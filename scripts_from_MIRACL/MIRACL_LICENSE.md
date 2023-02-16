@@ -1,7 +1,7 @@
                     GNU GENERAL PUBLIC LICENSE
                        Version 3, 29 June 2007
 
- Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
  Everyone is permitted to copy and distribute verbatim copies
  of this license document, but changing it is not allowed.
 
@@ -631,8 +631,8 @@ to attach them to the start of each source file to most effectively
 state the exclusion of warranty; and each file should have at least
 the "copyright" line and a pointer to where the full notice is found.
 
-    <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) <year>  <name of author>
+    {one line to give the program's name and a brief idea of what it does.}
+    Copyright (C) {year}  {name of author}
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -645,14 +645,14 @@ the "copyright" line and a pointer to where the full notice is found.
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Also add information on how to contact you by electronic and paper mail.
 
   If the program does terminal interaction, make it output a short
 notice like this when it starts in an interactive mode:
 
-    <program>  Copyright (C) <year>  <name of author>
+    {project}  Copyright (C) {year}  {fullname}
     This program comes with ABSOLUTELY NO WARRANTY; for details type `show w'.
     This is free software, and you are welcome to redistribute it
     under certain conditions; type `show c' for details.
@@ -664,36 +664,11 @@ might be different; for a GUI interface, you would use an "about box".
   You should also get your employer (if you work as a programmer) or school,
 if any, to sign a "copyright disclaimer" for the program, if necessary.
 For more information on this, and how to apply and follow the GNU GPL, see
-<https://www.gnu.org/licenses/>.
+<http://www.gnu.org/licenses/>.
 
   The GNU General Public License does not permit incorporating your program
 into proprietary programs.  If your program is a subroutine library, you
 may consider it more useful to permit linking proprietary applications with
 the library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.  But first, please read
-<https://www.gnu.org/licenses/why-not-lgpl.html>.
-
-
-Relevant licenses:
-3D Slicer - https://slicer.readthedocs.io/en/latest/user_guide/about.html#license
-Allen Institute - https://alleninstitute.org/terms-of-use/
-ANTs - https://www.nitrc.org/projects/ants
-Bash - https://www.gnu.org/licenses/gpl-3.0.html
-CLIJ - https://github.com/clij/clij2/blob/master/license.txt
-Convert-3D - https://sourceforge.net/projects/c3d/
-FIJI - https://github.com/fiji/fiji/blob/master/LICENSES
-FSL - https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence
-Gubra - https://github.com/Gubra-ApS/LSFM-mouse-brain-atlas/blob/master/LICENCE.txt
-ilastik - https://github.com/ilastik/ilastik/blob/main/LICENSE
-ITK-SNAP - https://www.nitrc.org/projects/itk-snap/
-ImageMagick - https://imagemagick.org/script/license.php
-MIRACL - (MIRACL_LICENSE.md in https://github.com/b-heifets/UNRAVEL/scripts_from_MIRACL/ and here https://github.com/AICONSlab/MIRACL/blob/master/LICENSE.md)
-Nibabel - https://nipy.org/nibabel/#license
-Numpy - https://numpy.org/doc/stable/license.html
-Pandas - https://github.com/pandas-dev/pandas/blob/main/LICENSE
-Python - https://www.python.org/about/
-
-
-
-
-
+<http://www.gnu.org/philosophy/why-not-lgpl.html>.
