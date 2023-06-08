@@ -28,7 +28,6 @@ cp /usr/local/miracl/atlases/ara/gubra/gubra_ano_25um_bin.nii.gz $PWD/
 
 fslmaths gubra_ano_split_25um.nii.gz -mul sig_clusters_WB.nii.gz sig_clusters_WB.nii.gz  
 
-fslstats sig_clusters_WB.nii.gz -H 21142 0 21142 > sig_clusters_WB_histo.csv
-
+fslstats sig_clusters_WB.nii.gz -H 21143 0 21143 > sig_clusters_WB_histo.csv
 
 #Daniel Ryskamp Rijsketic 07/01/22, 08/03/22, 08/25/22, 10/21/22 (Heifets Lab)

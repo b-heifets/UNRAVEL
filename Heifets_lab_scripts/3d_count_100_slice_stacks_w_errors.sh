@@ -41,7 +41,7 @@ done
 
 echo " " 
 echo "Errors after recounting (no errors if blank):"
-grep -r clij 
+grep -rq clij 
 echo " " 
 
 #rm all.csv

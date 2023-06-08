@@ -54,7 +54,7 @@ echo Samples > samples
 echo Conditions > conditions
 for s in ${sample_array[@]}; do
   echo $s >> samples
-  grep ${s: -2} $exp_summary/sample_overview.csv | cut -d',' -f4 >> conditions
+  grep "^${s: -2}" $exp_summary/sample_overview.csv | cut -d',' -f4 >> conditions
 done
 
 ####### Make cluster number header for data columns #######
@@ -87,11 +87,6 @@ cat counts | head -n 1 > cluster_counts.csv ; cat counts | tail -n +2 | sort -t"
 rm -f samples conditions all_counts #counts
 
 echo " " ; echo  "Cell counts in clusters: " ; cat cluster_counts.csv ; echo " "
-
-
-
-
-
 
 
 ###################################################

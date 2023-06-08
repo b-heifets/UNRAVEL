@@ -3,7 +3,7 @@
 
 if [ $# == 0 ] || [ "$1" == "help" ]; then
   echo "
-sunburst.sh <path/[validated]_cluster_index]> [xy voxel size in um] [z voxel size] [path/custom_atlas]
+sunburst.sh <path/[validated]_cluster_index]> [atlas xy voxel size in um] [atlas z voxel size] [path/custom_atlas]
 
 Output: <path/[validated]_cluster_index>_sunburst.csv and sunburst_RGBs.csv
 

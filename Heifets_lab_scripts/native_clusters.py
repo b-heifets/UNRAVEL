@@ -89,8 +89,8 @@ def bbox_crop_vol(i):
                 file.write(f"{volume_in_cubic_mm}")
         if not os.path.isfile(cluster_cropped_output):
             print(str(f'  Save cluster_{i} cropped cluster mask '+datetime.now().strftime("%H:%M:%S")))
-            image = nib.Nifti1Image(np.where(cluster_cropped == i, 1, 0), affine=np.eye(4)) #mask cluster --> create image assigned to variable
-            image.set_data_dtype(np.uint8)
+            image = np.where(cluster_cropped > 0, 1, 0).astype(np.uint8)
+            image = nib.Nifti1Image(image, np.eye(4))
             nib.save(image, cluster_cropped_output)
 
         #Crop seg_in_clusters and save as seperate .nii.gz files
@@ -100,8 +100,8 @@ def bbox_crop_vol(i):
             cluster_cropped = np.where(cluster_cropped == i, 1, 0)
             cluster_cropped = cluster_cropped.astype(np.uint8)
             seg_in_cluster_cropped = cluster_cropped * seg_cluster_cropped #zero out segmented cells outside of clusters
-            image = nib.Nifti1Image(np.where(seg_in_cluster_cropped > 0, 1, 0), affine=np.eye(4))
-            image.set_data_dtype(np.uint8)
+            image = np.where(seg_in_cluster_cropped > 0, 1, 0).astype(np.uint8)
+            image = nib.Nifti1Image(image, np.eye(4))
             Path(str(sys.argv[4]+'/consensus_cropped/3D_counts/crop_consensus_'+str(sys.argv[5])+'_native_cluster_'+str(i)+'_3dc')).mkdir(parents=True, exist_ok=True)
             nib.save(image, seg_in_cluster_cropped_output)
 
@@ -109,6 +109,6 @@ if not all(cluster_cropped_output_list) or not all(bbox_output_list) or not all(
     clusters = list(map(int, clusters)) #convert to ints
     with concurrent.futures.ProcessPoolExecutor() as executor:
         executor.map(bbox_crop_vol, clusters)
-    print(str("  Finished native_clusters.sh "+datetime.now().strftime("%H:%M:%S")+'\n'))
+    print(str("  Finished native_clusters.py "+datetime.now().strftime("%H:%M:%S")+'\n'))
 
 #Daniel Ryskamp Rijsketic 11/11/22 11/22-23/22 12/9-15/22 (Heifets lab)

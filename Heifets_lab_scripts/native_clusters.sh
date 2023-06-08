@@ -25,8 +25,18 @@ sample=${PWD##*/}
 path_native_index=$(echo $1 | sed "s/['\"]//g")
 output_folder=${path_native_index%/*/*}
 
+# Determine xyz voxel size in microns
+if [ "$2" == "m" ]; then 
+  metadata.sh
+  xy_res=$(grep "Voxel size: " parameters/metadata | cut -d" " -f3 | cut -dx -f1)
+  z_res=$(grep "Voxel size: " parameters/metadata | cut -d" " -f3 | cut -dx -f3)
+else
+  xy_res=$2
+  z_res=$3
+fi 
+
 cd $output_folder
-mkdir -p bounding_boxes clusters_cropped cluster_volumes
+mkdir -p bounding_boxes clusters_cropped cluster_volumes consensus_cropped
 
 #Convert to 8-bit if possible
 if [ "$(fslinfo $path_native_index | cut -f2 | head -1)" != "UINT8" ]; then
@@ -37,7 +47,7 @@ if [ "$(fslinfo $path_native_index | cut -f2 | head -1)" != "UINT8" ]; then
   fi
 fi
 
-python3 /usr/local/miracl/miracl/seg/native_clusters.py $1 $2 $3 $output_folder $sample $orig_dir/consensus/"$sample"_consensus.nii.gz $4
+python3 /usr/local/miracl/miracl/seg/native_clusters.py $1 $xy_res $z_res $output_folder $sample $orig_dir/consensus/"$sample"_consensus.nii.gz $4
 
 #edit headers of output .nii.gz files
 xy_res=$(echo "scale=5; ($2)/1000" | bc | sed 's/^\./0./') #covert microns to mm

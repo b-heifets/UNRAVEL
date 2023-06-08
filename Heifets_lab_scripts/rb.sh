@@ -3,22 +3,18 @@
 
 if [ $# == 0 ] || [ "$1" == "help" ]; then
   echo '
-From experiment folder containing ./sample??/ochann/tifs run:
-rb.sh <three letter orientation code> <# of pixels for rolling ball radius> <x/y voxel size in microns or m for metadata> <z voxel size or m> [leave blank to process all samples or enter sample?? separated by spaces]
+For rolling ball background subtraction run from experiment folder:
+rb.sh <orient code> <rolling ball radius in pixels> <x/y voxel size in microns or m for metadata> <z voxel size or m> [leave blank to process all samples or enter sample?? separated by spaces]
 
-Subtracts background to improve signal to noise ratio
-Then converts tif to nifti
-Then warps the background subtracted downsampled raw data to atlas space
+Input: ./sample??/ochann/tifs 
+Output: ./sample??/sample??_ochann_rb$2_gubra_space.nii.gz
 
-3 letter orientation codes (A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Interior): 
-   Zeiss LS7: ALS in agarose (imaged w/ dorsal toward door & front up; in z-stacks A is up, L is left, S is at stack start) 
-   Zeiss LS7: PLS if glued (imaged w/ dorsal toward door & front down; in z-stacks P is up, L is left, S is at stack start)
-   UltraII: AIL=LH (imaged w/ medial side down & front facing back; in z-stacks A is up, I is left, L is at stack start) 
-   UltraII: ASR=RH (imaged w/ medial side down & front facing back; in z-stacks A is up, S is left, R is at stack start)
+Determining 3 letter orientation codes (A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Interior):
+  Open z-stack virtually in FIJI -> 1st letter is side facing up, 2nd is side facing left, 3rd is side at stack start
 
 The rolling ball radius should be at least equal to the radius of the largest object of interest. Larger values ok too.
 
-If using for voxel-wise stats (glm.sh), afterwards move outputs to folder and run fsleyes.sh to check alignment of samples
+If using for voxel-wise stats (glm.sh), afterwards z-score outputs, move them to folder and run fsleyes.sh to check alignment
 If alignment not correct, use mirror.sh to flip (or flip.sh and shift.sh for custom adjustment)
 '
   exit 1

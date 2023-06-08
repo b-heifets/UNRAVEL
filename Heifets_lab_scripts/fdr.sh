@@ -65,7 +65,10 @@ if [ ! -f $results/"$results"_rev_cluster_index.nii.gz ]; then
   for i in ${revID_array[@]}; do 
      fslmaths "$results"_rev_cluster_index.nii.gz -add $i "$results"_rev_cluster_index.nii.gz 
   done
-  rm -f *_revID_*.nii.gz #comment out to keep cluster masks for effect_size_vox.sh 
+  mkdir -p revID
+  mv *_revID_*.nii.gz ./revID/
+  echo $mask > mask_used_for_cluster_correction.txt
+  echo $PWD > path_to_inputs_for_cluster_correction.txt
 
   echo " " ; echo "  Made FDR$2-adjusted_${image::-7} and "$results"_rev_cluster_index.nii.gz" ; echo " "
 else 

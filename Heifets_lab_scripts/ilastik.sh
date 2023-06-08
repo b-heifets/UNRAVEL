@@ -79,12 +79,12 @@ for sample in ${sample_array[@]}; do
   for i in $(eval echo $2); do 
     mkdir -p seg_ilastik_$i seg_ilastik_$i/IlastikSegmentation
     num_of_ilastik_tifs=$(ls seg_ilastik_$i/IlastikSegmentation | wc -l)
-    if (( $num_of_ilastik_tifs > 1 )) && (( $num_of_ilastik_tifs == $num_of_ochann_tifs )); then
+    if (( $num_of_ilastik_tifs > 1 )) && (( $num_of_ilastik_tifs == $num_of_ochann_tifs )) || [ -f ./seg_ilastik_$i/seg_ilastik_$i.nii.gz ] ; then
       echo "  IlastikSegmentation complete for $sample/seg_ilastik_$i, skipping "
     else
       echo " " ; echo "  Running ilastik.sh for $EXP $sample rater $i" starting at $(date) ; echo " "
-      echo "  run_ilastik.sh --headless --project=$exp_summary_path/"$EXP"_rater"$i".ilp --export_source="Simple Segmentation" --output_format=tif --output_filename_format=seg_ilastik_"$i"/IlastikSegmentation/{nickname}.tif ochann/"$sample"_Ch2_*.tif" 
-      run_ilastik.sh --headless --project="$exp_summary_path"/"$EXP"_rater"$i".ilp --export_source="Simple Segmentation" --output_format=tif --output_filename_format=seg_ilastik_"$i"/IlastikSegmentation/{nickname}.tif ochann/"$sample"_Ch2_*.tif
+      echo "  run_ilastik.sh --headless --project=$exp_summary_path/"$EXP"_rater"$i".ilp --export_source="Simple Segmentation" --output_format=tif --output_filename_format=seg_ilastik_"$i"/IlastikSegmentation/{nickname}.tif ochann/*.tif" 
+      run_ilastik.sh --headless --project="$exp_summary_path"/"$EXP"_rater"$i".ilp --export_source="Simple Segmentation" --output_format=tif --output_filename_format=seg_ilastik_"$i"/IlastikSegmentation/{nickname}.tif ochann/*.tif
       echo " " ; echo "  ilastik.sh for $EXP $sample rater $i finished at " $(date) ; echo " "
     fi
   done
@@ -93,5 +93,5 @@ for sample in ${sample_array[@]}; do
 done  
 
 
-#Daniel Ryskamp Rijsketic 08/15/2021 & 07/11/22 (Heifets Lab), w/ the run_ilastik.sh command adapted from Dan Barbosa
+#Daniel Ryskamp Rijsketic 08/15/2021, 07/11/22, 04/26/23 (Heifets Lab), w/ the run_ilastik.sh command adapted from Dan Barbosa
 

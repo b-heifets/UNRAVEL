@@ -15,7 +15,7 @@ if [ "$1" == "help" ]; then
 This script can run ilastik.sh and consensus.sh as part of the segmentation phase and can separately or serially run subscripts for cell density measurements ect. Scripts for the second phase include: 
 
 fdr.sh or ez_thr.sh (voxel-wise or cluster-wise correction for multiple comparisons, respectively)
-to_native2.sh (warp cluster index image [w/ IDs reversed] and the thresholded stats map to tissue space and scale to full res. Also scales warped atlas to full res)
+to_native.sh (warp cluster index image [w/ IDs reversed] and the thresholded stats map to tissue space and scale to full res. Also scales warped atlas to full res)
 native_clusters.sh (for each cluster, mask it, crop it, measure its volume in cubic mm, use it to crop and zero out the cell segmentation)
 ABAcluster.sh (binary clsuter mask multiplied by the ABA intensities)
 ABAconsensus.sh (multiplies the warped atlas by the consensus image, converting intensities of cells into the unique brain region intensity where they are located)
@@ -93,6 +93,8 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ]; then
   if [ "$xy_res" == "s" ]; then 
     xy_res=$(grep ${samples[0]: -2} sample_overview.csv | cut -d, -f7)
     z_res=$(grep ${samples[0]: -2} sample_overview.csv | cut -d, -f8)
+  elif [ "$xy_res" == "m" ]; then 
+    z_res="m"
   fi
 
   # Inputs for warping cluster index/stats and defining where data is saved in sample/summary folders
@@ -106,8 +108,7 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ]; then
   if [ "$clusters_to_process" == "all" ] && [ -f $PWD/cluster_validation_summary/$output_folder/all_clusters ]; then 
     clusters_to_process=$(cat $PWD/cluster_validation_summary/$output_folder/all_clusters)
   elif [ "$clusters_to_process" == "all" ] && [ ! -f $PWD/cluster_validation_summary/$output_folder/all_clusters ]; then 
-    float=$(fslstats ${path_and_stats_map%/*}/$output_folder/"$output_folder"_rev_cluster_index.nii.gz -R | awk '{print $2;}') # get 2nd word of output (max value in volume)
-    num_of_clusters=${float%.*} # convert to integer
+    num_of_clusters=$(fslstats ${path_and_stats_map%/*}/$output_folder/"$output_folder"_rev_cluster_index.nii.gz -R | awk -F' ' '{print $2+0}')
     clusters_to_process="{1..$num_of_clusters}"
     echo $clusters_to_process > $PWD/cluster_validation_summary/$output_folder/all_clusters
   fi
@@ -161,7 +162,7 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ] ; then
     cd $s
 
     # Warp reversed cluster index to native
-    to_native2.sh ${path_and_stats_map%/*}/$output_folder/"$output_folder"_rev_cluster_index.nii.gz $xy_res $z_res clusters/$output_folder native_cluster_index
+    to_native.sh ${path_and_stats_map%/*}/$output_folder/"$output_folder"_rev_cluster_index.nii.gz $xy_res $z_res clusters/$output_folder native_cluster_index
 
     # Generate clusters masks, ./bounding_boxes/"${image::-7}"_fslstats_w.txt, & cropped clusters
     clusters=$(eval echo "$clusters_to_process")
@@ -169,7 +170,7 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ] ; then
 
     # [Scale up native atlas and use it to convert clusters and/or consensus segementation to ABA intensties for region specific data]
     if [ "$regional_volumes" == "y" ] || [ "$regional_counts" == "y" ]; then 
-      to_native2.sh $s/reg_final/gubra_ano_split_10um_clar_downsample.nii.gz $xy_res $z_res clusters/$output_folder native_atlas
+      to_native.sh $s/reg_final/gubra_ano_split_10um_clar_downsample.nii.gz $xy_res $z_res clusters/$output_folder native_atlas
     fi
 
     if [ "$regional_counts" == "y" ]; then 
@@ -214,7 +215,7 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ] ; then
 
     # Warp stats map to native, crop it, and find most sig slice, save it for stats
     if [ "$make_montage" == "y" ]; then 
-      to_native2.sh ${path_and_stats_map%/*}/$output_folder/"$output_folder"_thresh.nii.gz $xy_res $z_res clusters/$output_folder native_stats
+      to_native.sh ${path_and_stats_map%/*}/$output_folder/"$output_folder"_thresh.nii.gz $xy_res $z_res clusters/$output_folder native_stats
       for i in $(eval echo "$clusters_to_process"); do
         crop_cluster.sh $s/clusters/$output_folder/bounding_boxes/"${s##*/}"_native_cluster_"$i"_fslstats_w.txt stats $s/clusters/$output_folder/native_stats/native_"$output_folder"_thresh.nii.gz
         get_most_sig_slice.sh $s/clusters/$output_folder/stats_cropped/crop_stats_thr_"${s##*/}"_native_cluster_"$i".nii.gz
