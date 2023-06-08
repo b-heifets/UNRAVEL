@@ -40,9 +40,10 @@ if [ ! -f $output ]; then
     # Warp from Gubra to native space (output has padding and 10 um resolution) and convert to 8-bit
     if [ -f clar_allen_reg/$image ]; then rm clar_allen_reg/$image ; fi
     antsApplyTransforms -d 3 -r reg_final/clar_downsample_res10um.nii.gz -i "$1" -n NearestNeighbor -t clar_allen_reg/allen_clar_ants1Warp.nii.gz clar_allen_reg/allen_clar_ants0GenericAffine.mat clar_allen_reg/init_tform.mat -o clar_allen_reg/$image --float # NearestNeighbor is ~6x faster than MultiLabel, which smooths cluster edges 
-    if [ $1 == *_cluster_index.nii.gz ]; then
-      echo " " ; echo "  If there are more than 254 clusters, do not convert to 8-bit" ; echo " " 
-      fslmaths clar_allen_reg/$image clar_allen_reg/$image -odt char #-odt converts to 8-bit
+    float=$(fslstats clar_allen_reg/$image -R | cut -d' ' -f2)
+    int=${float%.*}
+    if (( "$int" < "255" )); then 
+      fslmaths clar_allen_reg/$image clar_allen_reg/$image -odt char #-odt char converts to 8-bit
     fi
   fi
 
@@ -112,8 +113,8 @@ if [ ! -f $output ]; then
   zmin=$((($z_dim_10um-$DS_atlas_z)/2))
   zmax=$(echo "($DS_atlas_z+$zmin-1)" | bc )
 
-  echo " " ; echo "  Scale to 2xDS native, crop padding, reorient $image.nii.gz and scale native res for $sample" ; echo " " 
-  /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro to_native $PWD/$folder_w_warped_image/$image#$x_dim_10um#$y_dim_10um#$z_dim_10um#$xmin#$DS_atlas_x#$ymin#$DS_atlas_y#$zmin#$zmax#$tif_x_dim#$tif_y_dim#$tif_z_dim
+  echo " " ; echo "  Scale to 2xDS native, crop padding, reorient $image and scale native res for $sample" ; echo " " 
+  /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro to_native $PWD/$folder_w_warped_image/$image#$x_dim_10um#$y_dim_10um#$z_dim_10um#$xmin#$DS_atlas_x#$ymin#$DS_atlas_y#$zmin#$zmax#$tif_x_dim#$tif_y_dim#$tif_z_dim > /dev/null 2>&1
 
   rm -f $folder_w_warped_image/$image 
   

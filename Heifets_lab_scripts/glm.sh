@@ -65,7 +65,7 @@ echo " "
 read -p "Enter side of the brain to process (l, r, both) or (m) for mask specified by 1st positional argument: " mask ; echo " "
 read -p "Enter additional randomise options (aside from --uncorrp -x) or just press enter (for help run: randomise -h): " options ; echo " " 
 read -p "Enter # of permutations (e.g., 6000 [must be divisible by 300]): " permutations ; echo " " 
-read -p "Enter kernel radius for smoothing w/ fslmaths in mm (e.g., 0.05): " kernel ; echo " " 
+read -p "Enter 0 for no smoothing or kernel radius for smoothing in mm (e.g., 0.05): " kernel ; echo " " 
 
 kernel_in_um=$(echo "($kernel*1000+0.5)/1" | bc) #(x+0.5)/1 is used for rounding in bash and bc handles floats
 
@@ -97,12 +97,12 @@ cp_mask_atlas () {
 echo "Running glm.sh with mask: $mask, options: '$options', permutations: $permutations, kernel: $kernel, from $PWD " ; echo " " 
 echo "Running glm.sh with mask: $mask, options: '$options', permutations: $permutations, kernel: $kernel, from $PWD" > glm_params
 
+output_name="$GLMFolderName"
+
 #if design.fts for running ANOVA exists, then run ANOVA, else run two group t-test
 if [ -f $PWD/stats/design.fts ]; then
   
   if [ ! -d stats ]; then echo "  Make ./stats/design and use fsl to set up ANOVA (run: glm.sh help) " ; fi 
-
-  output_name="$GLMFolderName"
 
   cp_mask_atlas $1
 
@@ -146,8 +146,6 @@ else
   group2_N=$(find "$group2"_* -maxdepth 0 -type f | wc -l) #get N for group2
   echo "  Group 2 and N: $group2 $group2_N"
   echo " "
-  
-  output_name="$GLMFolderName"_"$group1"-"$group1_N"_"$group2"-"$group2_N"
 
   mkdir -p stats #output folder
 
@@ -165,7 +163,7 @@ else
   #Run t-test GLM 
   if (( $kernel_in_um > 0 )); then 
   
-    if [ ! -f all_s$kernel_in_um.nii.gz ] ; then echo "  Smoothing 4D volume with $kernel_in_um micron kernel " ; fslmaths all.nii.gz -s $kernel all_s$kernel_in_um.nii.gz ; echo " " ; fi
+    if [ ! -f all_s$kernel_in_um.nii.gz ] ; then echo "  Smoothing 4D volume with $kernel_in_um micron kernel " ; fslmaths all.nii.gz -s $kernel all_s$kernel_in_um.nii.gz -odt float ; echo " " ; fi
 
     echo " " ; echo "  Running randomise_parallel -i all_s$kernel_in_um.nii.gz -m $mask -o "$output_name" -d design.mat -t design.con --uncorrp -x -n $permutations $options"  ; echo Start: $(date) ; echo " "
     echo "randomise_parallel -i all_s$kernel_in_um.nii.gz -m $mask -o "$output_name" -d design.mat -t design.con --uncorrp -x -n $permutations $options" > glm_params

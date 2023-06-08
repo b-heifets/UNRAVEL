@@ -48,13 +48,13 @@ for sample in ${sample_array[@]}; do
       #prep_tifs.ijm adjusts 488 min display range and makes 488 x and y pixel dim even for tif to nii.gz conversion if needed  
 
       if [ $((SizeX%2)) -eq 0 ] && [ $((SizeY%2)) -eq 0 ]; then #positional args follow macro w/ # delimiter
-        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/488_original/$first_488_tif#$1#SizeX_even#SizeY_even#488#_Ch1_ 
+        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/488_original/$first_488_tif#$1#SizeX_even#SizeY_even#488#_Ch1_ > /dev/null 2>&1
       elif [ $((SizeX%2)) -ne 0 ] && [ $((SizeY%2)) -eq 0 ]; then 
-        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/488_original/$first_488_tif#$1#SizeX_odd#SizeY_even#488#_Ch1_ 
+        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/488_original/$first_488_tif#$1#SizeX_odd#SizeY_even#488#_Ch1_ > /dev/null 2>&1
       elif [ $((SizeX%2)) -eq 0 ] && [ $((SizeY%2)) -ne 0 ]; then
-        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/488_original/$first_488_tif#$1#SizeX_even#SizeY_odd#488#_Ch1_
+        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/488_original/$first_488_tif#$1#SizeX_even#SizeY_odd#488#_Ch1_ > /dev/null 2>&1
       elif  [ $((SizeX%2)) -ne 0 ] && [ $((SizeY%2)) -ne 0 ]; then
-        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/488_original/$first_488_tif#$1#SizeX_odd#SizeY_odd#488#_Ch1_
+        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/488_original/$first_488_tif#$1#SizeX_odd#SizeY_odd#488#_Ch1_ > /dev/null 2>&1
       fi
       echo $1 > parameters/488_min
       if [ -f parameters/488_min ]; then echo "  Finished preprocessing 488 tifs for $sample" ; echo End: $(date) ; echo " " ; fi
@@ -65,30 +65,35 @@ for sample in ${sample_array[@]}; do
   fi
 
   #Make ochann x and y pixel dim even for tif to nii.gz conversion if needed
-  cd ochann ; shopt -s nullglob ; for f in *\ *; do mv "$f" "${f// /_}"; done ; shopt -u nullglob ; cd .. 
 
-  if [ $((SizeX%2)) -ne 0 ] || [ $((SizeY%2)) -ne 0 ]; then
-    echo "  Making ochann x and y pixel dim even for tif to nii.gz conversion for $sample " 
+  if [ $(ls -A ochann | wc -l 2> /dev/null) -gt 0 ]; then
+
+    cd ochann ; shopt -s nullglob ; for f in *\ *; do mv "$f" "${f// /_}"; done ; shopt -u nullglob ; cd .. 
+
+    if [ $((SizeX%2)) -ne 0 ] || [ $((SizeY%2)) -ne 0 ]; then
+      echo "  Making ochann x and y pixel dim even for tif to nii.gz conversion for $sample " 
+      first_ochann_tif=$(ls ochann | head -1)
+      cp -r ochann ochann_original #ochann_original can be deleted to save space if same # of tifs in ochann and ochann_original, but keep first tif if it has metadata
+    fi
+
     first_ochann_tif=$(ls ochann | head -1)
-    cp ochann ochann_original #ochann_original can be deleted to save space if same # of tifs in ochann and ochann_original, but keep first tif if it has metadata
-  fi
 
-  first_ochann_tif=$(ls ochann | head -1)
+    if [ $((SizeX%2)) -ne 0 ] && [ $((SizeY%2)) -eq 0 ]; then
+      /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/ochann/$first_ochann_tif#0#SizeX_odd#SizeY_even#ochann#_Ch2_ > /dev/null 2>&1
+    elif [ $((SizeX%2)) -eq 0 ] && [ $((SizeY%2)) -ne 0 ]; then
+      /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/ochann/$first_ochann_tif#0#SizeX_even#SizeY_odd#ochann#_Ch2_ > /dev/null 2>&1
+    elif  [ $((SizeX%2)) -ne 0 ] && [ $((SizeY%2)) -ne 0 ]; then
+      /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/ochann/$first_ochann_tif#0#SizeX_odd#SizeY_odd#ochann#_Ch2_ > /dev/null 2>&1
+    fi
 
-  if [ $((SizeX%2)) -ne 0 ] && [ $((SizeY%2)) -eq 0 ]; then
-    /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/ochann/$first_ochann_tif#0#SizeX_odd#SizeY_even#ochann#_Ch2_ 
-  elif [ $((SizeX%2)) -eq 0 ] && [ $((SizeY%2)) -ne 0 ]; then
-    /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/ochann/$first_ochann_tif#0#SizeX_even#SizeY_odd#ochann#_Ch2_
-  elif  [ $((SizeX%2)) -ne 0 ] && [ $((SizeY%2)) -ne 0 ]; then
-    /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro prep_tifs $PWD/ochann/$first_ochann_tif#0#SizeX_odd#SizeY_odd#ochann#_Ch2_
-  fi
+    if [ $((SizeX%2)) -ne 0 ] || [ $((SizeY%2)) -ne 0 ]; then
+      old_filename_pattern=$(echo $first_ochann_tif | sed 's/0000/*/g')
+      cd ochann
+      rm -f $old_filename_pattern #delete old files so that only cropped files remain
+      cd .. 
+    fi
 
-  if [ $((SizeX%2)) -ne 0 ] || [ $((SizeY%2)) -ne 0 ]; then
-    old_filename_pattern=$(echo $first_ochann_tif | sed 's/0000/*/g')
-    cd ochann
-    rm -f $old_filename_pattern #delete old files so that only cropped files remain
-    cd .. 
-  fi
+  fi 
 
   cd ..
 done 

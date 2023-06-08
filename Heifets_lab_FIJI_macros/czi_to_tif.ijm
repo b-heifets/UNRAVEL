@@ -25,23 +25,23 @@ run("Crop");
 
 run("Split Channels");
 ////run("Image Sequence... ", "format=TIFF name="+sample+"_Ch2_ save="+dir+"/ochann/"+sample+"_Ch2_0000.tif"); //Old line before Fiji update
-run("Image Sequence... ", "dir="+dir+"/ochann/ format=TIFF name="+sample+"_Ch2");
+run("Image Sequence... ", "dir="+dir+"/ochann/ format=TIFF name="+sample+"_Ch2_");
 close();
 
 if (input[1]=="0") {
   //save full res 488 tif series
 ////run("Image Sequence... ", "format=TIFF name="+sample+"_Ch1_ save="+dir+"/488/"+sample+"_Ch1_0000.tif"); //Old line before Fiji update
-  run("Image Sequence... ", "dir="+dir+"/488/ format=TIFF name="+sample+"_Ch1");
+  run("Image Sequence... ", "dir="+dir+"/488/ format=TIFF name="+sample+"_Ch1_");
 }  else {
   //save full res 488 tif series 
 ////run("Image Sequence... ", "format=TIFF name="+sample+"_Ch1_ save="+dir+"/488_original/"+sample+"_Ch1_0000.tif"); //Old line before Fiji update
-  run("Image Sequence... ", "dir="+dir+"/488_original/ format=TIFF name="+sample+"_Ch1");
+  run("Image Sequence... ", "dir="+dir+"/488_original/ format=TIFF name="+sample+"_Ch1_");
 
   //************ Adjust display range *********************************************
   setMinAndMax(input[1], 65535); //input[1] = 488 "threshold" passed from 488thr.sh
   run("Apply LUT", "stack");
 ////run("Image Sequence... ", "format=TIFF name="+sample+"_Ch1_ save="+dir+"/488/"+sample+"_Ch1_0000.tif"); //Old line before Fiji update
-  run("Image Sequence... ", "dir="+dir+"/488/ format=TIFF name="+sample+"_Ch1");
+  run("Image Sequence... ", "dir="+dir+"/488/ format=TIFF name="+sample+"_Ch1_");
 
   //************ Save 488_min to log it *******************************************
   print(input[1]);

@@ -6,11 +6,6 @@ if [ $# == 0 ] || [ "$1" == "help" ]; then
 Run ez_thr.sh <path/vox_p.nii.gz> <side of the brain (l, r, or both) or path/custom_mask> <cluster_z_thresh> <cluster_prob_thresh>
  
 This script runs the /usr/local/fsl/bin/easythresh
-cluster_z_thresh is 1.644854 for one-tailed p-thr of 0.05 
-cluster_z_thresh is 1.959964 for one-tailed p-thr of 0.025 
-cluster_z_thresh is 2.326348 for one-tailed p-thr of 0.01 
-cluster_z_thresh is 2.575829 for one-tailed p-thr of 0.005 
-cluster_z_thresh is 3.090232 for one-tailed p-thr of 0.001 
 cluster_z_thresh is 1.959964 for two-tailed p-thr of 0.05 
 cluster_z_thresh is 2.241403 for two-tailed p-thr of 0.025 
 cluster_z_thresh is 2.575829 for two-tailed p-thr of 0.01 
@@ -56,7 +51,9 @@ if [ ! -f $results/"$results"_rev_cluster_index.nii.gz ]; then
   elif [ $2 == "r" ]; then mask=/usr/local/miracl/atlases/ara/gubra/gubra_template_wo_OB_25um_full_bin_right.nii.gz
   elif [ $2 == "both" ]; then mask=/usr/local/miracl/atlases/ara/gubra/gubra_template_25um_thr30_bin.nii.gz 
   else mask=$(echo $2 | sed "s/['\"]//g")
-  fi 
+  fi
+
+  cp $mask ./
 
   #Script from FSL: easythresh <raw_zstats> <brain_mask> <cluster_z_thresh> <cluster_prob_thresh> <background_image> <output_root>
   echo "Running: easythresh ${image::-7}_zstats.nii.gz $mask $3 $4 empty.nii.gz ${image::-7}"  
@@ -83,9 +80,12 @@ if [ ! -f $results/"$results"_rev_cluster_index.nii.gz ]; then
   fslmaths $index -sub $index "$results"_rev_cluster_index.nii.gz
   revID_array=(*_revID_*.nii.gz)
   for i in ${revID_array[@]}; do 
-     fslmaths "$results"_rev_cluster_index.nii.gz -add $i "$results"_rev_cluster_index.nii.gz 
+    fslmaths "$results"_rev_cluster_index.nii.gz -add $i "$results"_rev_cluster_index.nii.gz 
   done
-  rm -f *_revID_*.nii.gz
+  mkdir -p revID
+  mv *_revID_*.nii.gz ./revID/
+  echo $mask > mask_used_for_cluster_correction.txt
+  echo $PWD > path_to_inputs_for_cluster_correction.txt
 
   cd $orig_dir
 
