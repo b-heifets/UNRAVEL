@@ -6,6 +6,12 @@ UNRAVEL is a command line tool for:
 * Validation of hot/cold spots via c-Fos+ cell density quantification and montages at cellular resolution
 
 \
+Publications: 
+UNRAVELing the synergistic effects of psilocybin and environment on brain-wide immediate early gene expression in mice 
+[Neuropsychopharmacology](https://www.nature.com/articles/s41386-023-01613-4)
+[bioRxiv](https://www.biorxiv.org/content/10.1101/2023.02.19.528997v1)
+
+\
 [UNRAVEL guide:](https://office365stanford-my.sharepoint.com/:p:/g/personal/danrijs_stanford_edu/EbQN54e7SwRHgkmw3yn8fgcBz1xG22AICtZx8nsPrOLFtg?e=S159PM)
 * Notes dependencies, paths to update, organization of files/folders, and info on running scripts:
 * Key scripts: find_clusters.sh, glm.sh, and validate_clusters2.sh
