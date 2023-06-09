@@ -7,9 +7,9 @@ UNRAVEL is a command line tool for:
 
 \
 Publications: 
-UNRAVELing the synergistic effects of psilocybin and environment on brain-wide immediate early gene expression in mice 
-[Neuropsychopharmacology](https://www.nature.com/articles/s41386-023-01613-4)
-[bioRxiv](https://www.biorxiv.org/content/10.1101/2023.02.19.528997v1)
+* UNRAVELing the synergistic effects of psilocybin and environment on brain-wide immediate early gene expression in mice 
+    * [Neuropsychopharmacology](https://www.nature.com/articles/s41386-023-01613-4)
+    * [bioRxiv](https://www.biorxiv.org/content/10.1101/2023.02.19.528997v1)
 
 \
 [UNRAVEL guide:](https://office365stanford-my.sharepoint.com/:p:/g/personal/danrijs_stanford_edu/EbQN54e7SwRHgkmw3yn8fgcBz1xG22AICtZx8nsPrOLFtg?e=S159PM)
