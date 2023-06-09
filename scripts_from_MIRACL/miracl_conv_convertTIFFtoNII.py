@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # Maged Goubran @ 2017, mgoubran@stanford.edu
 
-### 3 pound signs indicate changes by Daniel Ryskamp Rijsketic
+### 3 pound signs indicate changes by Daniel Ryskamp Rijsketic (also changed it to python3 from python in line 1)
 
 # coding: utf-8
 
@@ -20,11 +20,11 @@ import cv2
 import nibabel as nib
 import numpy as np
 import scipy.ndimage
-import PyQt4
+###import PyQt4
 ###from PyQt4.QtGui import *
 from joblib import Parallel, delayed
 
-from miracl.conv import miracl_conv_gui_options as gui_opts
+###from miracl.conv import miracl_conv_gui_options as gui_opts
 
 warnings.simplefilter("ignore", UserWarning)
 
