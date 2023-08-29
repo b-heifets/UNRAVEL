@@ -1,10 +1,9 @@
 #!/bin/bash
-# (c) Daniel Ryskamp Rijsketic, Dan Barbosa, Boris Heifets @ Stanford University, 2021-2023
 
-if [ $# == 0 ] || [ "$1" == "help" ]; then
+if [ $# == 0 ] || [ "$1" == "help" ] || [ "$1" == "--help" ] || [ "$1" == "--h" ]; then
   echo "
-From experiment folder containing ./sample??/ochann/tifs, run:
-ilastik.sh <path/<EXP>_rater1.ilp (trained ilastik project)> <'{1..5}' (range for raters 1-5) or '1 2 4' (for specific rater(s))> [leave blank to process all samples or enter sample?? separated by spaces]
+From experiment folder containing ./sample??/<immunofluor_folder>/tifs, run:
+ilastik.sh <path/<EXP>_rater1.ilp (trained ilastik project)> <'{1..5}' (range for raters 1-5) or '1 2 4' (for specific rater(s))> <folder name for directory(s) to be segmented enclosed in single quotes> < [leave blank to process all samples or enter sample?? separated by spaces]
  
 This script creates the active cell segmentation using Ilastik's pixel classification workflow
 
@@ -47,7 +46,7 @@ https://www.ilastik.org/documentation/pixelclassification/pixelclassification
    Choose Export Image Settings... -> Format: -> tif -> if desired, replace {dataset_dir} with path where you want to export segmented images and leave /{nickname}_{result_type}.tif or /{nickname}.tif
 
 5. Batch Processing
-   Select Raw Data Files... -> Select all ochann images to process
+   Select Raw Data Files... -> Select all immunofluor images to process
    Process all files (if you cancel processing, Clear Raw Data Files and again Select Raw Data Files..., otherwise the project will become corrupted).
 "
   exit 1
@@ -55,8 +54,8 @@ fi
 
 echo " " ; echo "Running ilastik.sh $@ from $PWD" ; echo " "
 
-if [ $# -gt 2 ]; then 
-  samples=$(echo "${@:3}" | sed "s/['\"]//g")
+if [ $# -gt 3 ]; then 
+  samples=$(echo "${@:4}" | sed "s/['\"]//g")
   sample_array=($samples)
   sample_array=($(for i in ${sample_array[@]}; do echo $(basename $i) ; done)) 
 else 
@@ -74,17 +73,17 @@ cd $exp_dir_path
 for sample in ${sample_array[@]}; do
   cd $sample
   sample_path=$PWD
-  num_of_ochann_tifs=$(ls ochann | wc -l)
+  num_of_tifs=$(ls $3 | wc -l)
 
   for i in $(eval echo $2); do 
     mkdir -p seg_ilastik_$i seg_ilastik_$i/IlastikSegmentation
     num_of_ilastik_tifs=$(ls seg_ilastik_$i/IlastikSegmentation | wc -l)
-    if (( $num_of_ilastik_tifs > 1 )) && (( $num_of_ilastik_tifs == $num_of_ochann_tifs )) || [ -f ./seg_ilastik_$i/seg_ilastik_$i.nii.gz ] ; then
+    if (( $num_of_ilastik_tifs > 1 )) && (( $num_of_ilastik_tifs == $num_of_tifs )); then
       echo "  IlastikSegmentation complete for $sample/seg_ilastik_$i, skipping "
     else
       echo " " ; echo "  Running ilastik.sh for $EXP $sample rater $i" starting at $(date) ; echo " "
-      echo "  run_ilastik.sh --headless --project=$exp_summary_path/"$EXP"_rater"$i".ilp --export_source="Simple Segmentation" --output_format=tif --output_filename_format=seg_ilastik_"$i"/IlastikSegmentation/{nickname}.tif ochann/*.tif" 
-      run_ilastik.sh --headless --project="$exp_summary_path"/"$EXP"_rater"$i".ilp --export_source="Simple Segmentation" --output_format=tif --output_filename_format=seg_ilastik_"$i"/IlastikSegmentation/{nickname}.tif ochann/*.tif
+      echo "  run_ilastik.sh --headless --project=$exp_summary_path/"$EXP"_rater"$i".ilp --export_source="Simple Segmentation" --output_format=tif --output_filename_format=seg_ilastik_"$i"/IlastikSegmentation/{nickname}.tif "$3"/"$sample"_"$3"_*.tif" 
+      run_ilastik.sh --headless --project="$exp_summary_path"/"$EXP"_rater"$i".ilp --export_source="Simple Segmentation" --output_format=tif --output_filename_format=seg_ilastik_"$i"/IlastikSegmentation/{nickname}.tif "$3"/"$sample"_"$3"_*.tif
       echo " " ; echo "  ilastik.sh for $EXP $sample rater $i finished at " $(date) ; echo " "
     fi
   done
@@ -93,5 +92,5 @@ for sample in ${sample_array[@]}; do
 done  
 
 
-#Daniel Ryskamp Rijsketic 08/15/2021, 07/11/22, 04/26/23 (Heifets Lab), w/ the run_ilastik.sh command adapted from Dan Barbosa
+#Daniel Ryskamp Rijsketic 08/15/2021 & 07/11/22 (Heifets Lab), w/ the run_ilastik.sh command adapted from Dan Barbosa
 
