@@ -1,5 +1,4 @@
 #!/bin/bash 
-# (c) Daniel Ryskamp Rijsketic, Boris Heifets @ Stanford University, 2022-2023
 
 #For help message run: czi_to_tif.sh help
 if [ $# == 0 ] || [ "$1" == "help" ]; then
@@ -48,18 +47,18 @@ for sample in ${sample_array[@]}; do
       if [ $1 != "0" ]; then mkdir -p 488_original ; fi 
 
       #x and y dimensions need an even number of pixels for tif to nii.gz conversion w/ MIRACL 
-      metadata.sh
+      metadata.sh 
       SizeX=$(sed -n 10p parameters/metadata | awk '{print $3}') #10th line, 3rd word
       SizeY=$(sed -n 11p parameters/metadata | awk '{print $3}')
 
       if [ $((SizeX%2)) -eq 0 ] && [ $((SizeY%2)) -eq 0 ]; then
-        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro czi_to_tif $PWD/$czi#$1#SizeX_even#SizeY_even 
+        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro czi_to_tif $PWD/$czi#$1#SizeX_even#SizeY_even > /dev/null 2>&1
       elif [ $((SizeX%2)) -ne 0 ] && [ $((SizeY%2)) -eq 0 ]; then
-        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro czi_to_tif $PWD/$czi#$1#SizeX_odd#SizeY_even
+        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro czi_to_tif $PWD/$czi#$1#SizeX_odd#SizeY_even > /dev/null 2>&1
       elif [ $((SizeX%2)) -eq 0 ] && [ $((SizeY%2)) -ne 0 ]; then
-        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro czi_to_tif $PWD/$czi#$1#SizeX_even#SizeY_odd
+        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro czi_to_tif $PWD/$czi#$1#SizeX_even#SizeY_odd > /dev/null 2>&1
       else 
-        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro czi_to_tif $PWD/$czi#$1#SizeX_odd#SizeY_odd
+        /usr/local/miracl/depends/Fiji.app/ImageJ-linux64 --ij2 -macro czi_to_tif $PWD/$czi#$1#SizeX_odd#SizeY_odd > /dev/null 2>&1
       fi
 
       if (( $num_of_ochann_tifs > 1 )) && (( $num_of_488_tifs == $num_of_ochann_tifs )); then echo " " ; echo "  Converted .czi to 488 and ochann tifs for $sample " ; echo End: $(date) ; echo " " ; fi
