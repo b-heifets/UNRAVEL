@@ -65,9 +65,9 @@ def get_metadata_from_tif(image_path):
             namespaces = {k: v for k, v in ome_xml_root.nsmap.items() if k is not None}
             default_ns = ome_xml_root.nsmap[None]
             pixels_element = ome_xml_root.find(f'.//{{{default_ns}}}Pixels')
-            voxel_size_x = float(pixels_element.get('PhysicalSizeX'))
-            voxel_size_y = float(pixels_element.get('PhysicalSizeY'))
-            voxel_size_z = float(pixels_element.get('PhysicalSizeZ'))
+            x_res = float(pixels_element.get('PhysicalSizeX'))
+            y_res = float(pixels_element.get('PhysicalSizeY'))
+            z_res = float(pixels_element.get('PhysicalSizeZ'))
 
         else:
             # Extract X and Y resolution values and convert to microns
