@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-from aicspylibczi import CziFile
+import czifile
 import os
 import nibabel as nib
 import numpy as np
@@ -42,11 +42,12 @@ def load_channel_from_czi(czi_image, channel):
     '''
     Loads the specified channel of the .czi file as a numpy array
     '''
-    czi_image = CziFile(czi_image)
-    image = czi_image.read_image(C=args.channel)[channel] # Load the first channel of image | get img ([1] is the shape)
-    image = np.squeeze(image)
-    image = np.transpose(image, (2, 1, 0))
-    return image  
+    with czifile.CziFile(czi_image) as czi:
+        czi_array = czi.asarray()
+        image = czi_array[..., channel, :, :, :, :]
+        image = np.squeeze(image)
+        image = np.transpose(image, (2, 1, 0))
+        return image  
 
 def downsample(image, ds_factor):
     '''
