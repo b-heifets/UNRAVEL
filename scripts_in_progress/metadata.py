@@ -1,6 +1,8 @@
-"""
-Script to extract metadata from TIFF and CZI files and save to a metadata file.
-"""
+# -----------------------------------------------------------------------------
+# Filename: metadata.py
+# Date Created: 2023 September
+# Description: Script to extract metadata from TIFF and CZI files and save to a params/metadata file
+# -----------------------------------------------------------------------------
 
 import os
 from pathlib import Path
@@ -17,8 +19,8 @@ def search_for_file(extensions, directories):
     :return: Full path of found file or None if not found.
     """
     for directory in directories:
-        for file in os.listdir(directory):
-            if file.endswith(extensions):
+        for file in directory.iterdir():
+            if file.name.endswith(extensions):
                 return Path(directory) / file
     return None
 
@@ -43,36 +45,42 @@ def get_metadata_from_tif(image_path):
     :return: Tuple of SizeX, SizeY, SizeZ, x_res, y_res, z_res in microns.
     """
     with tifffile.TiffFile(image_path) as tif:
-        image_shape = tif.pages[0].shape
+
         meta = tif.pages[0].tags
-
-        # Get image dimensions based on shape
-        if len(image_shape) == 2:
-            SizeX, SizeY = image_shape
-            SizeZ = 1
-        elif len(image_shape) == 3:
-            SizeZ, SizeY, SizeX = image_shape
-        else:
-            # Handle 4D image shape
-            # Depending on your TIFF's actual structure
-            _, SizeZ, SizeY, SizeX = image_shape
-
-        # Default voxel size values
-        x_res, y_res, z_res = 1, 1, 1
         if "ome.tif" in str(image_path):
+    
             ome_xml_str = meta['ImageDescription'].value
             ome_xml_root = etree.fromstring(ome_xml_str.encode('utf-8'))
             namespaces = {k: v for k, v in ome_xml_root.nsmap.items() if k is not None}
             default_ns = ome_xml_root.nsmap[None]
             pixels_element = ome_xml_root.find(f'.//{{{default_ns}}}Pixels')
+            
+            SizeX = int(pixels_element.get('SizeX'))
+            SizeY = int(pixels_element.get('SizeY'))
+            SizeZ = int(pixels_element.get('SizeZ'))
+            
             x_res = float(pixels_element.get('PhysicalSizeX'))
             y_res = float(pixels_element.get('PhysicalSizeY'))
             z_res = float(pixels_element.get('PhysicalSizeZ'))
 
         else:
+            image_shape = tif.series[0].shape
+            
+            # Get image dimensions based on shape
+            if len(image_shape) == 2:
+                SizeY, SizeX = image_shape
+                SizeZ = 1
+            elif len(image_shape) == 3:
+                SizeZ, SizeY, SizeX = image_shape
+            else:
+                # Handle 4D image shape
+                # Depending on your TIFF's actual structure
+                _, SizeZ, SizeY, SizeX = image_shape
+
             # Extract X and Y resolution values and convert to microns
             x_res = meta['XResolution'].value[0]
             y_res = meta['YResolution'].value[0]
+            z_res = 1 # currently unknown how to get Z voxel size from std tiff series
 
     return SizeX, SizeY, SizeZ, x_res, y_res, z_res
 
