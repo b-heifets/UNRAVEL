@@ -1,32 +1,38 @@
 #!/usr/bin/env python3
 
 import argparse
-from aicspylibczi import CziFile
 import os
 import nibabel as nib
 import numpy as np
+import unravel_utils as unrvl
+from aicspylibczi import CziFile
 from glob import glob
+from metadata import get_metadata_from_czi
 from pathlib import Path
 from rich import print
 from scipy import ndimage
-import unravel_utils as unrvl
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Load channel of *.czi, resample, reorient, and save as .nii.gz')
-    parser.add_argument('-o', '--output', help='img.nii.gz', default="clar_res0.05.nii.gz", metavar='')
-    parser.add_argument('-c', '--channel', help='Channel number (0 for 1st channel)', default=0, type=int, metavar='')
-    parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns', default=3.5232, type=float, metavar='') 
-    parser.add_argument('-z', '--z_res', help='x/y voxel size in microns', default=6, type=float, metavar='')
+    # parser.add_argument('-i', '--input', help='Path to input .czi file (Default: auto-detect in sample directory)', default=None, metavar='')
+    parser.add_argument('-o', '--output', help='img.nii.gz (default: clar_res0.05.nii.gz)', default="clar_res0.05.nii.gz", metavar='')
+    parser.add_argument('-c', '--channel', help='Channel number (Default: 0 for 1st channel)', default=0, type=int, metavar='')
+    parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns (Default: get via metadata)', default=None, type=float, metavar='') 
+    parser.add_argument('-z', '--z_res', help='z voxel size in microns', default=None, type=float, metavar='')
     parser.add_argument('-r', '--res', help='Resample to this resolution (microns)', default=50, type=int, metavar='')
-    parser.add_argument('-zo', '--zoom_order', help='Order of spline interpolation. Range: 0-5.)', default=1, type=int, metavar='')
+    parser.add_argument('-zo', '--zoom_order', help='Order of spline interpolation. Range: 0-5. (Default: 1))', default=1, type=int, metavar='')
     return parser.parse_args()
 
 args = parse_args() 
 
-def get_czi(sample_dirs): 
+def get_czi(sample_dirs, input_path): 
     '''
-    Returns the path to the first .czi file in the sample folder
+    Returns the path to the .czi file. If input_path is provided, it takes precedence. 
+    Otherwise, it looks for the first .czi file in the sample folder.
     '''
+    if input_path is not None:
+        return input_path
+
     czi_files = glob(f"{sample_dirs}/*.czi")
     
     if not czi_files:
@@ -98,9 +104,15 @@ def load_czi_resample_save_nii(sample_dirs, channel, xy_res, z_res, target_resol
     Loads the specified channel of the .czi file, resamples, reorients, and saves as .nii.gz
     '''
     # Load .czi file
-    czi_image = get_czi(sample_dirs)
+    czi_image = get_czi(sample_dirs, args.input)
     if not czi_image:
         return  # Exit the function if no .czi file is found
+    
+    # If xy_res and z_res are default, then fetch from metadata
+    if xy_res is None or z_res is None:
+        _, _, _, x_res_metadata, _, z_res_metadata = get_metadata_from_czi(czi_image)
+        xy_res = xy_res if xy_res is not None else x_res_metadata
+        z_res = z_res if z_res is not None else z_res_metadata
     
     # Load channel of .czi file
     image = load_channel_from_czi(czi_image, channel)
@@ -132,13 +144,5 @@ def main(sample_dirs):
 if __name__ == '__main__':
     main()
 
-
 # To do:
-# Add option to get voxel size from metadata
 # Create alternate python script for starting from a tif series (e.g., data from UltraII microscope), importing functions from this script
-
-# /SSD3/test/sample_w_czi/sample13/niftis/clar_res0.05_sh.nii.gz from 'prep_reg.sh 3.5232 6 488 8' is smoother, so we could try with an order of 2 or 3 with zoom for comparison
-
-# Notes: for testing:
-# cd /SSD3/test/sample_w_czi/
-
