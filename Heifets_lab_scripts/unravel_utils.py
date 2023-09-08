@@ -68,11 +68,11 @@ def script_decorator(func):
     return wrapper
 
 
-#####################################
-# Interate sample folders decorator #
-#####################################
+##############################################################
+# Either process single input or iterate over sample folders #
+##############################################################
 
-# # Optionally accepts a single directory or matches a pattern for processing multiple directories
+# Returns full paths of folders matching the pattern sample?? in the current working directory
 def iterate_dirs(dir_paths=None, pattern=None):
     def decorator(func):
         @functools.wraps(func)
@@ -92,10 +92,19 @@ def iterate_dirs(dir_paths=None, pattern=None):
 
                 print(f"\n\n\n  Processing: [gold3]{dir_name}[/]")  
                 func(dir_path, **kwargs)
-                print(f"  Finished processing: [gold3]{dir_name}[/]\n")  
+                # print(f"  Finished processing: [gold3]{dir_name}[/]\n")  
         return wrapper
     return decorator
 
+# Decide whether to process a single input or multiple directories:
+def process_dirs(func, args, pattern='sample??'): # Modify sample folder pattern here if needed
+    if hasattr(args, 'input') and args.input:
+        sample_dirs = os.path.dirname(args.input)
+        func(sample_dirs)
+    else:
+        iterate_func = iterate_dirs(pattern=pattern)(func)
+        iterate_func()
+        
 
 #########################################
 # Decorators for the function_decorator #

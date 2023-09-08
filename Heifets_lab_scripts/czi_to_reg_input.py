@@ -46,9 +46,7 @@ def load_channel_from_czi(czi_image, channel):
     Loads the specified channel of the .czi file as a numpy array
     '''
     image = CziFile(czi_image).read_image(C=channel)[0]
-
     image = np.squeeze(image)
-
     image = np.transpose(image, (2, 1, 0))
     return image  
 
@@ -130,34 +128,26 @@ def load_czi_resample_save_nii(sample_dirs, channel, xy_res, z_res, target_resol
     # Save as .nii
     save_as_nii(sample_dirs, reoriented_image, output_name, target_resolution)
 
-def main(sample_dirs=None):
+
+def main(sample_dirs):
     args = parse_args() 
 
+    # Process the input or all sample?? folders
     if sample_dirs is None:
         sample_dirs = os.path.dirname(args.input)
 
     # Check if the output file already exists
     output_file_path = os.path.join(sample_dirs, "niftis", args.output)
     if os.path.exists(output_file_path):
-        print(f"Output file {output_file_path} already exists. Skipping.")
+        print(f"\n  Output file {output_file_path} already exists. Skipping.\n")
         return  # Skip the rest of the main function for this sample_dirs
 
     load_czi_resample_save_nii(sample_dirs, args.channel, args.xy_res, args.z_res, args.res, args.zoom_order, args.output)
 
-def main_entry_point():
-    args = parse_args()
-
-    if args.input:
-        # If a single .czi file is specified, only process it
-        main()
-    else:
-        # If no specific .czi file is provided, proceed with processing all sample folders
-        iterate_func = unrvl.iterate_dirs(pattern='sample??')(main)
-        iterate_func()
-
 @unrvl.script_decorator
 def run_script():
-    main_entry_point()
+    args = parse_args()
+    unrvl.process_dirs(main, args)
 
 if __name__ == '__main__':
     run_script()
