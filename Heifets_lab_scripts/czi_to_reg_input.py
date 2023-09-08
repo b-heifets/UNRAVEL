@@ -45,10 +45,11 @@ def load_channel_from_czi(czi_image, channel):
     '''
     Loads the specified channel of the .czi file as a numpy array
     '''
-    with CziFile(czi_image) as czi:
-        image = czi.read_image(C=channel)
-        image = np.squeeze(image)
-        image = np.transpose(image, (2, 1, 0))
+    image = CziFile(czi_image).read_image(C=channel)[0]
+
+    image = np.squeeze(image)
+
+    image = np.transpose(image, (2, 1, 0))
     return image  
 
 def resample(image, xy_res, z_res, target_resolution, zoom_order):
@@ -129,9 +130,11 @@ def load_czi_resample_save_nii(sample_dirs, channel, xy_res, z_res, target_resol
     # Save as .nii
     save_as_nii(sample_dirs, reoriented_image, output_name, target_resolution)
 
-@unrvl.main_function_decorator()
 def main(sample_dirs=None):
     args = parse_args() 
+
+    if sample_dirs is None:
+        sample_dirs = os.path.dirname(args.input)
 
     # Check if the output file already exists
     output_file_path = os.path.join(sample_dirs, "niftis", args.output)
@@ -141,20 +144,9 @@ def main(sample_dirs=None):
 
     load_czi_resample_save_nii(sample_dirs, args.channel, args.xy_res, args.z_res, args.res, args.zoom_order, args.output)
 
-if __name__ == '__main__':
+def main_entry_point():
     args = parse_args()
-    if args.input:
-        # If a single .czi file is specified by args.input, only process it (output: parent_dir/niftis/img.nii.gz)
-        main()
-    else:
-        # If no specific .czi file is provided, process all sample folders
-        sample_dirs_list = glob('sample??')
-        for sample_dir in sample_dirs_list:
-            main(sample_dir)
 
-if __name__ == '__main__':
-    args = parse_args()
-    
     if args.input:
         # If a single .czi file is specified, only process it
         main()
@@ -162,6 +154,13 @@ if __name__ == '__main__':
         # If no specific .czi file is provided, proceed with processing all sample folders
         iterate_func = unrvl.iterate_dirs(pattern='sample??')(main)
         iterate_func()
+
+@unrvl.script_decorator
+def run_script():
+    main_entry_point()
+
+if __name__ == '__main__':
+    run_script()
 
 # To do:
 # Create alternate python script for starting from a tif series (e.g., data from UltraII microscope), importing functions from this script

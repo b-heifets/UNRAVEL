@@ -3,9 +3,9 @@
 import fnmatch
 import functools
 import os
-import time
 import re
 import sys
+import time
 from datetime import datetime
 from rich import print
 from rich.console import Console
@@ -14,24 +14,9 @@ from rich.traceback import install
 from tqdm import tqdm
 
 
-##############################################
-# Decorators for the main_function_decorator #
-##############################################
-
-def start_and_end_times(func):
-    """
-    A decorator that prints the start and end times of the function it decorates.
-    """
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        start_time = datetime.now()
-        print(f"  [bright_blue]Start:[/] " + start_time.strftime('%Y-%m-%d %H:%M:%S') + "\n")
-        result = func(*args, **kwargs)
-        end_time = datetime.now()
-        print(f"\n\n  :mushroom: [bold magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold3]![/][dark_orange]![/][red1]![/] \n")
-        
-        return result
-    return wrapper
+####################
+# Script decorator #
+####################
 
 def print_cmd_decorator(func):
     """
@@ -47,6 +32,21 @@ def print_cmd_decorator(func):
         return func(*args, **kwargs)
     return wrapper
 
+def start_and_end_times(func):
+    """
+    A decorator that prints the start and end times of the function it decorates.
+    """
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        start_time = datetime.now()
+        print(f"  [bright_blue]Start:[/] " + start_time.strftime('%Y-%m-%d %H:%M:%S') + "\n")
+        result = func(*args, **kwargs)
+        end_time = datetime.now()
+        print(f"\n\n\n  :mushroom: [bold magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold3]![/][dark_orange]![/][red1]![/] \n")
+        
+        return result
+    return wrapper
+
 def rich_traceback(func):
     """
     A decorator that installs rich traceback for better exception visualization.
@@ -58,7 +58,7 @@ def rich_traceback(func):
     
     return wrapper
 
-def main_function_decorator(func):
+def script_decorator(func):
     @functools.wraps(func)
     @print_cmd_decorator
     @start_and_end_times
@@ -67,25 +67,32 @@ def main_function_decorator(func):
         return func(*args, **kwargs)
     return wrapper
 
-# Optionally accepts a single directory or matches a pattern for processing multiple directories
+
+#####################################
+# Interate sample folders decorator #
+#####################################
+
+# # Optionally accepts a single directory or matches a pattern for processing multiple directories
 def iterate_dirs(dir_paths=None, pattern=None):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
-                
-            # Get directories based on pattern only if dir_paths is not provided
-            if dir_paths is None:
-                dir_paths = [d for d in os.listdir(os.getcwd()) if (os.path.isdir(os.path.join(os.getcwd(), d)) and re.fullmatch(fnmatch.translate(pattern), d))]
-                dir_paths = sorted(dir_paths, key=lambda x: (len(x), x))  # Sort by length of string, then numerically
+            local_dir_paths = dir_paths  # Copy the dir_paths argument to a local variable
             
-            print(f"\n  [bright_black]Processing these folders: {dir_paths}[/]")
+            # Get directories based on pattern only if dir_paths is not provided
+            if local_dir_paths is None:
+                local_dir_paths = [d for d in os.listdir(os.getcwd()) if (os.path.isdir(os.path.join(os.getcwd(), d)) and re.fullmatch(fnmatch.translate(pattern), d))]
+                local_dir_paths = sorted(local_dir_paths, key=lambda x: (len(x), x))  # Sort by length of string, then numerically
+            
+            print(f"\n  [bright_black]Processing these folders: {local_dir_paths}[/]\n")
             
             # Call the wrapped function for each directory path
-            for dir_name in tqdm(dir_paths, desc="  ", ncols=100, dynamic_ncols=True, unit="dir", leave=True):
-                dir_path = os.path.join(os.getcwd(), dir_name)   # Modified this variable name for clarity
-                print("\n\n\n\n  Processing: " + f"[gold3]{dir_name}[/]    ")
+            for dir_name in tqdm(local_dir_paths, desc="  ", ncols=100, dynamic_ncols=True, unit="dir", leave=True):
+                dir_path = os.path.join(os.getcwd(), dir_name)
+
+                print(f"\n\n\n  Processing: [gold3]{dir_name}[/]")  
                 func(dir_path, **kwargs)
-            
+                print(f"  Finished processing: [gold3]{dir_name}[/]\n")  
         return wrapper
     return decorator
 
