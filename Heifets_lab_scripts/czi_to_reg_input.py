@@ -14,12 +14,12 @@ from scipy import ndimage
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Load channel of *.czi, resample, reorient, and save as .nii.gz')
-    # parser.add_argument('-i', '--input', help='Path to input .czi file (Default: auto-detect in sample directory)', default=None, metavar='')
+    parser.add_argument('-i', '--input', help='Path to input .czi file (Default: process sample?? directories w/ a .czi)', default=None, metavar='')
     parser.add_argument('-o', '--output', help='img.nii.gz (default: clar_res0.05.nii.gz)', default="clar_res0.05.nii.gz", metavar='')
     parser.add_argument('-c', '--channel', help='Channel number (Default: 0 for 1st channel)', default=0, type=int, metavar='')
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns (Default: get via metadata)', default=None, type=float, metavar='') 
     parser.add_argument('-z', '--z_res', help='z voxel size in microns', default=None, type=float, metavar='')
-    parser.add_argument('-r', '--res', help='Resample to this resolution (microns)', default=50, type=int, metavar='')
+    parser.add_argument('-r', '--res', help='Resample to this resolution in microns (Default: 50)', default=50, type=int, metavar='')
     parser.add_argument('-zo', '--zoom_order', help='Order of spline interpolation. Range: 0-5. (Default: 1))', default=1, type=int, metavar='')
     return parser.parse_args()
 
@@ -129,8 +129,8 @@ def load_czi_resample_save_nii(sample_dirs, channel, xy_res, z_res, target_resol
     # Save as .nii
     save_as_nii(sample_dirs, reoriented_image, output_name, target_resolution)
 
-@unrvl.main_function_decorator(pattern='sample??') # Adjust sample folder pattern as needed (e.g., 'sample??' for sample01, etc.)
-def main(sample_dirs):
+@unrvl.main_function_decorator()
+def main(sample_dirs=None):
     args = parse_args() 
 
     # Check if the output file already exists
@@ -142,7 +142,26 @@ def main(sample_dirs):
     load_czi_resample_save_nii(sample_dirs, args.channel, args.xy_res, args.z_res, args.res, args.zoom_order, args.output)
 
 if __name__ == '__main__':
-    main()
+    args = parse_args()
+    if args.input:
+        # If a single .czi file is specified by args.input, only process it (output: parent_dir/niftis/img.nii.gz)
+        main()
+    else:
+        # If no specific .czi file is provided, process all sample folders
+        sample_dirs_list = glob('sample??')
+        for sample_dir in sample_dirs_list:
+            main(sample_dir)
+
+if __name__ == '__main__':
+    args = parse_args()
+    
+    if args.input:
+        # If a single .czi file is specified, only process it
+        main()
+    else:
+        # If no specific .czi file is provided, proceed with processing all sample folders
+        iterate_func = unrvl.iterate_dirs(pattern='sample??')(main)
+        iterate_func()
 
 # To do:
 # Create alternate python script for starting from a tif series (e.g., data from UltraII microscope), importing functions from this script

@@ -58,14 +58,25 @@ def rich_traceback(func):
     
     return wrapper
 
-def iterate_dirs(pattern=None):
+def main_function_decorator(func):
+    @functools.wraps(func)
+    @print_cmd_decorator
+    @start_and_end_times
+    @rich_traceback
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper
+
+# Optionally accepts a single directory or matches a pattern for processing multiple directories
+def iterate_dirs(dir_paths=None, pattern=None):
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
                 
-            # Get all directories with the given pattern
-            dir_paths = [d for d in os.listdir(os.getcwd()) if (os.path.isdir(os.path.join(os.getcwd(), d)) and re.fullmatch(fnmatch.translate(pattern), d))]
-            dir_paths = sorted(dir_paths, key=lambda x: (len(x), x))  # Sort by length of string, then numerically
+            # Get directories based on pattern only if dir_paths is not provided
+            if dir_paths is None:
+                dir_paths = [d for d in os.listdir(os.getcwd()) if (os.path.isdir(os.path.join(os.getcwd(), d)) and re.fullmatch(fnmatch.translate(pattern), d))]
+                dir_paths = sorted(dir_paths, key=lambda x: (len(x), x))  # Sort by length of string, then numerically
             
             print(f"\n  [bright_black]Processing these folders: {dir_paths}[/]")
             
@@ -76,25 +87,6 @@ def iterate_dirs(pattern=None):
                 func(dir_path, **kwargs)
             
         return wrapper
-    return decorator
-
-def main_function_decorator(pattern=None):
-    def decorator(fn):
-        @functools.wraps(fn)
-        @print_cmd_decorator
-        @start_and_end_times
-        @rich_traceback
-        def wrapped(*args, **kwargs):
-            # Here, args[0] should be the root path based on how you've set up the script
-            root_path = args[0] if args else None
-
-            # Apply iterate_dirs to fn, so that fn (i.e., main) gets called for every matched directory
-            iterate_func = iterate_dirs(pattern=pattern)(fn)
-            
-            # Now call iterate_func with the root path
-            iterate_func(root_path)
-
-        return wrapped
     return decorator
 
 
