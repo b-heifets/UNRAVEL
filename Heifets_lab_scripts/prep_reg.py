@@ -14,7 +14,7 @@ from tifffile import imread
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load channel of *.czi (default) or ./tif_dir/*.tif, resample, reorient, and save as ./niftis/<img>.nii.gz')
+    parser = argparse.ArgumentParser(description='Load channel of *.czi (default) or ./<tif_dir>/*.tif, resample, reorient, and save as ./niftis/<img>.nii.gz')
     parser.add_argument('--dir_pattern', help='Pattern for folders in working dir to process (Default: sample??)', default='sample??', metavar='')
     parser.add_argument('--dir_list', help='Folders to process in working dir (e.g., sample01 sample02) (Default: process sample??) ', nargs='+', default=None, metavar='')
     parser.add_argument('-t', '--tif_dir', help='Name of folder with autofluo tifs', default=None, metavar='')
@@ -28,6 +28,13 @@ def parse_args():
 
 @unrvl.print_func_name_args_status_duration()
 def load_img_resample_reorient_save_nii(sample_dir, args=None):
+
+    # Skip processing if the output file already exists
+    nifti_dir = Path(sample_dir, "niftis")
+    nifti_path = nifti_dir / args.output
+    if nifti_path.exists():
+        print(f"\n  [default bold]{nifti_path}[/] already exists. Skipping.")
+        return
 
     # Load autofluo image
     czi_path = glob(f"{sample_dir}/*.czi")    
@@ -60,16 +67,15 @@ def load_img_resample_reorient_save_nii(sample_dir, args=None):
 
     # Reorient image
     img_reoriented = np.flip(np.rot90(img_resampled, axes=(1, 0)), axis=1)
-    nifti_dir = Path(sample_dir, "niftis")
-    nifti_dir.mkdir(exist_ok=True)
-    nifti_path = nifti_dir / args.output
 
     # Save image
+    nifti_dir.mkdir(exist_ok=True)
     affine = np.eye(4) * (args.res / 1000)
     affine[3, 3] = 1
     nifti_img = nib.Nifti1Image(img_reoriented, affine)
     nifti_img.header.set_data_dtype(np.int16)
     nib.save(nifti_img, str(nifti_path))
+    print(f"\n  Output: [default bold]{nifti_path}")
 
 @unrvl.print_cmd_and_times
 def main():
