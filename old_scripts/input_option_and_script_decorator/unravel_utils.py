@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import fnmatch
 import functools
 import os
 import re
@@ -10,6 +11,7 @@ from rich import print
 from rich.console import Console
 from rich.table import Table
 from rich.traceback import install
+from tqdm import tqdm
 
 
 ####################
@@ -56,7 +58,7 @@ def rich_traceback(func):
     
     return wrapper
 
-def print_cmd_and_times(func):
+def script_decorator(func):
     @functools.wraps(func)
     @print_cmd_decorator
     @start_and_end_times
@@ -64,6 +66,35 @@ def print_cmd_and_times(func):
     def wrapper(*args, **kwargs):
         return func(*args, **kwargs)
     return wrapper
+
+
+#####################################
+# Interate sample folders decorator #
+#####################################
+
+# # Optionally accepts a single directory or matches a pattern for processing multiple directories
+def iterate_dirs(dir_paths=None, pattern=None):
+    def decorator(func):
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs):
+            local_dir_paths = dir_paths  # Copy the dir_paths argument to a local variable
+            
+            # Get directories based on pattern only if dir_paths is not provided
+            if local_dir_paths is None:
+                local_dir_paths = [d for d in os.listdir(os.getcwd()) if (os.path.isdir(os.path.join(os.getcwd(), d)) and re.fullmatch(fnmatch.translate(pattern), d))]
+                local_dir_paths = sorted(local_dir_paths, key=lambda x: (len(x), x))  # Sort by length of string, then numerically
+            
+            print(f"\n  [bright_black]Processing these folders: {local_dir_paths}[/]\n")
+            
+            # Call the wrapped function for each directory path
+            for dir_name in tqdm(local_dir_paths, desc="  ", ncols=100, dynamic_ncols=True, unit="dir", leave=True):
+                dir_path = os.path.join(os.getcwd(), dir_name)
+
+                print(f"\n\n\n  Processing: [gold3]{dir_name}[/]")  
+                func(dir_path, **kwargs)
+                print(f"  Finished processing: [gold3]{dir_name}[/]\n")  
+        return wrapper
+    return decorator
 
 
 #########################################
@@ -101,15 +132,15 @@ def timer(original_func_name):
         return wrapper_timer
     return decorator
 
-def task_status(message=""):
+def task_status(message="Processing..."):
     """
-    A decorator to show a console status icon spinner in bold green for tasks that are processing.
+    A decorator to show a console status icon in bold green for tasks that are processing.
     """
     def decorator(func):
         @functools.wraps(func)
         def wrapper(*args, **kwargs):
             console = Console()
-            with console.status("[bold green]{}\n".format(message)) as status:
+            with console.status("[bold green]{}\n".format(message)) as status: # Added \n here
                 result = func(*args, **kwargs)
                 status.update("[bold green]Done!")
             return result
@@ -118,7 +149,7 @@ def task_status(message=""):
 
 def function_decorator(message=""):
     """
-    A decorator that combines `timer`, and `task_status`.
+    A decorator that combines `iterate_dirs`, `timer`, and `task_status`.
     """
     def decorator(func):
         original_func_name = func.__name__   # Capture the function name here
@@ -166,3 +197,6 @@ def print_table(func):
         
         return result
     return wrapper
+
+# Daniel Rijsketic 08/17-30/2023 (Heifets lab)
+# Wesley Zhao 08/30/2021 (Heifets lab)
