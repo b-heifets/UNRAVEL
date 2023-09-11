@@ -1,27 +1,15 @@
 #!/usr/bin/env python3
 
-from fnmatch import fnmatch
 import functools
 import os
+import re
 import sys
 import time
 from datetime import datetime
-from pathlib import Path
 from rich import print
 from rich.console import Console
 from rich.table import Table
 from rich.traceback import install
-from tqdm import tqdm
-
-DEFAULT_SAMPLE_DIR_PATTERN = 'sample??'
-
-def process_samples_in_dir(process_sample_func, sample_list=None, sample_dirs_pattern=DEFAULT_SAMPLE_DIR_PATTERN, args=None):
-    samples_to_process = sample_list or [d.name for d in Path('.').iterdir() if d.is_dir() and fnmatch(d.name, sample_dirs_pattern)]
-    print(f"\n  [bright_black]Processing these folders: {samples_to_process}[/]\n")
-
-    for sample in tqdm(samples_to_process):
-        print(f"\n\n\n  Processing: [gold3]{sample}[/]")
-        process_sample_func(sample, args)
 
 
 ####################
@@ -84,7 +72,7 @@ def print_cmd_and_times(func):
 
 def timer(original_func_name): 
     """
-    A decorator to time a function, print the function name, and print the arguments used.
+    A decorator to time a function
     """
     def decorator(func):
         @functools.wraps(func)
@@ -113,7 +101,6 @@ def timer(original_func_name):
         return wrapper_timer
     return decorator
 
-
 def task_status(message=""):
     """
     A decorator to show a console status icon spinner in bold green for tasks that are processing.
@@ -129,7 +116,7 @@ def task_status(message=""):
         return wrapper
     return decorator
 
-def print_func_name_args_status_duration(message=""):
+def function_decorator(message=""):
     """
     A decorator that combines `timer`, and `task_status`.
     """
