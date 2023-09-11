@@ -29,13 +29,6 @@ def parse_args():
 @unrvl.print_func_name_args_status_duration()
 def load_img_resample_reorient_save_nii(sample_dir, args=None):
 
-    # Skip processing if the output file already exists
-    nifti_dir = Path(sample_dir, "niftis")
-    nifti_path = nifti_dir / args.output
-    if nifti_path.exists():
-        print(f"\n  [default bold]{nifti_path}[/] already exists. Skipping.")
-        return
-
     # Load autofluo image
     czi_path = glob(f"{sample_dir}/*.czi")    
     if czi_path:
@@ -69,18 +62,26 @@ def load_img_resample_reorient_save_nii(sample_dir, args=None):
     img_reoriented = np.flip(np.rot90(img_resampled, axes=(1, 0)), axis=1)
 
     # Save image
+    nifti_dir = Path(sample_dir, "niftis").resolve()
     nifti_dir.mkdir(exist_ok=True)
+    nifti_path = nifti_dir / args.output
     affine = np.eye(4) * (args.res / 1000)
     affine[3, 3] = 1
     nifti_img = nib.Nifti1Image(img_reoriented, affine)
     nifti_img.header.set_data_dtype(np.int16)
     nib.save(nifti_img, str(nifti_path))
-    print(f"\n  Output: [default bold]{nifti_path}")
+    print(f"\n  Output: [default bold]{nifti_path}[/]")
 
 @unrvl.print_cmd_and_times
 def main():
     args = parse_args()
-    unrvl.process_samples_in_dir(load_img_resample_reorient_save_nii, sample_list=args.dir_list, sample_dirs_pattern=args.dir_pattern, args=args)
+
+    # Define output path relative to sample folder
+    nifti_path = Path("niftis", args.output)
+
+    # Process all samples in working dir or only those specified. 
+    # If running script from in a sample folder, just process that sample.
+    unrvl.process_samples_in_dir(load_img_resample_reorient_save_nii, sample_list=args.dir_list, sample_dirs_pattern=args.dir_pattern, output=nifti_path, args=args)
 
 
 if __name__ == '__main__':

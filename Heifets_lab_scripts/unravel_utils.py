@@ -15,11 +15,28 @@ from tqdm import tqdm
 
 DEFAULT_SAMPLE_DIR_PATTERN = 'sample??'
 
-def process_samples_in_dir(process_sample_func, sample_list=None, sample_dirs_pattern=DEFAULT_SAMPLE_DIR_PATTERN, args=None):
+def process_samples_in_dir(process_sample_func, sample_list=None, sample_dirs_pattern=DEFAULT_SAMPLE_DIR_PATTERN, output=None, args=None):
+    current_dir = Path('.').resolve().name  # Get the current directory name
     samples_to_process = sample_list or [d.name for d in Path('.').iterdir() if d.is_dir() and fnmatch(d.name, sample_dirs_pattern)]
+
+    # Check if the list is empty. If so, use the current directory.
+    if not samples_to_process:
+        samples_to_process.append(current_dir)
+
+    # Check if the current directory name is in samples_to_process
+    samples_to_process = ['.' if sample == current_dir else sample for sample in samples_to_process]
+
     print(f"\n  [bright_black]Processing these folders: {samples_to_process}[/]\n")
 
     for sample in tqdm(samples_to_process):
+
+        # Skip processing if the output file already exists
+        if output:
+            output_path = Path(sample, output)
+            if output_path.exists():
+                print(f"\n\n  [gold3]{output_path}[/] already exists. Skipping.\n")
+                continue # Skip to next sample
+        
         print(f"\n\n\n  Processing: [gold3]{sample}[/]")
         process_sample_func(sample, args)
 
