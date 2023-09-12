@@ -2,6 +2,8 @@
 
 from fnmatch import fnmatch
 import functools
+import numpy as np
+import nibabel as nib
 import os
 import sys
 import time
@@ -15,11 +17,28 @@ from tqdm import tqdm
 
 DEFAULT_SAMPLE_DIR_PATTERN = 'sample??'
 
-def process_samples_in_dir(process_sample_func, sample_list=None, sample_dirs_pattern=DEFAULT_SAMPLE_DIR_PATTERN, args=None):
+def process_samples_in_dir(process_sample_func, sample_list=None, sample_dirs_pattern=DEFAULT_SAMPLE_DIR_PATTERN, output=None, args=None):
+    current_dir = Path('.').resolve().name  # Get the current directory name
     samples_to_process = sample_list or [d.name for d in Path('.').iterdir() if d.is_dir() and fnmatch(d.name, sample_dirs_pattern)]
+
+    # Check if the list is empty. If so, use the current directory.
+    if not samples_to_process:
+        samples_to_process.append(current_dir)
+
+    # Check if the current directory name is in samples_to_process
+    samples_to_process = ['.' if sample == current_dir else sample for sample in samples_to_process]
+
     print(f"\n  [bright_black]Processing these folders: {samples_to_process}[/]\n")
 
     for sample in tqdm(samples_to_process):
+
+        # Skip processing if the output file already exists
+        if output:
+            output_path = Path(sample, output)
+            if output_path.exists():
+                print(f"\n\n  [gold3]{output_path}[/] already exists. Skipping.\n")
+                continue # Skip to next sample
+        
         print(f"\n\n\n  Processing: [gold3]{sample}[/]")
         process_sample_func(sample, args)
 
@@ -147,6 +166,21 @@ def print_func_name_args_status_duration(message=""):
 ####################
 # Other decorators #
 ####################
+
+def save_as_nifti(ndarray, output, x_res, y_res, z_res, data_type=np.int16):
+
+    output = Path(output).resolve()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Create the affine matrix with the appropriate resolution (converting microns to mm)
+    affine = np.diag([x_res / 1000, y_res / 1000, z_res / 1000, 1])
+    
+    # Create and save the NIFTI image
+    nifti_img = nib.Nifti1Image(ndarray, affine)
+    nifti_img.header.set_data_dtype(data_type)
+    nib.save(nifti_img, str(output))
+    
+    print(f"\n  Output: [default bold]{output}[/]\n")
 
 def print_table(func):
     """

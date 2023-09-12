@@ -10,7 +10,7 @@ from metadata import get_metadata_from_czi
 from pathlib import Path
 from rich import print
 from scipy import ndimage
-from tifffile import imread
+from tifffile import imread, imwrite
 
 
 def parse_args():
@@ -18,7 +18,6 @@ def parse_args():
     parser.add_argument('--dir_pattern', help='Pattern for folders in working dir to process (Default: sample??)', default='sample??', metavar='')
     parser.add_argument('--dir_list', help='Folders to process in working dir (e.g., sample01 sample02) (Default: process sample??) ', nargs='+', default=None, metavar='')
     parser.add_argument('-t', '--tif_dir', help='Name of folder with autofluo tifs', default=None, metavar='')
-    parser.add_argument('-o', '--output', help='img.nii.gz (default: clar_res0.05.nii.gz)', default="clar_res0.05.nii.gz", metavar='')
     parser.add_argument('-c', '--channel', help='Channel number (Default: 0 for 1st channel [usually autofluo])', default=0, type=int, metavar='')
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns (Default: get via metadata)', default=None, type=float, metavar='')
     parser.add_argument('-z', '--z_res', help='z voxel size in microns (Default: get via metadata)', default=None, type=float, metavar='')
@@ -26,15 +25,9 @@ def parse_args():
     parser.add_argument('-zo', '--zoom_order', help='Order of spline interpolation. Range: 0-5. (Default: 1))', default=1, type=int, metavar='')
     return parser.parse_args()
 
-@unrvl.print_func_name_args_status_duration()
-def load_img_resample_reorient_save_nii(sample_dir, args=None):
 
-    # Skip processing if the output file already exists
-    nifti_dir = Path(sample_dir, "niftis")
-    nifti_path = nifti_dir / args.output
-    if nifti_path.exists():
-        print(f"\n  [default bold]{nifti_path}[/] already exists. Skipping.")
-        return
+@unrvl.print_func_name_args_status_duration()
+def load_img_resample_reorient_save(sample_dir, args=None):
 
     # Load autofluo image
     czi_path = glob(f"{sample_dir}/*.czi")    
@@ -68,20 +61,29 @@ def load_img_resample_reorient_save_nii(sample_dir, args=None):
     # Reorient image
     img_reoriented = np.flip(np.rot90(img_resampled, axes=(1, 0)), axis=1)
 
-    # Save image
-    nifti_dir.mkdir(exist_ok=True)
-    affine = np.eye(4) * (args.res / 1000)
-    affine[3, 3] = 1
-    nifti_img = nib.Nifti1Image(img_reoriented, affine)
-    nifti_img.header.set_data_dtype(np.int16)
-    nib.save(nifti_img, str(nifti_path))
-    print(f"\n  Output: [default bold]{nifti_path}")
+    # Save image as tif series (for brain_mask.py)
+    tif_dir = Path(sample_dir, "reg_input", f"autofl_{args.res}um_tifs")
+    tif_dir.mkdir(parents=True, exist_ok=True)
+    for i, slice_ in enumerate(img_reoriented):
+        slice_file_path = tif_dir / f"slice_{i:04d}.tif"
+        imwrite(str(slice_file_path), slice_)
+    print(f"\n  Output: [default bold]{tif_dir}[/]\n")
+    
 
 @unrvl.print_cmd_and_times
 def main():
     args = parse_args()
-    unrvl.process_samples_in_dir(load_img_resample_reorient_save_nii, sample_list=args.dir_list, sample_dirs_pattern=args.dir_pattern, args=args)
+
+    # Define output path relative to sample folder
+    output_path = Path("reg_input", f"autofl_{args.res}um_tifs")
+
+    # Process all samples in working dir or only those specified. 
+    # If running script from in a sample folder, just process that sample.
+    unrvl.process_samples_in_dir(load_img_resample_reorient_save, sample_list=args.dir_list, sample_dirs_pattern=args.dir_pattern, output=output_path, args=args)
 
 
 if __name__ == '__main__':
     main()
+
+
+### To do: import metadata function for tifs. Add metadata function to unravel_utils.py
