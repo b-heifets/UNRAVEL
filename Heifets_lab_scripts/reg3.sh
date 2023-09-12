@@ -3,7 +3,7 @@
 if [[ $# == 0 || "$1" == "-h" || "$1" == "--help" || "$1" == "help" ]] ; then
   echo '
 From experiment folder run: 
-reg3.sh <orient code> <0, 1, or ./img.nii.gz> <w/l/r> <label res: 25> [sample?? list]
+reg3.sh <orient code> <0, 1, or ./input_img.nii.gz> <w/l/r> <label res: 25> [sample?? list]
 
 Input: ./<EXP>/<sample??>/niftis/sample??_??x_down_*_chan.nii.gz
 Optional brain mask (faster): ./nifti/clar_res0.05_mask.nii.gz
@@ -46,7 +46,7 @@ for sample in ${sample_array[@]}; do
     # Use mask for faster registration if it exists (brain_mask.sh)
     mask=niftis/autofl_50um_seg_ilastik.nii.gz
     autofl_masked=niftis/clar_res0.05_masked.nii.gz
-    if [ -f $mask ] && [ -f $mask ] ; then
+    if [ -f $mask ] && [ -f $autofl_masked ] ; then
       reg_cmd=$(echo "registration3.sh -i $autofl_masked -o $1 -m split -v $4 -t $2 -x $mask")
     else
       reg_cmd=$(echo "registration3.sh -o $1 -m split -v $4 -t $2")

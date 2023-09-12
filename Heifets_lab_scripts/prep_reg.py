@@ -12,8 +12,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Load channel of *.czi (default) or ./<tif_dir>/*.tif, resample, reorient, and save as ./niftis/<img>.nii.gz')
     parser.add_argument('--dir_pattern', help='Pattern for folders in working dir to process (Default: sample??)', default='sample??', metavar='')
     parser.add_argument('--dir_list', help='Folders to process in working dir (e.g., sample01 sample02) (Default: process sample??) ', nargs='+', default=None, metavar='')
+    parser.add_argument('-c', '--channel', help='.czi channel number (Default: 0 for 1st channel [usually autofluo])', default=0, type=int, metavar='')
     parser.add_argument('-t', '--tif_dir', help='Name of folder with raw autofluo tifs', default=None, metavar='')
-    parser.add_argument('-c', '--channel', help='Channel number (Default: 0 for 1st channel [usually autofluo])', default=0, type=int, metavar='')
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns (Default: get via metadata)', default=None, type=float, metavar='')
     parser.add_argument('-z', '--z_res', help='z voxel size in microns (Default: get via metadata)', default=None, type=float, metavar='')
     parser.add_argument('-r', '--res', help='Resample to this resolution in microns (Default: 50)', default=50, type=int, metavar='')
@@ -34,7 +34,8 @@ def resample_reorient(sample_dir, args=None):
             xy_res_metadata, z_res_metadata = unrvl.xyz_res_from_czi(czi_path)
 
     elif args.tif_dir:
-        img = unrvl.load_tif_series(args.tif_dir)
+        tif_dir_path = Path(sample_dir, args.tif_dir)
+        img = unrvl.load_tif_series(tif_dir_path)
 
         # Get voxel size from metadata
         if args.xy_res is None or args.z_res is None:
