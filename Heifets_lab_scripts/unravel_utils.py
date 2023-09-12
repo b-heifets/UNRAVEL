@@ -7,13 +7,21 @@ import nibabel as nib
 import os
 import sys
 import time
+from aicspylibczi import CziFile
 from datetime import datetime
+from glob import glob
 from pathlib import Path
 from rich import print
 from rich.console import Console
 from rich.table import Table
 from rich.traceback import install
+from tifffile import imread, imwrite
 from tqdm import tqdm
+
+
+##########################################
+# Process all or selected sample folders #
+##########################################
 
 DEFAULT_SAMPLE_DIR_PATTERN = 'sample??'
 
@@ -43,9 +51,9 @@ def process_samples_in_dir(process_sample_func, sample_list=None, sample_dirs_pa
         process_sample_func(sample, args)
 
 
-####################
-# Script decorator #
-####################
+###########################
+# Main function decorator #
+###########################
 
 def print_cmd_decorator(func):
     """
@@ -97,9 +105,9 @@ def print_cmd_and_times(func):
     return wrapper
 
 
-#########################################
-# Decorators for the function_decorator #
-#########################################
+######################
+# Function decorator #
+######################
 
 def timer(original_func_name): 
     """
@@ -163,9 +171,36 @@ def print_func_name_args_status_duration(message=""):
         return wrapper
     return decorator
 
-####################
-# Other decorators #
-####################
+
+###############
+# Load images #
+###############
+
+def load_czi_channel(czi_path, channel):
+    if czi_path:
+        czi_path = czi_path[0]
+        czi = CziFile(czi_path)
+        ndarray = czi.read_image(C=channel)[0]
+        ndarray = np.squeeze(ndarray)
+        ndarray = np.transpose(ndarray, (2, 1, 0))
+        return ndarray
+    else:
+        print(f"  [red bold]No .czi files found in {czi_path}[/]")
+        return None
+
+def load_tif_series(tif_dir_path):
+    tif_path = glob(f"{tif_dir_path}/*.tif")
+    if tif_path:
+        ndarray = np.stack([imread(tif) for tif in tif_dir_path ], axis=-1)
+        return ndarray
+    else:
+        print(f"  [red bold]No .tif files found in {tif_dir_path}[/]")
+        return None
+    
+
+###############
+# Save images #
+###############
 
 def save_as_nifti(ndarray, output, x_res, y_res, z_res, data_type=np.int16):
 
@@ -181,6 +216,23 @@ def save_as_nifti(ndarray, output, x_res, y_res, z_res, data_type=np.int16):
     nib.save(nifti_img, str(output))
     
     print(f"\n  Output: [default bold]{output}[/]\n")
+
+def save_as_tif_series(ndarray, tif_dir_out):
+    tif_dir_out.mkdir(parents=True, exist_ok=True)
+    for i, slice_ in enumerate(ndarray):
+        slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
+        imwrite(str(slice_file_path), slice_)
+    print(f"\n  Output: [default bold]{tif_dir_out}[/]\n")
+    
+
+################
+# Get metadata #
+################
+
+
+###################
+# Other functions #
+###################
 
 def print_table(func):
     """
