@@ -4,7 +4,6 @@ import argparse
 import numpy as np
 import unravel_utils as unrvl
 from glob import glob
-from metadata import get_metadata_from_czi
 from pathlib import Path
 from rich import print
 from scipy import ndimage
@@ -13,7 +12,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Load channel of *.czi (default) or ./<tif_dir>/*.tif, resample, reorient, and save as ./niftis/<img>.nii.gz')
     parser.add_argument('--dir_pattern', help='Pattern for folders in working dir to process (Default: sample??)', default='sample??', metavar='')
     parser.add_argument('--dir_list', help='Folders to process in working dir (e.g., sample01 sample02) (Default: process sample??) ', nargs='+', default=None, metavar='')
-    parser.add_argument('-t', '--tif_dir', help='Name of folder with autofluo tifs', default=None, metavar='')
+    parser.add_argument('-t', '--tif_dir', help='Name of folder with raw autofluo tifs', default=None, metavar='')
     parser.add_argument('-c', '--channel', help='Channel number (Default: 0 for 1st channel [usually autofluo])', default=0, type=int, metavar='')
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns (Default: get via metadata)', default=None, type=float, metavar='')
     parser.add_argument('-z', '--z_res', help='z voxel size in microns (Default: get via metadata)', default=None, type=float, metavar='')
@@ -29,18 +28,26 @@ def resample_reorient(sample_dir, args=None):
     czi_path = glob(f"{sample_dir}/*.czi")    
     if czi_path:
         img = unrvl.load_czi_channel(czi_path, args.channel)
+
+        # Get voxel size from metadata
+        if args.xy_res is None or args.z_res is None:
+            xy_res_metadata, z_res_metadata = unrvl.xyz_res_from_czi(czi_path)
+
     elif args.tif_dir:
         img = unrvl.load_tif_series(args.tif_dir)
 
+        # Get voxel size from metadata
+        if args.xy_res is None or args.z_res is None:
+            path_to_first_tif = glob(f"{sample_dir}/{args.tif_dir}/*.tif")[0]
+            xy_res_metadata, z_res_metadata = unrvl.xyz_res_from_tif(path_to_first_tif)
+
     if img is None:
-        print(f"  [red]No .czi files found and tif_dir is not specified for {sample_dir}[/]")
+        print(f"\n  [red]No .czi files found and tif_dir is not specified for {sample_dir}[/]\n")
         return
 
     # Resample image
-    if args.xy_res is None or args.z_res is None:
-        _, _, _, xy_res_metadata, _, z_res_metadata = get_metadata_from_czi(czi_path)
-        args.xy_res = args.xy_res or xy_res_metadata # If xy_res is None, use xy_res_metadata
-        args.z_res = args.z_res or z_res_metadata
+    args.xy_res = args.xy_res or xy_res_metadata # If xy_res is None, use xy_res_metadata
+    args.z_res = args.z_res or z_res_metadata
     zf_xy = args.xy_res / args.res # Zoom factor
     zf_z = args.z_res / args.res
     img_resampled = ndimage.zoom(img, (zf_xy, zf_xy, zf_z), order=args.zoom_order)
@@ -51,6 +58,7 @@ def resample_reorient(sample_dir, args=None):
     # Save image as tif series (for brain_mask.py)
     tif_dir_out = Path(sample_dir, "reg_input", f"autofl_{args.res}um_tifs")
     unrvl.save_as_tif_series(img_reoriented, tif_dir_out)    
+
 
 @unrvl.print_cmd_and_times
 def main():

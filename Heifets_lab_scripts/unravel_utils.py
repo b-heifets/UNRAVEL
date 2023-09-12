@@ -6,18 +6,19 @@ import numpy as np
 import nibabel as nib
 import os
 import sys
+import tifffile
 import time
 from aicspylibczi import CziFile
 from datetime import datetime
 from glob import glob
+from lxml import etree
 from pathlib import Path
 from rich import print
 from rich.console import Console
 from rich.table import Table
 from rich.traceback import install
-from tifffile import imread, imwrite
+from tifffile import imread, imwrite 
 from tqdm import tqdm
-
 
 ##########################################
 # Process all or selected sample folders #
@@ -229,6 +230,33 @@ def save_as_tif_series(ndarray, tif_dir_out):
 # Get metadata #
 ################
 
+def xyz_res_from_czi(czi_path):
+    """
+    Extracts metadata from .czi file and returns tuple with xy_res and z_res (voxel size) in microns.
+    """
+    czi = CziFile(czi_path)
+    xml_root = czi.meta
+    xy_res, z_res = None, None
+    scaling_info = xml_root.find(".//Scaling")
+    if scaling_info is not None:
+        xy_res = float(scaling_info.find("./Items/Distance[@Id='X']/Value").text)*1e6
+        z_res = float(scaling_info.find("./Items/Distance[@Id='Z']/Value").text)*1e6
+    return xy_res, z_res
+
+def xyz_res_from_tif(path_to_first_tif_in_series):
+    """
+    Extracts metadata from .ome.tif file and returns tuple with xy_res and z_res in microns.
+    """
+    with tifffile.TiffFile(path_to_first_tif_in_series) as tif:
+        meta = tif.pages[0].tags
+        ome_xml_str = meta['ImageDescription'].value
+        ome_xml_root = etree.fromstring(ome_xml_str.encode('utf-8'))
+        default_ns = ome_xml_root.nsmap[None]
+        pixels_element = ome_xml_root.find(f'.//{{{default_ns}}}Pixels')
+        xy_res, z_res = None, None
+        xy_res = float(pixels_element.get('PhysicalSizeX'))
+        z_res = float(pixels_element.get('PhysicalSizeZ'))
+        return xy_res, z_res
 
 ###################
 # Other functions #
