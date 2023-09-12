@@ -74,6 +74,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-### To do: import metadata function for tifs. Add metadata function to unravel_utils.py
