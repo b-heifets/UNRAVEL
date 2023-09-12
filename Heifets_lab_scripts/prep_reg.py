@@ -27,7 +27,7 @@ def parse_args():
 
 
 @unrvl.print_func_name_args_status_duration()
-def load_img_resample_reorient_save(sample_dir, args=None):
+def resample_reorient(sample_dir, args=None):
 
     # Load autofluo image
     czi_path = glob(f"{sample_dir}/*.czi")    
@@ -59,7 +59,7 @@ def load_img_resample_reorient_save(sample_dir, args=None):
     img_resampled = ndimage.zoom(img, (zf_xy, zf_xy, zf_z), order=args.zoom_order)
 
     # Reorient image
-    img_reoriented = np.flip(np.rot90(img_resampled, axes=(1, 0)), axis=1)
+    img_reoriented = np.flip(np.einsum('zyx->xzy', img_resampled), axis=1)
 
     # Save image as tif series (for brain_mask.py)
     tif_dir = Path(sample_dir, "reg_input", f"autofl_{args.res}um_tifs")
@@ -79,7 +79,7 @@ def main():
 
     # Process all samples in working dir or only those specified. 
     # If running script from in a sample folder, just process that sample.
-    unrvl.process_samples_in_dir(load_img_resample_reorient_save, sample_list=args.dir_list, sample_dirs_pattern=args.dir_pattern, output=output_path, args=args)
+    unrvl.process_samples_in_dir(resample_reorient, sample_list=args.dir_list, sample_dirs_pattern=args.dir_pattern, output=output_path, args=args)
 
 
 if __name__ == '__main__':
