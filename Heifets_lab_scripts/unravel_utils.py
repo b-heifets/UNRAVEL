@@ -2,6 +2,8 @@
 
 from fnmatch import fnmatch
 import functools
+import numpy as np
+import nibabel as nib
 import os
 import sys
 import time
@@ -164,6 +166,21 @@ def print_func_name_args_status_duration(message=""):
 ####################
 # Other decorators #
 ####################
+
+def save_as_nifti(ndarray, output, x_res, y_res, z_res, data_type=np.int16):
+
+    output = Path(output).resolve()
+    output.parent.mkdir(parents=True, exist_ok=True)
+    
+    # Create the affine matrix with the appropriate resolution (converting microns to mm)
+    affine = np.diag([x_res / 1000, y_res / 1000, z_res / 1000, 1])
+    
+    # Create and save the NIFTI image
+    nifti_img = nib.Nifti1Image(ndarray, affine)
+    nifti_img.header.set_data_dtype(data_type)
+    nib.save(nifti_img, str(output))
+    
+    print(f"\n  Output: [default bold]{output}[/]\n")
 
 def print_table(func):
     """
