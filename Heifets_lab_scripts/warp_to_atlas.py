@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import nibabel as nib
 import numpy as np
 import os
 import subprocess
@@ -12,12 +11,13 @@ import unravel_utils as unrvl
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Warp image data to atlas space')
-    parser.add_argument('-i', '--input', required=True, help='Input downsampled .nii.gz to warp', metavar='')
-    parser.add_argument('-rd', '--regdir', required=True, help='Folder w/ intermediate reg images (Default: clar_allen_reg)', default='clar_allen_reg', metavar='')
+    parser.add_argument('-i', '--input', required=True, help='Input autofl.nii.gz to warp (Default: reg_input/autofl_50um.nii.gz)', default='reg_input/autofl_50um.nii.gz', metavar='')
+    parser.add_argument('-ir', '--input_res', help='Resolution of input in microns (Default: 50)', default=50, type=int, metavar='')
+    parser.add_argument('-rd', '--reg_dir', required=True, help='Folder w/ intermediate reg images (Default: clar_allen_reg)', default='clar_allen_reg', metavar='')
     parser.add_argument('-oc', '--ort_code', required=True, help='(3 letter orientation code: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Interior)', metavar='')
     parser.add_argument('-t', '--template', help='Template to warp to (path/gubra_template_25um.nii.gz)', default="/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz",  metavar='')
-    parser.add_argument('-a', '--atlas_name', help='Name of atlas (Default: gubra)', default="gubra", metavar='')
-    parser.add_argument('-r', '--res', help='Atlas resolution in microns (Default: 25)', default=25, type=int, metavar='')
+    parser.add_argument('-an', '--atlas_name', help='Name of atlas (Default: gubra)', default="gubra", metavar='')
+
     return parser.parse_args()
 
 def check_ants_path():
@@ -34,9 +34,9 @@ def check_ants_path():
         sys.exit(1)
 
 def reorient_nii(image, ort_cord):
-    """
+    '''
     Reorient a 3D image based on the orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention).
-    """
+    '''
 
     # Define the anatomical direction mapping. The first letter is the direction of the first axis, etc.
     direction_map = {
@@ -71,29 +71,29 @@ def reorient_nii(image, ort_cord):
 
 
 def reorient_and_pad_image(args=None):
-    img = nib.load(args.input)
-    img_data = img.get_fdata()
+    img = unrvl.load_nii(args.input)
 
     # Reorient the image
     # (Assuming you have a function to reorient the image based on ort_code)
-    img_data_reoriented = reorient_nii(img_data, args.ort_code) 
+    img_reoriented = reorient_nii(img, args.ort_code) 
 
     # Padding the image
     pad_percent = 0.15  # 15%
-    pad_x = int(img_data_reoriented.shape[0] * pad_percent)
-    pad_y = int(img_data_reoriented.shape[1] * pad_percent)
+    pad_x = int(img_reoriented.shape[0] * pad_percent)
+    pad_y = int(img_reoriented.shape[1] * pad_percent)
     pad_z = 0
-    img_data_padded = np.pad(img_data_reoriented, ((pad_x, pad_x), (pad_y, pad_y), (pad_z, pad_z)), mode='constant')
+    img_data_padded = np.pad(img_reoriented, ((pad_x, pad_x), (pad_y, pad_y), (pad_z, pad_z)), mode='constant')
 
     # Change the type to 'short'
-    img_data_short = img_data_padded.astype(np.int16)
+    img_data_short = img_data_padded.astype(np.uint16)
 
     # Save the new image
-    img_new = nib.Nifti1Image(img_data_short, img.affine)
     base = os.path.basename(args.input)
     img_name = os.path.splitext(base)[0]
     img_ort = f'{img_name}_ort.nii.gz'
-    nib.save(img_new, img_ort)
+    unrvl.save_as_nii(img_data_padded, img_ort, )
+    # img_new = nib.Nifti1Image(img_data_short, img.affine)
+    # nib.save(img_new, img_ort)
 
     return img_name, img_ort
 
@@ -107,7 +107,7 @@ def warp_to_atlas(img_name, img_ort, args):
                 f"-r {args.template} "\
                 f"-i {img_ort} "\
                 "-n Bspline "\
-                f"-t [{args.regdir}/init_tform.mat, 1] {args.regdir}/allen_clar_ants1InverseWarp.nii.gz [{args.regdir}/allen_clar_ants0GenericAffine.mat, 1] "\
+                f"-t [{args.reg_dir}/init_tform.mat, 1] {args.reg_dir}/allen_clar_ants1InverseWarp.nii.gz [{args.reg_dir}/allen_clar_ants0GenericAffine.mat, 1] "\
                 f"-o {warped_img}", \
                 shell=True)
     

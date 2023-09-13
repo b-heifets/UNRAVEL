@@ -21,7 +21,7 @@ Optional arguments (-l overrides -m & -v) ######################################
   -s:  side, if registering a hemisphere instead of whole brain: 
        <rh> (right hemisphere) or <lh> (left)
   -t:  olfactory bulb exists <1>, doesn'\''t exist <0>, or <path/custom_template.nii.gz> (default: 1)
-  -x:  ./mask.nii.gz (e.g., ./clar_allen_res/clar_res0.05_mask.nii.gz (default: no mask, which is slower)
+  -x:  ./mask.nii.gz (e.g., ./reg_input/autofl_50um_brain_mask.nii.gz (default: no mask, which is slower)
 
 Outputs:
   reg_final/clar_downsample_res(vox)um.nii.gz : Autofluo data downsampled and oriented to "standard"
@@ -91,12 +91,12 @@ function ifdsntexistrun() {
   fi
 }
 
-# Add clar_res0.05.nii.gz to ./clar_allen_reg 
+# Add autofl_50um.nii.gz to ./clar_allen_reg 
 if [[ -z $inclar ]]; then 
-  inclar=$PWD/niftis/clar_res0.05.nii.gz #default
+  inclar=$PWD/reg_input/autofl_50um.nii.gz #default
 fi 
 
-resclar=${regdir}/clar_res0.05.nii.gz
+resclar=${regdir}/autofl_50um.nii.gz
 if [[ ! -f $res_clar ]]; then 
   if [[ -f $inclar ]]; then 
     cp $inclar $resclar
@@ -107,27 +107,27 @@ if [[ ! -f $res_clar ]]; then
 fi
 
 # N4 bias correct
-biasclar=$regdir/clar_res0.05_bias.nii.gz
+biasclar=$regdir/autofl_50um_bias.nii.gz
 if [[ -z $mask ]]; then
   ifdsntexistrun $biasclar "Bias-correcting 50 micron autofluo image" \
-N4BiasFieldCorrection -d 3 -i ${regdir}/clar_res0.05.nii.gz -s 2 -t [0.15,0.01,200] -o $biasclar
+N4BiasFieldCorrection -d 3 -i ${regdir}/autofl_50um.nii.gz -s 2 -t [0.15,0.01,200] -o $biasclar
 else 
   ifdsntexistrun $biasclar "Bias-correcting 50 micron autofluo image using mask" \
-N4BiasFieldCorrection -d 3 -i ${regdir}/clar_res0.05.nii.gz -s 2 -t [0.15,0.01,200] -o $biasclar -x $mask
+N4BiasFieldCorrection -d 3 -i ${regdir}/autofl_50um.nii.gz -s 2 -t [0.15,0.01,200] -o $biasclar -x $mask
 fi
 
 # Pad image
-padclar=$regdir/clar_res0.05_pad.nii.gz
+padclar=$regdir/autofl_50um_pad.nii.gz
 ifdsntexistrun $padclar "Padding image with 15 percent of voxels" \
 c3d $biasclar -pad 15% 15% 0 -o ${padclar}
 
 # Orient
-ortclar=$regdir/clar_res0.05_ort.nii.gz
+ortclar=$regdir/autofl_50um_ort.nii.gz
 ifdsntexistrun $ortclar "Orienting autofluo to standard orientation" \
 c3d $padclar -orient $ort -interpolation Cubic -type float -o $ortclar #-type < char | uchar | short | ushort | int | uint | float | double > ; -interpolation <NearestNeighbor|Linear|Cubic|Sinc|Gaussian> [param]
 
 # Smooth
-smclar=$regdir/clar_res0.05_sm.nii.gz
+smclar=$regdir/autofl_50um_sm.nii.gz
 ifdsntexistrun $smclar "Smoothing autofluo image" \
 c3d $ortclar -smooth 0.25vox -o $smclar
 

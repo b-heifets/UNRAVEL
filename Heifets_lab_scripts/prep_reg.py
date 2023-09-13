@@ -25,7 +25,7 @@ def parse_args():
 def resample_reorient(sample_dir, args=None):
 
     # Load autofluo image
-    czi_path = glob(f"{sample_dir}/*.czi")    
+    czi_path = Path(glob(f"{sample_dir}/*.czi")[0]).resolve()
     if czi_path:
         img = unrvl.load_czi_channel(czi_path, args.channel)
 
@@ -35,7 +35,7 @@ def resample_reorient(sample_dir, args=None):
 
     elif args.tif_dir:
         tif_dir_path = Path(sample_dir, args.tif_dir)
-        img = unrvl.load_tif_series(tif_dir_path)
+        img = unrvl.load_tifs(tif_dir_path)
 
         # Get voxel size from metadata
         if args.xy_res is None or args.z_res is None:
@@ -46,19 +46,26 @@ def resample_reorient(sample_dir, args=None):
         print(f"\n  [red]No .czi files found and tif_dir is not specified for {sample_dir}[/]\n")
         return
 
-    # Resample image
+
+    # Resample autofl image
     args.xy_res = args.xy_res or xy_res_metadata # If xy_res is None, use xy_res_metadata
     args.z_res = args.z_res or z_res_metadata
     zf_xy = args.xy_res / args.res # Zoom factor
     zf_z = args.z_res / args.res
     img_resampled = ndimage.zoom(img, (zf_xy, zf_xy, zf_z), order=args.zoom_order)
 
-    # Reorient image
-    img_reoriented = np.flip(np.einsum('zyx->xzy', img_resampled), axis=1)
+    # Reorient autofluo image
+    # img_reoriented = np.flip(np.einsum('zyx->xzy', img_resampled), axis=1)
+    img_reoriented = np.einsum('zyx->xzy', img_resampled)
 
-    # Save image as tif series (for brain_mask.py)
+    # Save autofl image as tif series (for brain_mask.py)
     tif_dir_out = Path(sample_dir, "reg_input", f"autofl_{args.res}um_tifs")
-    unrvl.save_as_tif_series(img_reoriented, tif_dir_out)    
+    tif_dir_out.mkdir(parents=True, exist_ok=True)
+    unrvl.save_as_tifs(img_reoriented, tif_dir_out)
+
+    # Save autofl image (for reg.py if skipping brain_mask.py and for applying the brain mask)
+    autofl_output = Path(sample_dir, "reg_input", f"autofl_{args.res}um.nii.gz").resolve()
+    unrvl.save_as_nii(img_reoriented, autofl_output, args.res, args.res, args.res, np.uint16)  
 
 
 @unrvl.print_cmd_and_times
@@ -66,7 +73,7 @@ def main():
     args = parse_args()
 
     # Define output path relative to sample folder for skipping samples that have already been processed
-    output_path = Path("reg_input", f"autofl_{args.res}um_tifs")
+    output_path = Path("reg_input", f"autofl_{args.res}um.nii.gz")
 
     # Process all samples in working dir or only those specified. 
     # If running script from in a sample folder, just process that sample.

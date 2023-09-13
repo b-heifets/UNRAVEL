@@ -179,36 +179,65 @@ def print_func_name_args_status_duration(message=""):
 
 def load_czi_channel(czi_path, channel):
     if czi_path:
-        czi_path = czi_path[0]
         czi = CziFile(czi_path)
         ndarray = czi.read_image(C=channel)[0]
         ndarray = np.squeeze(ndarray)
         ndarray = np.transpose(ndarray, (2, 1, 0))
         return ndarray
     else:
-        print(f"  [red bold]No .czi files found in {czi_path}[/]")
+        print(f"  [red bold].czi file not found: {czi_path}[/]")
+        return None
+    
+def load_nii(img_path):
+    if img_path:
+        img = nib.load(img_path)
+        ndarray = img.get_fdata()
+        return ndarray
+    else:
+        print(f"  [red bold].nii.gz file note found: {img_path}[/]")
         return None
 
-def load_tif_series(tif_dir_path):
-    tif_path = glob(f"{tif_dir_path}/*.tif")
-    if tif_path:
-        ndarray = np.stack([imread(tif) for tif in tif_dir_path ], axis=-1)
-        return ndarray
+# def load_tifs(tif_dir_path):
+#     tifs = glob(f"{tif_dir_path}/*.tif")
+#     if tifs:
+#         ndarray = np.stack([imread(tif) for tif in tifs], axis=-1)
+#         return ndarray
+#     else:
+#         print(f"  [red bold]No .tif files found in {tif_dir_path}[/]")
+#         return None
+    
+def load_tifs(tif_dir_path): 
+    tifs = glob(f"{tif_dir_path}/*.tif")
+    if tifs:
+        tifs_sorted = sorted(tifs)
+        tifs_stacked = [imread(tif) for tif in tifs_sorted]
+        ndarray = np.stack(tifs_stacked, axis=0)  # stack along the first dimension (z-axis)
+        return ndarray # shape: z, y, x
     else:
         print(f"  [red bold]No .tif files found in {tif_dir_path}[/]")
         return None
+    
+    # Load brain mask image
+    # seg_dir = str(sample_dir_path / f"{args.tif_dir}_ilastik_seg")
+    # seg_tif_list = glob(f"{seg_dir}/*.tif")
+    # seg_tif_list_sorted = sorted(seg_tif_list)
+    # seg_images_stacked = [tf_imread(tif) for tif in seg_tif_list_sorted]
+    # seg_img = np.stack(seg_images_stacked, axis=0)  # stack along the first dimension (z-axis)
     
 
 ###############
 # Save images #
 ###############
 
-def save_as_nifti(ndarray, output, x_res, y_res, z_res, data_type=np.int16):
+def save_as_nii(ndarray, output, x_res, y_res, z_res, data_type):
 
     output = Path(output).resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
+
+    # Reorient ndarray
+    ndarray = np.transpose(ndarray, (2, 1, 0))
     
-    # Create the affine matrix with the appropriate resolution (converting microns to mm)
+    # Create the affine matrix with the appropriate resolutions (converting microns to mm)
     affine = np.diag([x_res / 1000, y_res / 1000, z_res / 1000, 1])
     
     # Create and save the NIFTI image
@@ -218,7 +247,7 @@ def save_as_nifti(ndarray, output, x_res, y_res, z_res, data_type=np.int16):
     
     print(f"\n  Output: [default bold]{output}[/]\n")
 
-def save_as_tif_series(ndarray, tif_dir_out):
+def save_as_tifs(ndarray, tif_dir_out):
     tif_dir_out.mkdir(parents=True, exist_ok=True)
     for i, slice_ in enumerate(ndarray):
         slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
