@@ -108,7 +108,7 @@ if [ ! -f $output ]; then
   # Trim padding from rev warped image
   echo " " ; echo "  Crop padding for $warped_img"
 
-  fslroi $warped_img ${warped_img::-7}_wo_padding $xmin_rev_warped_img $xsize_rev_warped_img $ymin_rev_warped_img $ysize_rev_warped_img $zmin_rev_warped_img $zsize_rev_warped_img
+  fslroi $warped_img $warped_img $xmin_rev_warped_img $xsize_rev_warped_img $ymin_rev_warped_img $ysize_rev_warped_img $zmin_rev_warped_img $zsize_rev_warped_img
 
   # Native image size:
   cd $tifs_dir ; shopt -s nullglob ; for f in *\ *; do mv "$f" "${f// /_}"; done ; shopt -u nullglob ; cd .. #replace spaces with _ in tif series if needed
@@ -129,6 +129,8 @@ if [ ! -f $output ]; then
     xy_res=$2
     z_res=$3
   fi 
+  xy_res=$(echo "scale=6; ($xy_res)/1000" | bc | sed 's/^\./0./') #convert to mm (sed adds 0)
+  z_res=$(echo "scale=6; ($z_res)/1000" | bc | sed 's/^\./0./')
 
   # Make tmp img for copying resolution
   fslcreatehd $tif_x_dim $tif_y_dim $tif_z_dim 1 $xy_res $xy_res $z_res 1 0 0 0 4 to_native_tmp_img
