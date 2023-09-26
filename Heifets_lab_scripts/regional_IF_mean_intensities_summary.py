@@ -16,7 +16,7 @@ region_ID_name_abbr_csv = "/Users/Danielthy/Documents/_Heifets_lab_data/_Lightsh
 def parse_args():
     parser = argparse.ArgumentParser(description='Plot mean IF intensity for a given region intensity ID for 3+ groups (Tukey\'s HSD is used)')
 
-    parser.add_argument('-r', '--region_id', type=int, help='Region intensity ID', metavar='')
+    parser.add_argument('-r', '--region_id', type=int, nargs='*', help='Space-separated list of Region intensity IDs', metavar='')
     parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', metavar='')
     parser.add_argument('--labels', nargs='*', help='Group Labels in same order', metavar='')
     parser.add_argument('-l', '--lut', help="path to CSV with 'region_ID', 'region_name', 'region_abbr", default=region_ID_name_abbr_csv, metavar='')
@@ -174,4 +174,6 @@ if __name__ == "__main__":
     if args.order and args.labels and len(args.order) != len(args.labels):
         raise ValueError("The number of entries in --order and --labels must match.")
 
-    plot_data(args.region_id, args.order, args.labels, csv_path=args.lut, test_type=args.test, show_plot=args.show_plot)
+    for region in args.region_id:
+        plot_data(region, args.order, args.labels, csv_path=args.lut, test_type=args.test, show_plot=args.show_plot)
+
