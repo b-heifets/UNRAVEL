@@ -16,7 +16,7 @@ region_ID_name_abbr_csv = "/Users/Danielthy/Documents/_Heifets_lab_data/_Lightsh
 def parse_args():
     parser = argparse.ArgumentParser(description='Plot mean IF intensity for a given region intensity ID for 3+ groups (Tukey\'s HSD is used)')
 
-    parser.add_argument('-r', '--region_id', type=int, nargs='*', help='Space-separated list of Region intensity IDs', metavar='')
+    parser.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', metavar='')
     parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', metavar='')
     parser.add_argument('--labels', nargs='*', help='Group Labels in same order', metavar='')
     parser.add_argument('-l', '--lut', help="path to CSV with 'region_ID', 'region_name', 'region_abbr", default=region_ID_name_abbr_csv, metavar='')
@@ -54,6 +54,10 @@ def get_region_details(region_id, csv_path):
     region_row = region_df[region_df["region_ID"] == region_id].iloc[0]
     return region_row["region_name"], region_row["region_abbr"]
 
+def get_all_region_ids(csv_path):
+    """Retrieve all region IDs from the provided CSV."""
+    region_df = pd.read_csv(csv_path)
+    return region_df["region_ID"].tolist()
 
 def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_csv, test_type='tukey', show_plot=False):
     df = load_data(region_id)
@@ -159,14 +163,15 @@ def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_c
     wrapped_title = textwrap.fill(title, 45)  # wraps at x characters. Adjust as needed.
     plt.title(wrapped_title)
     plt.tight_layout()
+    region_abbr = region_abbr.replace("/", "-") # Replace problematic characters for file paths
     plt.savefig(f'region_{region_id}_{region_abbr}.pdf')
+    plt.close()
 
     if args.show_plot:
         plt.show()
 
 if __name__ == "__main__":
-
-    args = parse_args() 
+    args = parse_args()
 
     if (args.order and not args.labels) or (not args.order and args.labels):
         raise ValueError("Both --order and --labels must be provided together.")
@@ -174,6 +179,9 @@ if __name__ == "__main__":
     if args.order and args.labels and len(args.order) != len(args.labels):
         raise ValueError("The number of entries in --order and --labels must match.")
 
-    for region in args.region_id:
-        plot_data(region, args.order, args.labels, csv_path=args.lut, test_type=args.test, show_plot=args.show_plot)
+    # If region IDs are provided using -r, use them; otherwise, get all region IDs from the CSV
+    region_ids_to_process = args.region_ids if args.region_ids else get_all_region_ids(args.lut)
 
+    # Process each region ID
+    for region_id in region_ids_to_process:
+        plot_data(region_id, args.order, args.labels, csv_path=args.lut, test_type=args.test, show_plot=args.show_plot)
