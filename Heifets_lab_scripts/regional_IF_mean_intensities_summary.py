@@ -7,6 +7,7 @@ import numpy as np
 import os
 import pandas as pd
 import seaborn as sns
+import textwrap
 from scipy.stats import dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
@@ -154,9 +155,11 @@ def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_c
     ax.set_xlabel(None)
 
     # Save the plot
-    plt.title(f"{region_name} ({region_abbr})")
+    title = f"{region_name} ({region_abbr})"
+    wrapped_title = textwrap.fill(title, 45)  # wraps at x characters. Adjust as needed.
+    plt.title(wrapped_title)
     plt.tight_layout()
-    plt.savefig(f'region_{region_id}_{region_abbr}.png')
+    plt.savefig(f'region_{region_id}_{region_abbr}.pdf')
 
     if args.show_plot:
         plt.show()
