@@ -20,7 +20,9 @@ def parse_args():
     parser.add_argument('--labels', nargs='*', help='Group Labels in same order', metavar='')
     parser.add_argument('-l', '--lut', help="path to CSV with 'region_ID', 'region_name', 'region_abbr", default=region_ID_name_abbr_csv, metavar='')
     parser.add_argument('-t', '--test', help='Choose between "tukey" and "dunnett" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett'], metavar='')
-    
+    parser.add_argument('-s', '--show_plot', help='Show plot', action='store_true')
+
+
     parser.epilog = "regional_IF_mean_intensities_summary.py -r 1 --order group3 group2 group1 --labels Group_3 Group_2 Group_1"
     return parser.parse_args()
 
@@ -52,7 +54,7 @@ def get_region_details(region_id, csv_path):
     return region_row["region_name"], region_row["region_abbr"]
 
 
-def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_csv, test_type='tukey'):
+def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_csv, test_type='tukey', show_plot=False):
     df = load_data(region_id)
     region_name, region_abbr = get_region_details(region_id, csv_path)
     
@@ -155,7 +157,9 @@ def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_c
     plt.title(f"{region_name} ({region_abbr})")
     plt.tight_layout()
     plt.savefig(f'region_{region_id}_{region_abbr}.png')
-    plt.show()
+
+    if args.show_plot:
+        plt.show()
 
 if __name__ == "__main__":
 
@@ -167,4 +171,4 @@ if __name__ == "__main__":
     if args.order and args.labels and len(args.order) != len(args.labels):
         raise ValueError("The number of entries in --order and --labels must match.")
 
-    plot_data(args.region_id, args.order, args.labels, csv_path=args.lut, test_type=args.test)
+    plot_data(args.region_id, args.order, args.labels, csv_path=args.lut, test_type=args.test, show_plot=args.show_plot)
