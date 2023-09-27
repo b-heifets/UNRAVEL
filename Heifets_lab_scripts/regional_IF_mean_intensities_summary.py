@@ -14,7 +14,7 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 region_ID_name_abbr_csv = "/Users/Danielthy/Documents/_Heifets_lab_data/_Lightsheet_microscopy_data/#Gubra/gubra_region_ID_name_abbr.csv"
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Plot mean IF intensity for a given region intensity ID for 3+ groups (Tukey\'s HSD is used)')
+    parser = argparse.ArgumentParser(description='Plot mean IF intensity for a given region intensity ID for 3+ groups (only works for positive data)')
 
     parser.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', metavar='')
     parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', metavar='')
@@ -22,7 +22,6 @@ def parse_args():
     parser.add_argument('-l', '--lut', help="path to CSV with 'region_ID', 'region_name', 'region_abbr", default=region_ID_name_abbr_csv, metavar='')
     parser.add_argument('-t', '--test', help='Choose between "tukey" and "dunnett" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett'], metavar='')
     parser.add_argument('-s', '--show_plot', help='Show plot', action='store_true')
-
 
     parser.epilog = "regional_IF_mean_intensities_summary.py -r 1 --order group3 group2 group1 --labels Group_3 Group_2 Group_1"
     return parser.parse_args()
@@ -160,7 +159,7 @@ def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_c
 
     # Save the plot
     title = f"{region_name} ({region_abbr})"
-    wrapped_title = textwrap.fill(title, 45)  # wraps at x characters. Adjust as needed.
+    wrapped_title = textwrap.fill(title, 42)  # wraps at x characters. Adjust as needed.
     plt.title(wrapped_title)
     plt.tight_layout()
     region_abbr = region_abbr.replace("/", "-") # Replace problematic characters for file paths
