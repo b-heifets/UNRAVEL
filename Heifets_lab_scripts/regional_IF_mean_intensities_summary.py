@@ -21,6 +21,7 @@ def parse_args():
     parser.add_argument('--labels', nargs='*', help='Group Labels in same order', metavar='')
     parser.add_argument('-l', '--lut', help="path to CSV with 'region_ID', 'region_name', 'region_abbr", default=region_ID_name_abbr_csv, metavar='')
     parser.add_argument('-t', '--test', help='Choose between "tukey" and "dunnett" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett'], metavar='')
+    parser.add_argument('-a', "--alt", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}", default='two-sided', metavar='')
     parser.add_argument('-s', '--show_plot', help='Show plot', action='store_true')
 
     parser.epilog = "regional_IF_mean_intensities_summary.py -r 1 --order group3 group2 group1 --labels Group_3 Group_2 Group_1"
@@ -58,7 +59,7 @@ def get_all_region_ids(csv_path):
     region_df = pd.read_csv(csv_path)
     return region_df["region_ID"].tolist()
 
-def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_csv, test_type='tukey', show_plot=False):
+def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_csv, test_type='tukey', show_plot=False, alt='two-sided'):
     df = load_data(region_id)
     region_name, region_abbr = get_region_details(region_id, csv_path)
     
@@ -118,7 +119,7 @@ def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_c
         # Assuming control is the first group in the order (change as needed)
         control_data = df[df['group'] == order[0]]['mean_intensity'].values
         experimental_data = [df[df['group'] == group]['mean_intensity'].values for group in order[1:]]
-        test_stats = dunnett(*experimental_data, control=control_data)
+        test_stats = dunnett(*experimental_data, control=control_data, alternative=alt)
         # Convert the result to a DataFrame similar to the Tukey output for easier handling
         test_df = pd.DataFrame({
             'group1': [order[0]] * len(test_stats.pvalue),
@@ -183,4 +184,4 @@ if __name__ == "__main__":
 
     # Process each region ID
     for region_id in region_ids_to_process:
-        plot_data(region_id, args.order, args.labels, csv_path=args.lut, test_type=args.test, show_plot=args.show_plot)
+        plot_data(region_id, args.order, args.labels, csv_path=args.lut, test_type=args.test, show_plot=args.show_plot, alt=args.alt)
