@@ -11,24 +11,60 @@ import time
 from aicspylibczi import CziFile
 from datetime import datetime
 from glob import glob
+from functools import wraps, partial
 from lxml import etree
 from pathlib import Path
 from rich import print
 from rich.console import Console
+from rich.progress import Progress, TextColumn, SpinnerColumn, BarColumn, TimeElapsedColumn, TimeRemainingColumn, MofNCompleteColumn
 from rich.table import Table
 from rich.traceback import install
 from tifffile import imread, imwrite 
-from tqdm import tqdm
 
-##########################################
-# Process all or selected sample folders #
-##########################################
+#############################################################################
+# Process a specified path/image, all sample?? folders, or selected folders #
+#############################################################################
 
 DEFAULT_SAMPLE_DIR_PATTERN = 'sample??'
 
+def process_single_input(input_path, func, args):
+    """Process a single input path/image."""
+    img_path = Path(input_path)
+    if img_path.exists():
+        print(f"\n\n\n  Processing: [gold3]{img_path}[/]")
+        func(img_path.parent, args=args) 
+    else:
+        print(f"\n\n\n  [red]Error: Invalid file path. Please provide a valid path/image")
+
+def get_progress():
+    """Return a configured progress object for the progress bar."""
+    progress = Progress(
+        TextColumn("[progress.description]{task.description}"),
+        # BarColumn(),
+        SpinnerColumn(style="bright_magenta"),
+        BarColumn(complete_style="purple3",  finished_style="purple"),
+        TimeRemainingColumn(),
+        MofNCompleteColumn(),
+        TimeElapsedColumn(), 
+        TextColumn("[dark_orange]{task.percentage:>3.0f}%[progress.percentage]")
+
+    )
+    return progress
+
+def process_with_progress(items, func, *func_args, progress_message="  [red]Processing...", **func_kwargs):
+    """Process items with a progress bar."""
+    with get_progress() as progress:
+        task = progress.add_task(progress_message, total=len(items))
+        for item in items:
+            # Use functools.partial to pre-apply the other arguments
+            partial_func = partial(func, item, *func_args, **func_kwargs)
+            partial_func() 
+            progress.update(task, advance=1)
+
 def process_samples_in_dir(process_sample_func, sample_list=None, sample_dirs_pattern=DEFAULT_SAMPLE_DIR_PATTERN, output=None, args=None):
+    """Get a list of samples to process and process them with a progress bar."""
     current_dir = Path('.').resolve().name  # Get the current directory name
-    samples_to_process = sample_list or [d.name for d in Path('.').iterdir() if d.is_dir() and fnmatch(d.name, sample_dirs_pattern)]
+    samples_to_process = sorted(sample_list or [d.name for d in Path('.').iterdir() if d.is_dir() and fnmatch(d.name, sample_dirs_pattern)])
 
     # Check if the list is empty. If so, use the current directory.
     if not samples_to_process:
@@ -39,17 +75,19 @@ def process_samples_in_dir(process_sample_func, sample_list=None, sample_dirs_pa
 
     print(f"\n  [bright_black]Processing these folders: {samples_to_process}[/]\n")
 
-    for sample in tqdm(samples_to_process):
-
+    # Utilizing process_with_progress
+    def wrapped_process_sample(sample):
         # Skip processing if the output file already exists
         if output:
             output_path = Path(sample, output)
             if output_path.exists():
                 print(f"\n\n  [gold3]{output_path}[/] already exists. Skipping.\n")
-                continue # Skip to next sample
+                return  # Exit current iteration
         
         print(f"\n\n\n  Processing: [gold3]{sample}[/]")
-        process_sample_func(sample, args)
+        process_sample_func(sample, args=args)
+
+    process_with_progress(samples_to_process, wrapped_process_sample, progress_message="  [red]Processing samples...")
 
 
 ###########################
@@ -57,9 +95,7 @@ def process_samples_in_dir(process_sample_func, sample_list=None, sample_dirs_pa
 ###########################
 
 def print_cmd_decorator(func):
-    """
-    A decorator to print the script name and arguments used before running the decorated function.
-    """
+    """A decorator to print the script name and arguments used before running the decorated function."""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         cmd = f"\n\n[bold magenta]{os.path.basename(sys.argv[0])}[/] [purple3]{' '.join(sys.argv[1:])}[/]\n"
@@ -71,9 +107,7 @@ def print_cmd_decorator(func):
     return wrapper
 
 def start_and_end_times(func):
-    """
-    A decorator that prints the start and end times of the function it decorates.
-    """
+    """A decorator that prints the start and end times of the function it decorates."""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         start_time = datetime.now()
@@ -86,14 +120,11 @@ def start_and_end_times(func):
     return wrapper
 
 def rich_traceback(func):
-    """
-    A decorator that installs rich traceback for better exception visualization.
-    """
+    """A decorator that installs rich traceback for better exception visualization."""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         install()  # Enable the rich traceback
         return func(*args, **kwargs)
-    
     return wrapper
 
 def print_cmd_and_times(func):
@@ -109,68 +140,33 @@ def print_cmd_and_times(func):
 ######################
 # Function decorator #
 ######################
+def print_func_name_args_times(func):
+    """A decorator that prints the function name, arguments, and duration of the function it decorates."""
+    @functools.wraps(func)
+    def wrapper_timer(*args, **kwargs):
+        # Convert args and kwargs to string for printing
+        args_str = ', '.join(str(arg) for arg in args)
+        kwargs_str = ', '.join(f"{k}={v}" for k, v in kwargs.items())
 
-def timer(original_func_name): 
-    """
-    A decorator to time a function, print the function name, and print the arguments used.
-    """
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper_timer(*args, **kwargs):
-            # Convert args and kwargs to string for printing
-            args_str = ', '.join(str(arg) for arg in args)
-            kwargs_str = ', '.join(f"{k}={v}" for k, v in kwargs.items())
-            
-            # Combine both for final arguments string
-            all_args = args_str
-            if kwargs_str:
-                all_args += ', ' + kwargs_str
-                
-            print(f"\n  Running: [dark_orange]{original_func_name!r}[/] [bright_black]({all_args})[/]")
-            
-            start_time = time.perf_counter()
-            value = func(*args, **kwargs)
-            end_time = time.perf_counter()
-            run_time = end_time - start_time
-            minutes, seconds = divmod(run_time, 60)
-            if minutes == 0:
-                print(f"\n  Finished in [orange_red1]{seconds:.4f}[/] seconds \n")
-            else:
-                print(f"\n  Finished in [orange_red1]{minutes:.0f}[/] minutes [orange_red1]{seconds:.4f}[/] seconds \n")
-            return value
-        return wrapper_timer
-    return decorator
+        # Combine both for final arguments string
+        all_args = args_str
+        if kwargs_str:
+            all_args += ', ' + kwargs_str
 
+        # Print out the arguments
+        print(f"\n  Running: [dark_orange]{func.__name__!r}[/] [bright_black]({all_args})\n")
 
-def task_status(message=""):
-    """
-    A decorator to show a console status icon spinner in bold green for tasks that are processing.
-    """
-    def decorator(func):
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            console = Console()
-            with console.status("[bold green]{}\n".format(message)) as status:
-                result = func(*args, **kwargs)
-                status.update("[bold green]Done!")
-            return result
-        return wrapper
-    return decorator
-
-def print_func_name_args_status_duration(message=""):
-    """
-    A decorator that combines `timer`, and `task_status`.
-    """
-    def decorator(func):
-        original_func_name = func.__name__   # Capture the function name here
-        @functools.wraps(func)
-        @timer(original_func_name)
-        @task_status(message=message)
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs)
-        
-        return wrapper
-    return decorator
+        start_time = time.perf_counter()
+        value = func(*args, **kwargs)  # Pass all arguments to the function
+        end_time = time.perf_counter()
+        run_time = end_time - start_time
+        minutes, seconds = divmod(run_time, 60)
+        if minutes == 0:
+            print(f"  Finished in [orange_red1]{seconds:.4f}[/] seconds \n")
+        else:
+            print(f"  Finished in [orange_red1]{minutes:.0f}[/] minutes [orange_red1]{seconds:.4f}[/] seconds \n")
+        return value
+    return wrapper_timer
 
 
 ###############
@@ -178,6 +174,7 @@ def print_func_name_args_status_duration(message=""):
 ###############
 
 def load_czi_channel(czi_path, channel):
+    """Load a channel from a .czi image and return it as a numpy array."""
     if czi_path:
         czi = CziFile(czi_path)
         ndarray = czi.read_image(C=channel)[0]
@@ -189,6 +186,7 @@ def load_czi_channel(czi_path, channel):
         return None
     
 def load_nii(img_path):
+    """Load a .nii.gz image and return it as a numpy array."""
     if img_path:
         img = nib.load(img_path)
         ndarray = img.get_fdata()
@@ -196,17 +194,9 @@ def load_nii(img_path):
     else:
         print(f"  [red bold].nii.gz file note found: {img_path}[/]")
         return None
-
-# def load_tifs(tif_dir_path):
-#     tifs = glob(f"{tif_dir_path}/*.tif")
-#     if tifs:
-#         ndarray = np.stack([imread(tif) for tif in tifs], axis=-1)
-#         return ndarray
-#     else:
-#         print(f"  [red bold]No .tif files found in {tif_dir_path}[/]")
-#         return None
     
 def load_tifs(tif_dir_path): 
+    """Load a series of .tif images and return them as a numpy array."""
     tifs = glob(f"{tif_dir_path}/*.tif")
     if tifs:
         tifs_sorted = sorted(tifs)
@@ -216,20 +206,13 @@ def load_tifs(tif_dir_path):
     else:
         print(f"  [red bold]No .tif files found in {tif_dir_path}[/]")
         return None
-    
-    # Load brain mask image
-    # seg_dir = str(sample_dir_path / f"{args.tif_dir}_ilastik_seg")
-    # seg_tif_list = glob(f"{seg_dir}/*.tif")
-    # seg_tif_list_sorted = sorted(seg_tif_list)
-    # seg_images_stacked = [tf_imread(tif) for tif in seg_tif_list_sorted]
-    # seg_img = np.stack(seg_images_stacked, axis=0)  # stack along the first dimension (z-axis)
-    
 
 ###############
 # Save images #
 ###############
 
 def save_as_nii(ndarray, output, x_res, y_res, z_res, data_type):
+    """Save a numpy array as a .nii.gz image."""
 
     output = Path(output).resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -248,6 +231,7 @@ def save_as_nii(ndarray, output, x_res, y_res, z_res, data_type):
     print(f"\n  Output: [default bold]{output}[/]\n")
 
 def save_as_tifs(ndarray, tif_dir_out):
+    """Save a numpy array as a series of .tif images."""
     tif_dir_out.mkdir(parents=True, exist_ok=True)
     for i, slice_ in enumerate(ndarray):
         slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
@@ -260,9 +244,7 @@ def save_as_tifs(ndarray, tif_dir_out):
 ################
 
 def xyz_res_from_czi(czi_path):
-    """
-    Extracts metadata from .czi file and returns tuple with xy_res and z_res (voxel size) in microns.
-    """
+    """Extract metadata from .czi file and returns tuple with xy_res and z_res (voxel size) in microns."""
     czi = CziFile(czi_path)
     xml_root = czi.meta
     xy_res, z_res = None, None
@@ -273,9 +255,7 @@ def xyz_res_from_czi(czi_path):
     return xy_res, z_res
 
 def xyz_res_from_tif(path_to_first_tif_in_series):
-    """
-    Extracts metadata from .ome.tif file and returns tuple with xy_res and z_res in microns.
-    """
+    """Extract metadata from .ome.tif file and returns tuple with xy_res and z_res in microns."""
     with tifffile.TiffFile(path_to_first_tif_in_series) as tif:
         meta = tif.pages[0].tags
         ome_xml_str = meta['ImageDescription'].value
