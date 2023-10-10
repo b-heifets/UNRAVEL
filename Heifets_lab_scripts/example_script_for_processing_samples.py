@@ -32,7 +32,7 @@ def main():
 
     output_path = Path("reg_input", f"output.nii.gz")
 
-    if args.input: 
+    if args.input and not output_path.exists():
         unrvl.process_single_input(args.input, example_function, args) 
         return 
 

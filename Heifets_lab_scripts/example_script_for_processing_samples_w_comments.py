@@ -35,7 +35,7 @@ def main():
     output_path = Path("reg_input", f"output.nii.gz")
 
     # If the input flag is provided, process only that file and exit the function
-    if args.input: # If the input flag is provided
+    if args.input and not output_path.exists():# If the input flag is provided
         unrvl.process_single_input(args.input, example_function, args) # args are passed to example_function()
         return # Exit the function
 
