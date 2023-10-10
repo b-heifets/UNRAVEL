@@ -13,7 +13,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Before running brain_mask.py, train ilastik using tifs from ./sample??/niftis/autofl_50um/*.tif (from prep_reg.sh)')
     parser.add_argument('--dir_pattern', help='Pattern for folders in working dir to process (Default: sample??)', default='sample??', metavar='')
     parser.add_argument('--dir_list', help='Folders to process in working dir (e.g., sample01 sample02) (Default: process sample??) ', nargs='+', default=None, metavar='')
-    parser.add_argument('-ip', '--ilastik_prj', help='path/trained_ilastik_project.ilp (label 1 should = tissue; Default: brain_mask.ilp)', default='brain_mask.ilp', metavar='')
+    parser.add_argument('-ilp', '--ilastik_prj', help='path/trained_ilastik_project.ilp (label 1 should = tissue; Default: brain_mask.ilp)', default='brain_mask.ilp', metavar='')
     parser.add_argument('-td', '--tif_dir', help='path/autofl_tif_dir (Default: reg_input/autofl_50um_tifs)', default="reg_input/autofl_50um_tifs", metavar='')
     parser.add_argument('-afi', '--autofl_img', help='Autofl.nii.gz to mask (Default: reg_input/autofl_50um.nii.gz)', default='reg_input/autofl_50um.nii.gz', metavar='')
     parser.add_argument('-afr', '--autofl_res', help='Resolution of input in microns (Default: 50)', default=50, type=int, metavar='')
