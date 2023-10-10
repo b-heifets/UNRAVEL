@@ -28,7 +28,7 @@ def resolve_path(base_path, default_path, arg_path):
         return str(Path(arg_path).resolve())
 
 
-@unrvl.print_func_name_args_times()
+@unrvl.print_func_name_args_times
 def load_img_resample_reorient_save_nii(sample_dir, args=None):
 
     # Segment brain in autofluo image with Ilastik
