@@ -21,6 +21,7 @@ def parse_args():
     parser.add_argument('-zo', '--zoom_order', help='Order of spline interpolation. Range: 0-5. (Default: 1))', default=1, type=int, metavar='')
     return parser.parse_args()
 
+
 @unrvl.print_func_name_args_times
 def resample_reorient(sample_dir, args=None):
 
@@ -65,6 +66,7 @@ def resample_reorient(sample_dir, args=None):
     autofl_output = Path(sample_dir, "reg_input", f"autofl_{args.res}um.nii.gz").resolve()
     unrvl.save_as_nii(img_reoriented, autofl_output, args.res, args.res, args.res, np.uint16)  
 
+
 @unrvl.print_cmd_and_times
 def main():
     args = parse_args()
@@ -76,6 +78,7 @@ def main():
         return 
 
     unrvl.process_samples_in_dir(resample_reorient, sample_list=args.dir_list, sample_dirs_pattern=args.dir_pattern, output=output_path, args=args)
+    
 
 if __name__ == '__main__':
     main()
