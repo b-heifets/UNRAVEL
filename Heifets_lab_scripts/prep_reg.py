@@ -46,7 +46,6 @@ def resample_reorient(sample_dir, args=None):
         print(f"\n  [red]No .czi files found and tif_dir is not specified for {sample_dir}[/]\n")
         return
 
-
     # Resample autofl image
     args.xy_res = args.xy_res or xy_res_metadata # If xy_res is None, use xy_res_metadata
     args.z_res = args.z_res or z_res_metadata
