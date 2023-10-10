@@ -12,7 +12,6 @@ def parse_args():
     parser.add_argument('-i', '--input', help='path/atlas_space_immunofluorescence_image.nii.gz', required=True, metavar='')
     parser.add_argument('-o', '--output', help='path/name.csv', default=None, metavar='')
     parser.add_argument('-r', '--regions', nargs='*', type=int, help='Space-separated list of region intensities to process', default=None)
-
     return parser.parse_args()
 
 def calculate_mean_intensity(atlas, image, regions=None):
