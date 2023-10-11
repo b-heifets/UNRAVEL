@@ -1,43 +1,53 @@
 #!/usr/bin/env python3
 
 import argparse
-import unravel_utils as unrvl
 from glob import glob
 from pathlib import Path
 from rich import print
+from rich.live import Live
 from time import sleep
+from unravel_utils import (print_cmd_and_times, print_func_name_args_times, get_progress_bar, get_samples, load_czi_channel)
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Process sample folders w/ example resample function') #
-    parser.add_argument('--dir_pattern', help='Pattern for folders in working dir to process (Default: sample??)', default='sample??', metavar='') 
-    parser.add_argument('--dir_list', help='Folders to process in working dir (e.g., sample01 sample02) (Default: process sample??) ', nargs='+', default=None, metavar='') 
-    parser.add_argument('-i', '--input', help='<path/image.czi> (Optional: process just this image)', metavar='') 
-    parser.add_argument('-c', '--channel', type=int, help='Channel for czi file (Default: 0 for autofluo)', default=0, metavar='')
-    parser.epilog = "example_script_for_processing_samples_w_comments.py -i ./sample01/sample01.czi -c 1" 
-    return parser.parse_args() 
+    parser = argparse.ArgumentParser(description='Process sample folder(s) w/ example functions')
+    parser.add_argument('--dirs', help='List of folders to process. If not provided, --pattern used for matching dirs to process. If no matches, the current directory is used.', nargs='*', default=None, metavar='')
+    parser.add_argument('-p', '--pattern', help='Pattern for folders in the working dir to process. Default: sample??', default='sample??', metavar='')
+    parser.add_argument('-c', '--channel', help='Channel of the czi image to load. Default: 0 for autofluo', type=int, default=0, metavar='')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = "Add extra info or example command here"
+    return parser.parse_args()
 
-@unrvl.print_func_name_args_times
-def example_function(sample_dir, args=None): 
+@print_func_name_args_times
+def img_shape(img): 
+    print(f"  [default]Image shape: {img.shape}\n")
+    sleep(1) 
 
-    czi_path = Path(glob(f"{sample_dir}/*.czi")[0]).resolve() 
-    if czi_path: 
-        img = unrvl.load_czi_channel(czi_path, args.channel) 
-        print(f"  [default]Image shape: {img.shape}\n  Channel: {args.channel}\n")
+def main():    
+    args = parse_args()
 
-    sleep(2) 
+    samples = get_samples(args.dirs, args.pattern)
 
-@unrvl.print_cmd_and_times
-def main():
-    args = parse_args() 
+    decorated_load_czi_channel = print_func_name_args_times(load_czi_channel)
 
-    output_path = Path("reg_input", f"output.nii.gz")
-
-    if args.input and not output_path.exists():
-        unrvl.process_single_input(args.input, example_function, args) 
-        return 
-
-    # Process all samples in the working directory or only those specified if args.input is not provided.
-    unrvl.process_samples_in_dir(example_function, sample_list=args.dir_list, sample_dirs_pattern=args.dir_pattern, output=output_path, args=args) 
+    progress = get_progress_bar(total_tasks=len(samples))
+    task_id = progress.add_task("  [red]Processing samples...", total=len(samples))
+    with Live(progress):
+        for sample in samples:
+            czi_files = glob(f"{sample}/*.czi")
+            if czi_files:
+                czi_path = Path(czi_files[0]).resolve() 
+                img = decorated_load_czi_channel(czi_path, args.channel)
+                img_shape(img)
+            else:
+                print(f"  [red1 bold].czi file not found for sample: {sample}")
+            progress.update(task_id, advance=1)
 
 if __name__ == '__main__': 
-    main() 
+    from rich.traceback import install
+    install()
+    
+    args = parse_args()
+    print_cmd_and_times.verbose = args.verbose
+    print_func_name_args_times.verbose = args.verbose
+    
+    print_cmd_and_times(main)()
