@@ -72,7 +72,11 @@ def rb_resample_reorient_warp(sample_dir, args=None):
         img_bkg = rolling_ball(img, radius=args.rb_radius, nansafe=True) # returns the estimated background
         rb_bkg_sub_img = img - img_bkg
 
+        # Convert to 
+
         # Resample image
+        # Resample CLARITY to Allen resolution
+        # ResampleImage 3 ${inimg} ${res_vox} 0.025x0.025x0.025 0
         print(f"\n  [default]Image shape: {img.shape}\n  Channel: {channel}\n")
         args.xy_res = args.xy_res or xy_res_metadata # If xy_res is None, use xy_res_metadata
         args.z_res = args.z_res or z_res_metadata
@@ -81,7 +85,28 @@ def rb_resample_reorient_warp(sample_dir, args=None):
         resampled_rb_img = ndimage.zoom(rb_bkg_sub_img, (zf_xy, zf_xy, zf_z), order=args.zoom_order)
 
         # Reorient image
+        # Orient CLARITY to standard orientation
+        # PermuteFlipImageOrientationAxes 3 ${res_vox} ${swp_vox}  1 2 0  0 0 0
+
+        # Orient CLARITY to standard orientation
+        # c3d ${swp_vox} -orient ${orttagclar} -pad 15% 15% 0 -interpolation ${ortintclar} -type ${orttypeclar} -o ${ortclar}
         reoriented_rb_img = np.flip(np.einsum('zyx->xzy', resampled_rb_img), axis=1)
+
+        # Get original dim
+        # org_dim=`PrintHeader ${ortclar} 2`
+
+        # Resample to original resolution
+        # ResampleImage 3 ${org_clar} ${res_org_clar} ${org_dim} 1
+
+        # Copy original transform
+        # c3d ${res_org_clar} ${ortclar} -copy-transform -type ${orttypeclar} -o ${cp_clar}
+
+        # Combine deformation fields and transformations 
+        # antsApplyTransforms -d 3 -r ${init_allen} -t ${antswarp} [ ${antsaff}, 1 ] -o [ ${comb_def}, 1 ]
+
+        # "Applying ants deformations to CLARITY data" 
+        # antsApplyTransforms -d 3 -r ${allenref} -i ${cp_clar} -n Bspline -t [ ${initform}, 1 ] ${comb_def} -o ${wrpclar}
+
 
         # Warp image to atlas space
         warped_img = warp_to_atlas(reoriented_rb_img, args.atlas_name, args.res)

@@ -6,10 +6,11 @@ from pathlib import Path
 from rich import print
 from rich.live import Live
 from time import sleep
-from unravel_utils import (print_cmd_and_times, print_func_name_args_times, get_progress_bar, get_samples, load_czi_channel)
+from unravel_img_tools import load_czi_channel
+from unravel_utils import print_cmd_and_times, print_func_name_args_times, get_progress_bar, get_samples
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Process sample folder(s) w/ example functions')
+    parser = argparse.ArgumentParser(description='Process sample folder(s) w/ a *.czi file')
     parser.add_argument('--dirs', help='List of folders to process. If not provided, --pattern used for matching dirs to process. If no matches, the current directory is used.', nargs='*', default=None, metavar='')
     parser.add_argument('-p', '--pattern', help='Pattern for folders in the working dir to process. Default: sample??', default='sample??', metavar='') # default='sample??' is the default value if no argument is provided
     parser.add_argument('-c', '--channel', help='Channel of the czi image to load. Default: 0 for autofluo', type=int, default=0, metavar='') # metavar='' cleans up the help message

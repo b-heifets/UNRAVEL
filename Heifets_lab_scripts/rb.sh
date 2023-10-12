@@ -100,7 +100,7 @@ for sample in ${sample_array[@]}; do
     z_res_out=$(round $z_res_out_float 6)
     z_size=$(ls *.tif | wc -l)
     if [ $(($z_size%2)) -ne 0 ] ; then
-	z_size_out=$(echo "scale=6 ; (($z_size/$dz)+0.5)/1" | bc -l) #https://stackoverflow.com/questions/2395284/round-a-divided-number-in-bash #rounds up
+	    z_size_out=$(echo "scale=6 ; (($z_size/$dz)+0.5)/1" | bc -l) #https://stackoverflow.com/questions/2395284/round-a-divided-number-in-bash #rounds up
     else 
     	z_size_out=$(echo "scale=0; $z_size/$dz" | bc) #rounds down, trying for sample01
     fi
