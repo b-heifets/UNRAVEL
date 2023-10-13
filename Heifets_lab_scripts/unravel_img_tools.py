@@ -25,7 +25,7 @@ def load_czi_channel(czi_path, channel):
         ndarray = np.transpose(ndarray, (2, 1, 0))
         return ndarray
     else:
-        print(f"  [red bold].czi file not found: {czi_path}[/]")
+        print(f"    [red bold].czi file not found: {czi_path}[/]")
         return None
 
 @print_func_name_args_times(arg_index_for_basename=0)
@@ -36,7 +36,7 @@ def load_nii(img_path):
         ndarray = img.get_fdata()
         return ndarray
     else:
-        print(f"  [red bold].nii.gz file note found: {img_path}[/]")
+        print(f"    [red bold].nii.gz file note found: {img_path}[/]")
         return None
 
 @print_func_name_args_times(arg_index_for_basename=0)
@@ -49,7 +49,7 @@ def load_tifs(tif_dir_path):
         ndarray = np.stack(tifs_stacked, axis=0)  # stack along the first dimension (z-axis)
         return ndarray # shape: z, y, x
     else:
-        print(f"  [red bold]No .tif files found in {tif_dir_path}[/]")
+        print(f"    [red bold]No .tif files found in {tif_dir_path}[/]")
         return None
 
 
@@ -102,7 +102,7 @@ def save_as_nii(ndarray, output, x_res, y_res, z_res, data_type):
     nifti_img.header.set_data_dtype(data_type)
     nib.save(nifti_img, str(output))
     
-    print(f"\n  Output: [default bold]{output}[/]\n")
+    print(f"\n    Output: [default bold]{output}[/]\n")
 
 @print_func_name_args_times(arg_index_for_basename=0)
 def save_as_tifs(ndarray, tif_dir_out):
@@ -111,7 +111,7 @@ def save_as_tifs(ndarray, tif_dir_out):
     for i, slice_ in enumerate(ndarray):
         slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
         imwrite(str(slice_file_path), slice_)
-    print(f"\n  Output: [default bold]{tif_dir_out}[/]\n")
+    print(f"\n    Output: [default bold]{tif_dir_out}[/]\n")
 
 
 ######## Image processing ########

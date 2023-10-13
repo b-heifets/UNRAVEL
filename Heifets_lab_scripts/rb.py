@@ -49,7 +49,7 @@ def rb_resample_reorient_warp(czi_path, args):
         # Check if the output file already exists
         output_path = Path(f"{sample_dir}_{channel_name}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz")
         if output_path.exists():
-            print(f"\n\n  [gold3]{output_path}[/] already exists. Skipping.\n")
+            print(f"\n\n    [gold3]{output_path}[/] already exists. Skipping.\n")
             continue # Skip to next channel
 
         czi_files = glob(f"{sample_dir}/*.czi")
@@ -65,7 +65,7 @@ def rb_resample_reorient_warp(czi_path, args):
             tif_files = glob(f"{tif_dir_path}/*.tif")
 
             if not tif_files:
-                print(f"\n  [red]No .tif files found in {tif_dir_path}/. Skipping this directory.")
+                print(f"\n    [red]No .tif files found in {tif_dir_path}/. Skipping this directory.")
                 continue 
 
             path_to_first_tif = tif_files[0]
@@ -75,7 +75,7 @@ def rb_resample_reorient_warp(czi_path, args):
                 xy_res_metadata, z_res_metadata = unrvl.xyz_res_from_tif(path_to_first_tif)
 
         if img is None:
-            print(f"\n  [red]No .czi file found and tif_dir is not specified\n")
+            print(f"\n    [red]No .czi file found and tif_dir is not specified\n")
             return
                 
         # Rolling ball background subtraction
@@ -87,7 +87,7 @@ def rb_resample_reorient_warp(czi_path, args):
         # Resample image
         # Resample CLARITY to Allen resolution
         # ResampleImage 3 ${inimg} ${res_vox} 0.025x0.025x0.025 0
-        print(f"\n  [default]Image shape: {img.shape}\n  Channel: {channel}\n")
+        print(f"\n    [default]Image shape: {img.shape}\n    Channel: {channel}\n")
         args.xy_res = args.xy_res or xy_res_metadata # If xy_res is None, use xy_res_metadata
         args.z_res = args.z_res or z_res_metadata
         zf_xy = args.xy_res / args.res # Zoom factor
@@ -141,7 +141,7 @@ def main():
     samples = get_samples(args.dirs, args.pattern)
 
     progress = get_progress_bar(total_tasks=len(samples))
-    task_id = progress.add_task("  [red]Processing samples...", total=len(samples))
+    task_id = progress.add_task("[red]Processing samples...", total=len(samples))
     with Live(progress):
         for sample in samples:
             czi_files = glob(f"{sample}/*.czi")
@@ -149,7 +149,7 @@ def main():
                 czi_path = Path(czi_files[0]).resolve() 
                 rb_resample_reorient_warp(czi_path, args)
             else:
-                print(f"  [red1 bold].czi file not found for sample: {sample}")
+                print(f"    [red1 bold].czi file not found for sample: {sample}")
             progress.update(task_id, advance=1)
 
 

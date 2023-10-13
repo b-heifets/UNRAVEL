@@ -33,7 +33,7 @@ def brain_mask(sample, args):
     # Check if the output file already exists and skip if it does
     output = Path(sample, args.out_dir, args.output).resolve()
     if output.exists():
-        print(f"\n\n  {output} already exists. Skipping.\n")
+        print(f"\n\n    {output} already exists. Skipping.\n")
         return
 
     # Segment brain in autofluo image with Ilastik
@@ -86,7 +86,7 @@ def main():
     samples = get_samples(args.dirs, args.pattern)
 
     progress = get_progress_bar(total_tasks=len(samples))
-    task_id = progress.add_task("  [red]Processing samples...", total=len(samples))
+    task_id = progress.add_task("[red]Processing samples...", total=len(samples))
     
     with Live(progress):
         for sample in samples:

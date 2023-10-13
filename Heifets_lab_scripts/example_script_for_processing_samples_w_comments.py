@@ -27,7 +27,7 @@ def parse_args():
 def example_function(czi_path, channel): # czi_path and channel are passed to this function from main()
     """Load a czi file, process its image, and return the image."""
     img = load_czi_channel(czi_path, channel) # This loads the autofluo image from the .czi file
-    print(f"  [default]Image shape: {img.shape}\n") # This prints the shape of the image
+    print(f"    [default]Image shape: {img.shape}\n") # This prints the shape of the image
     sleep(1) # This simulates processing time
     return img # This returns the image to main()
 
@@ -42,7 +42,7 @@ def main(): # This is the main function that is called at the bottom of the scri
     samples = get_samples(args.dirs, args.pattern) # get_samples() returns a list of sample directories
 
     progress = get_progress_bar(total_tasks=len(samples)) # This creates a progress bar object
-    task_id = progress.add_task("  [red]Processing samples...", total=len(samples)) # This adds a task to the progress bar
+    task_id = progress.add_task("[red]Processing samples...", total=len(samples)) # This adds a task to the progress bar
     with Live(progress): # This starts the progress bar
         for sample in samples: # This iterates through each sample directory
             czi_files = glob(f"{sample}/*.czi") # This returns a list of .czi files in the sample directory
@@ -50,7 +50,7 @@ def main(): # This is the main function that is called at the bottom of the scri
                 czi_path = Path(czi_files[0]).resolve() # This gets the path to the first .czi file
                 example_function(czi_path, args.channel) # This calls the example_function() function defined above
             else:
-                print(f"  [red1 bold].czi file not found for sample: {sample}")
+                print(f"    [red1 bold].czi file not found for sample: {sample}")
             progress.update(task_id, advance=1) # This updates the progress bar
 
 

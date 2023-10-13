@@ -4,6 +4,7 @@ import functools
 import numpy as np
 import os
 import sys
+import threading
 import time
 from config import Configuration
 from datetime import datetime
@@ -47,13 +48,13 @@ class AverageTimePerIterationColumn(ProgressColumn):
 class CustomTimeRemainingColumn(TimeRemainingColumn):
     def render(self, task) -> Text:
         time_elapsed = super().render(task)
-        time_elapsed.stylize("dark_orange")      
+        time_elapsed.stylize("dark_orange")
         return time_elapsed
     
 class CustomTimeElapsedColumn(TimeElapsedColumn):
     def render(self, task) -> Text:
         time_elapsed = super().render(task)
-        time_elapsed.stylize("gold1")      
+        time_elapsed.stylize("gold1")
         return time_elapsed
 
 class CustomMofNCompleteColumn(MofNCompleteColumn):
@@ -92,19 +93,22 @@ def print_cmd_and_times(func):
 
         # Start time
         start_time = datetime.now()
-        print(f"  [bright_blue]Start:[/] " + start_time.strftime('%Y-%m-%d %H:%M:%S') + "\n")
+        print(f"    [bright_blue]Start:[/] " + start_time.strftime('%Y-%m-%d %H:%M:%S') + "\n")
 
         result = func(*args, **kwargs)  # Call the original function
 
         # End time
         end_time = datetime.now()
-        print(f"\n\n  :mushroom: [bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold1]![/][dark_orange]![/][red1]![/] \n")
+        print(f"\n\n:mushroom: [bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold1]![/][dark_orange]![/][red1]![/] \n")
         return result
-
     return wrapper
 
 
 ######## Function decorator ########
+
+# Create a thread-local storage for indentation level
+thread_local_data = threading.local()
+thread_local_data.indentation_level = 0
 
 def print_func_name_args_times(arg_index_for_basename=None):
     """A decorator that prints the function name, arguments, duration, and memory usage of the function it decorates."""
@@ -127,6 +131,14 @@ def print_func_name_args_times(arg_index_for_basename=None):
             if not Configuration.verbose:
                 return func(*args, **kwargs)  # If not verbose, skip all additional logic
             
+            # Increment the indentation level
+            if not hasattr(thread_local_data, 'indentation_level'):
+                thread_local_data.indentation_level = 0
+            thread_local_data.indentation_level += 1
+
+            # Compute indentation based on the current level
+            indent_str = '  ' * thread_local_data.indentation_level  # Using 4 spaces for each indentation level
+            
             # Convert args and kwargs to string for printing
             args_str = ', '.join(arg_str_representation(arg) for arg in args)
             kwargs_str = ', '.join(f"{k}={arg_str_representation(v)}" for k, v in kwargs.items())
@@ -134,8 +146,11 @@ def print_func_name_args_times(arg_index_for_basename=None):
             # Get the parent folder name (e.g., sample folder name) of the first argument if arg_index_for_basename is not None
             parent_folder_from_arg = args[arg_index_for_basename].parent.name if arg_index_for_basename is not None else os.path.basename(os.getcwd())
 
-            # Print out the arguments
-            print(f"\n  Running: [bold gold1]{func.__name__!r}[/] for [bold dark_orange]{parent_folder_from_arg}[/] \n\n  [bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})\n")
+            # Print out the arguments with the added indent
+            if thread_local_data.indentation_level > 1:  # considering that main function is at level 1
+                print(f"\n{indent_str}[gold3]{func.__name__!r}[/]\n{indent_str}[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
+            else:
+                print(f"\nRunning: [bold gold1]{func.__name__!r}[/] for [bold orange_red1]{parent_folder_from_arg}[/] \n[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
 
             # Function execution
             start_time = time.perf_counter()
@@ -146,9 +161,14 @@ def print_func_name_args_times(arg_index_for_basename=None):
             run_time = end_time - start_time
             minutes, seconds = divmod(run_time, 60)
             duration_str = f"{minutes:.0f} min {seconds:.4f} sec" if minutes else f"{seconds:.4f} sec"
-            print(f"  Finished in [orange_red1]{duration_str}[/] \n")
-            
+
+            # Print out the arguments with the added indent
+            if thread_local_data.indentation_level > 1:  # considering that main function is at level 1
+                print(f"{indent_str}[gold3]{duration_str}")
+            else:
+                print(f"Finished [bold gold1]{func.__name__!r}[/] in [orange_red1]{duration_str}\n")
+
+            thread_local_data.indentation_level -= 1
             return result
-    
         return wrapper_timer
     return decorator

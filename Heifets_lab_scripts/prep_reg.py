@@ -36,7 +36,7 @@ def prep_reg(sample, args):
     local_out_dir = args.out_dir if args.out_dir else "reg_input"
     output = Path(sample, local_out_dir, local_output).resolve()
     if output.exists():
-        print(f"\n\n  {output} already exists. Skipping.\n")
+        print(f"\n\n    {output} already exists. Skipping.\n")
         return # Skip to next sample
 
     # Load autofluo image
@@ -46,7 +46,7 @@ def prep_reg(sample, args):
         czi_path = Path(czi_files[0]).resolve() 
         img = load_czi_channel(czi_path, args.channel)
         if xy_res is None or z_res is None:
-            xy_res, z_res = xyz_res_from_czi(czi_path)                    
+            xy_res, z_res = xyz_res_from_czi(czi_path)
     else:
         tif_dir_path = Path(sample, args.tif_dir).resolve()
         img = load_tifs(tif_dir_path)
@@ -54,7 +54,7 @@ def prep_reg(sample, args):
             path_to_first_tif = glob(f"{sample}/{args.tif_dir}/*.tif")[0]
             xy_res, z_res = xyz_res_from_tif(path_to_first_tif)
     if img is None:
-        print(f"\n  [red]No .czi files found and tif_dir is not specified for {sample}[/]\n")
+        print(f"\n    [red]No .czi files found and tif_dir is not specified for {sample}[/]\n")
         return
     
     # Resample and reorient image
@@ -67,7 +67,7 @@ def prep_reg(sample, args):
 
     # Save autofl image (for reg.py if skipping brain_mask.py and for applying the brain mask)
     autofl_output = Path(sample, "reg_input", f"autofl_{args.res}um.nii.gz").resolve()
-    save_as_nii(img_reoriented, autofl_output, args.res, args.res, args.res, np.uint16)  
+    save_as_nii(img_reoriented, autofl_output, args.res, args.res, args.res, np.uint16)
     return
 
 def main():

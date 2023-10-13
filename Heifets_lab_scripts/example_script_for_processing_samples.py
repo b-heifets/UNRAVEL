@@ -26,7 +26,7 @@ def parse_args():
 def example_function(czi_path, channel):
     """Load a czi file, process its image, and return the image."""
     img = load_czi_channel(czi_path, channel)
-    print(f"  [default]Image shape: {img.shape}\n")
+    print(f"\n    [default]Image shape: {img.shape}\n")
     sleep(1) 
     return img
 
@@ -39,7 +39,7 @@ def main():
     samples = get_samples(args.dirs, args.pattern)
 
     progress = get_progress_bar(total_tasks=len(samples))
-    task_id = progress.add_task("  [red]Processing samples...", total=len(samples))
+    task_id = progress.add_task("[red]Processing samples...", total=len(samples))
     with Live(progress):
         for sample in samples:
             czi_files = glob(f"{sample}/*.czi")
@@ -47,7 +47,7 @@ def main():
                 czi_path = Path(czi_files[0]).resolve() 
                 example_function(czi_path, args.channel)
             else:
-                print(f"  [red1 bold].czi file not found for sample: {sample}")
+                print(f"    [red1 bold].czi file not found for sample: {sample}")
             progress.update(task_id, advance=1)
 
 
