@@ -10,10 +10,12 @@ from lxml import etree
 from pathlib import Path
 from scipy import ndimage
 from tifffile import imread, imwrite 
+from unravel_utils import print_func_name_args_times
 
 
 ######## Load images ########
 
+@print_func_name_args_times(arg_index_for_basename=0)
 def load_czi_channel(czi_path, channel):
     """Load a channel from a .czi image and return it as a numpy array."""
     if czi_path:
@@ -25,7 +27,8 @@ def load_czi_channel(czi_path, channel):
     else:
         print(f"  [red bold].czi file not found: {czi_path}[/]")
         return None
-    
+
+@print_func_name_args_times(arg_index_for_basename=0)
 def load_nii(img_path):
     """Load a .nii.gz image and return it as a numpy array."""
     if img_path:
@@ -35,7 +38,8 @@ def load_nii(img_path):
     else:
         print(f"  [red bold].nii.gz file note found: {img_path}[/]")
         return None
-    
+
+@print_func_name_args_times(arg_index_for_basename=0)
 def load_tifs(tif_dir_path): 
     """Load a series of .tif images and return them as a numpy array."""
     tifs = glob(f"{tif_dir_path}/*.tif")
@@ -51,6 +55,7 @@ def load_tifs(tif_dir_path):
 
 ######## Get metadata ########
 
+@print_func_name_args_times(arg_index_for_basename=0)
 def xyz_res_from_czi(czi_path):
     """Extract metadata from .czi file and returns tuple with xy_res and z_res (voxel size) in microns."""
     czi = CziFile(czi_path)
@@ -62,6 +67,7 @@ def xyz_res_from_czi(czi_path):
         z_res = float(scaling_info.find("./Items/Distance[@Id='Z']/Value").text)*1e6
     return xy_res, z_res
 
+@print_func_name_args_times(arg_index_for_basename=0)
 def xyz_res_from_tif(path_to_first_tif_in_series):
     """Extract metadata from .ome.tif file and returns tuple with xy_res and z_res in microns."""
     with tifffile.TiffFile(path_to_first_tif_in_series) as tif:
@@ -78,6 +84,7 @@ def xyz_res_from_tif(path_to_first_tif_in_series):
 
 ######## Save images ########
 
+@print_func_name_args_times(arg_index_for_basename=0)
 def save_as_nii(ndarray, output, x_res, y_res, z_res, data_type):
     """Save a numpy array as a .nii.gz image."""
 
@@ -97,6 +104,7 @@ def save_as_nii(ndarray, output, x_res, y_res, z_res, data_type):
     
     print(f"\n  Output: [default bold]{output}[/]\n")
 
+@print_func_name_args_times(arg_index_for_basename=0)
 def save_as_tifs(ndarray, tif_dir_out):
     """Save a numpy array as a series of .tif images."""
     tif_dir_out.mkdir(parents=True, exist_ok=True)
@@ -108,6 +116,7 @@ def save_as_tifs(ndarray, tif_dir_out):
 
 ######## Image processing ########
 
+@print_func_name_args_times(arg_index_for_basename=0)
 def resample_reorient(ndarray, xy_res, z_res, res, zoom_order=1):
     """Resample and reorient an ndarray for registration or warping to atlas space."""
 
@@ -121,6 +130,7 @@ def resample_reorient(ndarray, xy_res, z_res, res, zoom_order=1):
     
     return img_reoriented
 
+@print_func_name_args_times(arg_index_for_basename=0)
 def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None, args=None):
     """Segment tif series with Ilastik."""
     tif_dir = str(Path(tif_dir).resolve())
