@@ -3,10 +3,14 @@
 import argparse
 import os
 import numpy as np
-import unravel_utils as unrvl
+import antspyx as ants
+from config import Configuration
 from glob import glob
 from pathlib import Path
 from rich import print
+from rich.live import Live
+from unravel_utils import print_func_name_args_times, print_cmd_and_times, get_progress_bar, get_samples
+from unravel_img_tools import load_czi_channel
 from scipy import ndimage
 from skimage.restoration import rolling_ball
 from warp_to_atlas import warp_to_atlas
@@ -27,8 +31,14 @@ def parse_args():
     parser.add_argument('-t', '--tif_dir', help='Name of folder with raw autofluo tifs (alternate input image)', default=None, metavar='')
     return parser.parse_args()
 
-@unrvl.print_func_name_args_times()
-def rb_resample_reorient_warp(sample_dir, args=None):
+
+
+@print_func_name_args_times(arg_index_for_basename=0)
+def rb_resample_reorient_warp(czi_path, args):
+    """Performs rolling ball bkg sub on full res immunofluo data, resamples, reorients, and warp to atlas space."""
+
+    # For the sake of simplicity, we'll only handle .czi files for now.
+    img = load_czi_channel(czi_path, args.channel)
 
     # Iterate through each channel in args.channels
     for i, channel in enumerate(args.channels):
@@ -116,18 +126,35 @@ def rb_resample_reorient_warp(sample_dir, args=None):
         os.rename(warped_img, output)
 
 
-@unrvl.print_cmd_and_times
-def main():
-    args = parse_args()
-
+def main():    
     # Ensure args.channels and args.chann_name are always lists
     if not isinstance(args.channels, list):
         args.channels = [args.channels]
     if not isinstance(args.chann_name, list):
         args.chann_name = [args.chann_name]
 
-    unrvl.process_samples_in_dir(rb_resample_reorient_warp, sample_list=args.dir_list, sample_dirs_pattern=args.dir_pattern, args=args)
+    if args.input:
+        czi_path = Path(args.input).resolve()
+        rb_resample_reorient_warp(czi_path, args)
+        return
+
+    samples = get_samples(args.dirs, args.pattern)
+
+    progress = get_progress_bar(total_tasks=len(samples))
+    task_id = progress.add_task("  [red]Processing samples...", total=len(samples))
+    with Live(progress):
+        for sample in samples:
+            czi_files = glob(f"{sample}/*.czi")
+            if czi_files:
+                czi_path = Path(czi_files[0]).resolve() 
+                rb_resample_reorient_warp(czi_path, args)
+            else:
+                print(f"  [red1 bold].czi file not found for sample: {sample}")
+            progress.update(task_id, advance=1)
 
 
-if __name__ == '__main__':
-    main()
+if __name__ == '__main__': 
+    from rich.traceback import install
+    install()
+    args = parse_args()
+    print_cmd_and_times(main)()

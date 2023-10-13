@@ -33,7 +33,6 @@ def example_function(czi_path, channel): # czi_path and channel are passed to th
 
 
 def main(): # This is the main function that is called at the bottom of the script
-    args = parse_args() # args is a Namespace object that contains the arguments passed to the script
 
     if args.input: # If the --input flag is provided, load the image and print its shape
         czi_path = Path(args.input).resolve() # This gets the absolute path to the .czi file even if the path is relative
@@ -58,6 +57,6 @@ def main(): # This is the main function that is called at the bottom of the scri
 if __name__ == '__main__': # This is the standard way to call the main() function
     from rich.traceback import install
     install() # This enables rich to print a stylized traceback if there is an error (easier to read than the default traceback)
-    args = parse_args()
+    args = parse_args() # args is a Namespace object that contains the arguments passed to the script
     Configuration.verbose = args.verbose  # Set verbosity for all decorators in unravel_utils.py
     print_cmd_and_times(main)() # This calls the main() function and prints the command and execution time

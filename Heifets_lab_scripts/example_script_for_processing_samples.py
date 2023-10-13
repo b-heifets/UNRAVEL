@@ -31,8 +31,6 @@ def example_function(czi_path, channel):
     return img
 
 def main():    
-    args = parse_args()
-
     if args.input:
         czi_path = Path(args.input).resolve()
         example_function(czi_path, args.channel)
@@ -57,5 +55,5 @@ if __name__ == '__main__':
     from rich.traceback import install
     install()
     args = parse_args()
-    Configuration.verbose = args.verbose  # Set verbosity for all decorators
+    Configuration.verbose = args.verbose
     print_cmd_and_times(main)()
