@@ -8,6 +8,7 @@ from aicspylibczi import CziFile
 from glob import glob
 from lxml import etree
 from pathlib import Path
+from rich import print
 from scipy import ndimage
 from tifffile import imread, imwrite 
 from unravel_utils import print_func_name_args_times
