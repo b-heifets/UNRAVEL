@@ -11,13 +11,12 @@ import unravel_utils as unrvl
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Warp image data to atlas space')
-    parser.add_argument('-i', '--input', required=True, help='Input autofl.nii.gz to warp (Default: reg_input/autofl_50um.nii.gz)', default='reg_input/autofl_50um.nii.gz', metavar='')
-    parser.add_argument('-ir', '--input_res', help='Resolution of input in microns (Default: 50)', default=50, type=int, metavar='')
-    parser.add_argument('-rd', '--reg_dir', required=True, help='Folder w/ intermediate reg images (Default: clar_allen_reg)', default='clar_allen_reg', metavar='')
-    parser.add_argument('-oc', '--ort_code', required=True, help='(3 letter orientation code: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Interior)', metavar='')
+    parser.add_argument('-i', '--input', help='Input image.nii.gz to warp to atlas space', required=True, metavar='')
+    parser.add_argument('-ir', '--input_res', help='Resolution of input in microns (Default: 25)', default=25, type=int, metavar='')
+    parser.add_argument('-rd', '--reg_dir', help='Folder w/ intermediate reg images (Default: clar_allen_reg)', default='clar_allen_reg', required=True, metavar='')
+    parser.add_argument('-oc', '--ort_code', help='(3 letter orientation code: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Interior)', required=True, metavar='')
     parser.add_argument('-t', '--template', help='Template to warp to (path/gubra_template_25um.nii.gz)', default="/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz",  metavar='')
     parser.add_argument('-an', '--atlas_name', help='Name of atlas (Default: gubra)', default="gubra", metavar='')
-
     return parser.parse_args()
 
 def check_ants_path():
@@ -32,6 +31,16 @@ def check_ants_path():
     except (subprocess.CalledProcessError, FileNotFoundError):
         print("ANTS program can't be found. Please (re)define $ANTSPATH in your environment.")
         sys.exit(1)
+
+def check_dependencies():
+    # Check c3d
+    if not subprocess.run(["which", "c3d"]):
+        print("ERROR: c3d not initialized .. please setup miracl & rerun script")
+        exit(1)
+    # Check ANTs
+    if not subprocess.run(["which", "antsRegistration"]):
+        print("ANTS program can't be found. Please (re)define $ANTSPATH in your environment.")
+        exit(1)
 
 def reorient_nii(image, ort_cord):
     '''
@@ -84,14 +93,11 @@ def reorient_and_pad_image(args=None):
     pad_z = 0
     img_data_padded = np.pad(img_reoriented, ((pad_x, pad_x), (pad_y, pad_y), (pad_z, pad_z)), mode='constant')
 
-    # Change the type to 'short'
-    img_data_short = img_data_padded.astype(np.uint16)
-
     # Save the new image
     base = os.path.basename(args.input)
     img_name = os.path.splitext(base)[0]
     img_ort = f'{img_name}_ort.nii.gz'
-    unrvl.save_as_nii(img_data_padded, img_ort, )
+    unrvl.save_as_nii(img_data_padded, img_ort, args.input_res, args.input_res, args.input_res, np.uint16)
     # img_new = nib.Nifti1Image(img_data_short, img.affine)
     # nib.save(img_new, img_ort)
 

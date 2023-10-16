@@ -1,43 +1,59 @@
 #!/usr/bin/env python3
 
 import argparse
-import unravel_utils as unrvl
+from config import Configuration
 from glob import glob
 from pathlib import Path
 from rich import print
+from rich.live import Live
 from time import sleep
+from unravel_img_tools import load_czi_channel
+from unravel_utils import print_cmd_and_times, print_func_name_args_times, get_progress_bar, get_samples
+
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Process sample folders w/ example resample function') #
-    parser.add_argument('--dir_pattern', help='Pattern for folders in working dir to process (Default: sample??)', default='sample??', metavar='') 
-    parser.add_argument('--dir_list', help='Folders to process in working dir (e.g., sample01 sample02) (Default: process sample??) ', nargs='+', default=None, metavar='') 
-    parser.add_argument('-i', '--input', help='<path/image.czi> (Optional: process just this image)', metavar='') 
-    parser.add_argument('-c', '--channel', type=int, help='Channel for czi file (Default: 0 for autofluo)', default=0, metavar='')
-    parser.epilog = "example_script_for_processing_samples_w_comments.py -i ./sample01/sample01.czi -c 1" 
-    return parser.parse_args() 
+    parser = argparse.ArgumentParser(description='Process sample folder(s) w/ a *.czi file')
+    parser.add_argument('--dirs', help='List of folders to process. If not provided, --pattern used for matching dirs to process. If no matches, the current directory is used.', nargs='*', default=None, metavar='')
+    parser.add_argument('-p', '--pattern', help='Pattern for folders in the working dir to process. Default: sample??', default='sample??', metavar='')
+    parser.add_argument('-i', '--input', help='Optional: path/image.czi. If provided, the parent folder acts as the sample folder and other samples are not processed.', metavar='')
+    parser.add_argument('-c', '--channel', help='Channel of the czi image to load. Default: 0 for autofluo', type=int, default=0, metavar='')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = "Add extra info (e.g., outputs) and/or example command here"
+    return parser.parse_args()
 
-@unrvl.print_func_name_args_times
-def example_function(sample_dir, args=None): 
 
-    czi_path = Path(glob(f"{sample_dir}/*.czi")[0]).resolve() 
-    if czi_path: 
-        img = unrvl.load_czi_channel(czi_path, args.channel) 
-        print(f"  [default]Image shape: {img.shape}\n  Channel: {args.channel}\n")
+@print_func_name_args_times(arg_index_for_basename=0)
+def example_function(czi_path, channel):
+    """Load a czi file, process its image, and return the image."""
+    img = load_czi_channel(czi_path, channel)
+    print(f"\n    [default]Image shape: {img.shape}\n")
+    sleep(3) 
+    return img
 
-    sleep(2) 
+def main():    
+    if args.input:
+        czi_path = Path(args.input).resolve()
+        example_function(czi_path, args.channel)
+        return
 
-@unrvl.print_cmd_and_times
-def main():
-    args = parse_args() 
+    samples = get_samples(args.dirs, args.pattern)
 
-    output_path = Path("reg_input", f"output.nii.gz")
+    progress = get_progress_bar(total_tasks=len(samples))
+    task_id = progress.add_task("[red]Processing samples...", total=len(samples))
+    with Live(progress):
+        for sample in samples:
+            czi_files = glob(f"{sample}/*.czi")
+            if czi_files:
+                czi_path = Path(czi_files[0]).resolve() 
+                example_function(czi_path, args.channel)
+            else:
+                print(f"    [red1 bold].czi file not found for sample: {sample}")
+            progress.update(task_id, advance=1)
 
-    if args.input and not output_path.exists():
-        unrvl.process_single_input(args.input, example_function, args) 
-        return 
-
-    # Process all samples in the working directory or only those specified if args.input is not provided.
-    unrvl.process_samples_in_dir(example_function, sample_list=args.dir_list, sample_dirs_pattern=args.dir_pattern, output=output_path, args=args) 
 
 if __name__ == '__main__': 
-    main() 
+    from rich.traceback import install
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    print_cmd_and_times(main)()
