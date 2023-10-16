@@ -61,13 +61,12 @@ def prep_reg(sample, args):
     img_reoriented = resample_reorient(img, xy_res, z_res, args.res, zoom_order=args.zoom_order)
 
     # Save autofl image as tif series (for brain_mask.py)
-    tif_dir_out = Path(sample, args.out_dir, os.path.splitext(args.output)[0] + "_tifs").resolve() # e.g., ./sample01/reg_input/autofl_50um_tifs
+    tif_dir_out = Path(sample, args.out_dir, str(output).replace('.nii.gz', '_tifs')).resolve() # e.g., ./sample01/reg_input/autofl_50um_tifs
     tif_dir_out.mkdir(parents=True, exist_ok=True)
     save_as_tifs(img_reoriented, tif_dir_out)
 
     # Save autofl image (for reg.py if skipping brain_mask.py and for applying the brain mask)
-    autofl_output = Path(sample, "reg_input", f"autofl_{args.res}um.nii.gz").resolve()
-    save_as_nii(img_reoriented, autofl_output, args.res, args.res, args.res, np.uint16)
+    save_as_nii(img_reoriented, output, args.res, args.res, args.res, np.uint16)
     return
 
 def main():
