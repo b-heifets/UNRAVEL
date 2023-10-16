@@ -151,3 +151,73 @@ def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None,
             subprocess.run(cmd)
         else:
             subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+@print_func_name_args_times(arg_index_for_basename=0)
+def pad_image(ndarray, pad_width=0.15):
+    """Pads ndarray by 15% of voxels on all sides"""
+    pad_width = int(pad_width * ndarray.shape[0])
+    padded_img = np.pad(ndarray, [(pad_width, pad_width)] * 3, mode='constant')
+    return padded_img
+
+@print_func_name_args_times(arg_index_for_basename=0)
+def reorient_ndarray(data, orientation_string):
+    """Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention)."""
+    
+    # Orientation reference for RAS system
+    ref_orient = "RAS" # R=Right, A=Anterior, S=Superior (conventional orientation of NIFTI images)
+
+    # Ensure valid orientation_string
+    if not set(orientation_string).issubset(set(ref_orient + "LIP")):
+        raise ValueError("Invalid orientation code. Must be a 3-letter code consisting of RLAPSI.")
+    if len(orientation_string) != 3:
+        raise ValueError("Invalid orientation code. Must be a 3-letter code consisting of RLAPSI.")
+
+    # Compute the permutation indices and flips
+    permutation = [ref_orient.index(orient) for orient in orientation_string]
+    flips = [(slice(None, None, -1) if orient in "LIP" else slice(None)) for orient in orientation_string]
+
+    # Reorient the data using numpy's advanced indexing
+    reoriented_data = data[flips[0], flips[1], flips[2]]
+    reoriented_data = np.transpose(reoriented_data, permutation)
+
+    return reoriented_data
+
+@print_func_name_args_times(arg_index_for_basename=0)
+def reorient_ndarray2(ndarray, orientation_string):
+    """Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention)."""
+
+    # Define the anatomical direction mapping. The first letter is the direction of the first axis, etc.
+    direction_map = {
+        'R': 0, 'L': 0,
+        'A': 1, 'P': 1,
+        'I': 2, 'S': 2
+    }
+
+    # Define the flip direction
+    flip_map = {
+        'R': True, 'L': False,
+        'A': False, 'P': True,
+        'I': True, 'S': False
+    }
+
+    # Orientation reference for RAS system
+    ref_orient = "RAS"
+
+    # Ensure valid orientation_string
+    if not set(orientation_string).issubset(set(ref_orient + "LIP")):
+        raise ValueError("Invalid orientation code. Must be a 3-letter code consisting of RLAPSI.")
+    if len(orientation_string) != 3:
+        raise ValueError("Invalid orientation code. Must be a 3-letter code consisting of RLAPSI.")
+
+    # Determine new orientation based on the code
+    new_axes_order = [direction_map[c] for c in orientation_string]
+
+    # Reorder the axes
+    reoriented_volume = np.transpose(ndarray, axes=new_axes_order)
+
+    # Flip axes as necessary
+    for idx, c in enumerate(orientation_string):
+        if flip_map[c]:
+            reoriented_volume = np.flip(reoriented_volume, axis=idx)
+
+    return reoriented_volume

@@ -24,7 +24,7 @@ def parse_args():
     parser.add_argument('-r', '--res', help='Resample to this resolution in microns. Default: 50', default=50, type=int, metavar='')
     parser.add_argument('-zo', '--zoom_order', help='Order of spline interpolation (scipy.ndimage.zoom). Range: 0-5. Default: 1', default=1, type=int, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = "E.g., run from exp dir: prep_reg.py -v; Outputs: .[/sample??]/reg_input/autofl_*um.nii.gz and .[/sample??]/reg_input/autofl_*um_tifs/slice_????.tif series"
+    parser.epilog = "From exp dir run: prep_reg.py; Outputs: .[/sample??]/reg_input/autofl_*um.nii.gz and .[/sample??]/reg_input/autofl_*um_tifs/slice_????.tif series"
     return parser.parse_args()
 
 @print_func_name_args_times(arg_index_for_basename=0)

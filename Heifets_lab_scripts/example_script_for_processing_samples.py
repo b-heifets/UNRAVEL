@@ -27,7 +27,7 @@ def example_function(czi_path, channel):
     """Load a czi file, process its image, and return the image."""
     img = load_czi_channel(czi_path, channel)
     print(f"\n    [default]Image shape: {img.shape}\n")
-    sleep(1) 
+    sleep(3) 
     return img
 
 def main():    

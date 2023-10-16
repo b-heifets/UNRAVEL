@@ -3,14 +3,15 @@
 import argparse
 import os
 import numpy as np
-import antspyx as ants
+import ants
 from config import Configuration
 from glob import glob
 from pathlib import Path
 from rich import print
 from rich.live import Live
+from unravel_img_tools import load_tifs, reorient_ndarray, xyz_res_from_czi, xyz_res_from_tif
 from unravel_utils import print_func_name_args_times, print_cmd_and_times, get_progress_bar, get_samples
-from unravel_img_tools import load_czi_channel
+from unravel_img_tools import load_czi_channel, resample_reorient, pad_image
 from scipy import ndimage
 from skimage.restoration import rolling_ball
 from warp_to_atlas import warp_to_atlas
@@ -19,8 +20,10 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Load channel(s) of *.czi (default) or ./<tif_dir(s)>/*.tif, rolling ball bkg sub, resample, reorient, and save as ./sample??_ochann_rb4_gubra_space.nii.gz')
     parser.add_argument('--dir_pattern', help='Pattern for folders in working dir to process (Default: sample??)', default='sample??', metavar='')
     parser.add_argument('--dir_list', help='Folders to process in working dir (e.g., sample01 sample02) (Default: process sample??) ', nargs='+', default=None, metavar='')
+    parser.add_argument('-t', '--tif_dir', help='Name of folder in sample folder or working directory with raw immunofluo tifs. Use as image input if *.czi does not exist. Default: ochann', default="ochann", metavar='')
+    parser.add_argument('-i', '--input', help='Optional: path/image.czi or path/tif_dir. If provided, the parent folder acts as the sample folder and other samples are not processed.', metavar='')
     parser.add_argument('--channels', help='.czi channel number(s) (e.g., 1 2; Default: 1)', nargs='+', default=1, type=int, metavar='')
-    parser.add_argument('--chann_name', help='Name(s) of channels for saving (e.g., tdT cFos; for tifs place in ./sample??/<cFos>/; Default: ochann)', nargs='+', default="ochann", metavar='')
+    parser.add_argument('--chann_name', help='Name(s) of channels for saving (e.g., tdT cFos). List length should match that for --channels. Default: ochann)', nargs='+', default="ochann", metavar='')
     parser.add_argument('-o', '--output', help='Output file name (Default: sample??_ochann_rb4_gubra_space.nii.gz)', default=None, metavar='')
     parser.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels (Default: 4)', default=4, type=int, metavar='')
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns (Default: get via metadata)', default=None, type=float, metavar='')
@@ -28,13 +31,14 @@ def parse_args():
     parser.add_argument('-r', '--res', help='Resample to this resolution in microns (Default: 25)', default=25, type=int, metavar='')
     parser.add_argument('-zo', '--zoom_order', help='Order of spline interpolation. Range: 0-5. (Default: 1))', default=1, type=int, metavar='')
     parser.add_argument('-a', '--atlas_name', help='Name of atlas (Default: gubra)', default="gubra", metavar='')
-    parser.add_argument('-t', '--tif_dir', help='Name of folder with raw autofluo tifs (alternate input image)', default=None, metavar='')
+    parser.add_argument('-t', '--template', help='Average template image. Default: path/gubra_template_25um.nii.gz.', default="/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz",  metavar='')
+    parser.add_argument('--transforms', help="Name of folder w/ transforms from registration. Default: clar_allen_reg", default="clar_allen_reg", metavar='')
+    parser.epilog = "From exp dir run: rb.py; Outputs: .[/sample??]/sample??_ochann_rb4_gubra_space.nii.gz"
     return parser.parse_args()
 
 
-
 @print_func_name_args_times(arg_index_for_basename=0)
-def rb_resample_reorient_warp(czi_path, args):
+def rb_resample_reorient_warp(czi_path, sample, args):
     """Performs rolling ball bkg sub on full res immunofluo data, resamples, reorients, and warp to atlas space."""
 
     # For the sake of simplicity, we'll only handle .czi files for now.
@@ -47,94 +51,127 @@ def rb_resample_reorient_warp(czi_path, args):
         channel_name = args.chann_name[i] if isinstance(args.chann_name, list) else args.chann_name
 
         # Check if the output file already exists
-        output_path = Path(f"{sample_dir}_{channel_name}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz")
+        output_path = Path(f"{sample}_{channel_name}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz")
         if output_path.exists():
-            print(f"\n\n    [gold3]{output_path}[/] already exists. Skipping.\n")
+            print(f"\n\n    {output_path} already exists. Skipping.\n")
             continue # Skip to next channel
 
-        czi_files = glob(f"{sample_dir}/*.czi")
+        # Load immunofluo channel(s)              ### This code is also in prep_reg.py (aside from channel_name). Consider only having it in one place. 
+        xy_res, z_res = args.xy_res, args.z_res
+        czi_files = glob(f"{sample}/*.czi")
         if czi_files:
-            czi_path = Path(czi_files[0]).resolve()
-            img = unrvl.load_czi_channel(czi_path, channel)
-
-            if args.xy_res is None or args.z_res is None:
-                xy_res_metadata, z_res_metadata = unrvl.xyz_res_from_czi(czi_path)
-
-        elif args.tif_dir:
-            tif_dir_path = Path(sample_dir, args.tif_dir)
-            tif_files = glob(f"{tif_dir_path}/*.tif")
-
-            if not tif_files:
-                print(f"\n    [red]No .tif files found in {tif_dir_path}/. Skipping this directory.")
-                continue 
-
-            path_to_first_tif = tif_files[0]
-            img = unrvl.load_tifs(tif_dir_path)
-
-            if args.xy_res is None or args.z_res is None:
-                xy_res_metadata, z_res_metadata = unrvl.xyz_res_from_tif(path_to_first_tif)
-
+            czi_path = Path(czi_files[0]).resolve() 
+            img = load_czi_channel(czi_path, channel_name)
+            if xy_res is None or z_res is None:
+                xy_res, z_res = xyz_res_from_czi(czi_path)
+        else:
+            tif_dir_path = Path(sample, args.tif_dir).resolve()
+            img = load_tifs(tif_dir_path)
+            if xy_res is None or z_res is None:
+                path_to_first_tif = glob(f"{sample}/{args.tif_dir}/*.tif")[0]
+                xy_res, z_res = xyz_res_from_tif(path_to_first_tif)
         if img is None:
-            print(f"\n    [red]No .czi file found and tif_dir is not specified\n")
+            print(f"\n    [red]No .czi files found and tif_dir is not specified for {sample}[/]\n")
             return
                 
         # Rolling ball background subtraction
         img_bkg = rolling_ball(img, radius=args.rb_radius, nansafe=True) # returns the estimated background
-        rb_bkg_sub_img = img - img_bkg
+        rb_img = img - img_bkg
 
-        # Convert to 
+        # Resample and reorient image
+        rb_img_res_reort = resample_reorient(rb_img, xy_res, z_res, args.res, zoom_order=args.zoom_order) 
 
-        # Resample image
-        # Resample CLARITY to Allen resolution
-        # ResampleImage 3 ${inimg} ${res_vox} 0.025x0.025x0.025 0
-        print(f"\n    [default]Image shape: {img.shape}\n    Channel: {channel}\n")
-        args.xy_res = args.xy_res or xy_res_metadata # If xy_res is None, use xy_res_metadata
-        args.z_res = args.z_res or z_res_metadata
-        zf_xy = args.xy_res / args.res # Zoom factor
-        zf_z = args.z_res / args.res
-        resampled_rb_img = ndimage.zoom(rb_bkg_sub_img, (zf_xy, zf_xy, zf_z), order=args.zoom_order)
+        # Reorient again
+        rb_img_res_reort_reort = np.transpose(rb_img_res_reort, (1, 2, 0)) 
 
-        # Reorient image
-        # Orient CLARITY to standard orientation
-        # PermuteFlipImageOrientationAxes 3 ${res_vox} ${swp_vox}  1 2 0  0 0 0
+        # Padding the image 
+        rb_img_res_reort_reort_padded = pad_image(rb_img_res_reort_reort, pad_width=0.15)
 
-        # Orient CLARITY to standard orientation
-        # c3d ${swp_vox} -orient ${orttagclar} -pad 15% 15% 0 -interpolation ${ortintclar} -type ${orttypeclar} -o ${ortclar}
-        reoriented_rb_img = np.flip(np.einsum('zyx->xzy', resampled_rb_img), axis=1)
+        # Reorient yet again
+        rb_img_res_reort_reort_padded_reort = reorient_ndarray(rb_img_res_reort_reort_padded, args.ort_code)
 
-        # Get original dim
-        # org_dim=`PrintHeader ${ortclar} 2`
+        # Read in the images and transforms
+        reference_image = ants.image_read(args.template) # fixed template image
+        reference_image = ants.image_read(f'{args.transforms}/init_allen.nii.gz')
+        inverse_warp = ants.read_transform(f'{args.transforms}/allen_clar_ants1InverseWarp.nii.gz')
+        affine_transform = ants.read_transform(f'{args.transforms}/allen_clar_ants0GenericAffine.mat', precision=1)  # assuming 1 denotes float precision
 
-        # Resample to original resolution
-        # ResampleImage 3 ${org_clar} ${res_org_clar} ${org_dim} 1
+        # Combine the deformation fields and transformations
+        combined_transform = ants.compose_transforms(inverse_warp, affine_transform) # clar_allen_reg/clar_allen_comb_def.nii.gz
 
-        # Copy original transform
-        # c3d ${res_org_clar} ${ortclar} -copy-transform -type ${orttypeclar} -o ${cp_clar}
+        # Apply the transformations
+        warped_image = ants.apply_transforms(fixed=reference_image, moving=rb_img_res_reort_reort_padded_reort, transformlist=[combined_transform, initial_transform], interpolator='bSpline')
 
-        # Combine deformation fields and transformations 
-        # antsApplyTransforms -d 3 -r ${init_allen} -t ${antswarp} [ ${antsaff}, 1 ] -o [ ${comb_def}, 1 ]
+        # antsApplyTransforms -d 3 -r clar_allen_reg/init_allen.nii.gz -t clar_allen_reg/allen_clar_ants1InverseWarp.nii.gz [ clar_allen_reg/allen_clar_ants0GenericAffine.mat, 1 ] -o [ clar_allen_reg/clar_allen_comb_def.nii.gz, 1 ]
+        registration_result = ants.registration(fixed=reference_image, moving=rb_img_res_reort_reort_padded_reort, type_of_transform='SyN')
 
-        # "Applying ants deformations to CLARITY data" 
-        # antsApplyTransforms -d 3 -r ${allenref} -i ${cp_clar} -n Bspline -t [ ${initform}, 1 ] ${comb_def} -o ${wrpclar}
+        # antsApplyTransforms -d 3 -r /usr/local/miracl/atlases/ara/gubra/gubra_template_25um.nii.gz -i clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort_cp_org.nii.gz -n Bspline -t [ clar_allen_reg/init_tform.mat, 1 ] clar_allen_reg/clar_allen_comb_def.nii.gz -o /SSD3/test/sample_w_czi2/sample13/reg_final/reo_sample13_02x_down_cfos_rb4_chan_cfos_channel_allen_space.nii.gz
 
+        warped_moving_image = ants.apply_transforms(fixed=fixed_image, moving=moving_image, transformlist=registration_result['fwdtransforms'])
+
+        warped_data = warped_moving_image.numpy()
 
         # Warp image to atlas space
         warped_img = warp_to_atlas(reoriented_rb_img, args.atlas_name, args.res)
 
         # Rename the saved file
-        output = f"{sample_dir}_{channel_name}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz"
+        output = f"{sample}_{channel_name}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz"
         os.rename(warped_img, output)
+
+"""
+
+Rolling ball subtracting w/ pixel radius of 4
+get metadata
+Converting tifs to .nii.gz, downsampling, and reorienting (output: sample13_02x_down_cfos_rb4_chan.nii.gz)
+Reorienting sample13_cfos_rb4_gubra_space.nii.gz
+
+ Resampling CLARITY to Allen resolution 
+ResampleImage 3 niftis/reo_sample13_02x_down_cfos_rb4_chan.nii.gz clar_allen_reg/vox_seg_cfos_res.nii.gz 0.025x0.025x0.025 0
+
+ Orienting CLARITY to standard orientation 
+PermuteFlipImageOrientationAxes 3 clar_allen_reg/vox_seg_cfos_res.nii.gz clar_allen_reg/vox_seg_cfos_swp.nii.gz 1 2 0 0 0 0
+
+ Orienting CLARITY to standard orientation 
+c3d clar_allen_reg/vox_seg_cfos_swp.nii.gz -orient ALI -pad 15% 15% 0 -interpolation Cubic -type short -o clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort.nii.gz
+
+ Resampling to original resolution 
+ResampleImage 3 clar_allen_reg/clar.nii.gz clar_allen_reg/clar_res_org_seg.nii.gz 580x544x284 1 ### perhaps unnessary if 25 um resolution is used
+
+ Copying original transform 
+c3d clar_allen_reg/clar_res_org_seg.nii.gz clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort.nii.gz -copy-transform -type short -o clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort_cp_org.nii.gz ### perhaps unnessary if 25 um resolution is used
+
+ Combining deformation fields and transformations 
+antsApplyTransforms -d 3 -r clar_allen_reg/init_allen.nii.gz -t clar_allen_reg/allen_clar_ants1InverseWarp.nii.gz [ clar_allen_reg/allen_clar_ants0GenericAffine.mat, 1 ] -o [ clar_allen_reg/clar_allen_comb_def.nii.gz, 1 ]
+=============================================================================
+The composite transform comprises the following transforms (in order): 
+  1. inverse of clar_allen_reg/allen_clar_ants0GenericAffine.mat (type = AffineTransform)
+  2. clar_allen_reg/allen_clar_ants1InverseWarp.nii.gz (type = DisplacementFieldTransform)
+=============================================================================
+Output composite transform displacement field: clar_allen_reg/clar_allen_comb_def.nii.gz
+
+ Applying ants deformations to CLARITY data 
+antsApplyTransforms -d 3 -r /usr/local/miracl/atlases/ara/gubra/gubra_template_25um.nii.gz -i clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort_cp_org.nii.gz -n Bspline -t [ clar_allen_reg/init_tform.mat, 1 ] clar_allen_reg/clar_allen_comb_def.nii.gz -o /SSD3/test/sample_w_czi2/sample13/reg_final/reo_sample13_02x_down_cfos_rb4_chan_cfos_channel_allen_space.nii.gz
+Input scalar image: clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort_cp_org.nii.gz
+Reference image: /usr/local/miracl/atlases/ara/gubra/gubra_template_25um.nii.gz
+=============================================================================
+The composite transform comprises the following transforms (in order): 
+  1. clar_allen_reg/clar_allen_comb_def.nii.gz (type = DisplacementFieldTransform)
+  2. inverse of clar_allen_reg/init_tform.mat (type = AffineTransform)
+=============================================================================
+Interpolation type: BSplineInterpolateImageFunction
+Output warped image: /SSD3/test/sample_w_czi2/sample13/reg_final/reo_sample13_02x_down_cfos_rb4_chan_cfos_channel_allen_space.nii.gz
+"""
 
 
 def main():    
     # Ensure args.channels and args.chann_name are always lists
-    if not isinstance(args.channels, list):
+    if not isinstance(args.channels, list): # isinstance returns True if the object is an instance of the class
         args.channels = [args.channels]
     if not isinstance(args.chann_name, list):
         args.chann_name = [args.chann_name]
 
     if args.input:
-        czi_path = Path(args.input).resolve()
+        czi_path = Path(args.input).parent.resolve()
         rb_resample_reorient_warp(czi_path, args)
         return
 
@@ -147,7 +184,7 @@ def main():
             czi_files = glob(f"{sample}/*.czi")
             if czi_files:
                 czi_path = Path(czi_files[0]).resolve() 
-                rb_resample_reorient_warp(czi_path, args)
+                rb_resample_reorient_warp(czi_path, sample, args)
             else:
                 print(f"    [red1 bold].czi file not found for sample: {sample}")
             progress.update(task_id, advance=1)

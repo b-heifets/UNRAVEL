@@ -65,16 +65,12 @@ def bias_correction(image_path, mask_path=None):
     nib.save(corrected_image, corrected_path)
     return corrected_path
 
-def pad_image(image_path):
-    import numpy as np
-
+def pad_image(image_path, pad_width=0.15):
+    """Pads image by 15% of voxels on all sides"""
     image_data = load_nifti_image(image_path)
-    pad_width = int(0.15 * image_data.shape[0])  # 15% of voxels
-    padded_data = np.pad(image_data, [(pad_width, pad_width)] * 3, mode='constant')
-    
-    padded_path = "padded_" + image_path.split('/')[-1]
-    save_nifti_image(padded_data, image_path, padded_path)
-    return padded_path
+    pad_width = int(pad_width * image_data.shape[0])
+    padded_img = np.pad(image_data, [(pad_width, pad_width)] * 3, mode='constant')
+    return padded_img
 
 def smooth_image(image_path):
     image_data = load_nifti_image(image_path)
@@ -83,7 +79,6 @@ def smooth_image(image_path):
     smoothed_path = "smoothed_" + image_path.split('/')[-1]
     save_nifti_image(smoothed_data, image_path, smoothed_path)
     return smoothed_path
-
 
 
 def main(args):
