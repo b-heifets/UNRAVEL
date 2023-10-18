@@ -91,29 +91,14 @@ function ifdsntexistrun() {
   fi
 }
 
-# Add autofl_50um.nii.gz to ./clar_allen_reg 
-if [[ -z $inclar ]]; then 
-  inclar=$PWD/reg_input/autofl_50um.nii.gz #default
-fi 
-
-resclar=${regdir}/autofl_50um.nii.gz
-if [[ ! -f $res_clar ]]; then 
-  if [[ -f $inclar ]]; then 
-    cp $inclar $resclar
-  else 
-    ifdsntexistrun $resclar "Resample autofl to 50 micron resolution" \
-    zoom.sh $inclar m m m 50 uint16 ; if [ -f ${inclar::-7}_50um.nii.gz ]; then mv ${inclar::-7}_50um.nii.gz $resclar ; fi
-  fi
-fi
-
 # N4 bias correct
 biasclar=$regdir/autofl_50um_bias.nii.gz
 if [[ -z $mask ]]; then
   ifdsntexistrun $biasclar "Bias-correcting 50 micron autofluo image" \
-N4BiasFieldCorrection -d 3 -i ${regdir}/autofl_50um.nii.gz -s 2 -t [0.15,0.01,200] -o $biasclar
+N4BiasFieldCorrection -d 3 -i $PWD/reg_input/autofl_50um_masked.nii.gz -s 2 -t [0.15,0.01,200] -o $biasclar
 else 
   ifdsntexistrun $biasclar "Bias-correcting 50 micron autofluo image using mask" \
-N4BiasFieldCorrection -d 3 -i ${regdir}/autofl_50um.nii.gz -s 2 -t [0.15,0.01,200] -o $biasclar -x $mask
+N4BiasFieldCorrection -d 3 -i $PWD/reg_input/autofl_50um.nii.gz -s 2 -t [0.15,0.01,200] -o $biasclar -x $mask
 fi
 
 # Pad image
@@ -194,6 +179,10 @@ zoom.sh $smclar m m m $vox uint16 ; if [ -f ${smclar::-7}_${vox}um.nii.gz ]; the
 ifdsntexistrun $wrplbls "Applying ants deformation to atlas" \
 antsApplyTransforms -d 3 -r $smclarres -i $lbls -n MultiLabel -t $antswarp $antsaff $initform \
 -o $wrplbls --float # -r <reference-img> -t <transform(s)>
+
+if [[ -z $inclar ]]; then 
+  inclar=$PWD/reg_input/autofl_50um.nii.gz #default
+fi 
 
 # Get org tag (slow with larger niftis. Perhaps nibabel would be faster)
 ortmatrix=`PrintHeader $inclar 4 | tr 'x' ' '` ### Get ortientation matrix (Direction) w/ space delimiter rather than x delimiter 

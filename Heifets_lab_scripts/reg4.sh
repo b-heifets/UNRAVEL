@@ -5,10 +5,8 @@ if [[ $# == 0 || "$1" == "-h" || "$1" == "--help" || "$1" == "help" ]] ; then
 From experiment folder run: 
 reg4.sh <orient code> <0, 1, or ./template.nii.gz> <w/l/r> <label res: 25> [sample?? list]
 
-Input: ./<EXP>/<sample??>/reg_input/sample??_??x_down_*_chan.nii.gz
-Optional: brain mask (faster): ./nifti/clar_res0.05_mask.nii.gz
-    reg_input/autofl_50um_brain_mask.nii.gz
-    reg_input/autofl_50um_masked.nii.gz
+Inputs: reg_input/autofl_50um_brain_mask.nii.gz
+        reg_input/autofl_50um_masked.nii.gz
 
 Detailed command:
 reg4.sh <orient code> <1=OB, 0=OB, or ./custom_template.nii.gz> <w, l or r> <warped label res in tissue space: 10/25/50> [leave blank to process all samples or enter sample?? separated by spaces]

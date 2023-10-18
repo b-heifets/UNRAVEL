@@ -18,10 +18,10 @@ from warp_to_atlas import warp_to_atlas
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Load channel(s) of *.czi (default) or ./<tif_dir(s)>/*.tif, rolling ball bkg sub, resample, reorient, and save as ./sample??_ochann_rb4_gubra_space.nii.gz')
-    parser.add_argument('--dir_pattern', help='Pattern for folders in working dir to process (Default: sample??)', default='sample??', metavar='')
-    parser.add_argument('--dir_list', help='Folders to process in working dir (e.g., sample01 sample02) (Default: process sample??) ', nargs='+', default=None, metavar='')
-    parser.add_argument('-t', '--tif_dir', help='Name of folder in sample folder or working directory with raw immunofluo tifs. Use as image input if *.czi does not exist. Default: ochann', default="ochann", metavar='')
-    parser.add_argument('-i', '--input', help='Optional: path/image.czi or path/tif_dir. If provided, the parent folder acts as the sample folder and other samples are not processed.', metavar='')
+    parser.add_argument('-p', '--pattern', help='Pattern for folders in the working dir to process. Default: sample??', default='sample??', metavar='')
+    parser.add_argument('--dirs', help='List of folders to process. If not provided, --pattern used for matching dirs to process. If no matches, the current directory is used.', nargs='*', default=None, metavar='')
+    parser.add_argument('-td', '--tif_dir', help='Name of folder in sample folder or working directory with raw immunofluo tifs. Use as image input if *.czi does not exist. Default: ochann', default="ochann", metavar='')
+    parser.add_argument('-ort', '--ort_code', '3 letter orientation code for reorienting (using the letters RLAPSI). Default: ALI', default='ALI', metavar='')
     parser.add_argument('--channels', help='.czi channel number(s) (e.g., 1 2; Default: 1)', nargs='+', default=1, type=int, metavar='')
     parser.add_argument('--chann_name', help='Name(s) of channels for saving (e.g., tdT cFos). List length should match that for --channels. Default: ochann)', nargs='+', default="ochann", metavar='')
     parser.add_argument('-o', '--output', help='Output file name (Default: sample??_ochann_rb4_gubra_space.nii.gz)', default=None, metavar='')
@@ -38,13 +38,10 @@ def parse_args():
 
 
 @print_func_name_args_times(arg_index_for_basename=0)
-def rb_resample_reorient_warp(czi_path, sample, args):
+def rb_resample_reorient_warp(sample, args):
     """Performs rolling ball bkg sub on full res immunofluo data, resamples, reorients, and warp to atlas space."""
 
     cwd = Path(".").resolve()
-
-    # For the sake of simplicity, we'll only handle .czi files for now.
-    img = load_czi_channel(czi_path, args.channel)
 
     # Iterate through each channel in args.channels
     for i, channel in enumerate(args.channels):
@@ -58,12 +55,12 @@ def rb_resample_reorient_warp(czi_path, sample, args):
             print(f"\n\n    {output_path} already exists. Skipping.\n")
             continue # Skip to next channel
 
-        # Load immunofluo channel(s)              ### This code is also in prep_reg.py (aside from channel_name). Consider only having it in one place. 
+        # Load immunofluo channel(s)              ### This code is also in prep_reg.py (aside from channel & channel_name). Consider only having it in one place. 
         xy_res, z_res = args.xy_res, args.z_res
         czi_files = glob(f"{sample}/*.czi")
         if czi_files:
             czi_path = Path(czi_files[0]).resolve() 
-            img = load_czi_channel(czi_path, channel_name)
+            img = load_czi_channel(czi_path, channel, "xyz")
             if xy_res is None or z_res is None:
                 xy_res, z_res = xyz_res_from_czi(czi_path)
         else:
@@ -100,6 +97,11 @@ def rb_resample_reorient_warp(czi_path, sample, args):
         inverse_warp = ants.read_transform(f'{transforms_dir}/allen_clar_ants1InverseWarp.nii.gz')
         affine_transform = ants.read_transform(f'{transforms_dir}/allen_clar_ants0GenericAffine.mat', precision=1)  # assuming 1 denotes float precision
 
+        print(f'\n{initial_transform_matrix=}\n')
+        print(f'\n{inverse_warp=}\n')
+        print(f'\n{affine_transform=}\n')
+        import sys ; sys.exit()
+
         # Combine the deformation fields and transformations
         combined_transform = ants.compose_transforms(inverse_warp, affine_transform) # clar_allen_reg/clar_allen_comb_def.nii.gz
 
@@ -115,15 +117,10 @@ def rb_resample_reorient_warp(czi_path, sample, args):
 
 def main():    
     # Ensure args.channels and args.chann_name are always lists
-    if not isinstance(args.channels, list): # isinstance returns True if the object is an instance of the class
-        args.channels = [args.channels]
-    if not isinstance(args.chann_name, list):
-        args.chann_name = [args.chann_name]
-
-    if args.input:
-        czi_path = Path(args.input).parent.resolve()
-        rb_resample_reorient_warp(czi_path, args)
-        return
+    args.channels = [args.channels] if isinstance(args.channels, int) else args.channels
+    args.chann_name = [args.chann_name] if isinstance(args.chann_name, str) else args.chann_name
+    if len(args.channels) != len(args.chann_name):
+        raise ValueError("    [red1]Length of channels and chann_name arguments should be the same.")
 
     samples = get_samples(args.dirs, args.pattern)
 
@@ -131,12 +128,7 @@ def main():
     task_id = progress.add_task("[red]Processing samples...", total=len(samples))
     with Live(progress):
         for sample in samples:
-            czi_files = glob(f"{sample}/*.czi")
-            if czi_files:
-                czi_path = Path(czi_files[0]).resolve() 
-                rb_resample_reorient_warp(czi_path, sample, args)
-            else:
-                print(f"    [red1 bold].czi file not found for sample: {sample}")
+            rb_resample_reorient_warp(sample, args)
             progress.update(task_id, advance=1)
 
 

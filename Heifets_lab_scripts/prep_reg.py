@@ -13,8 +13,8 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times, get_p
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Load channel of ./*.czi (default; assumes 1 .czi in working dir) or ./<tif_dir>/*.tif, resample, reorient, and save as ./niftis/<img>.nii.gz')
-    parser.add_argument('--dirs', help='List of folders to process. If not provided, --pattern used for matching dirs to process. If no matches, the current directory is used.', nargs='*', default=None, metavar='')
     parser.add_argument('-p', '--pattern', help='Pattern for folders in the working dir to process. Default: sample??', default='sample??', metavar='')
+    parser.add_argument('--dirs', help='List of folders to process. If not provided, --pattern used for matching dirs to process. If no matches, the current directory is used.', nargs='*', default=None, metavar='')
     parser.add_argument('-t', '--tif_dir', help='Name of folder in sample folder or working directory with raw autofluo tifs. Use as image input if *.czi does not exist. Default: autofl_tifs', default="autofl_tifs", metavar='')
     parser.add_argument('-ri', '--reg_input', help='Output directory for registration input(s). Default: reg_input', default='reg_input', metavar='')
     parser.add_argument('-o', '--output', help='Output file name. Default: autofl_<res>_um.nii.gz', default=None, metavar='')

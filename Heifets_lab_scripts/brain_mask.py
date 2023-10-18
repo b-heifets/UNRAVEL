@@ -12,8 +12,8 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times, get_p
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Before running brain_mask.py, train ilastik using tifs from ./sample??/reg_input/autofl_*um_tifs/*.tif (from prep_reg.py)')
-    parser.add_argument('--dirs', help='List of folders to process. If not provided, --pattern used for matching dirs to process. If no matches, the current directory is used.', nargs='*', default=None, metavar='')
     parser.add_argument('-p', '--pattern', help='Pattern for folders in the working dir to process. Default: sample??', default='sample??', metavar='')
+    parser.add_argument('--dirs', help='List of folders to process. If not provided, --pattern used for matching dirs to process. If no matches, the current directory is used.', nargs='*', default=None, metavar='')
     parser.add_argument('-ri', '--reg_input', help='Output directory (located in ./sample??). Default: reg_input', default='reg_input', metavar='')
     parser.add_argument('-i', '--input', help='autofl.nii.gz input to mask. Default: autofl_<res>_um.nii.gz', default='autofl_50um.nii.gz', metavar='')
     parser.add_argument('-td', '--tif_dir', help='Directory containing tif series for segmentation. Default: autofl_50um_tifs', default="autofl_50um_tifs", metavar='')
@@ -70,9 +70,15 @@ def brain_mask(sample, args):
     # Apply brain mask to autofluo image
     autofl_masked = np.where(seg_img == 1, autofl_img, 0)
 
+
+
+    print("Before save masked autofl image")
+
     # Save masked autofl image
-    masked_autofl_output = Path(sample, args.reg_input, f"autofl_{args.res}um_masked.nii.gz")
+    masked_autofl_output = Path(sample, args.reg_input, f"autofl_{args.res}um_masked.nii.gz") if sample != cwd.name else Path(args.reg_input, f"autofl_{args.res}um_masked.nii.gz")
     save_as_nii(autofl_masked, masked_autofl_output, args.res, args.res, args.res, np.uint16)
+                
+    print(f'\n{masked_autofl_output=}\n')
 
 
 def main():
