@@ -94,9 +94,6 @@ def save_as_nii(ndarray, output, x_res, y_res, z_res, data_type):
 
     output = Path(output).resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
-
-    # Reorient ndarray
-    # ndarray = np.transpose(ndarray, (2, 1, 0))
     
     # Create the affine matrix with the appropriate resolutions (converting microns to mm)
     affine = np.diag([x_res / 1000, y_res / 1000, z_res / 1000, 1])

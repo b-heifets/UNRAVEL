@@ -41,6 +41,8 @@ def parse_args():
 def rb_resample_reorient_warp(czi_path, sample, args):
     """Performs rolling ball bkg sub on full res immunofluo data, resamples, reorients, and warp to atlas space."""
 
+    cwd = Path(".").resolve()
+
     # For the sake of simplicity, we'll only handle .czi files for now.
     img = load_czi_channel(czi_path, args.channel)
 
@@ -90,77 +92,25 @@ def rb_resample_reorient_warp(czi_path, sample, args):
         # Reorient yet again
         rb_img_res_reort_reort_padded_reort = reorient_ndarray(rb_img_res_reort_reort_padded, args.ort_code)
 
-        # Read in the images and transforms
-        reference_image = ants.image_read(args.template) # fixed template image
-        reference_image = ants.image_read(f'{args.transforms}/init_allen.nii.gz')
-        inverse_warp = ants.read_transform(f'{args.transforms}/allen_clar_ants1InverseWarp.nii.gz')
-        affine_transform = ants.read_transform(f'{args.transforms}/allen_clar_ants0GenericAffine.mat', precision=1)  # assuming 1 denotes float precision
+        # Directory with transforms from registration
+        transforms_dir = Path(sample, args.transforms).resolve() if sample != cwd.name else Path(args.transforms).resolve()
+
+        # Read in transforms
+        initial_transform_matrix = ants.read_transform(f'{transforms_dir}/init_tform.mat', precision=1)  # assuming 1 denotes float precision 
+        inverse_warp = ants.read_transform(f'{transforms_dir}/allen_clar_ants1InverseWarp.nii.gz')
+        affine_transform = ants.read_transform(f'{transforms_dir}/allen_clar_ants0GenericAffine.mat', precision=1)  # assuming 1 denotes float precision
 
         # Combine the deformation fields and transformations
         combined_transform = ants.compose_transforms(inverse_warp, affine_transform) # clar_allen_reg/clar_allen_comb_def.nii.gz
 
-        # Apply the transformations
-        warped_image = ants.apply_transforms(fixed=reference_image, moving=rb_img_res_reort_reort_padded_reort, transformlist=[combined_transform, initial_transform], interpolator='bSpline')
-
-        # antsApplyTransforms -d 3 -r clar_allen_reg/init_allen.nii.gz -t clar_allen_reg/allen_clar_ants1InverseWarp.nii.gz [ clar_allen_reg/allen_clar_ants0GenericAffine.mat, 1 ] -o [ clar_allen_reg/clar_allen_comb_def.nii.gz, 1 ]
-        registration_result = ants.registration(fixed=reference_image, moving=rb_img_res_reort_reort_padded_reort, type_of_transform='SyN')
+        # Read in reference image
+        reference_image = ants.image_read(f'{transforms_dir}/init_allen.nii.gz') # 50 um template from initial transformation to tissue during registration 
 
         # antsApplyTransforms -d 3 -r /usr/local/miracl/atlases/ara/gubra/gubra_template_25um.nii.gz -i clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort_cp_org.nii.gz -n Bspline -t [ clar_allen_reg/init_tform.mat, 1 ] clar_allen_reg/clar_allen_comb_def.nii.gz -o /SSD3/test/sample_w_czi2/sample13/reg_final/reo_sample13_02x_down_cfos_rb4_chan_cfos_channel_allen_space.nii.gz
+        warped_image = ants.apply_transforms(fixed=reference_image, moving=rb_img_res_reort_reort_padded_reort, transformlist=[combined_transform, initial_transform_matrix], interpolator='bSpline')
 
-        warped_moving_image = ants.apply_transforms(fixed=fixed_image, moving=moving_image, transformlist=registration_result['fwdtransforms'])
-
-        warped_data = warped_moving_image.numpy()
-
-        # Warp image to atlas space
-        warped_img = warp_to_atlas(reoriented_rb_img, args.atlas_name, args.res)
-
-        # Rename the saved file
-        output = f"{sample}_{channel_name}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz"
-        os.rename(warped_img, output)
-
-"""
-
-Rolling ball subtracting w/ pixel radius of 4
-get metadata
-Converting tifs to .nii.gz, downsampling, and reorienting (output: sample13_02x_down_cfos_rb4_chan.nii.gz)
-Reorienting sample13_cfos_rb4_gubra_space.nii.gz
-
- Resampling CLARITY to Allen resolution 
-ResampleImage 3 niftis/reo_sample13_02x_down_cfos_rb4_chan.nii.gz clar_allen_reg/vox_seg_cfos_res.nii.gz 0.025x0.025x0.025 0
-
- Orienting CLARITY to standard orientation 
-PermuteFlipImageOrientationAxes 3 clar_allen_reg/vox_seg_cfos_res.nii.gz clar_allen_reg/vox_seg_cfos_swp.nii.gz 1 2 0 0 0 0
-
- Orienting CLARITY to standard orientation 
-c3d clar_allen_reg/vox_seg_cfos_swp.nii.gz -orient ALI -pad 15% 15% 0 -interpolation Cubic -type short -o clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort.nii.gz
-
- Resampling to original resolution 
-ResampleImage 3 clar_allen_reg/clar.nii.gz clar_allen_reg/clar_res_org_seg.nii.gz 580x544x284 1 ### perhaps unnessary if 25 um resolution is used
-
- Copying original transform 
-c3d clar_allen_reg/clar_res_org_seg.nii.gz clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort.nii.gz -copy-transform -type short -o clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort_cp_org.nii.gz ### perhaps unnessary if 25 um resolution is used
-
- Combining deformation fields and transformations 
-antsApplyTransforms -d 3 -r clar_allen_reg/init_allen.nii.gz -t clar_allen_reg/allen_clar_ants1InverseWarp.nii.gz [ clar_allen_reg/allen_clar_ants0GenericAffine.mat, 1 ] -o [ clar_allen_reg/clar_allen_comb_def.nii.gz, 1 ]
-=============================================================================
-The composite transform comprises the following transforms (in order): 
-  1. inverse of clar_allen_reg/allen_clar_ants0GenericAffine.mat (type = AffineTransform)
-  2. clar_allen_reg/allen_clar_ants1InverseWarp.nii.gz (type = DisplacementFieldTransform)
-=============================================================================
-Output composite transform displacement field: clar_allen_reg/clar_allen_comb_def.nii.gz
-
- Applying ants deformations to CLARITY data 
-antsApplyTransforms -d 3 -r /usr/local/miracl/atlases/ara/gubra/gubra_template_25um.nii.gz -i clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort_cp_org.nii.gz -n Bspline -t [ clar_allen_reg/init_tform.mat, 1 ] clar_allen_reg/clar_allen_comb_def.nii.gz -o /SSD3/test/sample_w_czi2/sample13/reg_final/reo_sample13_02x_down_cfos_rb4_chan_cfos_channel_allen_space.nii.gz
-Input scalar image: clar_allen_reg/reo_sample13_02x_down_cfos_rb4_chan_ort_cp_org.nii.gz
-Reference image: /usr/local/miracl/atlases/ara/gubra/gubra_template_25um.nii.gz
-=============================================================================
-The composite transform comprises the following transforms (in order): 
-  1. clar_allen_reg/clar_allen_comb_def.nii.gz (type = DisplacementFieldTransform)
-  2. inverse of clar_allen_reg/init_tform.mat (type = AffineTransform)
-=============================================================================
-Interpolation type: BSplineInterpolateImageFunction
-Output warped image: /SSD3/test/sample_w_czi2/sample13/reg_final/reo_sample13_02x_down_cfos_rb4_chan_cfos_channel_allen_space.nii.gz
-"""
+        # Save warped image
+        ants.image_write(warped_image, f"{sample}_{channel_name}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz")
 
 
 def main():    
