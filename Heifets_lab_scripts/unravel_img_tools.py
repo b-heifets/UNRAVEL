@@ -17,13 +17,14 @@ from unravel_utils import print_func_name_args_times
 ######## Load images ########
 
 @print_func_name_args_times(arg_index_for_basename=0)
-def load_czi_channel(czi_path, channel):
-    """Load a channel from a .czi image and return it as a numpy array."""
+def load_czi_channel(czi_path, channel, axis_order):
+    """Load a channel from a .czi image and return it as a numpy array (zyx). Optional: axis_order=xyz."""
     if czi_path:
         czi = CziFile(czi_path)
         ndarray = czi.read_image(C=channel)[0]
         ndarray = np.squeeze(ndarray)
-        ndarray = np.transpose(ndarray, (2, 1, 0))
+        if axis_order == "xyz": 
+            ndarray = np.transpose(ndarray, (2, 1, 0))
         return ndarray
     else:
         print(f"    [red bold].czi file not found: {czi_path}[/]")
@@ -41,14 +42,16 @@ def load_nii(img_path):
         return None
 
 @print_func_name_args_times(arg_index_for_basename=0)
-def load_tifs(tif_dir_path): 
-    """Load a series of .tif images and return them as a numpy array."""
+def load_tifs(tif_dir_path, axis_order): 
+    """Load a series of .tif images and return them as a numpy array (zyx). Optional: axis_order=xyz """
     tifs = glob(f"{tif_dir_path}/*.tif")
     if tifs:
         tifs_sorted = sorted(tifs)
         tifs_stacked = [imread(tif) for tif in tifs_sorted]
         ndarray = np.stack(tifs_stacked, axis=0)  # stack along the first dimension (z-axis)
-        return ndarray # shape: z, y, x
+        if axis_order == "xyz": 
+            ndarray = np.transpose(ndarray, (2, 1, 0))
+        return ndarray
     else:
         print(f"    [red bold]No .tif files found in {tif_dir_path}[/]")
         return None
@@ -93,7 +96,7 @@ def save_as_nii(ndarray, output, x_res, y_res, z_res, data_type):
     output.parent.mkdir(parents=True, exist_ok=True)
 
     # Reorient ndarray
-    ndarray = np.transpose(ndarray, (2, 1, 0))
+    # ndarray = np.transpose(ndarray, (2, 1, 0))
     
     # Create the affine matrix with the appropriate resolutions (converting microns to mm)
     affine = np.diag([x_res / 1000, y_res / 1000, z_res / 1000, 1])
@@ -103,16 +106,18 @@ def save_as_nii(ndarray, output, x_res, y_res, z_res, data_type):
     nifti_img.header.set_data_dtype(data_type)
     nib.save(nifti_img, str(output))
     
-    print(f"\n    Output: [default bold]{output}[/]\n")
+    print(f"    Output: [default bold]{output}")
 
 @print_func_name_args_times(arg_index_for_basename=0)
-def save_as_tifs(ndarray, tif_dir_out):
+def save_as_tifs(ndarray, tif_dir_out, axis_order):
     """Save a numpy array as a series of .tif images."""
     tif_dir_out.mkdir(parents=True, exist_ok=True)
+    if axis_order == "xyz":
+        ndarray = np.transpose(ndarray, (2, 1, 0))
     for i, slice_ in enumerate(ndarray):
         slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
         imwrite(str(slice_file_path), slice_)
-    print(f"\n    Output: [default bold]{tif_dir_out}[/]\n")
+    print(f"    Output: [default bold]{tif_dir_out}")
 
 
 ######## Image processing ########
@@ -135,7 +140,7 @@ def resample_reorient(ndarray, xy_res, z_res, res, zoom_order=1):
 def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None, args=None):
     """Segment tif series with Ilastik."""
     tif_dir = str(Path(tif_dir).resolve())
-    tif_list = glob(f"{tif_dir}/*.tif")
+    tif_list = sorted(glob(f"{tif_dir}/*.tif"))
     ilastik_project = str(Path(ilastik_project).resolve())
     output_dir = str(Path(output_dir).resolve())
     output_dir_Path = Path(output_dir).resolve()

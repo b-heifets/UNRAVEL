@@ -143,14 +143,12 @@ def print_func_name_args_times(arg_index_for_basename=None):
             args_str = ', '.join(arg_str_representation(arg) for arg in args)
             kwargs_str = ', '.join(f"{k}={arg_str_representation(v)}" for k, v in kwargs.items())
 
-            # Get the parent folder name (e.g., sample folder name) of the first argument if arg_index_for_basename is not None
-            parent_folder_from_arg = args[arg_index_for_basename].parent.name if arg_index_for_basename is not None else os.path.basename(os.getcwd())
-
             # Print out the arguments with the added indent
             if thread_local_data.indentation_level > 1:  # considering that main function is at level 1
                 print(f"\n{indent_str}[gold3]{func.__name__!r}[/]\n{indent_str}[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
             else:
-                print(f"\nRunning: [bold gold1]{func.__name__!r}[/] for [bold orange_red1]{parent_folder_from_arg}[/] \n[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
+                dir_name_from_arg =  Path(args[arg_index_for_basename]).resolve().name if arg_index_for_basename is not None else os.path.basename(os.getcwd()) # Get dir name (e.g., sample??) of 1st argument if arg_index_for_basename is not None
+                print(f"\nRunning: [bold gold1]{func.__name__!r}[/] for [bold orange_red1]{dir_name_from_arg}[/] \n[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
 
             # Function execution
             start_time = time.perf_counter()
@@ -166,7 +164,7 @@ def print_func_name_args_times(arg_index_for_basename=None):
             if thread_local_data.indentation_level > 1:  # considering that main function is at level 1
                 print(f"{indent_str}[gold3]{duration_str}")
             else:
-                print(f"Finished [bold gold1]{func.__name__!r}[/] in [orange_red1]{duration_str}\n")
+                print(f"\nFinished [bold gold1]{func.__name__!r}[/] in [orange_red1]{duration_str}\n")
 
             thread_local_data.indentation_level -= 1
             return result
