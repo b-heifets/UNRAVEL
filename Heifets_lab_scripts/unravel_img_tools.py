@@ -10,6 +10,8 @@ from lxml import etree
 from pathlib import Path
 from rich import print
 from scipy import ndimage
+from scipy.ndimage import grey_opening
+from skimage.morphology import disk
 from tifffile import imread, imwrite 
 from unravel_utils import print_func_name_args_times
 
@@ -224,3 +226,28 @@ def reorient_ndarray2(ndarray, orientation_string):
             reoriented_volume = np.flip(reoriented_volume, axis=idx)
 
     return reoriented_volume
+
+def rolling_ball_subtraction_2d(img, radius):
+    """Rolling ball background subtraction in 2D of a ndarray (radius in pixels)"""
+    # Create the disk-shaped structuring element
+    selem = disk(radius) 
+
+    # Estimate the background using morphological opening
+    background = grey_opening(img, structure=selem)
+
+    corrected_img = img - background
+    return corrected_img
+
+@print_func_name_args_times(arg_index_for_basename=0)
+def rolling_ball_subtraction_3d(ndarray, radius, axis_order):
+    """For 3D stacks, apply rolling ball bkg sub slice-by-slice (radius in pixels; default axis order: zyx)"""
+    if axis_order == "xyz":
+        corrected_img = np.empty_like(ndarray)
+        for z in range(ndarray.shape[2]):
+            corrected_img[:,:,z] = rolling_ball_subtraction_2d(ndarray[:,:,z], radius)
+        return corrected_img
+    else: 
+        return np.array([rolling_ball_subtraction_2d(slice, radius) for slice in ndarray])
+    
+    
+

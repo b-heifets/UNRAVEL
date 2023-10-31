@@ -21,7 +21,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for folders in the working dir to process. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. If not provided, --pattern used for matching dirs to process. If no matches, the current directory is used.', nargs='*', default=None, metavar='')
     parser.add_argument('-td', '--tif_dir', help='Name of folder in sample folder or working directory with raw immunofluo tifs. Use as image input if *.czi does not exist. Default: ochann', default="ochann", metavar='')
-    parser.add_argument('-ort', '--ort_code', '3 letter orientation code for reorienting (using the letters RLAPSI). Default: ALI', default='ALI', metavar='')
+    parser.add_argument('-ort', '--ort_code', help='3 letter orientation code for reorienting (using the letters RLAPSI). Default: ALI', default='ALI', metavar='')
     parser.add_argument('--channels', help='.czi channel number(s) (e.g., 1 2; Default: 1)', nargs='+', default=1, type=int, metavar='')
     parser.add_argument('--chann_name', help='Name(s) of channels for saving (e.g., tdT cFos). List length should match that for --channels. Default: ochann)', nargs='+', default="ochann", metavar='')
     parser.add_argument('-o', '--output', help='Output file name (Default: sample??_ochann_rb4_gubra_space.nii.gz)', default=None, metavar='')
@@ -33,6 +33,7 @@ def parse_args():
     parser.add_argument('-a', '--atlas_name', help='Name of atlas (Default: gubra)', default="gubra", metavar='')
     parser.add_argument('-t', '--template', help='Average template image. Default: path/gubra_template_25um.nii.gz.', default="/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz",  metavar='')
     parser.add_argument('--transforms', help="Name of folder w/ transforms from registration. Default: clar_allen_reg", default="clar_allen_reg", metavar='')
+    parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
     parser.epilog = "From exp dir run: rb.py; Outputs: .[/sample??]/sample??_ochann_rb4_gubra_space.nii.gz"
     return parser.parse_args()
 
@@ -74,7 +75,10 @@ def rb_resample_reorient_warp(sample, args):
             return
                 
         # Rolling ball background subtraction
+        print("Before rolling_ball")
+        
         img_bkg = rolling_ball(img, radius=args.rb_radius, nansafe=True) # returns the estimated background
+        print("After rolling ball")
         rb_img = img - img_bkg
 
         # Resample and reorient image
@@ -86,8 +90,11 @@ def rb_resample_reorient_warp(sample, args):
         # Padding the image 
         rb_img_res_reort_reort_padded = pad_image(rb_img_res_reort_reort, pad_width=0.15)
 
+        print(f'\n{args.ort_code=}\n')
+        import sys ; sys.exit()
+
         # Reorient yet again
-        rb_img_res_reort_reort_padded_reort = reorient_ndarray(rb_img_res_reort_reort_padded, args.ort_code)
+        # rb_img_res_reort_reort_padded_reort = reorient_ndarray(rb_img_res_reort_reort_padded, args.ort_code)
 
         # Directory with transforms from registration
         transforms_dir = Path(sample, args.transforms).resolve() if sample != cwd.name else Path(args.transforms).resolve()
@@ -136,4 +143,5 @@ if __name__ == '__main__':
     from rich.traceback import install
     install()
     args = parse_args()
+    Configuration.verbose = args.verbose
     print_cmd_and_times(main)()
