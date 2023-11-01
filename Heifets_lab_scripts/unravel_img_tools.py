@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 
+import cv2 
+import multiprocessing
 import nibabel as nib
 import numpy as np
 import subprocess
 import tifffile
 from aicspylibczi import CziFile
+from concurrent.futures import ThreadPoolExecutor
 from glob import glob
 from lxml import etree
 from pathlib import Path
 from rich import print
 from scipy import ndimage
-from scipy.ndimage import grey_opening
+from scipy.ndimage import grey_opening, generate_binary_structure
 from skimage.morphology import disk
 from tifffile import imread, imwrite 
 from unravel_utils import print_func_name_args_times
@@ -109,7 +112,7 @@ def save_as_nii(ndarray, output, x_res, y_res, z_res, data_type):
 
 @print_func_name_args_times(arg_index_for_basename=0)
 def save_as_tifs(ndarray, tif_dir_out, axis_order):
-    """Save a numpy array as a series of .tif images."""
+    """Save <ndarray> as tifs in <Path(tif_dir_out)>. Pass <"xyz"> to transpose axes"""
     tif_dir_out.mkdir(parents=True, exist_ok=True)
     if axis_order == "xyz":
         ndarray = np.transpose(ndarray, (2, 1, 0))
@@ -227,27 +230,27 @@ def reorient_ndarray2(ndarray, orientation_string):
 
     return reoriented_volume
 
-def rolling_ball_subtraction_2d(img, radius):
-    """Rolling ball background subtraction in 2D of a ndarray (radius in pixels)"""
-    # Create the disk-shaped structuring element
-    selem = disk(radius) 
 
-    # Estimate the background using morphological opening
-    background = grey_opening(img, structure=selem)
+####### Rolling ball background subraction #######
 
-    corrected_img = img - background
-    return corrected_img
+def process_slice(slice_, struct_element):
+    smoothed_slice = cv2.morphologyEx(slice_, cv2.MORPH_OPEN, struct_element)
+    return slice_ - smoothed_slice
 
-@print_func_name_args_times(arg_index_for_basename=0)
-def rolling_ball_subtraction_3d(ndarray, radius, axis_order):
-    """For 3D stacks, apply rolling ball bkg sub slice-by-slice (radius in pixels; default axis order: zyx)"""
-    if axis_order == "xyz":
-        corrected_img = np.empty_like(ndarray)
-        for z in range(ndarray.shape[2]):
-            corrected_img[:,:,z] = rolling_ball_subtraction_2d(ndarray[:,:,z], radius)
-        return corrected_img
-    else: 
-        return np.array([rolling_ball_subtraction_2d(slice, radius) for slice in ndarray])
+def rolling_ball_subtraction_opencv_parallel(ndarray, radius):
+    # Generate a 2D disk as a structuring element
+    struct_element = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2*radius+1, 2*radius+1))
     
+    # Preallocate the result array
+    result = np.empty_like(ndarray)
     
+    # Number of available CPU cores
+    num_cores = min(len(ndarray), 8)  # Adjust number of threads as needed
+    
+    # Process slices in parallel
+    with ThreadPoolExecutor(max_workers=num_cores) as executor:
+        for i, background_subtracted_slice in enumerate(executor.map(process_slice, ndarray, [struct_element]*len(ndarray))):
+            result[i] = background_subtracted_slice
+            
+    return result
 

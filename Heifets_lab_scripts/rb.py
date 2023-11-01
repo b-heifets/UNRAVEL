@@ -9,9 +9,9 @@ from glob import glob
 from pathlib import Path
 from rich import print
 from rich.live import Live
-from unravel_img_tools import load_tifs, reorient_ndarray, xyz_res_from_czi, xyz_res_from_tif
+from unravel_img_tools import load_tifs, reorient_ndarray, xyz_res_from_czi, xyz_res_from_tif, save_as_tifs
 from unravel_utils import print_func_name_args_times, print_cmd_and_times, get_progress_bar, get_samples
-from unravel_img_tools import load_czi_channel, resample_reorient, pad_image
+from unravel_img_tools import load_czi_channel, resample_reorient, pad_image, rolling_ball_subtraction_opencv_parallel
 from scipy import ndimage
 from skimage.restoration import rolling_ball
 from warp_to_atlas import warp_to_atlas
@@ -76,9 +76,26 @@ def rb_resample_reorient_warp(sample, args):
                 
         # Rolling ball background subtraction
         print("Before rolling_ball")
+
+        img_bkg = rolling_ball_subtraction_opencv_parallel(img, 4)
+
+
+
+
         
-        img_bkg = rolling_ball(img, radius=args.rb_radius, nansafe=True) # returns the estimated background
+        # img_bkg = rolling_ball(img, radius=args.rb_radius, nansafe=True) # returns the estimated background
         print("After rolling ball")
+
+        tif_output_path = Path(os.getcwd()) / 'tif_output'
+        save_as_tifs(img_bkg, tif_output_path, "xyz")
+
+
+        
+
+        print(f'\n{args.ort_code=}\n')
+        import sys ; sys.exit()
+
+
         rb_img = img - img_bkg
 
         # Resample and reorient image
@@ -90,8 +107,7 @@ def rb_resample_reorient_warp(sample, args):
         # Padding the image 
         rb_img_res_reort_reort_padded = pad_image(rb_img_res_reort_reort, pad_width=0.15)
 
-        print(f'\n{args.ort_code=}\n')
-        import sys ; sys.exit()
+
 
         # Reorient yet again
         # rb_img_res_reort_reort_padded_reort = reorient_ndarray(rb_img_res_reort_reort_padded, args.ort_code)
