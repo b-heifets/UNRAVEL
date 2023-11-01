@@ -36,6 +36,24 @@ def get_samples(dir_list=None, dir_pattern="sample??"):
 
 ######## Progress bar ########
 
+class CustomMofNCompleteColumn(MofNCompleteColumn):
+    def render(self, task) -> Text:
+        completed = str(task.completed)
+        total = str(task.total)
+        return Text(f"{completed}/{total}", style="bright_cyan") 
+
+class CustomTimeElapsedColumn(TimeElapsedColumn):
+    def render(self, task) -> Text:
+        time_elapsed = super().render(task)
+        time_elapsed.stylize("green")
+        return time_elapsed
+    
+class CustomTimeRemainingColumn(TimeRemainingColumn):
+    def render(self, task) -> Text:
+        time_elapsed = super().render(task)
+        time_elapsed.stylize("dark_orange")
+        return time_elapsed
+
 class AverageTimePerIterationColumn(ProgressColumn):
     def render(self, task: "Task") -> Text:
         speed = task.speed or 0 
@@ -44,37 +62,25 @@ class AverageTimePerIterationColumn(ProgressColumn):
         else:
             avg_time = "." 
         return Text(avg_time, style="red1")
-    
-class CustomTimeRemainingColumn(TimeRemainingColumn):
-    def render(self, task) -> Text:
-        time_elapsed = super().render(task)
-        time_elapsed.stylize("dark_orange")
-        return time_elapsed
-    
-class CustomTimeElapsedColumn(TimeElapsedColumn):
-    def render(self, task) -> Text:
-        time_elapsed = super().render(task)
-        time_elapsed.stylize("gold1")
-        return time_elapsed
-
-class CustomMofNCompleteColumn(MofNCompleteColumn):
-    def render(self, task) -> Text:
-        completed = str(task.completed)
-        total = str(task.total)
-        return Text(f"{completed}/{total}", style="green") 
 
 def get_progress_bar(task_message="[red]Processing samples...", total_tasks=None):
     progress = Progress(
         TextColumn("[progress.description]{task.description}"),
         SpinnerColumn(style="bright_magenta"),
         BarColumn(complete_style="purple3", finished_style="purple"),
-        TextColumn("[bright_blue]{task.percentage:>3.0f}[bright_cyan]%[progress.percentage]"),
+        TextColumn("[bright_blue]{task.percentage:>3.0f}%[progress.percentage]"),
         CustomMofNCompleteColumn(),
         CustomTimeElapsedColumn(),
+        TextColumn("[gold1]eta:"),
         CustomTimeRemainingColumn(),
         AverageTimePerIterationColumn()
     )
     return progress
+
+def initialize_progress_bar(num_of_items_to_iterate, task_message="[red]Processing..."):
+    progress = get_progress_bar(total_tasks=num_of_items_to_iterate)
+    task_id = progress.add_task(task_message, total=num_of_items_to_iterate)
+    return progress, task_id
 
 
 ######## Main function decorator ########

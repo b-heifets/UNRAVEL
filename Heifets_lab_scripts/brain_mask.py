@@ -7,7 +7,7 @@ from pathlib import Path
 from rich import print
 from rich.live import Live
 from unravel_img_tools import ilastik_segmentation, load_tifs, load_nii, save_as_nii
-from unravel_utils import print_cmd_and_times, print_func_name_args_times, get_progress_bar, get_samples
+from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
@@ -89,9 +89,7 @@ def main():
         wd = Path.cwd()
         samples[0] = wd.name
 
-    progress = get_progress_bar(total_tasks=len(samples))
-    task_id = progress.add_task("[red]Processing samples...", total=len(samples))
-    
+    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
             brain_mask(sample, args)

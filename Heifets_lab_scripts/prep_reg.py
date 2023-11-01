@@ -9,7 +9,7 @@ from pathlib import Path
 from rich import print
 from rich.live import Live
 from unravel_img_tools import load_czi_channel, xyz_res_from_czi, load_tifs, xyz_res_from_tif, resample_reorient, save_as_tifs, save_as_nii
-from unravel_utils import print_cmd_and_times, print_func_name_args_times, get_progress_bar, get_samples
+from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Load channel of ./*.czi (default; assumes 1 .czi in working dir) or ./<tif_dir>/*.tif, resample, reorient, and save as ./niftis/<img>.nii.gz')
@@ -73,9 +73,7 @@ def main():
 
     samples = get_samples(args.dirs, args.pattern)
 
-    progress = get_progress_bar(total_tasks=len(samples))
-    task_id = progress.add_task("Processing samples...", total=len(samples))
-    
+    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
             prep_reg(sample, args)

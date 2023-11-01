@@ -8,7 +8,7 @@ from rich import print
 from rich.live import Live
 from time import sleep
 from unravel_img_tools import load_czi_channel
-from unravel_utils import print_cmd_and_times, print_func_name_args_times, get_progress_bar, get_samples
+from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
@@ -41,8 +41,7 @@ def main(): # This is the main function that is called at the bottom of the scri
 
     samples = get_samples(args.dirs, args.pattern) # get_samples() returns a list of sample directories
 
-    progress = get_progress_bar(total_tasks=len(samples)) # This creates a progress bar object
-    task_id = progress.add_task("[red]Processing samples...", total=len(samples)) # This adds a task to the progress bar
+    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...") # This initializes the progress bar
     with Live(progress): # This starts the progress bar
         for sample in samples: # This iterates through each sample directory
             czi_files = glob(f"{sample}/*.czi") # This returns a list of .czi files in the sample directory

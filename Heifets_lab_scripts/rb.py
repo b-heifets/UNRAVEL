@@ -10,7 +10,7 @@ from pathlib import Path
 from rich import print
 from rich.live import Live
 from unravel_img_tools import load_tifs, reorient_ndarray, xyz_res_from_czi, xyz_res_from_tif, save_as_tifs
-from unravel_utils import print_func_name_args_times, print_cmd_and_times, get_progress_bar, get_samples
+from unravel_utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
 from unravel_img_tools import load_czi_channel, resample_reorient, pad_image, rolling_ball_subtraction_opencv_parallel
 from scipy import ndimage
 from skimage.restoration import rolling_ball
@@ -147,8 +147,7 @@ def main():
 
     samples = get_samples(args.dirs, args.pattern)
 
-    progress = get_progress_bar(total_tasks=len(samples))
-    task_id = progress.add_task("[red]Processing samples...", total=len(samples))
+    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
             rb_resample_reorient_warp(sample, args)

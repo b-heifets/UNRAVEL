@@ -8,7 +8,7 @@ from rich import print
 from rich.live import Live
 from time import sleep
 from unravel_img_tools import load_czi_channel
-from unravel_utils import print_cmd_and_times, print_func_name_args_times, get_progress_bar, get_samples
+from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
@@ -38,13 +38,12 @@ def main():
 
     samples = get_samples(args.dirs, args.pattern)
 
-    progress = get_progress_bar(total_tasks=len(samples))
-    task_id = progress.add_task("[red]Processing samples...", total=len(samples))
+    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
             czi_files = glob(f"{sample}/*.czi")
             if czi_files:
-                czi_path = Path(czi_files[0]).resolve() 
+                czi_path = Path(czi_files[0]).resolve()
                 example_function(czi_path, args.channel)
             else:
                 print(f"    [red1 bold].czi file not found for sample: {sample}")
