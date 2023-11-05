@@ -4,7 +4,7 @@ import argparse
 import os
 import numpy as np
 import ants
-from config import Configuration
+from unravel_config import Configuration
 from glob import glob
 from pathlib import Path
 from rich import print
@@ -18,8 +18,8 @@ from warp_to_atlas import warp_to_atlas
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Load channel(s) of *.czi (default) or ./<tif_dir(s)>/*.tif, rolling ball bkg sub, resample, reorient, and save as ./sample??_ochann_rb4_gubra_space.nii.gz')
-    parser.add_argument('-p', '--pattern', help='Pattern for folders in the working dir to process. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process. If not provided, --pattern used for matching dirs to process. If no matches, the current directory is used.', nargs='*', default=None, metavar='')
+    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
+    parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, metavar='')
     parser.add_argument('-td', '--tif_dir', help='Name of folder in sample folder or working directory with raw immunofluo tifs. Use as image input if *.czi does not exist. Default: ochann', default="ochann", metavar='')
     parser.add_argument('-ort', '--ort_code', help='3 letter orientation code for reorienting (using the letters RLAPSI). Default: ALI', default='ALI', metavar='')
     parser.add_argument('--channels', help='.czi channel number(s) (e.g., 1 2; Default: 1)', nargs='+', default=1, type=int, metavar='')
@@ -38,7 +38,7 @@ def parse_args():
     return parser.parse_args()
 
 
-@print_func_name_args_times(arg_index_for_basename=0)
+@print_func_name_args_times()
 def rb_resample_reorient_warp(sample, args):
     """Performs rolling ball bkg sub on full res immunofluo data, resamples, reorients, and warp to atlas space."""
 

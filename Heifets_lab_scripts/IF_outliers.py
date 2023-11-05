@@ -5,10 +5,10 @@ import glob
 import os
 import numpy as np
 import matplotlib.pyplot as plt
-from config import Configuration
+from unravel_config import Configuration
 from rich import print
 from rich.live import Live
-from unravel_img_tools import load_nii
+from unravel_img_tools import load_3D_img
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, get_progress_bar
 
 
@@ -37,7 +37,7 @@ def detect_outliers(values):
 
 def main():
 
-    mask = load_nii(args.mask)
+    mask = load_3D_img(args.mask)
 
     # Collect .nii.gz files matching the pattern
     images = [f for f in glob.glob(args.pattern) if os.path.basename(f) != args.mask]
@@ -49,7 +49,7 @@ def main():
     task_id = progress.add_task("[red]Getting means...", total=len(images))
     with Live(progress):
         for idx, img in enumerate(images):
-            image = load_nii(img)
+            image = load_3D_img(img)
             mean_intensity = mean_intensity_within_mask(image, mask)
             mean_values.append(mean_intensity)
             print(f"{idx} Mean in mask for {img}: {mean_intensity}")

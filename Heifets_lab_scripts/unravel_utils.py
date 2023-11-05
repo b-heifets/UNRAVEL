@@ -6,7 +6,7 @@ import os
 import sys
 import threading
 import time
-from config import Configuration
+from unravel_config import Configuration
 from datetime import datetime
 from fnmatch import fnmatch
 from pathlib import Path
@@ -63,7 +63,7 @@ class AverageTimePerIterationColumn(ProgressColumn):
             avg_time = "." 
         return Text(avg_time, style="red1")
 
-def get_progress_bar(task_message="[red]Processing samples...", total_tasks=None):
+def initialize_progress_bar(num_of_items_to_iterate, task_message="[red]Processing..."):
     progress = Progress(
         TextColumn("[progress.description]{task.description}"),
         SpinnerColumn(style="bright_magenta"),
@@ -75,10 +75,6 @@ def get_progress_bar(task_message="[red]Processing samples...", total_tasks=None
         CustomTimeRemainingColumn(),
         AverageTimePerIterationColumn()
     )
-    return progress
-
-def initialize_progress_bar(num_of_items_to_iterate, task_message="[red]Processing..."):
-    progress = get_progress_bar(total_tasks=num_of_items_to_iterate)
     task_id = progress.add_task(task_message, total=num_of_items_to_iterate)
     return progress, task_id
 
@@ -112,11 +108,47 @@ def print_cmd_and_times(func):
 
 ######## Function decorator ########
 
+def get_dir_name_from_args(args, kwargs):
+    """
+    This function checks args and kwargs for a file or directory path
+    and returns a string based on the name of the file or directory.
+    """
+    for arg in args:
+        if isinstance(arg, (str, Path)) and Path(arg).exists():
+            return Path(arg).resolve().name
+
+    for kwarg in kwargs.values():
+        if isinstance(kwarg, (str, Path)) and Path(kwarg).exists():
+            return Path(kwarg).resolve().name
+
+    return Path.cwd().name
+
 # Create a thread-local storage for indentation level
 thread_local_data = threading.local()
 thread_local_data.indentation_level = 0
 
-def print_func_name_args_times(arg_index_for_basename=None):
+def print_func_name_args_times(print_path=True):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            func_args_str = ', '.join(repr(arg) for arg in args) 
+            func_kwargs_str = ', '.join(f"{k}={v!r}" for k, v in kwargs.items())
+            combined_args = func_args_str + (', ' if func_args_str and func_kwargs_str else '') + func_kwargs_str
+            
+            if print_path:
+                printable_path = get_printable_path_from_args(args, kwargs)
+                path_str = f" for [bold orange_red1]{printable_path}[/]"
+            else:
+                path_str = ""
+            
+            print(f"\nRunning: [bold gold1]{func.__name__!r}[/]{path_str} with args: [bright_black]({combined_args})[/]")
+            
+            # Call the actual function
+            result = func(*args, **kwargs)
+            return result
+        return wrapper
+    return decorator
+
+def print_func_name_args_times(print_dir=True):
     """A decorator that prints the function name, arguments, duration, and memory usage of the function it decorates."""
     
     ARG_REPRESENTATIONS = {
@@ -137,6 +169,10 @@ def print_func_name_args_times(arg_index_for_basename=None):
             if not Configuration.verbose:
                 return func(*args, **kwargs)  # If not verbose, skip all additional logic
             
+            func_args_str = ', '.join(repr(arg) for arg in args) 
+            func_kwargs_str = ', '.join(f"{k}={v!r}" for k, v in kwargs.items())
+            combined_args = func_args_str + (', ' if func_args_str and func_kwargs_str else '') + func_kwargs_str
+            
             # Increment the indentation level
             if not hasattr(thread_local_data, 'indentation_level'):
                 thread_local_data.indentation_level = 0
@@ -149,16 +185,21 @@ def print_func_name_args_times(arg_index_for_basename=None):
             args_str = ', '.join(arg_str_representation(arg) for arg in args)
             kwargs_str = ', '.join(f"{k}={arg_str_representation(v)}" for k, v in kwargs.items())
 
+            if print_dir:
+                dir_name = get_dir_name_from_args(args, kwargs) # Get dir name the basename of 1st arg with a valid path (e.g., sample??)
+                dir_string = f" for [bold orange_red1]{dir_name}[/]"
+            else:
+                dir_string = ""
+
             # Print out the arguments with the added indent
             if thread_local_data.indentation_level > 1:  # considering that main function is at level 1
                 print(f"\n{indent_str}[gold3]{func.__name__!r}[/]\n{indent_str}[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
             else:
-                dir_name_from_arg =  Path(args[arg_index_for_basename]).resolve().name if arg_index_for_basename is not None else os.path.basename(os.getcwd()) # Get dir name (e.g., sample??) of 1st argument if arg_index_for_basename is not None
-                print(f"\nRunning: [bold gold1]{func.__name__!r}[/] for [bold orange_red1]{dir_name_from_arg}[/] \n[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
+                print(f"\nRunning: [bold gold1]{func.__name__!r}[/]{dir_string} with args: [bright_black]({combined_args})[/]")
 
             # Function execution
             start_time = time.perf_counter()
-            result = func(*args, **kwargs)
+            result = func(*args, **kwargs) # Call the actual function
             end_time = time.perf_counter()
 
             # Print duration

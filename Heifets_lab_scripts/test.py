@@ -14,7 +14,7 @@ from time import sleep # for example_function
 def parse_args():
     parser = argparse.ArgumentParser(description='Process sample folder(s) w/ a *.czi, tif series, or .nii.gz  image')
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, metavar='')
+    parser.add_argument('--dirs', help='List of folders to process. Else: use current dir.', nargs='*', default=None, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = "Run from experiment folder containing sample?? folders."
     return parser.parse_args()
