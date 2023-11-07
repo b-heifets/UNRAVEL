@@ -12,7 +12,7 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times, initi
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load channel of ./*.czi (default; assumes 1 .czi in working dir) or ./<tif_dir>/*.tif, resample, reorient, and save as ./niftis/<img>.nii.gz')
+    parser = argparse.ArgumentParser(description='Load autofluo image (1st ./*.czi match or ./<tif_dir>/*.tif), resample, reorient, save as .nii.gz')
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, metavar='')
     parser.add_argument('-t', '--tif_dir', help='Name of folder in sample folder or working directory with raw autofluo tifs. Use as image input if *.czi does not exist. Default: autofl_tifs', default="autofl_tifs", metavar='')
@@ -64,9 +64,7 @@ def prep_reg(sample, args):
 
 
 def main():
-
     samples = get_samples(args.dirs, args.pattern)
-
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:

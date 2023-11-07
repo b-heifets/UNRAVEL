@@ -71,10 +71,6 @@ def brain_mask(sample, args):
     # Apply brain mask to autofluo image
     autofl_masked = np.where(seg_img == 1, autofl_img, 0)
 
-
-
-    print("Before save masked autofl image")
-
     # Save masked autofl image
     masked_autofl_output = Path(sample, args.reg_input, f"autofl_{args.res}um_masked.nii.gz") if sample != cwd.name else Path(args.reg_input, f"autofl_{args.res}um_masked.nii.gz")
     save_as_nii(autofl_masked, masked_autofl_output, args.res, args.res, args.res, np.uint16)

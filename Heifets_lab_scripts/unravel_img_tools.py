@@ -46,7 +46,7 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz"):
         ndarray = np.squeeze(czi.read_image(C=channel)[0])
         ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
         xy_res, z_res = xyz_res_from_czi(czi)
-    elif path.suffix in ['.tif', '.tiff']:
+    elif path.suffix in ['.tif', '.tiff']:   ################ need to set up parallel loading of slices if possible
         tifs_stacked = []
         for tif_path in sorted(Path(path).parent.glob("*.tif")):
             with Image.open(tif_path) as img:
@@ -56,7 +56,9 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz"):
         xy_res, z_res = xyz_res_from_tif(path)
     elif path.suffix in ['.nii', '.nii.gz']:
         img = nib.load(path)
-        ndarray = img.get_fdata()
+        data_dtype = img.header.get_data_dtype()
+        ndarray = img.get_data().astype(data_dtype)
+        ndarray = np.squeeze(ndarray)
         ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
         xy_res, z_res = xyz_res_from_nii(path)
     else:
