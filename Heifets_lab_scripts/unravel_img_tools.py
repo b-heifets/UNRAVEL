@@ -57,7 +57,7 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz"):
     elif path.suffix in ['.nii', '.nii.gz']:
         img = nib.load(path)
         data_dtype = img.header.get_data_dtype()
-        ndarray = img.get_data().astype(data_dtype)
+        ndarray = np.asanyarray(img.dataobj).astype(data_dtype)
         ndarray = np.squeeze(ndarray)
         ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
         xy_res, z_res = xyz_res_from_nii(path)
