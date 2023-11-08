@@ -1,46 +1,20 @@
 #!/usr/bin/env python3
 
 import argparse
-from unravel_config import Configuration
-from pathlib import Path
-from rich import print
-from rich.live import Live
-from unravel_img_tools import load_3D_img
-from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
+import os
 
-from time import sleep # for example_function
+def process_directory(directory):
+    # Extract the folder name if needed
+    folder_name = os.path.basename(directory)
+    print(f"Processing {folder_name} in {directory}")
+    # Your processing logic here
 
+def main():
+    parser = argparse.ArgumentParser(description="Process a given directory.")
+    parser.add_argument('--directory', type=str, required=True, help='The directory to process')
+    args = parser.parse_args()
 
-def parse_args():
-    parser = argparse.ArgumentParser(description='Process sample folder(s) w/ a *.czi, tif series, or .nii.gz  image')
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process. Else: use current dir.', nargs='*', default=None, metavar='')
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = "Run from experiment folder containing sample?? folders."
-    return parser.parse_args()
+    process_directory(args.directory)
 
-
-@print_func_name_args_times()
-def example_function(img_path):
-    """Load a 3D image in the sample folder (first *.czi, *.tif, or *.nii.gz match), print shape and resolution, and mimic processing time"""
-    img, xy_res, z_res = load_3D_img(img_path)
-    print(f"\n    [default]Image shape: {img.shape}, xy_res: {xy_res}, z_res: {z_res}\n")
-    sleep(0.5) 
-    return img
-
-
-def main():    
-    samples = get_samples(args.dirs, args.pattern)
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
-    with Live(progress):
-        for sample in samples:
-            example_function(Path(sample).resolve())
-            progress.update(task_id, advance=1)
-
-
-if __name__ == '__main__': 
-    from rich.traceback import install
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+if __name__ == "__main__":
+    main()

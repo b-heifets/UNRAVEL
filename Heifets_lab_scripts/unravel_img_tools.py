@@ -109,9 +109,9 @@ def save_as_nii(ndarray, output, xy_res, z_res, data_type):
     # Create and save the NIFTI image
     nifti_img = nib.Nifti1Image(ndarray, affine)
     nifti_img.header.set_data_dtype(data_type)
-    nib.save(nifti_img, str(output))
-    
+    nib.save(nifti_img, str(output))    
     print(f"    Output: [default bold]{output}")
+
 
 @print_func_name_args_times()
 def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
