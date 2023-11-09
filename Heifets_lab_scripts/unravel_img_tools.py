@@ -20,52 +20,69 @@ from unravel_utils import print_func_name_args_times
 ####### Load 3D image and get xy and z voxel size in microns #######
 
 # Helper function to resolve file path to first matching file in dir or file itself
-def resolve_path(file_path, extension):
-    """Return first matching file in dir or file itself if it matches the extension."""
+def resolve_path(file_path, extensions):
+    """Return first matching file in dir or file itself if it matches the extensions."""
     path = Path(file_path)
     if path.is_dir():
-        sorted_files = sorted(path.glob(f"*.{extension}"))
-        first_match = next(iter(sorted_files), None)
-        return first_match
-    return path if path.is_file() and path.suffix == f".{extension}" else None
+        for extension in extensions:
+            sorted_files = sorted(path.glob(f"*{extension}"))
+            first_match = next(iter(sorted_files), None)
+            if first_match:
+                return first_match
+    else:
+        # If it's a file, check if it matches any of the extensions
+        for extension in extensions:
+            if str(path).endswith(extension):
+                return path
+    return None
 
 @print_func_name_args_times()
-def load_3D_img(file_path, channel=0, desired_axis_order="xyz"): 
+def load_3D_img(file_path, channel=0, desired_axis_order="xyz", res=False): 
     """Load <file_path> (.czi, .nii.gz, or .tif).
     file_path can be path to image file or dir (uses first *.czi, *.tif, or *.nii.gz match)
     Default: axis_order=xyz (other option: axis_order="zyx")
-    Returns: ndarray, xy_res, z_res (resolution in um)
+    Default: returns: ndarray
+    If res=True returns: ndarray, xy_res, z_res (resolution in um)
     """
-    path = resolve_path(file_path, 'czi') or resolve_path(file_path, 'tif') or resolve_path(file_path, 'nii.gz') 
+
+
+    # path = resolve_path(file_path, 'czi') or resolve_path(file_path, 'tif') or resolve_path(file_path, 'nii.gz') 
+    path = resolve_path(file_path, ['.czi', '.tif', '.nii.gz'])
+
+    # Determine the file type based on its suffix
+    file_suffix = ''.join(path.suffixes) 
     if not path:
         print(f"    [red bold]No compatible image files found in {file_path}[/]")
         return None, None, None
     print(f"    [default]Loading {path.name}")
-    if path.suffix == '.czi':
+    if file_suffix == '.czi':
         czi = CziFile(path)
         ndarray = np.squeeze(czi.read_image(C=channel)[0])
         ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-        xy_res, z_res = xyz_res_from_czi(czi)
-    elif path.suffix in ['.tif', '.tiff']:   ################ need to set up parallel loading of slices if possible
+        if res is True: xy_res, z_res = xyz_res_from_czi(czi)
+    elif file_suffix == '.tif':   ################ need to set up parallel loading of slices if possible
         tifs_stacked = []
         for tif_path in sorted(Path(path).parent.glob("*.tif")):
             with Image.open(tif_path) as img:
                 tifs_stacked.append(np.array(img))
         ndarray = np.stack(tifs_stacked, axis=0)  # stack along the first dimension (z-axis)
         ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-        xy_res, z_res = xyz_res_from_tif(path)
-    elif path.suffix in ['.nii', '.nii.gz']:
+        if res is True: xy_res, z_res = xyz_res_from_tif(path)
+    elif file_suffix == '.nii.gz': 
         img = nib.load(path)
         data_dtype = img.header.get_data_dtype()
         ndarray = np.asanyarray(img.dataobj).astype(data_dtype)
         ndarray = np.squeeze(ndarray)
         ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
-        xy_res, z_res = xyz_res_from_nii(path)
+        if res is True: xy_res, z_res = xyz_res_from_nii(path)
     else:
-        print(f"    [red bold]Unsupported file type: {path.suffix}\n    Supported file types: .czi, .tif, .tiff, .nii, .nii.gz\n")
+        print(f"    [red bold]Unsupported file type: {path.suffix}\n    Supported file types: .czi, .tif, .nii.gz\n")
         return None, None, None
 
-    return ndarray, xy_res, z_res
+    if res is True: 
+        return ndarray, xy_res, z_res
+    else: 
+        return ndarray
 
 def xyz_res_from_czi(czi_path):
     xml_root = czi_path.meta

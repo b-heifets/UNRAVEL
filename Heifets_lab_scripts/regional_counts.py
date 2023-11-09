@@ -19,15 +19,16 @@ def parse_args():
     parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, metavar='')
     parser.add_argument('-i', '--input', help='path/img.nii.gz', metavar='')
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz', metavar='')
+    parser.add_argument('-c', '--connectivity', help='6, 18, or 26. Default: 6', type=int, default=6, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = "Run from experiment folder containing sample?? folders."
     return parser.parse_args()
 
 
-def get_region_id_with_progress(atlas_img, x, y, z, progress, task_id):
-    """"Get the atlas region intensity at the given coordinates"""
+def get_region_id_with_progress(atlas, x, y, z, progress, task_id):
+    """"Get the ndarray atlas region intensity at the given coordinates"""
     progress.update(task_id, advance=1)
-    return atlas_img.get_fdata()[int(x), int(y), int(z)]
+    return atlas[int(x), int(y), int(z)]
 
 @print_func_name_args_times()
 def count_cells_in_regions(img_path, atlas_path, connectivity):
@@ -44,26 +45,26 @@ def count_cells_in_regions(img_path, atlas_path, connectivity):
     connectivity = 6
     labels_out, n = cc3d.connected_components(img, connectivity=connectivity, out_dtype=np.uint32, return_N=True)
 
-    print(f"\nTotal cell count: {n+1}\n")
+    print(f"\n    Total cell count: {n+1}\n")
 
     # Get cell coordinates from the labeled image
-    print("Getting cell coordinates...")
+    print("    Getting cell coordinates")
     stats = cc3d.statistics(labels_out)
 
     # Convert the dictionary to a dataframe
-    print("Converting to dataframe...")
+    print("    Converting to dataframe")
     centroids = stats['centroids']
     centroids_df = pd.DataFrame(centroids, columns=['x', 'y', 'z'])
 
     # Get the region ID for each cell
-    progress, task_id = initialize_progress_bar(len(centroids_df), "[red]Getting region ID for each cell...")
+    progress, task_id = initialize_progress_bar(len(centroids_df), "    [red]Getting region ID for each cell")
     with Live(progress):
         centroids_df['region_ID'] = centroids_df.apply(lambda row: get_region_id_with_progress(
             atlas, row['x'], row['y'], row['z'], progress, task_id
         ), axis=1)        
 
     # Count how many centroids are in each region
-    print("Counting cells in each region...")
+    print("    Counting cells in each region")
     region_counts = centroids_df['region_ID'].value_counts()
 
     return region_counts
