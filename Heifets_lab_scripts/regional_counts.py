@@ -49,7 +49,7 @@ def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condi
 
     labels_out, n = cc3d.connected_components(img, connectivity=connectivity, out_dtype=np.uint32, return_N=True)
 
-    print(f"\n    Total cell count: {n+1}\n")
+    print(f"\n    Total cell count: {n}\n")
 
     # Get cell coordinates from the labeled image
     print("    Getting cell coordinates")
@@ -64,9 +64,7 @@ def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condi
 
     # Convert the centroids ndarray to a dataframe
     centroids_df = pd.DataFrame(centroids, columns=['x', 'y', 'z'])
-
-    print("Centroids: \n", centroids_df)
-
+    
     # Get the region ID for each cell
     centroids_df['Region_ID'] = centroids_df.apply(lambda row: get_atlas_region_at_coords(atlas, row['x'], row['y'], row['z']), axis=1)
 
@@ -98,7 +96,7 @@ def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condi
 
     # Sort the dataframe by counts and print the top 10 with count > 0
     merged_df.sort_values(by=f'{condition}_{sample_name}_Count', ascending=False, inplace=True)
-    print(merged_df[merged_df[f'{condition}_{sample_name}_Count'] > 0].head(10))
+    print(f"{merged_df[merged_df[f'{condition}_{sample_name}_Count'] > 0].head(10)}\n")
 
 
 def main():
