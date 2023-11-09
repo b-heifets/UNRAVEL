@@ -127,32 +127,12 @@ def get_dir_name_from_args(args, kwargs):
 thread_local_data = threading.local()
 thread_local_data.indentation_level = 0
 
-def print_func_name_args_times(print_path=True):
-    def decorator(func):
-        def wrapper(*args, **kwargs):
-            func_args_str = ', '.join(repr(arg) for arg in args) 
-            func_kwargs_str = ', '.join(f"{k}={v!r}" for k, v in kwargs.items())
-            combined_args = func_args_str + (', ' if func_args_str and func_kwargs_str else '') + func_kwargs_str
-            
-            if print_path:
-                printable_path = get_printable_path_from_args(args, kwargs)
-                path_str = f" for [bold orange_red1]{printable_path}[/]"
-            else:
-                path_str = ""
-            
-            print(f"\nRunning: [bold gold1]{func.__name__!r}[/]{path_str} with args: [bright_black]({combined_args})[/]")
-            
-            # Call the actual function
-            result = func(*args, **kwargs)
-            return result
-        return wrapper
-    return decorator
-
 def print_func_name_args_times(print_dir=True):
     """A decorator that prints the function name, arguments, duration, and memory usage of the function it decorates."""
     
     ARG_REPRESENTATIONS = {
         np.ndarray: lambda x: f"ndarray: {x.shape} {x.dtype}",
+        list: lambda x: f"list: {x[:5]}{'...' if len(x) > 5 else ''}",
         str: str,
         int: str,
         float: str,
@@ -161,8 +141,9 @@ def print_func_name_args_times(print_dir=True):
 
     def arg_str_representation(arg):
         """Return a string representation of the argument passed to the decorated function."""
-        return ARG_REPRESENTATIONS.get(type(arg), str)(arg) 
-
+        # return ARG_REPRESENTATIONS.get(type(arg), str)(arg)
+        return ARG_REPRESENTATIONS.get(type(arg), repr)(arg)
+    
     def decorator(func):
         @functools.wraps(func)
         def wrapper_timer(*args, **kwargs):
@@ -184,7 +165,8 @@ def print_func_name_args_times(print_dir=True):
             # Convert args and kwargs to string for printing
             args_str = ', '.join(arg_str_representation(arg) for arg in args)
             kwargs_str = ', '.join(f"{k}={arg_str_representation(v)}" for k, v in kwargs.items())
-
+            combined_args = args_str + (', ' if args_str and kwargs_str else '') + kwargs_str
+            
             if print_dir:
                 dir_name = get_dir_name_from_args(args, kwargs) # Get dir name the basename of 1st arg with a valid path (e.g., sample??)
                 dir_string = f" for [bold orange_red1]{dir_name}[/]"
