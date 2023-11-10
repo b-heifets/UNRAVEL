@@ -81,7 +81,7 @@ def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condi
     sample_name = Path(sample).resolve().name
 
     # Add column header to the region counts
-    region_counts_series = region_counts_series.rename_axis('Region_ID').reset_index(name=f'{condition}_{sample_name}_Count')
+    region_counts_series = region_counts_series.rename_axis('Region_ID').reset_index(name=f'{condition}_{sample_name}')
 
     # Load csv with region IDs, sides, names, abbreviations, and sides
     region_info_df = pd.read_csv(Path(__file__).parent / 'gubra__region_ID_side_name_abbr.csv')
@@ -90,8 +90,8 @@ def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condi
     region_counts_df = region_info_df.merge(region_counts_series, on='Region_ID', how='left')
 
     # After merging, fill NaN values with 0 for regions without any cells
-    region_counts_df[f'{condition}_{sample_name}_Count'].fillna(0, inplace=True)
-    region_counts_df[f'{condition}_{sample_name}_Count'] = region_counts_df[f'{condition}_{sample_name}_Count'].astype(int)
+    region_counts_df[f'{condition}_{sample_name}'].fillna(0, inplace=True)
+    region_counts_df[f'{condition}_{sample_name}'] = region_counts_df[f'{condition}_{sample_name}'].astype(int)
 
     # Save the region counts as a CSV file
     os.makedirs(Path(sample).resolve() / "regional_cell_densities", exist_ok=True)
@@ -100,8 +100,8 @@ def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condi
     region_counts_df.to_csv(output_path, index=False)
 
     # Sort the dataframe by counts and print the top 10 with count > 0
-    region_counts_df.sort_values(by=f'{condition}_{sample_name}_Count', ascending=False, inplace=True)
-    print(f"\n{region_counts_df[region_counts_df[f'{condition}_{sample_name}_Count'] > 0].head(10)}\n")
+    region_counts_df.sort_values(by=f'{condition}_{sample_name}', ascending=False, inplace=True)
+    print(f"\n{region_counts_df[region_counts_df[f'{condition}_{sample_name}'] > 0].head(10)}\n")
 
     region_ids = region_info_df['Region_ID']
 
@@ -130,7 +130,7 @@ def calculate_regional_volumes(sample, atlas, region_ids, xy_res, z_res, conditi
     # Merge the regional volumes into the region information dataframe
     region_info_df = pd.read_csv(Path(__file__).parent / 'gubra__region_ID_side_name_abbr.csv')
     sample_name = Path(sample).resolve().name
-    region_info_df[f'{condition}_{sample_name}_mm3'] = region_info_df['Region_ID'].map(regional_volumes)
+    region_info_df[f'{condition}_{sample_name}'] = region_info_df['Region_ID'].map(regional_volumes)
     regional_volumes_df = region_info_df.fillna(0)
 
     # Save regional volumes as a CSV file
@@ -149,7 +149,7 @@ def calculate_regional_cell_densities(sample, regional_counts_df, regional_volum
 
     # Merge the regional counts and volumes into a single dataframe
     sample_name = Path(sample).resolve().name
-    regional_counts_df[f'{condition}_{sample_name}_density'] = regional_counts_df[f'{condition}_{sample_name}_Count'] / regional_volumes_df[f'{condition}_{sample_name}_mm3']
+    regional_counts_df[f'{condition}_{sample_name}_density'] = regional_counts_df[f'{condition}_{sample_name}'] / regional_volumes_df[f'{condition}_{sample_name}']
     regional_densities_df = regional_counts_df.fillna(0)
 
     # Save regional cell densities as a CSV file
@@ -158,7 +158,10 @@ def calculate_regional_cell_densities(sample, regional_counts_df, regional_volum
     regional_densities_df.sort_values(by='Region_ID', ascending=True, inplace=True)
 
     # Drop the count column
-    regional_densities_df.drop(f'{condition}_{sample_name}_Count', axis=1, inplace=True)
+    regional_densities_df.drop(f'{condition}_{sample_name}', axis=1, inplace=True)
+
+    # Rename the density column
+    regional_densities_df.rename(columns={f'{condition}_{sample_name}_density': f'{condition}_{sample_name}'}, inplace=True)
 
     regional_densities_df.to_csv(output_path, index=False)
     print(f"    Saving regional cell densities to {output_path}\n")
