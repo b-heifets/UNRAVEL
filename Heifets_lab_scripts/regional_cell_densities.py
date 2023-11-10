@@ -95,7 +95,7 @@ def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condi
 
     # Save the region counts as a CSV file
     os.makedirs(Path(sample).resolve() / "regional_cell_densities", exist_ok=True)
-    output_filename = f"{condition}_{sample_name}_region_cell_counts.csv" if condition else f"{sample_name}_region_cell_counts.csv"
+    output_filename = f"{condition}_{sample_name}_regional_cell_counts.csv" if condition else f"{sample_name}_regional_cell_counts.csv"
     output_path = Path(sample).resolve() / "regional_cell_densities" / output_filename
     region_counts_df.to_csv(output_path, index=False)
 
