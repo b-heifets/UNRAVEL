@@ -94,8 +94,8 @@ def xyz_res_from_czi(czi_path):
 def xyz_res_from_nii(nii_path):
     img = nib.load(nii_path)
     affine = img.affine
-    xy_res = affine[0, 0] * 1e6
-    z_res = affine[2, 2] * 1e6
+    xy_res = abs(affine[0, 0] * 1e3) # Convert from mm to um
+    z_res = abs(affine[2, 2] * 1e3)
     return xy_res, z_res
 
 def xyz_res_from_tif(tif_path):
