@@ -19,6 +19,46 @@ from unravel_utils import print_func_name_args_times
 
 ####### Load 3D image and get xy and z voxel size in microns #######
 
+@print_func_name_args_times()
+def load_czi(czi, channel, desired_axis_order="xyz", return_res=False):
+    """Load a CZI file and return the ndarray and optionally the xy and z resolutions in microns."""
+    ndarray = np.squeeze(czi.read_image(C=channel)[0])
+    ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
+    if return_res:
+        xy_res, z_res = xyz_res_from_czi(czi)
+        return ndarray, xy_res, z_res
+    else:
+        return ndarray
+
+@print_func_name_args_times()
+def load_tifs(tif_path, desired_axis_order="xyz", return_res=False):
+    """Load a tif series and return the ndarray and optionally the xy and z resolutions in microns."""
+    tifs_stacked = []
+    for tif_file in sorted(Path(tif_path).parent.glob("*.tif")):
+        with Image.open(tif_file) as img:
+            tifs_stacked.append(np.array(img))
+    ndarray = np.stack(tifs_stacked, axis=0)
+    ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
+    if return_res:
+        xy_res, z_res = xyz_res_from_tif(tif_path)
+        return ndarray, xy_res, z_res
+    else:
+        return ndarray
+
+@print_func_name_args_times()
+def load_nii(nii_path, desired_axis_order="xyz", return_res=False):
+    """Load a .nii.gz file and return the ndarray and optionally the xy and z resolutions in microns."""
+    img = nib.load(nii_path)
+    data_dtype = img.header.get_data_dtype()
+    ndarray = np.asanyarray(img.dataobj).astype(data_dtype)
+    ndarray = np.squeeze(ndarray)
+    ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
+    if return_res:
+        xy_res, z_res = xyz_res_from_nii(nii_path)
+        return ndarray, xy_res, z_res
+    else:
+        return ndarray
+    
 # Helper function to resolve file path to first matching file in dir or file itself
 def resolve_path(file_path, extensions):
     """Return first matching file in dir or file itself if it matches the extensions."""
@@ -34,7 +74,7 @@ def resolve_path(file_path, extensions):
         for extension in extensions:
             if str(path).endswith(extension):
                 return path
-    return Nones
+    return None
 
 @print_func_name_args_times()
 def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False): 
@@ -42,46 +82,29 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False
     file_path can be path to image file or dir (uses first *.czi, *.tif, or *.nii.gz match)
     Default: axis_order=xyz (other option: axis_order="zyx")
     Default: returns: ndarray
-    If res=True returns: ndarray, xy_res, z_res (resolution in um)
+    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)
     """
 
-    # path = resolve_path(file_path, 'czi') or resolve_path(file_path, 'tif') or resolve_path(file_path, 'nii.gz') 
+    # Resolve the file path to the first matching file
     path = resolve_path(file_path, ['.czi', '.tif', '.nii.gz'])
-
-    # Determine the file type based on its suffix
-    file_suffix = ''.join(path.suffixes) 
     if not path:
         print(f"    [red bold]No compatible image files found in {file_path}[/]")
         return None, None, None
     print(f"    [default]Loading {path.name}")
-    if file_suffix == '.czi':
+
+    # Load image based on file type and optionally return resolutions
+    if path.suffix == '.czi':
         czi = CziFile(path)
-        ndarray = np.squeeze(czi.read_image(C=channel)[0])
-        ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-        if return_res is True: xy_res, z_res = xyz_res_from_czi(czi)
-    elif file_suffix == '.tif':   ################ need to set up parallel loading of slices if possible
-        tifs_stacked = []
-        for tif_path in sorted(Path(path).parent.glob("*.tif")):
-            with Image.open(tif_path) as img:
-                tifs_stacked.append(np.array(img))
-        ndarray = np.stack(tifs_stacked, axis=0)  # stack along the first dimension (z-axis)
-        ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-        if return_res is True: xy_res, z_res = xyz_res_from_tif(path)
-    elif file_suffix == '.nii.gz': 
-        img = nib.load(path)
-        data_dtype = img.header.get_data_dtype()
-        ndarray = np.asanyarray(img.dataobj).astype(data_dtype)
-        ndarray = np.squeeze(ndarray)
-        ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
-        if return_res is True: xy_res, z_res = xyz_res_from_nii(path)
+        ndarray, xy_res, z_res = load_czi(czi, channel, desired_axis_order, return_res)
+    elif path.suffix == '.tif':
+        ndarray, xy_res, z_res = load_tifs(path, desired_axis_order, return_res)
+    elif path.suffix == '.nii.gz':
+        ndarray, xy_res, z_res = load_nii(path, desired_axis_order, return_res)
     else:
         print(f"    [red bold]Unsupported file type: {path.suffix}\n    Supported file types: .czi, .tif, .nii.gz\n")
         return None, None, None
 
-    if return_res is True: 
-        return ndarray, xy_res, z_res
-    else: 
-        return ndarray
+    return (ndarray, xy_res, z_res) if return_res else ndarray
 
 def xyz_res_from_czi(czi_path):
     xml_root = czi_path.meta

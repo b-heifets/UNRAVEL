@@ -41,18 +41,13 @@ def prep_reg(sample, args):
     if output.exists():
         print(f"\n\n    {output} already exists. Skipping.\n")
         return # Skip to next sample
-
-    # Load autofluo image
+    
+    # Load autofluo image and optionally get resolutions
+    img_path =  Path(sample).resolve() if glob(f"{sample}/*.czi") else Path(sample, args.tif_dir).resolve()
     if args.xy_res is None or args.z_res is None:
-        if glob(f"{sample}/*.czi"): 
-            img, xy_res, z_res = load_3D_img(Path(sample).resolve(), args.channel, "xyz", return_res=True)
-        else:
-            img, xy_res, z_res = load_3D_img(Path(sample, args.tif_dir).resolve(), "xyz", return_res=True)
+        img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True)
     else:
-        if glob(f"{sample}/*.czi"): 
-            img = load_3D_img(Path(sample).resolve(), args.channel, "xyz")
-        else:
-            img = load_3D_img(Path(sample, args.tif_dir).resolve(), "xyz")
+        img = load_3D_img(img_path, args.channel, "xyz")
         xy_res, z_res = args.xy_res, args.z_res
     
     # Resample and reorient image
