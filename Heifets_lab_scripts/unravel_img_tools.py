@@ -37,14 +37,13 @@ def resolve_path(file_path, extensions):
     return None
 
 @print_func_name_args_times()
-def load_3D_img(file_path, channel=0, desired_axis_order="xyz", res=False): 
+def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False): 
     """Load <file_path> (.czi, .nii.gz, or .tif).
     file_path can be path to image file or dir (uses first *.czi, *.tif, or *.nii.gz match)
     Default: axis_order=xyz (other option: axis_order="zyx")
     Default: returns: ndarray
     If res=True returns: ndarray, xy_res, z_res (resolution in um)
     """
-
 
     # path = resolve_path(file_path, 'czi') or resolve_path(file_path, 'tif') or resolve_path(file_path, 'nii.gz') 
     path = resolve_path(file_path, ['.czi', '.tif', '.nii.gz'])
@@ -59,7 +58,7 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz", res=False):
         czi = CziFile(path)
         ndarray = np.squeeze(czi.read_image(C=channel)[0])
         ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-        if res is True: xy_res, z_res = xyz_res_from_czi(czi)
+        if return_res is True: xy_res, z_res = xyz_res_from_czi(czi)
     elif file_suffix == '.tif':   ################ need to set up parallel loading of slices if possible
         tifs_stacked = []
         for tif_path in sorted(Path(path).parent.glob("*.tif")):
@@ -67,19 +66,19 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz", res=False):
                 tifs_stacked.append(np.array(img))
         ndarray = np.stack(tifs_stacked, axis=0)  # stack along the first dimension (z-axis)
         ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-        if res is True: xy_res, z_res = xyz_res_from_tif(path)
+        if return_res is True: xy_res, z_res = xyz_res_from_tif(path)
     elif file_suffix == '.nii.gz': 
         img = nib.load(path)
         data_dtype = img.header.get_data_dtype()
         ndarray = np.asanyarray(img.dataobj).astype(data_dtype)
         ndarray = np.squeeze(ndarray)
         ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
-        if res is True: xy_res, z_res = xyz_res_from_nii(path)
+        if return_res is True: xy_res, z_res = xyz_res_from_nii(path)
     else:
         print(f"    [red bold]Unsupported file type: {path.suffix}\n    Supported file types: .czi, .tif, .nii.gz\n")
         return None, None, None
 
-    if res is True: 
+    if return_res is True: 
         return ndarray, xy_res, z_res
     else: 
         return ndarray

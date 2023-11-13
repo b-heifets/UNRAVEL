@@ -41,9 +41,9 @@ def prep_reg(sample, args):
 
     # Load autofluo image
     if glob(f"{sample}/*.czi"): 
-        img, xy_res, z_res = load_3D_img(Path(sample).resolve(), args.channel, "xyz")
+        img, xy_res, z_res = load_3D_img(Path(sample).resolve(), args.channel, "xyz", return_res=True)
     else:
-        img, xy_res, z_res = load_3D_img(Path(sample, args.tif_dir).resolve(), "xyz")
+        img, xy_res, z_res = load_3D_img(Path(sample, args.tif_dir).resolve(), "xyz", return_res=True)
 
     # If resolution not extracted from metadata, use args.xy_res and args.z_res
     if xy_res is None or z_res is None:

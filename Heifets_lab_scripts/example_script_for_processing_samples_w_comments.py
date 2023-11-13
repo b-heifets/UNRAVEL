@@ -25,7 +25,7 @@ def parse_args(): # This function defines the arguments that can be passed to th
 @print_func_name_args_times()
 def example_function(img_path):
     """Load a 3D image in the sample folder (first *.czi, *.tif, or *.nii.gz match), print shape and resolution, and mimic processing time"""
-    img, xy_res, z_res = load_3D_img(img_path) # This loads the autofluo image from the .czi file (channel 0 by default)
+    img, xy_res, z_res = load_3D_img(img_path, return_res=True) # This loads the autofluo image from the .czi file (channel 0 by default). Returns ndarray and resolution in microns
     print(f"\n    [default]Image shape: {img.shape}, xy_res: {xy_res}, z_res: {z_res}\n")
     sleep(0.5) # This simulates processing time
     return img # This returns the image to main()

@@ -23,7 +23,7 @@ def parse_args():
 @print_func_name_args_times()
 def example_function(img_path):
     """Load a 3D image in the sample folder (first *.czi, *.tif, or *.nii.gz match), print shape and resolution, and mimic processing time"""
-    img, xy_res, z_res = load_3D_img(img_path)
+    img, xy_res, z_res = load_3D_img(img_path, return_res=True)
     print(f"\n    [default]Image shape: {img.shape}, xy_res: {xy_res}, z_res: {z_res}\n")
     sleep(0.5) 
     return img
