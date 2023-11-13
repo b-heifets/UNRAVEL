@@ -79,7 +79,8 @@ def brain_mask(sample, args):
 
     # Save masked autofl image
     masked_autofl_output = Path(sample, args.reg_input, f"autofl_{args.res}um_masked.nii.gz") if sample != cwd.name else Path(args.reg_input, f"autofl_{args.res}um_masked.nii.gz")
-    save_as_nii(autofl_masked, masked_autofl_output, args.res, args.res, args.res, np.uint16)
+    
+    save_as_nii(autofl_masked, masked_autofl_output, args.res, args.res, np.uint16)
                 
     print(f'\n{masked_autofl_output=}\n')
 

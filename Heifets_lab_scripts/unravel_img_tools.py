@@ -76,13 +76,50 @@ def resolve_path(file_path, extensions):
                 return path
     return None
 
+# @print_func_name_args_times()
+# def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False): 
+#     """Load <file_path> (.czi, .nii.gz, or .tif).
+#     file_path can be path to image file or dir (uses first *.czi, *.tif, or *.nii.gz match)
+#     Default: axis_order=xyz (other option: axis_order="zyx")
+#     Default: returns: ndarray
+#     If return_res=True returns: ndarray, xy_res, z_res (resolution in um)
+#     """
+
+#     # Resolve the file path to the first matching file
+#     path = resolve_path(file_path, ['.czi', '.tif', '.nii.gz'])
+#     if not path:
+#         print(f"    [red bold]No compatible image files found in {file_path}[/]")
+#         return None, None, None
+#     print(f"    [default]Loading {path.name}")
+
+#     # Load image based on file type and optionally return resolutions
+#     if path.suffix == '.czi':
+#         czi = CziFile(path)
+#         if return_res: 
+#             ndarray, xy_res, z_res = load_czi(czi, channel, desired_axis_order, return_res)
+#         else:
+#             ndarray = load_czi(czi, channel, desired_axis_order)
+#     elif path.suffix == '.tif':
+#         if return_res:
+#             ndarray, xy_res, z_res = load_tifs(path, desired_axis_order, return_res)
+#         else: 
+#             ndarray = load_tifs(path, desired_axis_order)
+#     elif path.suffix == '.nii.gz':
+#         if return_res:
+#             ndarray, xy_res, z_res = load_nii(path, desired_axis_order, return_res)
+#         else: 
+#             ndarray = load_nii(path, desired_axis_order)
+
+#     else:
+#         print(f"    [red bold]Unsupported file type: {path.suffix}\n    Supported file types: .czi, .tif, .nii.gz\n")
+#         return None, None, None
+
+#     return (ndarray, xy_res, z_res) if return_res else ndarray
+
 @print_func_name_args_times()
 def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False): 
-    """Load <file_path> (.czi, .nii.gz, or .tif).
-    file_path can be path to image file or dir (uses first *.czi, *.tif, or *.nii.gz match)
-    Default: axis_order=xyz (other option: axis_order="zyx")
-    Default: returns: ndarray
-    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)
+    """
+    Load an image file (.czi, .nii.gz, or .tif) and optionally return its resolutions.
     """
 
     # Resolve the file path to the first matching file
@@ -95,16 +132,14 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False
     # Load image based on file type and optionally return resolutions
     if path.suffix == '.czi':
         czi = CziFile(path)
-        ndarray, xy_res, z_res = load_czi(czi, channel, desired_axis_order, return_res)
+        return load_czi(czi, channel, desired_axis_order, return_res)
     elif path.suffix == '.tif':
-        ndarray, xy_res, z_res = load_tifs(path, desired_axis_order, return_res)
+        return load_tifs(path, desired_axis_order, return_res)
     elif path.suffix == '.nii.gz':
-        ndarray, xy_res, z_res = load_nii(path, desired_axis_order, return_res)
+        return load_nii(path, desired_axis_order, return_res)
     else:
         print(f"    [red bold]Unsupported file type: {path.suffix}\n    Supported file types: .czi, .tif, .nii.gz\n")
         return None, None, None
-
-    return (ndarray, xy_res, z_res) if return_res else ndarray
 
 def xyz_res_from_czi(czi_path):
     xml_root = czi_path.meta
