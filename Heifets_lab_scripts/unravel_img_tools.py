@@ -34,7 +34,7 @@ def resolve_path(file_path, extensions):
         for extension in extensions:
             if str(path).endswith(extension):
                 return path
-    return None
+    return Nones
 
 @print_func_name_args_times()
 def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False): 

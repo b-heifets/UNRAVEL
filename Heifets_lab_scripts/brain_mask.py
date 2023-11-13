@@ -2,18 +2,19 @@
 
 import argparse
 import numpy as np
-from unravel_config import Configuration 
+from argparse import RawTextHelpFormatter
 from pathlib import Path
 from rich import print
 from rich.live import Live
+from unravel_config import Configuration 
 from unravel_img_tools import ilastik_segmentation, load_3D_img, save_as_nii
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Before running brain_mask.py, train ilastik (tissue = label 1) using tifs from ./sample??/reg_input/autofl_*um_tifs/*.tif (from prep_reg.py)')
+    parser = argparse.ArgumentParser(description='Uses a trained ilastik project (pixel classification workflow) to segment the brain for better registration', formatter_class=argparse.RawTextHelpFormatter)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, metavar='')
+    parser.add_argument('--dirs', help='List of folders to process. Supercedes --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-ri', '--reg_input', help='Output directory (located in ./sample??). Default: reg_input', default='reg_input', metavar='')
     parser.add_argument('-i', '--input', help='autofl.nii.gz input to mask. Default: autofl_<res>_um.nii.gz', default='autofl_50um.nii.gz', metavar='')
     parser.add_argument('-td', '--tif_dir', help='Directory containing tif series for segmentation. Default: autofl_50um_tifs', default="autofl_50um_tifs", metavar='')
@@ -22,7 +23,12 @@ def parse_args():
     parser.add_argument('-r', '--res', help='Resolution of autofluo input image in microns. Default: 50', default=50, type=int, metavar='')
     parser.add_argument('-l', '--ilastik_log', help='Show Ilastik log', action='store_true')
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = "From exp dir run: brain_mask.py; Outputs: ./reg_input/autofl_50um_tifs_ilastik_brain_seg/slice_????.tif series, ./reg_input/autofl_50um_brain_mask.nii.gz, and ./reg_input/autofl_50um_masked.nii.gz"
+    parser.epilog = """
+Before running brain_mask.py, train ilastik (tissue = label 1) using tifs from ./sample??/reg_input/autofl_*um_tifs/*.tif (from prep_reg.py).
+Run brain_mask.py from the experiment directory containing sample?? folders or a sample?? folder.
+inputs: ./sample??/reg_input/autofl_50um_tifs/*.tif series
+outputs: ./reg_input/autofl_50um_tifs_ilastik_brain_seg/slice_????.tif series, ./reg_input/autofl_50um_brain_mask.nii.gz, and ./reg_input/autofl_50um_masked.nii.gz
+next script: reg.py"""
     return parser.parse_args()
 
 
