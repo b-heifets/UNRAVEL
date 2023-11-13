@@ -177,6 +177,7 @@ def resample_reorient(ndarray, xy_res, z_res, res, zoom_order=1):
 
     # Reorient autofluo image
     img_reoriented = np.einsum('zyx->xzy', img_resampled)
+    img_reoriented = np.transpose(img_reoriented, (2, 1, 0))
     
     return img_reoriented
 

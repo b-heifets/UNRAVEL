@@ -174,7 +174,9 @@ def print_func_name_args_times(print_dir=True):
                 dir_string = ""
 
             # Print out the arguments with the added indent
-            if thread_local_data.indentation_level > 1:  # considering that main function is at level 1
+            if thread_local_data.indentation_level > 2:  # considering that main function is at level 1
+                print(f"{indent_str}[gold3]{func.__name__!r}[/]\n{indent_str}[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
+            elif thread_local_data.indentation_level > 1:
                 print(f"\n{indent_str}[gold3]{func.__name__!r}[/]\n{indent_str}[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
             else:
                 print(f"\nRunning: [bold gold1]{func.__name__!r}[/]{dir_string} with args: [bright_black]({combined_args})[/]")
