@@ -41,8 +41,8 @@ def brain_mask(sample, args):
         autofl_img_path = Path(sample, args.input).resolve() if sample != cwd.name else Path(args.input).resolve()
     else:
         autofl_img_path = Path(sample, "reg_input", f"autofl_{args.res}um.nii.gz").resolve() if sample != cwd.name else Path("reg_input", f"autofl_{args.res}um.nii.gz").resolve()
-    brain_mask_output = Path(autofl_img_path.name.replace('.nii.gz', '_brain_mask.nii.gz'))
-    autofl_img_masked_output = Path(autofl_img_path.name.replace('.nii.gz', '_masked.nii.gz'))    
+    brain_mask_output = Path(autofl_img_path.parent, str(autofl_img_path.name).replace('.nii.gz', '_brain_mask.nii.gz'))
+    autofl_img_masked_output = Path(autofl_img_path.parent, str(autofl_img_path.name).replace('.nii.gz', '_masked.nii.gz'))
     autofl_tif_directory = Path(autofl_img_path.parent, str(autofl_img_path.name).replace('.nii.gz', '_tifs'))
     seg_dir = Path(f"{autofl_tif_directory}_ilastik_brain_seg")
 
@@ -69,7 +69,7 @@ def brain_mask(sample, args):
     brain_mask = np.where(seg_img > 1, 0, seg_img)
 
     # Save brain mask as nifti
-    save_as_nii(brain_mask, brain_mask_output, args.res, args.res, args.res, np.uint8)
+    save_as_nii(brain_mask, brain_mask_output, args.res, args.res, np.uint8)
 
     # Load autofl image
     try: 
@@ -82,7 +82,7 @@ def brain_mask(sample, args):
     autofl_masked = np.where(seg_img == 1, autofl_img, 0)
 
     # Save masked autofl image
-    save_as_nii(autofl_masked, autofl_img_masked_output, args.res, args.res, args.res, np.uint16)
+    save_as_nii(autofl_masked, autofl_img_masked_output, args.res, args.res, np.uint16)
 
 
 def main():
