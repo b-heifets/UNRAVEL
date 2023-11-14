@@ -59,7 +59,11 @@ def brain_mask(sample, args):
     ilastik_segmentation(str(autofl_tif_directory), str(ilastik_project), str(seg_dir), args.ilastik_log)
 
     # Load brain mask image
-    seg_img = load_3D_img(seg_dir, "xyz")
+    try: 
+        seg_img = load_3D_img(seg_dir, "xyz")
+    except (FileNotFoundError, ValueError) as e:
+        print(f"\n    [red bold]Error: {e}\n    Skipping sample {sample}.\n")
+        return
 
     # Convert anything voxels to 0 if > 1 (label 1 = tissue; other labels converted to 0)
     brain_mask = np.where(seg_img > 1, 0, seg_img)
@@ -68,7 +72,11 @@ def brain_mask(sample, args):
     save_as_nii(brain_mask, brain_mask_output, args.res, args.res, args.res, np.uint8)
 
     # Load autofl image
-    autofl_img = load_3D_img(autofl_img_path)
+    try: 
+        autofl_img = load_3D_img(autofl_img_path)
+    except (FileNotFoundError, ValueError) as e:
+        print(f"\n    [red bold]Error: {e}\n    Skipping sample {sample}.\n")
+        return
 
     # Apply brain mask to autofluo image
     autofl_masked = np.where(seg_img == 1, autofl_img, 0)
