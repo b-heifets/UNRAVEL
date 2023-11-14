@@ -60,7 +60,11 @@ def brain_mask(sample, args):
 
     # Load brain mask image
     seg_dir = Path(sample, args.reg_input, f"{args.tif_dir}_ilastik_brain_seg").resolve() if sample != cwd.name else Path(args.reg_input, f"{args.tif_dir}_ilastik_brain_seg").resolve()
-    seg_img = load_3D_img(seg_dir, "xyz")
+    try: 
+        seg_img = load_3D_img(seg_dir, "xyz")
+    except (FileNotFoundError, ValueError) as e:
+        print(f"\n    [red bold]Error: {e}\n    Skipping sample {sample}.\n")
+        return
 
     # Convert anything voxels to 0 if > 1 (label 1 = tissue; other labels converted to 0)
     brain_mask = np.where(seg_img > 1, 0, seg_img)
@@ -68,21 +72,22 @@ def brain_mask(sample, args):
     # Save brain mask as nifti
     autofl_name = args.input.replace('.nii.gz', '') if args.input else f"autofl_{args.res}um"
     brain_mask_path = Path(sample, args.reg_input, f"{autofl_name}_brain_mask.nii.gz").resolve() if sample != cwd.name else Path(args.reg_input, f"{autofl_name}_brain_mask.nii.gz").resolve()
-    save_as_nii(brain_mask, brain_mask_path, args.res, args.res, args.res, np.uint8)
+    save_as_nii(brain_mask, brain_mask_path, args.res, args.res, np.uint8)
 
     # Load autofl image
     autofl_img_path = Path(sample, args.reg_input, f"{autofl_name}.nii.gz").resolve() if sample != cwd.name else Path(args.reg_input, f"{autofl_name}.nii.gz").resolve()
-    autofl_img = load_3D_img(autofl_img_path)
+    try: 
+        autofl_img = load_3D_img(autofl_img_path)
+    except (FileNotFoundError, ValueError) as e:
+        print(f"\n    [red bold]Error: {e}\n    Skipping sample {sample}.\n")
+        return
 
     # Apply brain mask to autofluo image
     autofl_masked = np.where(seg_img == 1, autofl_img, 0)
 
     # Save masked autofl image
     masked_autofl_output = Path(sample, args.reg_input, f"autofl_{args.res}um_masked.nii.gz") if sample != cwd.name else Path(args.reg_input, f"autofl_{args.res}um_masked.nii.gz")
-    
     save_as_nii(autofl_masked, masked_autofl_output, args.res, args.res, np.uint16)
-                
-    print(f'\n{masked_autofl_output=}\n')
 
 
 def main():

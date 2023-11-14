@@ -17,7 +17,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Supercedes --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, metavar='')
-    parser.add_argument('-t', '--tif_dir', help='Name of folder in w/ raw autofluo tifs. Default: autofl_tifs. In ./sample??/ or ./', default="autofl_tisfs", metavar='')
+    parser.add_argument('-t', '--tif_dir', help='Name of folder in w/ raw autofluo tifs. Default: autofl_tifs. In ./sample??/ or ./', default="autofl_tifs", metavar='')
     parser.add_argument('-o', '--output', help='NIfTI output path relative to ./ or ./sample??/. Default: reg_input/autofl_*um.nii.gz', default=None, metavar='')
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
@@ -43,13 +43,18 @@ def prep_reg(sample, args):
         return # Skip to next sample
     
     # Load autofluo image and optionally get resolutions
-    img_path =  Path(sample).resolve() if glob(f"{sample}/*.czi") else Path(sample, args.tif_dir).resolve()
-    if args.xy_res is None or args.z_res is None:
-        img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True)
-    else:
-        img = load_3D_img(img_path, args.channel, "xyz")
-        xy_res, z_res = args.xy_res, args.z_res
-    
+    try:
+        img_path = Path(sample).resolve() if glob(f"{sample}/*.czi") else Path(sample, args.tif_dir).resolve()
+        print(f'\n{img_path=}\n')
+        if args.xy_res is None or args.z_res is None:
+            img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True)
+        else:
+            img = load_3D_img(img_path, args.channel, "xyz")
+            xy_res, z_res = args.xy_res, args.z_res
+    except (FileNotFoundError, ValueError) as e:
+        print(f"\n    [red bold]Error: {e}\n    Skipping sample {sample}.\n")
+        return
+
     # Resample and reorient image
     img_reoriented = resample_reorient(img, xy_res, z_res, args.res, zoom_order=args.zoom_order)
 
