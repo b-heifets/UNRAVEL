@@ -21,7 +21,10 @@ from unravel_utils import print_func_name_args_times
 
 @print_func_name_args_times()
 def load_czi(czi, channel, desired_axis_order="xyz", return_res=False):
-    """Load a CZI file and return the ndarray and optionally the xy and z resolutions in microns."""
+    """Load a CZI image and return the ndarray
+    Default: axis_order=xyz (other option: axis_order="zyx")
+    Default: returns: ndarray
+    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)"""
     ndarray = np.squeeze(czi.read_image(C=channel)[0])
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
     if return_res:
@@ -30,24 +33,59 @@ def load_czi(czi, channel, desired_axis_order="xyz", return_res=False):
     else:
         return ndarray
 
+# @print_func_name_args_times()
+# def load_tifs(tif_path, desired_axis_order="xyz", return_res=False):
+#     """Load a tif series and return the ndarray and optionally the xy and z resolutions in microns."""
+#     tifs_stacked = []
+#     for tif_file in sorted(Path(tif_path).parent.glob("*.tif")):
+#         with Image.open(tif_file) as img:
+#             tifs_stacked.append(np.array(img))
+#     ndarray = np.stack(tifs_stacked, axis=0)
+#     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
+#     if return_res:
+#         xy_res, z_res = xyz_res_from_tif(tif_path)
+#         return ndarray, xy_res, z_res
+#     else:
+#         return ndarray
+    
+def load_single_tif(tif_file):
+    """Load a single tif file and return ndarray."""
+    with Image.open(tif_file) as img:
+        return np.array(img)
+
 @print_func_name_args_times()
-def load_tifs(tif_path, desired_axis_order="xyz", return_res=False):
-    """Load a tif series and return the ndarray and optionally the xy and z resolutions in microns."""
-    tifs_stacked = []
-    for tif_file in sorted(Path(tif_path).parent.glob("*.tif")):
-        with Image.open(tif_file) as img:
-            tifs_stacked.append(np.array(img))
+def load_tifs(tif_path, desired_axis_order="xyz", return_res=False, parallel_loading=True):
+    """Load a tif series [in parallel] and return the ndarray
+    Default: axis_order=xyz (other option: axis_order="zyx")
+    Default: returns: ndarray
+    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)"""
+    tif_files = sorted(Path(tif_path).parent.glob("*.tif"))
+
+    if parallel_loading:
+        with ThreadPoolExecutor() as executor:
+            tifs_stacked = list(executor.map(load_single_tif, tif_files))
+    else:
+        tifs_stacked = [] ################################################# Is this line not needed.
+        for tif_file in sorted(Path(tif_path).parent.glob("*.tif")):
+            with Image.open(tif_file) as img:
+                tifs_stacked.append(np.array(img))
+
     ndarray = np.stack(tifs_stacked, axis=0)
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
+
     if return_res:
         xy_res, z_res = xyz_res_from_tif(tif_path)
         return ndarray, xy_res, z_res
     else:
         return ndarray
 
+
 @print_func_name_args_times()
 def load_nii(nii_path, desired_axis_order="xyz", return_res=False):
-    """Load a .nii.gz file and return the ndarray and optionally the xy and z resolutions in microns."""
+    """Load a .nii.gz image and return the ndarray
+    Default: axis_order=xyz (other option: axis_order="zyx")
+    Default: returns: ndarray
+    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)"""
     img = nib.load(nii_path)
     data_dtype = img.header.get_data_dtype()
     ndarray = np.asanyarray(img.dataobj).astype(data_dtype)
@@ -96,7 +134,7 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False
         czi = CziFile(path)
         return load_czi(czi, channel, desired_axis_order, return_res)
     elif str(path).endswith('.tif'):
-        return load_tifs(path, desired_axis_order, return_res)
+        return load_tifs(path, desired_axis_order, return_res, parallel_loading=True)
     elif str(path).endswith('.nii.gz'):
         return load_nii(path, desired_axis_order, return_res)
     else:
