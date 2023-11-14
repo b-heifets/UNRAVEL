@@ -12,76 +12,69 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times, initi
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Uses a trained ilastik project (pixel classification workflow) to segment the brain for better registration', formatter_class=argparse.RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description='Uses a trained ilastik project (pixel classification workflow) to segment the brain for better registration', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Supercedes --pattern', nargs='*', default=None, metavar='')
-    parser.add_argument('-ri', '--reg_input', help='Output directory (located in ./sample??). Default: reg_input', default='reg_input', metavar='')
-    parser.add_argument('-i', '--input', help='autofl.nii.gz input to mask. Default: autofl_<res>_um.nii.gz', default='autofl_50um.nii.gz', metavar='')
-    parser.add_argument('-td', '--tif_dir', help='Directory containing tif series for segmentation. Default: autofl_50um_tifs', default="autofl_50um_tifs", metavar='')
+    parser.add_argument('-i', '--input', help='autofl.nii.gz input path relative to ./ or ./sample??/. Default: reg_input/autofl_50um.nii.gz', default=None, metavar='')
     parser.add_argument('-ilp', '--ilastik_prj', help='path/trained_ilastik_project.ilp. label 1 should = tissue. Default: brain_mask.ilp (assumes ilp is in exp dir).', default='brain_mask.ilp', metavar='')
-    parser.add_argument('-o', '--output', help='Output file name. Default: autofl_<res>um_masked.nii.gz', default=None, metavar='')
     parser.add_argument('-r', '--res', help='Resolution of autofluo input image in microns. Default: 50', default=50, type=int, metavar='')
     parser.add_argument('-l', '--ilastik_log', help='Show Ilastik log', action='store_true')
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
     parser.epilog = """
 Before running brain_mask.py, train ilastik (tissue = label 1) using tifs from ./sample??/reg_input/autofl_*um_tifs/*.tif (from prep_reg.py).
 Run brain_mask.py from the experiment directory containing sample?? folders or a sample?? folder.
-inputs: ./sample??/reg_input/autofl_50um_tifs/*.tif series
-outputs: ./reg_input/autofl_50um_tifs_ilastik_brain_seg/slice_????.tif series, ./reg_input/autofl_50um_brain_mask.nii.gz, and ./reg_input/autofl_50um_masked.nii.gz
+inputs: ./sample??/reg_input/autofl_*um_tifs/*.tif series
+outputs: ./reg_input/autofl_*um_tifs_ilastik_brain_seg/slice_????.tif series, ./reg_input/autofl_*um_brain_mask.nii.gz, and ./reg_input/autofl_*um_masked.nii.gz
 next script: reg.py"""
     return parser.parse_args()
 
+### TODO: consolidate --reg_input and --input into one argument
+### TODO: removing custom --output and --tif_dir args
 
 @print_func_name_args_times()
 def brain_mask(sample, args):
     """Segment brain in autofluo image with Ilastik and apply mask."""
 
+    # Define input and output paths
     cwd = Path(".").resolve()
+    if args.input: 
+        autofl_img_path = Path(sample, args.input).resolve() if sample != cwd.name else Path(args.input).resolve()
+    else:
+        autofl_img_path = Path(sample, "reg_input", f"autofl_{args.res}um.nii.gz").resolve() if sample != cwd.name else Path("reg_input", f"autofl_{args.res}um.nii.gz").resolve()
+    brain_mask_output = Path(autofl_img_path.name.replace('.nii.gz', '_brain_mask.nii.gz'))
+    autofl_img_masked_output = Path(autofl_img_path.name.replace('.nii.gz', '_masked.nii.gz'))    
+    autofl_tif_directory = Path(autofl_img_path.parent, str(autofl_img_path.name).replace('.nii.gz', '_tifs'))
+    seg_dir = Path(f"{autofl_tif_directory}_ilastik_brain_seg")
 
-    autofl_masked_output_name = args.output if args.output else f"autofl_{args.res}um_masked.nii.gz"
-    autofl_masked_img = Path(sample, args.reg_input, autofl_masked_output_name).resolve() if sample != cwd.name else Path(args.reg_input, autofl_masked_output_name).resolve()
-
-    if autofl_masked_img.exists():
-        print(f"\n\n    {autofl_masked_img} already exists. Skipping.\n")
+    # Skip processing if output exists
+    if autofl_img_masked_output.exists():
+        print(f"\n\n    {autofl_img_masked_output} already exists. Skipping.\n")
         return
-
-    autofl_tif_directory = Path(sample, args.reg_input, args.tif_dir).resolve() if sample != cwd.name else Path(args.reg_input, args.tif_dir).resolve()
- 
-    # brain_mask.ilp assumed to be in experiment dir by default
+    
+    # Run ilastik segmentation
     if args.ilastik_prj == 'brain_mask.ilp': 
-        ilastik_project = Path(cwd, args.ilastik_prj).resolve() if sample != cwd.name else Path(cwd.parent, args.ilastik_prj).resolve()
+        ilastik_project = Path(cwd, args.ilastik_prj).resolve() if sample != cwd.name else Path(cwd.parent, args.ilastik_prj).resolve() # Assumes ilp is in exp dir
     else:
         ilastik_project = Path(args.ilastik_prj)
-
-    output_dir_name = args.output if args.output else f"{autofl_tif_directory.name}_ilastik_brain_seg"
-    seg_output_dir = Path(sample, args.reg_input, output_dir_name).resolve() if sample != cwd.name else Path(args.reg_input, output_dir_name).resolve()
-
-    ilastik_segmentation(str(autofl_tif_directory), str(ilastik_project), str(seg_output_dir), args.ilastik_log)
+    ilastik_segmentation(str(autofl_tif_directory), str(ilastik_project), str(seg_dir), args.ilastik_log)
 
     # Load brain mask image
-    seg_dir = Path(sample, args.reg_input, f"{args.tif_dir}_ilastik_brain_seg").resolve() if sample != cwd.name else Path(args.reg_input, f"{args.tif_dir}_ilastik_brain_seg").resolve()
     seg_img = load_3D_img(seg_dir, "xyz")
 
     # Convert anything voxels to 0 if > 1 (label 1 = tissue; other labels converted to 0)
     brain_mask = np.where(seg_img > 1, 0, seg_img)
 
     # Save brain mask as nifti
-    autofl_name = args.input.replace('.nii.gz', '') if args.input else f"autofl_{args.res}um"
-    brain_mask_path = Path(sample, args.reg_input, f"{autofl_name}_brain_mask.nii.gz").resolve() if sample != cwd.name else Path(args.reg_input, f"{autofl_name}_brain_mask.nii.gz").resolve()
-    save_as_nii(brain_mask, brain_mask_path, args.res, args.res, args.res, np.uint8)
+    save_as_nii(brain_mask, brain_mask_output, args.res, args.res, args.res, np.uint8)
 
     # Load autofl image
-    autofl_img_path = Path(sample, args.reg_input, f"{autofl_name}.nii.gz").resolve() if sample != cwd.name else Path(args.reg_input, f"{autofl_name}.nii.gz").resolve()
     autofl_img = load_3D_img(autofl_img_path)
 
     # Apply brain mask to autofluo image
     autofl_masked = np.where(seg_img == 1, autofl_img, 0)
 
     # Save masked autofl image
-    masked_autofl_output = Path(sample, args.reg_input, f"autofl_{args.res}um_masked.nii.gz") if sample != cwd.name else Path(args.reg_input, f"autofl_{args.res}um_masked.nii.gz")
-    save_as_nii(autofl_masked, masked_autofl_output, args.res, args.res, args.res, np.uint16)
-                
-    print(f'\n{masked_autofl_output=}\n')
+    save_as_nii(autofl_masked, autofl_img_masked_output, args.res, args.res, args.res, np.uint16)
 
 
 def main():
