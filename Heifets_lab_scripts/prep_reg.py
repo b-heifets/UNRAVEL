@@ -18,7 +18,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, metavar='')
-    parser.add_argument('-cn', '--chann_name', help='Name of folder in w/ raw autofluo tifs. Default: autofl_tifs. In ./sample??/ or ./', default="autofl_tifs", metavar='')
+    parser.add_argument('-cn', '--chann_name', help='Name of folder in w/ raw autofluo tifs. Default: autofluo. In ./sample??/ or ./', default="autofluo", metavar='')
     parser.add_argument('-o', '--output', help='NIfTI output path relative to ./ or ./sample??/. Default: reg_input/autofl_*um.nii.gz', default=None, metavar='')
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
@@ -37,15 +37,26 @@ next script: brain_mask.py or reg.py"""
 def prep_reg(sample, args):
     """Preps inputs for brain_mask.py and atlas registration (reg.py)"""
 
+    # Define outputs 
+    cwd = Path(".").resolve()
+    sample_path = Path(sample).resolve() if sample != cwd.name else cwd
+
+    if args.output: 
+        output_path = Path(sample_path, args.output).resolve().parent
+        autofl_img_output_name = Path(args.output).name
+    else:
+        output_path = Path(sample_path, "reg_input").resolve()
+        autofl_img_output_name = f"autofl_{args.res}um.nii.gz"
+    autofl_img_output = Path(output_path, autofl_img_output_name)
+
     # Skip processing if output exists
-    autofl_img_output = Path(sample, args.output) if args.output else Path(sample, "reg_input", f"autofl_{args.res}um.nii.gz").resolve()
     if autofl_img_output.exists():
         print(f"\n\n    {autofl_img_output} already exists. Skipping.\n")
-        return # Skip to next sample
-    
+        return
+
     # Load autofluo image and optionally get resolutions
     try:
-        img_path = Path(sample).resolve() if glob(f"{sample}/*.czi") else Path(sample, args.chann_name).resolve()
+        img_path = sample_path if glob(f"{sample_path}/*.czi") else Path(sample_path, args.chann_name).resolve()
         if args.xy_res is None or args.z_res is None:
             img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True)
         else:
@@ -59,7 +70,7 @@ def prep_reg(sample, args):
     img_reoriented = resample_reorient(img, xy_res, z_res, args.res, zoom_order=args.zoom_order)
 
     # Save autofl image as tif series (for brain_mask.py)
-    tif_dir_output = Path(autofl_img_output.parent, str(autofl_img_output.name).replace('.nii.gz', '_tifs')) # e.g., ./sample01/reg_input/autofl_50um_tifs
+    tif_dir_output = str(autofl_img_output).replace('.nii.gz', '_tifs') # e.g., ./sample01/reg_input/autofl_50um_tifs
     tif_dir_output.mkdir(parents=True, exist_ok=True)
     save_as_tifs(img_reoriented, tif_dir_output, "xyz")
 
@@ -70,6 +81,10 @@ def prep_reg(sample, args):
 
 def main():
     samples = get_samples(args.dirs, args.pattern)
+
+    if samples == ['.']:
+        samples[0] = Path.cwd().name
+    
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:

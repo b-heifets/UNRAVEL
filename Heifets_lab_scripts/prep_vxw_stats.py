@@ -71,9 +71,7 @@ def rb_resample_reorient_warp(sample, args):
             return
         
         # Rolling ball background subtraction
-        img_bkg = rolling_ball_subtraction_opencv_parallel(img, radius=args.rb_radius, threads=args.threads)     
-
-        rb_img = img - img_bkg
+        rb_img = rolling_ball_subtraction_opencv_parallel(img, radius=args.rb_radius, threads=args.threads)     
 
         # Resample and reorient image
         rb_img_res_reort = resample_reorient(rb_img, xy_res, z_res, args.res, zoom_order=args.zoom_order) 
@@ -134,6 +132,10 @@ def main():
         raise ValueError("\n    [red1]Length of channels and chann_name arguments should be the same.\n")
 
     samples = get_samples(args.dirs, args.pattern)
+
+    if samples == ['.']:
+        samples[0] = Path.cwd().name
+        
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:

@@ -29,8 +29,6 @@ outputs: ./reg_input/autofl_*um_tifs_ilastik_brain_seg/slice_????.tif series, ./
 next script: reg.py"""
     return parser.parse_args()
 
-### TODO: consolidate --reg_input and --input into one argument
-### TODO: removing custom --output and --tif_dir args
 
 @print_func_name_args_times()
 def brain_mask(sample, args):
@@ -47,7 +45,7 @@ def brain_mask(sample, args):
     autofl_tif_directory = Path(autofl_img_path.parent, str(autofl_img_path.name).replace('.nii.gz', '_tifs'))
     seg_dir = Path(f"{autofl_tif_directory}_ilastik_brain_seg")
 
-    # Skip processing if output exists
+    # Skip if output exists
     if autofl_img_masked_output.exists():
         print(f"\n\n    {autofl_img_masked_output} already exists. Skipping.\n")
         return
@@ -87,12 +85,10 @@ def brain_mask(sample, args):
 
 
 def main():
-
     samples = get_samples(args.dirs, args.pattern)
-    
+
     if samples == ['.']:
-        wd = Path.cwd()
-        samples[0] = wd.name
+        samples[0] = Path.cwd().name
 
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):

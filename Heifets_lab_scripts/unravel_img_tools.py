@@ -286,7 +286,7 @@ def rolling_ball_subtraction_opencv_parallel(ndarray, radius, threads=8):
     Returns ndarray with background subtracted.
     """
     struct_element = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2*radius+1, 2*radius+1)) # 2D disk
-    result = np.empty_like(ndarray) # Preallocate the result array
+    bkg_subtracted_img = np.empty_like(ndarray) # Preallocate the result array
     num_cores = min(len(ndarray), threads) # Number of available CPU cores
     with ThreadPoolExecutor(max_workers=num_cores) as executor: # Process slices in parallel
         # Map the process_slice function to each slice in ndarray and store the result in result. Each process_slice call gets a slice and the struct_element as arguments.
@@ -294,5 +294,5 @@ def rolling_ball_subtraction_opencv_parallel(ndarray, radius, threads=8):
         # ndarray is a list of slices
         # [struct_element]*len(ndarray) is a list of struct_elements of length len(ndarray)
         for i, background_subtracted_slice in enumerate(executor.map(process_slice, ndarray, [struct_element]*len(ndarray))): 
-            result[i] = background_subtracted_slice
-    return result
+            bkg_subtracted_img[i] = background_subtracted_slice
+    return bkg_subtracted_img
