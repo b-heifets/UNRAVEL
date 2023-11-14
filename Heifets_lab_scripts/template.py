@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
 import argparse
-from unravel_config import Configuration
-from rich.live import Live
 from rich import print
+from rich.live import Live
+from rich.traceback import install
+from unravel_config import Configuration
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 def parse_args():
     parser = argparse.ArgumentParser(description='<Script purpose>')
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process. Supercedes --pattern', nargs='*', default=None, metavar='')
+    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = "Usage: <> ; Outputs: <> "
     return parser.parse_args()
@@ -33,7 +34,6 @@ def main():
 
 
 if __name__ == '__main__': 
-    from rich.traceback import install
     install()
     args = parse_args()
     Configuration.verbose = args.verbose

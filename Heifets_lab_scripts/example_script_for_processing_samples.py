@@ -14,7 +14,7 @@ from time import sleep # for example_function
 def parse_args():
     parser = argparse.ArgumentParser(description='Process sample folder(s) w/ a *.czi, tif series, or .nii.gz  image', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process. Supercedes --pattern', nargs='*', default=None, metavar='')
+    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """
 Run prep_reg.py from the experiment directory containing sample?? folders or a sample?? folder.

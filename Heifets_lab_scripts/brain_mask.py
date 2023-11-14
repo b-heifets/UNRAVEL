@@ -6,6 +6,7 @@ from argparse import RawTextHelpFormatter
 from pathlib import Path
 from rich import print
 from rich.live import Live
+from rich.traceback import install
 from unravel_config import Configuration 
 from unravel_img_tools import ilastik_segmentation, load_3D_img, save_as_nii
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
@@ -14,7 +15,7 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times, initi
 def parse_args():
     parser = argparse.ArgumentParser(description='Uses a trained ilastik project (pixel classification workflow) to segment the brain for better registration', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process. Supercedes --pattern', nargs='*', default=None, metavar='')
+    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-i', '--input', help='autofl.nii.gz input path relative to ./ or ./sample??/. Default: reg_input/autofl_50um.nii.gz', default=None, metavar='')
     parser.add_argument('-ilp', '--ilastik_prj', help='path/trained_ilastik_project.ilp. label 1 should = tissue. Default: brain_mask.ilp (assumes ilp is in exp dir).', default='brain_mask.ilp', metavar='')
     parser.add_argument('-r', '--res', help='Resolution of autofluo input image in microns. Default: 50', default=50, type=int, metavar='')
@@ -101,7 +102,6 @@ def main():
 
 
 if __name__ == '__main__':
-    from rich.traceback import install
     install()
     args = parse_args()
     Configuration.verbose = args.verbose

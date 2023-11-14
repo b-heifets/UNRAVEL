@@ -273,19 +273,26 @@ def reorient_ndarray2(ndarray, orientation_string):
 
 ####### Rolling ball background subraction #######
 
-def process_slice(slice_, struct_element):
-    smoothed_slice = cv2.morphologyEx(slice_, cv2.MORPH_OPEN, struct_element)
-    return slice_ - smoothed_slice
+def process_slice(slice, struct_element):
+    """Subtract background from <slice> using OpenCV."""
+    smoothed_slice = cv2.morphologyEx(slice, cv2.MORPH_OPEN, struct_element)
+    return slice - smoothed_slice
 
+@print_func_name_args_times()
 def rolling_ball_subtraction_opencv_parallel(ndarray, radius, threads=8):
     """Subtract background from <ndarray> using OpenCV. 
     Uses multiple threads to process slices in parallel.
     Radius is the radius of the rolling ball in pixels.
+    Returns ndarray with background subtracted.
     """
     struct_element = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2*radius+1, 2*radius+1)) # 2D disk
     result = np.empty_like(ndarray) # Preallocate the result array
     num_cores = min(len(ndarray), threads) # Number of available CPU cores
-    with ThreadPoolExecutor(max_workers=num_cores) as executor:
-        for i, background_subtracted_slice in enumerate(executor.map(process_slice, ndarray, [struct_element]*len(ndarray))):
+    with ThreadPoolExecutor(max_workers=num_cores) as executor: # Process slices in parallel
+        # Map the process_slice function to each slice in ndarray and store the result in result. Each process_slice call gets a slice and the struct_element as arguments.
+        # executor.map() returns an iterator with the results of each process_slice call. The iterator is consumed and the results are stored in result.
+        # ndarray is a list of slices
+        # [struct_element]*len(ndarray) is a list of struct_elements of length len(ndarray)
+        for i, background_subtracted_slice in enumerate(executor.map(process_slice, ndarray, [struct_element]*len(ndarray))): 
             result[i] = background_subtracted_slice
     return result

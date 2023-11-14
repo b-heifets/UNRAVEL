@@ -7,6 +7,7 @@ from glob import glob
 from pathlib import Path
 from rich import print
 from rich.live import Live
+from rich.traceback import install
 from unravel_config import Configuration 
 from unravel_img_tools import load_3D_img, resample_reorient, save_as_tifs, save_as_nii
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
@@ -15,9 +16,9 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times, initi
 def parse_args():
     parser = argparse.ArgumentParser(description='Loads autofluo image, resamples, reorients, saves as .nii.gz and tifs', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process. Supercedes --pattern', nargs='*', default=None, metavar='')
+    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, metavar='')
-    parser.add_argument('-t', '--tif_dir', help='Name of folder in w/ raw autofluo tifs. Default: autofl_tifs. In ./sample??/ or ./', default="autofl_tifs", metavar='')
+    parser.add_argument('-cn', '--chann_name', help='Name of folder in w/ raw autofluo tifs. Default: autofl_tifs. In ./sample??/ or ./', default="autofl_tifs", metavar='')
     parser.add_argument('-o', '--output', help='NIfTI output path relative to ./ or ./sample??/. Default: reg_input/autofl_*um.nii.gz', default=None, metavar='')
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
@@ -26,7 +27,7 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """
 Run prep_reg.py from the experiment directory containing sample?? folders or a sample?? folder.
-inputs: first ./*.czi or ./sample??/*.czi match. Otherwise, ./<tif_dir>/*.tif series
+inputs: first ./*.czi or ./sample??/*.czi match. Otherwise, ./<chann_name>/*.tif series
 outputs: .[/sample??]/reg_input/autofl_*um.nii.gz and .[/sample??]/reg_input/autofl_*um_tifs/*.tif series
 next script: brain_mask.py or reg.py"""
     return parser.parse_args()
@@ -44,8 +45,7 @@ def prep_reg(sample, args):
     
     # Load autofluo image and optionally get resolutions
     try:
-        img_path = Path(sample).resolve() if glob(f"{sample}/*.czi") else Path(sample, args.tif_dir).resolve()
-        print(f'\n{img_path=}\n')
+        img_path = Path(sample).resolve() if glob(f"{sample}/*.czi") else Path(sample, args.chann_name).resolve()
         if args.xy_res is None or args.z_res is None:
             img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True)
         else:
@@ -78,7 +78,6 @@ def main():
 
 
 if __name__ == '__main__':
-    from rich.traceback import install
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
