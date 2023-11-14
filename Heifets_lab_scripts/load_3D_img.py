@@ -2,12 +2,10 @@
 
 import argparse
 from argparse import RawTextHelpFormatter
-from pathlib import Path
-from rich import print
 from rich.traceback import install
 from unravel_config import Configuration
 from unravel_img_tools import load_3D_img
-from unravel_utils import print_cmd_and_times, print_func_name_args_times
+from unravel_utils import print_cmd_and_times
 
 
 def parse_args():
@@ -20,7 +18,10 @@ def parse_args():
     return parser.parse_args()
 
 def main():    
-    img, xy_res, z_res = load_3D_img(args.input, args.channel, desired_axis_order=args.axis_order, return_res=args.return_res)
+    if args.return_res:
+        img, xy_res, z_res = load_3D_img(args.input, args.channel, desired_axis_order=args.axis_order, return_res=args.return_res)
+    else:
+        img = load_3D_img(args.input, args.channel, desired_axis_order=args.axis_order, return_res=args.return_res)
 
 if __name__ == '__main__': 
     install()

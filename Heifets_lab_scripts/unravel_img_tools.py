@@ -133,8 +133,13 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False
     if str(path).endswith('.czi'):
         czi = CziFile(path)
         return load_czi(czi, channel, desired_axis_order, return_res)
-    elif str(path).endswith('.tif'):
+    elif str(path).endswith('.ome.tif'):
         return load_tifs(path, desired_axis_order, return_res, parallel_loading=True)
+    elif str(path).endswith('.tif'):
+        if return_res:
+            return load_tifs(path, desired_axis_order, return_res=False, parallel_loading=True), None, None
+        else:
+            return load_tifs(path, desired_axis_order, return_res=False, parallel_loading=True)
     elif str(path).endswith('.nii.gz'):
         return load_nii(path, desired_axis_order, return_res)
     else:

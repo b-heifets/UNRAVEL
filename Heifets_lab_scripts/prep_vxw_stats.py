@@ -66,6 +66,8 @@ def rb_resample_reorient_warp(sample, args):
             else:
                 img = load_3D_img(img_path, channel_num, "xyz")
                 xy_res, z_res = args.xy_res, args.z_res
+            if not isinstance(xy_res, float) or not isinstance(z_res, float):
+                raise ValueError(f"Metadata not extractable from {img_path}. Rerun w/ --xy_res and --z_res")
         except (FileNotFoundError, ValueError) as e:
             print(f"\n    [red bold]Error: {e}\n    Skipping {sample}.\n")
             return
@@ -135,7 +137,7 @@ def main():
 
     if samples == ['.']:
         samples[0] = Path.cwd().name
-        
+
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
