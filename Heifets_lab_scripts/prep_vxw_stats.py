@@ -11,7 +11,7 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 from unravel_config import Configuration
-from unravel_img_tools import load_3D_img, save_as_tifs, resample_reorient, pad_image, rolling_ball_subtraction_opencv_parallel
+from unravel_img_tools import load_3D_img, save_as_tifs, resample_reorient, pad_image, rolling_ball_subtraction_opencv_parallel, reorient_ndarray, save_as_nii
 from unravel_utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
 
 def parse_args():
@@ -67,7 +67,7 @@ def rb_resample_reorient_warp(sample, args):
                 img = load_3D_img(img_path, channel_num, "xyz")
                 xy_res, z_res = args.xy_res, args.z_res
         except (FileNotFoundError, ValueError) as e:
-            print(f"\n    [red bold]Error: {e}\n    Skipping sample {sample}.\n")
+            print(f"\n    [red bold]Error: {e}\n    Skipping {sample}.\n")
             return
         
         # Rolling ball background subtraction
@@ -78,14 +78,26 @@ def rb_resample_reorient_warp(sample, args):
         # Resample and reorient image
         rb_img_res_reort = resample_reorient(rb_img, xy_res, z_res, args.res, zoom_order=args.zoom_order) 
 
+        save_as_nii(rb_img_res_reort, output, args.res, args.res, np.uint16)
+
+
         # Reorient again
         rb_img_res_reort_reort = np.transpose(rb_img_res_reort, (1, 2, 0)) 
+
+        save_as_nii(rb_img_res_reort_reort, output, args.res, args.res, np.uint16)
+
 
         # Padding the image 
         rb_img_res_reort_reort_padded = pad_image(rb_img_res_reort_reort, pad_width=0.15)
 
+        save_as_nii(rb_img_res_reort_reort_padded, output, args.res, args.res, np.uint16)
+
         # Reorient yet again
-        # rb_img_res_reort_reort_padded_reort = reorient_ndarray(rb_img_res_reort_reort_padded, args.ort_code)
+        rb_img_res_reort_reort_padded_reort = reorient_ndarray(rb_img_res_reort_reort_padded, args.ort_code)
+
+        save_as_nii(rb_img_res_reort_reort_padded_reort, output, args.res, args.res, np.uint16)
+
+        import sys ; sys.exit()
 
         # Directory with transforms from registration
         cwd = Path(".").resolve()

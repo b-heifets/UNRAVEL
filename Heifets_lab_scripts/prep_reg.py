@@ -52,7 +52,7 @@ def prep_reg(sample, args):
             img = load_3D_img(img_path, args.channel, "xyz")
             xy_res, z_res = args.xy_res, args.z_res
     except (FileNotFoundError, ValueError) as e:
-        print(f"\n    [red bold]Error: {e}\n    Skipping sample {sample}.\n")
+        print(f"\n    [red bold]Error: {e}\n    Skipping {sample}.\n")
         return
 
     # Resample and reorient image
