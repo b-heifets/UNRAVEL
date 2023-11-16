@@ -25,7 +25,7 @@ def parse_args():
     return parser.parse_args()
 
 print_func_name_args_times()
-def atlas_label_intensity_histogram(cluster_index_path, atlas_path):
+def region_volumes(cluster_index_path, atlas_path):
     """Generate 16 bit intensity histogram CSV for regional volumes from cluster index and atlas"""
 
     # Load cluster index and atlas
@@ -38,10 +38,6 @@ def atlas_label_intensity_histogram(cluster_index_path, atlas_path):
     # Generate histogram CSV
     histo, _ = np.histogram(ABA_index, bins=65536, range=(0, 65535))
 
-    return histo, xy_res, z_res
-
-print_func_name_args_times()
-def convert_to_region_volumes(histo, xy_res, z_res):
     # Calculate volumes in cubic mm
     volumes_in_cubic_mm = ((xy_res**2) * z_res) * histo / 1000000000
 
@@ -76,17 +72,6 @@ def convert_to_region_volumes(histo, xy_res, z_res):
     region_volumes_combined_df = region_volumes_combined_df[region_volumes_combined_df['Volume_(mm^3)'] > 0]
     sunburst_df = sunburst_df[sunburst_df['Volume_(mm^3)'] > 0]
 
-    return region_volumes_split_df, region_volumes_combined_df, sunburst_df
-
-
-def main():
-
-    # Process the image and get the CSV file path
-    histo, xy_res, z_res = atlas_label_intensity_histogram(args.index, args.atlas)
-
-    # Convert to region volumes and save the result
-    region_volumes_split_df, region_volumes_combined_df, sunburst_df = convert_to_region_volumes(histo, xy_res, z_res)
-
     # Define output paths
     output_dir = Path(Path(args.index).parent, 'regional_volumes')
     os.makedirs(output_dir, exist_ok=True)
@@ -104,6 +89,10 @@ def main():
     os.system(f"cp {sunburst_RGBs} {output_dir}")
 
     print(f"\n{region_volumes_combined_df}")
+
+
+def main():
+    region_volumes(args.index, args.atlas)
 
 
 if __name__ == '__main__': 
