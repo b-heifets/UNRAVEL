@@ -1,30 +1,29 @@
 #!/usr/bin/env python3
 
 import argparse
+from pathlib import Path
 import numpy as np
 from rich import print
 from rich.traceback import install
 from unravel_config import Configuration
-from unravel_img_tools import load_3D_img
-from unravel_utils import print_cmd_and_times, print_func_name_args_times
+from unravel_img_tools import load_3D_img, save_as_nii, crop
+from unravel_utils import print_cmd_and_times, print_func_name_args_times, load_text_from_file
+
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load spatial subset of .nii.gz')
-    parser.add_argument('-i', '--input', help='Path to the NIFTI image (e.g., path/img.nii.gz)', metavar='')
+    parser = argparse.ArgumentParser(description='Crop native image based on cluster bounding boxes')
+    parser.add_argument('-i', '--input', help="Path to the image or it's dir", metavar='')
     parser.add_argument('-ob', '--outer_bbox', help='Path to the text file containing the outer bounding box (outer_bounds.txt)', metavar='')
     parser.add_argument('-ib', '--inner_bbox', help='Path to the text file containing the inner bounding box (bounding_box_sample??_cluster_*.txt)', metavar='')
+    parser.add_argument('-c', '--channel', help='.czi channel number. Default: 1', default=1, type=int, metavar='')
+    parser.add_argument('-cn', '--chann_name', help='Channel name. Default: ochann', default='ochann', metavar='')
+    parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, metavar='')
+    parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, metavar='')
+    parser.add_argument('-o', '--output', help='path/img.nii.gz.', default=None, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = "Bounding box text files are from native_clusters.py."
     return parser.parse_args()
 
-@print_func_name_args_times()
-def load_text_from_file(file_path):
-    try:
-        with open(file_path, 'r') as file:
-            return file.read()
-    except Exception as e:
-        print(f"[red]Error reading file: {e}[/]")
-        return None
 
 @print_func_name_args_times()
 def calculate_native_bbox(outer_bbox_text, inner_bbox_text):
@@ -39,44 +38,42 @@ def calculate_native_bbox(outer_bbox_text, inner_bbox_text):
     
     native_bbox = [[outer_start + inner_start, outer_start + inner_end] 
                     for (outer_start, _), (inner_start, inner_end) in zip(outer_bbox, inner_bbox)]
-    
+
+    # Convert to string
+    x_start, x_end = native_bbox[0]
+    y_start, y_end = native_bbox[1]
+    z_start, z_end = native_bbox[2]
+    native_bbox = f"{x_start}:{x_end}, {y_start}:{y_end}, {z_start}:{z_end}"    
+
     return native_bbox
-
-def bbox_string_to_slices(bbox_string):
-    slices = []
-    for dim in bbox_string.split(", "):
-        start, end = map(int, dim.split(":"))
-        slices.append(slice(start, end))
-    return tuple(slices)
-
-def bbox_to_slice(bbox):
-    return tuple(slice(start, end) for start, end in bbox)
 
 def main():
     args = parse_args()
 
-    native_bbox = calculate_native_bbox(outer_bbox_text, inner_bbox_text)
+    # Determine native bounding box for cropping
+    native_bbox = calculate_native_bbox(args.outer_bbox, args.inner_bbox)
 
     if native_bbox is None: 
+        print("    [red]Error calculating native bounding box[/]")
         return
 
-    # native_bbox = get_native_bbox(args.outer_bbox, args.inner_bbox)
+    # Load image
+    if args.xy_res is None or args.z_res is None:
+        img, xy_res, z_res = load_3D_img(args.input, return_res=True)
+    else:
+        img = load_3D_img(args.input, return_res=True)
+        xy_res, z_res = args.xy_res, args.z_res
+    
+    # Crop image
+    cropped_img = crop(img, native_bbox)
 
-
-    print(f"native_bbox: {native_bbox}")
-
-    # img, _, _ = load_3D_img(args.input)
-
-    # img_cropped = img[bbox_string_to_slices(native_bbox)]
-
-    # print(f"{img.shape=}")
-
-    # bbox_slice = bbox_to_slice(native_bbox)
-
-    # img = load_nifti_image(args.input)
-    # if img is not None:
-    #     img_cropped = img[bbox_slice]
-    #     print(f"Cropped image shape: {img_cropped.shape}")
+    # Save cropped image
+    dtype = img.dtype
+    if args.output:
+        save_as_nii(cropped_img, args.output, xy_res, z_res, data_type=dtype)
+    else:
+        output = Path(Path(args.bbox).resolve().parent.parent, f"{args.chann_name}_cropped")                     
+        save_as_nii(cropped_img, output, xy_res, z_res, data_type=dtype)
 
 
 if __name__ == '__main__': 

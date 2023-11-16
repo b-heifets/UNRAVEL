@@ -37,45 +37,47 @@ next scripts: cluster_validation_summary.py and cluster_montage.py"""
 def validate_clusters(sample, args):
     """Validate clusters of significant voxels based on full res cell densities measurements"""
 
-#     # Regional volumes
-# ABA_volumes.sh $rev_cluster_index
-# sunburst.sh $rev_cluster_index
-# mkdir -p cluster_validation_summary $PWD/cluster_validation_summary/$output_dir_name
-# rsync -au ${rev_cluster_index%/*}/ $exp_summary_dir/cluster_validation_summary/$output_dir_name/cluster_index
+    # Warp reversed cluster index to native space
+    # to_native2.sh $rev_cluster_index $xy_res $z_res clusters/$output_dir_name native_cluster_index
 
 
-#   # Warp reversed cluster index to native space
-#   to_native2.sh $rev_cluster_index $xy_res $z_res clusters/$output_dir_name native_cluster_index
 
-#   # Generate ./bounding_boxes/*.txt, & cropped cluster masks and segmentation images
-#   native_clusters_any_immunofluor_rater_abc.sh $s/clusters/$output_dir_name/native_cluster_index/native_"$output_dir_name"_rev_cluster_index.nii.gz $xy_res $z_res "$clusters"
+    # Generate ./bounding_boxes/*.txt, & cropped cluster masks and segmentation images
+    # native_clusters_any_immunofluor_rater_abc.sh $s/clusters/$output_dir_name/native_cluster_index/native_"$output_dir_name"_rev_cluster_index.nii.gz $xy_res $z_res "$clusters"
 
-#   # 3D count cells in clusters
-#   for c in $(eval echo $clusters); do
-#     cluster_cell_counts.py #<cropped_cluster_mask> <cropped_seg_img> # Perhaps add this to native_clusters
-#   done
+    # 3D count cells in clusters
+    # for c in $(eval echo $clusters); do
+    #  cluster_cell_counts.py #<cropped_cluster_mask> <cropped_seg_img> # Perhaps add this to native_clusters
+    # done
 
-#   # rsync -au $s/clusters/$output_dir_name/ $exp_summary_dir/cluster_validation_summary/$output_dir_name
+    # rsync -au $s/clusters/$output_dir_name/ $exp_summary_dir/cluster_validation_summary/$output_dir_name
 
-# ####### Get cell densities in clusters #######
-# # cd $exp_summary_dir/cluster_validation_summary/$output_dir_name
-# # cluster_densities2_any_immunofluor_rater_abc.sh all all $immuno_label $seg_type
-
-# cd $exp_summary_dir
-
-# printf "\n$inputs\n"
+    ####### Get cell densities in clusters #######
+    # cluster_densities2_any_immunofluor_rater_abc.sh all all $immuno_label $seg_type
 
 
 
 def main():
 
+    # Make output directory
     exp_summary_dir = Path(".").resolve()
+    cluster_validation_summary_dir = Path(exp_summary_dir, "cluster_validation_summary").resolve()
+    cluster_validation_summary_dir.mkdir(parents=True, exist_ok=True)
+    if args.output:
+        output_dir_name = args.output
+    else:
+        output_dir_name = str(Path(args.index)).replace(".nii.gz", "")
+    output_dir = Path(cluster_validation_summary_dir, output_dir_name).resolve()
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    index, xy_res, z_res = load_3D_img(args.index, desired_axis_order='xyz', return_res=True)
+    # Calculate region volumes
+    region_volumes(args.index, args.atlas) 
 
-    # Get regional volumes
-    region_volumes(args.index, args.atlas)
-
+    # Load cluster index and atlas
+    index, xy_res, z_res = load_3D_img(args.index, desired_axis_order='xyz', return_res=True) 
+    atlas = load_3D_img(args.atlas, desired_axis_order='xyz')
+     
+    # Get clusters to process
     if args.clusters == "all":
         clusters = cluster_IDs(index, min_extent=100, print_IDs=False, print_sizes=False)
     else:
@@ -120,3 +122,4 @@ if __name__ == '__main__':
 # TODO: save params to text file in output folder
 # offload get_samples logic to unravel_utils
 # Define default output folder name
+# In native_clusters the output for the outter bbox does not have the sample name. So when it gets rsynced, only one sample's bbox gets saved in the summary folder.

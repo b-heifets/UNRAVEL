@@ -203,3 +203,12 @@ def print_func_name_args_times(print_dir=True):
             return result
         return wrapper_timer
     return decorator
+
+@print_func_name_args_times()
+def load_text_from_file(file_path):
+    try:
+        with open(file_path, 'r') as file:
+            return file.read()
+    except Exception as e:
+        print(f"[red]Error reading file: {e}[/]")
+        return None

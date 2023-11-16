@@ -346,3 +346,65 @@ def cluster_IDs(ndarray, min_extent=100, print_IDs=False, print_sizes=False):
     clusters = [int(cluster_id) for cluster_id in clusters_above_minextent]
 
     return clusters
+
+print_func_name_args_times()
+def find_bounding_box(ndarray, cluster_ID=None, output_file_path=None):
+    """
+    Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.
+
+    Parameters:
+        ndarray: 3D numpy array to search within.
+        cluster_ID (int): Cluster intensity to find bbox for. If None, return bbox for all clusters.
+        output_file_path (str): File path to write the bounding box.
+    """
+    
+    # Initialize views based on whether we are looking for a specific cluster_ID or any cluster
+    if cluster_ID is not None:
+        # Find indices where ndarray equals cluster_ID for each dimension
+        views = [np.where(ndarray == int(cluster_ID))[i] for i in range(3)]
+    else:
+        # Find indices where ndarray has any value (greater than 0) for each dimension
+        views = [np.any(ndarray, axis=i) for i in range(3)]
+
+    # Initialize min and max indices
+    min_max_indices = []
+
+    # Find min and max indices for each dimension
+    for i, view in enumerate(views):
+        if cluster_ID is not None:
+            indices = views[i]
+        else:
+            indices = np.where(view)[0]
+
+        # Check if there are any indices found
+        if len(indices) > 0:
+            min_index = int(min(indices))
+            max_index = int(max(indices) + 1)
+        else:
+            # Handle empty array case by setting min and max to zero
+            min_index = 0
+            max_index = 0
+
+        min_max_indices.append((min_index, max_index))
+
+    # Unpack indices for easier referencing
+    xmin, xmax, ymin, ymax, zmin, zmax = [idx for dim in min_max_indices for idx in dim]
+
+    # Write to file if specified
+    if output_file_path:
+        with open(output_file_path, "w") as file:
+            file.write(f"{xmin}:{xmax}, {ymin}:{ymax}, {zmin}:{zmax}")
+
+    return xmin, xmax, ymin, ymax, zmin, zmax
+
+print_func_name_args_times()
+def crop(ndarray, bbox: str):
+    """Crop an ndarray to the specified bounding box (xmin:xmax, ymin:ymax, zmin:zmax)"""
+    # Split the bounding box string into coordinates
+    bbox_coords = bbox.split(',')
+    xmin, xmax = [int(x) for x in bbox_coords[0].split(':')]
+    ymin, ymax = [int(y) for y in bbox_coords[1].split(':')]
+    zmin, zmax = [int(z) for z in bbox_coords[2].split(':')]
+
+    # Crop and return the ndarray
+    return ndarray[xmin:xmax, ymin:ymax, zmin:zmax]
