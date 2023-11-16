@@ -62,7 +62,8 @@ def main():
         for sample in samples:
 
             # Resolve path to tif directory
-            tif_dir = Path(sample, args.chann_name).resolve()
+            cwd = Path(".").resolve()
+            tif_dir = Path(sample, args.chann_name).resolve() if sample != cwd.name else Path(args.chann_name).resolve()
 
             # Load image
             if args.xy_res is None or args.z_res is None:
