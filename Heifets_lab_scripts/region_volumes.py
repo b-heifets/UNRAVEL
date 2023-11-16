@@ -12,11 +12,16 @@ from unravel_img_tools import load_3D_img
 from unravel_utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Calculate regional volumes from cluster index and output csv for sunburst plot.')
+    parser = argparse.ArgumentParser(description='Calculate regional volumes from cluster index and outputs csvs')
     parser.add_argument('-i', '--index', help='path/rev_cluster_index.nii.gz (e.g., from fdr.sh)', default=None, metavar='') 
     parser.add_argument('-a', '--atlas', help='path/img.nii.gz. Default: gubra_ano_split_25um.nii.gz', default="/usr/local/unravel/atlases/gubra/gubra_ano_split_25um.nii.gz", metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = "Outputs: <> "
+    parser.epilog = """Outputs: .csv files in path/*_cluster_index.nii.gz/regional_volumes/
+    - *region_volumes_split.csv: volumes for each hemisphere
+    - *region_volumes_combined.csv: combined volumes for left and right hemispheres
+    - *sunburst.csv: volumes for each region in ABA hierarchy (for sunburst plot in Fluorish)
+    - sunburst_RGBs.csv: RGB values for each region in ABA hierarchy (for sunburst plot)
+    """
     return parser.parse_args()
 
 print_func_name_args_times()
@@ -94,7 +99,7 @@ def main():
     region_volumes_combined_df.to_csv(region_volumes_combined_output, index=False)
     sunburst_df.to_csv(sunburst_output, index=False)
 
-    # Copy sunburst_RGBs.csv to output dir (Used for coloring to sunburst plot in Fluorish Studios)
+    # Copy sunburst_RGBs.csv to output dir
     sunburst_RGBs = Path(__file__).parent / 'sunburst_RGBs.csv'
     os.system(f"cp {sunburst_RGBs} {output_dir}")
 
