@@ -323,3 +323,26 @@ def rolling_ball_subtraction_opencv_parallel(ndarray, radius, threads=8):
         for i, background_subtracted_slice in enumerate(executor.map(process_slice, ndarray, [struct_element]*len(ndarray))): 
             bkg_subtracted_img[i] = background_subtracted_slice
     return bkg_subtracted_img
+
+print_func_name_args_times()
+def cluster_IDs(ndarray, min_extent=100, print_IDs=False, print_sizes=False):
+    """Prints cluster IDs [and sizes] for clusters > minextent voxels"""
+
+    # Get unique intensities and their counts
+    unique_intensities, counts = np.unique(ndarray[ndarray > 0], return_counts=True)
+
+    # Filter clusters based on size
+    clusters_above_minextent = [intensity for intensity, count in zip(unique_intensities, counts) if count >= min_extent]
+    
+    # Print cluster IDs
+    for idx, cluster_id in enumerate(clusters_above_minextent):
+        if print_sizes:
+            print(f"ID: {int(cluster_id)}, Size: {counts[idx]}")
+        elif print_IDs:
+            print(int(cluster_id), end=' ')
+    if print_IDs: # Removes trailing %
+        print()
+    
+    clusters = [int(cluster_id) for cluster_id in clusters_above_minextent]
+
+    return clusters

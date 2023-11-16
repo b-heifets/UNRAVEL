@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import functools
+import pandas as pd
 import numpy as np
 import os
 import sys
@@ -13,6 +14,7 @@ from pathlib import Path
 from rich import print
 from rich.console import Console
 from rich.progress import Progress, TextColumn, SpinnerColumn, BarColumn, TimeElapsedColumn, TimeRemainingColumn, MofNCompleteColumn, ProgressColumn
+from rich.table import Table
 from rich.text import Text
 
 

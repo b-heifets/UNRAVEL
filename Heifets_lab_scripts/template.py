@@ -16,8 +16,8 @@ def parse_args():
     return parser.parse_args()
 
 
-@print_func_name_args_times(arg_index_for_basename=0)
-def example_function(sample, seconds):
+@print_func_name_args_times()
+def example_function(sample):
     from time import sleep
     print(f"\n    [default]Processing sample: {sample}\n")
     sleep(1) 

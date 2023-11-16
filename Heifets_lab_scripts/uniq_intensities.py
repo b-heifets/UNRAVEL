@@ -3,37 +3,31 @@
 import argparse
 import nibabel as nib
 import numpy as np
+from rich import print
+from rich.traceback import install
+from unravel_config import Configuration
+from unravel_img_tools import load_3D_img, cluster_IDs
+from unravel_utils import print_cmd_and_times
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Print list of IDs for clusters > X voxels')
     parser.add_argument('-i', '--input', help='path/input_img.nii.gz', required=True, metavar='')
-    parser.add_argument('-s', '--print_sizes', help='Optionally print cluster IDs and sizes if flag is provided', action='store_true')
     parser.add_argument('-m', '--minextent', help='Min cluster size in voxels (Default: 100)', default=100, metavar='', type=int)
+    parser.add_argument('-id', '--print_IDs', help='Print cluster IDs. Default: True', default=True, action='store_true')
+    parser.add_argument('-s', '--print_sizes', help='Print cluster IDs and sizes. Default: False', default=False, action='store_true')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     return parser.parse_args()
-
-def uniq_intensities(image, minextent, print_sizes=False):
-    # Load the image
-    img = nib.load(image)
-    data = img.get_fdata()
-
-    # Get unique intensities and their counts
-    unique_intensities, counts = np.unique(data[data > 0], return_counts=True)
-
-    # Filter clusters based on size
-    clusters_above_minextent = [intensity for intensity, count in zip(unique_intensities, counts) if count >= minextent]
-    
-    # Print cluster IDs
-    for idx, cluster_id in enumerate(clusters_above_minextent):
-        if print_sizes:
-            print(f"ID: {int(cluster_id)}, Size: {counts[idx]}")
-        else:
-            print(int(cluster_id), end=' ')
-    if not print_sizes:
-        print()
 
 def main():
     args = parse_args()
-    uniq_intensities(args.input, args.minextent, args.print_sizes)
 
-if __name__ == '__main__':
-    main()
+    img = load_3D_img(args.input)
+
+    cluster_IDs(img, min_extent=args.minextent, print_IDs=args.print_IDs, print_sizes=args.print_sizes)
+
+if __name__ == '__main__': 
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    print_cmd_and_times(main)()
