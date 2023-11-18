@@ -18,7 +18,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, metavar='')
-    parser.add_argument('-cn', '--chann_name', help='Name of folder in w/ raw autofluo tifs. Default: autofluo. In ./sample??/ or ./', default="autofluo", metavar='')
+    parser.add_argument('-a', '--autofl_name', help='Dir name for autofluo tifs. Otherwise, assumed to be in ./sample??/autofluo/', default="autofluo", metavar='')
     parser.add_argument('-o', '--output', help='NIfTI output path relative to ./ or ./sample??/. Default: reg_input/autofl_*um.nii.gz', default=None, metavar='')
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
@@ -27,7 +27,7 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """
 Run prep_reg.py from the experiment directory containing sample?? folders or a sample?? folder.
-inputs: first ./*.czi or ./sample??/*.czi match. Otherwise, ./<chann_name>/*.tif series
+inputs: first ./*.czi or ./sample??/*.czi match. Otherwise, ./<label>/*.tif series
 outputs: .[/sample??]/reg_input/autofl_*um.nii.gz and .[/sample??]/reg_input/autofl_*um_tifs/*.tif series
 next script: brain_mask.py or reg.py"""
     return parser.parse_args()
@@ -56,7 +56,7 @@ def prep_reg(sample, args):
 
     # Load autofluo image and optionally get resolutions
     try:
-        img_path = sample_path if glob(f"{sample_path}/*.czi") else Path(sample_path, args.chann_name).resolve()
+        img_path = sample_path if glob(f"{sample_path}/*.czi") else Path(sample_path, args.label).resolve()
         if args.xy_res is None or args.z_res is None:
             img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True)
         else:
