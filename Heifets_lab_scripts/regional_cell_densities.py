@@ -41,7 +41,7 @@ def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condi
 
     img = load_3D_img(seg_img_path)
 
-    atlas, xy_res, z_res = load_3D_img(atlas_path, res=True)
+    atlas, xy_res, z_res = load_3D_img(atlas_path, return_res=True)
 
     # Check that the image and atlas have the same shape
     if img.shape != atlas.shape:
