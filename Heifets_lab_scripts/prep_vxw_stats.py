@@ -44,24 +44,20 @@ next steps: check registration quality with check_reg.py and run vx_stats.py""" 
 def rb_resample_reorient_warp(sample, args):
     """Performs rolling ball bkg sub on full res fluo data, resamples, reorients, and warp to atlas space."""
 
-    output = args.output if args.output else Path(sample, f"{sample}_ochann_rb{args.rb_radius}_gubra_space.nii.gz").resolve()
-    if output.exists():
-        print(f"\n\n    {output} already exists. Skipping.\n")
-        return 
+    sample_path = Path(sample).resolve() if sample != Path().resolve().name else Path().resolve()
 
-    # Skip processing if output exists
-    fluo_img_output = Path(sample, args.output) if args.output else Path(sample, f"{sample}_{args.label}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz").resolve() # <sample??>_<ochann>_rb<4>_<gubra>_space.nii.gz)
+    fluo_img_output = Path(sample_path, args.output) if args.output else Path(sample_path, f"{sample}_{args.label}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz") # <sample??>_<ochann>_rb<4>_<gubra>_space.nii.gz)
     if fluo_img_output.exists():
         print(f"\n\n    {fluo_img_output} already exists. Skipping.\n")
         return
     
     # Load the fluorescence image and optionally get resolutions
     try:
-        img_path = Path(sample).resolve() if glob(f"{sample}/*.czi") else Path(sample, args.label).resolve()
+        img_path = sample_path if glob(f"{sample_path}/*.czi") else Path(sample_path, args.label)
         if args.xy_res is None or args.z_res is None:
-            img, xy_res, z_res = load_3D_img(img_path, args.chann_idx, "xyz", return_res=True)
+            img, xy_res, z_res = load_3D_img(img_path, channel=args.chann_idx, desired_axis_order="xyz", return_res=True)
         else:
-            img = load_3D_img(img_path, args.chann_idx, "xyz")
+            img = load_3D_img(img_path, channel=args.chann_idx, desired_axis_order="xyz", return_res=False)
             xy_res, z_res = args.xy_res, args.z_res
         if not isinstance(xy_res, float) or not isinstance(z_res, float):
             raise ValueError(f"Metadata not extractable from {img_path}. Rerun w/ --xy_res and --z_res")
@@ -75,24 +71,24 @@ def rb_resample_reorient_warp(sample, args):
     # Resample and reorient image
     rb_img_res_reort = resample_reorient(rb_img, xy_res, z_res, args.res, zoom_order=args.zoom_order) 
 
-    save_as_nii(rb_img_res_reort, output, args.res, args.res, np.uint16)
+    save_as_nii(rb_img_res_reort, Path(sample_path, "rb_img_res_reort.nii.gz"), args.res, args.res, np.uint16)
 
 
     # Reorient again
     rb_img_res_reort_reort = np.transpose(rb_img_res_reort, (1, 2, 0)) 
 
-    save_as_nii(rb_img_res_reort_reort, output, args.res, args.res, np.uint16)
+    save_as_nii(rb_img_res_reort_reort, Path(sample_path, "rb_img_res_reort_reort.nii.gz"), args.res, args.res, np.uint16)
 
 
     # Padding the image 
     rb_img_res_reort_reort_padded = pad_image(rb_img_res_reort_reort, pad_width=0.15)
 
-    save_as_nii(rb_img_res_reort_reort_padded, output, args.res, args.res, np.uint16)
+    save_as_nii(rb_img_res_reort_reort_padded, Path(sample_path, "rb_img_res_reort_reort_padded.nii.gz"), args.res, args.res, np.uint16)
 
     # Reorient yet again
     rb_img_res_reort_reort_padded_reort = reorient_ndarray(rb_img_res_reort_reort_padded, args.ort_code)
 
-    save_as_nii(rb_img_res_reort_reort_padded_reort, output, args.res, args.res, np.uint16)
+    save_as_nii(rb_img_res_reort_reort_padded_reort, Path(sample_path, "rb_img_res_reort_reort_padded_reort.nii.gz"), args.res, args.res, np.uint16)
 
     import sys ; sys.exit()
 
@@ -124,18 +120,7 @@ def rb_resample_reorient_warp(sample, args):
 
 
 def main():    
-
     samples = get_samples(args.dirs, args.pattern)
-
-    # Resolve path to tif directory
-    cwd = Path(".").resolve()
-
-    sample_path = Path(sample).resolve() if sample != cwd.name else Path().resolve()
-    tif_dir = Path(sample_path, args.label).resolve()
-
-    if samples == ['.']:
-        samples[0] = Path.cwd().name
-
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
