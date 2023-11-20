@@ -131,7 +131,7 @@ def calculate_regional_volumes(sample, atlas, region_ids, xy_res, z_res, conditi
     regional_volumes = {region_id: voxel_counts[region_id] * voxel_volume for region_id in region_ids}
 
     # Merge the regional volumes into the region information dataframe
-    region_info_df = pd.read_csv(Path(__file__).parent / 'gubra__region_ID_side_name_abbr.csv')
+    region_info_df = pd.read_csv(Path(__file__).parent / 'gubra__regionID_side_IDpath_region_abbr.csv')
     sample_name = Path(sample).resolve().name
     region_info_df[f'{condition}_{sample_name}'] = region_info_df['Region_ID'].map(regional_volumes)
     regional_volumes_df = region_info_df.fillna(0)
