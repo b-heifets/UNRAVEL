@@ -58,7 +58,7 @@ if [ "$(fslinfo $path_native_index | cut -f2 | head -1)" != "UINT8" ]; then
   fi
 fi
 
-python3 /usr/local/miracl/miracl/seg/native_clusters_any_immunofluor_rater_single_process_abc_debug.py $1 $xy_res $z_res $output_folder $sample $seg_nifti $4 ########## edited pos arg to accomodate consensus or rater specific segmentations
+python3 /usr/local/miracl/miracl/seg/native_clusters_any_immunofluor_rater_single_process_abc.py $1 $xy_res $z_res $output_folder $sample $seg_nifti $4 ########## edited pos arg to accomodate consensus or rater specific segmentations
 
 #edit headers of output .nii.gz files
 xy_res=$(echo "scale=5; ($2)/1000" | bc | sed 's/^\./0./') #covert microns to mm

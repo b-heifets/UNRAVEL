@@ -45,8 +45,6 @@ else:
     cluster_index_img = nib.load(sys.argv[1])
     cluster_index_ndarray = np.array(cluster_index_img.dataobj)
 
-    print(f"Debug: Shape of cluster_index_ndarray: {cluster_index_ndarray.shape}")
-
     #Make reference np.array lacking empty space around cluster index
     print(str('  Find bbox of cluster index and trim outer space '+datetime.now().strftime("%H:%M:%S")+'\n'))
     xy_view = np.any(cluster_index_ndarray, axis=2) #2D boolean array similar to max projection of z (True if > 0)
@@ -58,9 +56,6 @@ else:
     outer_zmin = int(min(np.where(yz_view)[1]))
     outer_zmax = int(max(np.where(yz_view)[1])+1)
     cluster_index_ndarray_cropped = cluster_index_ndarray[outer_xmin:outer_xmax, outer_ymin:outer_ymax, outer_zmin:outer_zmax] #Cropped cluster index
-
-    print(f"Debug: Shape of cluster_index_ndarray_cropped: {cluster_index_ndarray_cropped.shape}")
-
     with open(f"bounding_boxes/outer_bounds.txt", "w") as file:
         file.write(f"{outer_xmin}:{outer_xmax}, {outer_ymin}:{outer_ymax}, {outer_zmin}:{outer_zmax}")
 
@@ -68,13 +63,8 @@ else:
     print(str('  Load cell segmentation and trim outer space '+datetime.now().strftime("%H:%M:%S")+'\n'))
     seg_img = nib.load(sys.argv[6])
     seg_ndarray = np.array(seg_img.dataobj)
-
-    print(f"Debug: Shape of seg_ndarray: {seg_ndarray.shape}")
-
     seg_cropped = seg_ndarray[outer_xmin:outer_xmax, outer_ymin:outer_ymax, outer_zmin:outer_zmax] #Cropped cluster index
     seg_cropped = seg_cropped.squeeze() #removes single-dimensional elements from array 
-
-    print(f"Debug: Shape of seg_cropped after squeezing: {seg_cropped.shape}")
 
 if not all(cluster_cropped_output_list) or not all(bbox_output_list) or not all(cluster_volumes_output_list) or not all(seg_in_cluster_cropped_list): 
     clusters = list(map(int, clusters)) #convert to ints
@@ -96,9 +86,6 @@ if not all(cluster_cropped_output_list) or not all(bbox_output_list) or not all(
                 ymax = int(max(index[1])+1)
                 zmin = int(min(index[2])) 
                 zmax = int(max(index[2])+1)
-
-                print(f"Debug: Bounding box for cluster {i}: {xmin}:{xmax}, {ymin}:{ymax}, {zmin}:{zmax}")
-
                 with open(bbox_output, "w") as file:
                     file.write(f"{xmin}:{xmax}, {ymin}:{ymax}, {zmin}:{zmax}")
 
@@ -106,9 +93,6 @@ if not all(cluster_cropped_output_list) or not all(bbox_output_list) or not all(
             if not os.path.isfile(cluster_cropped_output) or not os.path.isfile(seg_in_cluster_cropped_output):
                 cluster_cropped = cluster_index_ndarray_cropped[xmin:xmax, ymin:ymax, zmin:zmax] #crop cluster
                 cluster_cropped = cluster_cropped.squeeze()
-
-                print(f"Debug: Shape of cluster_cropped after squeezing: {cluster_cropped.shape}")
-
             if not os.path.isfile(cluster_volumes_output):
                 print(str(f'  Get cluster_{i} volume (mm^3) '+datetime.now().strftime("%H:%M:%S")))
                 #((xy_res_in_um^2*)*xy_res_in_um)*ID_voxel_count/1000000000
@@ -128,9 +112,6 @@ if not all(cluster_cropped_output_list) or not all(bbox_output_list) or not all(
                 cluster_cropped = np.where(cluster_cropped == i, 1, 0)
                 cluster_cropped = cluster_cropped.astype(np.uint8)
                 seg_in_cluster_cropped = cluster_cropped * seg_cluster_cropped #zero out segmented cells outside of clusters
-
-                print(f"Debug: Shape of seg_in_cluster_cropped: {seg_in_cluster_cropped.shape}")
-
                 image = np.where(seg_in_cluster_cropped > 0, 1, 0).astype(np.uint8)
                 image = nib.Nifti1Image(image, np.eye(4))                
                 Path(str(sys.argv[4]+'/'+seg_type+'_cropped/3D_counts/crop_'+seg_type+'_'+str(sys.argv[5])+'_native_cluster_'+str(i)+'_3dc')).mkdir(parents=True, exist_ok=True) #ABC edit
