@@ -18,8 +18,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Crop native image based on cluster bounding boxes', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
+    parser.add_argument('-i', '--input', help='path/raw_image(.czi or .nii.gz)', default=None, metavar='')
     parser.add_argument('-o', '--out_dir_name', help="Output folder name. If supplied as path (./sample??/clusters/output_folder), the basename will be used", metavar='')
-    parser.add_argument('-cn', '--chann_name', help='Channel name (e.g., cfos or cfos_rb4). Default: ochann', default='ochann', metavar='')
+    parser.add_argument('-cn', '--chann_name', help='Channel name (e.g., cfos or cfos_rb4). Tif dir is loaded if -i omitted and it matches -cn. Default: ochann', default='ochann', metavar='')
     parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, metavar='')
     parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, metavar='')
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
@@ -65,13 +66,17 @@ def main():
             cwd = Path(".").resolve()
 
             sample_path = Path(sample).resolve() if sample != cwd.name else Path().resolve()
-            tif_dir = Path(sample_path, args.chann_name).resolve()
+
+            if args.input:
+                input_path = Path(args.input).resolve()
+            else:
+                input_path = Path(sample_path, args.chann_name).resolve()
 
             # Load image
             if args.xy_res is None or args.z_res is None:
-                img, xy_res, z_res = load_3D_img(tif_dir, return_res=True)
+                img, xy_res, z_res = load_3D_img(input_path, return_res=True)
             else:
-                img = load_3D_img(tif_dir, return_res=False)
+                img = load_3D_img(input_path, return_res=False)
                 xy_res, z_res = args.xy_res, args.z_res
 
             # Define output path
