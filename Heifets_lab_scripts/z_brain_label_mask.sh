@@ -3,25 +3,24 @@
 if [ $# == 0 ] || [ "$1" == "help" ]; then  
   echo '
 Run this from folder containing NiFTi files in atlas space:
-z_brain_mask.sh <Enter brain mask (l, r, both, or custom)> [leave blank to process *_gubra_space.nii.gz or enter images separated by spaces]
+z_brain_template_mask.sh <Enter side of the brain (l, r, both, or custom)> [leave blank to process *_gubra_space.nii.gz or enter images separated by spaces]
 
 Outputs z-scored volume (<image>_z_gubra_space.nii.gz)
 
 z-score = (<image>_gubra_space.nii.gz - mean pixel intensity in brain)/standard dev of intensity in brain
 
-Update path/mask in script if needed
+Update path/template_mask in script if needed
 '
   exit 1
 fi
 
-echo " " ; echo "Running z_brain_mask.sh $@ from $PWD" ; echo " "
+echo " " ; echo "Running z_brain_template_mask.sh $@ from $PWD" ; echo " "
 
-if [ $1 == "l" ]; then mask=/usr/local/miracl/atlases/ara/gubra/gubra_ano_25um_mask_wo_ventricles_root_LH.nii.gz ; fi
-if [ $1 == "r" ]; then mask=/usr/local/miracl/atlases/ara/gubra/gubra_ano_25um_mask_wo_ventricles_root_RH.nii.gz ; fi
-if [ $1 == "both" ]; then mask=/usr/local/miracl/atlases/ara/gubra/gubra_ano_25um_mask_wo_ventricles_root.nii.gz ; fi
-if [ $1 == "custom" ]; then read -p "Enter path/mask: " mask ; fi
-if [ -f "$1" ]; then mask=$(echo "$1") ; fi
-echo $mask >> z-score_mask
+if [ $1 == "l" ]; then template=/usr/local/miracl/atlases/ara/gubra/gubra_ano_25um_mask_wo_ventricles_root_LH.nii.gz ; fi
+if [ $1 == "r" ]; then template=/usr/local/miracl/atlases/ara/gubra/gubra_ano_25um_mask_wo_ventricles_root_RH.nii.gz ; fi
+if [ $1 == "both" ]; then template=/usr/local/miracl/atlases/ara/gubra/gubra_ano_25um_mask_wo_ventricles_root.nii.gz ; fi
+if [ $1 == "custom" ]; then read -p "Enter path/mask: " template ; fi
+template=$(echo $template | sed "s/['\"]//g")
 
 if [ $# -gt 1 ]; then 
   image_array=($(echo "${@:2}" | sed "s/['\"]//g"))
@@ -35,14 +34,14 @@ for i in ${!image_array[@]}; do
 
   echo "  Z-scoring ${image_array[$i]}, starting at" $(date)
 
-  # Zero out voxels outside mask
-  fslmaths ${image_array[$i]} -mas $mask ${image_array[$i]::-7}_masked.nii.gz 
+  # Zero out voxels outside atlas template
+  fslmaths ${image_array[$i]} -mas $template ${image_array[$i]::-7}_masked.nii.gz 
 
   # Get mean intensity for all nonzero voxels
   masked_mean=$(fslstats ${image_array[$i]::-7}_masked.nii.gz -M)
 
   # Generate Z-score numerator by subtracting masked_mean from each voxel in the brain mask 
-  fslmaths ${image_array[$i]::-7}_masked.nii.gz -sub $masked_mean -mas $mask ${image_array[$i]::-7}_numerator.nii.gz 
+  fslmaths ${image_array[$i]::-7}_masked.nii.gz -sub $masked_mean -mas $template ${image_array[$i]::-7}_numerator.nii.gz 
 
   # Calculate the standard deviation of the image for nonzero voxels
   SD=$(fslstats ${image_array[$i]::-7}_masked.nii.gz -S) 
@@ -60,4 +59,4 @@ fi
 done 
 
 
-#Austen Casey 11/23/21-2/22/22 10/26/23 & Daniel Ryskamp Rijsketic 11/23/21 & 07/21/22 (Heifets Lab)
+#Austen Casey 11/23/21-2/22/22 & Daniel Ryskamp Rijsketic 11/23/21 & 07/21/22 (Heifets Lab)

@@ -45,11 +45,15 @@ if [ $# -ne 0 ]; then #if positional args provided, then
   min_cluster_size=$7
   xy_res=$8
   z_res=$9
-  clusters_to_process=$(echo ${10} | sed "s/['\"]//g") ; clusters_to_process_inputs="'$clusters_to_process'"
-  regional_volumes=${11}
-  regional_counts=${12}
-  make_montage=${13}
-  raw_folders=$(echo ${14} | sed "s/['\"]//g")
+
+  immuno_label=$(echo ${10} | sed "s/['\"]//g")  ### ABC Add
+  seg_type=$(echo ${11} | sed "s/['\"]//g") ### ABC Add
+
+  clusters_to_process=$(echo ${12} | sed "s/['\"]//g") ; clusters_to_process_inputs="'$clusters_to_process'" #was 10
+  regional_volumes=${13} #was 11
+  regional_counts=${14} #was 12
+  make_montage=${15} #was 13
+  raw_folders=$(echo ${16} | sed "s/['\"]//g") #was 14
 else #Accept user inputs
   read -p "Enter path/exp_dir list (process all samples) or path/sample?? list (for specific samples) separated by spaces: " paths ; echo " " 
   read -p "Enter s to segment ochann & run consensus.sh, v for cluster validation, or both: " seg_or_val ; echo " "
@@ -66,6 +70,10 @@ else #Accept user inputs
     read -p "Enter side of the brain (l, r, both, or ./custom_mask.nii.gz) for cluster correction mask: " mask ; echo " "
     read -p "Enter xy voxel size (um), s to get once from sample_overview.csv, or m for metadata for each sample: " xy_res ; echo " "
     if [ $xy_res != "s" ] && [ $xy_res != "m" ]; then read -p "Enter z voxel size: " z_res ; echo " " ; fi
+
+    read -p "What is immunofluor label name? for example, 'cfos' or 'npas4', etc (only enter one): " immuno_label ; echo " " ###########
+    read -p "What type of segmentation method to validate? If consensus, type 'consensus', if rater1, type '1': " seg_type ; echo " " #############
+
     read -p "Which clusters to process? all, '{1..4}' (range), or '1 2 4' (select clusters): " clusters_to_process ; echo " "
     clusters_to_process=$(echo $clusters_to_process | sed "s/['\"]//g") ; clusters_to_process_inputs="'$clusters_to_process'"
     read -p "Enter y for regional volumes in clusters or n for just total cluster volumes: " regional_volumes ; echo " " 
@@ -119,12 +127,12 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ]; then
 
 fi
 
-inputs="validate_clusters2.sh '${path_array[@]}' $seg_or_val $path_and_stats_map $q_value $ez_thr $mask $min_cluster_size $xy_res $z_res $clusters_to_process_inputs $regional_volumes $regional_counts $make_montage '$raw_folders' " ; echo " " ; echo " " ; 
+inputs="validate_clusters2_abc.sh '${path_array[@]}' $seg_or_val $path_and_stats_map $q_value $ez_thr $mask $min_cluster_size $xy_res $z_res $immuno_label $seg_type $clusters_to_process_inputs $regional_volumes $regional_counts $make_montage '$raw_folders' " ; echo " " ; echo " " ; 
 echo "Rerun script with: " ; echo " " ; 
 echo "###############################################"
 echo "$inputs" 
 echo "###############################################"
-echo " " ; echo " " ; echo "validate_clusters.sh <./exp_or_sample_dir list> <seg (s), val (v), both> <./stats_map> <FDR q value or n> <easythresh z thresh or n> <l, r, both, or ./custom_mask> <min cluster size in voxels> <xy res in um> <z res> <clusters to process> <y for regional volumes or n> <y for regional counts or n> <y to montage tiles or n> <'ochann ochann_rb4'>" ; echo " " ; mkdir -p rerun_validate_clusters ; echo $inputs > rerun_validate_clusters/rerun_validate_clusters_$(date +"%Y_%m_%d_%I_%M_%p") ; echo " " ; echo " " ; echo " " 
+echo " " ; echo " " ; echo "validate_clusters2_abc.sh <./exp_or_sample_dir list> <seg (s), val (v), both> <./stats_map> <FDR q value or n> <easythresh z thresh or n> <l, r, both, or ./custom_mask> <min cluster size in voxels> <xy res in um> <z res> <immunofluorescent lab> <consensus or specific rater #s> <clusters to process> <y for regional volumes or n> <y for regional counts or n> <y to montage tiles or n> <'ochann ochann_rb4'>" ; echo " " ; mkdir -p rerun_validate_clusters ; echo $inputs > rerun_validate_clusters/rerun_validate_clusters_$(date +"%Y_%m_%d_%I_%M_%p") ; echo " " ; echo " " ; echo " " 
 
 
 #####################################################################
@@ -163,11 +171,22 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ] ; then
     cd $s
 
     # Warp reversed cluster index to native
-    to_native.sh ${path_and_stats_map%/*}/$output_folder/"$output_folder"_rev_cluster_index.nii.gz $xy_res $z_res clusters/$output_folder native_cluster_index
+    to_native2.sh ${path_and_stats_map%/*}/$output_folder/"$output_folder"_rev_cluster_index.nii.gz $xy_res $z_res clusters/$output_folder native_cluster_index
 
     # Generate clusters masks, ./bounding_boxes/"${image::-7}"_fslstats_w.txt, & cropped clusters
-    clusters=$(eval echo "$clusters_to_process")
-    native_clusters.sh $s/clusters/$output_folder/native_cluster_index/native_"$output_folder"_rev_cluster_index.nii.gz $xy_res $z_res "$clusters"
+    ###ABC Edited to chunk cluster index into groups of clusters that are easier to process at once
+    clusters=($(eval echo "$clusters_to_process"))
+    chunk_size=25
+    total_clusters=${#clusters[@]}
+      for ((start=0; $start < $total_clusters ; start+=chunk_size)); do 
+        end=$((start+chunk_size))
+        if ((end > $total_clusters)); then end=$total_clusters ; fi
+        cluster_chunk=("${clusters[@]:start:chunk_size}") ; 
+        #cluster_chunk=$(IFS=" "; echo "${cluster_chunk[*]}")
+        cluster_string="${cluster_chunk[*]}"
+        native_clusters_any_immunofluor_rater_abc.sh $s/clusters/$output_folder/native_cluster_index/native_"$output_folder"_rev_cluster_index.nii.gz $xy_res $z_res "$cluster_string" $immuno_label $seg_type 
+      done
+    
 
     # [Scale up native atlas and use it to convert clusters and/or consensus segementation to ABA intensties for region specific data]
     if [ "$regional_volumes" == "y" ] || [ "$regional_counts" == "y" ]; then 
@@ -183,7 +202,12 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ] ; then
 
     # 3D count cells in clusters (CLIJ plugin uses GPU for speed & edits enable fractional assignment of counts at region boundaries)  
     for i in $(eval echo "$clusters_to_process"); do
-      3d_count_cluster2.sh $s/clusters/$output_folder/consensus_cropped/3D_counts/crop_consensus_"${s##*/}"_native_cluster_"$i"_3dc/crop_consensus_"${s##*/}"_native_cluster_"$i".nii.gz $i n
+      if [ $seg_type != "consensus" ] ; then
+        seg_folder="$immuno_label"_seg_ilastik_"$seg_type" ; 
+           else
+        seg_folder=consensus
+      fi
+      3d_count_cluster2_any_immunofluor_rater_abc.sh $s/clusters/$output_folder/"$seg_folder"_cropped/3D_counts/crop_"$seg_folder"_"${s##*/}"_native_cluster_"$i"_3dc/crop_"$seg_folder"_"${s##*/}"_native_cluster_"$i".nii.gz $i n
     done
 
     rsync -au $s/clusters/$output_folder/ $exp_summary_dir/cluster_validation_summary/$output_folder
@@ -208,7 +232,7 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ] ; then
   ####### Get cell densities in clusters #######
   echo " " ; echo "For getting cell densities for specific/all samples and clusters, see: cluster_densities.sh help" ; echo " " 
   cd $exp_summary_dir/cluster_validation_summary/$output_folder
-  cluster_densities2.sh all all
+  cluster_densities2_any_immunofluor_rater_abc.sh all all $immuno_label $seg_type
 
   ####### [Generate tiles for montage] #######
   for s in ${samples[@]}; do

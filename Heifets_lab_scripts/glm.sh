@@ -1,5 +1,4 @@
 #!/bin/bash 
-# (c) Daniel Ryskamp Rijsketic, Austen Casey, Boris Heifets @ Stanford University, 2021-2023
 
 if [ "$1" == "help" ]; then
   echo '
@@ -22,7 +21,7 @@ vox_p images are uncorrected p value maps
 https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/GLM 
 https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide
 
-For a 2x2 ANOVA, before running this script make ./anova_<EX>_rb<4>_z/stats/design
+For a 2x2 ANOVA, before running this script make ./anova_<EX>_rb<4>_z/stats/design/
 open terminal from ./stats and run: fsl
 Misc -> GLM Setup
 GLM Setup window: 
@@ -47,7 +46,7 @@ Contrasts & F-tests tab in GLM window:
   F3: click lower right box
 GLM Setup window: 
   Save -> click design -> OK 
-run: glm.sh from anova folder
+run: glm.sh from anova folder 
 vox_p_fstat1=1st main effect 1-p values
 vox_p_fstat2=2nd main effect
 vox_p_fstat3=interaction
@@ -57,8 +56,6 @@ If outside of Heifets lab, update path to template mask: /usr/local/miracl/atlas
 '
   exit 1
 fi
-
-GLMFolderName=${PWD##*/}
 
 #User inputs
 echo " " 
@@ -97,7 +94,7 @@ cp_mask_atlas () {
 echo "Running glm.sh with mask: $mask, options: '$options', permutations: $permutations, kernel: $kernel, from $PWD " ; echo " " 
 echo "Running glm.sh with mask: $mask, options: '$options', permutations: $permutations, kernel: $kernel, from $PWD" > glm_params
 
-output_name="$GLMFolderName"
+output_name=${PWD##*/} # glm folder name
 
 #if design.fts for running ANOVA exists, then run ANOVA, else run two group t-test
 if [ -f $PWD/stats/design.fts ]; then

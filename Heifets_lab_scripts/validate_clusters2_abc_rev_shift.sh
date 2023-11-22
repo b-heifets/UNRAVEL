@@ -1,11 +1,13 @@
 #!/bin/bash
 
 echo " 
-Run validate_clusters.sh from experiment summary folder and follow prompts in terminal.
+Run validate_clusters2_abc_rev_shift.sh from experiment summary folder and follow prompts in terminal.
 
-validate_clusters.sh <./exp_or_sample_dir list> <seg (s), val (v), both> <./stats_map> <FDR q value or n> <easythresh z thresh or n> <l, r, both, or ./custom_mask> <min cluster size in voxels> <xy res in um> <z res> <clusters to process> <y for regional volumes or n> <y for regional counts or n> <y to montage tiles or n> <'ochann ochann_rb4'>
+Enter path/sample?? instead of dir list for one sample
 
-This script aims to validate clusters of significant voxels (hot/cold spots) identified from voxel-wise stats (find_clusters.sh -> glm.sh). validate_clusters.sh consists of two main phases (segmentation of cells in raw data and measuring cell density in clusters). See ilastik.sh help and consensus.sh help for how to set up phase 1 (ochann/tif series is required). For more info on phase 2 (requires output(s) from glm.sh, reg.sh, consensus.sh as well as 488/tifs), run: validate_clusters.sh help  
+validate_clusters2_abc_rev_shift.sh <./exp_or_sample_dir list> <seg (s), val (v), both> <./stats_map> <FDR q value or n> <easythresh z thresh or n> <l, r, both, or ./custom_mask> <min cluster size in voxels> <xy res in um> <z res> <IF label> <consensus or specific rater #s> <clusters to process> <y for regional volumes or n> <y for regional counts or n> <y to montage tiles or n> <'ochann ochann_rb4'> <shift_history> <path/region_mask>
+
+This script aims to validate clusters of significant voxels (hot/cold spots) identified from voxel-wise stats (find_clusters.sh -> glm.sh). validate_clusters2_abc_rev_shift.sh consists of two main phases (segmentation of cells in raw data and measuring cell density in clusters). See ilastik.sh help and consensus.sh help for how to set up phase 1 (ochann/tif series is required). For more info on phase 2 (requires output(s) from glm.sh, reg.sh, consensus.sh as well as 488/tifs), run: validate_clusters2_abc_rev_shift.sh help  
 
 "
 
@@ -14,9 +16,12 @@ if [ "$1" == "help" ]; then
 This script can run ilastik.sh and consensus.sh as part of the segmentation phase and can separately or serially run subscripts for cell density measurements ect. Scripts for the second phase include: 
 
 fdr.sh or ez_thr.sh (voxel-wise or cluster-wise correction for multiple comparisons, respectively)
+ABA_volumes.sh (regional volumes histogram output to csv)
+sunburst.sh (regional volumes in csv format for making sunburst w/ Flourish)
+rev_shift.sh (optionally apply region mask to cluster index and then if content of atlas space IF images was shifted, apply opposite shifts to atlas and rev_cluster_index.nii.gz)
 to_native.sh (warp cluster index image [w/ IDs reversed] and the thresholded stats map to tissue space and scale to full res. Also scales warped atlas to full res)
 native_clusters.sh (for each cluster, mask it, crop it, measure its volume in cubic mm, use it to crop and zero out the cell segmentation)
-ABAcluster.sh (binary clsuter mask multiplied by the ABA intensities)
+ABAcluster.sh (binary cluster mask multiplied by the ABA intensities)
 ABAconsensus.sh (multiplies the warped atlas by the consensus image, converting intensities of cells into the unique brain region intensity where they are located)
 3d_count_cluster.sh (fast 3D cell counting on the GPU. Cell intensities can be used for region specific counts)
 cluster_densities.sh (generates CSVs with cell counts, cluster volumes, and cell densities in clusters saved in exp_summary/cluster_validation_summary/unique_dir/cluster_outputs)
@@ -41,15 +46,23 @@ if [ $# -ne 0 ]; then #if positional args provided, then
   path_and_stats_map=$3
   q_value=$4
   ez_thr=$5
-  mask=$(echo $6 | sed "s/['\"]//g")
+  mask=$(echo $6 | sed "s/['\"]//g") # mask for cluster correction
   min_cluster_size=$7
   xy_res=$8
   z_res=$9
-  clusters_to_process=$(echo ${10} | sed "s/['\"]//g") ; clusters_to_process_inputs="'$clusters_to_process'"
-  regional_volumes=${11}
-  regional_counts=${12}
-  make_montage=${13}
-  raw_folders=$(echo ${14} | sed "s/['\"]//g")
+
+  immuno_label=$(echo ${10} | sed "s/['\"]//g")  ### ABC Add
+  seg_type=$(echo ${11} | sed "s/['\"]//g") ### ABC Add
+
+  clusters_to_process=$(echo ${12} | sed "s/['\"]//g") ; clusters_to_process_inputs="'$clusters_to_process'" #was 10
+  regional_volumes=${13} #was 11
+  regional_counts=${14} #was 12
+  make_montage=${15} #was 13
+  raw_folders=$(echo ${16} | sed "s/['\"]//g") #was 14
+
+  shift_history=${17}
+  region_mask=${18} # optional: mask for rev_cluster_index (e.g., to process specific anatomical regions)
+  
 else #Accept user inputs
   read -p "Enter path/exp_dir list (process all samples) or path/sample?? list (for specific samples) separated by spaces: " paths ; echo " " 
   read -p "Enter s to segment ochann & run consensus.sh, v for cluster validation, or both: " seg_or_val ; echo " "
@@ -66,6 +79,10 @@ else #Accept user inputs
     read -p "Enter side of the brain (l, r, both, or ./custom_mask.nii.gz) for cluster correction mask: " mask ; echo " "
     read -p "Enter xy voxel size (um), s to get once from sample_overview.csv, or m for metadata for each sample: " xy_res ; echo " "
     if [ $xy_res != "s" ] && [ $xy_res != "m" ]; then read -p "Enter z voxel size: " z_res ; echo " " ; fi
+
+    read -p "What is immunofluor label name? for example, 'cfos' or 'npas4', etc (only enter one): " immuno_label ; echo " " ###########
+    read -p "What type of segmentation method to validate? If consensus, type 'consensus', if rater1, type '1': " seg_type ; echo " " #############
+
     read -p "Which clusters to process? all, '{1..4}' (range), or '1 2 4' (select clusters): " clusters_to_process ; echo " "
     clusters_to_process=$(echo $clusters_to_process | sed "s/['\"]//g") ; clusters_to_process_inputs="'$clusters_to_process'"
     read -p "Enter y for regional volumes in clusters or n for just total cluster volumes: " regional_volumes ; echo " " 
@@ -74,6 +91,8 @@ else #Accept user inputs
     read -p "For raw/rb* montage tiles, list folders separated by spaces (.e.g, 'ochann ochann_rb4') (else: n): " raw_folders ; echo " "
     path_and_stats_map=$(echo ${path_and_stats_map%/} | sed "s/['\"]//g")
     raw_folders=$(echo $raw_folders | sed "s/['\"]//g")
+    read -p "Enter shift history for path/sample??: " shift_history ; echo " "
+    read -p "Enter path/region_mask.nii.gz or leave blank: " region_mask ; echo " " 
   fi
   path_array=($(echo $paths | sed "s/['\"]//g")) #remove ' marks from dragging and dropping folders/files into the terminal
 fi
@@ -103,28 +122,17 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ]; then
     output_folder="${stats_map::-7}"_ezThr"$ez_thr"
   fi
 
-  # Determine what clusters to process
-  if [ "$clusters_to_process" == "all" ] && [ -f $PWD/cluster_validation_summary/$output_folder/all_clusters ]; then 
-    clusters_to_process=$(cat $PWD/cluster_validation_summary/$output_folder/all_clusters)
-  elif [ "$clusters_to_process" == "all" ] && [ ! -f $PWD/cluster_validation_summary/$output_folder/all_clusters ]; then 
-     #float=$(fslstats ${path_and_stats_map%/*}/$output_folder/"$output_folder"_rev_cluster_index.nii.gz -R | awk '{print $2;}') # get 2nd word of output (max value in volume)
-    #num_of_clusters=${float%.*} # convert to integer
-    num_of_clusters=$(fslstats ${path_and_stats_map%/*}/$output_folder/"$output_folder"_rev_cluster_index.nii.gz -R | awk -F' ' '{print $2+0}') #ABC
-    clusters_to_process="{1..$num_of_clusters}"
-    echo $clusters_to_process > $PWD/cluster_validation_summary/$output_folder/all_clusters
-  fi
-
   # All data and inputs copied and moved to cluster_validation_summary
   mkdir -p cluster_validation_summary $PWD/cluster_validation_summary/$output_folder
 
 fi
 
-inputs="validate_clusters2.sh '${path_array[@]}' $seg_or_val $path_and_stats_map $q_value $ez_thr $mask $min_cluster_size $xy_res $z_res $clusters_to_process_inputs $regional_volumes $regional_counts $make_montage '$raw_folders' " ; echo " " ; echo " " ; 
+inputs="validate_clusters2_abc_rev_shift.sh '${path_array[@]}' $seg_or_val $path_and_stats_map $q_value $ez_thr $mask $min_cluster_size $xy_res $z_res $immuno_label $seg_type $clusters_to_process_inputs $regional_volumes $regional_counts $make_montage '$raw_folders' $shift_history $region_mask" ; echo " " ; echo " " ; 
 echo "Rerun script with: " ; echo " " ; 
 echo "###############################################"
 echo "$inputs" 
 echo "###############################################"
-echo " " ; echo " " ; echo "validate_clusters.sh <./exp_or_sample_dir list> <seg (s), val (v), both> <./stats_map> <FDR q value or n> <easythresh z thresh or n> <l, r, both, or ./custom_mask> <min cluster size in voxels> <xy res in um> <z res> <clusters to process> <y for regional volumes or n> <y for regional counts or n> <y to montage tiles or n> <'ochann ochann_rb4'>" ; echo " " ; mkdir -p rerun_validate_clusters ; echo $inputs > rerun_validate_clusters/rerun_validate_clusters_$(date +"%Y_%m_%d_%I_%M_%p") ; echo " " ; echo " " ; echo " " 
+echo " " ; echo " " ; echo "validate_clusters2_abc_rev_shift.sh <./exp_or_sample_dir list> <seg (s), val (v), both> <./stats_map> <FDR q value or n> <easythresh z thresh or n> <l, r, both, or ./custom_mask> <min cluster size in voxels> <xy res in um> <z res> <IF label> <consensus or specific rater #s> <clusters to process> <y for regional volumes or n> <y for regional counts or n> <y to montage tiles or n> <'ochann ochann_rb4'> <shift_history> <path/region_mask>" ; echo " " ; mkdir -p rerun_validate_clusters ; echo $inputs > rerun_validate_clusters/rerun_validate_clusters_$(date +"%Y_%m_%d_%I_%M_%p") ; echo " " ; echo " " ; echo " " 
 
 
 #####################################################################
@@ -162,12 +170,36 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ] ; then
   for s in ${samples[@]}; do
     cd $s
 
+    # If shifts were applied to atlas space IF image, apply reverse shifts to cluster index:
+    echo "Running rev_shift.sh ${path_and_stats_map%/*}/$output_folder/"$output_folder"_rev_cluster_index.nii.gz $shift_history $region_mask" ; echo " " 
+    
+    if [ "$shift_history" != "n" ]; then
+      index=$(rev_shift.sh ${path_and_stats_map%/*}/$output_folder/"$output_folder"_rev_cluster_index.nii.gz $shift_history $region_mask) 
+    else
+      index=${path_and_stats_map%/*}/$output_folder/rev_shifted_images/"$output_folder"_rev_cluster_index_${region_mask##*/} ### rev_shifted_images can also hold masked images (including non-shifted ones like here), so rename when refactoring to be more informative
+    fi 
+
+    # Set $clusters_to_process 
+    if [ "$clusters_to_process" == "all" ]; then 
+       clusters_to_process=$(uniq_intensities.py -i $index -m $min_cluster_size)
+    fi  
+
     # Warp reversed cluster index to native
-    to_native.sh ${path_and_stats_map%/*}/$output_folder/"$output_folder"_rev_cluster_index.nii.gz $xy_res $z_res clusters/$output_folder native_cluster_index
+    to_native2.sh $index $xy_res $z_res clusters/$output_folder native_cluster_index
 
     # Generate clusters masks, ./bounding_boxes/"${image::-7}"_fslstats_w.txt, & cropped clusters
-    clusters=$(eval echo "$clusters_to_process")
-    native_clusters.sh $s/clusters/$output_folder/native_cluster_index/native_"$output_folder"_rev_cluster_index.nii.gz $xy_res $z_res "$clusters"
+    ###ABC Edited to chunk cluster index into groups of clusters that are easier to process at once
+    clusters=($(eval echo "$clusters_to_process"))
+    chunk_size=25
+    total_clusters=${#clusters[@]}
+      for ((start=0; $start < $total_clusters ; start+=chunk_size)); do 
+        end=$((start+chunk_size))
+        if ((end > $total_clusters)); then end=$total_clusters ; fi
+        cluster_chunk=("${clusters[@]:start:chunk_size}") ; 
+        #cluster_chunk=$(IFS=" "; echo "${cluster_chunk[*]}")
+        cluster_string="${cluster_chunk[*]}"
+        native_clusters_any_immunofluor_rater_abc.sh $s/clusters/$output_folder/native_cluster_index/native_$(basename $index) $xy_res $z_res "$cluster_string" $immuno_label $seg_type 
+      done
 
     # [Scale up native atlas and use it to convert clusters and/or consensus segementation to ABA intensties for region specific data]
     if [ "$regional_volumes" == "y" ] || [ "$regional_counts" == "y" ]; then 
@@ -183,7 +215,12 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ] ; then
 
     # 3D count cells in clusters (CLIJ plugin uses GPU for speed & edits enable fractional assignment of counts at region boundaries)  
     for i in $(eval echo "$clusters_to_process"); do
-      3d_count_cluster2.sh $s/clusters/$output_folder/consensus_cropped/3D_counts/crop_consensus_"${s##*/}"_native_cluster_"$i"_3dc/crop_consensus_"${s##*/}"_native_cluster_"$i".nii.gz $i n
+      if [ $seg_type != "consensus" ] ; then
+        seg_folder="$immuno_label"_seg_ilastik_"$seg_type" ; 
+           else
+        seg_folder=consensus
+      fi
+      3d_count_cluster2_any_immunofluor_rater_abc.sh $s/clusters/$output_folder/"$seg_folder"_cropped/3D_counts/crop_"$seg_folder"_"${s##*/}"_native_cluster_"$i"_3dc/crop_"$seg_folder"_"${s##*/}"_native_cluster_"$i".nii.gz $i n
     done
 
     rsync -au $s/clusters/$output_folder/ $exp_summary_dir/cluster_validation_summary/$output_folder
@@ -208,7 +245,7 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ] ; then
   ####### Get cell densities in clusters #######
   echo " " ; echo "For getting cell densities for specific/all samples and clusters, see: cluster_densities.sh help" ; echo " " 
   cd $exp_summary_dir/cluster_validation_summary/$output_folder
-  cluster_densities2.sh all all
+  cluster_densities2_any_immunofluor_rater_abc.sh all all $immuno_label $seg_type
 
   ####### [Generate tiles for montage] #######
   for s in ${samples[@]}; do
@@ -216,7 +253,7 @@ if [ "$seg_or_val" == "v" ] || [ "$seg_or_val" == "both" ] ; then
 
     # Warp stats map to native, crop it, and find most sig slice, save it for stats
     if [ "$make_montage" == "y" ]; then 
-      to_native.sh ${path_and_stats_map%/*}/$output_folder/"$output_folder"_thresh.nii.gz $xy_res $z_res clusters/$output_folder native_stats
+      to_native2.sh ${path_and_stats_map%/*}/$output_folder/"$output_folder"_thresh.nii.gz $xy_res $z_res clusters/$output_folder native_stats
       for i in $(eval echo "$clusters_to_process"); do
         crop_cluster.sh $s/clusters/$output_folder/bounding_boxes/"${s##*/}"_native_cluster_"$i"_fslstats_w.txt stats $s/clusters/$output_folder/native_stats/native_"$output_folder"_thresh.nii.gz
         get_most_sig_slice.sh $s/clusters/$output_folder/stats_cropped/crop_stats_thr_"${s##*/}"_native_cluster_"$i".nii.gz

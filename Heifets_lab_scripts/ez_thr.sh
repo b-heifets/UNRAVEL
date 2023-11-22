@@ -1,17 +1,20 @@
 #!/bin/bash
-# (c) Daniel Ryskamp Rijsketic, Austen Casey, Boris Heifets @ Stanford University, 2022-2023
 
-if [ $# == 0 ] || [ "$1" == "help" ]; then
+if [ $# == 0 ] || [ "$1" == "help" ] || [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
   echo "
 Run ez_thr.sh <path/vox_p.nii.gz> <side of the brain (l, r, or both) or path/custom_mask> <cluster_z_thresh> <cluster_prob_thresh>
  
 This script runs the /usr/local/fsl/bin/easythresh
-cluster_z_thresh is 1.959964 for two-tailed p-thr of 0.05 
-cluster_z_thresh is 2.241403 for two-tailed p-thr of 0.025 
-cluster_z_thresh is 2.575829 for two-tailed p-thr of 0.01 
-cluster_z_thresh is 2.807034 for two-tailed p-thr of 0.005 
-cluster_z_thresh is 3.290527 for two-tailed p-thr of 0.001 
+
+z thresh = p thresh (two-tailed) 
+1.959964 = 0.05 
+2.241403 = 0.025 
+2.575829 = 0.01 
+2.807034 = 0.005 
+3.290527 = 0.001 
+3.890593 = 0.0001
 https://www.gigacalculator.com/calculators/p-value-to-z-score-calculator.php
+
 0.05 for cluster_prob_thresh means <5% chance that resulting clusters are due to chance.
 This accounts for spatial resolution, smoothness, etc..., to
 determine a min size cluster meeting these criteria
@@ -53,6 +56,7 @@ if [ ! -f $results/"$results"_rev_cluster_index.nii.gz ]; then
   else mask=$(echo $2 | sed "s/['\"]//g")
   fi
 
+  cp /usr/local/miracl/atlases/ara/gubra/gubra_ano_combined_25um.nii.gz ./
   cp $mask ./
 
   #Script from FSL: easythresh <raw_zstats> <brain_mask> <cluster_z_thresh> <cluster_prob_thresh> <background_image> <output_root>

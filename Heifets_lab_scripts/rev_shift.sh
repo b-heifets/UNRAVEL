@@ -1,16 +1,34 @@
 #!/bin/bash
 
 # Check input parameters
-if [ $# != 2 ] || [ "$1" == "-h" ] || [ "$1" == "--help" ] || [ "$1" == "help" ]; then
-  echo "Usage: rev_shift.sh  <img_to_unshift.nii.gz> <shift_history_with_underscores>"
+if [ $# == 0 ] || [ "$1" == "-h" ] || [ "$1" == "--help" ] || [ "$1" == "help" ]; then
+  echo "
+Usage: rev_shift.sh <path/image_to_shift.nii.gz> <shift_history_with_underscores or n> [path/mask.nii.gz]
+
+path/mask.nii.gz could for example be a mask of dopamine cell regions 
+
+"
   exit 1
 fi
 
-echo " " ; echo "Running rev_shift.sh $@ from $PWD" ; echo " " 
-
 # Image path and filename extraction
 img=$(echo $1 | sed "s/['\"]//g")
-img_path=$(dirname "$img")
+
+# Apply custom mask to the image if specified
+if [ ! -z "$3" ]; then
+  mask=$(echo $3 | sed "s/['\"]//g")
+  mask_name=$(basename "$mask")
+  fslmaths $img -mas $mask ${img::-7}_${mask_name::-7}
+  img=${img::-7}_${mask_name::-7}.nii.gz
+fi
+
+# Output image printed to stdout for use in validate_clusters.sh
+if [ "$2" == "n" ]; then 
+  echo $1
+  exit 1
+fi
+
+img_path=$(dirname "$1")
 img_base=$(basename "$img")
 
 # Extract shift history
@@ -39,7 +57,7 @@ for ((i=0; i<${#reversed_array[@]}; i+=2)); do
     A) inv_direction="P" ;;
     S) inv_direction="I" ;;
     I) inv_direction="S" ;;
-    *) echo "Invalid direction in history!"; exit 1 ;;
+    *) echo "Invalid direction in history!" >&2; exit 1 ;;
   esac
 
   # Append direction and pixels to shift log
@@ -68,11 +86,11 @@ for ((i=0; i<${#reversed_array[@]}; i+=2)); do
 done
 
 # Rename the output with reverse shift log information
-output_file="${img_path}/${rev_shift_log}${img_base}"
+mkdir -p "${img_path}/rev_shifted_images/" ### this folder can also hold masked images (including non-shifted ones), so rename when refactoring to be more informative
+output_file="${img_path}/rev_shifted_images/${rev_shift_log}${img_base}"
 mv "$prev_img" "$output_file"
 
-echo "  Reverse shifts applied: ${rev_shift_log}"
-echo "  Output saved as: ${output_file}" ; echo " " 
+echo "$output_file"
 
 
-#Daniel Rijsketic 09/20/23 (Heifets Lab)
+#Daniel Rijsketic 09/20/23, 09/28/23, 10/03/23 (Heifets Lab)

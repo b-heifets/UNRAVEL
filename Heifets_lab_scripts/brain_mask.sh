@@ -5,10 +5,12 @@ if [[ $# == 0 || "$1" == "-h" || "$1" == "--help" || "$1" == "help" ]] ; then
 From experiment folder with ./sample??/nifti/clar_res0.05.nii.gz, run:
 brain_mask.sh <path/trained_ilastik_project.ilp> [leave blank to process all samples or enter sample?? separated by spaces]
 
+When training ilastik, tissue should = label 1 and outside of the brain should = label 2.
+
 Before running brain_mask.sh, train ilastik using tifs from ./sample??/niftis/autofl_50um/*.tif (from prep_reg.sh)
 For help on ilastik, run: ilastik.sh -h 
  
-Outputs: ./clar_res0.05_mask.nii.gz & ./clar_res0.05_masked.nii.gz
+Outputs: ./niftis/autofl_50um_seg_ilastik, ./autofl_50um_seg_ilastik.nii.gz, & ./clar_res0.05_masked.nii.gz
 
 '
   exit 1
@@ -42,8 +44,9 @@ for sample in ${sample_array[@]}; do
 
     full_path_tifs="$PWD/niftis/autofl_50um/*.tif"
 
-    echo "  run_ilastik.sh --headless --project=$ilastik_project --export_source="Simple Segmentation" --output_format=tif --logfile log/autofl_50um_seg_log --redirect_output log/autofl_50um_seg_stdout --output_filename_format=niftis/autofl_50um_seg_ilastik/{nickname}.tif $full_path_tifs" 
-    run_ilastik.sh --headless --project=$ilastik_project --export_source="Simple Segmentation" --output_format=tif --logfile log/autofl_50um_seg_log --redirect_output log/autofl_50um_seg_stdout --output_filename_format=niftis/autofl_50um_seg_ilastik/{nickname}.tif $full_path_tifs
+    echo "  run_ilastik.sh --headless --project=$ilastik_project --export_source="Simple Segmentation" --output_format=tif --output_filename_format=niftis/autofl_50um_seg_ilastik/{nickname}.tif $full_path_tifs" 
+
+    run_ilastik.sh --headless --project=$ilastik_project --export_source="Simple Segmentation" --output_format=tif --output_filename_format=niftis/autofl_50um_seg_ilastik/{nickname}.tif $full_path_tifs
 
     echo " " ; echo "  brain_mask.sh finished at " $(date) ; echo " "
   fi
@@ -54,14 +57,17 @@ for sample in ${sample_array[@]}; do
     seg_series_to_nii.sh
     cd ..
     mv niftis.nii.gz autofl_50um_seg_ilastik.nii.gz
-    ### fslmaths autofl_50um_seg_ilastik.nii.gz -bin autofl_50um_seg_ilastik.nii.gz -odt char    
-    fslmaths autofl_50um_seg_ilastik.nii.gz -bin -mul -1 -add 1 autofl_50um_seg_ilastik.nii.gz -odt char    
+    fslmaths autofl_50um_seg_ilastik.nii.gz -bin autofl_50um_seg_ilastik.nii.gz -odt char # Use this if tissue = 1 and background = 2  
+
+    # Invert the binary segmentation if needed (if tissue = 2 and outside = 1 in ilastik) as follows
+    # fslmaths autofl_50um_seg_ilastik.nii.gz -bin -mul -1 -add 1 autofl_50um_seg_ilastik.nii.gz -odt char
     cd .. 
   fi
 
   #Apply mask to tissue
   if [ ! -f clar_res0.05_masked.nii.gz ]; then 
   cd niftis
+  # Follow these steps as well if you needed to invert the brain mask.
   fslcpgeom clar_res0.05.nii.gz autofl_50um_seg_ilastik.nii.gz
   fslmaths clar_res0.05.nii.gz -mas autofl_50um_seg_ilastik.nii.gz clar_res0.05_masked.nii.gz -odt short
   cd ..

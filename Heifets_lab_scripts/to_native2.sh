@@ -4,7 +4,7 @@ if [ $# == 0 ] || [ "$1" == "-h" ] || [ "$1" == "--help" ] || [ "$1" == "help" ]
   echo '
 Run this from sample folder: 
  
-to_native2.sh <path/image.nii.gz to warp to native space and/or scale> <xy voxel size (um) or m (metadata)> <z voxel size or m><clusters_folder> <output_folder> [tifs folder (Default: 488)] 
+to_native2.sh <path/image.nii.gz to warp to native space and/or scale> <raw xy voxel size (um) or m (metadata)> <raw z voxel size or m> <clusters_folder> <output_folder> <res of atlas labels from reg> [tifs folder (Default: 488)] 
 
 Outputs: ./clusters/<clusters_folder>/<output_folder>/native_<image>.nii.gz
 '
@@ -13,7 +13,7 @@ fi
 echo " " ; echo "Running to_native2.sh $@ from ${PWD##*/}" ; echo " " 
 
 # Set tifs dir default if not specified and check if it exists (used for scaling to these dims)
-tifs_dir=$6
+tifs_dir=$7
 if [[ -z $tifs_dir ]]; then
   tifs_dir="488" 
 fi 
@@ -64,7 +64,7 @@ if [ ! -f $output ]; then
     warped_img=$PWD/clar_allen_reg/$image 
     if [ -f $warped_img ]; then rm $warped_img ; fi 
     # Warp from Gubra to native space (output has padding and 10 um resolution)
-    antsApplyTransforms -d 3 -r reg_final/clar_downsample_res10um.nii.gz -i $path_img -n NearestNeighbor -t clar_allen_reg/allen_clar_ants1Warp.nii.gz clar_allen_reg/allen_clar_ants0GenericAffine.mat clar_allen_reg/init_tform.mat -o $warped_img --float # NearestNeighbor is ~6x faster than MultiLabel, which smooths cluster edges.
+    antsApplyTransforms -d 3 -r reg_final/clar_downsample_res${6}um.nii.gz -i $path_img -n NearestNeighbor -t clar_allen_reg/allen_clar_ants1Warp.nii.gz clar_allen_reg/allen_clar_ants0GenericAffine.mat clar_allen_reg/init_tform.mat -o $warped_img --float # NearestNeighbor is ~6x faster than MultiLabel, which smooths cluster edges.
     echo " "  
     # Lower bit depth of output 
     lower_bit_depth $warped_img "FLOAT32" #lowest output bit depth in prior step
@@ -72,7 +72,7 @@ if [ ! -f $output ]; then
 
   # Padding added to all sides of 50 um autofl image during registration.sh: c3d $biasclar -pad 15% 15% 0 -o ${padclar} 
   # Inputs for calculating how to remove padding
-  res_of_reg_final_outputs=$(fslinfo reg_final/clar_downsample_res10um.nii.gz | sed -n '7 p' | cut -f3) # In mm
+  res_of_reg_final_outputs=$(fslinfo reg_final/clar_downsample_res${6}um.nii.gz | sed -n '7 p' | cut -f3) # In mm
   res_of_clar_allen_reg=$(fslinfo clar_allen_reg/clar.nii.gz | sed -n '7 p' | cut -f3)
   reg_file_pre_padding=clar_allen_reg/clar_res0.05_bias.nii.gz
   reg_file_post_padding=clar_allen_reg/clar_res0.05_pad.nii.gz
