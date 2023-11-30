@@ -27,6 +27,7 @@ def parse_args():
     parser.epilog = """
 Currently, inputs are from native_clusters.sh
 Run native_cluster_crop.py from the experiment directory containing sample?? folders or a sample?? folder.
+Example usage: native_cluster_crop.py -i ./sample01/ochann -o clusters_output_folder_name -cn ochann -x 3.5232 -z 5 -v
 inputs: ./sample??/clusters/output_folder/bounding_boxes/outer_bounds.txt and ./sample??/clusters/output_folder/bounding_boxes/bounding_box_sample??_cluster_*.txt
 outputs: ./reg_input/autofl_*um_tifs_ilastik_brain_seg/slice_????.tif series, ./reg_input/autofl_*um_brain_mask.nii.gz, and ./reg_input/autofl_*um_masked.nii.gz"""
     return parser.parse_args()

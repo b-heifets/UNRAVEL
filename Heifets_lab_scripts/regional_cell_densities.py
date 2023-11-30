@@ -40,8 +40,6 @@ def get_atlas_region_at_coords(atlas, x, y, z):
 def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condition):
     """Count the number of cells in each region based on atlas region intensities"""
 
-    print("")
-
     img = load_3D_img(seg_img_path)
 
     atlas, xy_res, z_res = load_3D_img(atlas_path, return_res=True)
