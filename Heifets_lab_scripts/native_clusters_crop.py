@@ -18,16 +18,16 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Crop native image based on cluster bounding boxes', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
-    parser.add_argument('-i', '--input', help='path/raw_image(.czi or .nii.gz)', default=None, metavar='')
+    parser.add_argument('-i', '--input', help='If if inputs is .czi or .nii.gz: path/raw_image (otherwise the tif dir mattching -cn is used)', default=None, metavar='')
     parser.add_argument('-o', '--out_dir_name', help="Output folder name. If supplied as path (./sample??/clusters/output_folder), the basename will be used", metavar='')
-    parser.add_argument('-cn', '--chann_name', help='Channel name (e.g., cfos or cfos_rb4). Tif dir is loaded if -i omitted and it matches -cn. Default: ochann', default='ochann', metavar='')
+    parser.add_argument('-cn', '--chann_name', help='Channel name (e.g., cfos or cfos_rb4). Default: ochann', default='ochann', metavar='')
     parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, metavar='')
     parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, metavar='')
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
     parser.epilog = """
 Currently, inputs are from native_clusters.sh
 Run native_cluster_crop.py from the experiment directory containing sample?? folders or a sample?? folder.
-Example usage: native_cluster_crop.py -i ./sample01/ochann -o clusters_output_folder_name -cn ochann -x 3.5232 -z 5 -v
+Example usage: native_cluster_crop.py -o clusters_output_folder_name -cn ochann -x 3.5232 -z 5 -v
 inputs: ./sample??/clusters/output_folder/bounding_boxes/outer_bounds.txt and ./sample??/clusters/output_folder/bounding_boxes/bounding_box_sample??_cluster_*.txt
 outputs: ./reg_input/autofl_*um_tifs_ilastik_brain_seg/slice_????.tif series, ./reg_input/autofl_*um_brain_mask.nii.gz, and ./reg_input/autofl_*um_masked.nii.gz"""
     return parser.parse_args()
