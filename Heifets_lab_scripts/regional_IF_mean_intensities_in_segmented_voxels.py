@@ -41,9 +41,17 @@ def calculate_mean_intensity(fluo_image_path, ABA_seg_image_path, regions=None):
     fluo_img = load_3D_img(fluo_image_path, return_res=False)
     ABA_seg = load_3D_img(ABA_seg_image_path, return_res=False)
 
+    # Ensure both images have the same dimensions
+    if fluo_img.shape != ABA_seg.shape:
+        raise ValueError("The dimensions of fluo_img and ABA_seg do not match.")
+    
+    # Flatten the images to 1D arrays for bincount
+    fluo_img_flat = fluo_img.flatten()
+    ABA_seg_flat = ABA_seg.flatten()
+
     # Use bincount to get fluo intensity sums for each region
-    sums = np.bincount(ABA_seg, weights=fluo_img) # Sum of intensities in each region (excluding background)
-    counts = np.bincount(ABA_seg) # Number of voxels in each region (excluding background)
+    sums = np.bincount(ABA_seg_flat, weights=fluo_img_flat) # Sum of intensities in each region (excluding background)
+    counts = np.bincount(ABA_seg_flat) # Number of voxels in each region (excluding background)
 
     # Suppress the runtime warning and handle potential division by zero
     with np.errstate(divide='ignore', invalid='ignore'):
