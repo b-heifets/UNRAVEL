@@ -32,7 +32,7 @@ def parse_args():
 
 
 @print_func_name_args_times()
-def calculate_mean_intensity(fluo_image_path, ABA_seg_image_path, regions=None):
+def calculate_mean_intensity(fluo_image_path, ABA_seg_image_path, args):
     """Calculates mean intensity for each region in the atlas."""
 
     print("\n  Calculating mean immunofluorescence intensity for each region in the atlas...\n")
@@ -63,19 +63,20 @@ def calculate_mean_intensity(fluo_image_path, ABA_seg_image_path, regions=None):
     mean_intensities_dict = {i: mean_intensities[i] for i in range(1, len(mean_intensities))}
 
     # Filter the dictionary if regions are provided
-    if regions:
-        mean_intensities_dict = {region: mean_intensities_dict[region] for region in regions if region in mean_intensities_dict}
+    if args.regions:
+        mean_intensities_dict = {region: mean_intensities_dict[region] for region in args.regions if region in mean_intensities_dict}
 
     # Print results
     for region, mean_intensity in mean_intensities_dict.items():
-        print(f"    Region: {region}\tMean intensity in segmented voxels: {mean_intensity}")
+        if mean_intensity > 0 and args.verbose:
+            print(f"    Region: {region}\tMean intensity in segmented voxels: {mean_intensity}")
 
     return mean_intensities_dict
 
 
-def write_to_csv(data, output_file):
+def write_to_csv(data, output_path):
     """Writes the data to a CSV file."""
-    with open(output_file, 'w', newline='') as csvfile:
+    with open(output_path, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["Region_Intensity", "Mean_IF_Intensity_in_Seg_Voxels"])
         for key, value in data.items():
@@ -102,18 +103,15 @@ def main():
             fluo_image_path = Path(sample_path, args.input)
             ABA_seg_image_path = Path(sample_path, args.seg_dir, f"{sample}_ABA_{args.seg_dir}.nii.gz")
 
-            # Use the provided list of regional intensities (if any)
-            region_intensities = args.regions
-
             # Calculate mean intensity
-            mean_intensities = calculate_mean_intensity(fluo_image_path, ABA_seg_image_path, region_intensities)
+            mean_intensities = calculate_mean_intensity(fluo_image_path, ABA_seg_image_path, args)
 
             # Write to CSV
             if args.output:
                 write_to_csv(mean_intensities, args.output)
             else: 
-                output = ABA_seg_image_path.replace('.nii.gz', '_regional_mean_intensities_in_seg_voxels.csv')
-                write_to_csv(mean_intensities, output)
+                output_str = str(ABA_seg_image_path).replace('.nii.gz', '_regional_mean_intensities_in_seg_voxels.csv')
+                write_to_csv(mean_intensities, output_str)
 
             progress.update(task_id, advance=1)
 
