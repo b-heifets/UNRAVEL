@@ -18,12 +18,13 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Crop native image based on cluster bounding boxes', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
+    parser.add_argument('-i', '--input', help='<path/fluo_image> if inputs is .czi or .nii.gz: path/raw_image (otherwise the tif dir mattching -cn is used)', default=None, metavar='')
     parser.add_argument('-o', '--out_dir_name', help="Output folder name. If supplied as path (./sample??/clusters/output_folder), the basename will be used", metavar='')
     parser.add_argument('-cn', '--chann_name', help='Channel name (e.g., cfos or cfos_rb4). Default: ochann', default='ochann', metavar='')
     parser.add_argument('-s', '--seg_dir', help='Name of segmentation dir (e.g., cfos_seg_ilastik_1)', metavar='')
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
     parser.epilog = """
-usage: native_clusters_mean_IF_in_seg.py -o glm_iba1_rb20_cbsMeth_v_meth_18000p_vox_p_tstat1_FDR0.2_MinCluster100 -cn iba1_rb20 -x 3.5232 -z 5 -s iba1_seg_ilastik_1 -v
+usage: native_clusters_mean_IF_in_seg.py -o glm_iba1_rb20_cbsMeth_v_meth_18000p_vox_p_tstat1_FDR0.2_MinCluster100 -cn iba1_rb20 -s iba1_seg_ilastik_1 -v
 
 First run native_clusters_crop.py to crop fluo images for each cluster.
 
@@ -81,19 +82,6 @@ def main():
                 with open(output, 'w') as f:
                     f.write(f"{mean_intensity}")
                 print(f'\n    Mean {args.chann_name} intensity in {sample} {cluster} {args.seg_dir}: {mean_intensity}\n')
-
-                
-                # Alternative method to calculate mean intensity of voxels within the cluster that were segmented
-                # # Binarize segmentation
-                # seg_img_bin = (seg_img > 0).astype(int)
-
-                # # Zero out voxels outside of the cluster and segmented cells
-                # fluo_in_cluster_seg_img = seg_img * cropped_img
-
-                # # Calculate the mean intensity of the non-zero voxels
-                # mean_intensity = np.mean(fluo_in_cluster_seg_img[fluo_in_cluster_seg_img > 0])
-                # print(f'\n    Mean {args.chann_name} intensity in {sample} {cluster} {args.seg_dir}: {mean_intensity}\n')
-
 
             progress.update(task_id, advance=1)
 
