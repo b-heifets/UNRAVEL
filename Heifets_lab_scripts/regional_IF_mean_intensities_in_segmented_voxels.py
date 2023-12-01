@@ -18,12 +18,15 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-i', '--input', help='path/fluo_image or path/fluo_img_dir relative to sample?? folder', required=True, metavar='')
-    parser.add_argument('-as', '--ABA_seg', help='path/sample??_ABA_<IF>_seg_ilastik_*.nii.gz relative to ./sample??/ (segmented image with regional intensities from regional_cell_densities.py)', required=True, metavar='')
+    parser.add_argument('-s', '--seg_dir', help='Name of folder with segmentation outputs (e.g., ochann_seg_ilasik_1)', required=True, metavar='')
     parser.add_argument('-o', '--output', help='path/name.csv relative to ./sample??/', default=None, metavar='')
     parser.add_argument('-r', '--regions', nargs='*', type=int, help='Optional: Space-separated list of region intensities to process. Default: Process all regions', default=None)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Run from experiment folder containing sample?? folders.
-    Example usage: regional_IF_mean_intensities_in_segmented_voxels.py -i ochann -as iba1_seg_ilastik_1/sample??_ABA_iba1_seg_ilastik_1.nii.gz
+    Example usage: regional_IF_mean_intensities_in_segmented_voxels.py -i ochann -s ochann_seg_ilastik_1
+
+    inputs: ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1.nii.gz & path/fluo_image
+    outputs: ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_intensities_in_seg_voxels.csv
     """
     return parser.parse_args()
 
@@ -88,8 +91,8 @@ def main():
             sample_path = Path(sample).resolve() if sample != cwd.name else Path().resolve()
 
             # Resolve paths
-            fluo_image_path = Path(sample_path, args.input).resolve()
-            ABA_seg_image_path = Path(sample_path, args.ABA_seg).resolve()
+            fluo_image_path = Path(sample_path, args.input)
+            ABA_seg_image_path = Path(sample_path, args.seg_dir, f"{sample}_ABA_{args.seg_dir}.nii.gz")
 
             # Use the provided list of regional intensities (if any)
             region_intensities = args.regions
@@ -101,8 +104,10 @@ def main():
             if args.output:
                 write_to_csv(mean_intensities, args.output)
             else: 
-                output = args.ABA_seg.replace('.nii.gz', '_regional_mean_intensities_in_seg_voxels.csv')
+                output = ABA_seg_image_path.replace('.nii.gz', '_regional_mean_intensities_in_seg_voxels.csv')
                 write_to_csv(mean_intensities, output)
+
+            progress.update(task_id, advance=1)
 
 
 if __name__ == '__main__': 
