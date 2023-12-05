@@ -8,23 +8,24 @@ import os
 import pandas as pd
 import seaborn as sns
 import textwrap
+from argparse import RawTextHelpFormatter
+from pathlib import Path
 from scipy.stats import dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 region_ID_name_abbr_csv = "/Users/Danielthy/Documents/_Heifets_lab_data/_Lightsheet_microscopy_data/#Gubra/gubra_region_ID_name_abbr.csv"
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Plot mean IF intensity for a given region intensity ID for 3+ groups (only works for positive data)')
-
+    parser = argparse.ArgumentParser(description='Plot mean IF intensity for a given region intensity ID for 3+ groups (only works for positive data)', formatter_class=RawTextHelpFormatter)
     parser.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', metavar='')
+    parser.add_argument('-l', '--lut', help='LUT csv name in same dir as script. Default: gubra__region_ID_side_name_abbr.csv', default="gubra__region_ID_side_name_abbr.csv", metavar='')
     parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', metavar='')
     parser.add_argument('--labels', nargs='*', help='Group Labels in same order', metavar='')
-    parser.add_argument('-l', '--lut', help="path to CSV with 'region_ID', 'region_name', 'region_abbr", default=region_ID_name_abbr_csv, metavar='')
     parser.add_argument('-t', '--test', help='Choose between "tukey" and "dunnett" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett'], metavar='')
-    parser.add_argument('-a', "--alt", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}", default='two-sided', metavar='')
-    parser.add_argument('-s', '--show_plot', help='Show plot', action='store_true')
+    parser.add_argument('-a', "--alt", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', metavar='')
+    parser.add_argument('-s', '--show_plot', help='Show plot if flag is provided', action='store_true')
 
-    parser.epilog = "regional_IF_mean_intensities_summary.py -r 1 --order group3 group2 group1 --labels Group_3 Group_2 Group_1"
+    parser.epilog = "regional_IF_mean_intensities_summary.py -r 1 --order group3 group2 group1 --labels Group_3 Group_2 Group_1 -t dunnnett"
     return parser.parse_args()
 
 # Set Arial as the font
@@ -38,9 +39,10 @@ def load_data(region_id):
         if filename.endswith('.csv'):
             group_name = filename.split("_")[0]
             df = pd.read_csv(filename)
-            
+
             # Filter by the region ID
             mean_intensity = df[df["Region_Intensity"] == region_id]["Mean_IF_Intensity"].values
+
             if len(mean_intensity) > 0:
                 data.append({
                     'group': group_name,
@@ -51,13 +53,13 @@ def load_data(region_id):
 
 def get_region_details(region_id, csv_path):
     region_df = pd.read_csv(csv_path)
-    region_row = region_df[region_df["region_ID"] == region_id].iloc[0]
-    return region_row["region_name"], region_row["region_abbr"]
+    region_row = region_df[region_df["Region_ID"] == region_id].iloc[0]
+    return region_row["Name"], region_row["Abbr"]
 
 def get_all_region_ids(csv_path):
     """Retrieve all region IDs from the provided CSV."""
     region_df = pd.read_csv(csv_path)
-    return region_df["region_ID"].tolist()
+    return region_df["Region_ID"].tolist()
 
 def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_csv, test_type='tukey', show_plot=False, alt='two-sided'):
     df = load_data(region_id)
@@ -180,8 +182,9 @@ if __name__ == "__main__":
         raise ValueError("The number of entries in --order and --labels must match.")
 
     # If region IDs are provided using -r, use them; otherwise, get all region IDs from the CSV
-    region_ids_to_process = args.region_ids if args.region_ids else get_all_region_ids(args.lut)
+    lut = Path(__file__).parent / args.lut
+    region_ids_to_process = args.region_ids if args.region_ids else get_all_region_ids(lut)
 
     # Process each region ID
     for region_id in region_ids_to_process:
-        plot_data(region_id, args.order, args.labels, csv_path=args.lut, test_type=args.test, show_plot=args.show_plot, alt=args.alt)
+        plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=args.test, show_plot=args.show_plot, alt=args.alt)

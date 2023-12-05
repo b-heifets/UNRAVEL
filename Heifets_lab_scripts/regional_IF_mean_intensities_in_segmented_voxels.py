@@ -78,7 +78,7 @@ def write_to_csv(data, output_path):
     """Writes the data to a CSV file."""
     with open(output_path, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["Region_Intensity", "Mean_IF_Intensity_in_Seg_Voxels"])
+        writer.writerow(["Region_Intensity", "Mean_IF_Intensity"])
         for key, value in data.items():
             writer.writerow([key, value])
 

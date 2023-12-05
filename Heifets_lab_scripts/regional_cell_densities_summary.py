@@ -67,12 +67,12 @@ def parse_color_argument(color_arg, num_groups, region_id):
         # It's already a list (this would be the case for default values or if the input method changes)
         return color_arg    
     
-# Function to summarize significance and determine the group with a higher mean
 def summarize_significance(test_df, region_id, df, group_columns):
     summary_rows = []
     for _, row in test_df.iterrows():
         group1, group2 = row['group1'], row['group2']
         # Determine significance level
+        sig = ''
         if row['p-adj'] < 0.0001:
             sig = '****'
         elif row['p-adj'] < 0.001:
@@ -81,14 +81,19 @@ def summarize_significance(test_df, region_id, df, group_columns):
             sig = '**'
         elif row['p-adj'] < 0.05:
             sig = '*'
-        else:
-            sig = ''
         # Determine which group has a higher mean
-        mean1 = df[group_columns[group1]].mean().mean()
-        mean2 = df[group_columns[group2]].mean().mean()
+        mean1 = df[group_columns[group1]].mean().mean() # mean of the mean cell densities for each sample
+        mean2 = df[group_columns[group2]].mean().mean() 
         higher_group = group1 if mean1 > mean2 else group2
-        summary_rows.append({'Region_ID': region_id, 'Comparison': f'{group1} vs {group2}', 'p-value': row['p-adj'], 'Higher_Mean_Group': higher_group, 'Significance': sig})
+        summary_rows.append({
+            'Region_ID': region_id,
+            'Comparison': f'{group1} vs {group2}',
+            'p-value': row['p-adj'],
+            'Higher_Mean_Group': higher_group,
+            'Significance': sig
+        })
     return pd.DataFrame(summary_rows)
+
 
 def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir, group_columns, args):
 
@@ -98,8 +103,6 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         for value in df[group_columns[prefix]].values.ravel():
             reshaped_data.append({'group': prefix, 'density': value})
     reshaped_df = pd.DataFrame(reshaped_data)
-
-    print(f"    Plotting {region_id} {region_name} ({region_abbr}, {side})")
 
     # Plotting
     mpl.rcParams['font.family'] = 'Arial'
@@ -147,9 +150,9 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     elif args.test_type == 'tukey':
 
         # Conduct Tukey's HSD test
-        data = np.array([value for prefix in args.groups for value in df[group_columns[prefix]].values.ravel()]) # Flatten the data
+        cell_densities = np.array([value for prefix in args.groups for value in df[group_columns[prefix]].values.ravel()]) # Flatten the data
         labels = np.array([prefix for prefix in args.groups for _ in range(len(df[group_columns[prefix]].values.ravel()))])
-        tukey_results = pairwise_tukeyhsd(data, labels, alpha=0.05)
+        tukey_results = pairwise_tukeyhsd(cell_densities, labels, alpha=0.05)
 
         # Extract significant comparisons from Tukey's results
         tukey_significant = pd.DataFrame(data=tukey_results.summary().data[1:], columns=tukey_results.summary().data[0])
@@ -195,15 +198,25 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     plt.ylim(0, y_pos) # Adjust y-axis limit to accommodate comparison bars
     ax.set_xlabel(None)
 
-    # Print significance summary
-    print(f"\n{significant_comparisons}\n")
+    # Check if the 'Significance' column exists in significant_comparisons (for prepending 'sig__' to the filename)
+    has_significant_results = False
+    if 'reject' in significant_comparisons.columns:
+        has_significant_results = significant_comparisons['reject'].any()
+
+    # Extract the general region for the filename (output file name prefix for sorting by region)
+    regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
+
+    general_region = regional_summary.loc[regional_summary['Region_ID'] == region_id, 'General_Region'].values[0]
+
+    # Format the filename with 'sig__' prefix if there are significant results
+    prefix = 'sig__' if has_significant_results else ''
+    filename = f"{prefix}{general_region}__{region_id}_{region_abbr}_{side}".replace("/", "-") # Replace problematic characters
 
     # Save the plot for each side or pooled data
     title = f"{region_name} ({region_abbr}, {side})"
     wrapped_title = textwrap.fill(title, 42)
     plt.title(wrapped_title, pad = 20).set_position([.5, 1.05])
     plt.tight_layout()
-    filename = f"{region_id}_{region_abbr}_{side}".replace("/", "-")  # Replace problematic characters
     plt.savefig(f"{out_dir}/{filename}.pdf")
     plt.close()
 
@@ -221,9 +234,9 @@ def main():
 
     # Prepare output directories
     if args.output:
-        out_dirs = {side: f"{args.output}_{side}H" for side in ["L", "R", "pooled"]}
+        out_dirs = {side: f"{args.output}_{side}" for side in ["L", "R", "pooled"]}
     else:
-        out_dirs = {side: f"{args.test_type}_plots_{side}H" for side in ["L", "R", "pooled"]}
+        out_dirs = {side: f"{args.test_type}_plots_{side}" for side in ["L", "R", "pooled"]}
     for out_dir in out_dirs.values():
         os.makedirs(out_dir, exist_ok=True)
 
@@ -233,42 +246,39 @@ def main():
 
     all_summaries = pd.DataFrame()
 
-    # # Averaging data across hemispheres and plotting pooled data (DR)
-    # rh_df = df[df['Region_ID'] < 20000]
-    # lh_df = df[df['Region_ID'] > 20000]
+    # Averaging data across hemispheres and plotting pooled data (DR)
+    rh_df = df[df['Region_ID'] < 20000]
+    lh_df = df[df['Region_ID'] > 20000]
 
-    # # Drop first 4 columns
-    # rh_df = rh_df.iloc[:, 4:]
-    # lh_df = lh_df.iloc[:, 4:]
+    # Drop first 4 columns
+    rh_df = rh_df.iloc[:, 4:]
+    lh_df = lh_df.iloc[:, 4:]
 
-    # # Reset indices to ensure alignment
-    # rh_df.reset_index(drop=True, inplace=True)
-    # lh_df.reset_index(drop=True, inplace=True)
+    # Reset indices to ensure alignment
+    rh_df.reset_index(drop=True, inplace=True)
+    lh_df.reset_index(drop=True, inplace=True)
 
-    # # Initialize pooled_df with common columns
-    # pooled_df = df[['Region_ID', 'Side', 'Name', 'Abbr']][df['Region_ID'] < 20000].reset_index(drop=True)
-    # pooled_df['Side'] = 'Pooled'  # Set the 'Side' to 'Pooled'
+    # Initialize pooled_df with common columns
+    pooled_df = df[['Region_ID', 'Side', 'Name', 'Abbr']][df['Region_ID'] < 20000].reset_index(drop=True)
+    pooled_df['Side'] = 'Pooled'  # Set the 'Side' to 'Pooled'
 
-    # # Average the cell densities for left and right hemispheres
-    # for col in lh_df.columns:
-    #     pooled_df[col] = (lh_df[col] + rh_df[col]) / 2
+    # Average the cell densities for left and right hemispheres
+    for col in lh_df.columns:
+        pooled_df[col] = (lh_df[col] + rh_df[col]) / 2
 
-    # # Averaging data across hemispheres and plotting pooled data
-    # unique_region_ids = df[df["Side"] == "R"]["Region_ID"].unique()
-    # for region_id in unique_region_ids:
-    #     region_name, region_abbr = get_region_details(region_id, df)
-    #     out_dir = out_dirs["pooled"]
-    #     # Call the function with the pooled dataframe
-    #     significant_comparisons = process_and_plot_data(pooled_df[pooled_df["Region_ID"] == region_id], region_id, region_name, region_abbr, "Pooled", out_dir, group_columns, args)
-    #     if not significant_comparisons.empty:
-    #         summary_df = summarize_significance(significant_comparisons, region_id, pooled_df, group_columns)
-    #         all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
+    # Averaging data across hemispheres and plotting pooled data
+    unique_region_ids = df[df["Side"] == "R"]["Region_ID"].unique()
+    for region_id in unique_region_ids:
+        region_name, region_abbr = get_region_details(region_id, df)
+        out_dir = out_dirs["pooled"]
+        significant_comparisons = process_and_plot_data(pooled_df[pooled_df["Region_ID"] == region_id], region_id, region_name, region_abbr, "Pooled", out_dir, group_columns, args)
+        summary_df = summarize_significance(significant_comparisons, region_id, pooled_df, group_columns)
+        all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
 
-    # # Merge with the original regional_summary.csv and write to a new CSV
-    # regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
-    # final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left')
-    # final_summary.to_csv(Path(out_dir) / 'final_significance_summary.csv', index=False)
-
+    # Merge with the original regional_summary.csv and write to a new CSV
+    regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
+    final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left')
+    final_summary.to_csv(Path(out_dir) / 'significance_summary.csv', index=False)
 
     # Perform analysis and plotting for each hemisphere
     for side in ["L", "R"]:
@@ -278,14 +288,13 @@ def main():
             region_name, region_abbr = get_region_details(region_id, side_df)
             out_dir = out_dirs[side]
             significant_comparisons = process_and_plot_data(side_df[side_df["Region_ID"] == region_id], region_id, region_name, region_abbr, side, out_dir, group_columns, args)
-            if not significant_comparisons.empty:
-                summary_df = summarize_significance(significant_comparisons, region_id, side_df, group_columns)
-                all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
+            summary_df = summarize_significance(significant_comparisons, region_id, side_df, group_columns)
+            all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
 
         # Merge with the original regional_summary.csv and write to a new CSV
         regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
         final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left')
-        final_summary.to_csv(Path(out_dir) / 'final_significance_summary.csv', index=False)
+        final_summary.to_csv(Path(out_dir) / 'significance_summary.csv', index=False)
 
 
 if __name__ == "__main__":
