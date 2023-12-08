@@ -4,6 +4,7 @@ import argparse
 import ast
 import os
 from pathlib import Path
+import re
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,7 +18,6 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Plot cell densensities for a given region intensity ID for 3+ groups.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...', formatter_class=RawTextHelpFormatter)
-    parser.add_argument('-i', '--input', help='CSV file with cell densities for each group', metavar='')
     parser.add_argument('--groups', nargs='*', help='Group prefixes (e.g., saline meth cbsMeth)', metavar='')
     parser.add_argument('-t', '--test_type', help="Type of statistical test to use: 'tukey' or 'dunnett' (default: 'dunnett')", choices=['tukey', 'dunnett'], default='dunnett', metavar='')
     parser.add_argument('-c', '--ctrl_group', help="Control group name for Dunnett's tests", metavar='')
@@ -32,13 +32,13 @@ def parse_args():
     Example hex code list (pass arg w/ quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']"""
     return parser.parse_args()
 
-# TODO: Organize PDF names based on general region and note if has sig diff (e.g., <>__Subregion__Abbr__ID.pdf). Summarize results in new output csv file. Add t-test test_type. Dunnett greater. One-tailed option for other test_type options. 
+# TODO: Add t-test test_type. Dunnett greater. One-tailed option for other test_type options. 
 
 
 def get_region_details(region_id, df):
     # Adjust to account for the unique region IDs.
     region_row = df[(df["Region_ID"] == region_id) | (df["Region_ID"] == region_id + 20000)].iloc[0]
-    return region_row["Name"], region_row["Abbr"]
+    return region_row["Region"], region_row["Abbr"]
 
 def parse_color_argument(color_arg, num_groups, region_id):
     if isinstance(color_arg, str):
@@ -219,12 +219,51 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
 
 def main():
     args = parse_args()
+    
+    # Find all CSV files in the current directory matching *cell_densities.csv
+    file_list = [file for file in os.listdir('.') if file.endswith('cell_densities.csv')]
+    print(f"\n    Aggregating data from *cell_densities.csv: {file_list}\n")
 
-    df = pd.read_csv(args.input)
+    # Check if files are found
+    if not file_list:
+        print("    [red1]No files found matching the pattern '*cell_densities.csv'.")
+        return
+
+    # Aggregate the data for each sample
+    aggregated_df = pd.read_csv(file_list[0]).iloc[:, 0:5]
+    for file_name in file_list:
+        df = pd.read_csv(file_name).iloc[:, -1:]
+        # Rename the column prefix to match the --groups argument
+        for prefix in args.groups:
+            if prefix.lower() in df.columns[0].lower():
+                old_prefix = df.columns[0].split("_")[0]
+                new_column_name = df.columns[0].replace(old_prefix, prefix)
+                df.rename(columns={df.columns[0]: new_column_name}, inplace=True)
+                
+                # Append the aggregated data to the dataframe
+                aggregated_df = pd.concat([aggregated_df, df], axis=1)
+
+    # Sort all columns that are not part of the first five by group prefix
+    group_columns = sorted(aggregated_df.columns[5:], key=lambda x: args.groups.index(x.split('_')[0]))
+
+    # Sort each group's columns numerically and combine them
+    sorted_group_columns = []
+    for prefix in args.groups:
+        prefixed_group_columns = [col for col in group_columns if col.startswith(f"{prefix}_")]
+        sorted_group_columns += sorted(prefixed_group_columns, key=lambda x: int(re.search(r'\d+', x).group()))
+
+    # Combine the first five columns with the sorted group columns
+    sorted_columns = aggregated_df.columns[:5].tolist() + sorted_group_columns
+
+    # Now sorted_columns contains all columns, sorted by group and numerically within each group
+    df = aggregated_df[sorted_columns]
+
+    # Save the aggregated data as a CSV
+    df.to_csv('regional_cell_densities_all.csv', index=False)
 
     # Normalization if needed
     if args.divide:
-        df.iloc[:, 4:] = df.iloc[:, 4:].div(args.divide)
+        df.iloc[:, 5:] = df.iloc[:, 5:].div(args.divide)
 
     # Prepare output directories
     if args.output:
@@ -233,7 +272,7 @@ def main():
         out_dirs = {side: f"{args.test_type}_plots_{side}" for side in ["L", "R", "pooled"]}
     for out_dir in out_dirs.values():
         os.makedirs(out_dir, exist_ok=True)
-
+    
     group_columns = {}
     for prefix in args.groups:
         group_columns[prefix] = [col for col in df.columns if col.startswith(f"{prefix}_")] 
@@ -241,19 +280,20 @@ def main():
     all_summaries = pd.DataFrame()
 
     # Averaging data across hemispheres and plotting pooled data (DR)
+    print(f"\n    Plotting and summarizing pooled data for each region...")
     rh_df = df[df['Region_ID'] < 20000]
     lh_df = df[df['Region_ID'] > 20000]
 
     # Drop first 4 columns
-    rh_df = rh_df.iloc[:, 4:]
-    lh_df = lh_df.iloc[:, 4:]
+    rh_df = rh_df.iloc[:, 5:]
+    lh_df = lh_df.iloc[:, 5:]
 
     # Reset indices to ensure alignment
     rh_df.reset_index(drop=True, inplace=True)
     lh_df.reset_index(drop=True, inplace=True)
 
     # Initialize pooled_df with common columns
-    pooled_df = df[['Region_ID', 'Side', 'Name', 'Abbr']][df['Region_ID'] < 20000].reset_index(drop=True)
+    pooled_df = df[['Region_ID', 'Side', 'ID_Path', 'Region', 'Abbr']][df['Region_ID'] < 20000].reset_index(drop=True)
     pooled_df['Side'] = 'Pooled'  # Set the 'Side' to 'Pooled'
 
     # Average the cell densities for left and right hemispheres
@@ -276,6 +316,7 @@ def main():
 
     # Perform analysis and plotting for each hemisphere
     for side in ["L", "R"]:
+        print(f"    Plotting and summarizing data for {side} hemisphere...")
         side_df = df[df['Side'] == side]
         unique_region_ids = side_df["Region_ID"].unique()
         for region_id in unique_region_ids:        
