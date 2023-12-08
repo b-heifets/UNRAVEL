@@ -82,9 +82,8 @@ def summarize_significance(test_df, region_id, df, group_columns):
         elif row['p-adj'] < 0.05:
             sig = '*'
         # Determine which group has a higher mean
-        mean1 = df[group_columns[group1]].mean().mean() # mean of the mean cell densities for each sample
-        mean2 = df[group_columns[group2]].mean().mean() 
-        higher_group = group1 if mean1 > mean2 else group2
+        meandiff = row['meandiff']
+        higher_group = group2 if meandiff > 0 else group1
         summary_rows.append({
             'Region_ID': region_id,
             'Comparison': f'{group1} vs {group2}',
@@ -93,7 +92,6 @@ def summarize_significance(test_df, region_id, df, group_columns):
             'Significance': sig
         })
     return pd.DataFrame(summary_rows)
-
 
 def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir, group_columns, args):
 
@@ -136,16 +134,12 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         dunnett_results = dunnett(*data, control=control_data, alternative=args.alt)
 
         # Convert the result to a DataFrame
-        test_df = pd.DataFrame({
+        test_results_df = pd.DataFrame({
             'group1': [args.ctrl_group] * len(dunnett_results.pvalue),
             'group2': [prefix for prefix in args.groups if prefix != args.ctrl_group],
-            'p-adj': dunnett_results.pvalue
+            'p-adj': dunnett_results.pvalue,
         })
-        test_df['reject'] = test_df['p-adj'] < 0.05
-        significant_comparisons = test_df[test_df['reject'] == True]
-
-        if significant_comparisons.empty:
-            return pd.DataFrame()  # Return an empty DataFrame if no significant results
+        significant_comparisons = test_results_df[test_results_df['p-adj'] < 0.05]
 
     elif args.test_type == 'tukey':
 
@@ -155,8 +149,8 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         tukey_results = pairwise_tukeyhsd(cell_densities, labels, alpha=0.05)
 
         # Extract significant comparisons from Tukey's results
-        tukey_significant = pd.DataFrame(data=tukey_results.summary().data[1:], columns=tukey_results.summary().data[0])
-        significant_comparisons = tukey_significant[tukey_significant['reject'] == True]
+        test_results_df = pd.DataFrame(data=tukey_results.summary().data[1:], columns=tukey_results.summary().data[0])
+        significant_comparisons = test_results_df[test_results_df['p-adj'] < 0.05]
 
     # Loop for plotting comparison bars and asterisks
     for _, row in significant_comparisons.iterrows():
@@ -198,18 +192,18 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     plt.ylim(0, y_pos) # Adjust y-axis limit to accommodate comparison bars
     ax.set_xlabel(None)
 
-    # Check if the 'Significance' column exists in significant_comparisons (for prepending 'sig__' to the filename)
+    # Check if the 'Significance' column exists in significant_comparisons (for prepending '_sig__' to the filename)
     has_significant_results = False
     if 'reject' in significant_comparisons.columns:
         has_significant_results = significant_comparisons['reject'].any()
 
     # Extract the general region for the filename (output file name prefix for sorting by region)
     regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
-
+    region_id = region_id if region_id < 20000 else region_id - 20000 # Adjust if left hemi
     general_region = regional_summary.loc[regional_summary['Region_ID'] == region_id, 'General_Region'].values[0]
 
-    # Format the filename with 'sig__' prefix if there are significant results
-    prefix = 'sig__' if has_significant_results else ''
+    # Format the filename with '_sig__' prefix if there are significant results
+    prefix = '_sig__' if has_significant_results else ''
     filename = f"{prefix}{general_region}__{region_id}_{region_abbr}_{side}".replace("/", "-") # Replace problematic characters
 
     # Save the plot for each side or pooled data
@@ -220,7 +214,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     plt.savefig(f"{out_dir}/{filename}.pdf")
     plt.close()
 
-    return pd.DataFrame() if significant_comparisons.empty else significant_comparisons
+    return test_results_df
 
 
 def main():
@@ -278,7 +272,7 @@ def main():
     # Merge with the original regional_summary.csv and write to a new CSV
     regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
     final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left')
-    final_summary.to_csv(Path(out_dir) / 'significance_summary.csv', index=False)
+    final_summary.to_csv(Path(out_dir) / '__significance_summary.csv', index=False)
 
     # Perform analysis and plotting for each hemisphere
     for side in ["L", "R"]:
@@ -294,7 +288,7 @@ def main():
         # Merge with the original regional_summary.csv and write to a new CSV
         regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
         final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left')
-        final_summary.to_csv(Path(out_dir) / 'significance_summary.csv', index=False)
+        final_summary.to_csv(Path(out_dir) / '__significance_summary.csv', index=False)
 
 
 if __name__ == "__main__":
