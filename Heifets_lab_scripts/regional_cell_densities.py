@@ -20,7 +20,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, metavar='')
     parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image. Default: ochann_seg_ilastik_1.', default='ochann_seg_ilastik_1', metavar='')
-    parser.add_argument('-a', '--atlas', help='Dir name for atlas relative to ./sample??/. Default: atlas/native_atlas/native_gubra_ano_split_25um.nii.gz', default='atlas/native_atlas/native_gubra_ano_split_25um.nii.gz', metavar='')
+    parser.add_argument('-a', '--atlas', help='Dir name for atlas relative to ./sample??/. Default: atlas/native_atlas/native_gubra_ano_split_25um.nii.gz', metavar='')
     parser.add_argument('-o', '--output', help='path/name.csv. Default: region_cell_counts.csv', default='region_cell_counts.csv', metavar='')
     parser.add_argument('-c', '--condition', help='Short name for experimental groud for front of sample ID. Default: None', default=None, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)

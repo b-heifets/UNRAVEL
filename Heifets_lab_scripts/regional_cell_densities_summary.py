@@ -13,23 +13,28 @@ import seaborn as sns
 import textwrap
 from argparse import RawTextHelpFormatter
 from rich import print
-from scipy.stats import dunnett
+from rich.live import Live
+from rich.traceback import install
+from scipy.stats import dunnett, ttest_ind
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
+from unravel_utils import initialize_progress_bar
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Plot cell densensities for a given region intensity ID for 3+ groups.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...', formatter_class=RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description='Plot cell densensities for each region and summarize results.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...', formatter_class=RawTextHelpFormatter)
     parser.add_argument('--groups', nargs='*', help='Group prefixes (e.g., saline meth cbsMeth)', metavar='')
-    parser.add_argument('-t', '--test_type', help="Type of statistical test to use: 'tukey' or 'dunnett' (default: 'dunnett')", choices=['tukey', 'dunnett'], default='dunnett', metavar='')
-    parser.add_argument('-c', '--ctrl_group', help="Control group name for Dunnett's tests", metavar='')
+    parser.add_argument('-t', '--test_type', help="Type of statistical test to use: 'tukey' (default), 'dunnett', or 't-test'", choices=['tukey', 'dunnett', 't-test'], default='tukey', metavar='')
+    parser.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", metavar='')
     parser.add_argument('-d', '--divide', type=float, help='Divide the cell densities by the specified value for plotting (default is None)', default=None, metavar='')
     parser.add_argument('-y', '--ylabel', help='Y-axis label (Default: cell_density)', default='cell_density', metavar='')
     parser.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', metavar='')
     parser.add_argument('-s', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups", default='light:white', metavar='')
     parser.add_argument('-o', '--output', help='Output directory for plots (Default: <args.test_type>_plots)', metavar='')
-    parser.add_argument('-a', "--alt", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl)}", default='two-sided', metavar='')
-    parser.epilog = """regional_cell_densities_summary.py -i cell_densities.csv --groups Saline MDMA Meth -c Saline -d 10000 -s symbols --test_type tukey
-    
-    Example hex code list (pass arg w/ quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']"""
+    parser.add_argument('-a', "--alt", help="Number of tails and direction for t-test or Dunnett's tests {'two-sided', 'less' (<ctrl), or 'greater'}", default='two-sided', metavar='')
+    parser.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], metavar='')
+    parser.epilog = """Example usage: regional_cell_densities_summary.py -i cell_densities.csv --groups Saline MDMA Meth -d 10000
+
+Outputs plots and a summary CSV to the current directory.    
+Example hex code list (flank arg w/ double quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']"""
     return parser.parse_args()
 
 # TODO: Add t-test test_type. Dunnett greater. One-tailed option for other test_type options. 
@@ -44,7 +49,7 @@ def parse_color_argument(color_arg, num_groups, region_id):
     if isinstance(color_arg, str):
         if color_arg.startswith('[') and color_arg.endswith(']'):
             # It's a string representation of a list, so evaluate it safely
-            color_list = ast.literal_eval(color_arg)
+            color_list = ast.literal_eval(color_arg)    
             if len(color_list) != num_groups:
                 raise ValueError(f"The number of colors provided ({len(color_list)}) does not match the number of groups ({num_groups}).")
             return color_list
@@ -66,8 +71,8 @@ def parse_color_argument(color_arg, num_groups, region_id):
     else:
         # It's already a list (this would be the case for default values or if the input method changes)
         return color_arg    
-    
-def summarize_significance(test_df, region_id, df, group_columns):
+
+def summarize_significance(test_df, region_id):
     summary_rows = []
     for _, row in test_df.iterrows():
         group1, group2 = row['group1'], row['group2']
@@ -124,7 +129,36 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     y_pos = y_max * 1.05  # Start just above the highest bar
 
     # Check which test to perform
-    if args.test_type == 'dunnett':
+    if args.test_type == 't-test':
+        # Perform t-test for each group against the control group
+        control_data = df[group_columns[args.ctrl_group]].values.ravel()
+        test_results = []
+        for prefix in args.groups:
+            if prefix != args.ctrl_group:
+                other_group_data = df[group_columns[prefix]].values.ravel()
+                t_stat, p_value = ttest_ind(other_group_data, control_data, equal_var=False)  # Perform Welch's t-test
+                meandiff = np.mean(other_group_data) - np.mean(control_data)
+                if args.alt == 'less' and meandiff < 0:
+                    p_value /= 2  # For one-tailed test, halve the p-value if the alternative is 'less'
+                    t_stat = -t_stat  # Flip the sign for 'less'
+                elif args.alt == 'greater' and meandiff > 0:
+                    p_value /= 2  # For one-tailed test, halve the p-value if the alternative is 'greater'
+                elif args.alt == 'two-sided':
+                    pass # No change in p value needed for two-sided test
+                else: # Effect direction not consistent with hypothesis 
+                    p_value = 1
+                test_results.append({
+                    'group1': args.ctrl_group,
+                    'group2': prefix,
+                    't-stat': t_stat,
+                    'p-adj': p_value, # Referring to as p-adj to match the other test types
+                    'meandiff': np.mean(other_group_data) - np.mean(control_data)
+                })
+
+        test_results_df = pd.DataFrame(test_results)
+        significant_comparisons = test_results_df[test_results_df['p-adj'] < 0.05]
+
+    elif args.test_type == 'dunnett':
 
         # Extract the data for the control group and the other groups
         data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
@@ -133,11 +167,14 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         # The * operator unpacks the list so that each array is a separate argument, as required by dunnett
         dunnett_results = dunnett(*data, control=control_data, alternative=args.alt)
 
+        group2_data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
+
         # Convert the result to a DataFrame
         test_results_df = pd.DataFrame({
             'group1': [args.ctrl_group] * len(dunnett_results.pvalue),
             'group2': [prefix for prefix in args.groups if prefix != args.ctrl_group],
             'p-adj': dunnett_results.pvalue,
+            'meandiff': np.mean(group2_data, axis=1) - np.mean(control_data) # Calculate the mean difference between each group and the control group
         })
         significant_comparisons = test_results_df[test_results_df['p-adj'] < 0.05]
 
@@ -192,10 +229,8 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     plt.ylim(0, y_pos) # Adjust y-axis limit to accommodate comparison bars
     ax.set_xlabel(None)
 
-    # Check if the 'Significance' column exists in significant_comparisons (for prepending '_sig__' to the filename)
-    has_significant_results = False
-    if 'reject' in significant_comparisons.columns:
-        has_significant_results = significant_comparisons['reject'].any()
+    # Check if there are any significant comparisons (for prepending '_sig__' to the filename)
+    has_significant_results = True if significant_comparisons.shape[0] > 0 else False
 
     # Extract the general region for the filename (output file name prefix for sorting by region)
     regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
@@ -211,7 +246,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     wrapped_title = textwrap.fill(title, 42)
     plt.title(wrapped_title, pad = 20).set_position([.5, 1.05])
     plt.tight_layout()
-    plt.savefig(f"{out_dir}/{filename}.pdf")
+    plt.savefig(f"{out_dir}/{filename}.{args.extension}")
     plt.close()
 
     return test_results_df
@@ -222,7 +257,7 @@ def main():
     
     # Find all CSV files in the current directory matching *cell_densities.csv
     file_list = [file for file in os.listdir('.') if file.endswith('cell_densities.csv')]
-    print(f"\n    Aggregating data from *cell_densities.csv: {file_list}\n")
+    print(f"\nAggregating data from *cell_densities.csv: {file_list}\n")
 
     # Check if files are found
     if not file_list:
@@ -266,10 +301,15 @@ def main():
         df.iloc[:, 5:] = df.iloc[:, 5:].div(args.divide)
 
     # Prepare output directories
-    if args.output:
-        out_dirs = {side: f"{args.output}_{side}" for side in ["L", "R", "pooled"]}
+    if args.alt == 'two-sided':
+        suffix = ''
     else:
-        out_dirs = {side: f"{args.test_type}_plots_{side}" for side in ["L", "R", "pooled"]}
+        suffix = f"_{args.alt}" # Add suffix to indicate the alternative hypothesis
+
+    if args.output:
+        out_dirs = {side: f"{args.output}_{side}{suffix}" for side in ["L", "R", "pooled"]}
+    else:
+        out_dirs = {side: f"{args.test_type}_plots_{side}{suffix}" for side in ["L", "R", "pooled"]}
     for out_dir in out_dirs.values():
         os.makedirs(out_dir, exist_ok=True)
     
@@ -280,7 +320,7 @@ def main():
     all_summaries = pd.DataFrame()
 
     # Averaging data across hemispheres and plotting pooled data (DR)
-    print(f"\n    Plotting and summarizing pooled data for each region...")
+    print(f"\nPlotting and summarizing pooled data for each region...\n")
     rh_df = df[df['Region_ID'] < 20000]
     lh_df = df[df['Region_ID'] > 20000]
 
@@ -302,35 +342,42 @@ def main():
 
     # Averaging data across hemispheres and plotting pooled data
     unique_region_ids = df[df["Side"] == "R"]["Region_ID"].unique()
-    for region_id in unique_region_ids:
-        region_name, region_abbr = get_region_details(region_id, df)
-        out_dir = out_dirs["pooled"]
-        significant_comparisons = process_and_plot_data(pooled_df[pooled_df["Region_ID"] == region_id], region_id, region_name, region_abbr, "Pooled", out_dir, group_columns, args)
-        summary_df = summarize_significance(significant_comparisons, region_id, pooled_df, group_columns)
-        all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
+    progress, task_id = initialize_progress_bar(len(unique_region_ids), "[red]Processing regions (pooled)...")
+    with Live(progress):
+        for region_id in unique_region_ids:
+            region_name, region_abbr = get_region_details(region_id, df)
+            out_dir = out_dirs["pooled"]
+            comparisons_summary = process_and_plot_data(pooled_df[pooled_df["Region_ID"] == region_id], region_id, region_name, region_abbr, "Pooled", out_dir, group_columns, args)
+            summary_df = summarize_significance(comparisons_summary, region_id)
+            all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
+            progress.update(task_id, advance=1)
 
     # Merge with the original regional_summary.csv and write to a new CSV
     regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
     final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left')
-    final_summary.to_csv(Path(out_dir) / '__significance_summary.csv', index=False)
+    final_summary.to_csv(Path(out_dir) / '__significance_summary_pooled.csv', index=False)
 
     # Perform analysis and plotting for each hemisphere
     for side in ["L", "R"]:
-        print(f"    Plotting and summarizing data for {side} hemisphere...")
+        print(f"\nPlotting and summarizing data for {side} hemisphere...\n")
         side_df = df[df['Side'] == side]
         unique_region_ids = side_df["Region_ID"].unique()
-        for region_id in unique_region_ids:        
-            region_name, region_abbr = get_region_details(region_id, side_df)
-            out_dir = out_dirs[side]
-            significant_comparisons = process_and_plot_data(side_df[side_df["Region_ID"] == region_id], region_id, region_name, region_abbr, side, out_dir, group_columns, args)
-            summary_df = summarize_significance(significant_comparisons, region_id, side_df, group_columns)
-            all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
+        progress, task_id = initialize_progress_bar(len(unique_region_ids), f"[red]Processing regions ({side})...")
+        with Live(progress):
+            for region_id in unique_region_ids:        
+                region_name, region_abbr = get_region_details(region_id, side_df)
+                out_dir = out_dirs[side]
+                comparisons_summary = process_and_plot_data(side_df[side_df["Region_ID"] == region_id], region_id, region_name, region_abbr, side, out_dir, group_columns, args)
+                summary_df = summarize_significance(comparisons_summary, region_id)
+                all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
+                progress.update(task_id, advance=1)
 
         # Merge with the original regional_summary.csv and write to a new CSV
         regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
         final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left')
-        final_summary.to_csv(Path(out_dir) / '__significance_summary.csv', index=False)
+        final_summary.to_csv(Path(out_dir) / f'__significance_summary_{side}.csv', index=False)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__': 
+    install()
     main()
