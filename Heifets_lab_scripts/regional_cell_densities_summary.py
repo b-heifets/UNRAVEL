@@ -37,8 +37,6 @@ Outputs plots and a summary CSV to the current directory.
 Example hex code list (flank arg w/ double quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']"""
     return parser.parse_args()
 
-# TODO: Add t-test test_type. Dunnett greater. One-tailed option for other test_type options. 
-
 
 def get_region_details(region_id, df):
     # Adjust to account for the unique region IDs.
@@ -317,12 +315,13 @@ def main():
     for prefix in args.groups:
         group_columns[prefix] = [col for col in df.columns if col.startswith(f"{prefix}_")] 
 
-    all_summaries = pd.DataFrame()
-
     # Averaging data across hemispheres and plotting pooled data (DR)
     print(f"\nPlotting and summarizing pooled data for each region...\n")
     rh_df = df[df['Region_ID'] < 20000]
     lh_df = df[df['Region_ID'] > 20000]
+
+    # Initialize an empty dataframe to store all summaries
+    all_summaries_pooled = pd.DataFrame() 
 
     # Drop first 4 columns
     rh_df = rh_df.iloc[:, 5:]
@@ -349,32 +348,37 @@ def main():
             out_dir = out_dirs["pooled"]
             comparisons_summary = process_and_plot_data(pooled_df[pooled_df["Region_ID"] == region_id], region_id, region_name, region_abbr, "Pooled", out_dir, group_columns, args)
             summary_df = summarize_significance(comparisons_summary, region_id)
-            all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
+            all_summaries_pooled = pd.concat([all_summaries_pooled, summary_df], ignore_index=True)
             progress.update(task_id, advance=1)
 
     # Merge with the original regional_summary.csv and write to a new CSV
     regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
-    final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left')
-    final_summary.to_csv(Path(out_dir) / '__significance_summary_pooled.csv', index=False)
+    final_summary_pooled = pd.merge(regional_summary, all_summaries_pooled, on='Region_ID', how='left') 
+    final_summary_pooled.to_csv(Path(out_dir) / '__significance_summary_pooled.csv', index=False)
 
     # Perform analysis and plotting for each hemisphere
     for side in ["L", "R"]:
         print(f"\nPlotting and summarizing data for {side} hemisphere...\n")
+
+        # Initialize an empty dataframe to store all summaries
+        all_summaries = pd.DataFrame()
         side_df = df[df['Side'] == side]
-        unique_region_ids = side_df["Region_ID"].unique()
+        unique_region_ids = side_df["Region_ID"].unique() # Get unique region IDs for the current side
         progress, task_id = initialize_progress_bar(len(unique_region_ids), f"[red]Processing regions ({side})...")
         with Live(progress):
-            for region_id in unique_region_ids:        
+            for region_id in unique_region_ids:
                 region_name, region_abbr = get_region_details(region_id, side_df)
                 out_dir = out_dirs[side]
                 comparisons_summary = process_and_plot_data(side_df[side_df["Region_ID"] == region_id], region_id, region_name, region_abbr, side, out_dir, group_columns, args)
                 summary_df = summarize_significance(comparisons_summary, region_id)
                 all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
+                if region_id > 20000:
+                    all_summaries["Region_ID"] = all_summaries["Region_ID"] - 20000
                 progress.update(task_id, advance=1)
 
         # Merge with the original regional_summary.csv and write to a new CSV
         regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
-        final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left')
+        final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left') 
         final_summary.to_csv(Path(out_dir) / f'__significance_summary_{side}.csv', index=False)
 
 
