@@ -372,12 +372,15 @@ def main():
                 comparisons_summary = process_and_plot_data(side_df[side_df["Region_ID"] == region_id], region_id, region_name, region_abbr, side, out_dir, group_columns, args)
                 summary_df = summarize_significance(comparisons_summary, region_id)
                 all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
-                if region_id > 20000:
-                    all_summaries["Region_ID"] = all_summaries["Region_ID"] - 20000
                 progress.update(task_id, advance=1)
 
         # Merge with the original regional_summary.csv and write to a new CSV
         regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
+
+        # Adjust Region_ID for left hemisphere
+        if side == "L":
+            all_summaries["Region_ID"] = all_summaries["Region_ID"] - 20000
+
         final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left') 
         final_summary.to_csv(Path(out_dir) / f'__significance_summary_{side}.csv', index=False)
 
