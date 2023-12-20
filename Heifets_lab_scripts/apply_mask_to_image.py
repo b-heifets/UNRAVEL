@@ -16,7 +16,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', metavar='')
-    parser.add_argument('-m', '--mask', help='Mask image path relative to ./ or ./sample??/', metavar='')
+    parser.add_argument('-m', '--mask', help='Mask image path relative to ./ or ./sample??/. "sample??_" in arg replaced as needed.', metavar='')
     parser.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', metavar='')
     parser.add_argument('-x', '--xyres', help='If output .nii.gz: x/y voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-z', '--zres', help='If output .nii.gz: z voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
@@ -53,8 +53,14 @@ def main():
             # Load image
             img = load_3D_img(Path(sample_path, args.input).resolve(), return_res=False)
 
-            # Load mask
-            mask = load_3D_img(Path(sample_path, args.mask).resolve(), return_res=False)
+            # Check if "sample??_" is in the mask path and replace it with the actual sample name
+            if f"{args.pattern}_" in args.mask:
+                dynamic_mask_path = args.mask.replace(f"{args.pattern}_", f"{sample}_")
+            else:
+                dynamic_mask_path = args.mask
+
+            # Load mask with the updated or original path
+            mask = load_3D_img(Path(sample_path, dynamic_mask_path).resolve(), return_res=False)
 
             # Apply mask to image
             masked_img = apply_mask_to_ndarray(img, mask)
@@ -63,7 +69,7 @@ def main():
             output = Path(sample_path, args.output).resolve()
 
             # Save masked image
-            if output.endswith('.nii.gz'):
+            if str(output).endswith('.nii.gz'):
                 output.parent.mkdir(parents=True, exist_ok=True)
                 save_as_nii(masked_img, output, args.xyres, args.zres, img.dtype)
             else:
