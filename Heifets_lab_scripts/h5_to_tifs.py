@@ -103,9 +103,9 @@ def main():
     else: 
         h5_path = find_largest_h5_file()
         if h5_path:
-            print(f"    The largest .h5 file is: {h5_path}")
+            print(f"\n    The largest .h5 file is: {h5_path}")
         else:
-            print("    [red1]No .h5 files found.")
+            print("\n    [red1]No .h5 files found.\n")
 
     # Load h5 image (highest res dataset) as ndarray and extract voxel sizes in microns
     img, xy_res, z_res = load_h5(h5_path, desired_axis_order="xyz", return_res=True)
