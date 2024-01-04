@@ -2,6 +2,7 @@
 
 import argparse
 import numpy as np
+from argparse import RawTextHelpFormatter
 from pathlib import Path
 from rich import print
 from rich.live import Live
@@ -12,7 +13,7 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times, initi
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads image and mask. Zeros out voxels in image based on mask and direction args')
+    parser = argparse.ArgumentParser(description='Loads image and mask. Zeros out voxels in image based on mask and direction args', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', metavar='')
@@ -22,6 +23,7 @@ def parse_args():
     parser.add_argument('-x', '--xyres', help='If output .nii.gz: x/y voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-z', '--zres', help='If output .nii.gz: z voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = f"""Example usage: apply_mask_to_image.py -m iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters"""
     return parser.parse_args()
 
 
