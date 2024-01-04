@@ -18,11 +18,11 @@ def parse_args():
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', metavar='')
     parser.add_argument('-m', '--mask', help='Mask image path relative to ./ or ./sample??/. "sample??_" in arg replaced as needed.', metavar='')
-    parser.add_argument('-d, --direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 0', default='less', choices=['greater', 'less'], metavar='')
+    parser.add_argument('-d', '--direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 0', default='less', choices=['greater', 'less'], metavar='')
     parser.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', metavar='')
     parser.add_argument('-x', '--xyres', help='If output .nii.gz: x/y voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-z', '--zres', help='If output .nii.gz: z voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.add_argument('-v', '--verbose', help='sIncrease verbosity. Default: False', action='store_true', default=False)
     parser.epilog = f"""Example usage: apply_mask_to_image.py -m iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters"""
     return parser.parse_args()
 
