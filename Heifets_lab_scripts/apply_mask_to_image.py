@@ -36,7 +36,7 @@ def apply_mask_to_ndarray(ndarray, mask_ndarray, mask_condition):
     if mask_condition == 'greater':
         ndarray[mask_ndarray > 0] = 0
     elif mask_condition == 'less':
-        ndarray[mask_ndarray < 0] = 0
+        ndarray[mask_ndarray < 1] = 0
 
     return ndarray
 
