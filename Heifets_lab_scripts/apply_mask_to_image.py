@@ -12,11 +12,12 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times, initi
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads image and mask. Zeros out voxels in image where voxels are > 0 in mask')
+    parser = argparse.ArgumentParser(description='Loads image and mask. Zeros out voxels in image based on mask and direction args')
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', metavar='')
     parser.add_argument('-m', '--mask', help='Mask image path relative to ./ or ./sample??/. "sample??_" in arg replaced as needed.', metavar='')
+    parser.add_argument('-d, --direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 0', default='less', choices=['greater', 'less'], metavar='')
     parser.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', metavar='')
     parser.add_argument('-x', '--xyres', help='If output .nii.gz: x/y voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-z', '--zres', help='If output .nii.gz: z voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
@@ -25,14 +26,15 @@ def parse_args():
 
 
 @print_func_name_args_times()
-def apply_mask_to_ndarray(ndarray, mask_ndarray):
-    """Zero out voxels in ndarray where voxels are > 0 in mask_ndarray"""
-    # Ensure mask and tif array are the same shape
+def apply_mask_to_ndarray(ndarray, mask_ndarray, mask_condition):
+    """Zero out voxels in ndarray based on mask condition"""
     if mask_ndarray.shape != ndarray.shape:
         raise ValueError("Mask and input image must have the same shape")
 
-    # Zero out voxels in tif array where mask is > 0 
-    ndarray[mask_ndarray > 0 ] = 0
+    if mask_condition == 'greater':
+        ndarray[mask_ndarray > 0] = 0
+    elif mask_condition == 'less':
+        ndarray[mask_ndarray < 0] = 0
 
     return ndarray
 
@@ -63,7 +65,7 @@ def main():
             mask = load_3D_img(Path(sample_path, dynamic_mask_path).resolve(), return_res=False)
 
             # Apply mask to image
-            masked_img = apply_mask_to_ndarray(img, mask)
+            masked_img = apply_mask_to_ndarray(img, mask, args.mask_condition)
 
             # Define output path
             output = Path(sample_path, args.output).resolve()
@@ -77,6 +79,7 @@ def main():
                 save_as_tifs(masked_img, output, "xyz")
 
             progress.update(task_id, advance=1)
+
 
 if __name__ == '__main__':
     install()
