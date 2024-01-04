@@ -67,7 +67,7 @@ def main():
             mask = load_3D_img(Path(sample_path, dynamic_mask_path).resolve(), return_res=False)
 
             # Apply mask to image
-            masked_img = apply_mask_to_ndarray(img, mask, args.mask_condition)
+            masked_img = apply_mask_to_ndarray(img, mask, args.direction)
 
             # Define output path
             output = Path(sample_path, args.output).resolve()
