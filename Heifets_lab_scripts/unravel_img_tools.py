@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import cv2 
+import h5py
 import nibabel as nib
 import numpy as np
 import subprocess
@@ -81,6 +82,25 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False):
     else:
         return ndarray
     
+def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False):
+    """Load full res image from an HDF5 file (.h5) and return ndarray
+    Default: axis_order=xyz (other option: axis_order="zyx")
+    Default: returns: ndarray
+    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)"""
+    with h5py.File(hdf5_path, 'r') as f:
+        full_res_dataset_name = next(iter(f.keys())) # Assumes first dataset = full res image
+        dataset = f[full_res_dataset_name]
+        print(f"\n    Loading {full_res_dataset_name} as ndarray")
+        ndarray = dataset[:]  # Load the full res image into memory (if not enough RAM, chunck data [e.g., w/ dask array])
+        ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
+        print(f'    {ndarray.shape=}')
+
+    if return_res:
+        xy_res, z_res = xyz_res_from_h5(hdf5_path)
+        return ndarray, xy_res, z_res
+    else:
+        return ndarray
+    
 # Helper function to resolve file path to first matching file in dir or file itself
 def resolve_path(file_path, extensions):
     """Return first matching file in dir or file itself if it matches the extensions."""
@@ -155,6 +175,17 @@ def xyz_res_from_tif(tif_path):
         xy_res = float(pixels_element.get('PhysicalSizeX'))
         z_res = float(pixels_element.get('PhysicalSizeZ'))
         return xy_res, z_res
+
+def xyz_res_from_h5(hdf5_path):
+    """Returns tuple with xy_voxel_size and z_voxel_size in microns from full res HDF5 image"""
+    with h5py.File(hdf5_path, 'r') as f:
+        full_res_dataset_name = next(iter(f.keys())) # Assumes that full res data is 1st in the dataset list
+        print(f"\n    Loading HDF5 dataset: {full_res_dataset_name}\n")
+        dataset = f[full_res_dataset_name] 
+        res = dataset.attrs['element_size_um'] # z, y, x voxel sizes in microns (ndarray)
+        xy_res = res[1]
+        z_res = res[0]  
+    return xy_res, z_res
 
 
 ####### Save images #######

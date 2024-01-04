@@ -1,95 +1,132 @@
 #!/usr/bin/env python3
 
 import argparse
+import glob
+import os
+import h5py
 import numpy as np
 from argparse import RawTextHelpFormatter
-from glob import glob
 from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
-from unravel_config import Configuration 
-from unravel_img_tools import load_3D_img, resample_reorient, save_as_tifs, save_as_nii
+from tifffile import imwrite 
+from unravel_config import Configuration
+from unravel_img_tools import load_3D_img
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads autofluo image, resamples, reorients, saves as .nii.gz and tifs', formatter_class=RawTextHelpFormatter)
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
-    parser.add_argument('-o', '--output', help='Name of folder for outputing tifs in ./ or ./sample??/', metavar='')
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser = argparse.ArgumentParser(description='Loads h5/hdf5 image, saves as tifs. Also, saves xy and z voxel size in microns', formatter_class=RawTextHelpFormatter)
+    parser.add_argument('-i', '--input', help='path/image.h5', metavar='')
+    parser.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', metavar='')
     parser.epilog = """
-Run hdf5.py from the experiment directory containing sample?? folders or a sample?? folder.
-inputs: ./hdf5/*.h5 or ./sample??/hdf5/*.h5 match (put only largest h5 file here)
-outputs: .[/sample??]/tif_dir/slice_????.tif series and .[/sample??]/parameters/metadata
-next script: prep_reg.sh"""
+Example usage: 
+cd <path/sample??> # change working directory to sample folder
+h5_to_tifs.py -i <path/image.h5> -t 488
+
+Inputs: 
+image.h5 # either from -i path/image.h5 or largest *.h5 in cwd
+This script assumes that the first dataset in the hdf5 file has the highest resolution.
+
+Outputs:
+./<tif_dir_out>/slice_????.tif series
+./parameters/metadata (text file)
+
+Next script: 
+prep_reg.sh
+"""
     return parser.parse_args()
 
 
-@print_func_name_args_times()
-def prep_reg(sample, args):
-    """Preps inputs for brain_mask.py and atlas registration (reg.py)"""
+def find_largest_h5_file():
+    """ Find and return the path to the largest .h5 file in the current directory """
+    largest_file = None
+    max_size = -1
 
-    # Define outputs 
-    cwd = Path(".").resolve()
-    sample_path = Path(sample).resolve() if sample != cwd.name else cwd
+    for file in glob.glob('*.h5'):
+        size = os.path.getsize(file)
+        if size > max_size:
+            max_size = size
+            largest_file = file
 
-    if args.output: 
-        output_path = Path(sample_path, args.output).resolve().parent
-        autofl_img_output_name = Path(args.output).name
+    return largest_file
+
+def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False):
+    """Load full res image from an HDF5 file (.h5) and return ndarray
+    Default: axis_order=xyz (other option: axis_order="zyx")
+    Default: returns: ndarray
+    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)"""
+    with h5py.File(hdf5_path, 'r') as f:
+        full_res_dataset_name = next(iter(f.keys()))
+        dataset = f[full_res_dataset_name]
+        print(f"\n    Loading {full_res_dataset_name} as ndarray")
+        ndarray = dataset[:]  # Load the full res image into memory (if not enough RAM, chunck data [e.g., w/ dask array])
+        ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
+        print(f'    {ndarray.shape=}')
+
+    if return_res:
+        xy_res, z_res = xyz_res_from_h5(hdf5_path)
+        return ndarray, xy_res, z_res
     else:
-        output_path = Path(sample_path, "reg_input").resolve()
-        autofl_img_output_name = f"autofl_{args.res}um.nii.gz"
-    autofl_img_output = Path(output_path, autofl_img_output_name)
+        return ndarray
+    
+def xyz_res_from_h5(hdf5_path):
+    """Returns tuple with xy_voxel_size and z_voxel_size in microns from full res HDF5 image"""
+    with h5py.File(hdf5_path, 'r') as f:
+        # Extract full res HDF5 dataset
+        full_res_dataset_name = next(iter(f.keys())) # Assumes that full res data is 1st in the dataset list
+        dataset = f[full_res_dataset_name] # Slice the list of datasets
+        print(f"    {dataset}")
 
-    # Skip processing if output exists
-    if autofl_img_output.exists():
-        print(f"\n\n    {autofl_img_output} already exists. Skipping.\n")
-        return
+        # Extract x, y, and z voxel sizes
+        res = dataset.attrs['element_size_um'] # z, y, x voxel sizes in microns (ndarray)
+        xy_res = res[1]
+        z_res = res[0]  
+        print(f"    {xy_res=}")
+        print(f"    {z_res=}\n")
+    return xy_res, z_res
 
-    # Load autofluo image and optionally get resolutions
-    try:
-        img_path = sample_path if glob(f"{sample_path}/*.czi") else Path(sample_path, args.label).resolve()
-        if args.xy_res is None or args.z_res is None:
-            img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True)
-        else:
-            img = load_3D_img(img_path, args.channel, "xyz")
-            xy_res, z_res = args.xy_res, args.z_res
-        if not isinstance(xy_res, float) or not isinstance(z_res, float):
-            raise ValueError(f"Metadata not extractable from {img_path}. Rerun w/ --xy_res and --z_res")
-    except (FileNotFoundError, ValueError) as e:
-        print(f"\n    [red bold]Error: {e}\n    Skipping {sample}.\n")
-        return
+def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
+    """Save <ndarray> as tifs in <Path(tif_dir_out)>"""
+    tif_dir_out = Path(tif_dir_out)
+    tif_dir_out.mkdir(parents=True, exist_ok=True)
 
-    # Resample and reorient image
-    img_reoriented = resample_reorient(img, xy_res, z_res, args.res, zoom_order=args.zoom_order)
-
-    # Save autofl image as tif series (for brain_mask.py)
-    tif_dir_output = Path(str(autofl_img_output).replace('.nii.gz', '_tifs')) # e.g., ./sample01/reg_input/autofl_50um_tifs
-    tif_dir_output.mkdir(parents=True, exist_ok=True)
-    save_as_tifs(img_reoriented, tif_dir_output, "xyz")
-
-    # Save autofl image (for reg.py if skipping brain_mask.py and for applying the brain mask)
-    save_as_nii(img_reoriented, autofl_img_output, args.res, args.res, np.uint16)
-    return
+    if ndarray_axis_order == "xyz":
+        ndarray = np.transpose(ndarray, (2, 1, 0)) # Transpose to zyx (tiff expects zyx)
+    for i, slice_ in enumerate(ndarray):
+        slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
+        imwrite(str(slice_file_path), slice_)
+    print(f"    Output: [default bold]{tif_dir_out}\n")
 
 
 def main():
-    samples = get_samples(args.dirs, args.pattern)
+    args = parse_args()
 
-    if samples == ['.']:
-        samples[0] = Path.cwd().name
-    
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
-    with Live(progress):
-        for sample in samples:
-            prep_reg(sample, args)
-            progress.update(task_id, advance=1)
+    if args.input: 
+        h5_path = args.input
+    else: 
+        h5_path = find_largest_h5_file()
+        if h5_path:
+            print(f"\n    The largest .h5 file is: {h5_path}")
+        else:
+            print("\n    [red1]No .h5 files found.\n")
+
+    # Load h5 image (highest res dataset) as ndarray and extract voxel sizes in microns
+    img, xy_res, z_res = load_h5(h5_path, desired_axis_order="xyz", return_res=True)
+
+    # Make parameters directory in the sample?? folder
+    os.makedirs("parameters", exist_ok=True)
+
+    # Save metadata to text file so resolution can be obtained by other scripts
+    metadata_txt_path = Path(".", "parameters", "metadata")
+    with open(metadata_txt_path, 'w') as file: 
+        file.write(f'Voxel size: {xy_res}x{xy_res}x{z_res} micron^3')
+
+    # Save as tifs 
+    tifs_output_path = Path(".", args.tif_dir)
+    save_as_tifs(img, tifs_output_path)
 
 
 if __name__ == '__main__':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    main()
