@@ -15,6 +15,8 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times
 def parse_args():
     parser = argparse.ArgumentParser(description='Converts correlation map to z-score, p value, and FDR p value maps', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-i', '--input', help='path/image.nii.gz', required=True, metavar='')
+    parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
+    parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-a', '--alpha', help='FDR alpha. Default: 0.05', default=0.05, type=float, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Outputs: path/z_score_map.nii.gz, path/p_value_map.nii.gz, path/p_value_map_fdr_corrected.nii.gz"""
@@ -35,6 +37,12 @@ def z_to_p(z_map):
 def main():
 
     # Load Pearson correlation map
+    if args.xy_res is None or args.z_res is None:
+        img, xy_res, z_res = load_3D_img(args.input, args.channel, "xyz", return_res=True)
+    else:
+        img = load_3D_img(args.input, args.channel, "xyz")
+        xy_res, z_res = args.xy_res, args.z_res
+
     correlation_map = load_3D_img(args.input)
 
     # Apply Fisher Z-transformation to convert to z-score map
@@ -51,9 +59,9 @@ def main():
     # Save the Z-score map and P-value maps
     output_prefix = str(Path(args.input).resolve()).replace(".nii.gz", "")
 
-    save_as_nii(z_map, f"{output_prefix}_z_score_map.nii.gz")
-    save_as_nii(p_map, f"{output_prefix}_p_value_map.nii.gz")
-    save_as_nii(p_map_fdr_corrected, f"{output_prefix}_p_value_map_fdr_corrected.nii.gz")
+    save_as_nii(z_map, f"{output_prefix}_z_score_map.nii.gz", args.xy_res, args.z_res, data_type='float32')
+    save_as_nii(p_map, f"{output_prefix}_p_value_map.nii.gz", args.xy_res, args.z_res, data_type='float32')
+    save_as_nii(p_map_fdr_corrected, f"{output_prefix}_p_value_map_fdr_corrected.nii.gz", args.xy_res, args.z_res, data_type='float32')
     print("\n    Z-score map, P-value map, and FDR-corrected P-value map saved.\n")
     
     
