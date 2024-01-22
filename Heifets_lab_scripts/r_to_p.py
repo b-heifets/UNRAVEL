@@ -55,16 +55,23 @@ def main():
     # Convert z-score map to p-value map
     p_map = z_to_p(z_map)
 
+    # Invert P value map for visualization
+    inv_p_map = 1 - p_map
+
     # Apply multiple comparisons correction (False Discovery Rate, FDR)
     alpha_level = 0.05  # Set your desired alpha level
     _, p_map_fdr_corrected, _, _ = multipletests(p_map.flatten(), alpha=alpha_level, method='fdr_bh')
     p_map_fdr_corrected = p_map_fdr_corrected.reshape(p_map.shape)
 
+    # Invert FDR corrected P value map for visualization
+    inv_p_map_fdr_corrected = 1 - p_map_fdr_corrected
+
     # Save the Z-score map and P-value maps
     output_prefix = str(Path(args.input).resolve()).replace(".nii.gz", "")
+
     save_as_nii(z_map, f"{output_prefix}_z_score_map.nii.gz", xy_res, z_res, data_type='float32')
-    save_as_nii(p_map, f"{output_prefix}_p_value_map.nii.gz", xy_res, z_res, data_type='float32')
-    save_as_nii(p_map_fdr_corrected, f"{output_prefix}_p_value_map_fdr_corrected.nii.gz", xy_res, z_res, data_type='float32')
+    save_as_nii(inv_p_map, f"{output_prefix}_1-p_value_map.nii.gz", xy_res, z_res, data_type='float32')
+    save_as_nii(inv_p_map_fdr_corrected, f"{output_prefix}_1-p_value_map_fdr_corrected.nii.gz", xy_res, z_res, data_type='float32')
     print("\n    Z-score map, P-value map, and FDR-corrected P-value map saved.\n")
     
     
