@@ -26,7 +26,20 @@ def parse_args():
 @print_func_name_args_times()
 def r_to_z(correlation_map):
     """Convert a Pearson correlation map (ndarray) to a Z-score map (ndarray) using Fisher's Z-transformation via np.arctanh"""
-    return np.arctanh(correlation_map) #https://stats.stackexchange.com/questions/109028/fishers-z-transform-in-python
+    # Adjust values slightly (e.g., in the seed region) if they are exactly 1 or -1 to avoid divide by zero error
+    max_value = 1 - 1e-10  # Adjust 1e-10 to a suitable tolerance value
+    adjusted_correlation_map = np.clip(correlation_map, -max_value, max_value)
+    return np.arctanh(adjusted_correlation_map)
+
+@print_func_name_args_times()
+def r_to_z_formula(correlation_map):
+    """Convert a Pearson correlation map (ndarray) to a Z-score map (ndarray) using the direct Fisher Z transformation formula, with handling for values of 1 and -1."""
+    max_value = 1 - 1e-10  # Adjust the tolerance as needed
+    adjusted_correlation_map = np.clip(correlation_map, -max_value, max_value)
+
+    z_map = 0.5 * np.log((1 + adjusted_correlation_map) / (1 - adjusted_correlation_map)) # Fisher Z transformation formula
+    return z_map
+
 
 @print_func_name_args_times()
 def z_to_p(z_map):
@@ -48,6 +61,9 @@ def main():
     # Apply Fisher Z-transformation to convert to z-score map
     z_map = r_to_z(correlation_map)
 
+    # Apply direct Fisher Z-transformation formula to convert to z-score map
+    z_map_formula = r_to_z_formula(correlation_map)
+
     # Convert z-score map to p-value map
     p_map = z_to_p(z_map)
 
@@ -60,8 +76,10 @@ def main():
     output_prefix = str(Path(args.input).resolve()).replace(".nii.gz", "")
 
     save_as_nii(z_map, f"{output_prefix}_z_score_map.nii.gz", args.xy_res, args.z_res, data_type='float32')
+    save_as_nii(z_map_formula, f"{output_prefix}_z_score_map_formula.nii.gz", args.xy_res, args.z_res, data_type='float32')
     save_as_nii(p_map, f"{output_prefix}_p_value_map.nii.gz", args.xy_res, args.z_res, data_type='float32')
     save_as_nii(p_map_fdr_corrected, f"{output_prefix}_p_value_map_fdr_corrected.nii.gz", args.xy_res, args.z_res, data_type='float32')
+
     print("\n    Z-score map, P-value map, and FDR-corrected P-value map saved.\n")
     
     
