@@ -38,9 +38,9 @@ def main():
 
     # Load Pearson correlation map
     if args.xy_res is None or args.z_res is None:
-        img, xy_res, z_res = load_3D_img(args.input, args.channel, "xyz", return_res=True)
+        img, xy_res, z_res = load_3D_img(args.input, return_res=True)
     else:
-        img = load_3D_img(args.input, args.channel, "xyz")
+        img = load_3D_img(args.input)
         xy_res, z_res = args.xy_res, args.z_res
 
     correlation_map = load_3D_img(args.input)
