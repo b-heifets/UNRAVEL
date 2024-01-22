@@ -14,12 +14,13 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Converts correlation map to z-score, p value, and FDR p value maps', formatter_class=RawTextHelpFormatter)
-    parser.add_argument('-i', '--input', help='path/image.nii.gz', required=True, metavar='')
+    parser.add_argument('-i', '--input', help='[path/]image.nii.gz', required=True, metavar='')
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-a', '--alpha', help='FDR alpha. Default: 0.05', default=0.05, type=float, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Outputs: path/z_score_map.nii.gz, path/p_value_map.nii.gz, path/p_value_map_fdr_corrected.nii.gz"""
+    parser.epilog = """Outputs: <image>_z_score_map.nii.gz, <image>_p_value_map.nii.gz, <image>_p_value_map_fdr_corrected.nii.gz
+    Example usage: r_to_p.py -i sample01_iba1_rb20_correlation_map.nii.gz -x 25 -z 25 -v"""
     return parser.parse_args()
 
 
@@ -29,17 +30,7 @@ def r_to_z(correlation_map):
     # Adjust values slightly (e.g., in the seed region) if they are exactly 1 or -1 to avoid divide by zero error
     max_value = 1 - 1e-10  # Adjust 1e-10 to a suitable tolerance value
     adjusted_correlation_map = np.clip(correlation_map, -max_value, max_value)
-    return np.arctanh(adjusted_correlation_map)
-
-@print_func_name_args_times()
-def r_to_z_formula(correlation_map):
-    """Convert a Pearson correlation map (ndarray) to a Z-score map (ndarray) using the direct Fisher Z transformation formula, with handling for values of 1 and -1."""
-    max_value = 1 - 1e-10  # Adjust the tolerance as needed
-    adjusted_correlation_map = np.clip(correlation_map, -max_value, max_value)
-
-    z_map = 0.5 * np.log((1 + adjusted_correlation_map) / (1 - adjusted_correlation_map)) # Fisher Z transformation formula
-    return z_map
-
+    return np.arctanh(adjusted_correlation_map) # Fast equivalent to Fisher's Z-transformation: 0.5 * np.log((1 + adjusted_correlation_map) / (1 - adjusted_correlation_map))
 
 @print_func_name_args_times()
 def z_to_p(z_map):
@@ -61,9 +52,6 @@ def main():
     # Apply Fisher Z-transformation to convert to z-score map
     z_map = r_to_z(correlation_map)
 
-    # Apply direct Fisher Z-transformation formula to convert to z-score map
-    z_map_formula = r_to_z_formula(correlation_map)
-
     # Convert z-score map to p-value map
     p_map = z_to_p(z_map)
 
@@ -74,12 +62,9 @@ def main():
 
     # Save the Z-score map and P-value maps
     output_prefix = str(Path(args.input).resolve()).replace(".nii.gz", "")
-
-    save_as_nii(z_map, f"{output_prefix}_z_score_map.nii.gz", args.xy_res, args.z_res, data_type='float32')
-    save_as_nii(z_map_formula, f"{output_prefix}_z_score_map_formula.nii.gz", args.xy_res, args.z_res, data_type='float32')
-    save_as_nii(p_map, f"{output_prefix}_p_value_map.nii.gz", args.xy_res, args.z_res, data_type='float32')
-    save_as_nii(p_map_fdr_corrected, f"{output_prefix}_p_value_map_fdr_corrected.nii.gz", args.xy_res, args.z_res, data_type='float32')
-
+    save_as_nii(z_map, f"{output_prefix}_z_score_map.nii.gz", xy_res, z_res, data_type='float32')
+    save_as_nii(p_map, f"{output_prefix}_p_value_map.nii.gz", xy_res, z_res, data_type='float32')
+    save_as_nii(p_map_fdr_corrected, f"{output_prefix}_p_value_map_fdr_corrected.nii.gz", xy_res, z_res, data_type='float32')
     print("\n    Z-score map, P-value map, and FDR-corrected P-value map saved.\n")
     
     
