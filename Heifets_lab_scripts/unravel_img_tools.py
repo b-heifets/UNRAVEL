@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import re
 import cv2 
 import h5py
 import nibabel as nib
@@ -20,25 +21,31 @@ from unravel_utils import print_func_name_args_times
 ####### Load 3D image and get xy and z voxel size in microns #######
 
 @print_func_name_args_times()
-def load_czi(czi, channel, desired_axis_order="xyz", return_res=False):
+def load_czi(czi, channel, desired_axis_order="xyz", return_res=False, return_metadata=False):
     """Load a CZI image and return the ndarray
     Default: axis_order=xyz (other option: axis_order="zyx")
     Default: returns: ndarray
-    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)"""
+    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)
+    If return_metadata=True returns: ndarray, xy_res, z_res, x_dim, y_dim, z_dim (image dimensions)"""
     ndarray = np.squeeze(czi.read_image(C=channel)[0])
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-    if return_res:
-        xy_res, z_res = xyz_res_from_czi(czi)
+
+    if return_metadata:
+        xy_res, z_res, x_dim, y_dim, z_dim = metadata_from_czi(czi)
+        return ndarray, xy_res, z_res, x_dim, y_dim, z_dim
+    elif return_res:
+        xy_res, z_res = metadata_from_czi(czi)
         return ndarray, xy_res, z_res
     else:
         return ndarray
 
 @print_func_name_args_times()
-def load_tifs(tif_path, desired_axis_order="xyz", return_res=False, parallel_loading=True):
+def load_tifs(tif_path, desired_axis_order="xyz", return_res=False, return_metadata=False, parallel_loading=True):
     """Load a tif series [in parallel] and return the ndarray
     Default: axis_order=xyz (other option: axis_order="zyx")
     Default: returns: ndarray
-    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)"""
+    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)
+    If return_metadata=True returns: ndarray, xy_res, z_res, x_dim, y_dim, z_dim (image dimensions)"""
 
     def load_single_tif(tif_file):
         """Load a single tif file using OpenCV and return ndarray."""
@@ -58,35 +65,43 @@ def load_tifs(tif_path, desired_axis_order="xyz", return_res=False, parallel_loa
     ndarray = np.stack(tifs_stacked, axis=0)
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
 
-    if return_res:
-        xy_res, z_res = xyz_res_from_tif(tif_path)
+    if return_metadata:
+        xy_res, z_res, x_dim, y_dim, z_dim = metadata_from_tif(tif_path)
+        return ndarray, xy_res, z_res, x_dim, y_dim, z_dim
+    elif return_res:
+        xy_res, z_res = metadata_from_tif(tif_path)
         return ndarray, xy_res, z_res
     else:
         return ndarray
 
-
 @print_func_name_args_times()
-def load_nii(nii_path, desired_axis_order="xyz", return_res=False):
+def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metadata=False):
     """Load a .nii.gz image and return the ndarray
     Default: axis_order=xyz (other option: axis_order="zyx")
     Default: returns: ndarray
-    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)"""
+    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)
+    If return_metadata=True returns: ndarray, xy_res, z_res, x_dim, y_dim, z_dim (image dimensions)"""
     img = nib.load(nii_path)
     data_dtype = img.header.get_data_dtype()
     ndarray = np.asanyarray(img.dataobj).astype(data_dtype)
     ndarray = np.squeeze(ndarray)
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
-    if return_res:
-        xy_res, z_res = xyz_res_from_nii(nii_path)
+
+    if return_metadata:
+            xy_res, z_res, x_dim, y_dim, z_dim = metadata_from_nii(nii_path)
+            return ndarray, xy_res, z_res, x_dim, y_dim, z_dim
+    elif return_res:
+        xy_res, z_res = metadata_from_nii(nii_path)
         return ndarray, xy_res, z_res
     else:
         return ndarray
     
-def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False):
+def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metadata=False):
     """Load full res image from an HDF5 file (.h5) and return ndarray
     Default: axis_order=xyz (other option: axis_order="zyx")
     Default: returns: ndarray
-    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)"""
+    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)
+    If return_metadata=True returns: ndarray, xy_res, z_res, x_dim, y_dim, z_dim (image dimensions)"""
     with h5py.File(hdf5_path, 'r') as f:
         full_res_dataset_name = next(iter(f.keys())) # Assumes first dataset = full res image
         dataset = f[full_res_dataset_name]
@@ -95,8 +110,11 @@ def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False):
         ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
         print(f'    {ndarray.shape=}')
 
-    if return_res:
-        xy_res, z_res = xyz_res_from_h5(hdf5_path)
+    if return_metadata:
+        xy_res, z_res, x_dim, y_dim, z_dim = metadata_from_h5(hdf5_path)
+        return ndarray, xy_res, z_res, x_dim, y_dim, z_dim
+    elif return_res:
+        xy_res, z_res = metadata_from_h5(hdf5_path)
         return ndarray, xy_res, z_res
     else:
         return ndarray
@@ -182,21 +200,25 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False
         print(f"\n    [red bold]Error: {e}\n")
         import sys ; sys.exit()
 
-def xyz_res_from_czi(czi_path):
+def metadata_from_czi(czi_path):
     xml_root = czi_path.meta
     scaling_info = xml_root.find(".//Scaling")
     xy_res = float(scaling_info.find("./Items/Distance[@Id='X']/Value").text) * 1e6
     z_res = float(scaling_info.find("./Items/Distance[@Id='Z']/Value").text) * 1e6
-    return xy_res, z_res
+    x_dim = czi_path.read_subblock_rect(0)[2] ### Need to test
+    y_dim = czi_path.read_subblock_rect(0)[3] ### Need to test
+    z_dim = czi_path.size("Z") ### Need to test
+    return xy_res, z_res, x_dim, y_dim, z_dim
 
-def xyz_res_from_nii(nii_path):
+def metadata_from_nii(nii_path):
     img = nib.load(nii_path)
     affine = img.affine
     xy_res = abs(affine[0, 0] * 1e3) # Convert from mm to um
     z_res = abs(affine[2, 2] * 1e3)
-    return xy_res, z_res
+    x_dim, y_dim, z_dim = img.shape[:3] ### Need to test
+    return xy_res, z_res, x_dim, y_dim, z_dim
 
-def xyz_res_from_tif(tif_path):
+def metadata_from_tif(tif_path):
     with tifffile.TiffFile(tif_path) as tif:
         meta = tif.pages[0].tags
         ome_xml_str = meta['ImageDescription'].value
@@ -206,9 +228,12 @@ def xyz_res_from_tif(tif_path):
         xy_res, z_res = None, None
         xy_res = float(pixels_element.get('PhysicalSizeX'))
         z_res = float(pixels_element.get('PhysicalSizeZ'))
-        return xy_res, z_res
+        x_dim = int(pixels_element.get('SizeX')) ### Need to test
+        y_dim = int(pixels_element.get('SizeY')) ### Need to test
+        z_dim = int(pixels_element.get('SizeZ')) ### Need to test
+        return xy_res, z_res, x_dim, y_dim, z_dim
 
-def xyz_res_from_h5(hdf5_path):
+def metadata_from_h5(hdf5_path):
     """Returns tuple with xy_voxel_size and z_voxel_size in microns from full res HDF5 image"""
     with h5py.File(hdf5_path, 'r') as f:
         full_res_dataset_name = next(iter(f.keys())) # Assumes that full res data is 1st in the dataset list
@@ -217,7 +242,33 @@ def xyz_res_from_h5(hdf5_path):
         res = dataset.attrs['element_size_um'] # z, y, x voxel sizes in microns (ndarray)
         xy_res = res[1]
         z_res = res[0]  
-    return xy_res, z_res
+        z_dim, y_dim, x_dim = dataset.shape ### Need to test
+    return xy_res, z_res, x_dim, y_dim, z_dim
+
+def load_image_metadata_from_txt():
+    """Loads ./parameters/metadata* and returns xy_res, z_res, x_dim, y_dim, z_dim | None if file not found."""
+    file_paths = glob('parameters/metadata*')
+    if file_paths:
+        with open(file_paths[0], 'r') as file:
+            for line in file:
+                dim_match = re.compile(r'(Width|Height|Depth):\s+[\d.]+ microns \((\d+)\)').search(line)
+                if dim_match:
+                    dim = dim_match.group(1)
+                    dim_res = float(dim_match.group(2))
+                    if dim == 'Width':
+                        x_dim = int(dim_res)
+                    elif dim == 'Height':
+                        y_dim = int(dim_res)
+                    elif dim == 'Depth':
+                        z_dim = int(dim_res)
+
+                voxel_match = re.compile(r'Voxel size: ([\d.]+)x([\d.]+)x([\d.]+) micron\^3').search(line)
+                if voxel_match:
+                    xy_res = float(voxel_match.group(1))
+                    z_res = float(voxel_match.group(3))
+    else:
+        return None
+    return xy_res, z_res, x_dim, y_dim, z_dim
 
 
 ####### Save images #######

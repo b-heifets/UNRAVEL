@@ -61,12 +61,12 @@ def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False):
         print(f'    {ndarray.shape=}')
 
     if return_res:
-        xy_res, z_res = xyz_res_from_h5(hdf5_path)
+        xy_res, z_res = metadata_from_h5(hdf5_path)
         return ndarray, xy_res, z_res
     else:
         return ndarray
     
-def xyz_res_from_h5(hdf5_path):
+def metadata_from_h5(hdf5_path):
     """Returns tuple with xy_voxel_size and z_voxel_size in microns from full res HDF5 image"""
     with h5py.File(hdf5_path, 'r') as f:
         # Extract full res HDF5 dataset

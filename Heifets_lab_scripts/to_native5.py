@@ -15,19 +15,20 @@ from rich import print
 from rich.traceback import install
 from scipy.ndimage import rotate, zoom
 from unravel_config import Configuration
+from unravel_img_tools import load_3D_img
 from unravel_utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Warp atlas space image to tissue space, reorient, and scale to full resolution', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from atlas space', required=True, metavar='')
     parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., reg_final/clar_downsample_res25um.nii.gz)', required=True, metavar='')
-    parser.add_argument('-F', '--full_res_img', help='rel_path/full_res_img.nii.gz or name of tif dir (to get dims for scaling)', required=True, metavar='')
-    parser.add_argument('-p', '--reg_o_prefix', help='Registration output prefix. Default: allen_clar_ants', default='allen_clar_ants', metavar='')
-    parser.add_argument('-n', '--no_pad_img', help='Reg input mage w/o padding. Default: reg_input/autofl_*um.nii.gz', default='reg_input/autofl_*um.nii.gz', metavar='')
-    parser.add_argument('-p', '--pad_img', help='Image w padding. Default: clar_res0.05_pad.nii.gz', default='clar_res0.05_pad.nii.gz', metavar='') ### Could calc padding
+    parser.add_argument('-F', '--full_res_img', help='rel_path/full_res_img<.czi, .nii.gz, -tif_dir> (to get dims for scaling)', required=True, metavar='')
+    parser.add_argument('-X', '--xy_res', help='x/y voxel size of full res image in microns. Default: get via metadata', default=None, type=float, metavar='')
+    parser.add_argument('-Z', '--z_res', help='z voxel size of full res image.', default=None, type=float, metavar='')
     parser.add_argument('-o', '--output', help='Save as path/native_image.zarr (fast) or path/native_image.nii.gz if provided', metavar='')
+    parser.add_argument('-p', '--reg_o_prefix', help='Registration output prefix. Default: allen_clar_ants', default='allen_clar_ants', metavar='')
     parser.add_argument('-t', '--transforms', help="Name of folder w/ transforms from registration. Default: clar_allen_reg", default="clar_allen_reg", metavar='')
-    parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, metavar='')
+    parser.add_argument('-rr', '--reg_input_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, metavar='')
     parser.add_argument('-fr', '--fixed_res', help='Resolution of the fixed image. Default: 25', default='25',type=int, metavar='')
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -37,12 +38,62 @@ Usage: to_native3.py -i <path/warped_image.nii.gz> -o <path/native_image.nii.gz>
 """
     return parser.parse_args()
 
+# TODO: metadata.py for parameters/metadata.txt
 
 @print_func_name_args_times()
 def nii_to_ndarray(img_path):
     """Loads path/img.nii.gz as nib object and returns ndarray (same dtype)"""
     nii_img = nib.load(img_path)    
     return np.asanyarray(nii_img.dataobj) # Preserves dtype
+
+@print_func_name_args_times()
+def get_dims(img_path):
+
+    
+
+    # Load full res image to get dims for scaling and to calculate how much padding to remove            
+    img, xy_res, z_res = load_3D_img(img_path, return_res=True, xy_res=args.xy_res, z_res=args.z_res)
+
+    if str(full_res_img).endswith(".nii.gz"): 
+        nii_seg_img = nib.load(full_res_img)
+
+        
+        full_res_dims = np.array([nii_seg_img.shape[0], nii_seg_img.shape[1], nii_seg_img.shape[2]])
+    else: 
+        # Get dims from tifs (Using a generator without converting to a list to be memory efficient)
+        tifs = Path(full_res_img).resolve().glob("*.tif") # Generator
+        tif_file = next(tifs, None) # First item in generator
+        tif_img = cv2.imread(str(tif_file), cv2.IMREAD_UNCHANGED) # Load first tif
+        full_res_dims = np.array(tif_img.shape[1], tif_img.shape[0], sum(1 for _ in tifs) + 1) # For z count tifs + 1 (next() uses 1 generator item)
+
+
+
+def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, target_res, pad_fraction=0.15):
+    # Calculate zoom factors for xy and z dimensions
+    zf_xy = xy_res / target_res
+    zf_z = z_res / target_res
+    zf_array = np.array([zf_xy, zf_xy, zf_z])
+    
+    # Calculate expected dimensions of the resampled image (reg input is typically 50um)
+
+
+
+    resampled_dimensions = [
+        round(dim * zf) for dim, zf in zip(original_dimensions, (zf_xy, zf_xy, zf_z))
+    ]
+    
+    # Calculate padding for the resampled image (15% of the resampled dimensions)
+    padded_dimensions = []
+    for dim in resampled_dimensions:
+        # Calculate pad width for one side, then round to the nearest integer
+        pad_width_one_side = np.round(pad_fraction * dim)
+        # Calculate total padding for the dimension (both sides)
+        total_pad = 2 * pad_width_one_side
+        # Calculate new dimension after padding
+        new_dim = dim + total_pad
+        padded_dimensions.append(int(new_dim))
+    
+    return tuple(resampled_dimensions), tuple(padded_dimensions)
 
 @print_func_name_args_times()
 def reorient_to_tissue_space(ndarray):
@@ -52,11 +103,11 @@ def reorient_to_tissue_space(ndarray):
     return flipped_img
 
 @print_func_name_args_times()
-def scale_to_full_res(ndarray, new_width, new_height, new_depth, zoom_order=0):
-    """Scale ndarray to match provided dimensions (order=0 is nearest-neighbor). Returns scaled ndarray."""
-    zoom_factors = (new_width / ndarray.shape[0], new_height / ndarray.shape[1], new_depth / ndarray.shape[2])
-    scaled_data = zoom(ndarray, zoom_factors, order=zoom_order) 
-    return scaled_data
+def scale_to_full_res(ndarray, full_res_dims, zoom_order=0):
+    """Scale ndarray to match x, y, z dimensions provided as ndarray (order=0 is nearest-neighbor). Returns scaled ndarray."""
+    zoom_factors = (full_res_dims[0] / ndarray.shape[0], full_res_dims[1] / ndarray.shape[1], full_res_dims[2] / ndarray.shape[2])
+    scaled_img = zoom(ndarray, zoom_factors, order=zoom_order) 
+    return scaled_img
 
 @print_func_name_args_times()
 def save_nii(ndarray, output_path):
@@ -94,6 +145,10 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
         ]
     )
 
+
+    # Calculate resampled and padded dimensions
+    resampled_dims, padded_dims = calculate_resampled_padded_dimensions(full_res_dims, xy_res, z_res, target_res)
+
     # Load images for calculating how much padding to remove
     reg_file_pre_padding = nii_to_ndarray(img_pre_padding)
     reg_file_post_padding = nii_to_ndarray(f'{transforms_dir}/{img_post_padding}')
@@ -124,29 +179,14 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
     # Reorient image
     reoriented_img = reorient_to_tissue_space(cropped_img)
 
-    # Get full res dimensions
-    if str(full_res_img).endswith(".nii.gz"): 
-        nii_seg_img = nib.load(full_res_img)
-        x_dim = nii_seg_img.shape[0]
-        y_dim = nii_seg_img.shape[1]
-        z_dim = nii_seg_img.shape[2]
-    else: 
-        # Get dims from tifs (Using a generator without converting to a list to be memory efficient)
-        tifs = Path(full_res_img).resolve().glob("*.tif") # Generator
-        tif_file = next(tifs, None) # First item in generator
-        tif_img = cv2.imread(str(tif_file), cv2.IMREAD_UNCHANGED) # Load first tif
-        x_dim = tif_img.shape[1]
-        y_dim = tif_img.shape[0]
-        z_dim = sum(1 for _ in tifs) + 1 # Count tifs. Added 1 to account for missing item in the generator after next()
-
     # Scale to full resolution
-    native_img = scale_to_full_res(reoriented_img, x_dim, y_dim, z_dim, zoom_order=args.zoom_order)
+    native_img = scale_to_full_res(reoriented_img, full_res_dims, zoom_order=args.zoom_order)
     return native_img
 
 
 def main():
 
-    native_img = warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.no_pad_img, args.pad_img, args.reg_res, args.fixed_res, args.full_res_img)
+    native_img = warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.no_pad_img, args.pad_img, args.reg_input_res, args.fixed_res, args.full_res_img)
 
     # Save as .nii.gz or .zarr
     if args.output:

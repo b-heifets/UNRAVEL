@@ -58,12 +58,12 @@ def load_3D_tif(tif_path, desired_axis_order="xyz", return_res=False):
         print(f'    {ndarray.shape=}')
 
     if return_res:
-        xy_res, z_res = xyz_res_from_3D_tif(tif_path)
+        xy_res, z_res = metadata_from_3D_tif(tif_path)
         return ndarray, xy_res, z_res
     else:
         return ndarray
     
-def xyz_res_from_3D_tif(tif_path):
+def metadata_from_3D_tif(tif_path):
     """Returns tuple with xy_voxel_size and z_voxel_size in microns from a 3D .tif"""
 
     with tifffile.TiffFile(tif_path) as tif:

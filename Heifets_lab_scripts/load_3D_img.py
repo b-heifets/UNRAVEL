@@ -9,7 +9,7 @@ from unravel_utils import print_cmd_and_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load image (.czi, .nii.gz, or tif series)  and get metadata', formatter_class=RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description='Load image (.czi, .nii.gz, or tif series) and get metadata', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-i', '--input', help='path/img.czi, path/img.nii.gz, or path/tif_dir', metavar='')
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, metavar='')
     parser.add_argument('-ao', '--axis_order', help='Default: xyz. (other option: zyx)', default='xyz', metavar='')
