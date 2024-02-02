@@ -96,8 +96,7 @@ def main():
             output_dir = Path(sample_path, args.out_dir_name).resolve()
 
             # Save extended image
-            dtype = img.dtype
-            save_as_tifs(extended_img, output_dir, "xyz", data_type=dtype)
+            save_as_tifs(extended_img, output_dir, "xyz")
 
             progress.update(task_id, advance=1)
 

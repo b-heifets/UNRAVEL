@@ -4,6 +4,7 @@ import argparse
 import subprocess
 import nibabel as nib
 import sys
+import numpy as np
 from scipy.ndimage import zoom, gaussian_filter
 from ants import registration, apply_transforms_to_image
 

@@ -18,15 +18,18 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times, initi
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Loads h5/hdf5 image, saves as tifs. Also, saves xy and z voxel size in microns', formatter_class=RawTextHelpFormatter)
+    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
+    parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, metavar='')
     parser.add_argument('-i', '--input', help='path/image.h5', metavar='')
     parser.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', metavar='')
-    parser.epilog = """
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = """Run script from experiment folder w/ sample?? folders or a sample?? folder.
+
 Example usage: 
-cd <path/sample??> # change working directory to sample folder
 h5_to_tifs.py -i <path/image.h5> -t 488
 
 Inputs: 
-image.h5 # either from -i path/image.h5 or largest *.h5 in cwd
+Largest *.h5 in sample?? folder
 This script assumes that the first dataset in the hdf5 file has the highest resolution.
 
 Outputs:
@@ -38,6 +41,17 @@ prep_reg.sh
 """
     return parser.parse_args()
 
+def parse_args():
+    parser = argparse.ArgumentParser(description='Perform regional cell counting', formatter_class=RawTextHelpFormatter)
+    parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image. Default: ochann_seg_ilastik_1.', default='ochann_seg_ilastik_1', metavar='')
+    parser.add_argument('-a', '--atlas', help='Dir name for atlas relative to ./sample??/. Default: atlas/native_atlas/native_gubra_ano_split_25um.nii.gz', metavar='')
+    parser.add_argument('-o', '--output', help='path/name.csv. Default: region_cell_counts.csv', default='region_cell_counts.csv', metavar='')
+    parser.add_argument('-c', '--condition', help='Short name for experimental groud for front of sample ID. Default: None', default=None, metavar='')
+    parser.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, metavar='')
+    parser.epilog = """Run from experiment folder containing sample?? folders. 
+    inputs: ./sample??/ochann_seg_ilastik_1/sample??_ochann_seg_ilastik_1.nii.gz & atlas/native_atlas/native_gubra_ano_split_25um.nii.gz (from to_native2.sh)
+    gubra__regionID_side_IDpath_region_abbr.csv should be in the same dir as this script"""
+    return parser.parse_args()
 
 def find_largest_h5_file():
     """ Find and return the path to the largest .h5 file in the current directory """
@@ -52,40 +66,9 @@ def find_largest_h5_file():
 
     return largest_file
 
-def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False):
-    """Load full res image from an HDF5 file (.h5) and return ndarray
-    Default: axis_order=xyz (other option: axis_order="zyx")
-    Default: returns: ndarray
-    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)"""
-    with h5py.File(hdf5_path, 'r') as f:
-        full_res_dataset_name = next(iter(f.keys()))
-        dataset = f[full_res_dataset_name]
-        print(f"\n    Loading {full_res_dataset_name} as ndarray")
-        ndarray = dataset[:]  # Load the full res image into memory (if not enough RAM, chunck data [e.g., w/ dask array])
-        ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-        print(f'    {ndarray.shape=}')
 
-    if return_res:
-        xy_res, z_res = xyz_res_from_h5(hdf5_path)
-        return ndarray, xy_res, z_res
-    else:
-        return ndarray
     
-def xyz_res_from_h5(hdf5_path):
-    """Returns tuple with xy_voxel_size and z_voxel_size in microns from full res HDF5 image"""
-    with h5py.File(hdf5_path, 'r') as f:
-        # Extract full res HDF5 dataset
-        full_res_dataset_name = next(iter(f.keys())) # Assumes that full res data is 1st in the dataset list
-        dataset = f[full_res_dataset_name] # Slice the list of datasets
-        print(f"    {dataset}")
 
-        # Extract x, y, and z voxel sizes
-        res = dataset.attrs['element_size_um'] # z, y, x voxel sizes in microns (ndarray)
-        xy_res = res[1]
-        z_res = res[0]  
-        print(f"    {xy_res=}")
-        print(f"    {z_res=}\n")
-    return xy_res, z_res
 
 def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
     """Save <ndarray> as tifs in <Path(tif_dir_out)>"""

@@ -119,7 +119,7 @@ def resolve_path(file_path, extensions):
     return None
 
 @print_func_name_args_times()
-def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False): 
+def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False, xy_res=None, z_res=None): 
     """Load <file_path> (.czi, .nii.gz, or .tif).
     file_path can be path to image file or dir (uses first *.czi, *.tif, or *.nii.gz match)
     Default: axis_order=xyz (other option: axis_order="zyx")
@@ -131,24 +131,56 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False
     path = resolve_path(file_path, ['.czi', '.tif', '.nii.gz'])
     if not path:
         raise FileNotFoundError(f"No compatible image files found in {file_path}. Supported file types: .czi, .tif, .nii.gz")
-    print(f"    [default]Loading {path}")
+    
+    if str(path).endswith('.czi'):
+        print(f"\n    [default]Loading channel {channel} from {path} (channel 0 is the first channel)")
+    else: 
+        print(f"\n    [default]Loading {path}")
+
+    # Determine whether to extract metadata or use resolutions that were provided
+    if return_res:
+        if xy_res is None or z_res is None:
+            get_res_from_metadata = True
+        else:
+            get_res_from_metadata = False
 
     # Load image based on file type and optionally return resolutions
-    if str(path).endswith('.czi'):
-        czi = CziFile(path)
-        return load_czi(czi, channel, desired_axis_order, return_res)
-    elif str(path).endswith('.ome.tif'):
-        return load_tifs(path, desired_axis_order, return_res, parallel_loading=True)
-    elif str(path).endswith('.tif'):
-        if return_res:
-            return load_tifs(path, desired_axis_order, return_res=False, parallel_loading=True), None, None
+    try:
+        if str(path).endswith('.czi'):
+            czi = CziFile(path)
+            if return_res: 
+                if get_res_from_metadata: 
+                    return load_czi(czi, channel, desired_axis_order, return_res=True)
+                else: 
+                    return load_czi(czi, channel, desired_axis_order, return_res=False), xy_res, z_res
+            else: 
+                return load_czi(czi, channel, desired_axis_order, return_res=True)
+        elif str(path).endswith('.ome.tif'):
+            if return_res: 
+                if get_res_from_metadata: 
+                    return load_tifs(path, desired_axis_order, return_res=True, parallel_loading=True)
+                else: 
+                    return load_tifs(path, desired_axis_order, return_res=False, parallel_loading=True), xy_res, z_res
+            else: 
+                return load_tifs(path, desired_axis_order, return_res=False, parallel_loading=True)      
+        elif str(path).endswith('.tif'):
+            if return_res:
+                return load_tifs(path, desired_axis_order, return_res=False, parallel_loading=True), None, None
+            else:
+                return load_tifs(path, desired_axis_order, return_res=False, parallel_loading=True)
+        elif str(path).endswith('.nii.gz'):
+            if return_res: 
+                if get_res_from_metadata: 
+                    return load_nii(path, desired_axis_order, return_res=True)
+                else: 
+                    return load_nii(path, desired_axis_order, return_res=False), xy_res, z_res
+            else: 
+                return load_nii(path, desired_axis_order, return_res=False)
         else:
-            return load_tifs(path, desired_axis_order, return_res=False, parallel_loading=True)
-    elif str(path).endswith('.nii.gz'):
-        return load_nii(path, desired_axis_order, return_res)
-    else:
-        raise ValueError(f"Unsupported file type: {path.suffix}. Supported file types: .czi, .tif, .nii.gz")
-
+            raise ValueError(f"Unsupported file type: {path.suffix}. Supported file types: .czi, .tif, .nii.gz")
+    except (FileNotFoundError, ValueError) as e:
+        print(f"\n    [red bold]Error: {e}\n")
+        import sys ; sys.exit()
 
 def xyz_res_from_czi(czi_path):
     xml_root = czi_path.meta
@@ -204,7 +236,7 @@ def save_as_nii(ndarray, output, xy_res, z_res, data_type):
     nifti_img = nib.Nifti1Image(ndarray, affine)
     nifti_img.header.set_data_dtype(data_type)
     nib.save(nifti_img, str(output))    
-    print(f"    Output: [default bold]{output}")
+    print(f"\n    Output: [default bold]{output}")
 
 
 @print_func_name_args_times()
@@ -216,24 +248,25 @@ def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
     for i, slice_ in enumerate(ndarray):
         slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
         imwrite(str(slice_file_path), slice_)
-    print(f"    Output: [default bold]{tif_dir_out}")
+    print(f"\n    Output: [default bold]{tif_dir_out}")
 
 
 ####### Image processing #######
 
 @print_func_name_args_times()
-def resample_reorient(ndarray, xy_res, z_res, res, zoom_order=1):
-    """Resample and reorient an ndarray for registration or warping to atlas space."""
-
-    # Resample autofl image
+def resample(ndarray, xy_res, z_res, res, zoom_order=1):
+    """Resample a 3D ndarray"""
     zf_xy = xy_res / res # Zoom factor
     zf_z = z_res / res
     img_resampled = ndimage.zoom(ndarray, (zf_xy, zf_xy, zf_z), order=zoom_order)
+    return img_resampled
 
-    # Reorient autofluo image
+@print_func_name_args_times()
+def resample_reorient(ndarray, xy_res, z_res, res, zoom_order=1): # Mimics MIRACL's tif to .nii.gz conversion
+    """Resample and reorient an ndarray for registration or warping to atlas space."""
+    img_resampled = resample(ndarray, xy_res, z_res, res, zoom_order=1)
     img_reoriented = np.einsum('zyx->xzy', img_resampled)
     img_reoriented = np.transpose(img_reoriented, (2, 1, 0))
-    
     return img_reoriented
 
 @print_func_name_args_times()

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import os
 import numpy as np
 import ants
 from argparse import RawTextHelpFormatter
@@ -11,7 +10,7 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 from unravel_config import Configuration
-from unravel_img_tools import load_3D_img, save_as_tifs, resample_reorient, pad_image, rolling_ball_subtraction_opencv_parallel, reorient_ndarray, save_as_nii
+from unravel_img_tools import load_3D_img, resample_reorient, pad_image, rolling_ball_subtraction_opencv_parallel, reorient_ndarray, save_as_nii
 from unravel_utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
 
 def parse_args():
@@ -35,16 +34,16 @@ def parse_args():
     parser.epilog = """
 Run prep_vxw_stats.py from the experiment directory containing sample?? folders or a sample?? folder.
 inputs: first ./*.czi or ./sample??/*.czi match. Otherwise, ./<label>/*.tif series
-outputs: .[/sample??]/sample??_ochann_rb4_gubra_space.nii.g
+outputs: .[/sample??]/sample??_ochann_rb4_gubra_space.nii.gz
 next steps: check registration quality with check_reg.py and run vx_stats.py""" ### TODO: Need to implement check_reg.py and vx_stats.py
     return parser.parse_args()
 
 
 @print_func_name_args_times()
-def rb_resample_reorient_warp(sample, args):
+def rb_resample_reorient_warp(sample_path, args):
     """Performs rolling ball bkg sub on full res fluo data, resamples, reorients, and warp to atlas space."""
 
-    sample_path = Path(sample).resolve() if sample != Path().resolve().name else Path().resolve()
+    sample = sample_path.name
 
     fluo_img_output = Path(sample_path, args.output) if args.output else Path(sample_path, f"{sample}_{args.label}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz") # <sample??>_<ochann>_rb<4>_<gubra>_space.nii.gz)
     if fluo_img_output.exists():
@@ -70,24 +69,18 @@ def rb_resample_reorient_warp(sample, args):
 
     # Resample and reorient image
     rb_img_res_reort = resample_reorient(rb_img, xy_res, z_res, args.res, zoom_order=args.zoom_order) 
-
     save_as_nii(rb_img_res_reort, Path(sample_path, "rb_img_res_reort.nii.gz"), args.res, args.res, np.uint16)
-
 
     # Reorient again
     rb_img_res_reort_reort = np.transpose(rb_img_res_reort, (1, 2, 0)) 
-
     save_as_nii(rb_img_res_reort_reort, Path(sample_path, "rb_img_res_reort_reort.nii.gz"), args.res, args.res, np.uint16)
-
 
     # Padding the image 
     rb_img_res_reort_reort_padded = pad_image(rb_img_res_reort_reort, pad_width=0.15)
-
     save_as_nii(rb_img_res_reort_reort_padded, Path(sample_path, "rb_img_res_reort_reort_padded.nii.gz"), args.res, args.res, np.uint16)
 
     # Reorient yet again
     rb_img_res_reort_reort_padded_reort = reorient_ndarray(rb_img_res_reort_reort_padded, args.ort_code)
-
     save_as_nii(rb_img_res_reort_reort_padded_reort, Path(sample_path, "rb_img_res_reort_reort_padded_reort.nii.gz"), args.res, args.res, np.uint16)
 
     import sys ; sys.exit()
@@ -120,11 +113,21 @@ def rb_resample_reorient_warp(sample, args):
 
 
 def main():    
+
     samples = get_samples(args.dirs, args.pattern)
+
+    if samples == ['.']:
+        samples[0] = Path.cwd().name
+
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
-            rb_resample_reorient_warp(sample, args)
+
+            cwd = Path(".").resolve()
+
+            sample_path = Path(sample).resolve() if sample != cwd.name else Path().resolve()
+
+            rb_resample_reorient_warp(sample_path, args)
             progress.update(task_id, advance=1)
 
 
