@@ -200,7 +200,9 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False
     if return_res or return_metadata:
         if xy_res is None or z_res is None:
             get_res_from_metadata = True
-    else:
+        else:
+            get_res_from_metadata = False
+    else: 
         get_res_from_metadata = False
 
     # Load image based on file type and optionally return resolutions
