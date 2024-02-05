@@ -22,12 +22,16 @@ def parse_args():
     parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image. Default: ochann_seg_ilastik_1.', default='ochann_seg_ilastik_1', metavar='')
     parser.add_argument('-a', '--atlas', help='Dir name for atlas relative to ./sample??/. Default: atlas/native_atlas/native_gubra_ano_split_25um.nii.gz', metavar='')
     parser.add_argument('-o', '--output', help='path/name.csv. Default: region_cell_counts.csv', default='region_cell_counts.csv', metavar='')
-    parser.add_argument('-c', '--condition', help='Short name for experimental groud for front of sample ID. Default: None', default=None, metavar='')
+    parser.add_argument('-c', '--condition', help='One word name for group (prepended to sample ID for regional_cell_densities_summary.py)', default=None, metavar='')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, metavar='')
     parser.epilog = """Run from experiment folder containing sample?? folders. 
-    inputs: ./sample??/ochann_seg_ilastik_1/sample??_ochann_seg_ilastik_1.nii.gz & atlas/native_atlas/native_gubra_ano_split_25um.nii.gz (from to_native2.sh)
-    gubra__regionID_side_IDpath_region_abbr.csv should be in the same dir as this script"""
+Example usage: regional_cell_densities.py regional_cell_densities.py -c Saline --dirs sample14 sample36
+
+inputs: ./sample??/ochann_seg_ilastik_1/sample??_ochann_seg_ilastik_1.nii.gz & atlas/native_atlas/native_gubra_ano_split_25um.nii.gz (from to_native2.sh)
+gubra__regionID_side_IDpath_region_abbr.csv should be in the same dir as this script
+
+"""
     return parser.parse_args()
 
 
@@ -41,7 +45,6 @@ def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condi
     """Count the number of cells in each region based on atlas region intensities"""
 
     img = load_3D_img(seg_img_path)
-
     atlas, xy_res, z_res = load_3D_img(atlas_path, return_res=True)
 
     # Check that the image and atlas have the same shape
