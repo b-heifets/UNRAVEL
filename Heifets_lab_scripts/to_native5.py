@@ -23,6 +23,7 @@ def parse_args():
     parser.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from atlas space', required=True, metavar='')
     parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., reg_final/clar_downsample_res25um.nii.gz)', required=True, metavar='')
     # parser.add_argument('-F', '--full_res_img', help='rel_path/full_res_img<.czi, .nii.gz, tif_dir> (to get dims for scaling)', required=True, metavar='')
+    parser.add_argument('-m', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", metavar='')
     parser.add_argument('-X', '--xy_res', help='x/y voxel size of full res image in microns. Default: get via metadata', default=None, type=float, metavar='')
     parser.add_argument('-Z', '--z_res', help='z voxel size of full res image.', default=None, type=float, metavar='')
     parser.add_argument('-o', '--output', help='Save as path/native_image.zarr (fast) or path/native_image.nii.gz if provided', metavar='')
@@ -38,8 +39,6 @@ Usage: to_native3.py -i <path/warped_image.nii.gz> -o <path/native_image.nii.gz>
 """
     return parser.parse_args()
 
-# TODO: metadata.py for parameters/metadata.txt
-
 @print_func_name_args_times()
 def nii_to_ndarray(img_path):
     """Loads path/img.nii.gz as nib object and returns ndarray (same dtype)"""
@@ -49,11 +48,13 @@ def nii_to_ndarray(img_path):
 @print_func_name_args_times()
 def get_dims(img_path):
 
-    
     # Load dims from metadata
-  
-
-
+    if Path("./parameters/metadata.txt").exists():
+        xy_res, z_res, x_dim, y_dim, z_dim = load_image_metadata_from_txt()
+        full_res_dims = np.array([x_dim, y_dim, z_dim])
+    else: 
+        print("    [red1]./sample??/parameters/metadata.txt is missing. Loading full res image to get metadata")
+        img, xy_res, z_res, x_dim, y_dim, z_dim = load_3D_img(img_path, return_metadata=True, xy_res=args.xy_res, z_res=args.z_res)
 
     # Load full res image to get dims for scaling and to calculate how much padding to remove            
     img, xy_res, z_res = load_3D_img(img_path, return_res=True, xy_res=args.xy_res, z_res=args.z_res)
