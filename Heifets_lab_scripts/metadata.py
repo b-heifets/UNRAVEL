@@ -27,7 +27,6 @@ outputs: ./parameters/metadata.txt (Path should be relative to ./sample??)
 Pass in xy_res and z_res if they are not obtainable from the metadata."""    
     return parser.parse_args()
 
-
 def main(): 
 
     samples = get_samples(args.dirs, args.pattern)
@@ -40,16 +39,19 @@ def main():
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path().resolve()
 
             # Resolve path to image
-            img_path = resolve_relative_path(sample_path, args.input)
+            img_path = resolve_relative_path(sample_path, rel_path_or_glob_pattern=args.input)
 
             # Resolve path to metadata file
-            metadata_path = resolve_relative_path(sample_path, args.metad_path)
+            metadata_path = resolve_relative_path(sample_path, rel_path_or_glob_pattern=args.metad_path, make_parents=True)
 
-            # Load image and save metadata to file
-            if img_path.exists():
-                load_3D_img(img_path, desired_axis_order="xyz", xy_res=args.xy_res, z_res=args.z_res, return_metadata=True, save_metadata=metadata_path)
-            else:
-                print(f"    [red1]No match found for {args.input} in {sample_path}. Skipping...")
+            if metadata_path.exists():
+                print(f'\n{metadata_path} exists. Skipping...\n')
+            else: 
+                # Load image and save metadata to file
+                if img_path.exists():
+                    load_3D_img(img_path, desired_axis_order="xyz", xy_res=args.xy_res, z_res=args.z_res, return_metadata=True, save_metadata=metadata_path)
+                else:
+                    print(f"    [red1]No match found for {args.input} in {sample_path}. Skipping...")
 
             progress.update(task_id, advance=1)
 

@@ -54,26 +54,28 @@ def return_3D_img(ndarray, return_metadata=False, return_res=False, xy_res=None,
         return ndarray, xy_res, z_res
     return ndarray
 
-def handle_metadata(file_path, ndarray, return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=False):
+def handle_metadata(file_path, ndarray, return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=None):
     """Extract and handle metadata, including saving to a file if requested. Returns: xy_res, z_res, x_dim, y_dim, z_dim"""
     if return_res or return_metadata:
         if xy_res is None and z_res is None:
             xy_res, z_res = extract_resolution(file_path)
         x_dim, y_dim, z_dim = ndarray.shape
         if save_metadata:
-            save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata="parameters/metadata.txt")
+            save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata=save_metadata)
     return xy_res, z_res, x_dim, y_dim, z_dim
 
 @print_func_name_args_times()
-def extract_resolution(file_path):
+def extract_resolution(img_path):
     """Extract resolution from image metadata. Returns xy_res, z_res in microns."""
-    if str(file_path).endswith('.czi'):
-        xml_root = file_path.meta
+    xy_res, z_res = None, None
+    if str(img_path).endswith('.czi'):
+        czi = CziFile(img_path)
+        xml_root = czi.meta
         scaling_info = xml_root.find(".//Scaling")
         xy_res = float(scaling_info.find("./Items/Distance[@Id='X']/Value").text) * 1e6
         z_res = float(scaling_info.find("./Items/Distance[@Id='Z']/Value").text) * 1e6
-    elif str(file_path).endswith('.ome.tif') or str(file_path).endswith('.tif'):
-        with tifffile.TiffFile(file_path) as tif:
+    elif str(img_path).endswith('.ome.tif') or str(img_path).endswith('.tif'):
+        with tifffile.TiffFile(img_path) as tif:
             meta = tif.pages[0].tags
             ome_xml_str = meta['ImageDescription'].value
             ome_xml_root = etree.fromstring(ome_xml_str.encode('utf-8'))
@@ -81,12 +83,12 @@ def extract_resolution(file_path):
             pixels_element = ome_xml_root.find(f'.//{{{default_ns}}}Pixels')
             xy_res = float(pixels_element.get('PhysicalSizeX'))
             z_res = float(pixels_element.get('PhysicalSizeZ'))
-    elif str(file_path).endswith('.nii.gz'):
-        img = nib.load(file_path)
+    elif str(img_path).endswith('.nii.gz'):
+        img = nib.load(img_path)
         affine = img.affine
         xy_res = abs(affine[0, 0] * 1e3) # Convert from mm to um
         z_res = abs(affine[2, 2] * 1e3)
-    elif str(file_path).endswith('.h5'):
+    elif str(img_path).endswith('.h5'):
         with h5py.File(h5py, 'r') as f:
             full_res_dataset_name = next(iter(f.keys())) # Assumes that full res data is 1st in the dataset list
             print(f"\n    Loading HDF5 dataset: {full_res_dataset_name}\n")
@@ -99,7 +101,8 @@ def extract_resolution(file_path):
 @print_func_name_args_times()
 def load_czi(czi_path, channel, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
     """Loads image.czi channel. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)]."""
-    ndarray = np.squeeze(czi_path.read_image(C=channel)[0])
+    czi = CziFile(czi_path)
+    ndarray = np.squeeze(czi.read_image(C=channel)[0])
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
     xy_res, z_res, x_dim, y_dim, z_dim = handle_metadata(czi_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
@@ -162,11 +165,11 @@ def resolve_path(file_path, extensions):
                 return path
     return None
 
-def resolve_relative_path(sample_path, rel_path_or_glob_pattern):
+def resolve_relative_path(sample_path, rel_path_or_glob_pattern, make_parents=False):
     """Resolve and return the path to a file or directory relative to the given sample_path.
     If the file or directory does not exist, return the first glob match within the sample_path.
     If no matches are found, return None."""
-    
+
     # Check if the exact path exists
     exact_path = Path(sample_path, rel_path_or_glob_pattern)
     if exact_path.exists():
@@ -176,6 +179,64 @@ def resolve_relative_path(sample_path, rel_path_or_glob_pattern):
     glob_matches = sorted(Path(sample_path).glob(rel_path_or_glob_pattern))
     if glob_matches:
         return glob_matches[0]  # Return the first match
+
+    # Make parent dirs for future output
+    if make_parents: 
+        Path(sample_path, rel_path_or_glob_pattern).mkdir(parents=True)
+        return Path(sample_path, rel_path_or_glob_pattern)
+
+    return None
+
+def resolve_relative_path(sample_path, rel_path_or_glob_pattern, make_parents=False):
+    """Resolve and return the path to a file or directory relative to the given sample_path.
+    If the file or directory does not exist, return the first glob match within the sample_path.
+    If no matches are found and make_parents is True, create parent directories for the path."""
+
+    # Check if the exact path exists
+    exact_path = Path(sample_path, rel_path_or_glob_pattern)
+    if exact_path.exists():
+        return exact_path
+
+    # If not, attempt to find a match using glob pattern
+    glob_matches = sorted(Path(sample_path).glob(rel_path_or_glob_pattern))
+    if glob_matches:
+        return glob_matches[0]  # Return the first match
+
+    # Make parent dirs for future output
+    if make_parents:
+        parent_dir = exact_path.parent  # Get the parent directory of the intended path
+        parent_dir.mkdir(parents=True, exist_ok=True)  # Create the parent directory, if it doesn't exist
+        return exact_path  # Return the exact path, including the file name
+
+    return None
+
+def resolve_relative_path(sample_path, rel_path_or_glob_pattern, make_parents=False, is_file=True):
+    """Resolve and return the path to a file or directory relative to the given sample_path.
+    If the file or directory does not exist, return the first glob match within the sample_path.
+    If no matches are found and make_parents is True, create parent directories for the path.
+    The is_file flag indicates whether the path is expected to be a file (True) or a directory (False)."""
+
+    # Construct the full path
+    full_path = Path(sample_path, rel_path_or_glob_pattern)
+
+    # Check if the exact path exists
+    if full_path.exists():
+        return full_path
+
+    # If not, attempt to find a match using glob pattern
+    glob_matches = sorted(full_path.parent.glob(full_path.name))
+    if glob_matches:
+        return glob_matches[0]  # Return the first match
+
+    # Make parent dirs for future output
+    if make_parents:
+        if is_file:
+            # If the path is expected to be a file, create its parent directories
+            full_path.parent.mkdir(parents=True, exist_ok=True)
+        else:
+            # If the path is expected to be a directory, create it along with any necessary parents
+            full_path.mkdir(parents=True, exist_ok=True)
+        return full_path
 
     return None
 
@@ -201,8 +262,7 @@ def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False
     # Load image based on file type and optionally return resolutions
     try:
         if str(path).endswith('.czi'):
-            czi = CziFile(path)
-            return load_czi(czi, channel, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
+            return load_czi(path, channel, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
         elif str(path).endswith('.ome.tif') or str(path).endswith('.tif'):
             return load_tifs(path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res, parallel_loading=True)
         elif str(path).endswith('.nii.gz'):
