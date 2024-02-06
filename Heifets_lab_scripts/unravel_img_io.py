@@ -20,10 +20,12 @@ The main functions are:
 
 import re
 import cv2 
+import dask.array as da
 import h5py
 import nibabel as nib
 import numpy as np
 import tifffile
+import zarr
 from aicspylibczi import CziFile
 from concurrent.futures import ThreadPoolExecutor
 from glob import glob
@@ -174,9 +176,9 @@ def save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata='par
             f.write(f"Depth:  {z_dim*z_res} microns ({z_dim})\n")
             f.write(f"Voxel size: {xy_res}x{xy_res}x{z_res} micron^3\n")    
 
-def load_image_metadata_from_txt():
+def load_image_metadata_from_txt(metadata="./parameters/metadata*"):
     """Loads ./parameters/metadata* and returns xy_res, z_res, x_dim, y_dim, z_dim | None if file not found."""
-    file_paths = glob('parameters/metadata*')
+    file_paths = glob(metadata)
     if file_paths:
         with open(file_paths[0], 'r') as file:
             for line in file:
@@ -196,7 +198,7 @@ def load_image_metadata_from_txt():
                     xy_res = float(voxel_match.group(1))
                     z_res = float(voxel_match.group(3))
     else:
-        return None
+        return None, None, None, None, None
     return xy_res, z_res, x_dim, y_dim, z_dim
 
 @print_func_name_args_times()
@@ -238,6 +240,10 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
         print(f"\n    [red bold]Error: {e}\n")
         import sys ; sys.exit()
 
+@print_func_name_args_times()
+def zarr_to_ndarray(img_path):
+    zarr_dataset = zarr.open(img_path, mode='r')
+    return np.array(zarr_dataset)
 
 # Save images
 
@@ -267,3 +273,13 @@ def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
         slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
         imwrite(str(slice_file_path), slice_)
     print(f"\n    Output: [default bold]{tif_dir_out}")
+
+@print_func_name_args_times()
+def save_as_zarr(ndarray, output_path, ndarray_axis_order="xyz"):
+    """Save ndarray to specified path"""
+    if ndarray_axis_order == "xyz":
+        ndarray = np.transpose(ndarray, (2, 1, 0))
+    dask_array = da.from_array(ndarray, chunks='auto')
+    compressor = zarr.Blosc(cname='lz4', clevel=9, shuffle=zarr.Blosc.BITSHUFFLE)
+    dask_array.to_zarr(output_path, compressor=compressor, overwrite=True)
+    print(f"\n    Output: [default bold]{output_path}")

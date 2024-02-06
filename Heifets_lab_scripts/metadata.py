@@ -1,28 +1,31 @@
 #!/usr/bin/env python3
 
 import argparse
-from argparse import RawTextHelpFormatter
 from pathlib import Path
 from rich.live import Live
 from rich.traceback import install
+
+from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration
 from unravel_img_io import load_3D_img, resolve_relative_path
 from unravel_utils import get_samples, initialize_progress_bar, print_cmd_and_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load full res image (.czi, .nii.gz, or tif series) to get metadata and save to ./parameters/metadata.txt', formatter_class=RawTextHelpFormatter)
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
-    parser.add_argument('-i', '--input', help='path/full_res_img.extension.', required=True, metavar='')
-    parser.add_argument('-m', '--metad_path', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", metavar='')
-    parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, default=None, metavar='')
-    parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, default=None, metavar='')
+    parser = argparse.ArgumentParser(description='Load full res image (.czi, .nii.gz, or tif series) to get metadata and save to ./parameters/metadata.txt', formatter_class=SuppressMetavar)
+    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
+    parser.add_argument('-d', '--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
+    parser.add_argument('-i', '--input', help='path/full_res_img', required=True, action=SM)
+    parser.add_argument('-m', '--metad_path', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
+    parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, default=None, action=SM)
+    parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, default=None, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Run this from an experiment or sample?? folder if using a relative input path. 
 
-inputs: .czi, .nii.gz, or tif series (path should be relative to ./sample??)
-outputs: ./parameters/metadata.txt (path should be relative to ./sample??)
+Usage:    metadata.py -i path/full_res_img
+
+Inputs: .czi, .nii.gz, or tif series (path should be relative to ./sample??)
+Outputs: ./parameters/metadata.txt (path should be relative to ./sample??)
 
 Pass in xy_res and z_res if they are not obtainable from the metadata."""    
     return parser.parse_args()
