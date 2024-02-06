@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-from argparse import RawTextHelpFormatter
 import ants
 import cv2 
 import dask.array as da
@@ -14,30 +13,34 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 from scipy.ndimage import rotate, zoom
+
+from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration
 from unravel_img_io import load_3D_img, load_image_metadata_from_txt
 from unravel_utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Warp atlas space image to tissue space, reorient, and scale to full resolution', formatter_class=RawTextHelpFormatter)
-    parser.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from atlas space', required=True, metavar='')
-    parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., reg_final/clar_downsample_res25um.nii.gz)', required=True, metavar='')
-    # parser.add_argument('-F', '--full_res_img', help='rel_path/full_res_img<.czi, .nii.gz, tif_dir> (to get dims for scaling)', required=True, metavar='')
-    parser.add_argument('-m', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", metavar='')
-    parser.add_argument('-X', '--xy_res', help='x/y voxel size of full res image in microns. Default: get via metadata', default=None, type=float, metavar='')
-    parser.add_argument('-Z', '--z_res', help='z voxel size of full res image.', default=None, type=float, metavar='')
-    parser.add_argument('-o', '--output', help='Save as path/native_image.zarr (fast) or path/native_image.nii.gz if provided', metavar='')
-    parser.add_argument('-p', '--reg_o_prefix', help='Registration output prefix. Default: allen_clar_ants', default='allen_clar_ants', metavar='')
-    parser.add_argument('-t', '--transforms', help="Name of folder w/ transforms from registration. Default: clar_allen_reg", default="clar_allen_reg", metavar='')
-    parser.add_argument('-rr', '--reg_input_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, metavar='')
-    parser.add_argument('-fr', '--fixed_res', help='Resolution of the fixed image. Default: 25', default='25',type=int, metavar='')
-    parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, metavar='')
+    parser = argparse.ArgumentParser(description='Warp atlas space image to tissue space, reorient, and scale to full resolution', formatter_class=SuppressMetavar)
+    parser.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from atlas space', required=True, action=SM)
+    parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., reg_final/clar_downsample_res25um.nii.gz)', required=True, action=SM)
+    # parser.add_argument('-F', '--full_res_img', help='rel_path/full_res_img<.czi, .nii.gz, tif_dir> (to get dims for scaling)', required=True, action=SM)
+    parser.add_argument('-m', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
+    parser.add_argument('-x', '--xy_res', help='x/y voxel size of full res image in microns. Default: get via metadata', default=None, type=float, action=SM)
+    parser.add_argument('-z', '--z_res', help='z voxel size of full res image.', default=None, type=float, action=SM)
+    parser.add_argument('-o', '--output', help='Save as path/native_image.zarr (fast) or path/native_image.nii.gz if provided', action=SM)
+    parser.add_argument('-p', '--reg_o_prefix', help='Registration output prefix. Default: allen_clar_ants', default='allen_clar_ants', action=SM)
+    parser.add_argument('-t', '--transforms', help="Name of folder w/ transforms from registration. Default: clar_allen_reg", default="clar_allen_reg", action=SM)
+    parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
+    parser.add_argument('-fr', '--fixed_res', help='Resolution of the fixed image. Default: 25', default='25',type=int, action=SM)
+    parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Run from sample?? folder.
 
 Usage: to_native3.py -i <path/warped_image.nii.gz> -o <path/native_image.nii.gz> [-s path/seg_img.nii.gz or -t ochann]
-"""
+
+Next script: native_clusters.py"""
     return parser.parse_args()
+
 
 @print_func_name_args_times()
 def nii_to_ndarray(img_path):
@@ -46,43 +49,24 @@ def nii_to_ndarray(img_path):
     return np.asanyarray(nii_img.dataobj) # Preserves dtype
 
 @print_func_name_args_times()
-def get_dims(img_path):
-
-    # Load dims from metadata
-    if Path("./parameters/metadata.txt").exists():
+def get_metadata(full_res_img, metadata_path="./parameters/metadata.txt", xy_res=None, z_res=None):
+    """Loads metadata from .txt or the original full res image. Returns xy_res, z_res, full_res_dims (x, y, z)"""
+    if Path(metadata_path).exists():
         xy_res, z_res, x_dim, y_dim, z_dim = load_image_metadata_from_txt()
-        full_res_dims = np.array([x_dim, y_dim, z_dim])
     else: 
         print("    [red1]./sample??/parameters/metadata.txt is missing. Loading full res image to get metadata")
-        img, xy_res, z_res, x_dim, y_dim, z_dim = load_3D_img(img_path, return_metadata=True, xy_res=args.xy_res, z_res=args.z_res)
+        _, xy_res, z_res, x_dim, y_dim, z_dim = load_3D_img(full_res_img, return_metadata=True, xy_res=xy_res, z_res=z_res)
+    original_dimensions = np.array([x_dim, y_dim, z_dim])
+    return xy_res, z_res, original_dimensions
 
-    # Load full res image to get dims for scaling and to calculate how much padding to remove            
-    img, xy_res, z_res = load_3D_img(img_path, return_res=True, xy_res=args.xy_res, z_res=args.z_res)
-
-    if str(full_res_img).endswith(".nii.gz"): 
-        nii_seg_img = nib.load(full_res_img)
-
-        
-        full_res_dims = np.array([nii_seg_img.shape[0], nii_seg_img.shape[1], nii_seg_img.shape[2]])
-    else: 
-        # Get dims from tifs (Using a generator without converting to a list to be memory efficient)
-        tifs = Path(full_res_img).resolve().glob("*.tif") # Generator
-        tif_file = next(tifs, None) # First item in generator
-        tif_img = cv2.imread(str(tif_file), cv2.IMREAD_UNCHANGED) # Load first tif
-        full_res_dims = np.array(tif_img.shape[1], tif_img.shape[0], sum(1 for _ in tifs) + 1) # For z count tifs + 1 (next() uses 1 generator item)
-
-
-
-def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, target_res, pad_fraction=0.15):
+@print_func_name_args_times()
+def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, target_res=50, pad_fraction=0.15):
     # Calculate zoom factors for xy and z dimensions
     zf_xy = xy_res / target_res
     zf_z = z_res / target_res
     zf_array = np.array([zf_xy, zf_xy, zf_z])
     
     # Calculate expected dimensions of the resampled image (reg input is typically 50um)
-
-
-
     resampled_dimensions = [
         round(dim * zf) for dim, zf in zip(original_dimensions, (zf_xy, zf_xy, zf_z))
     ]
@@ -150,16 +134,14 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
         ]
     )
 
-    # Load metadata from ./parameters/metadata.txt
-    if Path("./parameters/metadata.txt").exists():
-        xy_res, z_res, x_dim, y_dim, z_dim = load_image_metadata_from_txt()
-        full_res_dims = np.array([x_dim, y_dim, z_dim])
-    else: 
-        print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ metadata.py")
-        import sys ; sys.exit()
+    # Load resolutions and dimensions of full res image or scaling and to calculate how much padding to remove
+    xy_res, z_res, original_dimensions = get_metadata(args.full_res_img, args.metadata, args.xy_res, args.z_res)
 
     # Calculate resampled and padded dimensions
-    resampled_dims, padded_dims = calculate_resampled_padded_dimensions(full_res_dims, xy_res, z_res, target_res)
+    resampled_dims, padded_dims = calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, reg_input_res)
+
+    print(f'\n{resampled_dims=}\n')
+    print(f'\n{padded_dims=}\n')
 
     # Load images for calculating how much padding to remove
     reg_file_pre_padding = nii_to_ndarray(img_pre_padding)
@@ -168,6 +150,11 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
     # Get shapes 
     reg_file_pre_padding_shape = np.array(reg_file_pre_padding.shape)
     reg_file_post_padding_shape = np.array(reg_file_post_padding.shape)
+
+    print(f'\n{reg_file_pre_padding_shape=}\n')
+    print(f'\n{reg_file_post_padding_shape=}\n')
+
+    import sys ; sys.exit()
 
     # Calculate zoom factor
     zf = round(reg_input_res / fixed_img_res)
@@ -198,7 +185,7 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
 
 def main():
 
-    native_img = warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.reg_input_res, args.fixed_res)
+    native_img = warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.reg_res, args.fixed_res)
 
     # Save as .nii.gz or .zarr
     if args.output:
@@ -209,7 +196,6 @@ def main():
         else: 
             print(f"    [red1]Output path does not end with .zarr or .nii.gz") 
 
-    
 
 
 if __name__ == '__main__':
