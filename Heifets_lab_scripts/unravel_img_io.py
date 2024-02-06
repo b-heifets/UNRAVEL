@@ -127,7 +127,8 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(nii_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
-    
+
+@print_func_name_args_times() 
 def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
     """Load full res image from an HDF5 image (.h5). Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)]."""
     with h5py.File(hdf5_path, 'r') as f:
@@ -139,65 +140,15 @@ def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metada
         xy_res, z_res, x_dim, y_dim, z_dim = metadata(hdf5_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
-def resolve_relative_path(sample_path, rel_path_or_glob_pattern, make_parents=False):
-    """Resolve and return the path to a file or directory relative to the given sample_path.
-    If the file or directory does not exist, return the first glob match within the sample_path.
-    If no matches are found, return None."""
-
-    # Check if the exact path exists
-    exact_path = Path(sample_path, rel_path_or_glob_pattern)
-    if exact_path.exists():
-        return exact_path
-
-    # If not, attempt to find a match using glob pattern
-    glob_matches = sorted(Path(sample_path).glob(rel_path_or_glob_pattern))
-    if glob_matches:
-        return glob_matches[0]  # Return the first match
-
-    # Make parent dirs for future output
-    if make_parents: 
-        Path(sample_path, rel_path_or_glob_pattern).mkdir(parents=True)
-        return Path(sample_path, rel_path_or_glob_pattern)
-
-    return None
-
-def resolve_relative_path(sample_path, rel_path_or_glob_pattern, make_parents=False):
-    """Resolve and return the path to a file or directory relative to the given sample_path.
-    If the file or directory does not exist, return the first glob match within the sample_path.
-    If no matches are found and make_parents is True, create parent directories for the path."""
-
-    # Check if the exact path exists
-    exact_path = Path(sample_path, rel_path_or_glob_pattern)
-    if exact_path.exists():
-        return exact_path
-
-    # If not, attempt to find a match using glob pattern
-    glob_matches = sorted(Path(sample_path).glob(rel_path_or_glob_pattern))
-    if glob_matches:
-        return glob_matches[0]  # Return the first match
-
-    # Make parent dirs for future output
-    if make_parents:
-        parent_dir = exact_path.parent  # Get the parent directory of the intended path
-        parent_dir.mkdir(parents=True, exist_ok=True)  # Create the parent directory, if it doesn't exist
-        return exact_path  # Return the exact path, including the file name
-
-    return None
-
 def resolve_relative_path(sample_path, rel_path_or_glob_pattern, make_parents=False, is_file=True):
     """Resolve and return the path to a file or directory relative to the given sample_path.
     If the file or directory does not exist, return the first glob match within the sample_path.
     If no matches are found and make_parents is True, create parent directories for the path.
     The is_file flag indicates whether the path is expected to be a file (True) or a directory (False)."""
-
-    # Construct the full path
     full_path = Path(sample_path, rel_path_or_glob_pattern)
-
-    # Check if the exact path exists
     if full_path.exists():
         return full_path
 
-    # If not, attempt to find a match using glob pattern
     glob_matches = sorted(full_path.parent.glob(full_path.name))
     if glob_matches:
         return glob_matches[0]  # Return the first match
@@ -205,14 +156,48 @@ def resolve_relative_path(sample_path, rel_path_or_glob_pattern, make_parents=Fa
     # Make parent dirs for future output
     if make_parents:
         if is_file:
-            # If the path is expected to be a file, create its parent directories
             full_path.parent.mkdir(parents=True, exist_ok=True)
         else:
-            # If the path is expected to be a directory, create it along with any necessary parents
             full_path.mkdir(parents=True, exist_ok=True)
         return full_path
 
     return None
+
+def save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata='parameters/metadata.txt'):
+    """Save metadata to .txt file"""
+    save_metadata = Path(save_metadata)
+    save_metadata.parent.mkdir(parents=True, exist_ok=True)
+    if not save_metadata.exists():
+        with save_metadata.open('w') as f:
+            f.write(f"Width:  {x_dim*xy_res} microns ({x_dim})\n")
+            f.write(f"Height:  {y_dim*xy_res} microns ({y_dim})\n")
+            f.write(f"Depth:  {z_dim*z_res} microns ({z_dim})\n")
+            f.write(f"Voxel size: {xy_res}x{xy_res}x{z_res} micron^3\n")    
+
+def load_image_metadata_from_txt():
+    """Loads ./parameters/metadata* and returns xy_res, z_res, x_dim, y_dim, z_dim | None if file not found."""
+    file_paths = glob('parameters/metadata*')
+    if file_paths:
+        with open(file_paths[0], 'r') as file:
+            for line in file:
+                dim_match = re.compile(r'(Width|Height|Depth):\s+[\d.]+ microns \((\d+)\)').search(line)
+                if dim_match:
+                    dim = dim_match.group(1)
+                    dim_res = float(dim_match.group(2))
+                    if dim == 'Width':
+                        x_dim = int(dim_res)
+                    elif dim == 'Height':
+                        y_dim = int(dim_res)
+                    elif dim == 'Depth':
+                        z_dim = int(dim_res)
+
+                voxel_match = re.compile(r'Voxel size: ([\d.]+)x([\d.]+)x([\d.]+) micron\^3').search(line)
+                if voxel_match:
+                    xy_res = float(voxel_match.group(1))
+                    z_res = float(voxel_match.group(3))
+    else:
+        return None
+    return xy_res, z_res, x_dim, y_dim, z_dim
 
 @print_func_name_args_times()
 def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=None): 
@@ -252,42 +237,6 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
     except (FileNotFoundError, ValueError) as e:
         print(f"\n    [red bold]Error: {e}\n")
         import sys ; sys.exit()
-
-def save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata='parameters/metadata.txt'):
-    """Save metadata to .txt file"""
-    save_metadata = Path(save_metadata)
-    save_metadata.parent.mkdir(parents=True, exist_ok=True)
-    if not save_metadata.exists():
-        with save_metadata.open('w') as f:
-            f.write(f"Width:  {x_dim*xy_res} microns ({x_dim})\n")
-            f.write(f"Height:  {y_dim*xy_res} microns ({y_dim})\n")
-            f.write(f"Depth:  {z_dim*z_res} microns ({z_dim})\n")
-            f.write(f"Voxel size: {xy_res}x{xy_res}x{z_res} micron^3\n")    
-
-def load_image_metadata_from_txt():
-    """Loads ./parameters/metadata* and returns xy_res, z_res, x_dim, y_dim, z_dim | None if file not found."""
-    file_paths = glob('parameters/metadata*')
-    if file_paths:
-        with open(file_paths[0], 'r') as file:
-            for line in file:
-                dim_match = re.compile(r'(Width|Height|Depth):\s+[\d.]+ microns \((\d+)\)').search(line)
-                if dim_match:
-                    dim = dim_match.group(1)
-                    dim_res = float(dim_match.group(2))
-                    if dim == 'Width':
-                        x_dim = int(dim_res)
-                    elif dim == 'Height':
-                        y_dim = int(dim_res)
-                    elif dim == 'Depth':
-                        z_dim = int(dim_res)
-
-                voxel_match = re.compile(r'Voxel size: ([\d.]+)x([\d.]+)x([\d.]+) micron\^3').search(line)
-                if voxel_match:
-                    xy_res = float(voxel_match.group(1))
-                    z_res = float(voxel_match.group(3))
-    else:
-        return None
-    return xy_res, z_res, x_dim, y_dim, z_dim
 
 
 # Save images
