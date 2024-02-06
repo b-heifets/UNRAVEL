@@ -6,7 +6,7 @@ from pathlib import Path
 from rich.live import Live
 from rich.traceback import install
 from unravel_config import Configuration
-from unravel_img_tools import load_3D_img, resolve_relative_path
+from unravel_img_io import load_3D_img, resolve_relative_path
 from unravel_utils import get_samples, initialize_progress_bar, print_cmd_and_times
 
 

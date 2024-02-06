@@ -6,7 +6,6 @@ import nibabel as nib
 import numpy as np
 from datetime import datetime
 from pathlib import Path
-from unravel_utils import print_cmd
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Load subset of 3D image.czi')
@@ -39,7 +38,6 @@ def save_as_nifti(ndarray, output):
 
 def main():
     args = parse_args() 
-    print_cmd()
 
     czi_subset = load_czi_subset(args.input, args.channel, args.x_start, args.x_end, args.y_start, args.y_end, args.z_start, args.z_end)
 

@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 from rich.traceback import install
 from unravel_config import Configuration
-from unravel_img_tools import load_3D_img, save_as_nii
+from unravel_img_io import load_3D_img, save_as_nii
 from unravel_utils import print_cmd_and_times, print_func_name_args_times
 
 

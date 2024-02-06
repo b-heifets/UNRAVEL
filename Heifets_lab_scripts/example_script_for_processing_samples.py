@@ -6,7 +6,7 @@ from pathlib import Path
 from rich import print
 from rich.live import Live
 from unravel_config import Configuration
-from unravel_img_tools import load_3D_img
+from unravel_img_io import load_3D_img
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 from time import sleep # for example_function

@@ -4,7 +4,7 @@ import argparse
 from argparse import RawTextHelpFormatter
 from rich.traceback import install
 from unravel_config import Configuration
-from unravel_img_tools import load_image_metadata_from_txt
+from unravel_img_io import load_image_metadata_from_txt
 from unravel_utils import print_cmd_and_times
 
 

@@ -5,7 +5,8 @@ from argparse import RawTextHelpFormatter
 from rich.traceback import install
 from rich import print
 from unravel_config import Configuration
-from unravel_img_tools import load_3D_img, find_bounding_box, cluster_IDs, crop, save_as_nii
+from unravel_img_io import load_3D_img, save_as_nii
+from unravel_img_tools import find_bounding_box, cluster_IDs, crop
 from unravel_utils import print_cmd_and_times, load_text_from_file
 
 

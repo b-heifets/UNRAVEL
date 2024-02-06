@@ -5,7 +5,6 @@ import os
 import nibabel as nib
 import numpy as np
 import tifffile as tif
-from unravel_utils import print_cmd
 
 def parse_args():
     parser = argparse.ArgumentParser(description='''Converts image.nii.gz to tif series''')
@@ -31,7 +30,6 @@ def nii_to_tifs(nii_path, output_dir):
 
 def main():
     args = parse_args()
-    print_cmd()
     nii_to_tifs(args.input, args.output_dir)
 
 if __name__ == '__main__':

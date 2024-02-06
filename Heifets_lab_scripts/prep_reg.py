@@ -9,7 +9,8 @@ from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration 
-from unravel_img_tools import load_3D_img, resample_reorient, resolve_relative_path, save_as_tifs, save_as_nii
+from unravel_img_io import load_3D_img, resolve_relative_path, save_as_tifs, save_as_nii
+from unravel_img_tools import resample_reorient
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples
 
 def parse_args():

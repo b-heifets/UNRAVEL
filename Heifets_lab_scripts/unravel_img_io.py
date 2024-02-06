@@ -35,6 +35,7 @@ from unravel_utils import print_func_name_args_times
 
 
 # Load 3D image (load_3D_img()), get/save metadata, and return ndarray [with metadata]
+
 def return_3D_img(ndarray, return_metadata=False, return_res=False, xy_res=None, z_res=None, x_dim=None, y_dim=None, z_dim=None):
     """Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim). """
     if return_metadata:
@@ -54,7 +55,6 @@ def metadata(file_path, ndarray, return_res=False, return_metadata=False, xy_res
             save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata=save_metadata)
     return xy_res, z_res, x_dim, y_dim, z_dim
 
-@print_func_name_args_times()
 def extract_resolution(img_path):
     """Extract resolution from image metadata. Returns xy_res, z_res in microns."""
     xy_res, z_res = None, None
@@ -256,7 +256,6 @@ def save_as_nii(ndarray, output, xy_res, z_res, data_type):
     nifti_img.header.set_data_dtype(data_type)
     nib.save(nifti_img, str(output))    
     print(f"\n    Output: [default bold]{output}")
-
 
 @print_func_name_args_times()
 def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
