@@ -8,7 +8,7 @@ import pandas as pd
 from rich import print
 from rich.traceback import install
 from unravel_config import Configuration
-from unravel_img_tools import load_3D_img
+from unravel_img_io import load_3D_img
 from unravel_utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
