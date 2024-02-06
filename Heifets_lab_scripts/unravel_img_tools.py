@@ -11,7 +11,7 @@ The main functions are:
         - If return_res=True returns: ndarray, xy_res, z_res (resolution = voxel size in microns)
         - If return_metadata=True returns: ndarray, xy_res, z_res, x_dim, y_dim, z_dim (image dimensions)
         - If save_metadata=True saves metadata to parameters/metadata.txt
-    - Helper functions: resolve_path, extract_resolution, load_image_metadata_from_txt, save_metadata_to_file, handle_metadata, return_3D_img
+    - Helper functions: extract_resolution, load_image_metadata_from_txt, save_metadata_to_file, metadata, return_3D_img
 - Functions for saving ndarrays:
     - save_as_nii: Save a numpy array as a .nii.gz image.
     - save_as_tifs: Save a 3D ndarray as a series of tif images.
@@ -54,7 +54,7 @@ def return_3D_img(ndarray, return_metadata=False, return_res=False, xy_res=None,
         return ndarray, xy_res, z_res
     return ndarray
 
-def handle_metadata(file_path, ndarray, return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=None):
+def metadata(file_path, ndarray, return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=None):
     """Extract and handle metadata, including saving to a file if requested. Returns: xy_res, z_res, x_dim, y_dim, z_dim"""
     if return_res or return_metadata:
         if xy_res is None and z_res is None:
@@ -104,7 +104,7 @@ def load_czi(czi_path, channel, desired_axis_order="xyz", return_res=False, retu
     czi = CziFile(czi_path)
     ndarray = np.squeeze(czi.read_image(C=channel)[0])
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-    xy_res, z_res, x_dim, y_dim, z_dim = handle_metadata(czi_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
+    xy_res, z_res, x_dim, y_dim, z_dim = metadata(czi_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
     
 @print_func_name_args_times()
@@ -124,7 +124,7 @@ def load_tifs(tif_path, desired_axis_order="xyz", return_res=False, return_metad
             tifs_stacked.append(load_single_tif(tif_file))
     ndarray = np.stack(tifs_stacked, axis=0)
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-    xy_res, z_res, x_dim, y_dim, z_dim = handle_metadata(tif_files[0], ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
+    xy_res, z_res, x_dim, y_dim, z_dim = metadata(tif_files[0], ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
 @print_func_name_args_times()
@@ -135,7 +135,7 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
     ndarray = np.asanyarray(img.dataobj).astype(data_dtype)
     ndarray = np.squeeze(ndarray)
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
-    xy_res, z_res, x_dim, y_dim, z_dim = handle_metadata(nii_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
+    xy_res, z_res, x_dim, y_dim, z_dim = metadata(nii_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
     
 def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None):
@@ -146,24 +146,8 @@ def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metada
         print(f"\n    Loading {full_res_dataset_name} as ndarray")
         ndarray = dataset[:]  # Load the full res image into memory (if not enough RAM, chunck data [e.g., w/ dask array])
         ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
-        xy_res, z_res, x_dim, y_dim, z_dim = handle_metadata(hdf5_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
+        xy_res, z_res, x_dim, y_dim, z_dim = metadata(hdf5_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
-    
-def resolve_path(file_path, extensions):
-    """Returns the path to the first matching file in dir or file itself if it matches the extensions."""
-    path = Path(file_path)
-    if path.is_dir():
-        for extension in extensions:
-            sorted_files = sorted(path.glob(f"*{extension}"))
-            first_match = next(iter(sorted_files), None)
-            if first_match:
-                return first_match
-    else:
-        # If it's a file, check if it matches any of the extensions
-        for extension in extensions:
-            if str(path).endswith(extension):
-                return path
-    return None
 
 def resolve_relative_path(sample_path, rel_path_or_glob_pattern, make_parents=False):
     """Resolve and return the path to a file or directory relative to the given sample_path.
@@ -241,36 +225,39 @@ def resolve_relative_path(sample_path, rel_path_or_glob_pattern, make_parents=Fa
     return None
 
 @print_func_name_args_times()
-def load_3D_img(file_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=None): 
-    """Load <file_path> (.czi, .nii.gz, or .tif).
-    file_path can be path to image file or dir (uses first *.czi, *.tif, or *.nii.gz match)
+def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=None): 
+    """Load path to.czi, .nii.gz, .ome.tif, tifs_dir, tifs_dir/first.tif, .h5).
     Default: desired_axis_order=xyz (other option: axis_order="zyx")
     Default: returns: ndarray
-    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)
+    If return_res=True, returns: ndarray, xy_res, z_res (resolution in um)
+    If return_metadata=True, returns ndarray, xy_res, z_res, x_dim, y_dim, z_dim
     """ 
 
-    # Resolve the file path to the first matching file
-    path = resolve_path(file_path, ['.czi', '.tif', '.nii.gz'])
-    if not Path(path).exists():
-        raise FileNotFoundError(f"No compatible image files found in {file_path}. Supported file types: .czi, .tif, .nii.gz")
-    
-    if str(path).endswith('.czi'):
-        print(f"\n    [default]Loading channel {channel} from {path} (channel 0 is the first channel)")
-    else: 
-        print(f"\n    [default]Loading {path}")
+    # If file_path points to dir containing tifs, resolve path to first .tif
+    if img_path.is_dir():
+        sorted_files = sorted(img_path.glob(f"*.tif"))
+        img_path = next(iter(sorted_files), None) # first match
 
-    # Load image based on file type and optionally return resolutions
+    if not Path(img_path).exists():
+        raise FileNotFoundError(f"No compatible image files found in {img_path}. Supported file types: .czi, .tif, .nii.gz")
+    
+    if str(img_path).endswith('.czi'):
+        print(f"\n    [default]Loading channel {channel} from {img_path} (channel 0 is the first channel)")
+    else: 
+        print(f"\n    [default]Loading {img_path}")
+
+    # Load image based on file type and optionally return resolutions and dimensions
     try:
-        if str(path).endswith('.czi'):
-            return load_czi(path, channel, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
-        elif str(path).endswith('.ome.tif') or str(path).endswith('.tif'):
-            return load_tifs(path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res, parallel_loading=True)
-        elif str(path).endswith('.nii.gz'):
-            return load_nii(path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
-        elif str(path).endswith('.h5'):
-            return load_h5(path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
+        if str(img_path).endswith('.czi'):
+            return load_czi(img_path, channel, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
+        elif str(img_path).endswith('.ome.tif') or str(img_path).endswith('.tif'):
+            return load_tifs(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res, parallel_loading=True)
+        elif str(img_path).endswith('.nii.gz'):
+            return load_nii(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
+        elif str(img_path).endswith('.h5'):
+            return load_h5(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
         else:
-            raise ValueError(f"Unsupported file type: {path.suffix}. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5")
+            raise ValueError(f"Unsupported file type: {img_path.suffix}. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5")
     except (FileNotFoundError, ValueError) as e:
         print(f"\n    [red bold]Error: {e}\n")
         import sys ; sys.exit()

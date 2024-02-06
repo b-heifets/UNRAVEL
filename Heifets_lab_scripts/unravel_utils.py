@@ -33,6 +33,8 @@ def get_samples(dir_list=None, dir_pattern="sample??"):
         ]
     if not samples:
         samples.append('.')
+    if samples == ['.']:
+        samples[0] = Path.cwd().name
     return sorted(samples)
 
 
