@@ -9,11 +9,11 @@ from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration 
-from unravel_img_tools import load_3D_img, resample, resample_reorient, resolve_relative_path, save_as_tifs, save_as_nii
+from unravel_img_tools import load_3D_img, resample, resolve_relative_path, save_as_tifs, save_as_nii
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads full resolution autofluo image, resamples (e.g., to 50 um for registration), reorients, saves as .nii.gz and tifs', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='Loads full resolution autofluo image, resamples (e.g., to 50 um for registration), saves as .nii.gz and tifs', formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Pattern (sample??) for dirs to process. Else: use cwd', default='sample??', action=SM)
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='Full res image input path relative to ./sample??', required=True, action=SM)
@@ -67,10 +67,7 @@ def main():
             img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res, save_metadata=metadata_path)
 
             # Resample autofluo image (for registration)
-            ### img_resampled = resample(img, xy_res, z_res, args.reg_res, zoom_order=args.zoom_order)
-
-            # Resample and reorient image
-            img_resampled = resample_reorient(img, xy_res, z_res, args.reg_res, zoom_order=args.zoom_order)
+            img_resampled = resample(img, xy_res, z_res, args.reg_res, zoom_order=args.zoom_order)
 
             # Save autofluo image as tif series (for brain_mask.py)
             tif_dir = Path(str(output).replace('.nii.gz', '_tifs'))
