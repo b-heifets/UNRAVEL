@@ -15,7 +15,7 @@ from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samp
 def parse_args():
     parser = argparse.ArgumentParser(description='Loads full resolution autofluo image, resamples (e.g., to 50 um for registration), saves as .nii.gz and tifs', formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Pattern (sample??) for dirs to process. Else: use cwd', default='sample??', action=SM)
-    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='Full res image input path relative to ./sample??', required=True, action=SM)
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
     parser.add_argument('-o', '--output', help='Output path. Default: reg_input/autofl_50um.nii.gz', default="reg_input/autofl_50um.nii.gz", action=SM)

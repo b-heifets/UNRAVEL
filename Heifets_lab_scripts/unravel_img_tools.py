@@ -56,6 +56,7 @@ def return_3D_img(ndarray, return_metadata=False, return_res=False, xy_res=None,
 
 def metadata(file_path, ndarray, return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=None):
     """Extract and handle metadata, including saving to a file if requested. Returns: xy_res, z_res, x_dim, y_dim, z_dim"""
+    x_dim, y_dim, z_dim = None, None, None
     if return_res or return_metadata:
         if xy_res is None and z_res is None:
             xy_res, z_res = extract_resolution(file_path)
@@ -99,7 +100,7 @@ def extract_resolution(img_path):
     return xy_res, z_res
 
 @print_func_name_args_times()
-def load_czi(czi_path, channel, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
+def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
     """Loads image.czi channel. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)]."""
     czi = CziFile(czi_path)
     ndarray = np.squeeze(czi.read_image(C=channel)[0])
@@ -128,7 +129,7 @@ def load_tifs(tif_path, desired_axis_order="xyz", return_res=False, return_metad
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
 @print_func_name_args_times()
-def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None):
+def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
     """Load a .nii.gz image and return the ndarray. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)]."""
     img = nib.load(nii_path)
     data_dtype = img.header.get_data_dtype()
@@ -138,7 +139,7 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(nii_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
     
-def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None):
+def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
     """Load full res image from an HDF5 image (.h5). Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)]."""
     with h5py.File(hdf5_path, 'r') as f:
         full_res_dataset_name = next(iter(f.keys())) # Assumes first dataset = full res image
@@ -234,12 +235,13 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
     """ 
 
     # If file_path points to dir containing tifs, resolve path to first .tif
+    img_path = Path(img_path)
     if img_path.is_dir():
         sorted_files = sorted(img_path.glob(f"*.tif"))
         img_path = next(iter(sorted_files), None) # first match
 
-    if not Path(img_path).exists():
-        raise FileNotFoundError(f"No compatible image files found in {img_path}. Supported file types: .czi, .tif, .nii.gz")
+    if not img_path.exists():
+        raise FileNotFoundError(f"No compatible image files found in {img_path}. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5")
     
     if str(img_path).endswith('.czi'):
         print(f"\n    [default]Loading channel {channel} from {img_path} (channel 0 is the first channel)")
@@ -351,11 +353,10 @@ def resample_reorient(ndarray, xy_res, z_res, res, zoom_order=1): # Mimics MIRAC
 @print_func_name_args_times()
 def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None, args=None):
     """Segment tif series with Ilastik."""
-    tif_dir = str(Path(tif_dir).resolve())
+    tif_dir = str(tif_dir)
     tif_list = sorted(glob(f"{tif_dir}/*.tif"))
-    ilastik_project = str(Path(ilastik_project).resolve())
-    output_dir = str(Path(output_dir).resolve())
-    output_dir_Path = Path(output_dir).resolve()
+    ilastik_project = str(ilastik_project)
+    output_dir_ = str(output_dir)
     cmd = [
         'run_ilastik.sh',
         '--headless',
@@ -364,7 +365,7 @@ def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None,
         '--output_format', 'tif',
         '--output_filename_format', f'{output_dir}/{{nickname}}.tif',
     ] + tif_list
-    if not output_dir_Path.exists():
+    if not Path(output_dir_).exists():
         if ilastik_log == None:
             subprocess.run(cmd)
         else:
