@@ -10,7 +10,7 @@ from rich.traceback import install
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration 
 from unravel_img_io import load_3D_img, resolve_relative_path, save_as_tifs, save_as_nii
-from unravel_img_tools import resample_reorient
+from unravel_img_tools import resample, reorient_for_raw_to_nii_conv
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples
 
 def parse_args():
@@ -68,7 +68,8 @@ def main():
             img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res, save_metadata=metadata_path)
 
             # Resample and reorient autofluo image (for registration)
-            img_resampled = resample_reorient(img, xy_res, z_res, args.reg_res, zoom_order=args.zoom_order)
+            img_resampled = resample(img, xy_res, z_res, args.reg_res, zoom_order=args.zoom_order)
+            img_resampled = reorient_for_raw_to_nii_conv(img_resampled)
 
             # Save autofluo image as tif series (for brain_mask.py)
             tif_dir = Path(str(output).replace('.nii.gz', '_tifs'))

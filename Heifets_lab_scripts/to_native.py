@@ -10,7 +10,7 @@ from rich.live import Live
 from rich.traceback import install
 from unravel_config import Configuration 
 from unravel_img_io import load_3D_img, save_as_tifs, save_as_nii
-from unravel_img_tools import resample_reorient
+from unravel_img_tools import resample, reorient_for_raw_to_nii_conv
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
@@ -70,7 +70,8 @@ def prep_reg(sample, args):
         return
 
     # Resample and reorient image
-    img_reoriented = resample_reorient(img, xy_res, z_res, args.res, zoom_order=args.zoom_order)
+    img_resampled = resample(img, xy_res, z_res, args.res, zoom_order=args.zoom_order)
+    img_reoriented = reorient_for_raw_to_nii_conv(img_resampled)
 
     # Save autofl image as tif series (for brain_mask.py)
     tif_dir_output = Path(str(autofl_img_output).replace('.nii.gz', '_tifs')) # e.g., ./sample01/reg_input/autofl_50um_tifs

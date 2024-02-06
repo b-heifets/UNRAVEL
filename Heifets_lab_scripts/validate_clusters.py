@@ -9,8 +9,8 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 from unravel_config import Configuration 
-from unravel_img_io import load_3D_img, save_as_tifs, save_as_nii
-from unravel_img_tools import resample_reorient, cluster_IDs
+from unravel_img_io import load_3D_img
+from unravel_img_tools import cluster_IDs
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 from region_volumes import region_volumes
 

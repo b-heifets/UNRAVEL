@@ -11,7 +11,7 @@ from rich.live import Live
 from rich.traceback import install
 from unravel_config import Configuration
 from unravel_img_io import load_3D_img, save_as_nii
-from unravel_img_tools import resample_reorient, pad_image, reorient_ndarray2
+from unravel_img_tools import resample, reorient_for_raw_to_nii_conv, pad_image, reorient_ndarray2
 from unravel_utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
 
 def parse_args():
@@ -160,7 +160,8 @@ def main():
                 return
 
             # Resample and reorient image
-            img_res_reort = resample_reorient(img, xy_res, z_res, args.res, zoom_order=args.zoom_order) 
+            img_res = resample(img, xy_res, z_res, args.res, zoom_order=args.zoom_order) 
+            img_res_reort = reorient_for_raw_to_nii_conv(img_res)
             
             # Warp to atlas space
             warp_to_atlas_space(sample_path, img_res_reort, args.ort_code)

@@ -2,7 +2,7 @@
 
 """ This module contains functions processing 3D images: 
     - resample: Resample a 3D ndarray.
-    - resample_reorient: Resample and reorient an ndarray for registration or warping to atlas space.
+    - reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space
     - ilastik_segmentation: Segment tif series with Ilastik.
     - pad_image: Pad an ndarray by a specified percentage.
     - reorient_ndarray: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).
@@ -33,12 +33,11 @@ def resample(ndarray, xy_res, z_res, res, zoom_order=1):
     return img_resampled
 
 @print_func_name_args_times()
-def resample_reorient(ndarray, xy_res, z_res, res, zoom_order=1): # Mimics MIRACL's tif to .nii.gz conversion
-    """Resample and reorient an ndarray for registration or warping to atlas space."""
-    img_resampled = resample(ndarray, xy_res, z_res, res, zoom_order=zoom_order)
-    img_reoriented = np.einsum('zyx->xzy', img_resampled)
-    img_reoriented = np.transpose(img_reoriented, (2, 1, 0))
-    return img_reoriented
+def reorient_for_raw_to_nii_conv(ndarray):
+    """Reorient resampled ndarray for registration or warping to atlas space 
+    (mimics MIRACL's tif to .nii.gz conversion)"""
+    img_reoriented = np.einsum('zyx->xzy', ndarray)
+    return np.transpose(img_reoriented, (2, 1, 0))
 
 @print_func_name_args_times()
 def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None, args=None):

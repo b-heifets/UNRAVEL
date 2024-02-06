@@ -11,7 +11,7 @@ from rich.live import Live
 from rich.traceback import install
 from unravel_config import Configuration
 from unravel_img_io import load_3D_img
-from unravel_img_tools import resample_reorient, pad_image, rolling_ball_subtraction_opencv_parallel, reorient_ndarray, save_as_nii
+from unravel_img_tools import resample, reorient_for_raw_to_nii_conv, pad_image, rolling_ball_subtraction_opencv_parallel, reorient_ndarray, save_as_nii
 from unravel_utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
 
 def parse_args():
@@ -69,7 +69,8 @@ def rb_resample_reorient_warp(sample_path, args):
     rb_img = rolling_ball_subtraction_opencv_parallel(img, radius=args.rb_radius, threads=args.threads)     
 
     # Resample and reorient image
-    rb_img_res_reort = resample_reorient(rb_img, xy_res, z_res, args.res, zoom_order=args.zoom_order) 
+    rb_img_res = resample(rb_img, xy_res, z_res, args.res, zoom_order=args.zoom_order) 
+    rb_img_res_reort = reorient_for_raw_to_nii_conv(rb_img_res)
     save_as_nii(rb_img_res_reort, Path(sample_path, "rb_img_res_reort.nii.gz"), args.res, args.res, np.uint16)
 
     # Reorient again
