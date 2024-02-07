@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import functools
+import re
 import numpy as np
 import os
 import sys
@@ -17,41 +18,45 @@ from rich.text import Text
 
 
 # Sample list 
-
 def get_samples(sample_dir_list=None, sample_dir_pattern="sample??", exp_dir_paths=None):
     """Return a list of full paths to sample folders from the provided directory list or experiment directories.
-    If no sample folders are found, return the current directory."""
+    If no sample folders are found, use the current working directory."""
     samples = []
+
+    # Ensure sample_dir_list is a list
+    if isinstance(sample_dir_list, str):
+        sample_dir_list = [sample_dir_list]  # Convert string to list
 
     # If sample_dir_list is provided, add full paths of directories from it that exist.
     if sample_dir_list:
         samples += [Path(dir_name).resolve() for dir_name in sample_dir_list if Path(dir_name).is_dir()]
 
-    # If exp_dir_paths is provided, search for sample folders within each experiment directory and add their full paths.
-    if exp_dir_paths:
+    # If exp_dir_paths is provided and sample_dir_list is not provided or empty, search for sample folders within each experiment directory and add their full paths.
+    if exp_dir_paths and not sample_dir_list:
         for exp_dir in exp_dir_paths:
             exp_path = Path(exp_dir)
             if exp_path.is_dir():
-                samples += [
+                found_samples = [
                     d.resolve() for d in exp_path.iterdir()
                     if d.is_dir() and fnmatch(d.name, sample_dir_pattern)
                 ]
+                found_samples = sorted(found_samples)
+                samples.extend(found_samples)
 
-    # If no sample_dir_list or exp_dir_paths provided, or no samples found in them, search in the current working directory and add full paths.
+    # If no sample_dir_list or exp_dir_paths provided, or no samples found in them, use the current working directory.
     if not samples:
         cwd = Path.cwd()
-        samples += [
-            (d if d.name != cwd.name else cwd).resolve() # Resolve the path of matching dirs 
-            for d in Path('.').iterdir() # Iterate over dirs in the current directory
-            if d.is_dir() and fnmatch(d.name, sample_dir_pattern) # Add dirs that match the pattern to samples
+        found_samples = [
+            (d if d.name != cwd.name else cwd).resolve()
+            for d in cwd.iterdir()
+            if d.is_dir() and fnmatch(d.name, sample_dir_pattern)
         ]
+        if found_samples:  # Found matching directories in the current working directory
+            samples.extend(found_samples)
+        else:  # No matching directories found, use the cwd as the fallback
+            samples.append(cwd.resolve())  # Ensure cwd is appended as a Path object, not a list
 
-    # Replace single '.' with the full path of the current directory, if necessary.
-    if len(samples) == 1 and samples[0].name == '.':
-        samples[0] = cwd.resolve()
-
-    return sorted(samples)
-
+    return samples 
 
 # Progress bar
 

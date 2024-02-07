@@ -19,7 +19,7 @@ from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samp
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Warps cluster index from atlas space to tissue space, crops clusters and applies segmentation mask', formatter_class=SuppressMetavar)
-    parser.add_argument('-e','--exp_paths', help='List of experiment dir paths w/ sample?? folders', nargs='*', default=None, action=SM)
+    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? folders', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern (sample??) for dirs to process. Else: use cwd', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
 
