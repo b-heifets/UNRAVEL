@@ -18,8 +18,9 @@ DRAFT IN PROGRESS
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Registers average template brain/atlas to downsampled autofl brain. Check accuracy w/ ./reg_final outputs in itksnap or fsleyes')
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, metavar='')
+    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
+    parser.add_argument('-s', '--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='path/img.nii.gz', default=1, metavar='')
     parser.add_argument('-oc', '--ort_code', help='3 letter orientation code (A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Interior; Default: ALI)', default='ALI', metavar='')
     parser.add_argument('-an', '--atlas_name', help='Name of atlas (Default: gubra)', default="gubra", metavar='')
