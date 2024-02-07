@@ -16,27 +16,44 @@ from rich.progress import Progress, TextColumn, SpinnerColumn, BarColumn, TimeEl
 from rich.text import Text
 
 
-######## Sample list ########
+# Sample list 
 
-def get_samples(dir_list=None, dir_pattern="sample??"):
-    """Return a list of sample folders or the current directory if no sample folders are found."""
-    if dir_list:
-        samples = [Path(dir_name).name for dir_name in dir_list if Path(dir_name).is_dir()]
-    else:
-        current_dir = Path('.').resolve().name
-        samples = [
-            d.name if d.name != current_dir else '.'
-            for d in Path('.').iterdir()
-            if d.is_dir() and fnmatch(d.name, dir_pattern)
-        ]
+def get_samples(sample_dir_list=None, sample_dir_pattern="sample??", exp_dir_paths=None):
+    """Return a list of sample folders from the provided directory list or experiment directories.
+    If no sample folders are found, return the current directory."""
+    samples = []
+
+    # If sample_dir_list is provided, add directories from it that exist.
+    if sample_dir_list:
+        samples += [Path(dir_name).name for dir_name in sample_dir_list if Path(dir_name).is_dir()]
+
+    # If exp_dir_paths is provided, search for sample folders within each experiment directory.
+    if exp_dir_paths:
+        for exp_dir in exp_dir_paths:
+            exp_path = Path(exp_dir)
+            if exp_path.is_dir():
+                samples += [
+                    d.name for d in exp_path.iterdir()
+                    if d.is_dir() and fnmatch(d.name, sample_dir_pattern)
+                ]
+
+    # If no sample_dir_list or exp_dir_paths provided, or no samples found in them, search in the current working directory.
     if not samples:
-        samples.append('.')
+        cwd = Path.cwd()
+        samples += [
+            d.name if d.name != cwd.name else '.' 
+            for d in Path('.').iterdir()
+            if d.is_dir() and fnmatch(d.name, sample_dir_pattern)
+        ]
+
+    # Replace single '.' with the current directory name, if necessary.
     if samples == ['.']:
-        samples[0] = Path.cwd().name
+        samples[0] = cwd.name
+
     return sorted(samples)
 
 
-######## Progress bar ########
+# Progress bar
 
 class CustomMofNCompleteColumn(MofNCompleteColumn):
     def render(self, task) -> Text:
@@ -81,7 +98,7 @@ def initialize_progress_bar(num_of_items_to_iterate, task_message="[red]Processi
     return progress, task_id
 
 
-######## Main function decorator ########
+# Main function decorator
 
 def print_cmd_and_times(func):
     """A combined decorator to print the script name, arguments, start/end times, and use rich traceback."""
@@ -108,7 +125,7 @@ def print_cmd_and_times(func):
     return wrapper
 
 
-######## Function decorator ########
+# Function decorator
 
 def get_dir_name_from_args(args, kwargs):
     """
