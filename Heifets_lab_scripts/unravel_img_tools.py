@@ -167,7 +167,7 @@ def rolling_ball_subtraction_opencv_parallel(ndarray, radius, threads=8):
     return bkg_subtracted_img
 
 print_func_name_args_times()
-def cluster_IDs(ndarray, min_extent=100, print_IDs=False, print_sizes=False):
+def cluster_IDs(ndarray, min_extent=1, print_IDs=False, print_sizes=False):
     """Prints cluster IDs [and sizes] for clusters > minextent voxels"""
 
     # Get unique intensities and their counts
