@@ -30,6 +30,7 @@ def parse_args():
     parser.add_argument('-o', '--output', help='rel_path/clusters_info.csv (Default: clusters/<cluster_index_dir>/cluster_data.csv)', default=None, action=SM)
 
     # Optional warp_to_native() args
+    parser.add_argument('-n', '--native_idx', help='Load/save native cluster index from/to rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
     parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz. Default: reg_final/clar_downsample_res25um.nii.gz', default="reg_final/clar_downsample_res25um.nii.gz", action=SM)
     parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], genericLabel, linear)', default="nearestNeighbor", action=SM)
     parser.add_argument('-t', '--transforms', help="Name of dir w/ transforms. Default: clar_allen_reg", default="clar_allen_reg", action=SM)
@@ -110,10 +111,7 @@ def main():
     
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
-        for sample in samples:
-
-            # Resolve path to sample folder
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+        for sample_path in samples:
             
             # Define final output and check if it exists
             cluster_index_dir = Path(args.moving_img).parent.name
@@ -133,11 +131,14 @@ def main():
                 d_type = "uint16"
             
             # Load cluster index and convert to ndarray 
-            native_cluster_index = warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.reg_res, args.fixed_res, args.interpol, args.metadata, args.legacy, args.zoom_order, data_type=d_type)
-
+            if Path(args.native_idx).exists():
+                native_cluster_index = load_3D_img(resolve_relative_path(sample_path, args.native_idx))
+            else:
+                native_cluster_index = warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.reg_res, args.fixed_res, args.interpol, args.metadata, args.legacy, args.zoom_order, d_type, output=args.native_idx)
+            
             # Get clusters to process
             if args.clusters == "all":
-                clusters = cluster_IDs(args.moving_img)
+                clusters = cluster_IDs(rev_cluster_index)
             else:
                 clusters = [args.clusters]
             clusters = [int(cluster) for cluster in clusters]
@@ -146,11 +147,13 @@ def main():
             native_cluster_index_cropped, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax = crop_outer_space(native_cluster_index, output_path.parent)
 
             # Load image metadata from .txt
-            xy_res, z_res = load_image_metadata_from_txt(args.metadata)
+            xy_res, z_res, _, _, _ = load_image_metadata_from_txt(args.metadata)
+            if xy_res is None or z_res is None: 
+                print("    [red bold]./sample??/parameters/metadata.txt missing. cd to sample?? dir and run: metadata.py")
 
             # Load cell segmentation .nii.gz
-            if Path(args.seg).is_dir():
-                seg_img = load_3D_img(Path(sample_path, args.seg, f"{sample}_{args.seg}.nii.gz"))
+            if Path(sample_path, args.seg).is_dir():
+                seg_img = load_3D_img(Path(sample_path, args.seg, f"{sample_path.name}_{args.seg}.nii.gz"))
             else:
                 seg_img = load_3D_img(resolve_relative_path(sample_path, args.seg))
 

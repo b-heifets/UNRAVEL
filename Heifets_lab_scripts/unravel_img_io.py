@@ -219,12 +219,14 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
 
     # If file_path points to dir containing tifs, resolve path to first .tif
     img_path = Path(img_path)
+
     if img_path.is_dir():
         sorted_files = sorted(img_path.glob(f"*.tif"))
-        img_path = next(iter(sorted_files), None) # first match
+        if sorted_files: 
+            img_path = next(iter(sorted_files), None) 
 
     if not img_path.exists():
-        raise FileNotFoundError(f"No compatible image files found in {img_path}. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5")
+        raise FileNotFoundError(f"No compatible image files found in {img_path}. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
     
     if str(img_path).endswith('.czi'):
         print(f"\n    [default]Loading channel {channel} from {img_path} (channel 0 is the first channel)")

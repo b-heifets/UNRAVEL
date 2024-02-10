@@ -20,7 +20,7 @@ def parse_args():
     parser.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from atlas space', required=True, action=SM)
     parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., reg_final/clar_downsample_res25um.nii.gz)', required=True, action=SM)
     parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], genericLabel, linear)', default="nearestNeighbor", action=SM)
-    parser.add_argument('-o', '--output', help='Save as path/native_image.zarr (fast) or path/native_image.nii.gz if provided', action=SM)
+    parser.add_argument('-o', '--output', help='Save as path/native_image.zarr (fast) or path/native_image.nii.gz if provided', default=None, action=SM)
     parser.add_argument('-d', '--dtype', help='Desired dtype for full res output (uint8, uint16). Default: moving_img.dtype', action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
     parser.add_argument('-rp', '--reg_o_prefix', help='Registration output prefix. Default: allen_clar_ants', default='allen_clar_ants', action=SM)
@@ -78,7 +78,7 @@ def scale_to_full_res(ndarray, full_res_dims, zoom_order=0):
     return scaled_img
 
 @print_func_name_args_times()
-def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_prefix, reg_input_res, fixed_img_res, interpol, metadata_path, legacy, zoom_order, data_type):
+def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_prefix, reg_input_res, fixed_img_res, interpol, metadata_path, legacy, zoom_order, data_type, output):
     """Warp image from atlas space to full res native space"""
     # Load images for warping
     atlas_space_ants_img = ants.image_read(moving_img_path)
@@ -141,23 +141,23 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
     # Scale to full resolution
     native_img = scale_to_full_res(cropped_img, original_dimensions, zoom_order)
 
+    # Save as .nii.gz or .zarr
+    if output:
+        if str(output).endswith(".zarr"):
+            save_as_zarr(native_img, output)
+        elif str(output).endswith(".nii.gz"):
+            xy_res, z_res, _, _, _ = load_image_metadata_from_txt(args.metadata)
+            save_as_nii(native_img, output, xy_res, z_res, native_img.dtype)
+        else: 
+            print(f"\n    [red bold]Output path does not end with .zarr or .nii.gz\n") 
+
+
     return native_img
 
 
 def main():
 
-    native_img = warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.reg_res, args.fixed_res, args.interpol, args.metadata, args.legacy, args.zoom_order, args.dtype)
-
-    # Save as .nii.gz or .zarr
-    if args.output:
-        if str(args.output).endswith(".zarr"):
-            save_as_zarr(native_img, args.output)
-        elif str(args.output).endswith(".nii.gz"):
-            xy_res, z_res, _, _, _ = load_image_metadata_from_txt(args.metadata)
-            save_as_nii(native_img, args.output, xy_res, z_res, native_img.dtype)
-        else: 
-            print(f"\n    [red bold]Output path does not end with .zarr or .nii.gz\n") 
-
+    warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.reg_res, args.fixed_res, args.interpol, args.metadata, args.legacy, args.zoom_order, args.dtype, args.output)
 
 if __name__ == '__main__':
     install()

@@ -25,13 +25,11 @@ def parse_args():
     parser.epilog = """Run this from an experiment or sample?? folder if using a relative input path. 
 
 Usage:    metadata.py -i rel_path/full_res_img (can use glob patterns)
+          metadata.py -i tif_dir -x 3.5232 -z 6 # use this if metadata not extractable
 
 Inputs: .czi, .nii.gz, or tif series (path should be relative to ./sample??)
 Outputs: ./parameters/metadata.txt (path should be relative to ./sample??)
-
-Pass in xy_res and z_res if they are not obtainable from the metadata.
-
-Fast: pass in dir name for tif series, -x, and -z"""    
+"""    
     return parser.parse_args()
 
 
