@@ -10,28 +10,41 @@ from rich.live import Live
 from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
+from to_native5 import warp_to_native
 from unravel_config import Configuration 
 from unravel_img_io import load_3D_img, load_image_metadata_from_txt, resolve_relative_path, save_as_nii
-from unravel_img_tools import cluster_IDs, resample
+from unravel_img_tools import cluster_IDs
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Generated cropped images for each cluster and applies segmentation mask', formatter_class=SuppressMetavar)
-    parser.add_argument('--exp_dirs', help='List of dirs containing sample?? folders', nargs='*', default=None, action=SM)
+    parser = argparse.ArgumentParser(description='Warps cluster index from atlas space to tissue space, crops clusters and applies segmentation mask', formatter_class=SuppressMetavar)
+    parser.add_argument('-e','--exp_paths', help='List of experiment dir paths w/ sample?? folders', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern (sample??) for dirs to process. Else: use cwd', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--index', help='path/rev_cluster_index.nii.gz (e.g., from fdr.sh)', required=True, action=SM) 
+    parser.add_argument('-d', '--dirs', help='List of sample?? dirs to process. Overrides --pattern', nargs='*', default=None, action=SM)
+
+    # warp_to_native() args
+    parser.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from atlas space', required=True, action=SM)
+    parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., reg_final/clar_downsample_res25um.nii.gz)', required=True, action=SM)
+    parser.add_argument('-t', '--transforms', help="Name of dir w/ transforms. Default: clar_allen_reg", default="clar_allen_reg", action=SM)
+    parser.add_argument('-p', '--reg_o_prefix', help='Registration output prefix. Default: allen_clar_ants', default='allen_clar_ants', action=SM)
+    parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
+    parser.add_argument('-fr', '--fixed_res', help='Resolution of the fixed image. Default: 25', default='25',type=int, action=SM)
+    parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
+    parser.add_argument('-l', '--legacy', help='Mode for backward compatibility (accounts for raw to nii reorienting & file saving)', action='store_true', default=False)
+    
+    # native_clusters() args
+    parser.add_argument('-i', '--index', help='path/atlas_space_rev_cluster_index.nii.gz (e.g., from fdr.sh)', required=True, action=SM) 
     parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image (e.g., cfos_seg_ilastik_1)', action=SM)
-    parser.add_argument('-o', '--output', help='Output folder name (e.g., stats_map_q0.05).', default=None, action=SM)
+    parser.add_argument('-o', '--output', help='./sample??/output folder name (e.g., stats_map_q0.05...).', default=None, action=SM)
     parser.add_argument('-cm', '--c_masks', help='Save cluster_masks', action='store_true', default=False)
     parser.add_argument('-a', '--atlas', help='path/img.nii.gz. Default: gubra_ano_split_25um.nii.gz', default="/usr/local/unravel/atlases/gubra/gubra_ano_split_25um.nii.gz", action=SM)
     parser.add_argument('-c', '--clusters', help='Clusters to process: all or 1 3 4. Default: all', nargs='*', default='all', action=SM)
-    parser.add_argument('-m', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
+    parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Run from a sample?? folder.
 
-Example usage:     native_clusters2.py 
+Example usage:     native_clusters2.py -m <path/image_to_warp_from_atlas_space.nii.gz> -f <path/fixed_image.nii.gz> [-l]
 
 Inputs: sample??/clusters/<cluster_index_dir>/native_cluster_index/<rev_cluster_index.nii.gz>
 
@@ -40,17 +53,14 @@ Outputs: <seg_dir>_cropped/, bounding_boxes/, clusters_cropped/, and cluster_vol
 Next script: cluster_cell_counts.py"""
     return parser.parse_args()
 
+
 # TODO: If still slow, consider loading image subsets corresponding to clusters. could use resolve_relative_path to allow for relative paths with glob patterns
 
-def bbox_crop_vol(i, sample_path, cluster_index_dir, native_rev_cluster_index_img_cropped, seg_cropped, xy_res, z_res, seg_dir, c_masks=False):
+def bbox_crop_vol(i, sample_path, cluster_index_dir, native_rev_cluster_index_img_cropped, seg_cropped, xy_res, z_res, seg_dir, legacy=False):
     #Define path/outputs:
     sample = sample_path.name
     output_path = Path(sample_path, "clusters", cluster_index_dir)
-    cluster_cropped_output = Path(output_path, "clusters_cropped", f"crop_{sample}_native_cluster_{i}.nii.gz")
-    bbox_output = Path(output_path, "bounding_boxes", f"bounding_box_{sample}_cluster_{i}.txt")
-    cluster_volumes_output =  Path(output_path, "cluster_volumes", f"{sample}_cluster_{i}_volume_in_cubic_mm.txt")
-    seg_in_cluster_cropped_output = Path(output_path, f"{seg_dir}_cropped", "3D_counts", f"crop_{seg_dir}_{sample}_native_cluster_{i}_3dc/crop_{seg_dir}_{sample}_native_cluster_{i}.nii.gz")
-
+    
     #Get bounding box for slicing/cropping each cluster from index: xmin:xmax,ymin:ymax,zmin:zmax
     print(str(f'  Get cluster_{i} bbox '+datetime.now().strftime("%H:%M:%S")))
     index = np.where(native_rev_cluster_index_img_cropped == i) #1D arrays of indices of elements == i for each axis
@@ -60,6 +70,7 @@ def bbox_crop_vol(i, sample_path, cluster_index_dir, native_rev_cluster_index_im
     ymax = int(max(index[1])+1)
     zmin = int(min(index[2])) 
     zmax = int(max(index[2])+1)
+    bbox_output = Path(output_path, "bounding_boxes", f"bounding_box_{sample}_cluster_{i}.txt")
     with open(bbox_output, "w") as file:
         file.write(f"{xmin}:{xmax}, {ymin}:{ymax}, {zmin}:{zmax}")
 
@@ -71,18 +82,19 @@ def bbox_crop_vol(i, sample_path, cluster_index_dir, native_rev_cluster_index_im
     print(str(f'  Get cluster_{i} volume (mm^3) '+datetime.now().strftime("%H:%M:%S")))
     # ((xy_res_in_um^2*)*xy_res_in_um)*ID_voxel_count/1000000000
     volume_in_cubic_mm = ((xy_res**2) * z_res) * int(np.count_nonzero(cluster_cropped)) / 1000000000
+    cluster_volumes_output =  Path(output_path, "cluster_volumes", f"{sample}_cluster_{i}_volume_in_cubic_mm.txt")
     with open(cluster_volumes_output, "w") as file:
         file.write(f"{volume_in_cubic_mm}")
     
-    # Save cropped cluster mask as .nii.gz file
-    if c_masks:
+    
+    if legacy:
+        # Save cropped cluster mask as .nii.gz file
         print(str(f'  Save cluster_{i} cropped cluster mask '+datetime.now().strftime("%H:%M:%S")))
-        image = np.where(cluster_cropped > 0, 1, 0).astype(np.uint8)
         image = nib.Nifti1Image(image, np.eye(4))
-        nib.save(image, cluster_cropped_output)
+        cluster_cropped_output = Path(output_path, "clusters_cropped", f"crop_{sample}_native_cluster_{i}.nii.gz")
+        save_as_nii(cluster_cropped, cluster_cropped_output, xy_res, z_res, data_type=np.uint8)
 
-    #Crop seg_in_clusters and save as seperate .nii.gz files
-    if not seg_in_cluster_cropped_output.exists():
+        #Crop seg_in_clusters and save as seperate .nii.gz files
         print(str(f"  Crop cluster_{i} cell segmentation, zero out voxels outside of cluster, & save "+datetime.now().strftime("%H:%M:%S")))
         seg_cluster_cropped = seg_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
         cluster_cropped = np.where(cluster_cropped == i, 1, 0)
@@ -90,12 +102,14 @@ def bbox_crop_vol(i, sample_path, cluster_index_dir, native_rev_cluster_index_im
         seg_in_cluster_cropped = cluster_cropped * seg_cluster_cropped #zero out segmented cells outside of clusters
         image = np.where(seg_in_cluster_cropped > 0, 1, 0).astype(np.uint8)
         image = nib.Nifti1Image(image, np.eye(4))
-        Path(output_path, f"{seg_dir}_cropped", "3D_counts", f"crop_{seg_dir}_{sample}_native_cluster_{i}_3dc").mkdir(parents=True, exist_ok=True)
-        nib.save(image, seg_in_cluster_cropped_output)
+        seg_in_cluster_cropped_output = Path(output_path, f"{seg_dir}_cropped", "3D_counts", f"crop_{seg_dir}_{sample}_native_cluster_{i}_3dc/crop_{seg_dir}_{sample}_native_cluster_{i}.nii.gz")
+        seg_in_cluster_cropped_output.mkdir(parents=True, exist_ok=True)
+        save_as_nii(seg_in_cluster_cropped, seg_in_cluster_cropped_output, xy_res, z_res, data_type=np.uint8)
 
 
 def main():
-    samples = get_samples(args.dirs, args.pattern)
+
+    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
@@ -127,7 +141,7 @@ def main():
                 return
             
             # Load cluster index and convert to ndarray
-            ### native_img = warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.reg_res, args.fixed_res, args.metadata, args.legacy)
+            native_img = warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.reg_res, args.fixed_res, args.metadata, args.legacy)
 
             index_basename = Path(args.index).name
             native_rev_cluster_index_path = Path(output_path, "native_cluster_index", f"native_{index_basename}")
