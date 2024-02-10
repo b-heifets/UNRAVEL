@@ -142,6 +142,13 @@ def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metada
         xy_res, z_res, x_dim, y_dim, z_dim = metadata(hdf5_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
+@print_func_name_args_times()
+def load_zarr(zarr_path, desired_axis_order="xyz"):
+    zarr_dataset = zarr.open(zarr_path, mode='r')
+    ndarray = np.array(zarr_dataset)
+    ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
+    return ndarray
+
 def resolve_relative_path(sample_path, rel_path_or_glob_pattern, make_parents=False, is_file=True):
     """Resolve and return the path to a file or directory relative to the given sample_path.
     If the file or directory does not exist, return the first glob match within the sample_path.
@@ -234,16 +241,14 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
             return load_nii(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
         elif str(img_path).endswith('.h5'):
             return load_h5(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
+        elif str(img_path).endswith('.zarr'):
+            return load_zarr(img_path, desired_axis_order)
         else:
             raise ValueError(f"Unsupported file type: {img_path.suffix}. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5")
     except (FileNotFoundError, ValueError) as e:
         print(f"\n    [red bold]Error: {e}\n")
         import sys ; sys.exit()
 
-@print_func_name_args_times()
-def zarr_to_ndarray(img_path):
-    zarr_dataset = zarr.open(img_path, mode='r')
-    return np.array(zarr_dataset)
 
 # Save images
 
