@@ -140,7 +140,7 @@ def main():
             if args.clusters == "all":
                 clusters = cluster_IDs(rev_cluster_index)
             else:
-                clusters = [args.clusters]
+                clusters = args.clusters
             clusters = [int(cluster) for cluster in clusters]
 
             # Crop outer space around all clusters 

@@ -59,34 +59,63 @@ Next script: cluster_cell_counts.py"""
 
 
 @print_func_name_args_times()
-def native_clusters(c, native_cluster_index, xy_res, z_res, seg_img):
-    """For each cluster, crop native_cluster_index, mask it, measure volume, crop seg_cropped, and zero out voxels outside of clusters."""
+def crop_outer_space(native_cluster_index, output_path):
+    """Crop outer space around all clusters and save bounding box to .txt using an optimized approach."""
+    
+    # Create boolean arrays indicating presence of clusters along each axis
+    presence_x = np.any(native_cluster_index, axis=(1, 2))
+    presence_y = np.any(native_cluster_index, axis=(0, 2))
+    presence_z = np.any(native_cluster_index, axis=(0, 1))
+    
+    # Use np.argmax on presence arrays to find first occurrence of clusters
+    # For max, reverse the array, use np.argmax, and subtract from the length
+    outer_xmin, outer_xmax = np.argmax(presence_x), len(presence_x) - np.argmax(presence_x[::-1])
+    outer_ymin, outer_ymax = np.argmax(presence_y), len(presence_y) - np.argmax(presence_y[::-1])
+    outer_zmin, outer_zmax = np.argmax(presence_z), len(presence_z) - np.argmax(presence_z[::-1])
+    
+    # Adjust the max bounds to include the last slice where the cluster is present
+    outer_xmax += 1
+    outer_ymax += 1
+    outer_zmax += 1
+    
+    # Crop the native_cluster_index to the bounding box
+    native_cluster_index_cropped = native_cluster_index[outer_xmin:outer_xmax, outer_ymin:outer_ymax, outer_zmin:outer_zmax]
+    
+    # Save the bounding box to a file
+    with open(f"{output_path.parent}/outer_bounds.txt", "w") as file:
+        file.write(f"{outer_xmin}:{outer_xmax}, {outer_ymin}:{outer_ymax}, {outer_zmin}:{outer_zmax}") 
+    
+    return native_cluster_index_cropped, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax
 
-    # Get bounding box for each cluster
-    index = np.where(native_cluster_index == c) # 1D arrays of indices of elements == i for each axis
-    xmin = int(min(index[0]))
-    xmax = int(max(index[0])+1)
-    ymin = int(min(index[1]))
-    ymax = int(max(index[1])+1)
-    zmin = int(min(index[2])) 
-    zmax = int(max(index[2])+1)
+def process_cluster(cluster_ID, native_cluster_index_cropped, xy_res, z_res):
+    cluster_mask = native_cluster_index_cropped == cluster_ID
+    presence_x = np.any(cluster_mask, axis=(1, 2))
+    presence_y = np.any(cluster_mask, axis=(0, 2))
+    presence_z = np.any(cluster_mask, axis=(0, 1))
 
-    # Crop native_cluster_index for each cluster using the bounding box
-    cropped_cluster = native_cluster_index[xmin:xmax, ymin:ymax, zmin:zmax]
+    xmin, xmax = np.argmax(presence_x), len(presence_x) - np.argmax(presence_x[::-1])
+    ymin, ymax = np.argmax(presence_y), len(presence_y) - np.argmax(presence_y[::-1])
+    zmin, zmax = np.argmax(presence_z), len(presence_z) - np.argmax(presence_z[::-1])
 
-    # Mask clusters
-    cropped_cluster[cropped_cluster != c] = 0
+    cropped_cluster = native_cluster_index_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
+    volume_in_cubic_mm = ((xy_res**2) * z_res) * np.count_nonzero(cropped_cluster) / 1e9
 
-    # Measure cluster volume
-    volume_in_cubic_mm = ((xy_res**2) * z_res) * int(np.count_nonzero(cropped_cluster)) / 1000000000
+    # Include additional processing as needed, such as masking and segmentation.
 
-    # Crop the segmentation image for each cluster using the bounding box
-    cropped_seg = seg_img[xmin:xmax, ymin:ymax, zmin:zmax]
+    return cluster_ID, volume_in_cubic_mm, xmin, xmax, ymin, ymax, zmin, zmax
 
-    # Zero out segmented voxels outside of clusters
-    cropped_seg[cropped_cluster == 0] = 0
+def main_parallel(native_cluster_index_cropped, clusters, xy_res, z_res):
+    results = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=40) as executor:
+        future_to_cluster = {executor.submit(process_cluster, cluster_ID, native_cluster_index_cropped, xy_res, z_res): cluster_ID for cluster_ID in clusters}
+        for future in concurrent.futures.as_completed(future_to_cluster):
+            cluster_ID = future_to_cluster[future]
+            try:
+                result = future.result()
+                results.append(result)
+            except Exception as exc:
+                print(f'Cluster {cluster_ID} generated an exception: {exc}')
 
-    return c, volume_in_cubic_mm, xmin, xmax, ymin, ymax, zmin, zmax, cropped_seg
 
 
 def main():
@@ -124,8 +153,11 @@ def main():
             if args.clusters == "all":
                 clusters = cluster_IDs(rev_cluster_index)
             else:
-                clusters = [args.clusters]
+                clusters = args.clusters
             clusters = [int(cluster) for cluster in clusters]
+
+            # Crop outer space around all clusters 
+            native_cluster_index_cropped, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax = crop_outer_space(native_cluster_index, output_path.parent)
 
             # Load image metadata from .txt
             xy_res, z_res, _, _, _ = load_image_metadata_from_txt(args.metadata)
@@ -138,9 +170,20 @@ def main():
             else:
                 seg_img = load_3D_img(resolve_relative_path(sample_path, args.seg))
 
+            # Crop outer space around all clusters
+            seg_cropped = seg_img[outer_xmin:outer_xmax, outer_ymin:outer_ymax, outer_zmin:outer_zmax]
+            seg_cropped = seg_cropped.squeeze() # Removes single-dimensional elements from array 
+
             # For each cluster, crop native_cluster_index, mask it, measure volume, crop seg_cropped, and zero out voxels outside of clusters.
-            for c in clusters:
-                c, volume_in_cubic_mm, xmin, xmax, ymin, ymax, zmin, zmax = native_clusters(c, native_cluster_index, xy_res, z_res, seg_img)
+
+            # Assuming native_cluster_index_cropped, clusters, xy_res, z_res are defined
+            main_parallel(native_cluster_index_cropped, clusters, xy_res, z_res)
+
+            # Process results
+            for result in results:
+                # Process each result
+                # This could involve saving data to a file, accumulating statistics, etc.
+                print(result)
 
             # For each cluster, crop native_cluster_index, mask it, measure volume, crop seg_cropped, and zero out voxels outside of clusters.
                 

@@ -74,37 +74,28 @@ def crop_outer_space(native_cluster_index, output_path):
         file.write(f"{outer_xmin}:{outer_xmax}, {outer_ymin}:{outer_ymax}, {outer_zmin}:{outer_zmax}") 
     return native_cluster_index_cropped, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax 
 
-
-@print_func_name_args_times()
+# @print_func_name_args_times()
 def native_clusters(c, native_cluster_index_cropped, xy_res, z_res, seg_cropped):
-    """For each cluster, crop native_cluster_index, mask it, measure volume, crop seg_cropped, and zero out voxels outside of clusters."""
+    # Mask the cluster
+    cluster_mask = native_cluster_index_cropped == c
 
-    # Get bounding box for each cluster
-    index = np.where(native_cluster_index_cropped == c) # 1D arrays of indices of elements == i for each axis
-    xmin = int(min(index[0]))
-    xmax = int(max(index[0])+1)
-    ymin = int(min(index[1]))
-    ymax = int(max(index[1])+1)
-    zmin = int(min(index[2])) 
-    zmax = int(max(index[2])+1)
+    # Use np.any to determine the presence of the cluster along each axis
+    presence_x = np.any(cluster_mask, axis=(1, 2))
+    presence_y = np.any(cluster_mask, axis=(0, 2))
+    presence_z = np.any(cluster_mask, axis=(0, 1))
 
-    # Crop native_cluster_index for each cluster using the bounding box
+    # Find the bounding box using the presence arrays
+    xmin, xmax = np.argmax(presence_x), len(presence_x) - np.argmax(presence_x[::-1])
+    ymin, ymax = np.argmax(presence_y), len(presence_y) - np.argmax(presence_y[::-1])
+    zmin, zmax = np.argmax(presence_z), len(presence_z) - np.argmax(presence_z[::-1])
+
+    # Crop and process as before
     cropped_cluster = native_cluster_index_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
-
-    # Mask clusters
-    cropped_cluster[cropped_cluster != c] = 0
-
-    # Measure cluster volume
-    volume_in_cubic_mm = ((xy_res**2) * z_res) * int(np.count_nonzero(cropped_cluster)) / 1000000000
-
-    # Crop the segmentation image for each cluster using the bounding box
+    volume_in_cubic_mm = ((xy_res**2) * z_res) * np.count_nonzero(cropped_cluster) / 1e9
     cropped_seg = seg_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
-
-    # Zero out segmented voxels outside of clusters
     cropped_seg[cropped_cluster == 0] = 0
 
     return c, volume_in_cubic_mm, xmin, xmax, ymin, ymax, zmin, zmax, cropped_seg
-
 
 def main():
 
@@ -141,7 +132,7 @@ def main():
             if args.clusters == "all":
                 clusters = cluster_IDs(rev_cluster_index)
             else:
-                clusters = [args.clusters]
+                clusters = args.clusters
             clusters = [int(cluster) for cluster in clusters]
 
             # Crop outer space around all clusters 
@@ -164,7 +155,7 @@ def main():
 
             # For each cluster, crop native_cluster_index, mask it, measure volume, crop seg_cropped, and zero out voxels outside of clusters.
             for c in clusters:
-                c, volume_in_cubic_mm, xmin, xmax, ymin, ymax, zmin, zmax = native_clusters(c, native_cluster_index_cropped, xy_res, z_res, seg_cropped)
+                c, volume_in_cubic_mm, xmin, xmax, ymin, ymax, zmin, zmax, cropped_seg = native_clusters(c, native_cluster_index_cropped, xy_res, z_res, seg_cropped)
 
             # For each cluster, crop native_cluster_index, mask it, measure volume, crop seg_cropped, and zero out voxels outside of clusters.
                 
