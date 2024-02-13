@@ -94,6 +94,19 @@ def crop_outer_space(native_cluster_index, output_path):
     
     return native_cluster_index_cropped, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax
 
+def load_clusters_or_inner_bbox(cluster_bbox_data, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax):
+    """Determine whether to load each cluster in parallel or load the inner bounding box containing all clusters.
+    Returns True (load clusters) or False."""
+    # Sum volume of all cluster bboxes
+    cluster_bbox_volumes = [((xmax - xmin) * (ymax - ymin) * (zmax - zmin)) for _, xmin, xmax, ymin, ymax, zmin, zmax in cluster_bbox_data]
+    total_cluster_bbox_volume = sum(cluster_bbox_volumes)
+
+    # Volume of the outer bounding box
+    outer_bbox_volume = (outer_xmax - outer_xmin) * (outer_ymax - outer_ymin) * (outer_zmax - outer_zmin)
+
+    # If the sum of cluster bbox vols is significantly less than the outer bbox vol, load clusters individually
+    return total_cluster_bbox_volume / outer_bbox_volume < 0.95
+
 def cluster_bbox(cluster_ID, native_cluster_index_cropped):
     """Get bounding box for the current cluster. Return cluster_ID, xmin, xmax, ymin, ymax, zmin, zmax."""
     cluster_mask = native_cluster_index_cropped == cluster_ID
@@ -138,7 +151,7 @@ def count_cells(seg_in_cluster, connectivity=6):
 
     return n
 
-def density_in_cluster(cluster_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, connectivity=6, density='cell_count'):
+def density_in_cluster(cluster_data, native_cluster_index_cropped, seg_path_or_seg_cropped, xy_res, z_res, connectivity=6, density='cell_count'):
     """Measure cell count or volume of segmented voxels in the current cluster.
     For cell densities, return: cluster_ID, cell_count, cluster_volume_in_cubic_mm, cell_density, xmin, xmax, ymin, ymax, zmin, zmax
     For label densities, return: cluster_ID, seg_volume_in_cubic_mm, cluster_volume_in_cubic_mm, label_density, xmin, xmax, ymin, ymax, zmin, zmax.
@@ -148,8 +161,15 @@ def density_in_cluster(cluster_data, native_cluster_index_cropped, seg_cropped, 
     # Crop the cluster from the native cluster index
     cropped_cluster = native_cluster_index_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
 
-    # Crop the segmentation image for the current cluster
-    seg_in_cluster = seg_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
+    # Check if we should load clusters individually or the entire inner bounding box
+    if isinstance(seg_path_or_seg_cropped, np.ndarray):
+        # Crop the segmentation image for the current cluster
+        seg_in_cluster = seg_path_or_seg_cropped[xmin:xmax, ymin:ymax, zmin:zmax]
+        print("        Cropping the segmentation image for the current cluster")
+    else:
+        # Load the segmentation image subset for the current cluster
+        print("        Loading the segmentation image for the current cluster")
+        seg_in_cluster = load_nii_subset(seg_path_or_seg_cropped, xmin, xmax, ymin, ymax, zmin, zmax)
 
     # Zero out segmented voxels outside of the current cluster
     seg_in_cluster[cropped_cluster == 0] = 0
@@ -168,13 +188,25 @@ def density_in_cluster(cluster_data, native_cluster_index_cropped, seg_cropped, 
         return cluster_ID, seg_volume_in_cubic_mm, cluster_volume_in_cubic_mm, label_density, xmin, xmax, ymin, ymax, zmin, zmax
     
 @print_func_name_args_times()
-def density_in_cluster_parallel(cluster_bbox_results, native_cluster_index_cropped, seg_cropped, xy_res, z_res, connectivity=6, density='cell_count'):
+def density_in_cluster_parallel(cluster_bbox_data, native_cluster_index_cropped, seg_path, xy_res, z_res, connectivity=6, density='cell_count', load_clusters_boolean=True):
     """Measure cell count or volume of segmented voxels in each cluster in parallel. Return list of results."""
     results = []
     num_cores = os.cpu_count()
-    workers = min(round(num_cores * 0.95), len(cluster_bbox_results)) 
+    workers = min(round(num_cores * 0.95), len(cluster_bbox_data)) 
+    if load_clusters_boolean: 
+        seg_path_or_seg_cropped = seg_path
+        print("\n    Loading the subset of the segmentation image corresponding to each cluster in parallel.\n")
+    else:
+        print("\n    Loading the subset of the segmentation image that contains all clusters.\n")
+        outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax = np.min(cluster_bbox_data, axis=0)[1:], np.max(cluster_bbox_data, axis=0)[2:]
+        seg_path_or_seg_cropped = load_nii_subset(seg_path, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax)
+        
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
-        future_to_cluster = {executor.submit(density_in_cluster, cluster_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, connectivity, density): cluster_data[0] for cluster_data in cluster_bbox_results} # cluster_data[0] is the cluster_ID
+        future_to_cluster = {
+            executor.submit(
+                density_in_cluster, cluster_data, native_cluster_index_cropped, seg_path_or_seg_cropped, xy_res, z_res, connectivity, density
+            ): cluster_data[0] for cluster_data in cluster_bbox_data
+        }
         for future in concurrent.futures.as_completed(future_to_cluster):
             cluster_ID = future_to_cluster[future]
             try:
@@ -234,35 +266,17 @@ def main():
             # Get bounding boxes for each cluster in parallel
             cluster_bbox_data = cluster_bbox_parallel(native_cluster_index_cropped, clusters)
 
-
-
-            # Determine the bounding box to use
-            use_cluster_bboxes = should_use_cluster_bboxes(cluster_bbox_data, outer_bbox)  # Implement this function based on your criteria
-
-            # Load segmentation image subsets conditionally
-            if use_cluster_bboxes:
-                for cluster_data in cluster_bbox_data:
-                    cluster_ID, xmin, xmax, ymin, ymax, zmin, zmax = cluster_data
-                    seg_subset = load_segmentation_subset(seg_path, (xmin, xmax, ymin, ymax, zmin, zmax))
-                    # Process the loaded subset as required
-            else:
-                # Load the entire inner bounding box
-                xmin, xmax, ymin, ymax, zmin, zmax = outer_bbox
-                seg_subset = load_segmentation_subset(seg_path, (xmin, xmax, ymin, ymax, zmin, zmax))
-                # Process the loaded subset as required
-
-
-
+            # Define path to segmentation image
             if Path(sample_path, args.seg).is_dir() and not str(args.seg).endswith(".zarr"):
-                seg_img = load_3D_img(Path(sample_path, args.seg, f"{sample_path.name}_{args.seg}.nii.gz"))
+                seg_path = Path(sample_path, args.seg, f"{sample_path.name}_{args.seg}.nii.gz")
             else:
-                seg_img = load_3D_img(resolve_relative_path(sample_path, args.seg))
+                seg_path = resolve_relative_path(sample_path, args.seg)
 
-            seg_cropped = seg_img[outer_xmin:outer_xmax, outer_ymin:outer_ymax, outer_zmin:outer_zmax]
-            seg_cropped = seg_cropped.squeeze() # Removes single-dimensional elements from array 
+            # Before calling density_in_cluster_parallel, determine the loading strategy
+            load_clusters_boolean = load_clusters_or_inner_bbox(cluster_bbox_data, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax)
 
             # Process each cluster to count cells or measure volume, in parallel
-            cluster_data_results = density_in_cluster_parallel(cluster_bbox_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, args.connect, args.density)
+            cluster_data_results = density_in_cluster_parallel(cluster_bbox_data, seg_path, native_cluster_index_cropped, xy_res, z_res, args.connect, args.density, load_clusters_boolean)
 
             # Process cluster_data_results to save to CSV or perform further analysis
             data_list = []
@@ -286,15 +300,15 @@ def main():
                 }
 
                 data_list.append(data)
-            
-            # Create a DataFrame from the list of data dictionaries
-            df = pd.DataFrame(data_list)
 
-            # Sort the DataFrame by 'cluster_ID' in ascending order
-            df_sorted = df.sort_values(by='cluster_ID', ascending=True)
+            # Sort the data list by 'cluster_ID' in ascending order before creating the DataFrame
+            data_list_sorted = sorted(data_list, key=lambda x: x['cluster_ID'])
 
-            # Save the sorted DataFrame to the CSV file
-            df_sorted.to_csv(output_path, index=False)
+            # Create a DataFrame from the sorted list of data dictionaries
+            df = pd.DataFrame(data_list_sorted)
+
+            # Save the DataFrame to the CSV file
+            df.to_csv(output_path, index=False)
             print(f"\n    Output: [default bold]{output_path}")
 
             progress.update(task_id, advance=1)
