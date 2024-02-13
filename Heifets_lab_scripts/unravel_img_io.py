@@ -135,7 +135,7 @@ def load_nii_subset(nii_path, xmin, xmax, ymin, ymax, zmin, zmax):
     """Load a spatial subset of a path/img.nii.gz and return an ndarray."""
     proxy_img = nib.load(nii_path)    
     subset_array = proxy_img.dataobj[xmin:xmax, ymin:ymax, zmin:zmax]
-    return subset_array
+    return np.squeeze(subset_array)
 
 @print_func_name_args_times() 
 def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):

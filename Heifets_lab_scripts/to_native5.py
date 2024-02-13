@@ -146,7 +146,7 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
         if str(output).endswith(".zarr"):
             save_as_zarr(native_img, output)
         elif str(output).endswith(".nii.gz"):
-            xy_res, z_res, _, _, _ = load_image_metadata_from_txt(args.metadata)
+            xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
             save_as_nii(native_img, output, xy_res, z_res, native_img.dtype)
         else: 
             print(f"\n    [red bold]Output path does not end with .zarr or .nii.gz\n") 
