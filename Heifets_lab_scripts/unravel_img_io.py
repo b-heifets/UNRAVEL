@@ -130,6 +130,13 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(nii_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
+@print_func_name_args_times()
+def load_nii_subset(nii_path, xmin, xmax, ymin, ymax, zmin, zmax):
+    """Load a spatial subset of a path/img.nii.gz and return an ndarray."""
+    proxy_img = nib.load(nii_path)    
+    subset_array = proxy_img.dataobj[xmin:xmax, ymin:ymax, zmin:zmax]
+    return subset_array
+
 @print_func_name_args_times() 
 def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
     """Load full res image from an HDF5 image (.h5). Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)]."""

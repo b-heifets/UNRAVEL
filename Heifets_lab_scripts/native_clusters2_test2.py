@@ -14,7 +14,7 @@ from rich.traceback import install
 from argparse_utils import SuppressMetavar, SM
 from to_native5 import warp_to_native
 from unravel_config import Configuration 
-from unravel_img_io import load_3D_img, load_image_metadata_from_txt, resolve_relative_path
+from unravel_img_io import load_3D_img, load_image_metadata_from_txt, resolve_relative_path, load_nii_subset
 from unravel_img_tools import cluster_IDs
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples, print_func_name_args_times
 
@@ -112,7 +112,7 @@ def cluster_bbox_parallel(native_cluster_index_cropped, clusters):
     """Get bounding boxes for each cluster in parallel. Return list of results."""
     results = []
     num_cores = os.cpu_count() # This is good for CPU-bound tasks. Could try 2 * num_cores + 1 for io-bound tasks
-    workers = min(num_cores, len(clusters))  
+    workers = min(round(num_cores * 0.95), len(clusters))  
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
         future_to_cluster = {executor.submit(cluster_bbox, cluster_ID, native_cluster_index_cropped): cluster_ID for cluster_ID in clusters}
         for future in concurrent.futures.as_completed(future_to_cluster):
@@ -172,7 +172,7 @@ def density_in_cluster_parallel(cluster_bbox_results, native_cluster_index_cropp
     """Measure cell count or volume of segmented voxels in each cluster in parallel. Return list of results."""
     results = []
     num_cores = os.cpu_count()
-    workers = min(num_cores, len(cluster_bbox_results)) 
+    workers = min(round(num_cores * 0.95), len(cluster_bbox_results)) 
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
         future_to_cluster = {executor.submit(density_in_cluster, cluster_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, connectivity, density): cluster_data[0] for cluster_data in cluster_bbox_results} # cluster_data[0] is the cluster_ID
         for future in concurrent.futures.as_completed(future_to_cluster):
@@ -234,11 +234,30 @@ def main():
             # Get bounding boxes for each cluster in parallel
             cluster_bbox_data = cluster_bbox_parallel(native_cluster_index_cropped, clusters)
 
-            # Load the segmentation image and crop it to the outer bounds of all clusters
-            if Path(sample_path, args.seg).is_dir():
+
+
+            # Determine the bounding box to use
+            use_cluster_bboxes = should_use_cluster_bboxes(cluster_bbox_data, outer_bbox)  # Implement this function based on your criteria
+
+            # Load segmentation image subsets conditionally
+            if use_cluster_bboxes:
+                for cluster_data in cluster_bbox_data:
+                    cluster_ID, xmin, xmax, ymin, ymax, zmin, zmax = cluster_data
+                    seg_subset = load_segmentation_subset(seg_path, (xmin, xmax, ymin, ymax, zmin, zmax))
+                    # Process the loaded subset as required
+            else:
+                # Load the entire inner bounding box
+                xmin, xmax, ymin, ymax, zmin, zmax = outer_bbox
+                seg_subset = load_segmentation_subset(seg_path, (xmin, xmax, ymin, ymax, zmin, zmax))
+                # Process the loaded subset as required
+
+
+
+            if Path(sample_path, args.seg).is_dir() and not str(args.seg).endswith(".zarr"):
                 seg_img = load_3D_img(Path(sample_path, args.seg, f"{sample_path.name}_{args.seg}.nii.gz"))
             else:
                 seg_img = load_3D_img(resolve_relative_path(sample_path, args.seg))
+
             seg_cropped = seg_img[outer_xmin:outer_xmax, outer_ymin:outer_ymax, outer_zmin:outer_zmax]
             seg_cropped = seg_cropped.squeeze() # Removes single-dimensional elements from array 
 
@@ -250,25 +269,21 @@ def main():
             for result in cluster_data_results:
                 cluster_ID, cell_count_or_seg_vol, cluster_volume_in_cubic_mm, density_measure, xmin, xmax, ymin, ymax, zmin, zmax = result
 
-                # Prepare the data dictionary based on the density measure type
+                # Determine the appropriate headers based on the density measure type
                 if args.density == "cell_density":
-                    data = {
-                        "sample": sample_path.name, 
-                        "cluster_ID": cluster_ID, 
-                        "cell_count": cell_count_or_seg_vol,  
-                        "cluster_volume_in_cubic_mm": cluster_volume_in_cubic_mm, 
-                        "cell_density": density_measure, 
-                        "xmin": xmin, "xmax": xmax, "ymin": ymin, "ymax": ymax, "zmin": zmin, "zmax": zmax
-                    }
+                    count_or_vol_header, density_header = "cell_count", "cell_density"
                 else: 
-                    data = {
-                        "sample": sample_path.name, 
-                        "cluster_ID": cluster_ID, 
-                        "label_volume_in_cubic_mm": cell_count_or_seg_vol,  
-                        "cluster_volume_in_cubic_mm": cluster_volume_in_cubic_mm, 
-                        "label_density": density_measure, 
-                        "xmin": xmin, "xmax": xmax, "ymin": ymin, "ymax": ymax, "zmin": zmin, "zmax": zmax
-                    }
+                    count_or_vol_header, density_header = "label_volume", "label_density"
+
+                # Prepare the data dictionary
+                data = {
+                    "sample": sample_path.name, 
+                    "cluster_ID": cluster_ID, 
+                    count_or_vol_header: cell_count_or_seg_vol,  
+                    "cluster_volume": cluster_volume_in_cubic_mm, 
+                    density_header: density_measure, 
+                    "xmin": xmin, "xmax": xmax, "ymin": ymin, "ymax": ymax, "zmin": zmin, "zmax": zmax
+                }
 
                 data_list.append(data)
             

@@ -94,6 +94,36 @@ def crop_outer_space(native_cluster_index, output_path):
     
     return native_cluster_index_cropped, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax
 
+def cluster_bbox(cluster_ID, native_cluster_index_cropped):
+    """Get bounding box for the current cluster. Return cluster_ID, xmin, xmax, ymin, ymax, zmin, zmax."""
+    cluster_mask = native_cluster_index_cropped == cluster_ID
+    presence_x = np.any(cluster_mask, axis=(1, 2))
+    presence_y = np.any(cluster_mask, axis=(0, 2))
+    presence_z = np.any(cluster_mask, axis=(0, 1))
+
+    xmin, xmax = np.argmax(presence_x), len(presence_x) - np.argmax(presence_x[::-1])
+    ymin, ymax = np.argmax(presence_y), len(presence_y) - np.argmax(presence_y[::-1])
+    zmin, zmax = np.argmax(presence_z), len(presence_z) - np.argmax(presence_z[::-1])
+
+    return cluster_ID, xmin, xmax, ymin, ymax, zmin, zmax
+
+@print_func_name_args_times()
+def cluster_bbox_parallel(native_cluster_index_cropped, clusters):
+    """Get bounding boxes for each cluster in parallel. Return list of results."""
+    results = []
+    num_cores = os.cpu_count() # This is good for CPU-bound tasks. Could try 2 * num_cores + 1 for io-bound tasks
+    workers = min(round(num_cores * 0.95), len(clusters))  
+    with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
+        future_to_cluster = {executor.submit(cluster_bbox, cluster_ID, native_cluster_index_cropped): cluster_ID for cluster_ID in clusters}
+        for future in concurrent.futures.as_completed(future_to_cluster):
+            cluster_ID = future_to_cluster[future]
+            try:
+                result = future.result()
+                results.append(result)
+            except Exception as exc:
+                print(f'Cluster {cluster_ID} generated an exception: {exc}')
+    return results
+
 def count_cells(seg_in_cluster, connectivity=6):
     """Count cells (objects) in each cluster using connected-components-3d
     Return the number of cells in the cluster."""
@@ -142,7 +172,7 @@ def density_in_cluster_parallel(cluster_bbox_results, native_cluster_index_cropp
     """Measure cell count or volume of segmented voxels in each cluster in parallel. Return list of results."""
     results = []
     num_cores = os.cpu_count()
-    workers = min(num_cores, len(cluster_bbox_results)) 
+    workers = min(round(num_cores * 0.95), len(cluster_bbox_results)) 
     with concurrent.futures.ThreadPoolExecutor(max_workers=workers) as executor:
         future_to_cluster = {executor.submit(density_in_cluster, cluster_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, connectivity, density): cluster_data[0] for cluster_data in cluster_bbox_results} # cluster_data[0] is the cluster_ID
         for future in concurrent.futures.as_completed(future_to_cluster):
@@ -201,38 +231,17 @@ def main():
             if xy_res is None or z_res is None: 
                 print("    [red bold]./sample??/parameters/metadata.txt missing. cd to sample?? dir and run: metadata.py")
 
-            # Apply connected components labeling of clusters to get bounding boxes
-            connectivity = args.connect  # Use the connectivity specified by the user
-            labels_out, n = cc3d.connected_components(native_cluster_index_cropped, connectivity=connectivity, return_N=True, out_dtype=np.uint32)
-
-            # Get statistics for each labeled component
-            stats = cc3d.statistics(labels_out)
-
-            # Map new labels to original cluster IDs using centroids
-            centroid_to_original_id = {}
-            for label_id, centroid in stats['centroids'].items():
-                if label_id == 0:  # Skip background
-                    continue
-                original_id = native_cluster_index_cropped[int(centroid[0]), int(centroid[1]), int(centroid[2])]
-                centroid_to_original_id[label_id] = original_id
+            # Get bounding boxes for each cluster in parallel
+            cluster_bbox_data = cluster_bbox_parallel(native_cluster_index_cropped, clusters)
 
             # Load the segmentation image and crop it to the outer bounds of all clusters
             if Path(sample_path, args.seg).is_dir():
                 seg_img = load_3D_img(Path(sample_path, args.seg, f"{sample_path.name}_{args.seg}.nii.gz"))
             else:
                 seg_img = load_3D_img(resolve_relative_path(sample_path, args.seg))
-            seg_cropped = seg_img[outer_xmin:outer_xmax, outer_ymin:outer_ymax, outer_zmin:outer_zmax]
-            seg_cropped = seg_cropped.squeeze()  # Removes single-dimensional elements from array
 
-            # Get bounding boxes for each cluster
-            cluster_bbox_data = []
-            for label_id in range(1, n + 1):  # Skip the background label 0
-                if label_id not in centroid_to_original_id:
-                    continue
-                original_id = centroid_to_original_id[label_id]
-                bbox = stats['bounding_boxes'][label_id]
-                xmin, ymin, zmin, xmax, ymax, zmax = bbox
-                cluster_bbox_data.append((original_id, xmin, xmax, ymin, ymax, zmin, zmax))
+            seg_cropped = seg_img[outer_xmin:outer_xmax, outer_ymin:outer_ymax, outer_zmin:outer_zmax]
+            seg_cropped = seg_cropped.squeeze() # Removes single-dimensional elements from array 
 
             # Process each cluster to count cells or measure volume, in parallel
             cluster_data_results = density_in_cluster_parallel(cluster_bbox_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, args.connect, args.density)
@@ -242,25 +251,21 @@ def main():
             for result in cluster_data_results:
                 cluster_ID, cell_count_or_seg_vol, cluster_volume_in_cubic_mm, density_measure, xmin, xmax, ymin, ymax, zmin, zmax = result
 
-                # Prepare the data dictionary based on the density measure type
+                # Determine the appropriate headers based on the density measure type
                 if args.density == "cell_density":
-                    data = {
-                        "sample": sample_path.name, 
-                        "cluster_ID": cluster_ID, 
-                        "cell_count": cell_count_or_seg_vol,  
-                        "cluster_volume_in_cubic_mm": cluster_volume_in_cubic_mm, 
-                        "cell_density": density_measure, 
-                        "xmin": xmin, "xmax": xmax, "ymin": ymin, "ymax": ymax, "zmin": zmin, "zmax": zmax
-                    }
+                    count_or_vol_header, density_header = "cell_count", "cell_density"
                 else: 
-                    data = {
-                        "sample": sample_path.name, 
-                        "cluster_ID": cluster_ID, 
-                        "label_volume_in_cubic_mm": cell_count_or_seg_vol,  
-                        "cluster_volume_in_cubic_mm": cluster_volume_in_cubic_mm, 
-                        "label_density": density_measure, 
-                        "xmin": xmin, "xmax": xmax, "ymin": ymin, "ymax": ymax, "zmin": zmin, "zmax": zmax
-                    }
+                    count_or_vol_header, density_header = "label_volume", "label_density"
+
+                # Prepare the data dictionary
+                data = {
+                    "sample": sample_path.name, 
+                    "cluster_ID": cluster_ID, 
+                    count_or_vol_header: cell_count_or_seg_vol,  
+                    "cluster_volume": cluster_volume_in_cubic_mm, 
+                    density_header: density_measure, 
+                    "xmin": xmin, "xmax": xmax, "ymin": ymin, "ymax": ymax, "zmin": zmin, "zmax": zmax
+                }
 
                 data_list.append(data)
             
