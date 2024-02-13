@@ -158,13 +158,13 @@ def density_in_cluster(cluster_data, native_cluster_index_cropped, seg_cropped, 
     cluster_volume_in_cubic_mm = ((xy_res**2) * z_res) * np.count_nonzero(cropped_cluster) / 1e9
 
     # Count cells or measure the volume of segmented voxels
-    if density == "cell_count":
+    if density == "cell_density":
         cell_count = count_cells(seg_in_cluster, connectivity=connectivity)
         cell_density = cell_count / cluster_volume_in_cubic_mm
         return cluster_ID, cell_count, cluster_volume_in_cubic_mm, cell_density, xmin, xmax, ymin, ymax, zmin, zmax
     else: 
         seg_volume_in_cubic_mm = ((xy_res**2) * z_res) * np.count_nonzero(seg_in_cluster) / 1e9
-        label_density = seg_volume_in_cubic_mm / cluster_volume_in_cubic_mm
+        label_density = seg_volume_in_cubic_mm / cluster_volume_in_cubic_mm * 100
         return cluster_ID, seg_volume_in_cubic_mm, cluster_volume_in_cubic_mm, label_density, xmin, xmax, ymin, ymax, zmin, zmax
     
 @print_func_name_args_times()
@@ -183,7 +183,6 @@ def density_in_cluster_parallel(cluster_bbox_results, native_cluster_index_cropp
             except Exception as exc:
                 print(f'Cluster {cluster_ID} generated an exception: {exc}')
     return results
-
 
 
 def main():
@@ -225,7 +224,7 @@ def main():
             clusters = [int(cluster) for cluster in clusters]
 
             # Crop outer space around all clusters 
-            native_cluster_index_cropped, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax = crop_outer_space(native_cluster_index, output_path.parent)
+            native_cluster_index_cropped, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax = crop_outer_space(native_cluster_index, output_path)
 
             # Load image metadata from .txt
             xy_res, z_res, _, _, _ = load_image_metadata_from_txt(args.metadata)
@@ -247,6 +246,7 @@ def main():
             cluster_data_results = density_in_cluster_parallel(cluster_bbox_data, native_cluster_index_cropped, seg_cropped, xy_res, z_res, args.connect, args.density)
 
             # Process cluster_data_results to save to CSV or perform further analysis
+            data_list = []
             for result in cluster_data_results:
                 cluster_ID, cell_count_or_seg_vol, cluster_volume_in_cubic_mm, density_measure, xmin, xmax, ymin, ymax, zmin, zmax = result
 
@@ -270,9 +270,17 @@ def main():
                         "xmin": xmin, "xmax": xmax, "ymin": ymin, "ymax": ymax, "zmin": zmin, "zmax": zmax
                     }
 
-                # Create a DataFrame from the data dictionary and save it to the CSV file
-                df = pd.DataFrame([data]) # or pd.DataFrame(data, index=[0])
-                df.to_csv(output_path, index=False)  # If the file doesn't exist, write the header
+                data_list.append(data)
+            
+            # Create a DataFrame from the list of data dictionaries
+            df = pd.DataFrame(data_list)
+
+            # Sort the DataFrame by 'cluster_ID' in ascending order
+            df_sorted = df.sort_values(by='cluster_ID', ascending=True)
+
+            # Save the sorted DataFrame to the CSV file
+            df_sorted.to_csv(output_path, index=False)
+            print(f"\n    Output: [default bold]{output_path}")
 
             progress.update(task_id, advance=1)
 
