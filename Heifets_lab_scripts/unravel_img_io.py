@@ -156,14 +156,15 @@ def load_zarr(zarr_path, desired_axis_order="xyz"):
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
     return ndarray
 
-def resolve_path(sample_path, path_or_pattern, make_parents=True, is_file=True):
-    """This function helps to resolve absolute or paths relative to the sample?? folder.
+def resolve_path(upstream_path, path_or_pattern, make_parents=True, is_file=True):
+    """Returns full path or Path(upstream_path, path_or_pattern) and [makes parent dirs]. 
 
     Conditional returns: 
-    1) If path_or_glob_pattern is absolute, [make parent dirs] and return full path. 
-    2) If Path(sample_path, relative_path).exists(), return full path 
-    3) If Path(sample_path, rel_path/glob_pattern).exists(), return path for first match
-    4) If rel_path does not exist, make parent dirs and return full path
+    1) If path_or_pattern is absolute, return Path(path_or_pattern). 
+    2) If Path(upstream_path, relative_path).exists(), return Path(upstream_path, path_or_pattern) 
+    3) If Path(upstream_path, [rel_path/]glob_pattern), return Path of first match
+    4) If not Path(upstream_path, relative_path).exists(), return full path
+    5) Else, return None
     """
     if Path(path_or_pattern).is_absolute():
         if is_file:
@@ -172,7 +173,7 @@ def resolve_path(sample_path, path_or_pattern, make_parents=True, is_file=True):
             Path(path_or_pattern).mkdir(parents=True, exist_ok=True)
         return Path(path_or_pattern)
     
-    full_path = Path(sample_path, path_or_pattern)
+    full_path = Path(upstream_path, path_or_pattern)
     if full_path.exists():
         return full_path
 

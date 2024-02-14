@@ -19,47 +19,63 @@ from rich.text import Text
 
 # Sample list 
 def get_samples(sample_dir_list=None, sample_dir_pattern="sample??", exp_dir_paths=None):
-    """Return a list of full paths to sample folders from the provided directory list or experiment directories.
-    If no sample folders are found, use the current working directory."""
+    """
+    Return a list of full paths to sample directories (dirs) based on the dir list, pattern, and/or experiment dirs.
+
+    This function searches for dirs matching a specific pattern (default "sample??") within the given experiment dirs.
+    If a sample_dir_list is provided, it uses the full paths from the list or resolves them if necessary.
+    If an exp_dir_paths list is provided, it searches for sample dirs within each experiment directory.
+    If both sample_dir_list and exp_dir_paths are provided, paths are added to the list from both sources.    
+
+    Parameters:
+    - sample_dir_list (list of str or None): Explicit list of dirs to include. Can be dir names or absolute paths.
+    - sample_dir_pattern (str): Pattern to match dirs within experiment dirs. Defaults to "sample??".
+    - exp_dir_paths (list of str or None): List of paths to experiment dirs where subdirs matching the sample_dir_pattern will be searched for.
+
+    Returns:
+    - list of pathlib.Path: Full paths to all found sample dirs.
+    """
     samples = []
 
     # Ensure sample_dir_list is a list
     if isinstance(sample_dir_list, str):
         sample_dir_list = [sample_dir_list]  # Convert string to list
 
-    # If sample_dir_list is provided, add full paths of directories from it that exist.
+    # Add full paths of dirs from sample_dir_list that exist
     if sample_dir_list:
-        samples += [Path(dir_name).resolve() for dir_name in sample_dir_list if Path(dir_name).is_dir()]
+        for dir_name in sample_dir_list:
+            dir_path = Path(dir_name)
+            dir_path = dir_path if dir_path.is_absolute() else dir_path.resolve()
+            if dir_path.is_dir():
+                samples.append(dir_path)
 
-    # If exp_dir_paths is provided and sample_dir_list is not provided or empty, search for sample folders within each experiment directory and add their full paths.
-    if exp_dir_paths and not sample_dir_list:
+    # Search for sample folders within each experiment directory in exp_dir_paths and add their full paths
+    if exp_dir_paths:
         for exp_dir in exp_dir_paths:
-            exp_path = Path(exp_dir)
+            exp_path = Path(exp_dir).resolve()
             if exp_path.is_dir():
                 found_samples = [
                     d.resolve() for d in exp_path.iterdir()
                     if d.is_dir() and fnmatch(d.name, sample_dir_pattern)
                 ]
-                found_samples = sorted(found_samples)
                 samples.extend(found_samples)
 
-    # If no sample_dir_list or exp_dir_paths provided, or no samples found in them, use the current working directory.
+    # If no dirs have been added yet, search the current working directory for dirs matching the pattern
     if not samples:
-        cwd = Path.cwd()
-        found_samples = [
-            (d if d.name != cwd.name else cwd).resolve()
-            for d in cwd.iterdir()
+        cwd_samples = [
+            d.resolve() for d in Path.cwd().iterdir()
             if d.is_dir() and fnmatch(d.name, sample_dir_pattern)
         ]
-        if found_samples:  # Found matching directories in the current working directory
-            samples.extend(found_samples)
-        else:  # No matching directories found, use the cwd as the fallback
-            samples.append(cwd.resolve())  # Ensure cwd is appended as a Path object, not a list
+        samples.extend(cwd_samples)
 
-    return samples 
+    # Use the current working directory as the fallback if no samples found
+    if not samples:
+        samples.append(Path.cwd())
 
-# Progress bar
+    return samples
 
+
+# Progress bar functions
 class CustomMofNCompleteColumn(MofNCompleteColumn):
     def render(self, task) -> Text:
         completed = str(task.completed)

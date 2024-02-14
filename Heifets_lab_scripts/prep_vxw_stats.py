@@ -18,7 +18,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Loads fluorescence channel(s) and subracts background, resamples, reorients, and saves as NIftI', formatter_class=RawTextHelpFormatter)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-s', '--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-o', '--output', help='Output file name (Default: <sample??>_<ochann>_rb<4>_<gubra>_space.nii.gz)', default=None, metavar='')
     parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, metavar='')
     parser.add_argument('-l', '--label', help='Fluorescent label (e.g., cfos). If raw data is tifs, should match tif dir name. Default: ochann)', default="ochann", metavar='')
