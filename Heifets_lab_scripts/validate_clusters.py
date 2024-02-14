@@ -62,7 +62,7 @@ Next script: cluster_cell_counts.py"""
 
 
 # TODO: QC. Aggregate .csv results for all samples if args.exp_dirs, script to load image subset.
-# TODO: Make config file for defaults like: reg_final/clar_downsample_res25um.nii.gz. If still slow, consider loading image subsets corresponding to clusters. could use resolve_relative_path to allow for relative paths with glob patterns
+# TODO: Make config file for defaults like: reg_final/clar_downsample_res25um.nii.gz.
 
 @print_func_name_args_times()
 def crop_outer_space(native_cluster_index, output_path):
