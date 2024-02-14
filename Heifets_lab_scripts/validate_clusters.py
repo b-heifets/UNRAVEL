@@ -14,7 +14,7 @@ from rich.traceback import install
 from argparse_utils import SuppressMetavar, SM
 from to_native5 import warp_to_native
 from unravel_config import Configuration 
-from unravel_img_io import load_3D_img, load_image_metadata_from_txt, load_nii_subset, resolve_relative_path
+from unravel_img_io import load_3D_img, load_image_metadata_from_txt, load_nii_subset, resolve_path
 from unravel_img_tools import cluster_IDs
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples, print_func_name_args_times
 
@@ -196,9 +196,9 @@ def main():
             # Define final output and check if it exists
             cluster_index_dir = str(Path(args.moving_img).name).replace(".nii.gz", "").replace("_rev_cluster_index_", "_")
             if args.output:
-                output_path = resolve_relative_path(sample_path, args.output)
+                output_path = resolve_path(sample_path, args.output)
             else: 
-                output_path = resolve_relative_path(sample_path, Path("clusters", cluster_index_dir, f"{args.density}_data.csv"), make_parents=True)
+                output_path = resolve_path(sample_path, Path("clusters", cluster_index_dir, f"{args.density}_data.csv"), make_parents=True)
             if output_path and output_path.exists():
                 print(f"\n\n    {output_path} already exists. Skipping.\n")
                 return
@@ -238,7 +238,7 @@ def main():
             if Path(sample_path, args.seg).is_dir() and not str(args.seg).endswith(".zarr"):
                 seg_path = Path(sample_path, args.seg, f"{sample_path.name}_{args.seg}.nii.gz")
             else:
-                seg_path = resolve_relative_path(sample_path, args.seg)
+                seg_path = resolve_path(sample_path, args.seg)
             seg_cropped = load_nii_subset(seg_path, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax)
 
             # Process each cluster to count cells or measure volume, in parallel

@@ -9,7 +9,7 @@ from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration 
-from unravel_img_io import load_3D_img, resolve_relative_path, save_as_tifs, save_as_nii
+from unravel_img_io import load_3D_img, resolve_path, save_as_tifs, save_as_nii
 from unravel_img_tools import resample, reorient_for_raw_to_nii_conv
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples
 
@@ -54,16 +54,16 @@ def main():
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
             # Define output
-            output = resolve_relative_path(sample_path, args.output, make_parents=True)
+            output = resolve_path(sample_path, args.output, make_parents=True)
             if output.exists():
                 print(f"\n\n    {output.name} already exists. Skipping.\n")
                 return
 
             # Define input image path
-            img_path = resolve_relative_path(sample_path, rel_path_or_glob_pattern=args.input)
+            img_path = resolve_path(sample_path, path_or_pattern=args.input)
 
             # Resolve path to metadata file
-            metadata_path = resolve_relative_path(sample_path, rel_path_or_glob_pattern=args.metad_path, make_parents=True)
+            metadata_path = resolve_path(sample_path, path_or_pattern=args.metad_path, make_parents=True)
 
             # Load autofluo image [and xy and z voxel size in microns]
             img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res, save_metadata=metadata_path)

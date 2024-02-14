@@ -8,7 +8,7 @@ from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration
-from unravel_img_io import load_3D_img, resolve_relative_path, save_metadata_to_file
+from unravel_img_io import load_3D_img, resolve_path, save_metadata_to_file
 from unravel_utils import get_samples, initialize_progress_bar, print_cmd_and_times
 
 
@@ -56,10 +56,10 @@ def main():
         for sample_path in samples:
 
             # Resolve path to image
-            img_path = resolve_relative_path(sample_path, path_or_glob_pattern=args.input)
+            img_path = resolve_path(sample_path, path_or_pattern=args.input)
 
             # Resolve path to metadata file
-            metadata_path = resolve_relative_path(sample_path, path_or_glob_pattern=args.metad_path, make_parents=True)
+            metadata_path = resolve_path(sample_path, path_or_pattern=args.metad_path, make_parents=True)
 
             if metadata_path.exists():
                 print(f'\n\n{metadata_path} exists. Skipping...')

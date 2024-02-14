@@ -9,7 +9,7 @@ from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration 
-from unravel_img_io import load_3D_img, resolve_relative_path, save_as_nii
+from unravel_img_io import load_3D_img, resolve_path, save_as_nii
 from unravel_img_tools import ilastik_segmentation
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples
 
@@ -55,7 +55,7 @@ def main():
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
             # Define input and output paths
-            autofl_img_path = resolve_relative_path(sample_path, rel_path_or_glob_pattern=args.input)
+            autofl_img_path = resolve_path(sample_path, path_or_pattern=args.input)
             brain_mask_output = Path(str(autofl_img_path).replace('.nii.gz', '_brain_mask.nii.gz'))
             autofl_img_masked_output = Path(str(autofl_img_path).replace('.nii.gz', '_masked.nii.gz'))
             autofl_tif_directory = str(autofl_img_path).replace('.nii.gz', '_tifs')

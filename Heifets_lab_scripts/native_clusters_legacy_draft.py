@@ -12,7 +12,7 @@ from rich.traceback import install
 from argparse_utils import SuppressMetavar, SM
 from to_native5 import warp_to_native
 from unravel_config import Configuration 
-from unravel_img_io import load_3D_img, load_image_metadata_from_txt, resolve_relative_path, save_as_nii
+from unravel_img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_nii
 from unravel_img_tools import cluster_IDs
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples
 
@@ -134,7 +134,7 @@ def main():
                 return
             
             # Load resolutions and dimensions of full res image or scaling and to calculate how much padding to remove
-            metadata_path = resolve_relative_path(sample_path, rel_path_or_glob_pattern=args.metad_path)
+            metadata_path = resolve_path(sample_path, path_or_pattern=args.metad_path)
             xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
             if xy_res is None:
                 print(f"    [red1]./{sample}/parameters/metadata.txt is missing. Generate w/ metadata.py")
