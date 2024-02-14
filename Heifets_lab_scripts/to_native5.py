@@ -69,7 +69,6 @@ def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, ta
     
     return np.array(resampled_dimensions), np.array(padded_dimensions)
 
-
 @print_func_name_args_times()
 def scale_to_full_res(ndarray, full_res_dims, zoom_order=0):
     """Scale ndarray to match x, y, z dimensions provided as ndarray (order=0 is nearest-neighbor). Returns scaled ndarray."""
@@ -138,6 +137,7 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
     if legacy: 
         cropped_img = reverse_reorient_for_raw_to_nii_conv(cropped_img)
 
+    # cropped_img should be oriented like the raw image
     # Scale to full resolution
     native_img = scale_to_full_res(cropped_img, original_dimensions, zoom_order)
 
@@ -150,7 +150,6 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
             save_as_nii(native_img, output, xy_res, z_res, native_img.dtype)
         else: 
             print(f"\n    [red bold]Output path does not end with .zarr or .nii.gz\n") 
-
 
     return native_img
 

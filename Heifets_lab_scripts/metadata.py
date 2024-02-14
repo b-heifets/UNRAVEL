@@ -25,7 +25,7 @@ def parse_args():
     parser.epilog = """Run this from an experiment or sample?? folder if using a relative input path. 
 
 Usage:    metadata.py -i rel_path/full_res_img (can use glob patterns)
-          metadata.py -i tif_dir -x 3.5232 -z 6 # use this if metadata not extractable
+          metadata.py -i tif_dir -x 3.5232 -z 6 # Use if metadata not extractable
 
 Inputs: .czi, .nii.gz, or tif series (path should be relative to ./sample??)
 Outputs: ./parameters/metadata.txt (path should be relative to ./sample??)
@@ -56,10 +56,10 @@ def main():
         for sample_path in samples:
 
             # Resolve path to image
-            img_path = resolve_relative_path(sample_path, rel_path_or_glob_pattern=args.input)
+            img_path = resolve_relative_path(sample_path, path_or_glob_pattern=args.input)
 
             # Resolve path to metadata file
-            metadata_path = resolve_relative_path(sample_path, rel_path_or_glob_pattern=args.metad_path, make_parents=True)
+            metadata_path = resolve_relative_path(sample_path, path_or_glob_pattern=args.metad_path, make_parents=True)
 
             if metadata_path.exists():
                 print(f'\n\n{metadata_path} exists. Skipping...')
@@ -70,7 +70,6 @@ def main():
                     if img_path.is_dir and args.xy_res is not None and args.z_res is not None:
                         x_dim, y_dim, z_dim = get_dims_from_tifs(img_path)
                         save_metadata_to_file(args.xy_res, args.z_res, x_dim, y_dim, z_dim, save_metadata=metadata_path)
-                        return
                     else: 
                         load_3D_img(img_path, desired_axis_order="xyz", xy_res=args.xy_res, z_res=args.z_res, return_metadata=True, save_metadata=metadata_path)
                         print(f'\n\n{metadata_path}:')
