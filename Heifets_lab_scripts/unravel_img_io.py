@@ -204,7 +204,7 @@ def save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata='par
 
 def load_image_metadata_from_txt(metadata="./parameters/metadata*"):
     """Loads ./parameters/metadata* and returns xy_res, z_res, x_dim, y_dim, z_dim | None if file not found."""
-    file_paths = glob(metadata)
+    file_paths = glob(str(metadata))
     if file_paths:
         with open(file_paths[0], 'r') as file:
             for line in file:

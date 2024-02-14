@@ -79,6 +79,7 @@ def scale_to_full_res(ndarray, full_res_dims, zoom_order=0):
 @print_func_name_args_times()
 def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_prefix, reg_input_res, fixed_img_res, interpol, metadata_path, legacy, zoom_order, data_type, output):
     """Warp image from atlas space to full res native space"""
+
     # Load images for warping
     atlas_space_ants_img = ants.image_read(moving_img_path)
     fixed_ants_img = ants.image_read(fixed_img_path)
@@ -125,7 +126,7 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
     else: 
         atlas_space_nib_img = nib.load(moving_img_path) 
         data_type = atlas_space_nib_img.get_data_dtype()
-        warped_img = warped_ants_img.numpy().astype(data_type) # convert to ndarray with original dtype
+        warped_img = warped_ants_img.numpy().astype(data_type) # Convert to ndarray with original dtype
 
     # Perform cropping to remove padding
     cropped_img = warped_img[
@@ -134,11 +135,11 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
         crop_mins[2]:crop_mins[2] + crop_sizes[2]
     ]
 
+    # Reorient if needed
     if legacy: 
         cropped_img = reverse_reorient_for_raw_to_nii_conv(cropped_img)
 
-    # cropped_img should be oriented like the raw image
-    # Scale to full resolution
+    # Scale to full resolution (cropped_img should be oriented like the raw image)
     native_img = scale_to_full_res(cropped_img, original_dimensions, zoom_order)
 
     # Save as .nii.gz or .zarr

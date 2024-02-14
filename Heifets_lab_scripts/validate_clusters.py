@@ -52,7 +52,9 @@ def parse_args():
 
 Example usage:     validate_clusters.py -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
 
-Outputs: ./sample??/clusters/<cluster_index_dir>/outer_bounds.txt, ./sample??/clusters/<cluster_index_dir>/cluster_data.csv
+cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
+
+Outputs: ./sample??/clusters/<cluster_index_dir>/outer_bounds.txt, ./sample??/clusters/<cluster_index_dir>/<args.density>_data.csv
 
 For -s, if a dir name is provided, the script will load ./sample??/seg_dir/sample??_seg_dir.nii.gz. 
 If a relative path is provided, the script will load the image at the specified path.
@@ -209,12 +211,18 @@ def main():
                 d_type = "uint8"
             elif rev_cluster_index.max() < 65536:
                 d_type = "uint16"
+
+            # Define paths relative to sample?? folder
+            fixed_img_path = str(resolve_path(sample_path, args.fixed_img))
+            transforms_path = resolve_path(sample_path, args.transforms)
+            metadata_path = resolve_path(sample_path, args.metadata)
+            native_idx_path = resolve_path(sample_path, args.native_idx) if args.native_idx else None
             
             # Load cluster index and convert to ndarray 
             if args.native_idx and Path(args.native_idx).exists():
                 native_cluster_index = load_3D_img(Path(args.native_idx).exists())
             else:
-                native_cluster_index = warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.reg_res, args.fixed_res, args.interpol, args.metadata, args.legacy, args.zoom_order, d_type, output=args.native_idx)
+                native_cluster_index = warp_to_native(args.moving_img, fixed_img_path, transforms_path, args.reg_o_prefix, args.reg_res, args.fixed_res, args.interpol, metadata_path, args.legacy, args.zoom_order, d_type, output=native_idx_path)
 
             # Get clusters to process
             if args.clusters == "all":
@@ -227,7 +235,7 @@ def main():
             native_cluster_index_cropped, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax = crop_outer_space(native_cluster_index, output_path)
 
             # Load image metadata from .txt
-            xy_res, z_res, _, _, _ = load_image_metadata_from_txt(args.metadata)
+            xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
             if xy_res is None or z_res is None: 
                 print("    [red bold]./sample??/parameters/metadata.txt missing. cd to sample?? dir and run: metadata.py")
 
