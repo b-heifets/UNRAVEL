@@ -20,7 +20,7 @@ def parse_args():
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', action=SM)
     parser.add_argument('-m', '--mask', help='Mask image path relative to ./ or ./sample??/. "sample??_" in arg replaced as needed.', action=SM)
-    parser.add_argument('-d', '--direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 1', default='less', choices=['greater', 'less'], action=SM)
+    parser.add_argument('-di', '--direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 1', default='less', choices=['greater', 'less'], action=SM)
     parser.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', action=SM)
     parser.add_argument('-x', '--xyres', help='If output .nii.gz: x/y voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
     parser.add_argument('-z', '--zres', help='If output .nii.gz: z voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
@@ -60,8 +60,10 @@ def main():
             else:
                 dynamic_mask_path = args.mask
 
+            img_path = resolve_path(sample_path, dynamic_mask_path)
+
             # Load mask with the updated or original path
-            mask = load_3D_img(resolve_path(sample_path, dynamic_mask_path), return_res=False)
+            mask = load_3D_img(img_path, return_res=False)
 
             # Apply mask to image
             masked_img = apply_mask_to_ndarray(img, mask, args.direction)
