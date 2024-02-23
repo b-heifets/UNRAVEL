@@ -15,7 +15,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Validate clusters with t-tests after pooling data from left and right hemispheres', formatter_class=SuppressMetavar)
     parser.epilog = """Inputs: *.csv from validate_clusters.py (they must be in the working directory)
 
-Naming conventions:
+Inputs: *.csv from validate_clusters.py (they must be in the working directory) from the left and right hemispheres.
+
+CSV naming conventions:
 - Condition: first word before '_' in the file name
 - Side: last word before .csv
 

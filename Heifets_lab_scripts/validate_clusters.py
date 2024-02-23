@@ -203,7 +203,7 @@ def main():
                 output_path = resolve_path(sample_path, Path("clusters", cluster_index_dir, f"{args.density}_data.csv"), make_parents=True)
             if output_path and output_path.exists():
                 print(f"\n\n    {output_path} already exists. Skipping.\n")
-                return
+                continue
             
             # Use lower bit-depth possible for cluster index
             rev_cluster_index = load_3D_img(args.moving_img)
