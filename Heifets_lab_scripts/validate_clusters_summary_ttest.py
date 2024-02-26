@@ -12,8 +12,9 @@ from argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Validate clusters based on differences in cell or label density w/ t-tests.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='Validate clusters based on differences in cell/object or label density w/ t-tests.', formatter_class=SuppressMetavar)
     parser.add_argument('-t', '--tail', help="Specify '1' for a one-tailed test or '2' for a two-tailed test (default: 2).", default='2', type=str, action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Inputs: *.csv from validate_clusters.py (e.g., in working dir named after the rev_cluster_index.nii.gz file)
 
 CSV naming conventions:
@@ -62,7 +63,7 @@ def main():
 
     if has_hemisphere:
         # Process files with hemisphere pooling
-        print("\n    Pooling bilateral data...\n")
+        print(f"\nProcessing [red1 bold]bilateral[/red1 bold] [dark_orange bold]{density_col}[/ dark_orange bold] data from _LH.csv and _RH.csv files with [gold1 bold]{str(args.tail)}[/gold1 bold]-tailed t-tests...")
         for file in csv_files:
             condition_name = file.split('_')[0]
             side = file.split('_')[-1].split('.')[0]
@@ -83,7 +84,7 @@ def main():
         summary_df[density_col] = summary_df[data_col_pooled] / summary_df['pooled_cluster_volume'] # Add a column for cell/lable density
     else:
         # Process files without hemisphere pooling
-        print("\n    Processing unilateral data...\n")
+        print(f"\nProcessing [red1 bold]unilateral[/red1 bold] [dark_orange bold]{density_col}[/ dark_orange bold] data with [gold1 bold]{str(args.tail)}[/gold1 bold]-tailed t-tests...")
         for file in csv_files:
             df = pd.read_csv(file)
             df['condition'] = file.split('_')[0]
@@ -123,11 +124,15 @@ def main():
 
     t_test_results['significance'] = t_test_results['p_value'].apply(lambda p: '****' if p < 0.0001 else '***' if p < 0.001 else '**' if p < 0.01 else '*' if p < 0.05 else 'n.s.')
 
-    # Output results
-    print(f'\n{t_test_results}\n')
+    # Print the name of the working directory
+    print(f"Current working directory: [bold green]{Path.cwd().name}")
+
+    if args.verbose:
+        # Output results
+        print(f'\n{t_test_results}\n')
 
     # Print the number of clusters with significant differences
-    print(f"\nNumber of sig. clusters: {len(t_test_results[t_test_results['p_value'] < 0.05])}")
+    print(f"Number of sig. clusters: {len(t_test_results[t_test_results['p_value'] < 0.05])}")
 
     # Print the total number of clusters
     print(f"Total number of clusters: {len(t_test_results)}")
@@ -162,7 +167,7 @@ def main():
     with open(Path(output_dir) / 'significant_cluster_IDs.txt', 'w') as f:
         f.write(significant_cluster_ids_str)
     
-    print(f"\nSaved results in ./{output_dir}/\n")
+    print(f"Saved results in [bright_magenta]./cluster_validation_summary/")
 
 if __name__ == '__main__':
     install()
