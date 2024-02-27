@@ -272,16 +272,37 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
 
 
 # Save images
+def load_nii_orientation(input_nii_path):
+    """Load a .nii.gz file and return its orientation (affine matrix)."""
+    nii = nib.load(str(input_nii_path))
+    return nii.affine
 
 @print_func_name_args_times()
-def save_as_nii(ndarray, output, xy_res, z_res, data_type):
-    """Save a numpy array as a .nii.gz image."""
-
+def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=np.float32, reference=None):
+    """
+    Save a numpy array as a .nii.gz image with the option to retain the orientation of an input .nii.gz file.
+    
+    :param ndarray: The numpy array to save.
+    :param output: Output file path.
+    :param xy_res: XY resolution in microns.
+    :param z_res: Z resolution in microns.
+    :param data_type: Data type for the NIFTI image.
+    :param reference: Either an affine matrix or a path to a .nii.gz file to retain its orientation.
+    """
     output = Path(output).resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
     
-    # Create the affine matrix with the appropriate resolutions (converting microns to mm)
-    affine = np.diag([xy_res / 1000, xy_res / 1000, z_res / 1000, 1])
+    # Check if reference is an affine matrix or a path
+    if reference is not None:
+        if isinstance(reference, np.ndarray):
+            affine = reference
+        elif isinstance(reference, (str, Path)):
+            affine = load_nii_orientation(reference)
+        else:
+            raise ValueError("Reference must be either an affine matrix or a file path.")
+    else:
+        # Create the affine matrix with the appropriate resolutions (converting microns to mm)
+        affine = np.diag([xy_res / 1000, xy_res / 1000, z_res / 1000, 1]) # RAS orientation
     
     # Create and save the NIFTI image
     nifti_img = nib.Nifti1Image(ndarray, affine)
