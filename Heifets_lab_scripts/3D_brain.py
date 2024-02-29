@@ -80,14 +80,20 @@ def main():
     # Get R, G, B values for each region
     color_map = pd.read_csv(Path(__file__).parent / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
 
+    # Delete rgba.txt if it exists (used for coloring the regions in DSI Studio)
+    txt_output = str(Path(args.input).parent / "rgba.txt")
+    if Path(txt_output).exists():
+        Path(txt_output).unlink()
+
     # Determine the RGB color for bars based on the region_id
     for region_id in present_regions:
         combined_region_id = region_id if region_id < 20000 else region_id - 20000
         region_rgb = color_map[color_map['Region_ID'] == combined_region_id][['R', 'G', 'B']]
 
         # Convert R, G, B values to space-separated R G B A values (one line per region)
-        txt_output = str(Path(args.input).parent / "rgba.txt")
         rgba_str = ' '.join(region_rgb.astype(str).values[0]) + ' 255'
+
+        # Save the RGBA values to a .txt file
         with open(txt_output, 'a') as f:
             f.write(rgba_str + '\n')
     
