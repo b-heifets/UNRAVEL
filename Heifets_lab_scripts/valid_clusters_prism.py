@@ -13,6 +13,7 @@ from argparse_utils import SuppressMetavar, SM
 def parse_args():
     parser = argparse.ArgumentParser(description='Organize cell_count|label_volume, cluster_volume, and <cell|label>_density data from cluster and sample and save as csv', formatter_class=SuppressMetavar)
     parser.add_argument('-a', '--all', help='Save all summary CSVs included ones w/ cell_count|label_volume and cluster_volume data', action='store_true', default=False)
+    parser.add_argument('-c', '--clusters', help='List of valid cluster IDs to include in the summary', nargs='+', type=int, action=SM)
     parser.epilog = """Inputs: *.csv from validate_clusters.py (e.g., in working dir named after the rev_cluster_index.nii.gz file)
 
 CSV naming conventions:
@@ -112,12 +113,21 @@ def main():
     # Generate a summary table for the cell_density or label_density data
     density_col_summary_df = generate_summary_table(csv_files, density_col)
 
+    # Exclude clusters that are not in the list of valid clusters
+    if args.clusters is not None:
+        data_col_summary_df = data_col_summary_df[data_col_summary_df['cluster_ID'].isin(args.clusters)]
+        cluster_volume_summary_df = cluster_volume_summary_df[cluster_volume_summary_df['cluster_ID'].isin(args.clusters)]
+        density_col_summary_df = density_col_summary_df[density_col_summary_df['cluster_ID'].isin(args.clusters)]
+
     # Sum each column in the summary tables other than the 'cluster_ID' column, which could be dropped
     data_col_summary_df_sum = data_col_summary_df.sum()
     cluster_volume_summary_df_sum = cluster_volume_summary_df.sum()
 
     # Calculate the density sum from the sum of the cell_count or label_volume and cluster_volume sums
-    density_col_summary_df_sum = data_col_summary_df_sum / cluster_volume_summary_df_sum * 100
+    if 'cell_count' in first_df.columns:
+        density_col_summary_df_sum = data_col_summary_df_sum / cluster_volume_summary_df_sum
+    elif 'label_volume' in first_df.columns:
+        density_col_summary_df_sum = data_col_summary_df_sum / cluster_volume_summary_df_sum * 100
 
     # Organize the df like the original summary tables
     multi_index = data_col_summary_df.columns
