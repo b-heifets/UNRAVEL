@@ -2,20 +2,29 @@
 
 import argparse
 from glob import glob
+from pathlib import Path
+from matplotlib.colors import hex2color
 import numpy as np
+import openpyxl
 import pandas as pd
 from argparse_utils import SuppressMetavar, SM
 from rich import print
+from openpyxl.styles import PatternFill
+from openpyxl.styles.colors import Color
+from openpyxl.utils import get_column_letter
+from openpyxl.utils.dataframe import dataframe_to_rows
+from openpyxl.styles import Border, Side, Font
+from openpyxl.styles import Alignment
 
 def parse_args():
     parser = argparse.ArgumentParser(description='''Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.''',
                                      formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/*_sunburst.csv. Default: first *_sunburst.csv match. Columns: Depth_0, Depth_1, ..., Volume_(mm^3)', action=SM)
-    parser.add_argument('-s', '--sorted', help='path/*_sunburst_sorted.csv (default)', action=SM)
     parser.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
     parser.add_argument('-p', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Example usage:    top_regions.py -i input.csv
+    parser.epilog = """Example usage:    valid_clusters_table.py
+
+Prerequisites: valid_cluster_index.sh has been run. Run this script from the <valid_clusters> dir. *cluster_info.txt is assumed to be in its parent dir.
 
 Sorting by heirarchy and volume: 
 1) Group by Depth: Starting from the earliest depth column, for each depth level:
@@ -172,17 +181,12 @@ def calculate_top_regions(df, top_n, percent_vol_threshold, verbose=False):
         return top_regions_df
     else:
         return None
-
-
-def main():
-    args = parse_args()
-
+    
+def get_top_regions_and_percent_vols(cluster_dir, top_regions, percent_vol, verbose=False):
     # Load the CSV file into a DataFrame
-    if args.input:
-        input_csv = args.input
-    else:
-        csv_files = glob('*sunburst.csv')
-        input_csv = csv_files[0] # first match
+    cluster_path = Path(cluster_dir).resolve()
+    csv_files = glob(f'{cluster_path}/*_sunburst.csv')
+    input_csv = csv_files[0] # first match
     df = pd.read_csv(input_csv)
 
     # Fill NaN values in the original DataFrame
@@ -195,17 +199,17 @@ def main():
     df_final = undo_fill_with_original(df_filled_sorted, df)
 
     # Save the sorted DataFrame to a new CSV file
-    sorted_path = args.sorted if args.sorted else input_csv.replace('sunburst.csv', 'sunburst_sorted.csv')
+    sorted_path = input_csv.replace('sunburst.csv', 'sunburst_sorted.csv')
     df_final.to_csv(sorted_path, index=False)
 
-    if args.verbose:
+    if verbose:
         print(f'\nSunburst csv sorted by region hierarchy : \n')
         print(f'{df_final}\n')
 
     # Attempt to calculate top regions, collapsing as necessary
     criteria_met = False
     while not criteria_met:
-        top_regions_df = calculate_top_regions(df_final, args.top_regions, args.percent_vol, args.verbose)
+        top_regions_df = calculate_top_regions(df_final, top_regions, percent_vol, verbose)
 
         if top_regions_df is not None and not top_regions_df.empty: # If top regions are found
             criteria_met = True
@@ -214,7 +218,7 @@ def main():
             total_volume = df_final['Volume_(mm^3)'].sum()
             top_regions_df = top_regions_df[top_regions_df['Volume_(mm^3)'] / total_volume > 0.01]
             
-            if args.verbose:
+            if verbose:
                 print(f'\nTop regions meeting the volume criterion:\n')
                 print(f'{top_regions_df}\n')
 
@@ -239,18 +243,215 @@ def main():
             print(f'\n{top_region_names_and_percent_vols=}')
 
             # Save the top regions DataFrame to a new CSV file
-            top_regions_path = args.sorted.replace('_sorted.csv', '_top_regions.csv') if args.sorted else input_csv.replace('sunburst.csv', 'sunburst_top_regions.csv')
+            top_regions_path = input_csv.replace('sunburst.csv', 'sunburst_top_regions.csv')
             top_regions_df.to_csv(top_regions_path, index=False)
         else:
             # Attempt to collapse the hierarchy further
-            df_final = collapse_hierarchy(df_final, args.verbose)
+            df_final = collapse_hierarchy(df_final, verbose)
 
-            if args.verbose:
+            if verbose:
                 print(f'\nTop regions do not meet the volume criterion. Collapsing the hierarchy:\n')
                 print(f'{df_final}\n')
 
             if df_final.empty:
                 break  # Exit if no further collapsing is possible
+
+    return top_region_names_and_percent_vols, total_volume
+
+
+
+
+def main():
+    args = parse_args()
+
+    # Find cluster_* dirs in the current dir
+    cluster_dirs = glob('cluster_*')
+
+    # Generate dynamic column names based on args.top_regions
+    column_names = ['Cluster'] + ['Volume'] + ['CoG'] + ['~Region'] + ['ID_Path'] + [f'Top_Region_{i+1}' for i in range(args.top_regions)]
+
+    # Load the *cluster_info.txt file from the parent dir to get the cluster Centroid of Gravity (CoG)
+    parent_dir = Path.cwd().parent
+    cluster_info_files = glob(str(parent_dir / '*cluster_info.txt'))
+    cluster_info_file = cluster_info_files[0] # first match
+ 
+    # Load the cluster info file
+    cluster_info_df = pd.read_csv(cluster_info_file, sep='\t', header=None)  # Assuming tab-separated values; adjust if different
+
+    # Reverse the row order of only the first column (excluding the header)
+    first_column_name = cluster_info_df.columns[0]
+    reversed_data = cluster_info_df[first_column_name].iloc[1:].iloc[::-1].reset_index(drop=True) # Reverse the data 
+    new_first_column = pd.concat([cluster_info_df[first_column_name].iloc[:1], reversed_data]) # Concat header w/ reversed data
+    cluster_info_df[first_column_name] = new_first_column.values # Assign the new column back to the DataFrame
+
+    # Get the CoG for each cluster (values in last three columns of each row)
+    CoGs = cluster_info_df.iloc[:, -3:].values
+
+    # Convert to this format: 'x,y,z'
+    CoGs = [','.join(map(str, CoG)) for CoG in CoGs]
+
+    # Create a dict w/ the first column as keys and the CoG as values
+    cluster_CoGs = dict(zip(cluster_info_df[first_column_name], CoGs))
+
+    # Create an empty DataFrame with the column names
+    top_regions_and_percent_vols_df = pd.DataFrame(columns=column_names)
+
+    # Load csv with CCFv3 info 
+    ccfv3_info_df = pd.read_csv(Path(__file__).parent / 'CCFv3_info.csv')
+
+    # For each cluster directory
+    for cluster_dir in cluster_dirs:
+        cluster_num = cluster_dir.split('_')[-1]  # Extract cluster number from directory name
+
+        # Get the CoG string for the current cluster from the dictionary
+        cog_string = cluster_CoGs.get(cluster_num) if cluster_CoGs.get(cluster_num) else "Not found"
+
+        # Get the top regions and their percentage volumes for the current cluster
+        top_regions_and_percent_vols, cluster_volume = get_top_regions_and_percent_vols(cluster_dir, args.top_regions, args.percent_vol, args.verbose)
+
+        # Get the top region
+        top_region = top_regions_and_percent_vols[0].split(' ')[0]
+
+        # Lookup the general_regio and structure_id_path in the DataFrame using the abbreviation for the top region
+        general_region = ccfv3_info_df.loc[ccfv3_info_df['abbreviation'] == top_region, 'general_region'].values
+        id_path = ccfv3_info_df.loc[ccfv3_info_df['abbreviation'] == top_region, 'structure_id_path'].values
+
+        # Since there could be multiple matches, we take the first one or a default value if not found
+        general_region = general_region[0] if len(general_region) > 0 else "General region not found"
+        id_path = id_path[0] if len(id_path) > 0 else "ID path not found"
+
+        # Ensure the list has the exact number of top regions (pad with None if necessary)
+        padded_top_regions = (list(top_regions_and_percent_vols) + [None] * args.top_regions)[:args.top_regions]
+
+        # Prepare the row data, including placeholders for 'Volume', 'CoG', '~Region', and top regions
+        row_data = [cluster_num, cluster_volume, cog_string, general_region, id_path] + padded_top_regions   
+
+        # Ensure column_names matches the structure of row_data
+        column_names = ['Cluster', 'Volume', 'CoG', '~Region', 'ID_Path'] + [f'Top_Region_{i+1}' for i in range(args.top_regions)]
+
+        # Create a temporary DataFrame for the current cluster's data
+        temp_df = pd.DataFrame([row_data], columns=column_names)
+
+        # Concatenate the temporary DataFrame with the main DataFrame
+        top_regions_and_percent_vols_df = pd.concat([top_regions_and_percent_vols_df, temp_df], ignore_index=True)
+
+    # Sort the DataFrame by the 'ID_Path' column in descending order
+    top_regions_and_percent_vols_df = top_regions_and_percent_vols_df.sort_values(by='ID_Path', ascending=False)
+
+    # Drop the 'ID_Path' column
+    top_regions_and_percent_vols_df = top_regions_and_percent_vols_df.drop(columns=['ID_Path'])
+
+    # Convert the 'Volume' column to 4 decimal places
+    top_regions_and_percent_vols_df['Volume'] = top_regions_and_percent_vols_df['Volume'].round(4)
+
+    # Define the path for the new Excel file
+    excel_file_path = Path(__file__).parent / 'top_regions_and_percent_vols.xlsx'
+
+    print(f'\n The top regions and their percentage volumes for each cluster: \n')
+    print(f'\n{top_regions_and_percent_vols_df}\n')
+
+    # Load csv with RGB values 
+    sunburst_RGBs_df = pd.read_csv(Path(__file__).parent / 'sunburst_RGBs.csv', header=None)
+
+    # Parse the dataframe to get a dictionary of region names and their corresponding RGB values
+    rgb_values = {}
+    for index, row in sunburst_RGBs_df.iterrows():
+        # Format is 'region_name: rgb(r,g,b)'
+        region, rgb = row[0].split(': rgb(')
+        r, g, b = map(int, rgb.strip(')').split(','))
+        rgb_values[region] = (r, g, b)
+
+    # Create an Excel workbook and select the active worksheet
+    wb = openpyxl.Workbook()
+    ws = wb.active
+
+    thin_border = Border(left=Side(style='thin'), right=Side(style='thin'), top=Side(style='thin'), bottom=Side(style='thin'))
+
+    # Write each row of the DataFrame to the worksheet and color cells for the top regions
+    for region in dataframe_to_rows(top_regions_and_percent_vols_df, index=False, header=True):
+        ws.append(region)
+
+        for i in range(args.top_regions):
+
+            # Find the region name without the percentage to match the RGB values
+            top_region_column_num = 4 + i
+
+            region_key = None
+            if region[top_region_column_num] is not None:
+                region_key = region[top_region_column_num].split(' ')[0]
+
+            # Apply the color to the cell if it matches one of the RGB values
+            if region_key in rgb_values:
+                # Convert the RGB to a hex string
+                rgb = rgb_values[region_key]
+                hex_color = "{:02x}{:02x}{:02x}".format(rgb[0], rgb[1], rgb[2])
+                fill = PatternFill(start_color=hex_color, end_color=hex_color, fill_type='solid')
+                top_region_column_num = 5 + i
+                ws.cell(row=ws.max_row, column=top_region_column_num).fill = fill
+                ws.cell(row=ws.max_row, column=top_region_column_num).border = thin_border
+            elif region_key is None:
+                hex_color = "{:02x}{:02x}{:02x}".format(100, 100, 100) # Grey
+                fill = PatternFill(start_color=hex_color, end_color=hex_color, fill_type='solid')
+                top_region_column_num = 5 + i
+                ws.cell(row=ws.max_row, column=top_region_column_num).fill = fill
+                ws.cell(row=ws.max_row, column=top_region_column_num).border = thin_border
+
+    # Apply a thin border style to cells with content
+    for row in ws.iter_rows():
+        for cell in row:
+            if cell.value:  # If the cell has content
+                cell.border = thin_border
+                cell.font = Font(name='Arial', size=11)
+
+    # Apply the font to the header row
+    header_font = Font(name='Arial', bold=True)
+    for cell in ws['1:1']:
+        cell.font = header_font
+
+    # Insert a new row at the top
+    ws.insert_rows(1)
+
+    # Insert a new column at the left
+    ws.insert_cols(1)            
+
+    # Adjust the column width to fit the content
+    for col in ws.columns:
+        max_length = 0
+        for cell in col:
+            if cell.value:
+                max_length = max(max_length, len(str(cell.value)))
+        if max_length > 0:
+            adjusted_width = max_length + 2  # Add 2 for a little extra padding
+            column_letter = openpyxl.utils.get_column_letter(col[0].column)
+            ws.column_dimensions[column_letter].width = adjusted_width
+
+    # Fill cells in first column with white
+    for cell in ws['A']:
+        cell.fill = PatternFill(start_color='FFFFFF', end_color='FFFFFF', fill_type='solid')
+
+    # Fill cells in ninth column with white
+    column = 6 + args.top_regions
+    for cell in ws[get_column_letter(column)]:
+        cell.fill = PatternFill(start_color='FFFFFF', end_color='FFFFFF', fill_type='solid')
+
+    # Fill cells in first row with white
+    for cell in ws[1]:
+        cell.fill = PatternFill(start_color='FFFFFF', end_color='FFFFFF', fill_type='solid')
+
+    # Fill cells in last row with white
+    num_rows = top_regions_and_percent_vols_df.shape[0] + 3
+    for cell in ws[num_rows]:
+        cell.fill = PatternFill(start_color='FFFFFF', end_color='FFFFFF', fill_type='solid')
+
+    # Center align the content
+    for row in ws.iter_rows(min_row=1, min_col=1):
+        for cell in row:
+            cell.alignment = Alignment(horizontal='center', vertical='center')
+
+    # Save the workbook to a file
+    excel_file_path = 'valid_clusters_table.xlsx'
+    wb.save(excel_file_path)
+    print(f"Excel file saved at {excel_file_path}")
 
 
 if __name__ == '__main__':
