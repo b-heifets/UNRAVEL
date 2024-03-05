@@ -88,11 +88,11 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
     transforms_dir = Path(transforms_dir).resolve()
     deformation_field = str(Path(f'{transforms_dir}/{reg_output_prefix}1Warp.nii.gz'))
     generic_affine_matrix = str(Path(f'{transforms_dir}/{reg_output_prefix}0GenericAffine.mat'))
-    intial_affine_matrix = str(Path(f'{transforms_dir}/init_tform.mat'))
+    initial_transform_matrix = str(Path(f'{transforms_dir}/init_tform.mat'))
     warped_ants_img = ants.apply_transforms(
         fixed=fixed_ants_img,
         moving=atlas_space_ants_img,
-        transformlist=[deformation_field, generic_affine_matrix, intial_affine_matrix],
+        transformlist=[deformation_field, generic_affine_matrix, initial_transform_matrix],
         interpolator=interpol
     )
 
