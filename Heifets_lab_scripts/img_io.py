@@ -29,11 +29,12 @@ def main():
     if args.xy_res is None or args.z_res is None:
         img, xy_res, z_res = load_3D_img(args.input, return_res=True)
     else:
-        img = load_3D_img(args.input, return_res=True)
+        img = load_3D_img(args.input)
         xy_res, z_res = args.xy_res, args.z_res
 
     # Print metadata
-    print(f"\n    Image shape: {img.shape}")
+    print(f"\n    Type: {type(img)}")
+    print(f"    Image shape: {img.shape}")
     print(f"    Image dtype: {img.dtype}")
     print(f"    xy resolution: {xy_res} um")
     print(f"    z resolution: {z_res} um")
