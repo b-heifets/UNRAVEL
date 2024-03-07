@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
 import argparse
-import numpy as np
 import ants
+import nibabel as nib
+import numpy as np
+from fsl.data.image import Image
 from pathlib import Path
 from rich import print
 from rich.live import Live
@@ -10,8 +12,8 @@ from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration
-from unravel_img_io import load_3D_img, resolve_path, load_image_metadata_from_txt, save_as_nii
-from unravel_img_tools import resample, reorient_for_raw_to_nii_conv, pad_image, reorient_ndarray
+from unravel_img_io import load_3D_img, resolve_path, save_as_nii
+from unravel_img_tools import resample, reorient_for_raw_to_nii_conv
 from unravel_utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
 
 
@@ -21,6 +23,10 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-m', '--moving_img', help='INPUT: Path of native image relative to ./sample?? (fixed image)', required=True, action=SM)
+    parser.add_argument('-tr', '--target_res', help='Res of image just before warping in micron. Default=50', type=int, default=50, action=SM)
+
+
+    parser.add_argument('-rf', '--reg_fixed', help='Name of file in transforms dir used as fixed input for registration. Default: clar.nii.gz', default='clar.nii.gz', action=SM)
     parser.add_argument('-o', '--output', help='Output path/img.nii.gz', default=None, action=SM)
     parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-ort', '--ort_code', help='3 letter orientation code for reorienting (using the letters RLAPSI). Default: ALI', default='ALI', action=SM)
@@ -51,33 +57,110 @@ Input examples (path is relative to ./sample??; 1st glob match processed):
 
 
 
+# Function to set the affine header using orientation code using ants image
+def set_affine_header(ants_img, ort_code):
+    """Set the affine header using orientation code"""
+    # Set the affine header using orientation code
+    affine = ants.affine_matrix_from_orientation(orientation=ort_code, origin=[0, 0, 0], size=[1, 1, 1], spacing=[1, 1, 1])
+    ants_img.set_origin([0, 0, 0])
+    ants_img.set_direction(np.eye(3))
+    ants_img.set_spacing([1, 1, 1])
+    ants_img.set_direction(affine[:3, :3])
+    ants_img.set_origin(affine[:3, 3])
 
+def pad_img(ndarray, pad_width=0.15):
+    """Pads ndarray by 15% of voxels on all sides"""
+    pad_factor = 1 + 2 * pad_width
 
+    pad_width_x = round(((ndarray.shape[0] * pad_factor) - ndarray.shape[0]) / 2)
+    pad_width_y = round(((ndarray.shape[1] * pad_factor) - ndarray.shape[1]) / 2)
+    pad_width_z = round(((ndarray.shape[2] * pad_factor) - ndarray.shape[2]) / 2)
+
+    return np.pad(ndarray, ((pad_width_x, pad_width_x), (pad_width_y, pad_width_y), (pad_width_z, pad_width_z)), mode='constant')
+ 
 
 @print_func_name_args_times()
-def to_atlas(sample_path, img, xy_res, z_res, reg_res, zoom_order, ort_code, interpol, transforms_dir, output, reg_output_prefix, legacy=False):
+def to_atlas(sample_path, img, xy_res, z_res, reg_res, target_res, zoom_order, fixed_img_for_reg, interpol, transforms_dir, output, reg_output_prefix, legacy=False):
     """Warps native image to atlas space"""
 
-    # Resample and reorient image
-    img = resample(img, xy_res, z_res, reg_res, zoom_order=zoom_order) 
+    # # Resample and reorient image
+    # img = resample(img, xy_res, z_res, reg_res, zoom_order=zoom_order) 
 
-    # Reorient image if legacy mode is True
-    if legacy:
-        img = reorient_for_raw_to_nii_conv(img)
-        save_as_nii(img, Path(sample_path, "img_reorient_for_raw_to_nii_conv.nii.gz"), args.reg_res, args.reg_res, np.uint16)
+    # # Reorient image if legacy mode is True
+    # if legacy:
+    #     img = reorient_for_raw_to_nii_conv(img)
+    #     save_as_nii(img, Path(sample_path, "img_reorient_for_raw_to_nii_conv.nii.gz"), reg_res, reg_res, np.uint16)        
 
-        # Reorient using orientation code
-        # img = reorient_ndarray(img, args.ort_code)
-        # save_as_nii(img, Path(sample_path, "img_reorient_for_raw_to_nii_conv_reort.nii.gz"), args.reg_res, args.reg_res, np.uint16)
+    # # Padding the image 
+    # img = pad_img(img, pad_width=0.15)
+    # save_as_nii(img, Path(sample_path, "pad.nii.gz"), reg_res, reg_res, np.uint16)
 
-        
+    # Create the Nifti1Image
+    # target_img = nib.Nifti1Image(img, np.eye(4))
+    target_img = nib.load(Path(sample_path, "pad.nii.gz"))
+    source_img = nib.load(fixed_img_for_reg) # Source of header info
+    new_affine = source_img.affine.copy()
 
-    # Padding the image 
-    img = pad_image(img, pad_width=0.15)
-    save_as_nii(img, Path(sample_path, "img_res_reort_padded.nii.gz"), args.reg_res, args.reg_res, np.uint16)
+    # Determine scale factors from source affine by examining the length of the vectors
+    # This works regardless of the orientation or which axes are flipped
+    scale_factors = np.linalg.norm(source_img.affine[:3, :3], axis=0)
+
+    # Adjust scale factors in the new affine matrix according to target resolution
+    # We calculate the adjustment factor based on the target resolution divided by the original scale factor
+    # Then apply this adjustment maintaining the direction (sign) of the original scale factors
+    target_res = target_res / 1000
+    for i in range(3):
+        adjustment_factor = np.array([target_res, target_res, target_res])[i] / scale_factors[i]
+        new_affine[:3, i] = source_img.affine[:3, i] * adjustment_factor
+
+
+
+    # Copy relevant header information
+    hdr1 = source_img.header
+    hdr2 = target_img.header
+    fields_to_copy = [
+        'xyzt_units', 'descrip', 'qform_code', 'sform_code',
+        'qoffset_x', 'qoffset_y', 'qoffset_z', # Assuming 'qoffset_z' is also needed
+    ]
+
+    for field in fields_to_copy:
+        hdr2[field] = hdr1[field]
+
+    # Conditionally copy entire 'pixdim' if appropriate for your task
+    hdr2['pixdim'] = hdr1['pixdim']
+
+     
+    #Copy header info from input to output:
+    # hdr1 = source_img.header
+    # hdr2 = target_img.header
+    # # hdr2['extents'] = hdr1['extents']
+    # # hdr2['regular'] = hdr1['regular']
+    # hdr2['pixdim'][4:] = hdr1['pixdim'][4:]
+    # hdr2['xyzt_units'] = hdr1['xyzt_units']
+    # # hdr2['descrip'] = hdr1['descrip']
+    # hdr2['qform_code'] = hdr1['qform_code']
+    # hdr2['sform_code'] = hdr1['sform_code']
+    # hdr2['qoffset_x'] = hdr1['qoffset_x']
+    # hdr2['qoffset_y'] = hdr1['qoffset_y']
+
+    # Save
+    nib.save(target_img, Path(sample_path, "cp.nii.gz"), new_affine)
+    nib.Nifti1Image(new_data, img.affine, img.header)
+    # save_as_nii(img, Path(sample_path, "pad.nii.gz"), args.reg_res, args.reg_res, np.uint16)
+
+
+
+
+    # set_affine_header(img, ort_code)
+
+    # save_as_nii(img, Path(sample_path, "reort.nii.gz"), args.reg_res, args.reg_res, np.uint16)
 
     import sys ; sys.exit()
 
+
+    # Convert the NumPy array to an ANTs image
+    img = img.astype('float32')
+    ants_img = ants.from_numpy(img)
 
     # Convert the numpy array to an ANTs image
     ants_img = ants.from_numpy(img)
@@ -110,7 +193,7 @@ def to_atlas(sample_path, img, xy_res, z_res, reg_res, zoom_order, ort_code, int
     )
 
     # Save warped image
-    ants.image_write(warped_ants_img, output)
+    ants.image_write(warped_ants_img, str(output))
 
 
 def main():    
@@ -129,11 +212,16 @@ def main():
                 return
 
             # Load autofluo image [and xy and z voxel size in microns]
-            img_path = resolve_path(sample_path, path_or_pattern=args.moving_img)
-            img, xy_res, z_res = load_3D_img(img_path, args.chann_idx, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)
+            img_path = resolve_path(sample_path, args.moving_img)
+            # img, xy_res, z_res = load_3D_img(img_path, args.chann_idx, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)
+            img = None
+            xy_res = args.xy_res
+            z_res = args.z_res
+
+            fixed_img_for_reg = resolve_path(sample_path, Path(args.transforms, args.reg_fixed))
 
             # Warp native image to atlas space
-            to_atlas(sample_path, img, xy_res, z_res, args.reg_res, args.zoom_order, args.ort_code, args.interpol, args.transforms, args.output, args.reg_o_prefix, legacy=args.legacy)
+            to_atlas(sample_path, img, xy_res, z_res, args.reg_res, args.target_res, args.zoom_order, fixed_img_for_reg, args.interpol, args.transforms, args.output, args.reg_o_prefix, legacy=args.legacy)
 
             progress.update(task_id, advance=1)
 

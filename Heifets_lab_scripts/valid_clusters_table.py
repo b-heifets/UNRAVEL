@@ -9,6 +9,7 @@ import openpyxl
 import pandas as pd
 from argparse_utils import SuppressMetavar, SM
 from rich import print
+from rich.traceback import install
 from openpyxl.styles import PatternFill
 from openpyxl.styles.colors import Color
 from openpyxl.utils import get_column_letter
@@ -343,10 +344,6 @@ def main():
 
     # Convert the 'Volume' column to 4 decimal places
     top_regions_and_percent_vols_df['Volume'] = top_regions_and_percent_vols_df['Volume'].round(4)
-
-    # Define the path for the new Excel file
-    excel_file_path = Path(__file__).parent / 'top_regions_and_percent_vols.xlsx'
-
     print(f'\n The top regions and their percentage volumes for each cluster: \n')
     print(f'\n{top_regions_and_percent_vols_df}\n')
 
@@ -455,4 +452,5 @@ def main():
 
 
 if __name__ == '__main__':
+    install()
     main()
