@@ -81,10 +81,10 @@ def main():
     columns_to_load = ['structure_id_path', 'very_general_region',  'collapsed_region_name', 'abbreviation', 'collapsed_region', 'other_abbreviation', 'other_abbreviation_defined', 'layer', 'sunburst']
 
     # Load the specified columns from the CSV with CCFv3 info
-    collapsing_instructions_df = pd.read_csv(Path(__file__).parent / 'CCFv3_info.csv', usecols=columns_to_load)
+    ccfv3_info_df = pd.read_csv(Path(__file__).parent / 'CCFv3_info.csv', usecols=columns_to_load)
 
     # Creat a dictionary to hold the mappings for the region abbreviation to collapsed region abbreviation
-    abbreviation_to_collapsed_dict = dict(zip(collapsing_instructions_df['abbreviation'], collapsing_instructions_df['collapsed_region']))
+    abbreviation_to_collapsed_dict = dict(zip(ccfv3_info_df['abbreviation'], ccfv3_info_df['collapsed_region']))
 
     # Now collapse the regions in the unique_regions set
     unique_regions_collapsed = {abbreviation_to_collapsed_dict.get(region, region) for region in all_unique_regions} 
@@ -95,7 +95,7 @@ def main():
     layers_set = set()
     for region in all_unique_regions:
         if any(char.isdigit() for char in region):
-            layer = collapsing_instructions_df.loc[collapsing_instructions_df['abbreviation'] == region, 'layer'].values
+            layer = ccfv3_info_df.loc[ccfv3_info_df['abbreviation'] == region, 'layer'].values
             if len(layer) > 0:
                 layers_set.add(str(layer[0]))  # Convert float to string
 
@@ -106,7 +106,7 @@ def main():
     # Get all regions with digits that are not defined as layers
     other_regions_w_digits = [
         region for region in all_unique_regions
-        if any(char.isdigit() for char in region) and not collapsing_instructions_df[collapsing_instructions_df['abbreviation'] == region]['layer'].notna().any()
+        if any(char.isdigit() for char in region) and not ccfv3_info_df[ccfv3_info_df['abbreviation'] == region]['layer'].notna().any()
     ]
 
     # Print the cortical layers and any regions with digits that are not defined as layers
@@ -116,14 +116,14 @@ def main():
         print(f"Numbers ({layers_set}) = cortical layers\n")
 
     # For regions in all_unique_regions, determine abbreviations to offload from the table (i.e., abbreviations mentioned in 'other_abbreviation' and defined in 'other_abbreviation_defined')
-    list_of_regions_w_other_abbreviation_in_all_unique_regions = [region for region in all_unique_regions if collapsing_instructions_df.loc[collapsing_instructions_df['abbreviation'] == region, 'other_abbreviation'].notna().any()]
+    list_of_regions_w_other_abbreviation_in_all_unique_regions = [region for region in all_unique_regions if ccfv3_info_df.loc[ccfv3_info_df['abbreviation'] == region, 'other_abbreviation'].notna().any()]
 
     # Initialize an empty dictionary to hold the mapping of other_abbreviations to their definitions
     other_abbreviation_to_definitions = {}
 
     for region in list_of_regions_w_other_abbreviation_in_all_unique_regions:
         # Extract 'other_abbreviation' and 'other_abbreviation_defined' for the current region
-        rows = collapsing_instructions_df[collapsing_instructions_df['abbreviation'] == region]
+        rows = ccfv3_info_df[ccfv3_info_df['abbreviation'] == region]
         for _, row in rows.iterrows():
             other_abbreviation = row['other_abbreviation']
             other_abbreviation_defined = row['other_abbreviation_defined']
@@ -147,7 +147,7 @@ def main():
 
 
     # Get the 'very_general_region' column from the CCFv3_info.csv file and use it to get the 'very_general_region' for each region in unique_regions_collapsed
-    very_general_region_dict = dict(zip(collapsing_instructions_df['collapsed_region'], collapsing_instructions_df['very_general_region']))
+    very_general_region_dict = dict(zip(ccfv3_info_df['collapsed_region'], ccfv3_info_df['very_general_region']))
     very_general_regions = [very_general_region_dict.get(region, '') for region in unique_regions_collapsed]
 
     # If the same string is in the 'very_general_regions' list and the 'unique_regions_collapsed' list, remove it from both at the same index
@@ -164,10 +164,10 @@ def main():
     legend_df = pd.DataFrame({'Region': very_general_regions, 'Abbrev.': unique_regions_collapsed})
 
     # Add the 'Subregion' column to the dataframe
-    legend_df['Subregion'] = [collapsing_instructions_df.loc[collapsing_instructions_df['collapsed_region'] == region, 'collapsed_region_name'].values[0] for region in unique_regions_collapsed]
+    legend_df['Subregion'] = [ccfv3_info_df.loc[ccfv3_info_df['collapsed_region'] == region, 'collapsed_region_name'].values[0] for region in unique_regions_collapsed]
 
     # Add the 'structure_id_path' column to the dataframe
-    legend_df['structure_id_path'] = [collapsing_instructions_df.loc[collapsing_instructions_df['collapsed_region'] == region, 'structure_id_path'].values[0] for region in unique_regions_collapsed]
+    legend_df['structure_id_path'] = [ccfv3_info_df.loc[ccfv3_info_df['collapsed_region'] == region, 'structure_id_path'].values[0] for region in unique_regions_collapsed]
 
     # Sort the dataframe by the 'structure_id_path' column in descending order
     legend_df.sort_values(by='structure_id_path', ascending=False, inplace=True)
@@ -238,14 +238,14 @@ def main():
             column_letter = openpyxl.utils.get_column_letter(col[0].column)
             ws.column_dimensions[column_letter].width = adjusted_width
 
-    # # Add columns for R, G, and B values to collapsing_instructions_df
-    collapsing_instructions_df[['R', 'G', 'B']] = collapsing_instructions_df['sunburst'].str.extract(r'rgb\((\d+),(\d+),(\d+)\)')
-    collapsing_instructions_df[['R', 'G', 'B']] = collapsing_instructions_df[['R', 'G', 'B']].apply(pd.to_numeric)
+    # # Add columns for R, G, and B values to ccfv3_info_df
+    ccfv3_info_df[['R', 'G', 'B']] = ccfv3_info_df['sunburst'].str.extract(r'rgb\((\d+),(\d+),(\d+)\)')
+    ccfv3_info_df[['R', 'G', 'B']] = ccfv3_info_df[['R', 'G', 'B']].apply(pd.to_numeric)
 
     # Apply RGB values to cells
-    apply_rgb_to_cell(ws, collapsing_instructions_df, 'very_general_region', 0)
-    apply_rgb_to_cell(ws, collapsing_instructions_df, 'collapsed_region', 1)
-    apply_rgb_to_cell(ws, collapsing_instructions_df, 'collapsed_region_name', 2)
+    apply_rgb_to_cell(ws, ccfv3_info_df, 'very_general_region', 0)
+    apply_rgb_to_cell(ws, ccfv3_info_df, 'collapsed_region', 1)
+    apply_rgb_to_cell(ws, ccfv3_info_df, 'collapsed_region_name', 2)
 
     # Iterate through the cells and merge cells with the same value in column B
     current_region = None
