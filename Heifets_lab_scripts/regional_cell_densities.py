@@ -17,8 +17,9 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times, initi
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Perform regional cell counting', formatter_class=RawTextHelpFormatter)
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, metavar='')
+    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
+    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image. Default: ochann_seg_ilastik_1.', default='ochann_seg_ilastik_1', metavar='')
     parser.add_argument('-a', '--atlas', help='Dir name for atlas relative to ./sample??/. Default: atlas/native_atlas/native_gubra_ano_split_25um.nii.gz', metavar='')
     parser.add_argument('-o', '--output', help='path/name.csv. Default: region_cell_counts.csv', default='region_cell_counts.csv', metavar='')
@@ -174,7 +175,8 @@ def calculate_regional_cell_densities(sample, regional_counts_df, regional_volum
 
 def main():
 
-    samples = get_samples(args.dirs, args.pattern)
+    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
+
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
