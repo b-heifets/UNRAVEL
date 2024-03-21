@@ -7,25 +7,28 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from argparse_utils import SuppressMetavar, SM 
+from argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Organize cell_count|label_volume, cluster_volume, and <cell|label>_density data from cluster and sample and save as csv', formatter_class=SuppressMetavar)
-    parser.add_argument('-a', '--all', help='Save all summary CSVs included ones w/ cell_count|label_volume and cluster_volume data', action='store_true', default=False)
-    parser.add_argument('-c', '--clusters', help='List of valid cluster IDs to include in the summary', nargs='+', type=int, action=SM)
-    parser.epilog = """Inputs: *.csv from validate_clusters.py (e.g., in working dir named after the rev_cluster_index.nii.gz file)
+    parser.add_argument('-a', '--all', help='Also save CSVs w/ cell_count|label_volume and cluster_volume data', action='store_true', default=False)
+    parser.add_argument('-c', '--clusters', help='List of valid cluster IDs to include in the summary. Default: all clusters', nargs='+', type=int, action=SM)
+    parser.epilog = """Inputs: *.csv from validate_clusters.py (in working dir)
 
 CSV naming conventions:
 - Condition: first word before '_' in the file name
 - Sample: second word in file name
 
-Example unilateral inputs: 
-- condition1_sample01_<cell|label>_density_data.csv 
+Example unilateral inputs:
+- condition1_sample01_<cell|label>_density_data.csv
 - condition1_sample02_<cell|label>_density_data.csv
 - condition2_sample03_<cell|label>_density_data.csv
 - condition2_sample04_<cell|label>_density_data.csv
 
+Example bilateral inputs (if any file has _LH.csv or _RH.csv, the script will attempt to pool data):
+- condition1_sample01_<cell|label>_density_data_LH.csv
+- condition1_sample01_<cell|label>_density_data_RH.csv
 ...
 
 Columns in the .csv files:
@@ -42,15 +45,33 @@ def generate_summary_table(csv_files, data_column_name):
     # Create a dictionary to hold data for each condition
     data_by_condition = {}
 
+    # Check if any files contain hemisphere indicators
+    has_hemisphere = any('_LH.csv' in file or '_RH.csv' in file for file in csv_files)
+
     # Loop through each file in the working directory
     for file in csv_files:
+
         # Extract the condition and sample name
         parts = file.split('_')
         condition = parts[0]
-        sample = '_'.join(parts[1:-3])  # Adjust according to your filename structure
+        sample = parts[1] 
 
-        # Load the CSV file into a pandas dataframe
-        df = pd.read_csv(file)
+        # if has_hemisphere, pool data from LH and RH files
+        if file.endswith('_RH.csv'):
+            continue # Skip RH files
+
+        if file.endswith('_LH.csv'):
+            LH_df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
+            RH_df = pd.read_csv(file.replace('_LH.csv', '_RH.csv'), usecols=['sample', 'cluster_ID', data_column_name])
+
+            # Sum the data_col of the LH and RH dataframes
+            df = pd.concat([LH_df, RH_df], ignore_index=True).groupby(['sample', 'cluster_ID']).agg( # Group by sample and cluster_ID
+                **{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='sum')} # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method
+            ).reset_index() # Reset the index to avoid a multi-index dataframe
+
+        else:
+            # Load the CSV file into a pandas dataframe
+            df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
 
         # Set the cluster_ID as index and select the density column
         df.set_index('cluster_ID', inplace=True)
@@ -81,10 +102,6 @@ def generate_summary_table(csv_files, data_column_name):
     # Reset the index so that 'Cluster_ID' becomes a column
     all_conditions_df.reset_index(inplace=True)
 
-    # Make output dir
-    output_dir = 'cluster_validation_summary'
-    Path(output_dir).mkdir(exist_ok=True)
-
     return all_conditions_df
 
 
@@ -103,7 +120,7 @@ def main():
     else:
         print("Error: Unrecognized data columns in input files.")
         return
-    
+
     # Generate a summary table for the cell_count or label_volume data
     data_col_summary_df = generate_summary_table(csv_files, data_col)
 
@@ -118,6 +135,11 @@ def main():
         data_col_summary_df = data_col_summary_df[data_col_summary_df['cluster_ID'].isin(args.clusters)]
         cluster_volume_summary_df = cluster_volume_summary_df[cluster_volume_summary_df['cluster_ID'].isin(args.clusters)]
         density_col_summary_df = density_col_summary_df[density_col_summary_df['cluster_ID'].isin(args.clusters)]
+
+        # Sort data frames such that the 'cluster_ID' column matches the order of clusters in args.clusters
+        data_col_summary_df = data_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.clusters)}))
+        cluster_volume_summary_df = cluster_volume_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.clusters)}))
+        density_col_summary_df = density_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.clusters)}))
 
     # Sum each column in the summary tables other than the 'cluster_ID' column, which could be dropped
     data_col_summary_df_sum = data_col_summary_df.sum()
@@ -134,12 +156,20 @@ def main():
     density_col_summary_df_sum.columns = multi_index
     density_col_summary_df_sum = density_col_summary_df_sum.drop('cluster_ID').reset_index().T
 
+    # Make output dir
+    output_dir = 'cluster_validation_summary'
+    Path(output_dir).mkdir(exist_ok=True)
+
     # Save the summary tables to .csv files
     if args.all:
         data_col_summary_df.to_csv(Path('cluster_validation_summary') / f'{data_col}_summary.csv', index=False)
         cluster_volume_summary_df.to_csv(Path('cluster_validation_summary') / 'cluster_volume_summary.csv', index=False)
-    density_col_summary_df.to_csv(Path('cluster_validation_summary') / f'{density_col}_summary.csv', index=False)
-    density_col_summary_df_sum.to_csv(Path('cluster_validation_summary') / f'{density_col}_summary_across_clusters.csv', index=False)
+    if args.clusters is not None:
+        density_col_summary_df.to_csv(Path('cluster_validation_summary') / f'{density_col}_summary_for_valid_clusters.csv', index=False)
+        density_col_summary_df_sum.to_csv(Path('cluster_validation_summary') / f'{density_col}_summary_across_valid_clusters.csv', index=False)
+    else:
+        density_col_summary_df.to_csv(Path('cluster_validation_summary') / f'{density_col}_summary.csv', index=False)
+        density_col_summary_df_sum.to_csv(Path('cluster_validation_summary') / f'{density_col}_summary_across_clusters.csv', index=False)
 
     print(f"Saved results in [bright_magenta]./cluster_validation_summary/")
 

@@ -143,7 +143,7 @@ def main():
     # Print a space separated list of significant cluster IDs
     significant_clusters = t_test_results[t_test_results['p_value'] < 0.05]['cluster_ID']
     significant_cluster_ids = significant_clusters.tolist()
-    significant_cluster_ids_str = ' '.join(map(str, significant_cluster_ids))
+    significant_cluster_ids_str = ' '.join(map(str, significant_cluster_ids)) + '\n'
     print(f"Significant cluster IDs: {significant_cluster_ids_str}")
 
     # Make output dir

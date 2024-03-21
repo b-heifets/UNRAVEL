@@ -23,7 +23,7 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Example usage:    valid_clusters_table.py
 
-Prerequisites: valid_cluster_index.sh has been run. Run this script from the <valid_clusters> dir. *cluster_info.txt is assumed to be in its parent dir.
+Prerequisites: valid_cluster_index.sh has been run. Run this script from the <valid_clusters> dir. *cluster_info.txt in working dir.
 
 Sorting by heirarchy and volume: 
 1) Group by Depth: Starting from the earliest depth column, for each depth level:
@@ -39,6 +39,8 @@ Sorting by heirarchy and volume:
     
 """
     return parser.parse_args()
+
+# TODO: Make sure table is fully arial. Add in merging for the ~Region column
 
 
 def fill_na_with_last_known(df):
@@ -188,6 +190,11 @@ def get_top_regions_and_percent_vols(cluster_dir, top_regions, percent_vol, verb
     input_csv = csv_files[0] # first match
     df = pd.read_csv(input_csv)
 
+    # Check if the DataFrame is empty print a message and return
+    if df.empty:
+        print(f'\n{input_csv} is empty. Exiting...')
+        import sys ; sys.exit()
+
     # Fill NaN values in the original DataFrame
     df_filled_na = fill_na_with_last_known(df.copy())
 
@@ -282,13 +289,24 @@ def main():
     # Find cluster_* dirs in the current dir
     cluster_dirs = glob('cluster_*')
 
+    # Remove non-directories from the list
+    cluster_dirs = [d for d in cluster_dirs if Path(d).is_dir()]
+
+    # Remove dirs that don't end with a number
+    cluster_dirs = [d for d in cluster_dirs if d.split('_')[-1].isdigit()]
+
     # Generate dynamic column names based on args.top_regions
     column_names = ['Cluster'] + ['Volume'] + ['CoG'] + ['~Region'] + ['ID_Path'] + [f'Top_Region_{i+1}' for i in range(args.top_regions)]
 
     # Load the *cluster_info.txt file from the parent dir to get the cluster Centroid of Gravity (CoG)
-    parent_dir = Path.cwd().parent
-    cluster_info_files = glob(str(parent_dir / '*cluster_info.txt'))
-    cluster_info_file = cluster_info_files[0] # first match
+    cluster_info_files = glob('*cluster_info.txt')
+    
+    # If no cluster_info.txt file is found, exit
+    if not cluster_info_files:
+        print(f'\nNo *cluster_info.txt file found in {Path.cwd()}. Exiting...')
+        return
+    else:
+        cluster_info_file = cluster_info_files[0] # first match
  
     # Load the cluster info file
     cluster_info_df = pd.read_csv(cluster_info_file, sep='\t', header=None)  # Assuming tab-separated values; adjust if different
@@ -471,7 +489,6 @@ def main():
     volumes = top_regions_and_percent_vols_df['Volume'].tolist()
     max_volume = max(volumes)  # The largest volume
 
-
     for row, volume in enumerate(volumes, start=3):  # Starting from row 3 (C3)
         # Calculate the color based on the volume
         fill_color, font_color = get_fill_color(volume, max_volume)
@@ -492,6 +509,12 @@ def main():
     excel_file_path = 'valid_clusters_table.xlsx'
     wb.save(excel_file_path)
     print(f"Excel file saved at {excel_file_path}")
+
+    # Get the anatomically sorted list of cluster IDs and save it to a .txt file
+    valid_cluster_ids = top_regions_and_percent_vols_df['Cluster'].tolist()
+    valid_cluster_ids_str = ' '.join(map(str, valid_cluster_ids)) + '\n'
+    with open('valid_cluster_IDs_sorted_by_anatomy.txt', 'w') as f:
+        f.write(valid_cluster_ids_str)
 
 
 if __name__ == '__main__':
