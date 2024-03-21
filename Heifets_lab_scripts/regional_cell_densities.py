@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-from argparse import RawTextHelpFormatter
 import cc3d
 import numpy as np
 import os
@@ -11,21 +10,22 @@ from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
+from argparse_utils import SuppressMetavar, SM
 from unravel_img_io import load_3D_img
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Perform regional cell counting', formatter_class=RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description='Perform regional cell counting', formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image. Default: ochann_seg_ilastik_1.', default='ochann_seg_ilastik_1', metavar='')
-    parser.add_argument('-a', '--atlas', help='Dir name for atlas relative to ./sample??/. Default: atlas/native_atlas/native_gubra_ano_split_25um.nii.gz', metavar='')
-    parser.add_argument('-o', '--output', help='path/name.csv. Default: region_cell_counts.csv', default='region_cell_counts.csv', metavar='')
-    parser.add_argument('-c', '--condition', help='One word name for group (prepended to sample ID for regional_cell_densities_summary.py)', default=None, metavar='')
+    parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image. Default: ochann_seg_ilastik_1.', default='ochann_seg_ilastik_1', action=SM)
+    parser.add_argument('-a', '--atlas', help='Dir name for atlas relative to ./sample??/. Default: atlas/native_atlas/native_gubra_ano_split_25um.nii.gz', action=SM)
+    parser.add_argument('-o', '--output', help='path/name.csv. Default: region_cell_counts.csv', default='region_cell_counts.csv', action=SM)
+    parser.add_argument('-c', '--condition', help='One word name for group (prepended to sample ID for regional_cell_densities_summary.py)', default=None, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, metavar='')
+    parser.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, action=SM)
     parser.epilog = """Run from experiment folder containing sample?? folders. 
 Example usage: regional_cell_densities.py regional_cell_densities.py -c Saline --dirs sample14 sample36
 
