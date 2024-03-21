@@ -88,7 +88,7 @@ def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condi
     # Add column header to the region counts
     region_counts_series = region_counts_series.rename_axis('Region_ID').reset_index(name=f'{condition}_{sample_name}')
 
-    # Load csv with region IDs, sides, names, abbreviations, and sides
+    # Load csv with region IDs, sides, ID_paths, names, and abbreviations
     region_info_df = pd.read_csv(Path(__file__).parent / 'gubra__regionID_side_IDpath_region_abbr.csv')
 
     # Merge the region counts into the region information dataframe
