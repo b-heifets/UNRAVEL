@@ -1,0 +1,127 @@
+#!/usr/bin/env python3
+
+import argparse
+import nibabel as nib
+import numpy as np
+from rich import print
+from rich.traceback import install
+
+from argparse_utils import SuppressMetavar, SM
+from unravel_config import Configuration 
+from unravel_utils import print_cmd_and_times, print_func_name_args_times
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Convert the data type of a .nii.gz image', formatter_class=SuppressMetavar)
+    parser.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
+    parser.add_argument('-d', '--data_type', help='Data type (from numpy). For example: uint16', required=True, action=SM)
+    parser.add_argument('-o', '--output', help='path/new_img.nii.gz. Default: path/img_dtype.nii.gz', action=SM)
+    parser.add_argument('-s', '--scale', help='Scale the data to the range of the new data type. Default: False', action='store_true', default=False)
+    parser.add_argument('-b', '--binary', help='Convert to binary image. Default: False', action='store_true', default=False)
+    parser.add_argument('-z', '--zscore', help='Convert the range of z-scored data (use uint8 data type). Default: False', action='store_true', default=False)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = """Example usage:     nii_dtype.py -i path/img.nii.gz -d float32
+Example usage for z-score scaling:     nii_dtype.py -i path/img.nii.gz -d uint8 -z
+
+Possible numpy data types supported by NIfTI images: 
+    - Unsigned Integer: uint8, uint16, uint32, uint64
+    - Signed Integer: int8, int16, int32, int64
+    - Floating Point: float32, float64
+    - Complex Numbers: complex64, complex128
+
+With standard scaling, the min intensity becomes dtype min and max intensity becomes dtype max. Every other intensity is scaled accordingly.
+
+With z-score scaling, the range of z-scored data from -3 to 3 is converted to 0 to 255.
+"""
+    return parser.parse_args()
+
+
+@print_func_name_args_times()
+def convert_dtype(ndarray, data_type, scale_mode='none', zscore_range=(-3, 3), target_range=(0, 255)):
+    """
+    Convert the data type of a ndarray and optionally scale the data.
+
+    Parameters:
+    - ndarray: Input ndarray.
+    - data_type: Target data type.
+    - scale_mode: 'none', 'standard', or 'zscore'. Determines the scaling approach.
+    - zscore_range: Tuple indicating the z-score range for scaling if scale_mode is 'zscore'.
+    - target_range: Tuple indicating the target range for the data type conversion.
+
+    Returns:
+    - Converted ndarray with the specified data type and scaling.
+    """
+    if scale_mode != 'none':
+        if scale_mode == 'standard':
+            print("Applying standard scaling...")
+            data_min, data_max = ndarray.min(), ndarray.max()
+            ndarray = (ndarray - data_min) / (data_max - data_min) * (target_range[1] - target_range[0]) + target_range[0]
+        elif scale_mode == 'zscore':
+            print("Applying z-score based scaling (converting range from -3 to 3 to 0 to 255)...")
+            scale = (target_range[1] - target_range[0]) / (zscore_range[1] - zscore_range[0])
+            offset = target_range[0] - zscore_range[0] * scale
+            ndarray = ndarray * scale + offset
+            ndarray = np.clip(ndarray, target_range[0], target_range[1])
+
+    if scale_mode == 'none' or not np.issubdtype(np.dtype(data_type), np.floating):
+        dtype_info = np.iinfo(data_type) if np.issubdtype(np.dtype(data_type), np.integer) else np.finfo(data_type)
+        ndarray = np.clip(ndarray, dtype_info.min, dtype_info.max)
+
+    return ndarray.astype(np.dtype(data_type))
+
+
+def main():
+
+    # Load the .nii.gz file
+    nii_path = args.input if args.input.endswith('.nii.gz') else f'{args.input}.nii.gz'
+    nii = nib.load(nii_path)
+
+    # Convert the data to a numpy array
+    img = nii.get_fdata()
+
+    # Optionally binarize the image
+    if args.binary:
+        img = np.where(img > 0, 1, 0)
+
+    # Determine the scaling mode
+    scale_mode = 'standard' if args.scale else 'zscore' if args.zscore else 'none'
+
+    # Determine target range based on specified data type and scaling mode
+    if args.zscore:
+        if args.data_type in ['float32', 'float64']:
+            # For floating-point types with z-score scaling, use the z-score range itself or a modified version
+            target_range = (-3, 3)
+        else:
+            # For uint8, map z-scores to the full range of the type
+            target_range = (0, 255)
+    else:
+        # For standard scaling or no scaling, derive range from the data type
+        if np.issubdtype(np.dtype(args.data_type), np.integer):
+            dtype_info = np.iinfo(args.data_type)
+        else:
+            dtype_info = np.finfo(args.data_type)
+        target_range = (dtype_info.min, dtype_info.max)
+
+    # Convert the data type and optionally scale the data
+    new_img = convert_dtype(img, args.data_type, scale_mode=scale_mode, zscore_range=(-3, 3), target_range=target_range)
+
+    # Update the header's datatype
+    new_nii = nib.Nifti1Image(new_img, nii.affine)
+    new_nii.header.set_data_dtype(np.dtype(args.data_type))
+
+    # Save the new .nii.gz file
+    if args.binary:
+        output_path = args.output if args.output else nii_path.replace('.nii.gz', f'_bin_{args.data_type}.nii.gz')
+    elif args.scale:
+        output_path = args.output if args.output else nii_path.replace('.nii.gz', f'_std_scaled_{args.data_type}.nii.gz')
+    elif scale_mode == 'zscore':
+        output_path = args.output if args.output else nii_path.replace('.nii.gz', f'_z_range_scaled_{args.data_type}.nii.gz')
+    else:
+        output_path = args.output if args.output else nii_path.replace('.nii.gz', f'_{args.data_type}.nii.gz')
+    nib.save(new_nii, output_path)
+
+
+if __name__ == '__main__':
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    print_cmd_and_times(main)()
