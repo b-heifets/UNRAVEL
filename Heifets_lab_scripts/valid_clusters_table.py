@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 
 import argparse
-from glob import glob
-from pathlib import Path
-from matplotlib.colors import hex2color
-import numpy as np
 import openpyxl
+import math
+import numpy as np
 import pandas as pd
 from argparse_utils import SuppressMetavar, SM
-from rich import print
+from glob import glob
+from pathlib import Path
 from openpyxl.styles import PatternFill
-from openpyxl.styles.colors import Color
 from openpyxl.utils import get_column_letter
 from openpyxl.utils.dataframe import dataframe_to_rows
-from openpyxl.styles import Border, Side, Font
-from openpyxl.styles import Alignment
+from openpyxl.styles import Border, Side, Font, Alignment
+from rich import print
+from rich.traceback import install
 
 def parse_args():
     parser = argparse.ArgumentParser(description='''Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.''',
@@ -258,7 +257,23 @@ def get_top_regions_and_percent_vols(cluster_dir, top_regions, percent_vol, verb
 
     return top_region_names_and_percent_vols, total_volume
 
-
+# Function to create fill color based on the volume
+def get_fill_color(value, max_value):
+    # Apply a log transform to the volume to enhance visibility of smaller values
+    # Adding 1 to the value to avoid log(0), and another 1 to max_value to ensure the max_value maps to 1 after log transform
+    log_transformed_value = math.log10(value + 1)  
+    log_transformed_max = math.log10(max_value + 1)
+    normalized_value = log_transformed_value / log_transformed_max
+    
+    # Convert to a scale of 0-255 (for RGB values)
+    rgb_value = int(normalized_value * 255)
+    # Create fill color as a hex string
+    fill_color = f"{rgb_value:02x}{rgb_value:02x}{rgb_value:02x}"
+    
+    # Set the font color to black if the fill color is light (more than 127 in RGB scale), otherwise white
+    font_color = "000000" if rgb_value > 127 else "FFFFFF"
+    
+    return fill_color, font_color
 
 
 def main():
@@ -296,8 +311,11 @@ def main():
     # Create an empty DataFrame with the column names
     top_regions_and_percent_vols_df = pd.DataFrame(columns=column_names)
 
-    # Load csv with CCFv3 info 
-    ccfv3_info_df = pd.read_csv(Path(__file__).parent / 'CCFv3_info.csv')
+    # Specify the column names you want to load
+    columns_to_load = ['abbreviation', 'general_region',  'structure_id_path']
+
+    # Load the specified columns from the CSV with CCFv3 info
+    ccfv3_info_df = pd.read_csv(Path(__file__).parent / 'CCFv3_info.csv', usecols=columns_to_load)
 
     # For each cluster directory
     for cluster_dir in cluster_dirs:
@@ -343,10 +361,6 @@ def main():
 
     # Convert the 'Volume' column to 4 decimal places
     top_regions_and_percent_vols_df['Volume'] = top_regions_and_percent_vols_df['Volume'].round(4)
-
-    # Define the path for the new Excel file
-    excel_file_path = Path(__file__).parent / 'top_regions_and_percent_vols.xlsx'
-
     print(f'\n The top regions and their percentage volumes for each cluster: \n')
     print(f'\n{top_regions_and_percent_vols_df}\n')
 
@@ -448,6 +462,32 @@ def main():
         for cell in row:
             cell.alignment = Alignment(horizontal='center', vertical='center')
 
+    # Make column B bold
+    for cell in ws['B']:
+        cell.font = Font(bold=True)
+
+    # Format column C such that the brightness of the fill is proportional to the volume / total volume and the text brightness is inversely proportional to the fill brightness
+    # total_volume = top_regions_and_percent_vols_df['Volume'].sum()
+    volumes = top_regions_and_percent_vols_df['Volume'].tolist()
+    max_volume = max(volumes)  # The largest volume
+
+
+    for row, volume in enumerate(volumes, start=3):  # Starting from row 3 (C3)
+        # Calculate the color based on the volume
+        fill_color, font_color = get_fill_color(volume, max_volume)
+        
+        # Get the cell at column C and the current row
+        cell = ws.cell(row=row, column=3)  # Column 3 corresponds to column C
+        
+        # Set the fill color based on the calculated brightness
+        cell.fill = PatternFill(start_color=fill_color, end_color=fill_color, fill_type="solid")
+        
+        # Set the font color based on the inverse of the fill color's brightness
+        cell.font = Font(color=font_color)
+
+    # Print message about the coloring of the volume column
+    print(f"\nBrighter cell fills in the 'Volume' column represent larger volumes (log(10) scaled and normalized to the max volume).\n")
+
     # Save the workbook to a file
     excel_file_path = 'valid_clusters_table.xlsx'
     wb.save(excel_file_path)
@@ -455,4 +495,5 @@ def main():
 
 
 if __name__ == '__main__':
+    install()
     main()
