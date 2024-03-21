@@ -84,36 +84,8 @@ def pad_img(ndarray, pad_width=0.15):
 def to_atlas(sample_path, img, xy_res, z_res, reg_res, target_res, zoom_order, fixed_img_for_reg, interpol, transforms_dir, output, reg_output_prefix, moving_img, legacy=False):
     """Warps native image to atlas space"""
 
-    # # Resample and reorient image
-    # img = resample(img, xy_res, z_res, reg_res, zoom_order=zoom_order) 
-
-    # # Reorient image if legacy mode is True
-    # if legacy:
-    #     img = reorient_for_raw_to_nii_conv(img)
-    #     save_as_nii(img, Path(sample_path, "img_reorient_for_raw_to_nii_conv.nii.gz"), reg_res, reg_res, np.uint16)        
-
-    # # Padding the image 
-    # img = pad_img(img, pad_width=0.15)
-    # save_as_nii(img, Path(sample_path, "pad.nii.gz"), reg_res, reg_res, np.uint16)
-
-    # Create the Nifti1Image
-    # target_img = nib.Nifti1Image(img, np.eye(4))
-    target_img = nib.load(Path(sample_path, "pad.nii.gz"))
-    source_img = nib.load(fixed_img_for_reg) # Source of header info
-    new_affine = source_img.affine.copy()
-
-    # Determine scale factors from source affine by examining the length of the vectors
-    # This works regardless of the orientation or which axes are flipped
-    scale_factors = np.linalg.norm(source_img.affine[:3, :3], axis=0)
-
-    # Adjust scale factors in the new affine matrix according to target resolution
-    # We calculate the adjustment factor based on the target resolution divided by the original scale factor
-    # Then apply this adjustment maintaining the direction (sign) of the original scale factors
-    target_res = target_res / 1000
-    for i in range(3):
-        adjustment_factor = np.array([target_res, target_res, target_res])[i] / scale_factors[i]
-        new_affine[:3, i] = source_img.affine[:3, i] * adjustment_factor
-
+    # Resample and reorient image
+    img = resample(img, xy_res, z_res, reg_res, zoom_order=zoom_order) 
 
     # Reorient image if legacy mode is True
     if legacy:

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-from argparse import RawTextHelpFormatter
 import cc3d
 import numpy as np
 import os
@@ -11,20 +10,22 @@ from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
+from argparse_utils import SuppressMetavar, SM
 from unravel_img_io import load_3D_img
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Perform regional cell counting', formatter_class=RawTextHelpFormatter)
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
-    parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, metavar='')
-    parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image. Default: ochann_seg_ilastik_1.', default='ochann_seg_ilastik_1', metavar='')
-    parser.add_argument('-a', '--atlas', help='Dir name for atlas relative to ./sample??/. Default: atlas/native_atlas/native_gubra_ano_split_25um.nii.gz', metavar='')
-    parser.add_argument('-o', '--output', help='path/name.csv. Default: region_cell_counts.csv', default='region_cell_counts.csv', metavar='')
-    parser.add_argument('-c', '--condition', help='One word name for group (prepended to sample ID for regional_cell_densities_summary.py)', default=None, metavar='')
+    parser = argparse.ArgumentParser(description='Perform regional cell counting', formatter_class=SuppressMetavar)
+    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
+    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image. Default: ochann_seg_ilastik_1.', default='ochann_seg_ilastik_1', action=SM)
+    parser.add_argument('-a', '--atlas', help='Dir name for atlas relative to ./sample??/. Default: atlas/native_atlas/native_gubra_ano_split_25um.nii.gz', action=SM)
+    parser.add_argument('-o', '--output', help='path/name.csv. Default: region_cell_counts.csv', default='region_cell_counts.csv', action=SM)
+    parser.add_argument('-c', '--condition', help='One word name for group (prepended to sample ID for regional_cell_densities_summary.py)', default=None, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, metavar='')
+    parser.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, action=SM)
     parser.epilog = """Run from experiment folder containing sample?? folders. 
 Example usage: regional_cell_densities.py regional_cell_densities.py -c Saline --dirs sample14 sample36
 
@@ -87,7 +88,7 @@ def count_cells_in_regions(sample, seg_img_path, atlas_path, connectivity, condi
     # Add column header to the region counts
     region_counts_series = region_counts_series.rename_axis('Region_ID').reset_index(name=f'{condition}_{sample_name}')
 
-    # Load csv with region IDs, sides, names, abbreviations, and sides
+    # Load csv with region IDs, sides, ID_paths, names, and abbreviations
     region_info_df = pd.read_csv(Path(__file__).parent / 'gubra__regionID_side_IDpath_region_abbr.csv')
 
     # Merge the region counts into the region information dataframe
@@ -174,7 +175,8 @@ def calculate_regional_cell_densities(sample, regional_counts_df, regional_volum
 
 def main():
 
-    samples = get_samples(args.dirs, args.pattern)
+    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
+
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
