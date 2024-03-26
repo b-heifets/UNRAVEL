@@ -34,7 +34,7 @@ def parse_args():
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-t', '--template', help='path/template.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-m', '--moving_img', help='Name of image to warp (saved in transforms dir). Default: img_to_warp_to_atlas_space.nii.gz', default='img_to_warp_to_atlas_space.nii.gz', action=SM)
-    parser.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: args.input.dtype', action=SM)
+    parser.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: args.input.dtype', default=None, action=SM)
     parser.add_argument('-tr', '--target_res', help='Res of image just before warping in microns. Default=50', type=int, default=50, action=SM) ### Test if other res works
     parser.add_argument('-rf', '--reg_fixed', help='Name of file in transforms dir used as fixed input for registration. Default: clar.nii.gz', default='clar.nii.gz', action=SM)
     parser.add_argument('-r', '--reg_res', help='Registration resolution in microns (reg.py). Default: 50', default=50, type=int, action=SM)
@@ -102,6 +102,10 @@ def to_atlas(img, xy_res, z_res, transforms_path, reg_res, target_res, zoom_orde
     # Path to the fixed image for registration (e.g., clar.nii.gz)
     fixed_img_for_reg = Path(transforms, reg_fixed)
 
+    # Get dtype from input image if not specified
+    if output_dtype is None:
+        output_dtype = img.dtype
+
     # Resample and reorient image
     img = resample(img, xy_res, z_res, reg_res, zoom_order=zoom_order) 
 
@@ -111,7 +115,9 @@ def to_atlas(img, xy_res, z_res, transforms_path, reg_res, target_res, zoom_orde
 
     # Padding the image 
     img = pad_img(img, pad_width=0.15)
-    img = img.astype('float32') # FLOAT32 for ANTs
+
+    # Conver ndarray to FLOAT32 for ANTs
+    img = img.astype('float32') 
 
     # Load image used as fixed input for registration to copy header info
     fixed_img_for_reg_nii = nib.load(fixed_img_for_reg) # (e.g, clar.nii.gz)
@@ -172,10 +178,6 @@ def to_atlas(img, xy_res, z_res, transforms_path, reg_res, target_res, zoom_orde
     # Convert the ANTsImage to a numpy array 
     warped_img = warped_img_ants.numpy()
 
-    # Get dtype from input image if not specified
-    if output_dtype is None:
-        output_dtype = img.dtype
-
     # Convert dtype of warped image to match input image
     if np.issubdtype(output_dtype, np.unsignedinteger):
         warped_img[warped_img < 0] = 0 # If output_dtype is unsigned, set negative values to zero
@@ -183,10 +185,9 @@ def to_atlas(img, xy_res, z_res, transforms_path, reg_res, target_res, zoom_orde
 
     # Convert the warped image to NIfTI, copy relevant header information, and save it
     atlas = nib.load(atlas_path) 
-    new_affine = atlas.affine.copy()
-    warpped_img_nii = nib.Nifti1Image(warped_img, atlas.affine.copy())
-    warpped_img_nii = copy_nii_header(atlas, warpped_img_nii)
-    nib.save(warpped_img_nii, output)
+    warped_img_nii = nib.Nifti1Image(warped_img, atlas.affine.copy())
+    warped_img_nii = copy_nii_header(atlas, warped_img_nii)
+    nib.save(warped_img_nii, output)
 
 
 def main():    
