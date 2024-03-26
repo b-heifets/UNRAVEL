@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 
 import argparse
-from pathlib import Path
 import ants
 import nibabel as nib
 import numpy as np
-from argparse_utils import SM, SuppressMetavar
-from to_atlas import pad_img
-from unravel_img_io import load_3D_img, resolve_path
+from pathlib import Path
+from rich import print
+from rich.live import Live
+from rich.traceback import install
 
+from argparse_utils import SM, SuppressMetavar
+from unravel_config import Configuration
+from unravel_img_io import load_3D_img, resolve_path
 from unravel_img_tools import reorient_for_raw_to_nii_conv, resample
+from unravel_utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
 
 
 
@@ -54,8 +58,16 @@ Input examples (path is relative to ./sample??; 1st glob match processed):
     return parser.parse_args()
 
 
+def pad_img(ndarray, pad_width=0.15):
+    """Pads ndarray by 15% of voxels on all sides"""
+    pad_factor = 1 + 2 * pad_width
 
-### TODO: Make sure that uint16 is used instead of int16. Undo hard coding
+    pad_width_x = round(((ndarray.shape[0] * pad_factor) - ndarray.shape[0]) / 2)
+    pad_width_y = round(((ndarray.shape[1] * pad_factor) - ndarray.shape[1]) / 2)
+    pad_width_z = round(((ndarray.shape[2] * pad_factor) - ndarray.shape[2]) / 2)
+
+    return np.pad(ndarray, ((pad_width_x, pad_width_x), (pad_width_y, pad_width_y), (pad_width_z, pad_width_z)), mode='constant')
+ 
 
 args = parse_args()
 
@@ -94,28 +106,17 @@ for i in range(3):
     new_affine[:3, i] = source_img.affine[:3, i] * adjustment_factor
 
 # Copy relevant header information
-hdr1 = source_img.header
-hdr2 = target_img.header
 fields_to_copy = [
     'xyzt_units', 'descrip', 'qform_code', 'sform_code',
     'qoffset_x', 'qoffset_y', 'qoffset_z', 'pixdim', 
 ]
+
 for field in fields_to_copy:
-    hdr2[field] = hdr1[field]
-
-print(hdr2['qform_code'])
-print(hdr2['sform_code'])
-
-# Set codes for scanner-based anatomical coordinates (non-standard orientation)
-hdr2['qform_code'] = 1  
-hdr2['sform_code'] = 1 
-
-print(hdr2['qform_code'])
-print(hdr2['sform_code'])
+    target_img.header[field] = source_img.header[field]
 
 # Save the image to be warped
 img = img.astype('float32') # FLOAT32 for ANTs
-target_image_nii = nib.Nifti1Image(img, new_affine, hdr2)
+target_image_nii = nib.Nifti1Image(img, new_affine, target_img.header)
 transforms_path = Path(args.transforms).resolve() # Directory with transforms from registration
 moving_img_path = transforms_path / args.moving_img
 nib.save(target_image_nii, moving_img_path)
@@ -123,8 +124,6 @@ nib.save(target_image_nii, moving_img_path)
 # Load the it as an ANTs image for warping
 # moving_ants_img = ants.image_read(str(moving_img_path))
 moving_ants_img = ants.image_read(str(moving_img_path)) 
-
-
 
 
 
@@ -150,8 +149,6 @@ deformation_field = ants.apply_transforms(
 )
 
 # Applying transformations including an initial transformation and resampling to a new space
-# input_image = ants.image_read('clar_allen_reg/sample16_08x_down_ochann_rb4_chan_ort_cp_org.nii.gz') # used as moving before
-
 ref_image_new = ants.image_read('/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz') 
 
 transforms = [
@@ -159,40 +156,65 @@ transforms = [
     'clar_allen_reg/comptx.nii.gz'  
 ]
 
-output_image_2 = ants.apply_transforms(fixed=ref_image_new, moving=moving_ants_img, transformlist=transforms, interpolator='bSpline')
+warped_img_ants = ants.apply_transforms(fixed=ref_image_new, moving=moving_ants_img, transformlist=transforms, interpolator='bSpline')
 
 # Convert the ANTsImage to a numpy array 
-output_array = output_image_2.numpy()
+warped_img = warped_img_ants.numpy()
 
 # Assumes that raw image data type is unsigned int 16
-if np.max(output_array) < 65535: 
+if np.max(warped_img) < 65535: 
     # Set negative values to zero
-    output_array[output_array < 0] = 0
+    warped_img[warped_img < 0] = 0
 
     # Convert dtype
-    output_array = output_array.astype(np.uint16)
-
-# Convert to a NIfTI image
-target_img = nib.Nifti1Image(output_array, np.eye(4))
+    warped_img = warped_img.astype(np.uint16) # Could use args.dtype here
 
 # Load image to copy header info 
-source_img = nib.load('/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz') 
-new_affine = source_img.affine.copy()
-
-# Copy relevant header information
-hdr1 = source_img.header
-hdr2 = target_img.header
-fields_to_copy = [
-    'xyzt_units', 'descrip', 'qform_code', 'sform_code',
-    'qoffset_x', 'qoffset_y', 'qoffset_z', 'pixdim', 
-]
-for field in fields_to_copy:
-    hdr2[field] = hdr1[field]
+atlas = nib.load('/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz') 
+new_affine = atlas.affine.copy()
 
 # Save the image to be warped
-target_image_nii = nib.Nifti1Image(output_array, new_affine, hdr2)
-output_file_path = '/SSD3/mdma_v_meth/sample16/testing2_uint16_rb.nii.gz'  
+warpped_img_nii = nib.Nifti1Image(warped_img, atlas.affine.copy())
 
+# Copy relevant header information
+for field in fields_to_copy:
+    warpped_img_nii.header[field] = atlas.header[field]
 
 # Save the Nifti image using nibabel
-nib.save(target_image_nii, output_file_path)
+output_file_path = '/SSD3/mdma_v_meth/sample16/testing3_uint16_rb.nii.gz'  
+nib.save(warpped_img_nii, output_file_path)
+
+
+def main():    
+
+    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
+
+    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    with Live(progress):
+        for sample in samples:
+            
+            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+
+            output = resolve_path(sample_path, args.output)
+            if output.exists():
+                print(f"\n\n    {output} already exists. Skipping.\n")
+                return
+
+            # Load autofluo image [and xy and z voxel size in microns]
+            img_path = resolve_path(sample_path, args.input)
+            img, xy_res, z_res = load_3D_img(img_path, args.chann_idx, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)
+
+            fixed_img_for_reg = resolve_path(sample_path, Path(args.transforms, args.reg_fixed))
+
+            # Warp native image to atlas space
+            to_atlas(sample_path, img, xy_res, z_res, args.reg_res, args.target_res, args.zoom_order, fixed_img_for_reg, args.interpol, args.transforms, args.output, args.reg_o_prefix, args.moving_img, legacy=args.legacy)
+
+            progress.update(task_id, advance=1)
+
+
+if __name__ == '__main__': 
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    print_cmd_and_times(main)()
+

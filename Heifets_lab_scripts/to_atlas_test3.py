@@ -94,28 +94,17 @@ for i in range(3):
     new_affine[:3, i] = source_img.affine[:3, i] * adjustment_factor
 
 # Copy relevant header information
-hdr1 = source_img.header
-hdr2 = target_img.header
 fields_to_copy = [
     'xyzt_units', 'descrip', 'qform_code', 'sform_code',
     'qoffset_x', 'qoffset_y', 'qoffset_z', 'pixdim', 
 ]
+
 for field in fields_to_copy:
-    hdr2[field] = hdr1[field]
-
-print(hdr2['qform_code'])
-print(hdr2['sform_code'])
-
-# Set codes for scanner-based anatomical coordinates (non-standard orientation)
-hdr2['qform_code'] = 1  
-hdr2['sform_code'] = 1 
-
-print(hdr2['qform_code'])
-print(hdr2['sform_code'])
+    target_img.header[field] = source_img.header[field]
 
 # Save the image to be warped
 img = img.astype('float32') # FLOAT32 for ANTs
-target_image_nii = nib.Nifti1Image(img, new_affine, hdr2)
+target_image_nii = nib.Nifti1Image(img, new_affine, target_img.header)
 transforms_path = Path(args.transforms).resolve() # Directory with transforms from registration
 moving_img_path = transforms_path / args.moving_img
 nib.save(target_image_nii, moving_img_path)
@@ -123,8 +112,6 @@ nib.save(target_image_nii, moving_img_path)
 # Load the it as an ANTs image for warping
 # moving_ants_img = ants.image_read(str(moving_img_path))
 moving_ants_img = ants.image_read(str(moving_img_path)) 
-
-
 
 
 
@@ -150,8 +137,6 @@ deformation_field = ants.apply_transforms(
 )
 
 # Applying transformations including an initial transformation and resampling to a new space
-# input_image = ants.image_read('clar_allen_reg/sample16_08x_down_ochann_rb4_chan_ort_cp_org.nii.gz') # used as moving before
-
 ref_image_new = ants.image_read('/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz') 
 
 transforms = [
@@ -159,40 +144,30 @@ transforms = [
     'clar_allen_reg/comptx.nii.gz'  
 ]
 
-output_image_2 = ants.apply_transforms(fixed=ref_image_new, moving=moving_ants_img, transformlist=transforms, interpolator='bSpline')
+warped_img_ants = ants.apply_transforms(fixed=ref_image_new, moving=moving_ants_img, transformlist=transforms, interpolator='bSpline')
 
 # Convert the ANTsImage to a numpy array 
-output_array = output_image_2.numpy()
+warped_img = warped_img_ants.numpy()
 
 # Assumes that raw image data type is unsigned int 16
-if np.max(output_array) < 65535: 
+if np.max(warped_img) < 65535: 
     # Set negative values to zero
-    output_array[output_array < 0] = 0
+    warped_img[warped_img < 0] = 0
 
     # Convert dtype
-    output_array = output_array.astype(np.uint16)
-
-# Convert to a NIfTI image
-target_img = nib.Nifti1Image(output_array, np.eye(4))
+    warped_img = warped_img.astype(np.uint16) # Could use args.dtype here
 
 # Load image to copy header info 
-source_img = nib.load('/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz') 
-new_affine = source_img.affine.copy()
-
-# Copy relevant header information
-hdr1 = source_img.header
-hdr2 = target_img.header
-fields_to_copy = [
-    'xyzt_units', 'descrip', 'qform_code', 'sform_code',
-    'qoffset_x', 'qoffset_y', 'qoffset_z', 'pixdim', 
-]
-for field in fields_to_copy:
-    hdr2[field] = hdr1[field]
+atlas = nib.load('/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz') 
+new_affine = atlas.affine.copy()
 
 # Save the image to be warped
-target_image_nii = nib.Nifti1Image(output_array, new_affine, hdr2)
-output_file_path = '/SSD3/mdma_v_meth/sample16/testing2_uint16_rb.nii.gz'  
+warpped_img_nii = nib.Nifti1Image(warped_img, atlas.affine.copy())
 
+# Copy relevant header information
+for field in fields_to_copy:
+    warpped_img_nii.header[field] = atlas.header[field]
 
 # Save the Nifti image using nibabel
-nib.save(target_image_nii, output_file_path)
+output_file_path = '/SSD3/mdma_v_meth/sample16/testing3_uint16_rb.nii.gz'  
+nib.save(warpped_img_nii, output_file_path)
