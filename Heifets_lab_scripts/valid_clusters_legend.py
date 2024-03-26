@@ -21,6 +21,8 @@ def parse_args():
 
 Prerequisites: valid_cluster_table.sh has been run and the resulting .xlsx files are in the working directory.
 
+Inputs: *_valid_clusters_table.xlsx files in the working directory
+
 Outputs: legend.xlsx
 """
     return parser.parse_args()
