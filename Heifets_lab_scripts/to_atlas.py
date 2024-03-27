@@ -12,7 +12,7 @@ from rich.traceback import install
 from argparse_utils import SM, SuppressMetavar
 from unravel_config import Configuration
 from unravel_img_io import load_3D_img, resolve_path
-from unravel_img_tools import reorient_for_raw_to_nii_conv, resample
+from unravel_img_tools import pad_img, reorient_for_raw_to_nii_conv, resample
 from unravel_utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
 
 
@@ -54,14 +54,6 @@ Input examples (path is relative to ./sample??; 1st glob match processed):
 """
     return parser.parse_args()
 
-@print_func_name_args_times()
-def pad_img(ndarray, pad_width=0.15):
-    """Pads ndarray by 15% of voxels on all sides"""
-    pad_factor = 1 + 2 * pad_width
-    pad_width_x = round(((ndarray.shape[0] * pad_factor) - ndarray.shape[0]) / 2)
-    pad_width_y = round(((ndarray.shape[1] * pad_factor) - ndarray.shape[1]) / 2)
-    pad_width_z = round(((ndarray.shape[2] * pad_factor) - ndarray.shape[2]) / 2)
-    return np.pad(ndarray, ((pad_width_x, pad_width_x), (pad_width_y, pad_width_y), (pad_width_z, pad_width_z)), mode='constant')
 
 @print_func_name_args_times()
 def copy_nii_header(source_img, new_img):

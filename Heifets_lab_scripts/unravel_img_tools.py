@@ -4,7 +4,7 @@
     - resample: Resample a 3D ndarray.
     - reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space
     - ilastik_segmentation: Segment tif series with Ilastik.
-    - pad_image: Pad an ndarray by a specified percentage.
+    - pad_img: Pad an ndarray by a specified percentage.
     - reorient_ndarray: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).
     - reorient_ndarray2: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).
     - rolling_ball_subtraction_opencv_parallel: Subtract background from a 3D ndarray using OpenCV.
@@ -77,11 +77,13 @@ def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None,
             subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 @print_func_name_args_times()
-def pad_image(ndarray, pad_width=0.15):
+def pad_img(ndarray, pad_width=0.15):
     """Pads ndarray by 15% of voxels on all sides"""
-    pad_width = int(pad_width * ndarray.shape[0])
-    padded_img = np.pad(ndarray, [(pad_width, pad_width)] * 3, mode='constant')
-    return padded_img
+    pad_factor = 1 + 2 * pad_width
+    pad_width_x = round(((ndarray.shape[0] * pad_factor) - ndarray.shape[0]) / 2)
+    pad_width_y = round(((ndarray.shape[1] * pad_factor) - ndarray.shape[1]) / 2)
+    pad_width_z = round(((ndarray.shape[2] * pad_factor) - ndarray.shape[2]) / 2)
+    return np.pad(ndarray, ((pad_width_x, pad_width_x), (pad_width_y, pad_width_y), (pad_width_z, pad_width_z)), mode='constant')
 
 @print_func_name_args_times()
 def reorient_ndarray(data, orientation_string):
