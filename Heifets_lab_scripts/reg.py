@@ -1,27 +1,24 @@
 #!/usr/bin/env python3
 
 import argparse
-import ants
-import math
-import nibabel as nib
+import os
+import subprocess
 import sys
-import numpy as np
-
-from ants import n4_bias_field_correction, registration, apply_transforms_to_image
+import ants
+import shutil
+import nibabel as nib
+from ants import n4_bias_field_correction, registration
+from nibabel.orientations import axcodes2ornt, ornt_transform, io_orientation, inv_ornt_aff
 from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
-from scipy.ndimage import zoom, gaussian_filter
+from scipy.ndimage import gaussian_filter
 from argparse_utils import SM, SuppressMetavar
 from unravel_config import Configuration
-from unravel_img_io import load_3D_img, resolve_path
-from unravel_img_tools import pad_img, reorient_for_raw_to_nii_conv, resample
+from unravel_img_io import resolve_path
+from unravel_img_tools import pad_img
 from unravel_utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
-
-
-
-
 
 
 def parse_args():
@@ -29,61 +26,86 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='path/prep_reg_output_image.nii.gz', required=True, action=SM)
-    parser.add_argument('-m', '--mask', help="<brain_mask>.nii.gz", default=None, action=SM)
-    parser.add_argument('-o', '--output', help='Output path. Default: <input>_bias.nii.gz', default=None, action=SM)
+
+    # Required arguments: 
+    parser.add_argument('-f', '--fixed_input', help='path/prep_reg_output_image.nii.gz (typically 50 um resolution)', required=True, action=SM)
+    parser.add_argument('-m', '--moving_img', help='path/moving_img.nii.gz (e.g., average template)', required=True,  action=SM)
+
+    # Optional arguments:
+    parser.add_argument('-mas', '--mask', help="<brain_mask>.nii.gz", default=None, action=SM)
+    parser.add_argument('-tf', '--transforms', help="Name of folder w/ transforms from registration. Default: clar_allen_reg", default="clar_allen_reg", action=SM)
+    parser.add_argument('-op', '--output_prefix', help='Prefix of ants.registration outputs. Default: ANTsPy_reg_', default="ANTsPy_reg_", action=SM)
+    parser.add_argument('-bc', '--bias_correct', help='Perform N4 bias field correction. Default: False', action='store_true', default=False)
+    parser.add_argument('-pad', '--pad_img', help='If True, add 15 percent padding to image. Default: False', action='store_true', default=False)
+    parser.add_argument('-sm', '--smooth', help='Sigma value for smoothing the fixed image. Default: 0 for no smoothing. Use 0.4 for autofl', default=0, type=float, action=SM)
+    parser.add_argument('-ort', '--ort_code', help='3 letter orientation code (e.g., PLI; A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Interior)', action=SM)
+    parser.add_argument('-itx', '--init_tform', help='Name of the initial transformation matrix. Default: init_tform_py.mat', default="init_tform_py.mat", action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.add_argument('-bc', '--bias_correct', help='Perform N4 bias field correction', action='store_true', default=False)
-    parser.add_argument('-sm', '--smooth', help='Smooth image with Gaussian filter. Default: 0.25. For no smoothing, set to 0', default=0.25, type=float, action=SM)
-    parser.add_argument('-oc', '--ort_code', help='3 letter orientation code (A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Interior; Default: ALI)', default='ALI', action=SM)
-    parser.add_argument('-an', '--atlas_name', help='Name of atlas (Default: gubra)', default="gubra", action=SM)
-    parser.add_argument('-a', '--atlas', help='<path/atlas> to warp (default: gubra_ano_split_10um.nii.gz)', default="/usr/local/gubra/gubra_ano_split_25um.nii.gz", action=SM)
-    parser.add_argument('-r', '--res', help="Resolution of atlas in microns (10, 25, or 50; Default: 25)", default=25, type=int, action=SM)
-    parser.add_argument('-s', '--side', help="Side for hemisphere registration (w, l or r; Default: w)", default='w', action=SM)
-    parser.add_argument('-t', '--template', help='Template (moving img; Default: path/gubra_template_25um.nii.gz)', default="/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz",  action=SM)
-    parser.add_argument('-r', '--res', help='Resample to this resolution in microns (Default: 50)', default=50, type=int, action=SM)
-    parser.add_argument('-zo', '--zoom_order', help='Order of spline interpolation. Range: 0-5. (Default: 1))', default=1, type=int, action=SM)
+    parser.epilog = """Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir
+Example usage: reg.py -f <50um_autofl_img_masked.nii.gz> -mas <brain_mask.nii.gz> -m <path/template.nii.gz> -bc -pad -sm 0.4 -ort PLI
+
+Prereqs: 
+prep_reg.py [and brain_mask.py] for warping an average template to the autofluo tissue
+"""
     return parser.parse_args()
 
+
+@print_func_name_args_times()
 def bias_correction(image_path, mask_path=None, shrink_factor=2, verbose=False, output_dir=None):
-    """Performs N4 bias field correction on image
+    """Perform N4 bias field correction on a .nii.gz and return an ndarray
     Args:
         image_path (str): Path to input image.nii.gz
         mask_path (str): Path to mask image.nii.gz
         shrink_factor (int): Shrink factor for bias field correction
         verbose (bool): Print output
         output_dir (str): Path to save corrected image"""
-    image = ants.image_read(str(image_path))
+    ants_img = ants.image_read(str(image_path))
     if mask_path:
-        mask = ants.image_read(str(mask_path))
-        corrected_image = n4_bias_field_correction(image=str(image_path), mask=mask, shrink_factor=shrink_factor, verbose=verbose)
+        ants_mask = ants.image_read(str(mask_path))
+        ants_img_corrected = n4_bias_field_correction(image=ants_img, mask=ants_mask, shrink_factor=shrink_factor, verbose=verbose)
     else:
-        corrected_image = n4_bias_field_correction(image)
-    corrected_image_name = str(Path(image_path).name).replace('.nii.gz', '_bias.nii.gz')
-    corrected_path = Path(output_dir) / corrected_image_name if output_dir else Path(image_path).parent / corrected_image_name
-    ants.image_write(corrected_image, str(corrected_path))
-    return corrected_path
+        ants_img_corrected = n4_bias_field_correction(ants_img)
+    ndarray = ants_img_corrected.numpy()
 
-def pad_image(image_path, pad_width=0.15):
-    """Pads image by 15% of voxels on all sides"""
-    image_data = load_nifti_image(image_path)
-    pad_width = int(pad_width * image_data.shape[0])
-    padded_img = np.pad(image_data, [(pad_width, pad_width)] * 3, mode='constant')
-    return padded_img
+    return ndarray
 
-def smooth_image(ndarray, sigma=None, res=50, kernel_size_in_vx=0.25):
-    """Smooth ndarray with a Gaussian filter and return the smoothed image
-    Args:
-        ndarray (np.ndarray): Image data
-        sigma (float): Standard deviation for Gaussian kernel
-        res (int): Resolution of the image in microns
-        kernel_size_in_vx (float): Kernel size in voxels"""
-    if sigma is None:
-        FWHM = kernel_size_in_vx * res  # 0.25 times the voxel size
-        sigma = FWHM / (2 * math.sqrt(2 * math.log(2))) # Calculate sigma that corresponds to the FWHM
-        sigma = sigma / res # Convert sigma from microns to voxel units
-    smoothed_img = gaussian_filter(ndarray, sigma=sigma)
-    return smoothed_img
+def set_nii_orientation(nii_img, target_axcodes, zero_origin=True, qform_code=1, sform_code=1):
+    """Set the orientation the the .nii.gz image header
+    
+    Arguments: 
+    nii_img: a NIfTI image object from nibabel
+    target_axcodes: a tuple of axis codes like ('R', 'A', 'S') or ('L', 'P', 'S')
+    """
+
+    img = nii_img.get_fdata() 
+
+    # Determine the current orientation of the ndarray
+    current_ornt = io_orientation(nii_img.affine)
+
+    # Convert target axis codes to an orientation
+    target_ornt = axcodes2ornt(target_axcodes)
+
+    # Find the transformation needed
+    transformation_ornt = ornt_transform(current_ornt, target_ornt)
+
+    # Adjust the affine to match the new orientation
+    new_affine = inv_ornt_aff(transformation_ornt, img.shape) @ nii_img.affine
+
+    # Zero the origin:
+    if zero_origin:
+        for i in range(3):
+            new_affine[i,3] = 0     
+        
+    # Make the .nii.gz image with the adjusted header.
+    nii_img_oriented = nib.Nifti1Image(img, new_affine, nii_img.header)
+
+    # Set the header information
+    nii_img_oriented.header['xyzt_units'] = 10 # mm, s
+    nii_img_oriented.header['qform_code'] = qform_code
+    nii_img_oriented.header['sform_code'] = sform_code
+    nii_img_oriented.header['regular'] = b'r'
+
+    return nii_img_oriented
 
 
 def main(): 
@@ -91,7 +113,6 @@ def main():
     if len(args.ort_code) != 3 or not all(x in 'APRLIS' for x in args.ort_code):
         raise ValueError("Invalid 3 letter orientation code. Must be a combination of A/P, L/R, and S/I")
        
-
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
 
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
@@ -100,68 +121,115 @@ def main():
             
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            output = resolve_path(sample_path, args.output)
-            if output.exists():
-                print(f"\n\n    {output} already exists. Skipping.\n")
-                return
-            
             # Directory with transforms from registration
             transforms_path = resolve_path(sample_path, args.transforms)
 
+            # Define outputs
+            output_prefix = str(Path(transforms_path, args.output_prefix))
+            output = f'{output_prefix}Warped.nii.gz'
+            fixed_img_for_reg = str(Path(args.fixed_input).name).replace(".nii.gz", "_fixed_reg_input.nii.gz")
+            if Path(output).exists():
+                print(f"\n\n    {output} already exists. Skipping.\n")
+                return
+            
             # Bias correction
             if args.bias_correct: 
-                corrected_path = bias_correction(args.input, mask_path=args.mask, shrink_factor=2, verbose=False, output_dir=transforms_path)
-                img = load_3D_img(corrected_path, "xyz")
+                print(f'\n    Bias correcting the registration input\n')
+                img = bias_correction(args.fixed_input, mask_path=args.mask, shrink_factor=2, verbose=args.verbose, output_dir=transforms_path)
             else:
-                img = load_3D_img(args.input, "xyz")
+                nii_img = nib.load(args.fixed_input)
+                img = nii_img.get_fdata()
 
             # Pad with 15% of voxels on all sides
-            img = pad_image(img, pad_width=0.15)
+            if args.pad_img: 
+                print(f'\n    Adding padding to the registration input\n')
+                img = pad_img(img, pad_width=0.15)
 
             # Smoothing
             if args.smooth > 0:
-                img = smooth_image(img, sigma=None, res=args.reg_res, kernel_size_in_vx=args.smooth)
+                print(f'\n    Smoothing the registration input\n')
+                img = gaussian_filter(img, sigma=args.smooth)
 
-            ants.image_write(img, '/SSD3/mdma_v_meth/s16_reg_test/sample16/clar_allen_reg/clar_res0.05_sm_py.nii.gz')
+            # Conver ndarray to FLOAT32 for ANTs
+            img = img.astype('float32') 
 
-            import sys ; sys.exit()
+            # Create NIfTI, set header info, and save the registration input (reference image) 
+            print(f'\n    Setting header info for the registration input\n')
+            input_nii = nib.load(args.fixed_input)
+            reg_input_nii = nib.Nifti1Image(img, input_nii.affine.copy())
+            reg_input_nii = set_nii_orientation(reg_input_nii, tuple(args.ort_code))
+            nib.save(reg_input_nii, Path(transforms_path, fixed_img_for_reg))
 
-            ### Need to set orientation of the image
+            # Get the absolute path to the currently running script
+            print(f'\n    Generating the initial transform matrix for aligning the moving image (e.g., template) to the fixed image (e.g., tissue) \n')
+            script_path = Path(Path(os.path.abspath(__file__)).parent, 'ANTsPy_affine_initializer.py')
+            command = [
+                'python', 
+                script_path, 
+                '-f', str(Path(transforms_path, fixed_img_for_reg)), 
+                '-m', args.moving_img, 
+                '-o', str(Path(transforms_path, args.init_tform)), 
+                '-t', '10'
+            ]
 
+            # Redirect stderr to os.devnull, leaving stdout unaffected
+            with open(os.devnull, 'w') as devnull:
+                subprocess.run(command, stderr=devnull)
 
-            # Define the paths to your fixed and moving images, and where to save the transformation matrix
-            fixed_image_path = '/SSD3/mdma_v_meth/s16_reg_test/sample16/clar_allen_reg/clar_res0.05_sm_py.nii.gz'
-            moving_image_path = '/usr/local/unravel/atlases/gubra/custom_templates/gubra_template_25um_OB_trim.nii.gz'
-            output_transform_path = '/SSD3/mdma_v_meth/s16_reg_test/sample16/clar_allen_reg/init_tform_py.mat'
+            # Load images
+            print(f'\n    Applying the initial transform matrix to aligning the moving image to the fixed image \n')
+            fixed_image = ants.image_read(str(Path(transforms_path, fixed_img_for_reg)))
+            moving_image = ants.image_read(args.moving_img)
 
-            # Load the fixed and moving images
-            fixed_image = ants.image_read(fixed_image_path)
-            moving_image = ants.image_read(moving_image_path)
-
-            # Execute the affine initializer with the specified parameters
-            txfn = ants.affine_initializer(
-                fixed_image=fixed_image,
-                moving_image=moving_image,
-                search_factor=1,  # Degree of increments on the sphere to search
-                radian_fraction=1,  # Defines the arc to search over
-                use_principal_axis=False,  # Determines whether to initialize by principal axis
-                local_search_iterations=500,  # Number of iterations for local optimization at each search point
-                txfn=output_transform_path  # Path to save the transformation matrix
+            # Apply transformation
+            transformed_image = ants.apply_transforms(
+                fixed=fixed_image,
+                moving=moving_image,
+                transformlist=[str(Path(transforms_path, args.init_tform))]
             )
 
-            print(f"Transformation file saved to: {txfn}")
+            # Save the transformed image
+            ants.image_write(transformed_image, str(Path(transforms_path, 'initial_alignment_of_moving_image.nii.gz')))
 
+            # Perform registration (reg is a dict with multiple outputs)
+            reg = ants.registration(
+                fixed=fixed_image, # e.g., reg_input.nii.gz
+                moving=transformed_image, # e.g., the initially aligned template
+                type_of_transform='SyN',  # SyN = symmetric normalization
+                grad_step=0.1,
+                flow_sigma=3,  # Flow sigma for BSplineSyN
+                total_sigma=0,  # Total sigma for BSplineSyN
+                syn_metric='CC',  # Cross-correlation
+                syn_sampling=2,  # Corresponds to CC radius
+                reg_iterations=(100, 70, 50, 20),  # Convergence criteria
+                use_histogram_matching=False, 
+                outprefix=output_prefix, 
+                verbose=args.verbose
+            )
 
-            # For example, with ANTsPy
-            fixed_image = nib.load("resampled_image.nii.gz")
-            moving_image = nib.load(args.template)
-            
-            reg_output = registration(fixed_image, moving_image)
-            warped_moving_image = apply_transforms_to_image(fixed_image, moving_image, transform=reg_output['fwdtransforms'])
-            save_nifti_image(warped_moving_image.numpy(), args.input, "warped_moving_image.nii.gz")
+            # Save the warped image output
+            ants.image_write(reg['warpedmovout'], output)
+            print(f"Transformed image saved to: {output}")
 
-            # More operations...
-            # ...
+            # # Handle forward transformation fields
+            # for i, transform_path in enumerate(reg['fwdtransforms']):
+            #     # Determine the type of transformation from its filename and construct the new filename accordingly
+            #     if transform_path.endswith('.mat'):
+            #         new_filename = f"{output_prefix}{i}GenericAffine.mat"
+            #     else:
+            #         new_filename = f"{output_prefix}{i}Warp.nii.gz"
+            #     shutil.copy(transform_path, new_filename)
+            #     print(f"Forward transform saved to: {new_filename}")
+
+            # # Handle inverse transformation fields, if they exist
+            # for i, transform_path in enumerate(reg['invtransforms']):
+            #     # The transformation type is inferred from the filename as above
+            #     if transform_path.endswith('.mat'):
+            #         new_filename = f"{output_prefix}{i}InverseGenericAffine.mat"
+            #     else:
+            #         new_filename = f"{output_prefix}{i}InverseWarp.nii.gz"
+            #     shutil.copy(transform_path, new_filename)
+            #     print(f"Inverse transform saved to: {new_filename}")
 
             progress.update(task_id, advance=1)
 
