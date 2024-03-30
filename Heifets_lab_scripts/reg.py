@@ -14,7 +14,9 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 from scipy.ndimage import gaussian_filter
+
 from argparse_utils import SM, SuppressMetavar
+from reorient_nii import reorient_nii
 from unravel_config import Configuration
 from unravel_img_io import resolve_path
 from unravel_img_tools import pad_img
@@ -34,7 +36,7 @@ def parse_args():
     # Optional arguments:
     parser.add_argument('-mas', '--mask', help="<brain_mask>.nii.gz", default=None, action=SM)
     parser.add_argument('-tf', '--transforms', help="Name of folder w/ transforms from registration. Default: clar_allen_reg", default="clar_allen_reg", action=SM)
-    parser.add_argument('-op', '--output_prefix', help='Prefix of ants.registration outputs. Default: ANTsPy_reg_', default="ANTsPy_reg_", action=SM)
+    parser.add_argument('-op', '--output_prefix', help='Prefix of ants.registration outputs. Default: None', default=None, action=SM)
     parser.add_argument('-bc', '--bias_correct', help='Perform N4 bias field correction. Default: False', action='store_true', default=False)
     parser.add_argument('-pad', '--pad_img', help='If True, add 15 percent padding to image. Default: False', action='store_true', default=False)
     parser.add_argument('-sm', '--smooth', help='Sigma value for smoothing the fixed image. Default: 0 for no smoothing. Use 0.4 for autofl', default=0, type=float, action=SM)
@@ -125,7 +127,10 @@ def main():
             transforms_path = resolve_path(sample_path, args.transforms)
 
             # Define outputs
-            output_prefix = str(Path(transforms_path, args.output_prefix))
+            if not args.output_prefix:
+                output_prefix = str(Path(transforms_path, ''))
+            else:
+                output_prefix = str(Path(transforms_path, args.output_prefix))
             output = f'{output_prefix}Warped.nii.gz'
             fixed_img_for_reg = str(Path(args.fixed_input).name).replace(".nii.gz", "_fixed_reg_input.nii.gz")
             if Path(output).exists():
@@ -157,7 +162,9 @@ def main():
             print(f'\n    Setting header info for the registration input\n')
             input_nii = nib.load(args.fixed_input)
             reg_input_nii = nib.Nifti1Image(img, input_nii.affine.copy())
-            reg_input_nii = set_nii_orientation(reg_input_nii, tuple(args.ort_code))
+
+            # Set the orientation of the image
+            reg_input_nii = reorient_nii(reg_input_nii, args.ort_code, zero_origin=True, code=1)
             nib.save(reg_input_nii, Path(transforms_path, fixed_img_for_reg))
 
             # Get the absolute path to the currently running script
@@ -196,14 +203,11 @@ def main():
                 fixed=fixed_image, # e.g., reg_input.nii.gz
                 moving=transformed_image, # e.g., the initially aligned template
                 type_of_transform='SyN',  # SyN = symmetric normalization
-                grad_step=0.1,
-                flow_sigma=3,  # Flow sigma for BSplineSyN
-                total_sigma=0,  # Total sigma for BSplineSyN
+                grad_step=0.1, # Gradient step size
                 syn_metric='CC',  # Cross-correlation
                 syn_sampling=2,  # Corresponds to CC radius
                 reg_iterations=(100, 70, 50, 20),  # Convergence criteria
-                use_histogram_matching=False, 
-                outprefix=output_prefix, 
+                outprefix=output_prefix, # Can be omitted to use a default prefix of "" 
                 verbose=args.verbose
             )
 
