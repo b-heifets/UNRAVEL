@@ -18,6 +18,8 @@ def parse_args():
 def main():
     args = parse_args()
     nii = nib.load(args.input)
+    
+    np.set_printoptions(precision=2, suppress=True)
 
     # Print data type
     data_type = nii.get_data_dtype()
