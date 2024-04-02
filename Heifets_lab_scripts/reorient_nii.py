@@ -137,7 +137,7 @@ def transform_nii_affine(nii, target_ort, zero_origin=False):
 
     return new_affine
 
-def reorient_nii(input_nii_path, target_ort, zero_origin=False, apply=False, form_code=None):
+def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None):
     """Reorient a NIfTI image or its affine matrix to a target orientation
 
     Args:
@@ -153,8 +153,6 @@ def reorient_nii(input_nii_path, target_ort, zero_origin=False, apply=False, for
         else:
             new_affine (np.ndarray): New affine matrix
 """
-
-    nii = nib.load(input_nii_path)
 
     # Optionally apply the orientation change to the image data
     if apply:
@@ -193,16 +191,17 @@ def reorient_nii(input_nii_path, target_ort, zero_origin=False, apply=False, for
         return new_affine
 
 def main():
-    new_nii = reorient_nii(args.input, args.target_ort, zero_origin=args.zero_origin, apply=args.apply, form_code=args.form_code)
+    nii = nib.load(args.input)
+    new_nii = reorient_nii(nii, args.target_ort, zero_origin=args.zero_origin, apply=args.apply, form_code=args.form_code)
 
     # Save the new .nii.gz file
     if args.output: 
         nib.save(new_nii, args.output)
     else:
         if args.apply:
-            nib.save(new_nii, input.replace('.nii.gz', f'_{args.target_ort}_applied.nii.gz'))
+            nib.save(new_nii, args.input.replace('.nii.gz', f'_{args.target_ort}_applied.nii.gz'))
         else:
-            nib.save(new_nii, input.replace('.nii.gz', f'_{args.target_ort}.nii.gz'))
+            nib.save(new_nii, args.input.replace('.nii.gz', f'_{args.target_ort}.nii.gz'))
 
 
 if __name__ == '__main__':

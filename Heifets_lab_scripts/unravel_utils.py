@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import functools
-import re
 import numpy as np
 import os
 import sys
@@ -122,26 +121,37 @@ def initialize_progress_bar(num_of_items_to_iterate, task_message="[red]Processi
 # Main function decorator
 
 def print_cmd_and_times(func):
-    """A combined decorator to print the script name, arguments, start/end times, and use rich traceback."""
+    """A decorator to print the script name, arguments, start/end times, use rich traceback, and log commands to a hidden file."""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        if not Configuration.verbose:
-            return func(*args, **kwargs)  # If not verbose, skip all additional logic
+        log_file = ".command_log.txt"  # Name of the hidden log file
 
-        # Print command
-        cmd = f"\n\n[bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]{' '.join(sys.argv[1:])}[/]\n"
-        console = Console()  # Instantiate the Console object
-        console.print(cmd)
+        # Command string
+        cmd = f"\n{os.path.basename(sys.argv[0])} {' '.join(sys.argv[1:])}"
 
-        # Start time
-        start_time = datetime.now()
-        print(f"    [bright_blue]Start:[/] " + start_time.strftime('%Y-%m-%d %H:%M:%S') + "\n")
+        # Log command to file
+        with open(log_file, "a") as file:  # Open in append mode
+            file.write(cmd)
+            start_time = datetime.now()
+            file.write(f"\n    Start: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
+
+        # If verbose, print command and times
+        if Configuration.verbose:
+            console = Console()  # Instantiate the Console object
+            console.print(f"\n\n[bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]{' '.join(sys.argv[1:])}[/]\n")
+            print(f"\n    [bright_blue]Start:[/] " + start_time.strftime('%Y-%m-%d %H:%M:%S') + "\n")
 
         result = func(*args, **kwargs)  # Call the original function
 
-        # End time
-        end_time = datetime.now()
-        print(f"\n\n:mushroom: [bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold1]![/][dark_orange]![/][red1]![/] \n")
+        if Configuration.verbose:
+            end_time = datetime.now()
+            console.print(f"\n\n:mushroom: [bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold1]![/][dark_orange]![/][red1]![/] \n")
+
+        # Always log end time to file
+        with open(log_file, "a") as file:
+            end_time = datetime.now()
+            file.write(f"\n    End: {end_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
+        
         return result
     return wrapper
 

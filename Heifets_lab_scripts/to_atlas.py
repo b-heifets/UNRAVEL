@@ -164,14 +164,12 @@ def to_atlas(img, xy_res, z_res, transforms_path, reg_res, atlas_res, zoom_order
         compose=f'{transforms_path}/' # dir to output comptx.nii.gz
     )
 
-    # Applying transformations including an initial transformation and resampling to a new space
+    # Applying transformations from registration and the initial alignment
     template = ants.image_read(template_path) 
-
     transforms = [
-        str(transforms_path / 'init_tform.mat'),  # Initial transformation matrix 
+        str(transforms_path / 'init_tform.mat'), # Initial transformation matrix 
         str(transforms_path / 'comptx.nii.gz') # Composite transformation field
     ]
-
     warped_img_ants = ants.apply_transforms(fixed=template, moving=moving_ants_img, transformlist=transforms, interpolator=interpol)
 
     # Convert the ANTsImage to a numpy array 
