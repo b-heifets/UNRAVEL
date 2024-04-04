@@ -15,7 +15,7 @@ from argparse import RawTextHelpFormatter
 from rich import print
 from rich.live import Live
 from rich.traceback import install
-from scipy.stats import dunnett, ttest_ind
+from scipy.stats import ttest_ind
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from unravel_utils import initialize_progress_bar
 
@@ -23,6 +23,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Plot cell densensities for each region and summarize results.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...', formatter_class=RawTextHelpFormatter)
     parser.add_argument('--groups', nargs='*', help='Group prefixes (e.g., saline meth cbsMeth)', metavar='')
     parser.add_argument('-t', '--test_type', help="Type of statistical test to use: 'tukey' (default), 'dunnett', or 't-test'", choices=['tukey', 'dunnett', 't-test'], default='tukey', metavar='')
+    parser.add_argument('-hemi', help="Hemisphere(s) to process (r, l or both)", choices=['r', 'l', 't-both'], required=True, metavar='')
     parser.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", metavar='')
     parser.add_argument('-d', '--divide', type=float, help='Divide the cell densities by the specified value for plotting (default is None)', default=None, metavar='')
     parser.add_argument('-y', '--ylabel', help='Y-axis label (Default: cell_density)', default='cell_density', metavar='')
@@ -31,7 +32,9 @@ def parse_args():
     parser.add_argument('-o', '--output', help='Output directory for plots (Default: <args.test_type>_plots)', metavar='')
     parser.add_argument('-a', "--alt", help="Number of tails and direction for t-test or Dunnett's tests {'two-sided', 'less' (<ctrl), or 'greater'}", default='two-sided', metavar='')
     parser.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], metavar='')
-    parser.epilog = """Example usage: regional_cell_densities_summary.py -i cell_densities.csv --groups Saline MDMA Meth -d 10000
+    parser.epilog = """Example usage: regional_cell_densities_summary.py --groups Saline MDMA Meth -d 10000 -hemi r
+
+# TO DO: Add module for Dunnett's tests (don't use this option for now)
 
 Outputs plots and a summary CSV to the current directory.    
 Example hex code list (flank arg w/ double quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']"""
@@ -225,7 +228,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     ax.spines['bottom'].set_linewidth(2)
     ax.spines['left'].set_linewidth(2)
     plt.ylim(0, y_pos) # Adjust y-axis limit to accommodate comparison bars
-    ax.set_xlabel(None)
+    ax.set_xlabel('group') ### was None
 
     # Check if there are any significant comparisons (for prepending '_sig__' to the filename)
     has_significant_results = True if significant_comparisons.shape[0] > 0 else False
@@ -304,10 +307,28 @@ def main():
     else:
         suffix = f"_{args.alt}" # Add suffix to indicate the alternative hypothesis
 
+    # Make output directories
     if args.output:
-        out_dirs = {side: f"{args.output}_{side}{suffix}" for side in ["L", "R", "pooled"]}
+        if args.hemi == 'both': 
+            out_dirs = {side: f"{args.output}_{side}{suffix}" for side in ["L", "R", "pooled"]}
+        elif args.hemi == 'r': 
+            out_dirs = {side: f"{args.output}_{side}{suffix}" for side in ["R"]}
+        elif args.hemi == 'l': 
+            out_dirs = {side: f"{args.output}_{side}{suffix}" for side in ["L"]}
+        else: 
+            print("--hemi should be l, r, or both")
+            import sys ; sys.exit()
     else:
-        out_dirs = {side: f"{args.test_type}_plots_{side}{suffix}" for side in ["L", "R", "pooled"]}
+        if args.hemi == 'both': 
+            out_dirs = {side: f"{args.test_type}_plots_{side}{suffix}" for side in ["L", "R", "pooled"]}
+        elif args.hemi == 'r': 
+            out_dirs = {side: f"{args.test_type}_plots_{side}{suffix}" for side in ["R"]}
+        elif args.hemi == 'l': 
+            out_dirs = {side: f"{args.test_type}_plots_{side}{suffix}" for side in ["L"]}
+        else: 
+            print("--hemi should be l, r, or both")
+            import sys ; sys.exit()
+
     for out_dir in out_dirs.values():
         os.makedirs(out_dir, exist_ok=True)
     
@@ -315,49 +336,55 @@ def main():
     for prefix in args.groups:
         group_columns[prefix] = [col for col in df.columns if col.startswith(f"{prefix}_")] 
 
-    # Averaging data across hemispheres and plotting pooled data (DR)
-    print(f"\nPlotting and summarizing pooled data for each region...\n")
-    rh_df = df[df['Region_ID'] < 20000]
-    lh_df = df[df['Region_ID'] > 20000]
+    if args.hemi == 'both': 
+        # Averaging data across hemispheres and plotting pooled data (DR)
+        print(f"\nPlotting and summarizing pooled data for each region...\n")
+        rh_df = df[df['Region_ID'] < 20000]
+        lh_df = df[df['Region_ID'] > 20000]
 
-    # Initialize an empty dataframe to store all summaries
-    all_summaries_pooled = pd.DataFrame() 
+        # Initialize an empty dataframe to store all summaries
+        all_summaries_pooled = pd.DataFrame() 
 
-    # Drop first 4 columns
-    rh_df = rh_df.iloc[:, 5:]
-    lh_df = lh_df.iloc[:, 5:]
+        # Drop first 4 columns
+        rh_df = rh_df.iloc[:, 5:]
+        lh_df = lh_df.iloc[:, 5:]
 
-    # Reset indices to ensure alignment
-    rh_df.reset_index(drop=True, inplace=True)
-    lh_df.reset_index(drop=True, inplace=True)
+        # Reset indices to ensure alignment
+        rh_df.reset_index(drop=True, inplace=True)
+        lh_df.reset_index(drop=True, inplace=True)
 
-    # Initialize pooled_df with common columns
-    pooled_df = df[['Region_ID', 'Side', 'ID_Path', 'Region', 'Abbr']][df['Region_ID'] < 20000].reset_index(drop=True)
-    pooled_df['Side'] = 'Pooled'  # Set the 'Side' to 'Pooled'
+        # Initialize pooled_df with common columns
+        pooled_df = df[['Region_ID', 'Side', 'ID_Path', 'Region', 'Abbr']][df['Region_ID'] < 20000].reset_index(drop=True)
+        pooled_df['Side'] = 'Pooled'  # Set the 'Side' to 'Pooled'
 
-    # Average the cell densities for left and right hemispheres
-    for col in lh_df.columns:
-        pooled_df[col] = (lh_df[col] + rh_df[col]) / 2
+        # Average the cell densities for left and right hemispheres
+        for col in lh_df.columns:
+            pooled_df[col] = (lh_df[col] + rh_df[col]) / 2
 
-    # Averaging data across hemispheres and plotting pooled data
-    unique_region_ids = df[df["Side"] == "R"]["Region_ID"].unique()
-    progress, task_id = initialize_progress_bar(len(unique_region_ids), "[red]Processing regions (pooled)...")
-    with Live(progress):
-        for region_id in unique_region_ids:
-            region_name, region_abbr = get_region_details(region_id, df)
-            out_dir = out_dirs["pooled"]
-            comparisons_summary = process_and_plot_data(pooled_df[pooled_df["Region_ID"] == region_id], region_id, region_name, region_abbr, "Pooled", out_dir, group_columns, args)
-            summary_df = summarize_significance(comparisons_summary, region_id)
-            all_summaries_pooled = pd.concat([all_summaries_pooled, summary_df], ignore_index=True)
-            progress.update(task_id, advance=1)
+        # Averaging data across hemispheres and plotting pooled data
+        unique_region_ids = df[df["Side"] == "R"]["Region_ID"].unique()
+        progress, task_id = initialize_progress_bar(len(unique_region_ids), "[red]Processing regions (pooled)...")
+        with Live(progress):
+            for region_id in unique_region_ids:
+                region_name, region_abbr = get_region_details(region_id, df)
+                out_dir = out_dirs["pooled"]
+                comparisons_summary = process_and_plot_data(pooled_df[pooled_df["Region_ID"] == region_id], region_id, region_name, region_abbr, "Pooled", out_dir, group_columns, args)
+                summary_df = summarize_significance(comparisons_summary, region_id)
+                all_summaries_pooled = pd.concat([all_summaries_pooled, summary_df], ignore_index=True)
+                progress.update(task_id, advance=1)
 
-    # Merge with the original regional_summary.csv and write to a new CSV
-    regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
-    final_summary_pooled = pd.merge(regional_summary, all_summaries_pooled, on='Region_ID', how='left') 
-    final_summary_pooled.to_csv(Path(out_dir) / '__significance_summary_pooled.csv', index=False)
+        # Merge with the original regional_summary.csv and write to a new CSV
+        regional_summary = pd.read_csv(Path(__file__).parent / 'regional_summary.csv')
+        final_summary_pooled = pd.merge(regional_summary, all_summaries_pooled, on='Region_ID', how='left') 
+        final_summary_pooled.to_csv(Path(out_dir) / '__significance_summary_pooled.csv', index=False)
 
     # Perform analysis and plotting for each hemisphere
-    for side in ["L", "R"]:
+    if args.hemi == 'r':
+        sides_to_process = ["R"]
+    else: 
+        sides_to_process = ["L"]
+
+    for side in sides_to_process:
         print(f"\nPlotting and summarizing data for {side} hemisphere...\n")
 
         # Initialize an empty dataframe to store all summaries
