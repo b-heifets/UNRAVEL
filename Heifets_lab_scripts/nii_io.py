@@ -13,7 +13,7 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times
 def parse_args():
     parser = argparse.ArgumentParser(description='Convert the data type of a .nii.gz image', formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
-    parser.add_argument('-d', '--data_type', help='Data type (from numpy). For example: uint16', required=True, action=SM)
+    parser.add_argument('-d', '--data_type', help='Data type of output. For example: uint16 (numpy conventions)', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/new_img.nii.gz. Default: path/img_dtype.nii.gz', action=SM)
     parser.add_argument('-s', '--scale', help='Scale the data to the range of the new data type. Default: False', action='store_true', default=False)
     parser.add_argument('-b', '--binary', help='Convert to binary image. Default: False', action='store_true', default=False)
@@ -105,7 +105,7 @@ def main():
     new_img = convert_dtype(img, args.data_type, scale_mode=scale_mode, zscore_range=(-3, 3), target_range=target_range)
 
     # Update the header's datatype
-    new_nii = nib.Nifti1Image(new_img, nii.affine)
+    new_nii = nib.Nifti1Image(new_img, nii.affine, nii.header)
     new_nii.header.set_data_dtype(np.dtype(args.data_type))
 
     # Save the new .nii.gz file

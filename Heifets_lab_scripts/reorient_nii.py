@@ -15,8 +15,8 @@ def parse_args():
     parser.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/img.nii.gz', required=True, action=SM)
     parser.add_argument('-t', '--target_ort', help='Target orientation axis codes (e.g., RAS)', required=True, action=SM)
-    parser.add_argument('-z', '--zero_origin', help='Zero the origin of the affine matrix. Default: False', action='store_true', default=False)
-    parser.add_argument('-a', '--apply', help='Apply the new orientation to the ndarray data. Default: False', action='store_true', default=False)
+    parser.add_argument('-z', '--zero_origin', help='Provide flag to zero the origin of the affine matrix.', action='store_true', default=False)
+    parser.add_argument('-a', '--apply', help='Provide flag to apply the new orientation to the ndarray data.', action='store_true', default=False)
     parser.add_argument('-fc', '--form_code', help='Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned)', type=int, default=None)
     parser.epilog = """Example usage:     reorient_nii.py -i image.nii.gz -t PIR -a -z
 
@@ -185,10 +185,7 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
     # Set the data type of the NIfTI image to match the template image
     new_nii.set_data_dtype(nii.header.get_data_dtype())
 
-    if apply:
-        return new_nii
-    else:
-        return new_affine
+    return new_nii
 
 def main():
     nii = nib.load(args.input)
