@@ -42,6 +42,7 @@ def parse_args():
     parser.add_argument('-sm', '--smooth', help='Sigma value for smoothing the fixed image. Default: 0 for no smoothing. Use 0.4 for autofl', default=0, type=float, action=SM)
     parser.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     parser.add_argument('-ia', '--init_align', help='Name of initially aligned image (moving reg input). Default: <moving_img>__initial_alignment_to_fixed_img.nii.gz' , default=None, action=SM)
+    parser.add_argument('-it', '--init_time', help='Time in seconds allowed for ANTsPy_affine_initializer.py to run. Default: 30' , default='30', type=str, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir
 Example usage: reg.py -f <50um_autofl_img_masked.nii.gz> -mas <brain_mask.nii.gz> -m <path/template.nii.gz> -bc -pad -sm 0.4 -ort PLI
@@ -180,7 +181,7 @@ def main():
                 '-f', str(Path(transforms_path, fixed_img_for_reg)), 
                 '-m', args.moving_img, 
                 '-o', str(Path(transforms_path, f"{args.tform_prefix}init_tform.mat")), 
-                '-t', '10' # Time in seconds allowed for this step. Increase time out duration if needed.
+                '-t', args.init_time # Time in seconds allowed for this step. Increase time out duration if needed.
             ]
 
             # Redirect stderr to os.devnull
