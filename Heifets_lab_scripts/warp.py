@@ -12,48 +12,30 @@ from argparse_utils import SM, SuppressMetavar
 from unravel_config import Configuration
 from unravel_utils import print_func_name_args_times, print_cmd_and_times
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Warp to/from atlas space and registration input space', formatter_class=SuppressMetavar)
     parser.add_argument('-t', '--transforms', help='path/transforms_dir', required=True, action=SM)
     parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz', required=True, action=SM)
     parser.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/output.nii.gz', required=True, action=SM)
-    parser.add_argument('-inv', '--inverse', help='Perform inverse warping if flag provided. Default: False', default=False, action='store_true', action=SM)
+    parser.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from reg.py)', default=False, action='store_true')
     parser.add_argument('-inp', '--interpol', help='Type of interpolation (nearestNeighbor, linear [default], bSpline, multiLabel).', default='linear', action=SM)
-    parser.add_argument('-dt', '--data_type', help='numpy data type (e.g., uint16)', default=None, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity if flag provided', default=False, action='store_true')
     parser.epilog = """
-# Example of forward warping atlas to tissue space: 
-(
-warp.py \
-    -m '/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz' \
-    -f 'transforms/clar_res0.05_masked_fixed_reg_input.nii.gz' \
-    -t transforms \
-    -o transforms/fwd_warp_multiLabel.nii.gz \
-    -inp multiLabel \
-    -v \
-)
+# Example of forward warping atlas to tissue space:
+warp.py -m atlas_img.nii.gz -f transforms/clar_res0.05_masked_fixed_reg_input.nii.gz -t transforms -o warp/atlas_in_tissue_space.nii.gz -inp multiLabel -v
 
-# Example of inverse warping tissue to atlas space: 
-(
-warp.py \
-    -m 'transforms/clar_res0.05_masked_fixed_reg_input.nii.gz' \
-    -f '/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz' \
-    -t transforms \
-    -o transforms/inv_warp_test.nii.gz \
-    -inv \
-    -v \
-)
+# Example of inverse warping tissue to atlas space:
+warp.py -m transforms/clar_res0.05_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -t transforms -o warp/tissue_in_atlas_space.nii.gz -inv -v
 
-Uses transformation fields from reg.py. Use multiLabel for warping atlases
+Prereq: reg.py
 """
     return parser.parse_args()
 
-# TODO: Add option for resampling moving and fixed images to a higher resolution (e.g., 10 um ; use itksnap for viewing these)
-
 
 @print_func_name_args_times()
-def apply_transform(transforms_path, moving_img_path, fixed_img_path, output_path, inverse, interpol, data_type):
+def apply_transform(transforms_path, moving_img_path, fixed_img_path, output_path, inverse, interpol):
     """
     Applies the transformations to an image using ANTsPy.
 
@@ -118,15 +100,21 @@ def apply_transform(transforms_path, moving_img_path, fixed_img_path, output_pat
     # Convert the ANTsImage to a numpy array 
     warped_img = warped_img_ants.numpy()
 
-    # Convert dtype of warped image to match input image
-    if data_type is not None: 
-        if np.issubdtype(data_type, np.unsignedinteger):
-            warped_img[warped_img < 0] = 0 # If output_dtype is unsigned, set negative values to zero
-        warped_img = warped_img.astype(data_type)
+    # Round the floating-point label values to the nearest integer
+    warped_img = np.round(warped_img)
+
+    # Convert dtype of warped image to match the moving image
+    moving_img_nii = nib.load(moving_img_path) 
+    data_type = moving_img_nii.header.get_data_dtype()
+    if np.issubdtype(data_type, np.unsignedinteger):
+        warped_img[warped_img < 0] = 0 # If output_dtype is unsigned, set negative values to zero
+    warped_img = warped_img.astype(data_type)
 
     # Convert the warped image to NIfTI, copy relevant header information, and save it
     fixed_img_nii = nib.load(fixed_img_path) 
     warped_img_nii = nib.Nifti1Image(warped_img, fixed_img_nii.affine.copy(), fixed_img_nii.header.copy())
+    warped_img_nii.set_data_dtype(data_type)
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     nib.save(warped_img_nii, output_path)
 
 
@@ -136,7 +124,7 @@ def main():
     moving_img_path = str(Path(args.moving_img).resolve())
     fixed_img_path = str(Path(args.fixed_img).resolve())
 
-    apply_transform(transforms_path, moving_img_path, fixed_img_path, args.output, args.inverse, args.interpol, args.data_type)
+    apply_transform(transforms_path, moving_img_path, fixed_img_path, args.output, args.inverse, args.interpol)
 
 
 if __name__ == '__main__': 
