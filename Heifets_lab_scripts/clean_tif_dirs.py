@@ -24,7 +24,7 @@ def parse_args():
     parser.epilog = """Run script from the experiment directory w/ sample?? folder(s)
 or run from a sample?? folder.
 
-Example usage:     check_for_non_tifs.py -m -v
+Example usage:     check_for_non_tifs.py -t autofl ochann -m -v
 
 Tif directory clean up involves:
     - Moving subdirectories to parent dir
@@ -37,25 +37,6 @@ Assumes that the extension of the TIF files is .tif or .ome.tif.
 
 
 def clean_tifs_dir(path_to_tif_dir, move, verbose):
-    """Clean up a directory containing TIF files by moving subdirectories and non-TIF files, and replacing spaces in filenames."""
-    # Move non-TIF files and replace spaces in filenames
-    for file in path_to_tif_dir.iterdir():
-        if file.is_file() and not file.suffix.lower() in ('.tif', '.ome.tif'):
-            if move:
-                new_location = path_to_tif_dir.parent / file.name
-                if not new_location.exists():
-                    shutil.move(str(file), str(new_location))
-                    print(f"Moved {file} to {new_location}")
-                else:
-                    print(f"Skipping {file} because {new_location} already exists.")
-        elif file.suffix.lower() == '.tif':
-            new_file_name = file.name.replace(' ', '_')
-            if new_file_name != file.name:
-                new_file_path = file.with_name(new_file_name)
-                file.rename(new_file_path)
-                print(f"Renamed {file} to {new_file_path}")
-
-def clean_tifs_dir(path_to_tif_dir, move, verbose):
     """Clean up a directory containing TIF files:  
         - Move subdirs to parent dir 
         - Move non-TIF files to parent dir. 
@@ -66,7 +47,7 @@ def clean_tifs_dir(path_to_tif_dir, move, verbose):
         move (bool): Enable moving of subdirs and non-TIF files to parent dir.
         verbose (bool): Increase verbosity."""
     if verbose:
-        print(f"\nProcessing directory: {path_to_tif_dir}")
+        print(f"\n\nProcessing directory: {path_to_tif_dir}\n")
 
     # Move subdirectories to parent directory
     for subdir in path_to_tif_dir.iterdir():

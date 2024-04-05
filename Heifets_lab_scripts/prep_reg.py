@@ -14,7 +14,7 @@ from unravel_img_tools import resample, reorient_for_raw_to_nii_conv
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads full resolution autofluo image, resamples (e.g., to 50 um for registration), reorients, saves as .nii.gz and tifs', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='Loads full resolution autofluo image and resamples to 50 um for registration', formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -26,7 +26,8 @@ def parse_args():
     parser.add_argument('-m', '--metad_path', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg.py. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = """Run script from the experiment directory w/ sample?? folder(s)
 or run from a sample?? folder.
 
@@ -37,7 +38,7 @@ Input examples (path is relative to ./sample??; 1st glob match processed):
 
 Outputs: 
 .[/sample??]/reg_input/autofl_*um.nii.gz
-.[/sample??]/reg_input/autofl_*um_tifs/*.tif series
+.[/sample??]/reg_input/autofl_*um_tifs/*.tif series (used for training ilastik for brain_mask.py)
 
 Next script: brain_mask.py or reg.py"""
     return parser.parse_args()
@@ -68,9 +69,12 @@ def main():
             # Load autofluo image [and xy and z voxel size in microns]
             img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res, save_metadata=metadata_path)
 
-            # Resample and reorient autofluo image (for registration)
+            # Resample autofluo image (for registration)
             img_resampled = resample(img, xy_res, z_res, args.reg_res, zoom_order=args.zoom_order)
-            img_resampled = reorient_for_raw_to_nii_conv(img_resampled)
+
+            # Optionally reorient autofluo image (mimics MIRACL's tif to .nii.gz conversion)
+            if args.miracl: 
+                img_resampled = reorient_for_raw_to_nii_conv(img_resampled)
 
             # Save autofluo image as tif series (for brain_mask.py)
             tif_dir = Path(str(output).replace('.nii.gz', '_tifs'))
