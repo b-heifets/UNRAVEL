@@ -1,91 +1,60 @@
 #!/usr/bin/env python3
 
-import os
+import argparse
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import SimpleITK as sitk
-import pathlib
-
+import anndata
+import nibabel as nib
 from abc_atlas_access.abc_atlas_cache.abc_project_cache import AbcProjectCache
+from pathlib import Path
+from rich import print
+from rich.traceback import install
 
-# Update the base download directory to your local path
-download_base = pathlib.Path('/Users/Danielthy/Documents/_Heifets_lab_data/_UNRAVEL/ABC_atlas/abc_download_root')
-abc_cache = AbcProjectCache.from_s3_cache(download_base) # Initialize the cache
-print(abc_cache.current_manifest)
+from argparse_utils import SuppressMetavar, SM
+from unravel_config import Configuration
+from unravel_utils import print_cmd_and_times
 
-# Read in cell metadata and rename columns for section coordinates
-cell = abc_cache.get_metadata_dataframe(directory='MERFISH-C57BL6J-638850-CCF', file_name='cell_metadata_with_cluster_annotation')
+def parse_args():
+    parser = argparse.ArgumentParser(description='Visualize MERFISH data in the Allen Brain Atlas', formatter_class=SuppressMetavar)
+    parser.add_argument('-b', '--base_dir', help='path/base_dir (abc_download_root)', required=True, action=SM)
+    parser.add_argument('-d', '--dir', help='Directory name in the cache', default='MERFISH-C57BL6J-638850-CCF', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    return parser.parse_args()
 
-cell.rename(columns={'x': 'x_section',
-                     'y': 'y_section',
-                     'z': 'z_section'},
-            inplace=True)
-cell.set_index('cell_label', inplace=True)
 
-# Read in the reconstructed coordinates and join them with the cell dataframe
-reconstructed_coords = abc_cache.get_metadata_dataframe(
-    directory='MERFISH-C57BL6J-638850-CCF',
-    file_name='reconstructed_coordinates',
-    dtype={"cell_label": str}
-)
-reconstructed_coords.rename(columns={'x': 'x_reconstructed',
-                                     'y': 'y_reconstructed',
-                                     'z': 'z_reconstructed'},
-                            inplace=True)
-reconstructed_coords.set_index('cell_label', inplace=True)
+def main():
+    # Update the base download directory to your local path
+    download_base = Path(args.base_dir)
+    abc_cache = AbcProjectCache.from_s3_cache(download_base)
 
-cell_joined = cell.join(reconstructed_coords, how='inner')
+    # Load cell metadata with reconstructed coordinates
+    cell_metadata = abc_cache.get_metadata_dataframe(directory='MERFISH-C57BL6J-638850', file_name='cell_metadata_with_cluster_annotation')
 
-# Repeat the process for the cell CCF coordinates
-ccf_coords = abc_cache.get_metadata_dataframe(
-    directory='MERFISH-C57BL6J-638850-CCF',
-    file_name='ccf_coordinates',
-    dtype={"cell_label": str}
-)
-ccf_coords.rename(columns={'x': 'x_ccf',
-                           'y': 'y_ccf',
-                           'z': 'z_ccf'},
-                  inplace=True)
-ccf_coords.set_index('cell_label', inplace=True)
+    # Assuming 'HTR2a_expression' is a column in your cell metadata indicating the expression level of HTR2a
+    # For simplicity, we're treating any positive value as expression here
+    htr2a_cells = cell_metadata[cell_metadata['HTR2a_expression'] > 0]
 
-cell_joined = cell_joined.join(ccf_coords, how='inner')
+    # Dimensions based on CCFv3 space - you might need to adjust these based on your data
+    dim_x, dim_y, dim_z = 1320, 800, 114  # Example dimensions
 
-# Visualization helper function
-def plot_section(xx=None, yy=None, cc=None, val=None, pcmap=None, 
-                 overlay=None, extent=None, bcmap=plt.cm.Greys_r, alpha=1.0,
-                 fig_width = 6, fig_height = 6):
-    
-    fig, ax = plt.subplots()
-    fig.set_size_inches(fig_width, fig_height)
+    # Create a 3D numpy array to store expression data
+    expression_map = np.zeros((dim_z, dim_y, dim_x))
 
-    if xx is not None and yy is not None and pcmap is not None:
-        plt.scatter(xx, yy, s=0.5, c=val, marker='.', cmap=pcmap)
-    elif xx is not None and yy is not None and cc is not None:
-        plt.scatter(xx, yy, s=0.5, color=cc, marker='.', zorder=1)   
-        
-    if overlay is not None and extent is not None and bcmap is not None:
-        plt.imshow(overlay, cmap=bcmap, extent=extent, alpha=alpha, zorder=2)
-        
-    ax.set_ylim(11, 0)
-    ax.set_xlim(0, 11)
-    ax.axis('equal')
-    ax.set_xticks([])
-    ax.set_yticks([])
-    
-    return fig, ax
+    # Populate the 3D array with HTR2a expression levels
+    for index, row in htr2a_cells.iterrows():
+        x, y, z = int(row['x_reconstructed']), int(row['y_reconstructed']), int(row['z_reconstructed'])
+        expression_map[z, y, x] = row['HTR2a_expression']
 
-# Visualize cells in a specific section
-brain_section = 'C57BL6J-638850.40'
-pred = (cell_joined['brain_section_label'] == brain_section)
-section = cell_joined[pred]
+    # Convert the numpy array to a NIfTI image
+    nifti_img = nib.Nifti1Image(expression_map, affine=np.eye(4))
 
-fig, ax = plot_section(xx=section['x_section'],
-                       yy=section['y_section'], 
-                       cc=section['neurotransmitter_color'])
-res = ax.set_title("Neurotransmitter - Section Coordinates")
+    # Save the NIfTI image to disk
+    nib.save(nifti_img, 'HTR2a_expression_map.nii.gz')
 
-fig, ax = plot_section(xx=section['x_reconstructed'],
-                       yy=section['y_reconstructed'], 
-                       cc=section['neurotransmitter_color'])
-res = ax.set_title("Neurotransmitter - Reconstructed Coordinates")
+    print("3D map of HTR2a expression saved as 'HTR2a_expression_map.nii.gz'.")
+
+if __name__ == '__main__':
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    print_cmd_and_times(main)()
