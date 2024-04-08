@@ -86,7 +86,7 @@ def set_nii_orientation(nii_img, target_axcodes, zero_origin=True, qform_code=1,
     target_axcodes: a tuple of axis codes like ('R', 'A', 'S') or ('L', 'P', 'S')
     """
 
-    img = nii_img.get_fdata() 
+    img = nii_img.get_fdata(dtype=np.float32) 
 
     # Determine the current orientation of the ndarray
     current_ornt = io_orientation(nii_img.affine)
@@ -145,7 +145,7 @@ def main():
                 print(f'\n    Bias correcting the registration input\n')
                 fixed_img = bias_correction(args.fixed_img, mask_path=args.mask, shrink_factor=2, verbose=args.verbose, output_dir=transforms_path)
             else:
-                fixed_img = fixed_img_nii.get_fdata()
+                fixed_img = fixed_img_nii.get_fdata(dtype=np.float32)
 
             # Optionally pad the fixed image with 15% of voxels on all sides
             if args.pad_img: 
@@ -166,7 +166,7 @@ def main():
             # Set the orientation of the image (use if not already set correctly in the header; check with nii_orientation.py)
             if args.ort_code: 
                 reg_input_nii_affine = reorient_nii(reg_input_nii, args.ort_code, zero_origin=True, apply=False, form_code=1)
-                reg_input_nii = nib.Nifti1Image(reg_input_nii.get_fdata(), reg_input_nii_affine, header=reg_input_nii.header)
+                reg_input_nii = nib.Nifti1Image(reg_input_nii.get_fdata(dtype=np.float32), reg_input_nii_affine, header=reg_input_nii.header)
 
             # Save the fixed input for registration
             fixed_img_for_reg = str(Path(args.fixed_img).name).replace(".nii.gz", "_fixed_reg_input.nii.gz")

@@ -93,7 +93,7 @@ def main():
 
     # Load the NIfTI file
     atlas_nii = nib.load(args.input)
-    atlas_ndarray = atlas_nii.get_fdata()
+    atlas_ndarray = atlas_nii.get_fdata(dtype=np.float32)
 
     # Generate a binary mask for each unique intensity value
     unique_intensities, voxel_counts = np.unique(atlas_ndarray, return_counts=True)

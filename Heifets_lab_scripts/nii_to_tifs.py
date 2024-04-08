@@ -15,7 +15,7 @@ def parse_args():
 def nii_to_tifs(nii_path, output_dir):
     # Load the NIfTI file
     nii_image = nib.load(nii_path)
-    data = nii_image.get_fdata()
+    data = nii_image.get_fdata(dtype=np.float32)
 
     # Ensure the output directory exists
     if not os.path.exists(output_dir):

@@ -59,11 +59,12 @@ def main():
     args = parse_args()
 
     # Load the images using nibabel
-    atlas = nib.load(args.atlas)
-    img = nib.load(args.input)
+    atlas_nii = nib.load(args.atlas)
+    nii = nib.load(args.input)
 
-    atlas = atlas.get_fdata()
-    img = img.get_fdata()
+    # Get the data as numpy arrays
+    atlas = atlas_nii.get_fdata(dtype=np.float32)
+    img = nii.get_fdata(dtype=np.float32)
 
     # Use the provided list of regional intensities (if any)
     region_intensities = args.regions
