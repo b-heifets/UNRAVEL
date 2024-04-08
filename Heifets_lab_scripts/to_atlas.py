@@ -30,24 +30,23 @@ def parse_args():
     parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-x', '--xy_res', help='Native x/y voxel size in microns (Default: get via metadata)', default=None, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='Native z voxel size in microns (Default: get via metadata)', default=None, type=float, action=SM)
-    parser.add_argument('-tf', '--transforms', help="Name of folder w/ transforms from registration. Default: clar_allen_reg", default="clar_allen_reg", action=SM)
+    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
-    parser.add_argument('-t', '--template', help='path/template.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
-    parser.add_argument('-m', '--moving_img', help='Name of image to warp (saved in transforms dir). Default: img_to_warp_to_atlas_space.nii.gz', default='img_to_warp_to_atlas_space.nii.gz', action=SM)
+    parser.add_argument('-t', '--template', help='path/template.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz', action=SM)
+    parser.add_argument('-m', '--moving_img', help='Name of image to warp (saved in reg_outputs dir). Default: img_to_warp_to_atlas_space.nii.gz', default='img_to_warp_to_atlas_space.nii.gz', action=SM)
     parser.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: args.input.dtype', default=None, action=SM)
     parser.add_argument('-ar', '--atlas_res', help='Resolution of atlas in microns. Default=25', type=int, default=25, action=SM)
-    parser.add_argument('-rf', '--reg_fixed', help='Name of file in transforms dir used as fixed input for registration. Default: clar.nii.gz', default='clar.nii.gz', action=SM)
-    parser.add_argument('-r', '--reg_res', help='Registration resolution in microns (reg.py). Default: 50', default=50, type=int, action=SM)
-    parser.add_argument('-ip', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor, genericLabel, linear, bSpline [default])', default="bSpline", action=SM)
+    parser.add_argument('-rf', '--reg_fixed', help='Name of fixed reg input in ./reg_outputs. Default: autofl_50um_masked_fixed_reg_input.nii.gz', default='autofl_50um_masked_fixed_reg_input.nii.gz', action=SM)
+    parser.add_argument('-ip', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor, multiLabel, linear, bSpline [default])', default="bSpline", action=SM)
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the native image. Default: 1', default=1, type=int, action=SM)
-    parser.add_argument('-rp', '--reg_o_prefix', help='Registration output prefix. Default: allen_clar_ants', default='allen_clar_ants', action=SM)
-    parser.add_argument('-l', '--legacy', help='Mode for backward compatibility (accounts for raw to nii reorienting)', action='store_true', default=False)
+    parser.add_argument('-tp', '--tform_prefix', help='Registration output prefix. Default: ANTsPy_', default='ANTsPy_', action=SM)
+    parser.add_argument('-l', '--miracl', help='Mode for backward compatibility (accounts for raw to nii reorienting)', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
     parser.epilog = """Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir
-Example usage: to_atlas.py -i ochann -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-l -v]
+Example usage: to_atlas.py -i ochann -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v]
 
 Prereqs: 
-prep_reg.py and reg.py for registration transforms
+reg.py
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
 *.czi, ochann/*.tif, ochann, *.tif, *.h5, or *.zarr 
@@ -67,33 +66,30 @@ def copy_nii_header(source_img, new_img):
 
     return new_img
 
-
 @print_func_name_args_times()
-def to_atlas(img, xy_res, z_res, transforms_path, reg_res, atlas_res, zoom_order, interpol, transforms, reg_fixed, reg_o_prefix, moving_img, output_dtype, atlas_path, template_path, output, legacy=False):
+def to_atlas(img, xy_res, z_res, reg_outputs_path, atlas_res, zoom_order, interpol, reg_fixed, tform_prefix, moving_img, output_dtype, atlas_path, template_path, output, miracl=False):
     """Warp native image to atlas space using ANTs.
     
     Args:
         img (np.ndarray): 3D image to warp
         xy_res (float): x/y resolution in microns
         z_res (float): z resolution in microns
-        transforms_path (Path): Path to directory with transforms from registration
-        reg_res (int): Registration resolution in microns
+        reg_outputs_path (Path): Path to directory with outputs (e.g., transforms) from registration
         atlas_res (int): Resolution of the image just before warping in microns (also the resolution of the atlas)
         zoom_order (int): SciPy zoom order for resampling the native image
         interpol (str): Interpolator for ants.apply_transforms
-        transforms (str): Name of folder w/ transforms from registration
-        reg_fixed (str): Name of file in transforms dir used as fixed input for registration
-        reg_o_prefix (str): Registration output prefix
-        moving_img (str): Name of image to warp (saved in transforms dir)
+        reg_fixed (str): Name of file in reg_outputs dir used as fixed input for registration
+        tform_prefix (str): Registration output prefix
+        moving_img (str): Name of image to warp (saved in reg_outputs_path dir)
         atlas_path (str): Path to the atlas
         output (str): Output path/img.nii.gz
-        legacy (bool): Mode for backward compatibility (accounts for raw to nii reorienting)
+        miracl (bool): Compatibility with miracl (accounts for raw to nii reorienting)
         
     Outputs:
         Warped image saved to output path"""
 
     # Load image used as fixed input for registration to copy header info
-    fixed_img_for_reg_nii = nib.load(Path(transforms_path, reg_fixed))
+    fixed_img_for_reg_nii = nib.load(Path(reg_outputs_path, reg_fixed))
 
     # Get dtype from input image if not specified
     if output_dtype is None:
@@ -102,8 +98,8 @@ def to_atlas(img, xy_res, z_res, transforms_path, reg_res, atlas_res, zoom_order
     # Resample and reorient image
     img = resample(img, xy_res, z_res, atlas_res, zoom_order=zoom_order) 
 
-    # Reorient image if legacy mode is True
-    if legacy:
+    # Reorient image if miracl mode is True
+    if miracl:
         img = reorient_for_raw_to_nii_conv(img)    
 
     # Padding the image 
@@ -138,21 +134,21 @@ def to_atlas(img, xy_res, z_res, transforms_path, reg_res, atlas_res, zoom_order
     img_nii.set_sform(new_affine)
 
     # Save the resampled image
-    nib.save(img_nii, Path(transforms_path, moving_img))
+    nib.save(img_nii, Path(reg_outputs_path, moving_img))
 
     # Load img_nii as an ANTs image for warping
-    moving_ants_img = ants.image_read(str(Path(transforms_path, moving_img))) 
+    moving_ants_img = ants.image_read(str(Path(reg_outputs_path, moving_img))) 
 
     # Load reference image
-    ref_image = ants.image_read(str(Path(transforms_path, reg_fixed))) ### clar.nii.gz (was init_allen.nii.gz)
+    ref_image = ants.image_read(str(Path(reg_outputs_path, reg_fixed)))
 
     # Create a dummy moving image filled with zeros
     dummy_moving = ants.make_image(ref_image.shape, voxval=0, spacing=ref_image.spacing, origin=ref_image.origin, direction=ref_image.direction)
 
     # Specify the transformations
     transforms = [
-        str(transforms_path / f'{reg_o_prefix}1InverseWarp.nii.gz'), 
-        str(transforms_path / f'{reg_o_prefix}0GenericAffine.mat') 
+        str(reg_outputs_path / f'{tform_prefix}1InverseWarp.nii.gz'), 
+        str(reg_outputs_path / f'{tform_prefix}0GenericAffine.mat') 
     ]
 
     # Apply the transformations to generate a composite deformation field
@@ -161,14 +157,14 @@ def to_atlas(img, xy_res, z_res, transforms_path, reg_res, atlas_res, zoom_order
         moving=dummy_moving, 
         transformlist=transforms, 
         whichtoinvert=[False, True], 
-        compose=f'{transforms_path}/' # dir to output comptx.nii.gz
+        compose=f'{reg_outputs_path}/' # dir to output comptx.nii.gz
     )
 
     # Applying transformations from registration and the initial alignment
     template = ants.image_read(template_path) 
     transforms = [
-        str(transforms_path / 'init_tform.mat'), # Initial transformation matrix 
-        str(transforms_path / 'comptx.nii.gz') # Composite transformation field
+        str(reg_outputs_path / f'{tform_prefix}init_tform.mat'), # Initial transformation matrix 
+        str(reg_outputs_path / 'comptx.nii.gz') # Composite transformation field
     ]
     warped_img_ants = ants.apply_transforms(fixed=template, moving=moving_ants_img, transformlist=transforms, interpolator=interpol)
 
@@ -206,11 +202,11 @@ def main():
             img_path = resolve_path(sample_path, args.input)
             img, xy_res, z_res = load_3D_img(img_path, args.chann_idx, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)
 
-            # Directory with transforms from registration
-            transforms_path = resolve_path(sample_path, args.transforms)
+            # Directory with outputs (e.g., transforms) from registration
+            reg_outputs_path = resolve_path(sample_path, args.reg_outputs)
 
             # Warp native image to atlas space
-            to_atlas(img, xy_res, z_res, transforms_path, args.reg_res, args.atlas_res, args.zoom_order, args.interpol, args.transforms, args.reg_fixed, args.reg_o_prefix, args.moving_img, args.dtype, args.atlas, args.template, args.output, legacy=args.legacy)
+            to_atlas(img, xy_res, z_res, reg_outputs_path, args.atlas_res, args.zoom_order, args.interpol, args.reg_fixed, args.tform_prefix, args.moving_img, args.dtype, args.atlas, args.template, args.output, miracl=args.miracl)
 
             progress.update(task_id, advance=1)
 

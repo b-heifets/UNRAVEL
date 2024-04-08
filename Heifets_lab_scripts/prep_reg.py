@@ -18,9 +18,9 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='Full res image input path relative to ./sample??', required=True, action=SM)
+    parser.add_argument('-i', '--input', help='Full res image input path relative (rel_path) to ./sample??', required=True, action=SM)
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
-    parser.add_argument('-o', '--output', help='Output path. Default: reg_input/autofl_50um.nii.gz', default="reg_input/autofl_50um.nii.gz", action=SM)
+    parser.add_argument('-o', '--output', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
     parser.add_argument('-m', '--metad_path', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
@@ -37,8 +37,8 @@ Input examples (path is relative to ./sample??; 1st glob match processed):
 *.czi, autofluo/*.tif series, autofluo, *.tif, or *.h5 
 
 Outputs: 
-.[/sample??]/reg_input/autofl_*um.nii.gz
-.[/sample??]/reg_input/autofl_*um_tifs/*.tif series (used for training ilastik for brain_mask.py)
+.[/sample??]/reg_inputs/autofl_*um.nii.gz
+.[/sample??]/reg_inputs/autofl_*um_tifs/*.tif series (used for training ilastik for brain_mask.py)
 
 Next script: brain_mask.py or reg.py"""
     return parser.parse_args()
