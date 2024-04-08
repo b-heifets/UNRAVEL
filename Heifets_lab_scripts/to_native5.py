@@ -18,13 +18,13 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times
 def parse_args():
     parser = argparse.ArgumentParser(description='Warp atlas space image to tissue space, reorient, and scale to full resolution', formatter_class=SuppressMetavar)
     parser.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from atlas space', required=True, action=SM)
-    parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., reg_final/clar_downsample_res25um.nii.gz)', required=True, action=SM)
-    parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], genericLabel, linear)', default="nearestNeighbor", action=SM)
+    parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz)', required=True, action=SM)
+    parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel, linear)', default="nearestNeighbor", action=SM)
     parser.add_argument('-o', '--output', help='Save as path/native_image.zarr (fast) or path/native_image.nii.gz if provided', default=None, action=SM)
     parser.add_argument('-d', '--dtype', help='Desired dtype for full res output (uint8, uint16). Default: moving_img.dtype', action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
-    parser.add_argument('-rp', '--reg_o_prefix', help='Registration output prefix. Default: allen_clar_ants', default='allen_clar_ants', action=SM)
-    parser.add_argument('-t', '--transforms', help="Name of folder w/ transforms from registration. Default: clar_allen_reg", default="clar_allen_reg", action=SM)
+    parser.add_argument('-tp', '--tform_prefix', help='Prefix of transforms output from ants.registration. Default: ANTsPy_', default="ANTsPy_", action=SM)
+    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     parser.add_argument('-fr', '--fixed_res', help='Resolution of the fixed image. Default: 25', default='25',type=int, action=SM)
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
@@ -77,7 +77,7 @@ def scale_to_full_res(ndarray, full_res_dims, zoom_order=0):
     return scaled_img
 
 @print_func_name_args_times()
-def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_prefix, reg_input_res, fixed_img_res, interpol, metadata_path, legacy, zoom_order, data_type, output):
+def warp_to_native(moving_img_path, fixed_img_path, reg_outputs_dir, reg_output_prefix, reg_input_res, fixed_img_res, interpol, metadata_path, legacy, zoom_order, data_type, output):
     """Warp image from atlas space to full res native space"""
 
     # Load images for warping
@@ -85,10 +85,13 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
     fixed_ants_img = ants.image_read(fixed_img_path)
 
     # Warp from atlas to native space
-    transforms_dir = Path(transforms_dir).resolve()
-    deformation_field = str(Path(f'{transforms_dir}/{reg_output_prefix}1Warp.nii.gz'))
-    generic_affine_matrix = str(Path(f'{transforms_dir}/{reg_output_prefix}0GenericAffine.mat'))
-    initial_transform_matrix = str(Path(f'{transforms_dir}/init_tform.mat'))
+    reg_outputs_dir = Path(reg_outputs_dir).resolve()
+    deformation_field = str(Path(f'{reg_outputs_dir}/{reg_output_prefix}1Warp.nii.gz'))
+    generic_affine_matrix = str(Path(f'{reg_outputs_dir}/{reg_output_prefix}0GenericAffine.mat'))
+    if Path(f'{reg_outputs_dir}/{reg_output_prefix}init_tform.mat').exists():
+        initial_transform_matrix = str(Path(f'{reg_outputs_dir}/{reg_output_prefix}init_tform.mat'))
+    else: 
+        initial_transform_matrix = str(Path(f'{reg_outputs_dir}/init_tform.mat')) # For compatibility w/ MIRACL
     warped_ants_img = ants.apply_transforms(
         fixed=fixed_ants_img,
         moving=atlas_space_ants_img,
@@ -157,7 +160,7 @@ def warp_to_native(moving_img_path, fixed_img_path, transforms_dir, reg_output_p
 
 def main():
 
-    warp_to_native(args.moving_img, args.fixed_img, args.transforms, args.reg_o_prefix, args.reg_res, args.fixed_res, args.interpol, args.metadata, args.legacy, args.zoom_order, args.dtype, args.output)
+    warp_to_native(args.moving_img, args.fixed_img, args.reg_outputs, args.tform_prefix, args.reg_res, args.fixed_res, args.interpol, args.metadata, args.legacy, args.zoom_order, args.dtype, args.output)
 
 if __name__ == '__main__':
     install()

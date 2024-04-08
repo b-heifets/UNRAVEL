@@ -18,14 +18,14 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='reg_input/autofl_50um_tifs (from prep_reg.py)', default="reg_input/autofl_50um_tifs", action=SM)
-    parser.add_argument('-o', '--output', help='Directory to copy and rename TIF files', default="ilastik_brain_mask", action=SM)
-    parser.add_argument('-s', '--slice_interval', help='Interval of slices to copy', default=50, type=int, action=SM)
+    parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um_tifs (from prep_reg.py)', default="reg_inputs/autofl_50um_tifs", action=SM)
+    parser.add_argument('-o', '--output', help='path/dir to copy TIF files. Default: ilastik_brain_mask', default="ilastik_brain_mask", action=SM)
+    parser.add_argument('-s', '--slice_interval', help='Interval of slices to copy. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = """Run script from the experiment directory w/ sample?? folder(s)
 or run from a sample?? folder.
 
-Example usage:     prep_brain_mask.py -e <list of experiment directories> -o ilastik_brain_mask"""
+Example usage:     prep_brain_mask.py -e <list of experiment directories>"""
     return parser.parse_args()
 
 
@@ -53,7 +53,8 @@ def main():
 
             # Copy the selected slices to the target directory
             for slice_number in slice_numbers:
-                src_file = autofl_dir / f'slice_{slice_number}.tif'
+                src_file_name = f'slice_{slice_number:04}.tif'  # Ensures four-digit formatting
+                src_file = autofl_dir / src_file_name
                 if src_file.exists():
                     dest_file = target_dir / f'{sample.name}_slice_{slice_number}.tif'
                     shutil.copy(src_file, dest_file)

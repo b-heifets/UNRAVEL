@@ -29,31 +29,29 @@ def parse_args():
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
 
     # Required arguments: 
-    parser.add_argument('-f', '--fixed_img', help='path/prep_reg_output_image.nii.gz (typically 50 um resolution)', required=True, action=SM)
-    parser.add_argument('-m', '--moving_img', help='path/moving_img.nii.gz (e.g., average template)', required=True, action=SM)
+    parser.add_argument('-m', '--moving_img', help='path/moving_img.nii.gz (e.g., average template optimally matching tissue)', required=True, action=SM)
 
     # Optional arguments:
+    parser.add_argument('-f', '--fixed_img', help='reg_inputs/autofl_50um_masked.nii.gz (from prep_reg.py)', default="reg_inputs/autofl_50um_masked.nii.gz", action=SM)
     parser.add_argument('-o', '--output', help='Warped moving image aligned with the fixed image. Default: <moving_img>__warped_moving_img.nii.gz', default=None, action=SM)
-    parser.add_argument('-mas', '--mask', help="<brain_mask>.nii.gz", default=None, action=SM)
-    parser.add_argument('-t', '--transforms', help="Name of folder w/ transforms from registration. Default: clar_allen_reg", default="clar_allen_reg", action=SM)
-    parser.add_argument('-tp', '--tform_prefix', help='Prefix of the transforms output from ants.registration. Default: None', default="ANTsPy_", action=SM)
+    parser.add_argument('-mas', '--mask', help="Brain mask for bias correction. Default: reg_inputs/autofl_50um_brain_mask.nii.gz. or pass in None", default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
+    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
+    parser.add_argument('-tp', '--tform_prefix', help='Prefix of transforms output from ants.registration. Default: ANTsPy_', default="ANTsPy_", action=SM)
     parser.add_argument('-bc', '--bias_correct', help='Perform N4 bias field correction. Default: False', action='store_true', default=False)
     parser.add_argument('-pad', '--pad_img', help='If True, add 15 percent padding to image. Default: False', action='store_true', default=False)
     parser.add_argument('-sm', '--smooth', help='Sigma value for smoothing the fixed image. Default: 0 for no smoothing. Use 0.4 for autofl', default=0, type=float, action=SM)
     parser.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     parser.add_argument('-ia', '--init_align', help='Name of initially aligned image (moving reg input). Default: <moving_img>__initial_alignment_to_fixed_img.nii.gz' , default=None, action=SM)
     parser.add_argument('-it', '--init_time', help='Time in seconds allowed for ANTsPy_affine_initializer.py to run. Default: 30' , default='30', type=str, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = """Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir
-Example usage: reg.py -f <50um_autofl_img_masked.nii.gz> -mas <brain_mask.nii.gz> -m <path/template.nii.gz> -bc -pad -sm 0.4 -ort PLI
-
-Outputs saved in transforms folder. 
+Example usage: reg.py -m <path/template.nii.gz> -bc -pad -sm 0.4 -ort <3 letter orientation code>
 
 ort_code letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Interior
-Use of ort_code sets the orientation and zeros the image origin, so don't use it if the orientation is already set correctly (see nii_orientation.py)
+The side of the brain at the positive direction of the x, y, and z axes determine the 3 letters (axis order xyz)
 
 Prereqs: 
-prep_reg.py [and brain_mask.py] for warping an average template to the autofluo tissue
+prep_reg.py, [prep_brain_mask.py], & [brain_mask.py] for warping an average template to the autofluo tissue
 """
     return parser.parse_args()
 
@@ -127,23 +125,25 @@ def main():
             
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            # Directory with transforms from registration
-            transforms_path = resolve_path(sample_path, args.transforms)
-            transforms_path.mkdir(parents=True, exist_ok=True)
+            # Directory with outputs (e.g., transforms) from registration
+            reg_outputs_path = resolve_path(sample_path, args.reg_outputs)
+            reg_outputs_path.mkdir(parents=True, exist_ok=True)
  
             # Define final output and skip processing if it exists
-            output = str(Path(transforms_path, str(Path(args.moving_img).name).replace(".nii.gz", "__warped_to_fixed_image.nii.gz")))
+            output = str(Path(reg_outputs_path, str(Path(args.moving_img).name).replace(".nii.gz", "__warped_to_fixed_image.nii.gz")))
             if Path(output).exists():
                 print(f"\n\n    {output} already exists. Skipping.\n")
                 return
             
             # Load the fixed image
-            fixed_img_nii = nib.load(args.fixed_img)
+            fixed_img_nii_path = resolve_path(sample_path, args.fixed_img)
+            fixed_img_nii = nib.load(fixed_img_nii_path)
 
             # Optionally perform bias correction on the fixed image (e.g., when it is an autofluorescence image)
             if args.bias_correct: 
                 print(f'\n    Bias correcting the registration input\n')
-                fixed_img = bias_correction(args.fixed_img, mask_path=args.mask, shrink_factor=2, verbose=args.verbose, output_dir=transforms_path)
+                mask_path = resolve_path(sample_path, args.mask)
+                fixed_img = bias_correction(str(fixed_img_nii_path), mask_path=str(mask_path), shrink_factor=2, verbose=args.verbose, output_dir=reg_outputs_path)
             else:
                 fixed_img = fixed_img_nii.get_fdata()
 
@@ -160,17 +160,16 @@ def main():
             # Create NIfTI, set header info, and save the registration input (reference image) 
             print(f'\n    Setting header info for the registration input\n')
             fixed_img = fixed_img.astype(np.float32) # Convert the fixed image to FLOAT32 for ANTs
-            reg_input_nii = nib.Nifti1Image(fixed_img, fixed_img_nii.affine.copy(), fixed_img_nii.header)
-            reg_input_nii.set_data_dtype(np.float32)
+            reg_inputs_fixed_img_nii = nib.Nifti1Image(fixed_img, fixed_img_nii.affine.copy(), fixed_img_nii.header)
+            reg_inputs_fixed_img_nii.set_data_dtype(np.float32)
 
             # Set the orientation of the image (use if not already set correctly in the header; check with nii_orientation.py)
             if args.ort_code: 
-                reg_input_nii_affine = reorient_nii(reg_input_nii, args.ort_code, zero_origin=True, apply=False, form_code=1)
-                reg_input_nii = nib.Nifti1Image(reg_input_nii.get_fdata(), reg_input_nii_affine, header=reg_input_nii.header)
+                reg_inputs_fixed_img_nii = reorient_nii(reg_inputs_fixed_img_nii, args.ort_code, zero_origin=True, apply=False, form_code=1)
 
             # Save the fixed input for registration
             fixed_img_for_reg = str(Path(args.fixed_img).name).replace(".nii.gz", "_fixed_reg_input.nii.gz")
-            nib.save(reg_input_nii, Path(transforms_path, fixed_img_for_reg))
+            nib.save(reg_inputs_fixed_img_nii, Path(reg_outputs_path, fixed_img_for_reg))
 
             # Perform initial approximate alignment of the moving image to the fixed image
             print(f'\n\n    Generating the initial transform matrix for aligning the moving image (e.g., template) to the fixed image (e.g., tissue) \n')
@@ -178,9 +177,9 @@ def main():
             command = [
                 'python', 
                 script_path, 
-                '-f', str(Path(transforms_path, fixed_img_for_reg)), 
+                '-f', str(Path(reg_outputs_path, fixed_img_for_reg)), 
                 '-m', args.moving_img, 
-                '-o', str(Path(transforms_path, f"{args.tform_prefix}init_tform.mat")), 
+                '-o', str(Path(reg_outputs_path, f"{args.tform_prefix}init_tform.mat")), 
                 '-t', args.init_time # Time in seconds allowed for this step. Increase time out duration if needed.
             ]
 
@@ -190,26 +189,26 @@ def main():
 
             # Load images
             print(f'\n    Applying the initial transform matrix to aligning the moving image to the fixed image \n')
-            fixed_image = ants.image_read(str(Path(transforms_path, fixed_img_for_reg)))
+            fixed_image = ants.image_read(str(Path(reg_outputs_path, fixed_img_for_reg)))
             moving_image = ants.image_read(args.moving_img)
 
             # Apply transformation
             transformed_image = ants.apply_transforms(
                 fixed=fixed_image,
                 moving=moving_image,
-                transformlist=[str(Path(transforms_path, f"{args.tform_prefix}init_tform.mat"))]
+                transformlist=[str(Path(reg_outputs_path, f"{args.tform_prefix}init_tform.mat"))]
             )
 
             # Save the transformed image
             if args.init_align: 
-                init_align_out = Path(transforms_path, args.init_align)
+                init_align_out = Path(reg_outputs_path, args.init_align)
             else: 
-                init_align_out = str(Path(transforms_path, str(Path(args.moving_img).name).replace(".nii.gz", "__initial_alignment_to_fixed_img.nii.gz")))
-            ants.image_write(transformed_image, str(Path(transforms_path, init_align_out)))
+                init_align_out = str(Path(reg_outputs_path, str(Path(args.moving_img).name).replace(".nii.gz", "__initial_alignment_to_fixed_img.nii.gz")))
+            ants.image_write(transformed_image, str(Path(reg_outputs_path, init_align_out)))
 
             # Perform registration (reg is a dict with multiple outputs)
             print(f'\n    Running registration \n')
-            output_prefix = str(Path(transforms_path, args.tform_prefix))
+            output_prefix = str(Path(reg_outputs_path, args.tform_prefix))
             reg = ants.registration(
                 fixed=fixed_image, # e.g., fixed autofluo image
                 moving=transformed_image, # e.g., the initially aligned moving image (e.g., template)
@@ -227,7 +226,7 @@ def main():
             print(f"\nTransformed moving image saved to: \n{output}")
 
             # Save the warped image output
-            warpedfixout = str(Path(transforms_path, str(Path(args.fixed_img).name).replace(".nii.gz", "__warped_to_moving_img.nii.gz")))
+            warpedfixout = str(Path(reg_outputs_path, str(Path(args.fixed_img).name).replace(".nii.gz", "__warped_to_moving_img.nii.gz")))
             ants.image_write(reg['warpedfixout'], warpedfixout)
             print(f"Transformed fixed image saved to: \n{warpedfixout}\n")
 

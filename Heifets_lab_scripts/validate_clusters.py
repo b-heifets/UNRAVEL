@@ -26,18 +26,18 @@ def parse_args():
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
 
     # Key args
-    parser.add_argument('-m', '--moving_img', help='REQUIRED: path/*_rev_cluster_index.nii.gz to warp from atlas space', required=True, action=SM)
-    parser.add_argument('-s', '--seg', help='REQUIRED: Dir name for segmentation image (e.g., cfos_seg_ilastik_1) or rel_path/seg_img.nii.gz', required=True, action=SM)
+    parser.add_argument('-m', '--moving_img', help='path/*_rev_cluster_index.nii.gz to warp from atlas space', required=True, action=SM)
+    parser.add_argument('-s', '--seg', help='Dir name for segmentation image (e.g., cfos_seg_ilastik_1) or rel_path/seg_img.nii.gz', required=True, action=SM)
     parser.add_argument('-c', '--clusters', help='Clusters to process: all or list of clusters (e.g., 1 3 4). Default: all', nargs='*', default='all', action=SM)
     parser.add_argument('-de', '--density', help='Density to measure: cell_density (default) or label_density', default='cell_density', choices=['cell_density', 'label_density'], action=SM)
     parser.add_argument('-o', '--output', help='rel_path/clusters_info.csv (Default: clusters/<cluster_index_dir>/cluster_data.csv)', default=None, action=SM)
 
     # Optional warp_to_native() args
     parser.add_argument('-n', '--native_idx', help='Load/save native cluster index from/to rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
-    parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz. Default: reg_final/clar_downsample_res25um.nii.gz', default="reg_final/clar_downsample_res25um.nii.gz", action=SM)
+    parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], genericLabel [slow])', default="nearestNeighbor", action=SM)
-    parser.add_argument('-t', '--transforms', help="Name of dir w/ transforms. Default: clar_allen_reg", default="clar_allen_reg", action=SM)
-    parser.add_argument('-rp', '--reg_o_prefix', help='Registration output prefix. Default: allen_clar_ants', default='allen_clar_ants', action=SM)
+    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
+    parser.add_argument('-tp', '--tform_prefix', help='Prefix of transforms output from ants.registration. Default: ANTsPy_', default="ANTsPy_", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     parser.add_argument('-fr', '--fixed_res', help='Resolution of the fixed image. Default: 25', default='25',type=int, action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
@@ -64,7 +64,7 @@ Next script: cluster_cell_counts.py"""
 
 
 # TODO: QC. Aggregate .csv results for all samples if args.exp_dirs, script to load image subset.
-# TODO: Make config file for defaults like: reg_final/clar_downsample_res25um.nii.gz.
+# TODO: Make config file for defaults or a command_generator.py script
 
 @print_func_name_args_times()
 def crop_outer_space(native_cluster_index, output_path):
@@ -214,7 +214,7 @@ def main():
 
             # Define paths relative to sample?? folder
             fixed_img_path = str(resolve_path(sample_path, args.fixed_img))
-            transforms_path = resolve_path(sample_path, args.transforms)
+            reg_outputs_path = resolve_path(sample_path, args.reg_outputs)
             metadata_path = resolve_path(sample_path, args.metadata)
             native_idx_path = resolve_path(sample_path, args.native_idx) if args.native_idx else None
             
@@ -222,7 +222,7 @@ def main():
             if args.native_idx and Path(args.native_idx).exists():
                 native_cluster_index = load_3D_img(Path(args.native_idx).exists())
             else:
-                native_cluster_index = warp_to_native(args.moving_img, fixed_img_path, transforms_path, args.reg_o_prefix, args.reg_res, args.fixed_res, args.interpol, metadata_path, args.legacy, args.zoom_order, d_type, output=native_idx_path)
+                native_cluster_index = warp_to_native(args.moving_img, fixed_img_path, reg_outputs_path, args.tform_prefix, args.reg_res, args.fixed_res, args.interpol, metadata_path, args.legacy, args.zoom_order, d_type, output=native_idx_path)
 
             # Get clusters to process
             if args.clusters == "all":

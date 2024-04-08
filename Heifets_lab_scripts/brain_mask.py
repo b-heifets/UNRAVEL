@@ -19,13 +19,13 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='reg_input/autofl_50um.nii.gz (from prep_reg.py)', default="reg_input/autofl_50um.nii.gz", action=SM)
+    parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um.nii.gz (from prep_reg.py)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     parser.add_argument('-ilp', '--ilastik_prj', help='path/brain_mask.ilp. Default: brain_mask.ilp', default='brain_mask.ilp', action=SM)
     parser.add_argument('-r', '--reg_res', help='Resolution of autofluo input image in microns. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-l', '--ilastik_log', help='Show Ilastik log', action='store_true')
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
     parser.epilog = """Prereqs: 
-1) Train ilastik (tissue = label 1) w/ tifs from reg_input/autofl_*um_tifs/*.tif (from prep_reg.py)
+1) Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_*um_tifs/*.tif (from prep_reg.py)
 2) Save brain_mask.ilp in experiment directory of use -ilp
 
 Run brain_mask.py from exp dir or a sample?? dir.
@@ -33,13 +33,13 @@ Run brain_mask.py from exp dir or a sample?? dir.
 Example usage:     brain_mask.py -v 
 
 Inputs: 
-reg_input/autofl_50um.nii.gz
+reg_inputs/autofl_50um.nii.gz
 brain_mask.ilp # in exp dir
 
 Outputs: 
-reg_input/autofl_50um_tifs_ilastik_brain_seg/slice_????.tif series
-reg_input/autofl_50um_brain_mask.nii.gz
-reg_input/autofl_50um_masked.nii.gz
+reg_inputs/autofl_50um_tifs_ilastik_brain_seg/slice_????.tif series
+reg_inputs/autofl_50um_brain_mask.nii.gz
+reg_inputs/autofl_50um_masked.nii.gz
 
 Next script: reg.py"""
     return parser.parse_args()

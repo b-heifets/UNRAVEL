@@ -15,7 +15,7 @@ from unravel_utils import print_func_name_args_times, print_cmd_and_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Warp to/from atlas space and registration input space', formatter_class=SuppressMetavar)
-    parser.add_argument('-t', '--transforms', help='path/transforms_dir', required=True, action=SM)
+    parser.add_argument('-ro', '--reg_outputs', help='path/reg_outputs', required=True, action=SM)
     parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz', required=True, action=SM)
     parser.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/output.nii.gz', required=True, action=SM)
@@ -24,10 +24,10 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity if flag provided', default=False, action='store_true')
     parser.epilog = """
 # Example of forward warping atlas to tissue space:
-warp.py -m atlas_img.nii.gz -f transforms/clar_res0.05_masked_fixed_reg_input.nii.gz -t transforms -o warp/atlas_in_tissue_space.nii.gz -inp multiLabel -v
+warp.py -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -t reg_outputs -o warp/atlas_in_tissue_space.nii.gz -inp multiLabel -v
 
 # Example of inverse warping tissue to atlas space:
-warp.py -m transforms/clar_res0.05_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -t transforms -o warp/tissue_in_atlas_space.nii.gz -inv -v
+warp.py -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -t reg_outputs -o warp/tissue_in_atlas_space.nii.gz -inv -v
 
 Prereq: reg.py
 """
@@ -35,13 +35,13 @@ Prereq: reg.py
 
 
 @print_func_name_args_times()
-def apply_transform(transforms_path, moving_img_path, fixed_img_path, output_path, inverse, interpol):
+def apply_transform(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse, interpol):
     """
     Applies the transformations to an image using ANTsPy.
 
     Parameters:
     moving_img_name (str): Path to the image to be transformed.
-    transforms_path (str): Path to the folder with tranformation files
+    reg_outputs_path (str): Path to the reg_outputs folder (contains tranformation files)
     direction: direction of warping (forward or reverse)
     fixed_img_name (str): Path to the reference image for applying the transform.
     output_path (str): Path where the transformed image will be saved.
@@ -50,9 +50,9 @@ def apply_transform(transforms_path, moving_img_path, fixed_img_path, output_pat
     """
 
     # Get the transforms prefix
-    transforms_prefix_file = next(transforms_path.glob(f"*1Warp.nii.gz"), None)
+    transforms_prefix_file = next(reg_outputs_path.glob(f"*1Warp.nii.gz"), None)
     if transforms_prefix_file is None:
-        raise FileNotFoundError(f"No '1Warp.nii.gz' file found in {transforms_path}")
+        raise FileNotFoundError(f"No '1Warp.nii.gz' file found in {reg_outputs_path}")
     transforms_prefix = str(transforms_prefix_file.name).replace("1Warp.nii.gz", "")
 
     # Load images (With forward warping, fixed/moving match reg.py. They are reversed for inverse warping.)
@@ -66,8 +66,8 @@ def apply_transform(transforms_path, moving_img_path, fixed_img_path, output_pat
 
         # Specify the transformations
         transforms = [
-            str(transforms_path / f'{transforms_prefix}1InverseWarp.nii.gz'), 
-            str(transforms_path / f'{transforms_prefix}0GenericAffine.mat') 
+            str(reg_outputs_path / f'{transforms_prefix}1InverseWarp.nii.gz'), 
+            str(reg_outputs_path / f'{transforms_prefix}0GenericAffine.mat') 
         ]
 
         # Apply the transformations to generate a composite deformation field
@@ -76,20 +76,20 @@ def apply_transform(transforms_path, moving_img_path, fixed_img_path, output_pat
             moving=dummy_moving, 
             transformlist=transforms, 
             whichtoinvert=[False, True], 
-            compose=f'{transforms_path}/' # dir to output comptx.nii.gz
+            compose=f'{reg_outputs_path}/' # dir to output comptx.nii.gz
         )
 
         # Applying transformations from registration and initial alignment
         transforms = [
-            str(transforms_path / f'{transforms_prefix}init_tform.mat'), # Initial transformation matrix 
-            str(transforms_path / 'comptx.nii.gz') # Composite transformation field
+            str(reg_outputs_path / f'{transforms_prefix}init_tform.mat'), # Initial transformation matrix 
+            str(reg_outputs_path / 'comptx.nii.gz') # Composite transformation field
         ]
         warped_img_ants = ants.apply_transforms(fixed=fixed_img_ants, moving=moving_img_ants, transformlist=transforms, interpolator=interpol)
 
     else: 
-        deformation_field = str(transforms_path / f'{transforms_prefix}1Warp.nii.gz')
-        generic_affine_matrix = str(transforms_path / f'{transforms_prefix}0GenericAffine.mat')
-        initial_transform_matrix = str(transforms_path / f'{transforms_prefix}init_tform.mat')
+        deformation_field = str(reg_outputs_path / f'{transforms_prefix}1Warp.nii.gz')
+        generic_affine_matrix = str(reg_outputs_path / f'{transforms_prefix}0GenericAffine.mat')
+        initial_transform_matrix = str(reg_outputs_path / f'{transforms_prefix}init_tform.mat')
         warped_img_ants = ants.apply_transforms(
             fixed=fixed_img_ants,
             moving=moving_img_ants,
@@ -120,11 +120,11 @@ def apply_transform(transforms_path, moving_img_path, fixed_img_path, output_pat
 
 def main(): 
 
-    transforms_path = Path(args.transforms).resolve()
+    reg_outputs_path = Path(args.reg_outputs).resolve()
     moving_img_path = str(Path(args.moving_img).resolve())
     fixed_img_path = str(Path(args.fixed_img).resolve())
 
-    apply_transform(transforms_path, moving_img_path, fixed_img_path, args.output, args.inverse, args.interpol)
+    apply_transform(reg_outputs_path, moving_img_path, fixed_img_path, args.output, args.inverse, args.interpol)
 
 
 if __name__ == '__main__': 
