@@ -36,7 +36,7 @@ def main():
 
     # Load the NIfTI image
     nii = nib.load(args.input)
-    img = nii.get_fdata(dtype=np.uint16)
+    img = nii.get_fdata(dtye=np.float32)
 
     # Initialize an empty ndarray with the same shape as img and data type uint16
     if args.data_type: 
