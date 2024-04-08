@@ -76,7 +76,10 @@ def main():
     nii = nib.load(nii_path)
 
     # Convert the data to a numpy array
-    img = nii.get_fdata()
+    img = nii.get_fdata(dtype=np.float32)
+
+    # Convert the ndarray to the input data type
+    img = img.astype(args.data_type)
 
     # Optionally binarize the image
     if args.binary:
