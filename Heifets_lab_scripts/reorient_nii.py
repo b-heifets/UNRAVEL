@@ -157,19 +157,28 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
     # Optionally apply the orientation change to the image data
     if apply:
         print('Applying orientation change to the image data...')
-        img = nii.get_fdata()
+        img = nii.get_fdata(dtype=np.float32)
         current_orientation = io_orientation(nii.affine)
         target_orientation = axcodes2ornt(target_ort)
         orientation_change = ornt_transform(current_orientation, target_orientation)
         img = apply_orientation(img, orientation_change)
     else:
-        img = nii.get_fdata()
+        img = nii.get_fdata(dtype=np.float32)
+
+
+    # Check data type
+    data_type = nii.header.get_data_dtype()
+
+    # For integer data types, round the values to the nearest integer
+    if np.issubdtype(data_type, np.integer):
+        img = np.round(img).astype(data_type)
 
     # Get the new affine matrix
     new_affine = transform_nii_affine(nii, target_ort, zero_origin=zero_origin)
 
     # Make the new NIfTI image
     new_nii = nib.Nifti1Image(img, new_affine)
+    new_nii.header.set_data_dtype(data_type)
 
     # Set the header information
     new_nii.header['xyzt_units'] = 10 # mm, s
@@ -181,9 +190,6 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
     else: 
         new_nii.header.set_qform(new_affine, code=int(nii.header['qform_code']))
         new_nii.header.set_sform(new_affine, code=int(nii.header['sform_code']))
-
-    # Set the data type of the NIfTI image to match the template image
-    new_nii.set_data_dtype(nii.header.get_data_dtype())
 
     return new_nii
 
