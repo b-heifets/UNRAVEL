@@ -37,7 +37,6 @@ def parse_args():
     parser.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: args.input.dtype', default=None, action=SM)
     parser.add_argument('-ar', '--atlas_res', help='Resolution of atlas in microns. Default=25', type=int, default=25, action=SM)
     parser.add_argument('-rf', '--reg_fixed', help='Name of file in reg_outputs dir used as fixed input for registration. Default: autofl_50um_masked_fixed_reg_input.nii.gz', default='autofl_50um_masked_fixed_reg_input.nii.gz', action=SM)
-    parser.add_argument('-r', '--reg_res', help='Registration resolution in microns (reg.py). Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-ip', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor, genericLabel, linear, bSpline [default])', default="bSpline", action=SM)
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the native image. Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-tp', '--tform_prefix', help='Prefix of transforms output from ants.registration. Default: ANTsPy_', default="ANTsPy_", action=SM)
@@ -84,7 +83,7 @@ def main():
             reg_outputs_path = resolve_path(sample_path, args.reg_outputs)
             
             # Warp native image to atlas space
-            to_atlas(rb_img, xy_res, z_res, reg_outputs_path, args.reg_res, args.atlas_res, args.zoom_order, args.interpol, args.reg_outputs, args.reg_fixed, args.tform_prefix, args.moving_img, args.dtype, args.atlas, args.template, output, miracl=args.miracl)
+            to_atlas(rb_img, xy_res, z_res, reg_outputs_path, args.atlas_res, args.zoom_order, args.interpol, args.reg_fixed, args.tform_prefix, args.moving_img, args.dtype, args.atlas, args.template, output, miracl=args.miracl)
 
             progress.update(task_id, advance=1)
 

@@ -66,7 +66,6 @@ def copy_nii_header(source_img, new_img):
 
     return new_img
 
-
 @print_func_name_args_times()
 def to_atlas(img, xy_res, z_res, reg_outputs_path, atlas_res, zoom_order, interpol, reg_fixed, tform_prefix, moving_img, output_dtype, atlas_path, template_path, output, miracl=False):
     """Warp native image to atlas space using ANTs.
