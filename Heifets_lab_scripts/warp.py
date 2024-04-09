@@ -20,7 +20,7 @@ def parse_args():
     parser.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/output.nii.gz', required=True, action=SM)
     parser.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from reg.py)', default=False, action='store_true')
-    parser.add_argument('-inp', '--interpol', help='Type of interpolation (nearestNeighbor, linear [default], bSpline, multiLabel).', default='linear', action=SM)
+    parser.add_argument('-inp', '--interpol', help='Type of interpolation (linear [default], nearestNeighbor, multiLabel).', default='linear', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity if flag provided', default=False, action='store_true')
     parser.epilog = """
 # Example of forward warping atlas to tissue space:
@@ -35,7 +35,7 @@ Prereq: reg.py
 
 
 @print_func_name_args_times()
-def apply_transform(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse, interpol):
+def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse, interpol):
     """
     Applies the transformations to an image using ANTsPy.
 
@@ -124,7 +124,7 @@ def main():
     moving_img_path = str(Path(args.moving_img).resolve())
     fixed_img_path = str(Path(args.fixed_img).resolve())
 
-    apply_transform(reg_outputs_path, moving_img_path, fixed_img_path, args.output, args.inverse, args.interpol)
+    warp(reg_outputs_path, moving_img_path, fixed_img_path, args.output, args.inverse, args.interpol)
 
 
 if __name__ == '__main__': 
