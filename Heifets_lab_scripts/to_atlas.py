@@ -33,7 +33,7 @@ def parse_args():
     parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-t', '--template', help='path/template.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz', action=SM)
-    parser.add_argument('-m', '--moving_img', help='Name of image to warp (saved in reg_outputs dir). Default: img_to_warp_to_atlas_space.nii.gz', default='img_to_warp_to_atlas_space.nii.gz', action=SM)
+    parser.add_argument('-m', '--moving_img', help='Name of image to warp (saved in reg_outputs dir if provided)', default=None, action=SM)
     parser.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: args.input.dtype', default=None, action=SM)
     parser.add_argument('-ar', '--atlas_res', help='Resolution of atlas in microns. Default=25', type=int, default=25, action=SM)
     parser.add_argument('-rf', '--reg_fixed', help='Name of fixed reg input in ./reg_outputs. Default: autofl_50um_masked_fixed_reg_input.nii.gz', default='autofl_50um_masked_fixed_reg_input.nii.gz', action=SM)
@@ -67,7 +67,7 @@ def copy_nii_header(source_img, new_img):
     return new_img
 
 @print_func_name_args_times()
-def to_atlas(img, xy_res, z_res, reg_outputs_path, atlas_res, zoom_order, interpol, reg_fixed, tform_prefix, moving_img, output_dtype, atlas_path, template_path, output, miracl=False):
+def to_atlas(img, xy_res, z_res, reg_outputs_path, atlas_res, zoom_order, interpol, reg_fixed, tform_prefix, output_dtype, atlas_path, template_path, output, moving_img=None, miracl=False):
     """Warp native image to atlas space using ANTs.
     
     Args:
@@ -80,7 +80,7 @@ def to_atlas(img, xy_res, z_res, reg_outputs_path, atlas_res, zoom_order, interp
         interpol (str): Interpolator for ants.apply_transforms
         reg_fixed (str): Name of file in reg_outputs dir used as fixed input for registration
         tform_prefix (str): Registration output prefix
-        moving_img (str): Name of image to warp (saved in reg_outputs_path dir)
+        moving_img (str): Name of image to warp (saved in reg_outputs_path dir if provided)
         atlas_path (str): Path to the atlas
         output (str): Output path/img.nii.gz
         miracl (bool): Compatibility with miracl (accounts for raw to nii reorienting)
@@ -134,7 +134,10 @@ def to_atlas(img, xy_res, z_res, reg_outputs_path, atlas_res, zoom_order, interp
     img_nii.set_sform(new_affine)
 
     # Save the resampled image
-    nib.save(img_nii, Path(reg_outputs_path, moving_img))
+    if moving_img is None:
+        nib.save(img_nii, Path(reg_outputs_path, 'img_to_warp_to_atlas_space.nii.gz'))
+    else:
+        nib.save(img_nii, Path(reg_outputs_path, moving_img))
 
     # Load img_nii as an ANTs image for warping
     moving_ants_img = ants.image_read(str(Path(reg_outputs_path, moving_img))) 
@@ -182,6 +185,9 @@ def to_atlas(img, xy_res, z_res, reg_outputs_path, atlas_res, zoom_order, interp
     warped_img_nii = copy_nii_header(atlas, warped_img_nii)
     nib.save(warped_img_nii, output)
 
+    # Delete the intermediate files
+    if moving_img is None:
+        Path(reg_outputs_path, 'img_to_warp_to_atlas_space.nii.gz').unlink()
 
 def main():    
 
@@ -206,7 +212,7 @@ def main():
             reg_outputs_path = resolve_path(sample_path, args.reg_outputs)
 
             # Warp native image to atlas space
-            to_atlas(img, xy_res, z_res, reg_outputs_path, args.atlas_res, args.zoom_order, args.interpol, args.reg_fixed, args.tform_prefix, args.moving_img, args.dtype, args.atlas, args.template, args.output, miracl=args.miracl)
+            to_atlas(img, xy_res, z_res, reg_outputs_path, args.atlas_res, args.zoom_order, args.interpol, args.reg_fixed, args.tform_prefix, args.dtype, args.atlas, args.template, args.output, args.moving_img, miracl=args.miracl)
 
             progress.update(task_id, advance=1)
 

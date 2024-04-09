@@ -24,7 +24,7 @@ def parse_args():
 
     # Optional arguments:
     parser.add_argument('-o', '--output', help='Output file name (Default: <sample??>_<label>_rb<4>_<gubra>_space.nii.gz) or path rel to sample??', default=None, action=SM)
-    parser.add_argument('-l', '--label', help='Fluorescent label (e.g., cfos). If raw data is tifs, should match tif dir name. Default: ochann)', default="ochann", action=SM)
+    parser.add_argument('-l', '--label', help='Fluorescent label (e.g., cfos). Default: ochann)', default="ochann", action=SM)
     parser.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels (Default: 4)', default=4, type=int, action=SM)
     parser.add_argument('-an', '--atlas_name', help='Name of atlas (Default: gubra)', default="gubra", action=SM)
     parser.add_argument('-x', '--xy_res', help='Native x/y voxel size in microns (Default: get via metadata)', default=None, type=float, action=SM)
@@ -33,7 +33,6 @@ def parse_args():
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-t', '--template', help='path/template.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
-    parser.add_argument('-m', '--moving_img', help='Name of image to warp (saved in reg_outputs dir). Default: img_to_warp_to_atlas_space.nii.gz', default='img_to_warp_to_atlas_space.nii.gz', action=SM)
     parser.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: args.input.dtype', default=None, action=SM)
     parser.add_argument('-ar', '--atlas_res', help='Resolution of atlas in microns. Default=25', type=int, default=25, action=SM)
     parser.add_argument('-rf', '--reg_fixed', help='Name of file in reg_outputs dir used as fixed input for registration. Default: autofl_50um_masked_fixed_reg_input.nii.gz', default='autofl_50um_masked_fixed_reg_input.nii.gz', action=SM)
@@ -83,7 +82,7 @@ def main():
             reg_outputs_path = resolve_path(sample_path, args.reg_outputs)
             
             # Warp native image to atlas space
-            to_atlas(rb_img, xy_res, z_res, reg_outputs_path, args.atlas_res, args.zoom_order, args.interpol, args.reg_fixed, args.tform_prefix, args.moving_img, args.dtype, args.atlas, args.template, output, miracl=args.miracl)
+            to_atlas(rb_img, xy_res, z_res, reg_outputs_path, args.atlas_res, args.zoom_order, args.interpol, args.reg_fixed, args.tform_prefix, args.dtype, args.atlas, args.template, output, moving_img=None, miracl=args.miracl)
 
             progress.update(task_id, advance=1)
 

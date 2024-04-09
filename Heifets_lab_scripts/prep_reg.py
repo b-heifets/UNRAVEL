@@ -8,6 +8,7 @@ from rich.live import Live
 from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
+from prep_brain_mask import copy_specific_slices
 from unravel_config import Configuration 
 from unravel_img_io import load_3D_img, resolve_path, save_as_tifs, save_as_nii
 from unravel_img_tools import resample, reorient_for_raw_to_nii_conv
@@ -23,28 +24,37 @@ def parse_args():
     parser.add_argument('-o', '--output', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
-    parser.add_argument('-m', '--metad_path', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
+    parser.add_argument('-mp', '--metad_path', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg.py. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)
+    parser.add_argument('-md', '--mask_dir', help='path/brain_mask_tifs to copy specific slices for brain_mask.py', default=None, action=SM)
+    parser.add_argument('-ss', '--slice_start', help='Number of the first slice to copy for brain_mask.py. Default: 10', default=10, type=int, action=SM)
+    parser.add_argument('-si', '--slice_interval', help='Interval of slices to copy for brain_mask.py. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = """Run script from the experiment directory w/ sample?? folder(s)
 or run from a sample?? folder.
 
-Example usage:     prep_reg.py -i *.czi -v
+Example usage:     prep_reg.py -i *.czi -e <list of paths to experiment directories> -md <path/brain_mask_tifs> -v
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
 *.czi, autofluo/*.tif series, autofluo, *.tif, or *.h5 
 
 Outputs: 
 .[/sample??]/reg_inputs/autofl_*um.nii.gz
-.[/sample??]/reg_inputs/autofl_*um_tifs/*.tif series (used for training ilastik for brain_mask.py)
+.[/sample??]/reg_inputs/autofl_*um_tifs/*.tif series (used for training ilastik for brain_mask.py) 
 
 Next script: brain_mask.py or reg.py"""
     return parser.parse_args()
 
 
 def main():
+
+    if args.mask_dir is not None:
+        # Create the target directory for copying the selected slices for brain_mask.py
+        target_dir = Path(args.mask_dir)
+        target_dir.mkdir(exist_ok=True, parents=True)
+
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
@@ -80,6 +90,10 @@ def main():
             tif_dir = Path(str(output).replace('.nii.gz', '_tifs'))
             tif_dir.mkdir(parents=True, exist_ok=True)
             save_as_tifs(img_resampled, tif_dir, "xyz")
+
+            if args.mask_dir is not None:
+                # Copy specific slices to the target directory
+                copy_specific_slices(sample_path, tif_dir, target_dir, slice_start=args.slice_start, slice_interval=args.slice_interval)
 
             # Save autofl image (for reg.py if skipping brain_mask.py and for applying the brain mask)
             save_as_nii(img_resampled, output, args.reg_res, args.reg_res, np.uint16)
