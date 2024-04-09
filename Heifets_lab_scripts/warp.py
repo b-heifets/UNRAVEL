@@ -24,10 +24,10 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity if flag provided', default=False, action='store_true')
     parser.epilog = """
 # Example of forward warping atlas to tissue space:
-warp.py -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -t reg_outputs -o warp/atlas_in_tissue_space.nii.gz -inp multiLabel -v
+warp.py -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -ro reg_outputs -o warp/atlas_in_tissue_space.nii.gz -inp multiLabel -v
 
 # Example of inverse warping tissue to atlas space:
-warp.py -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -t reg_outputs -o warp/tissue_in_atlas_space.nii.gz -inv -v
+warp.py -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -ro reg_outputs -o warp/tissue_in_atlas_space.nii.gz -inv -v
 
 Prereq: reg.py
 """
