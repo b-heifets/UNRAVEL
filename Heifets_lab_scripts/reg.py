@@ -221,14 +221,14 @@ def main():
                     verbose=args.verbose
                 )
 
-                # Save the warped image output
+                # Save the warped moving image output
                 ants.image_write(reg['warpedmovout'], output)
                 print(f"\nTransformed moving image saved to: \n{output}")
 
-                # Save the warped image output
-                warpedfixout = str(Path(reg_outputs_path, str(Path(args.fixed_img).name).replace(".nii.gz", "__warped_to_moving_img.nii.gz")))
-                ants.image_write(reg['warpedfixout'], warpedfixout)
-                print(f"Transformed fixed image saved to: \n{warpedfixout}\n")
+                # # Save the warped fixed image output
+                # warpedfixout = str(Path(reg_outputs_path, str(Path(args.fixed_img).name).replace(".nii.gz", "__warped_to_moving_img.nii.gz")))
+                # ants.image_write(reg['warpedfixout'], warpedfixout)
+                # print(f"Transformed fixed image saved to: \n{warpedfixout}\n")
 
             # Warp the atlas image to the tissue image for checking registration
             warped_atlas = str(Path(reg_outputs_path, str(Path(args.atlas).name).replace(".nii.gz", "_in_tissue_space.nii.gz")))
