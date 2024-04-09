@@ -20,6 +20,7 @@ from unravel_config import Configuration
 from unravel_img_io import resolve_path
 from unravel_img_tools import pad_img
 from unravel_utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
+from warp import warp
 
 
 def parse_args():
@@ -43,6 +44,7 @@ def parse_args():
     parser.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     parser.add_argument('-ia', '--init_align', help='Name of initially aligned image (moving reg input). Default: <moving_img>__initial_alignment_to_fixed_img.nii.gz' , default=None, action=SM)
     parser.add_argument('-it', '--init_time', help='Time in seconds allowed for ANTsPy_affine_initializer.py to run. Default: 30' , default='30', type=str, action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = """Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir
 Example usage: reg.py -m <path/template.nii.gz> -bc -pad -sm 0.4 -ort <3 letter orientation code>
@@ -229,6 +231,10 @@ def main():
             warpedfixout = str(Path(reg_outputs_path, str(Path(args.fixed_img).name).replace(".nii.gz", "__warped_to_moving_img.nii.gz")))
             ants.image_write(reg['warpedfixout'], warpedfixout)
             print(f"Transformed fixed image saved to: \n{warpedfixout}\n")
+
+            # Warp the atlas image to the tissue image for checking registration
+            warped_atlas = str(Path(reg_outputs_path, str(Path(args.atlas).name).replace(".nii.gz", "_in_tissue_space.nii.gz")))
+            warp(reg_outputs_path, args.atlas, Path(reg_outputs_path, fixed_img_for_reg), warped_atlas, inverse=False, interpol='multiLabel')
 
             progress.update(task_id, advance=1)
 
