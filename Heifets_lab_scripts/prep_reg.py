@@ -8,7 +8,7 @@ from rich.live import Live
 from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
-from prep_brain_mask import copy_specific_slices
+from copy_tifs import copy_specific_slices
 from unravel_config import Configuration 
 from unravel_img_io import load_3D_img, resolve_path, save_as_tifs, save_as_nii
 from unravel_img_tools import resample, reorient_for_raw_to_nii_conv
