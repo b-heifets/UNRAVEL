@@ -131,10 +131,13 @@ def main():
             reg_outputs_path = resolve_path(sample_path, args.reg_outputs)
             reg_outputs_path.mkdir(parents=True, exist_ok=True)
  
-            # Load the fixed image
+            # Define inputs and outputs for the fixed image
+            fixed_img_nii_path = resolve_path(sample_path, args.fixed_img)
             fixed_img_for_reg = str(Path(args.fixed_img).name).replace(".nii.gz", "_fixed_reg_input.nii.gz")
-            if not Path(fixed_img_for_reg).exists():
-                fixed_img_nii_path = resolve_path(sample_path, args.fixed_img)
+            fixed_img_for_reg_path = str(Path(reg_outputs_path, fixed_img_for_reg))
+
+            # Preprocess the fixed image 
+            if not fixed_img_nii_path.exists():
                 fixed_img_nii = nib.load(fixed_img_nii_path)
 
                 # Optionally perform bias correction on the fixed image (e.g., when it is an autofluorescence image)
@@ -166,7 +169,7 @@ def main():
                     reg_inputs_fixed_img_nii = reorient_nii(reg_inputs_fixed_img_nii, args.ort_code, zero_origin=True, apply=False, form_code=1)
 
                 # Save the fixed input for registration
-                nib.save(reg_inputs_fixed_img_nii, Path(reg_outputs_path, fixed_img_for_reg))
+                nib.save(reg_inputs_fixed_img_nii, fixed_img_for_reg_path)
 
             # Generate the initial transform matrix for aligning the moving image to the fixed image
             if not Path(reg_outputs_path, f"{args.tform_prefix}init_tform.mat").exists():
@@ -175,7 +178,7 @@ def main():
                 command = [
                     'python', 
                     script_path, 
-                    '-f', str(Path(reg_outputs_path, fixed_img_for_reg)), 
+                    '-f', fixed_img_for_reg_path, 
                     '-m', args.moving_img, 
                     '-o', str(Path(reg_outputs_path, f"{args.tform_prefix}init_tform.mat")), 
                     '-t', args.init_time # Time in seconds allowed for this step. Increase time out duration if needed.
@@ -192,7 +195,7 @@ def main():
                 init_align_out = str(Path(reg_outputs_path, str(Path(args.moving_img).name).replace(".nii.gz", "__initial_alignment_to_fixed_img.nii.gz")))
             if not Path(init_align_out).exists():
                 print(f'\n    Applying the initial transform matrix to aligning the moving image to the fixed image \n')
-                fixed_image = ants.image_read(str(Path(reg_outputs_path, fixed_img_for_reg)))
+                fixed_image = ants.image_read(fixed_img_for_reg_path)
                 moving_image = ants.image_read(args.moving_img)
                 transformed_image = ants.apply_transforms(
                     fixed=fixed_image,
@@ -200,7 +203,6 @@ def main():
                     transformlist=[str(Path(reg_outputs_path, f"{args.tform_prefix}init_tform.mat"))]
                 )
                 ants.image_write(transformed_image, str(Path(reg_outputs_path, init_align_out)))
-
 
             # Define final output and skip processing if it exists
             output = str(Path(reg_outputs_path, str(Path(args.moving_img).name).replace(".nii.gz", "__warped_to_fixed_image.nii.gz")))
@@ -234,7 +236,7 @@ def main():
             warped_atlas = str(Path(reg_outputs_path, str(Path(args.atlas).name).replace(".nii.gz", "_in_tissue_space.nii.gz")))
             if not Path(warped_atlas).exists():
                 print(f'\n    Warping the atlas image to the tissue image for checking registration \n')
-                warp(reg_outputs_path, args.atlas, Path(reg_outputs_path, fixed_img_for_reg), warped_atlas, inverse=False, interpol='multiLabel')
+                warp(reg_outputs_path, args.atlas, fixed_img_for_reg_path, warped_atlas, inverse=False, interpol='multiLabel')
 
             progress.update(task_id, advance=1)
 
