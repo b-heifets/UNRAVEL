@@ -10,9 +10,10 @@ from rich.live import Live
 from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
+from nii_io import convert_dtype
 from prep_reg import prep_reg
 from unravel_config import Configuration
-from unravel_img_io import load_3D_img, resolve_path
+from unravel_img_io import load_3D_img, resolve_path, save_as_nii
 from unravel_img_tools import pad_img, rolling_ball_subtraction_opencv_parallel
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples
 from warp import warp
@@ -36,8 +37,8 @@ def parse_args():
     parser.add_argument('-x', '--xy_res', help='Native x/y voxel size in microns (Default: get via metadata)', default=None, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='Native z voxel size in microns (Default: get via metadata)', default=None, type=float, action=SM)
     parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
-    parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
-    parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from reg.py. Default: reg_inputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_inputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
+    parser.add_argument('-ar', '--atlas_res', help='Resolution of atlas in microns. Default=25', type=int, default=25, action=SM)
+    parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from reg.py. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: uint16', default="uint16", action=SM)
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the raw image. Default: 1', default=1, type=int, action=SM)
@@ -73,8 +74,9 @@ def main():
 
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            default_output_name = f"{sample}_{args.label}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz"
-            output = resolve_path(sample_path, args.output or default_output_name)
+            default_output_name = f"{sample_path.name}_{args.label}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz"
+            output = sample_path / (args.output or default_output_name)
+
             if output.exists():
                 print(f"\n    {output} already exists. Skipping.")
                 continue
@@ -86,8 +88,11 @@ def main():
             # Rolling ball background subtraction
             rb_img = rolling_ball_subtraction_opencv_parallel(img, radius=args.rb_radius, threads=args.threads)  
 
+            # Optionally save full res rb_img
+            # save_as_nii(rb_img, Path(sample_path, "rb4.nii.gz"), xy_res, z_res, args.dtype)
+
             # Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)
-            rb_img = prep_reg(rb_img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
+            rb_img = prep_reg(rb_img, xy_res, z_res, args.atlas_res, args.zoom_order, args.miracl)
 
             # Pad the image
             rb_img = pad_img(rb_img, pad_width=0.15)
@@ -101,24 +106,25 @@ def main():
             rb_img_nii.set_data_dtype(np.float32) 
 
             # Save the image for warping
-            temp_output = resolve_path(sample_path, f"{sample}_{args.label}_rb{args.rb_radius}_{args.atlas_name}_space_temp.nii.gz")
+            temp_output = str(resolve_path(sample_path, f"{sample}_{args.label}_rb{args.rb_radius}_{args.atlas_name}_space_temp.nii.gz"))
             nib.save(rb_img_nii, temp_output)
 
             # Warp the image to atlas space
             reg_outputs_path = fixed_reg_input.parent
-            warp(reg_outputs_path, temp_output, args.atlas, output, inverse=True, interpol='linear')
+            warp(reg_outputs_path, temp_output, args.atlas, output, inverse=True, interpol='bSpline')
 
             # Optionally lower the dtype of the output if the desired dtype is not float32
             if args.dtype.lower() != 'float32':
-                output_img = nib.load(output)
-                output_img_data = output_img.get_fdata(dtype=np.float32)  # Ensures data is loaded in float32 for precision
-                output_img_data = output_img_data.astype(args.dtype)  # Convert dtype as specified
-                output_img = nib.Nifti1Image(output_img_data, output_img.affine.copy(), output_img.header)
-                output_img.header.set_data_dtype(args.dtype)
-                nib.save(output_img, output)
+                output_nii = nib.load(output)
+                output_img = output_nii.get_fdata(dtype=np.float32)  # Ensures data is loaded in float32 for precision
+                # output_img = output_img.astype(args.dtype)  # Convert dtype as specified
+                output_img = convert_dtype(output_img, args.dtype, scale_mode='none')
+                output_nii = nib.Nifti1Image(output_img, output_nii.affine.copy(), output_nii.header)
+                output_nii.header.set_data_dtype(args.dtype)
+                nib.save(output_nii, output)
 
             # Remove temp file
-            temp_output.unlink()
+            Path(temp_output).unlink()
 
             if args.target_dir is not None:
                 # Copy output to the target directory

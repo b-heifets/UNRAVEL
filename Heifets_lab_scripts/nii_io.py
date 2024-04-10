@@ -40,7 +40,7 @@ With --fixed_scale, the data is scaled using the provided min and max values.
 @print_func_name_args_times()
 def convert_dtype(ndarray, data_type, scale_mode='none', fixed_scale_range=None, zscore_range=(-3, 3), target_range=(0, 255)):
     """
-    Convert the data type of a ndarray and optionally scale the data.
+    Convert the data type of an ndarray and optionally scale the data.
 
     Parameters:
     - ndarray: Input ndarray.
