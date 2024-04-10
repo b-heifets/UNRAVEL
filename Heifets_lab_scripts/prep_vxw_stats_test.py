@@ -36,7 +36,6 @@ def parse_args():
     parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from reg.py. Default: reg_inputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_inputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
-    parser.add_argument('-ro', '--reg_outputs', help="Folder w/ outputs from reg.py. Default: reg_outputs", default="reg_outputs", action=SM)
     parser.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: uint16', default="uint16", action=SM)
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the raw image. Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
@@ -89,7 +88,7 @@ def main():
             # Create NIfTI, set header info, and save the registration input (reference image) 
             print(f'\n    Setting header info for the registration input\n')
             rb_img = rb_img.astype(np.float32) # Convert the fixed image to FLOAT32 for ANTsPy
-            fixed_reg_input = resolve_path(sample_path, args.fixed_img)
+            fixed_reg_input = resolve_path(sample_path, args.fixed_reg_in)
             fixed_reg_input_nii = nib.load(fixed_reg_input)
             rb_img_nii = nib.Nifti1Image(rb_img, fixed_reg_input_nii.affine.copy(), fixed_reg_input_nii.header)
             rb_img_nii.set_data_dtype(np.float32) 
@@ -99,7 +98,7 @@ def main():
             nib.save(rb_img_nii, temp_output)
 
             # Warp the image to atlas space
-            reg_outputs_path = resolve_path(sample_path, args.reg_outputs)
+            reg_outputs_path = fixed_reg_input.parent
             warp(reg_outputs_path, temp_output, args.atlas, output, inverse=True, interpol='linear')
 
             # Optionally lower the dtype of the output
