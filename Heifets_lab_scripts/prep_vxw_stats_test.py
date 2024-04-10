@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import shutil
 import nibabel as nib
 import numpy as np
 from pathlib import Path
@@ -22,6 +23,7 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-td', '--target_dir', help='path/target_output_dir name for aggregating outputs from all samples', default=None, action=SM)
 
     # Required arguments:
     parser.add_argument('-i', '--input', help='path to full res image', required=True, action=SM)
@@ -34,6 +36,7 @@ def parse_args():
     parser.add_argument('-x', '--xy_res', help='Native x/y voxel size in microns (Default: get via metadata)', default=None, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='Native z voxel size in microns (Default: get via metadata)', default=None, type=float, action=SM)
     parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
+    parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from reg.py. Default: reg_inputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_inputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: uint16', default="uint16", action=SM)
@@ -56,7 +59,11 @@ next steps: Aggregate outputs and run vxw_stats.py"""
     return parser.parse_args()
 
 
-def main():    
+def main():
+    if args.target_dir is not None:
+        # Create the target directory for copying outputs for vxw_stats.py
+        target_dir = Path(args.target_dir)
+        target_dir.mkdir(exist_ok=True, parents=True)
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
 
@@ -112,6 +119,11 @@ def main():
 
             # Remove temp file
             temp_output.unlink()
+
+            if args.target_dir is not None:
+                # Copy output to the target directory
+                target_output = target_dir / output.name
+                shutil.copy(output, target_output)
 
             progress.update(task_id, advance=1)
 

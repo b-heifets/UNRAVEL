@@ -27,14 +27,14 @@ def parse_args():
     parser.add_argument('-mp', '--metad_path', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg.py. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)
-    parser.add_argument('-md', '--mask_dir', help='path/brain_mask_tifs to copy specific slices for brain_mask.py', default=None, action=SM)
+    parser.add_argument('-td', '--target_dir', help='path/target_dir name to copy specific slices for brain_mask.py (see usage)', default=None, action=SM)
     parser.add_argument('-s', '--slices', help='List of slice numbers to copy, e.g., 0000 0400 0800', nargs='*', type=str, default=[])
     parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = """Run script from the experiment directory w/ sample?? folder(s)
 or run from a sample?? folder.
 
-Example usage:     prep_reg.py -i *.czi -e <list of paths to experiment directories> -md <path/brain_mask_tifs> -v
+Example usage:     prep_reg.py -i *.czi -e <list of paths to experiment directories> -td <path/brain_mask_tifs> -v
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
 *.czi, autofluo/*.tif series, autofluo, *.tif, or *.h5 
@@ -74,9 +74,9 @@ def prep_reg(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
 
 def main():
 
-    if args.mask_dir is not None:
+    if args.target_dir is not None:
         # Create the target directory for copying the selected slices for brain_mask.py
-        target_dir = Path(args.mask_dir)
+        target_dir = Path(args.target_dir)
         target_dir.mkdir(exist_ok=True, parents=True)
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
@@ -114,7 +114,7 @@ def main():
             # Save autofl image (for reg.py if skipping brain_mask.py and for applying the brain mask)
             save_as_nii(img_resampled, output, args.reg_res, args.reg_res, np.uint16)
 
-            if args.mask_dir is not None:
+            if args.target_dir is not None:
                 # Copy specific slices to the target directory
                 tif_dir = str(output).replace('.nii.gz', '_tifs')
                 copy_specific_slices(sample_path, tif_dir, target_dir, args.slices)
