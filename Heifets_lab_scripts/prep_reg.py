@@ -12,7 +12,7 @@ from copy_tifs import copy_specific_slices
 from unravel_config import Configuration 
 from unravel_img_io import load_3D_img, resolve_path, save_as_tifs, save_as_nii
 from unravel_img_tools import resample, reorient_for_raw_to_nii_conv
-from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples
+from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples, print_func_name_args_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Loads full resolution autofluo image and resamples to 50 um for registration', formatter_class=SuppressMetavar)
@@ -28,8 +28,7 @@ def parse_args():
     parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg.py. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-md', '--mask_dir', help='path/brain_mask_tifs to copy specific slices for brain_mask.py', default=None, action=SM)
-    parser.add_argument('-ss', '--slice_start', help='Number of the first slice to copy for brain_mask.py. Default: 10', default=10, type=int, action=SM)
-    parser.add_argument('-si', '--slice_interval', help='Interval of slices to copy for brain_mask.py. Default: 50', default=50, type=int, action=SM)
+    parser.add_argument('-s', '--slices', help='List of slice numbers to copy, e.g., 0000 0400 0800', nargs='*', type=str, default=[])
     parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = """Run script from the experiment directory w/ sample?? folder(s)
@@ -46,6 +45,31 @@ Outputs:
 
 Next script: brain_mask.py or reg.py"""
     return parser.parse_args()
+
+
+@print_func_name_args_times()
+def prep_reg(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
+    """Prepare the autofluo image for reg.py or mimic preprocessing  for prep_vxw_stats.py.
+    
+    Args:
+        - ndarray (np.ndarray): 3D autofluo or immunofluo image.
+        - xy_res (float): x/y resolution in microns.
+        - z_res (float): z resolution in microns.
+        - reg_res (int): Resample input to this resolution in microns for reg.py.
+        - zoom_order (int): Order for resampling (scipy.ndimage.zoom).
+        - miracl (bool): Include reorientation step to mimic MIRACL's tif to .nii.gz conversion.
+        
+    Returns:
+        - img_resampled (np.ndarray): Resampled image."""
+
+    # Resample autofluo image (for registration)
+    img_resampled = resample(ndarray, xy_res, z_res, reg_res, zoom_order=zoom_order)
+
+    # Optionally reorient autofluo image (mimics MIRACL's tif to .nii.gz conversion)
+    if miracl: 
+        img_resampled = reorient_for_raw_to_nii_conv(img_resampled)
+
+    return img_resampled
 
 
 def main():
@@ -69,34 +93,31 @@ def main():
             if output.exists():
                 print(f"\n\n    {output.name} already exists. Skipping.\n")
                 return
-
+            
             # Define input image path
             img_path = resolve_path(sample_path, args.input)
 
             # Resolve path to metadata file
-            metadata_path = resolve_path(sample_path, args.metad_path, make_parents=True)
+            metadata_path = resolve_path(sample_path, metadata_path, make_parents=True)
 
             # Load autofluo image [and xy and z voxel size in microns]
-            img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res, save_metadata=metadata_path)
+            img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)
 
-            # Resample autofluo image (for registration)
-            img_resampled = resample(img, xy_res, z_res, args.reg_res, zoom_order=args.zoom_order)
-
-            # Optionally reorient autofluo image (mimics MIRACL's tif to .nii.gz conversion)
-            if args.miracl: 
-                img_resampled = reorient_for_raw_to_nii_conv(img_resampled)
+            # Prepare the autofluo image for registration
+            img_resampled = prep_reg(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
 
             # Save autofluo image as tif series (for brain_mask.py)
             tif_dir = Path(str(output).replace('.nii.gz', '_tifs'))
             tif_dir.mkdir(parents=True, exist_ok=True)
             save_as_tifs(img_resampled, tif_dir, "xyz")
 
-            if args.mask_dir is not None:
-                # Copy specific slices to the target directory
-                copy_specific_slices(sample_path, tif_dir, target_dir, slice_start=args.slice_start, slice_interval=args.slice_interval)
-
             # Save autofl image (for reg.py if skipping brain_mask.py and for applying the brain mask)
             save_as_nii(img_resampled, output, args.reg_res, args.reg_res, np.uint16)
+
+            if args.mask_dir is not None:
+                # Copy specific slices to the target directory
+                tif_dir = str(output).replace('.nii.gz', '_tifs')
+                copy_specific_slices(sample_path, tif_dir, target_dir, args.slices)
 
             progress.update(task_id, advance=1)
 
