@@ -121,7 +121,7 @@ def main():
             output = resolve_path(sample_path, args.output, make_parents=True)
             if output.exists():
                 print(f"\n\n    {output.name} already exists. Skipping.\n")
-                return
+                continue
 
             # Define input image path
             img_path = resolve_path(sample_path, args.input)

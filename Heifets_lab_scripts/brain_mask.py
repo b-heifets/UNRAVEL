@@ -64,7 +64,7 @@ def main():
             # Skip if output exists
             if autofl_img_masked_output.exists():
                 print(f"\n\n    {autofl_img_masked_output} already exists. Skipping.\n")
-                return
+                continue
             
             # Run ilastik segmentation
             if args.ilastik_prj == 'brain_mask.ilp': 

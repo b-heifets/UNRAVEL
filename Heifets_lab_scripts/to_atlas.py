@@ -202,7 +202,7 @@ def main():
             output = resolve_path(sample_path, args.output)
             if output.exists():
                 print(f"\n\n    {output} already exists. Skipping.\n")
-                return
+                continue
 
             # Load full res image [and xy and z voxel size in microns], to be resampled [and reoriented], padded, and warped
             img_path = resolve_path(sample_path, args.input)
