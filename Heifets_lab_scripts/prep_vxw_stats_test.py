@@ -86,7 +86,7 @@ def main():
             rb_img = pad_img(rb_img, pad_width=0.15)
 
             # Create NIfTI, set header info, and save the registration input (reference image) 
-            print(f'\n    Setting header info for the registration input\n')
+            print(f'\n    Setting header info and saving temp .nii.gz for warping\n')
             rb_img = rb_img.astype(np.float32) # Convert the fixed image to FLOAT32 for ANTsPy
             fixed_reg_input = resolve_path(sample_path, args.fixed_reg_in)
             fixed_reg_input_nii = nib.load(fixed_reg_input)
@@ -101,13 +101,14 @@ def main():
             reg_outputs_path = fixed_reg_input.parent
             warp(reg_outputs_path, temp_output, args.atlas, output, inverse=True, interpol='linear')
 
-            # Optionally lower the dtype of the output
-            output_img = nib.load(output)
-            output_img_data = output_img.get_fdata(dtype=np.float32)
-            output_img_data = output_img_data.astype(args.dtype)
-            output_img = nib.Nifti1Image(output_img_data, output_img.affine.copy(), output_img.header)
-            output_img.header.set_data_dtype(args.dtype)
-            nib.save(output_img, output)
+            # Optionally lower the dtype of the output if the desired dtype is not float32
+            if args.dtype.lower() != 'float32':
+                output_img = nib.load(output)
+                output_img_data = output_img.get_fdata(dtype=np.float32)  # Ensures data is loaded in float32 for precision
+                output_img_data = output_img_data.astype(args.dtype)  # Convert dtype as specified
+                output_img = nib.Nifti1Image(output_img_data, output_img.affine.copy(), output_img.header)
+                output_img.header.set_data_dtype(args.dtype)
+                nib.save(output_img, output)
 
             # Remove temp file
             temp_output.unlink()
