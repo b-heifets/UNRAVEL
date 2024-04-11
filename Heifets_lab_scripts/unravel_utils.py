@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import functools
+import shutil
 import numpy as np
 import os
 import sys
@@ -260,3 +261,28 @@ def load_text_from_file(file_path):
     except Exception as e:
         print(f"[red]Error reading file: {e}[/]")
         return None
+
+@print_func_name_args_times()
+def copy_files(source_dir, target_dir, filename, sample_path=None, verbose=False):
+    """Copy the specified slices to the target directory.
+    
+    Args:
+        - source_dir (Path): Path to the source directory containing the .tif files.
+        - target_dir (Path): Path to the target directory where the selected slices will be copied.
+        - filename (str): Name of the file to copy.
+        - sample_path (Path): Path to the sample directory (provide to prepend to the filename).
+        - verbose (bool): Increase verbosity."""
+    
+    src_file = Path(source_dir, filename)
+    
+    if src_file.exists():
+        if sample_path is not None:
+            dest_file = target_dir / f'{sample_path.name}_{filename}'
+        else: 
+            dest_file = target_dir / filename
+        shutil.copy(src_file, dest_file)
+        if verbose:
+            print(f"Copied {src_file} to {dest_file}")
+    else:
+        if verbose:
+            print(f"File {src_file} does not exist and was not copied.")
