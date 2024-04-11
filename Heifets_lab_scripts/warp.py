@@ -61,23 +61,24 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
 
     # Apply the transformations
     if inverse:
-        # Create a dummy moving image filled with zeros
-        dummy_moving = ants.make_image(moving_img_ants.shape, voxval=0, spacing=moving_img_ants.spacing, origin=moving_img_ants.origin, direction=moving_img_ants.direction)
+        if not Path(reg_outputs_path, 'comptx.nii.gz').exists():
+            # Create a dummy moving image filled with zeros
+            dummy_moving = ants.make_image(moving_img_ants.shape, voxval=0, spacing=moving_img_ants.spacing, origin=moving_img_ants.origin, direction=moving_img_ants.direction)
 
-        # Specify the transformations
-        transforms = [
-            str(reg_outputs_path / f'{transforms_prefix}1InverseWarp.nii.gz'), 
-            str(reg_outputs_path / f'{transforms_prefix}0GenericAffine.mat') 
-        ]
+            # Specify the transformations
+            transforms = [
+                str(reg_outputs_path / f'{transforms_prefix}1InverseWarp.nii.gz'), 
+                str(reg_outputs_path / f'{transforms_prefix}0GenericAffine.mat') 
+            ]
 
-        # Apply the transformations to generate a composite deformation field
-        deformation_field = ants.apply_transforms(
-            fixed=moving_img_ants, 
-            moving=dummy_moving, 
-            transformlist=transforms, 
-            whichtoinvert=[False, True], 
-            compose=f'{reg_outputs_path}/' # dir to output comptx.nii.gz
-        )
+            # Apply the transformations to generate a composite deformation field
+            deformation_field = ants.apply_transforms(
+                fixed=moving_img_ants, 
+                moving=dummy_moving, 
+                transformlist=transforms, 
+                whichtoinvert=[False, True], 
+                compose=f'{reg_outputs_path}/' # dir to output comptx.nii.gz
+            )
 
         # Applying transformations from registration and initial alignment
         transforms = [
