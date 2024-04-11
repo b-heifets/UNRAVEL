@@ -11,7 +11,7 @@ from unravel_utils import print_cmd_and_times
 def parse_args():
     parser = argparse.ArgumentParser(description='Sort data based on conditions and directory names.', formatter_class=SuppressMetavar)
     parser.add_argument('-c', '--conditions', help='List of conditions. Files not matching these will be moved to a dir called <other_data>', nargs='+', required=True, action=SM)
-    parser.add_argument('-t', '--target_dir', help='Name of the folder to move the files to. Default: other_data', default='other_data', action=SM)
+    parser.add_argument('-td', '--target_dir', help='Name of the folder to move the files to. Default: other_data', default='other_data', action=SM)
     parser.epilog = """Example usage:     sort_files_by_condition.py -c control treatment
 
 A file will be moved if: 
