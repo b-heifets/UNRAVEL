@@ -94,22 +94,22 @@ def main():
             # Pad the image
             rb_img = pad_img(rb_img, pad_width=0.15)
 
-            # Create NIfTI, set header info, and save the registration input (reference image) 
-            print(f'\n    Setting header info and saving temp .nii.gz for warping\n')
+            # Create NIfTI, set header info, and save the input for warp()
+            reg_outputs_path = fixed_reg_input.parent
+            warp_inputs_dir = reg_outputs_path / "warp_inputs"
+            warp_inputs_dir.mkdir(exist_ok=True, parents=True)
+            warp_input = str(warp_inputs_dir / f"{sample_path.name}_{args.label}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz")
+            print(f'\n    Setting header info and saving the input for warp() here: {warp_input}\n')
             rb_img = rb_img.astype(np.float32) # Convert the fixed image to FLOAT32 for ANTsPy
             fixed_reg_input = sample_path / args.fixed_reg_in
             fixed_reg_input_nii = nib.load(fixed_reg_input)
             rb_img_nii = nib.Nifti1Image(rb_img, fixed_reg_input_nii.affine.copy(), fixed_reg_input_nii.header)
             rb_img_nii.set_data_dtype(np.float32) 
-
-            # Save the image for warping
-            reg_outputs_path = fixed_reg_input.parent
-            temp_output = str(reg_outputs_path / f"{sample_path.name}_{args.label}_rb{args.rb_radius}_{args.atlas_name}_space_before_warping.nii.gz")
-            nib.save(rb_img_nii, temp_output)
+            nib.save(rb_img_nii, warp_input)
 
             # Warp the image to atlas space
             print(f'\n    Warping preprocessed image to atlas space\n')
-            warp(reg_outputs_path, temp_output, args.atlas, output, inverse=True, interpol='bSpline')
+            warp(reg_outputs_path, warp_input, args.atlas, output, inverse=True, interpol='bSpline')
 
             # Optionally lower the dtype of the output if the desired dtype is not float32
             if args.dtype.lower() != 'float32':
@@ -120,9 +120,6 @@ def main():
                 output_nii = nib.Nifti1Image(output_img, output_nii.affine.copy(), output_nii.header)
                 output_nii.header.set_data_dtype(args.dtype)
                 nib.save(output_nii, output)
-
-            # Remove temp file
-            Path(temp_output).unlink()
 
             if args.target_dir is not None:
                 # Copy output to the target directory
