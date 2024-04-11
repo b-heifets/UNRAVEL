@@ -19,18 +19,16 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um_tifs (from prep_reg.py) or name of directory with raw tifs', default=None, action=SM)
-    parser.add_argument('-o', '--output', help='path/dir to copy TIF files.
-                        (e.g., ilastik_brain_mask', required=True, action=SM)
-    parser.add_argument('-s', '--slices', help='List of slice numbers to copy, e.g., 0000 0400 0800', nargs='*', type=str, default=[])
+    parser.add_argument('-o', '--output', help='path/dir to copy TIF files. (e.g., ilastik_brain_mask or ilastik_segmentation)', required=True, action=SM)
+    parser.add_argument('-s', '--slices', help='List of slice numbers to copy (4 digits each; space separated)', nargs='*', type=str, default=[])
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Usage: copy_tifs.py -i reg_inputs/autofl_50um_tifs -s
-    0010 0060 0110 -o ilastik_brain_mask
+    parser.epilog = """
+To prep for brain_mask.py (if --mask_dir <path/mask_dir> and -e <exp dir paths> were not specified in prep_reg.py): 
+copy_tifs.py -i reg_inputs/autofl_50um_tifs -s 0010 0060 0110 -o ilastik_brain_mask
 
-Purposes:
- - Copy tifs if --mask_dir <path/mask_dir> and -e <exp dirs> were not specified in prep_reg.py 
- - Copy tifs to segment full resolution immunofluorescence images.
-
-Example usage:     copy_tifs.py -e <list of experiment directories>"""
+To prep for ilastik.py to segment full resolution immunofluorescence images: 
+copy_tifs.py -i reg_inputs/autofl_50um_tifs -s 0100 0500 1000 -o ilastik_segmentation
+"""
     return parser.parse_args()
 
 
