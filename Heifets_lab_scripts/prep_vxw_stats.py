@@ -114,8 +114,7 @@ def main():
             # Optionally lower the dtype of the output if the desired dtype is not float32
             if args.dtype.lower() != 'float32':
                 output_nii = nib.load(output)
-                output_img = output_nii.get_fdata(dtype=np.float32)  # Ensures data is loaded in float32 for precision
-                # output_img = output_img.astype(args.dtype)  # Convert dtype as specified
+                output_img = output_nii.get_fdata(dtype=np.float32)
                 output_img = convert_dtype(output_img, args.dtype, scale_mode='none')
                 output_nii = nib.Nifti1Image(output_img, output_nii.affine.copy(), output_nii.header)
                 output_nii.header.set_data_dtype(args.dtype)
