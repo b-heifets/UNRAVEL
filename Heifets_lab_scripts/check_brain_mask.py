@@ -8,22 +8,19 @@ from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration 
-from unravel_img_io import resolve_path
 from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples, copy_files
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Copies a subset of .tif files to a new dir for training ilastik', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='For masking QC, copies autofluo_50um.nii.gz and autofluo_50_masked.nii.gz for each sampled to a target dir', formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-td', '--target_dir', help='path/target_output_dir name for aggregating outputs from all samples.', required=True, action=SM)
-    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
-    parser.add_argument('-fri', '--fixed_reg_in', help='Fixed image from registration (reg.py). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    parser.add_argument('-wa', '--warped_atlas', help='Warped atlas image from reg.py. Default: gubra_ano_combined_25um_in_tissue_space.nii.gz', default="gubra_ano_combined_25um_in_tissue_space.nii.gz", action=SM)
+    parser.add_argument('-i', '--input', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = """Usage: 
-check_reg.py -e <list of experiment directories> # copies to the current working directory
-check_reg.py -e <list of experiment directories> -td <target_output_dir"""
+check_brain_mask.py -e <list of experiment directories> # copies to the current working directory
+check_brain_mask.py -e <list of experiment directories> -td <target_output_dir"""
     return parser.parse_args()
 
 
@@ -43,11 +40,11 @@ def main():
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
             # Define input paths
-            source_path = resolve_path(sample_path, args.reg_outputs)
+            source_path = sample_path / Path(args.input).parent
 
             # Copy the selected slices to the target directory
-            copy_files(source_path, target_dir, args.fixed_reg_in, sample_path, args.verbose)
-            copy_files(source_path, target_dir, args.warped_atlas, sample_path, args.verbose)
+            copy_files(source_path, target_dir, Path(args.input).name, sample_path, args.verbose)
+            copy_files(source_path, target_dir, str(Path(args.input).name).replace('.nii.gz', '_masked.nii.gz'), sample_path, args.verbose)
 
             progress.update(task_id, advance=1)
 
