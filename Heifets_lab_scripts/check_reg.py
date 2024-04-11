@@ -16,7 +16,7 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-td', '--target_dir', help='path/target_output_dir name for aggregating outputs from all samples.', required=True, action=SM)
+    parser.add_argument('-td', '--target_dir', help='path/target_output_dir name for aggregating outputs from all samples (cwd if omitted.', default=None, action=SM)
     parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
     parser.add_argument('-fri', '--fixed_reg_in', help='Fixed image from registration (reg.py). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     parser.add_argument('-wa', '--warped_atlas', help='Warped atlas image from reg.py. Default: gubra_ano_combined_25um_in_tissue_space.nii.gz', default="gubra_ano_combined_25um_in_tissue_space.nii.gz", action=SM)
@@ -43,7 +43,7 @@ def main():
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
             # Define input paths
-            source_path = resolve_path(sample_path, args.reg_outputs)
+            source_path = sample_path / args.reg_outputs
 
             # Copy the selected slices to the target directory
             copy_files(source_path, target_dir, args.fixed_reg_in, sample_path, args.verbose)
