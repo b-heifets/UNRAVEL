@@ -38,7 +38,7 @@ def main():
     current_axcodes_tuple = nib.orientations.aff2axcodes(nii.affine) 
     current_axcodes = ''.join(current_axcodes_tuple) 
     np.set_printoptions(precision=4, suppress=True)
-    print(f'\nAffine matrix ({current_axcodes}):\n{nii.affine}\n')
+    print(f'\nAffine matrix ([default bold]{current_axcodes}[/]):\n{nii.affine}\n')
 
 
 if __name__ == '__main__':
