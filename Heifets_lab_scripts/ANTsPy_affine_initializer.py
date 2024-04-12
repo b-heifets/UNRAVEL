@@ -19,7 +19,11 @@ def parse_args():
     parser.add_argument('-t', '--time_out', help='Duration in seconds to allow this script to run. Default: 10', default=10, type=int, action=SM)
     parser.epilog = """This also allows for suppressing error messages. 
 
-Usage: 
+Usage: ANTsPy_affine_initialized.py -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10
+with open(os.devnull, 'w') as devnull:
+
+    
+Python usage: 
 import subprocess
 import os
 

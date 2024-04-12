@@ -52,14 +52,14 @@ def main():
     args = parse_args()
 
     # Load the image
-    img = load_tif(args.tif_path)
+    img = load_tif(args.input)
 
     # Apply difference of Gaussians if sigmas are provided
     img = difference_of_gaussians(img, args.sigma1, args.sigma2)
     print(f'Applied Difference of Gaussians with sigmas {args.sigma1} and {args.sigma2}.')
 
     # Save the processed image
-    output_path = args.output if args.output is not None else args.tif_path.replace('.tif', f'_DoG_s1{args.sigma1}_s2{args.sigma2}.tif')
+    output_path = args.output if args.output is not None else args.input.replace('.tif', f'_DoG{args.sigma2}-{args.sigma1}.tif')
     save_tif(img, output_path)
 
 
