@@ -99,14 +99,14 @@ def main():
             fixed_img_for_reg_path = str(Path(reg_outputs_path, fixed_img_for_reg))
 
             # Preprocess the fixed image 
-            if not fixed_img_nii_path.exists():
+            if not Path(fixed_img_for_reg_path).exists():
                 fixed_img_nii = nib.load(fixed_img_nii_path)
 
                 # Optionally perform bias correction on the fixed image (e.g., when it is an autofluorescence image)
                 if args.bias_correct: 
                     print(f'\n    Bias correcting the registration input\n')
                     mask_path = resolve_path(sample_path, args.mask)
-                    fixed_img = bias_correction(str(fixed_img_nii_path), mask_path=str(mask_path), shrink_factor=2, verbose=args.verbose, output_dir=reg_outputs_path)
+                    fixed_img = bias_correction(str(fixed_img_nii_path), mask_path=str(mask_path), shrink_factor=2, verbose=args.verbose)
                 else:
                     fixed_img = fixed_img_nii.get_fdata(dtype=np.float32)
 

@@ -50,14 +50,14 @@ def main():
     args = parse_args()
 
     # Load the image
-    img = load_tif(args.tif_path)
+    img = load_tif(args.input)
 
     # Apply rolling ball subtraction
     img = rolling_ball_subtraction(img, args.rb_radius)
     print(f'Applied rolling ball subtraction with radius {args.rb_radius}.')
 
     # Save the processed image
-    output_path = args.output if args.output is not None else args.tif_path.replace('.tif', f'_rb{args.rb_radius}.tif')
+    output_path = args.output if args.output is not None else args.input.replace('.tif', f'_rb{args.rb_radius}.tif')
     save_tif(img, output_path)
 
 
