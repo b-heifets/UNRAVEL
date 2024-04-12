@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+
+import argparse
+import cv2
+import numpy as np
+from rich import print
+from rich.traceback import install
+
+from argparse_utils import SuppressMetavar, SM
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description='Perform rolling ball background subtraction on a TIFF file.', formatter_class=SuppressMetavar)
+    parser.add_argument('-i', '--input', help='Path to the input TIFF file.', required=True, action=SM)
+    parser.add_argument('-o', '--output', help='Path to save the output TIFF file.', default=None, action=SM)
+    parser.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels.', default=None, type=int, action=SM)
+    parser.epilog = """Usage:
+background_subtract_tif.py -i input.tif -rb 4 
+
+Rolling ball subtraction:
+    - Radius should be ~ 1.0 to 2.0 times the size of the features of interest
+    - Larger radii will remove more background, but may also remove some of the features of interest
+    - Smaller radii will remove less background, but may leave some background noise
+"""
+
+    return parser.parse_args()
+
+
+def load_tif(tif_path):
+    '''Load a single tif file using OpenCV and return ndarray.'''
+    img = cv2.imread(tif_path, cv2.IMREAD_UNCHANGED)
+    if img is None:
+        raise FileNotFoundError(f'Could not load the TIFF file from {tif_path}')
+    return img
+
+def rolling_ball_subtraction(img, radius):
+    '''Subtract background from image using a rolling ball algorithm.'''
+    kernel_size = 2 * radius + 1
+    struct_element = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (kernel_size, kernel_size)) # 2D disk
+    background = cv2.morphologyEx(img, cv2.MORPH_OPEN, struct_element)
+    subtracted_img = cv2.subtract(img, background)
+    return subtracted_img
+
+def save_tif(img, output_path):
+    '''Save an image as a tif file.'''
+    cv2.imwrite(output_path, img)
+
+
+def main():
+    args = parse_args()
+
+    # Load the image
+    img = load_tif(args.tif_path)
+
+    # Apply rolling ball subtraction
+    img = rolling_ball_subtraction(img, args.rb_radius)
+    print(f'Applied rolling ball subtraction with radius {args.rb_radius}.')
+
+    # Save the processed image
+    output_path = args.output if args.output is not None else args.tif_path.replace('.tif', f'_rb{args.rb_radius}.tif')
+    save_tif(img, output_path)
+
+
+if __name__ == '__main__': 
+    install()
+    main()
