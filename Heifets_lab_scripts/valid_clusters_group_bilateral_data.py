@@ -10,7 +10,7 @@ from unravel_utils import print_cmd_and_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Organize bilateral csv outputs from validate_clusters.py', formatter_class=SuppressMetavar)
-    parser.epilog = """Example usage:     validate_clusters_org_data.py -v
+    parser.epilog = """Example usage:     validate_clusters_org_data.py
 
 This script organizes the CSV files output by validate_clusters.py into directories based on hemisphere.
 
