@@ -98,7 +98,7 @@ def main():
             img_path = resolve_path(sample_path, args.input)
 
             # Resolve path to metadata file
-            metadata_path = resolve_path(sample_path, metadata_path, make_parents=True)
+            metadata_path = resolve_path(sample_path, args.metad_path, make_parents=True)
 
             # Load autofluo image [and xy and z voxel size in microns]
             img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)

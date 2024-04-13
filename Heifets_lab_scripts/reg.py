@@ -105,8 +105,11 @@ def main():
                 # Optionally perform bias correction on the fixed image (e.g., when it is an autofluorescence image)
                 if args.bias_correct: 
                     print(f'\n    Bias correcting the registration input\n')
-                    mask_path = resolve_path(sample_path, args.mask)
-                    fixed_img = bias_correction(str(fixed_img_nii_path), mask_path=str(mask_path), shrink_factor=2, verbose=args.verbose)
+                    if args.mask != "None": 
+                        mask_path = resolve_path(sample_path, args.mask)
+                        fixed_img = bias_correction(str(fixed_img_nii_path), mask_path=str(mask_path), shrink_factor=2, verbose=args.verbose)
+                    elif args.mask == "None": 
+                        fixed_img = bias_correction(str(fixed_img_nii_path), mask_path=None, shrink_factor=2, verbose=args.verbose)
                 else:
                     fixed_img = fixed_img_nii.get_fdata(dtype=np.float32)
 
