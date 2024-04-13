@@ -12,6 +12,7 @@ from rich.traceback import install
 from argparse_utils import SuppressMetavar, SM
 from nii_io import convert_dtype
 from prep_reg import prep_reg
+from spatial_averaging import apply_2D_mean_filter, spatial_average_2D, spatial_average_3D, spatial_average_3d
 from unravel_config import Configuration
 from unravel_img_io import load_3D_img
 from unravel_img_tools import pad_img, rolling_ball_subtraction_opencv_parallel
@@ -31,6 +32,7 @@ def parse_args():
 
     # Optional arguments:
     parser.add_argument('-l', '--label', help='Fluorescent label (e.g., cfos). Default: ochann)', default="ochann", action=SM)
+    parser.add_argument('-sa', '--spatial_avg', help='Spatial averaging in 2D or 3D (2 or 3). Default: None', default=None, type=int, action=SM)
     parser.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels (Default: 4)', default=4, type=int, action=SM)
     parser.add_argument('-an', '--atlas_name', help='Name of atlas (Default: gubra)', default="gubra", action=SM)
     parser.add_argument('-o', '--output', help='Output file name (Default: <sample??>_<label>_rb<4>_<gubra>_space.nii.gz) or path rel to sample??', default=None, action=SM)
@@ -84,6 +86,12 @@ def main():
             # Load full res image [and xy and z voxel size in microns], to be resampled [and reoriented], padded, and warped
             img_path = sample_path / args.input
             img, xy_res, z_res = load_3D_img(img_path, args.chann_idx, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)
+
+            # Apply spatial averaging
+            if args.spatial_avg == 3:
+                img = spatial_average_3D(img, kernel_size=args.kernel_size)
+            elif args.spatial_avg == 2:
+                img = spatial_average_2D(img, apply_2D_mean_filter, kernel_size=(args.kernel_size, args.kernel_size))
 
             # Rolling ball background subtraction
             rb_img = rolling_ball_subtraction_opencv_parallel(img, radius=args.rb_radius, threads=args.threads)  

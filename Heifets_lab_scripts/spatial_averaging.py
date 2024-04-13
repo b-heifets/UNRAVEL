@@ -113,7 +113,7 @@ def main():
     if args.dimensions == 3:
         img = spatial_average_3D(img, kernel_size=args.kernel_size)
     elif args.dimensions == 2:
-        img = spatial_average_2D(img, D, kernel_size=(args.kernel_size, args.kernel_size))
+        img = spatial_average_2D(img, apply_2D_mean_filter, kernel_size=(args.kernel_size, args.kernel_size))
     else:
         raise ValueError("Dimensions must be 2 or 3.")
 
