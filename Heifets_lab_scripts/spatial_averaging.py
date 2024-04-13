@@ -22,11 +22,11 @@ def parse_args():
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
     parser.add_argument('-x', '--xy_res', help='xy resolution in um', default=None, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='z resolution in um', default=None, type=float, action=SM)
-    parser.add_argument('-dt', '--dtype', help='Data type for .nii.gz. Default: uint16', default='uint16', action=SM)
+    parser.add_argument('-dt', '--dtype', help='Output data type. Default: uint16', default='uint16', action=SM)
     parser.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata. Default: None', default=None, action=SM)
     parser.add_argument('-ao', '--axis_order', help='Default: xyz. (other option: zyx)', default='xyz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Usage:     3D_spatial_average.py -i img.nii.gz -o img_spatial_avg.nii.gz -v
+    parser.epilog = """Usage:     spatial_averaging.py -i <tif_dir> -o spatial_avg.zarr -d 2 -v 
     
 Input image types: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
@@ -54,13 +54,13 @@ Input image types: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
 
 @print_func_name_args_times()
-def spatial_average_3d(arr, kernel_size=3):
+def spatial_average_3D(arr, kernel_size=3):
     """
     Apply a 3D spatial averaging filter to a 3D numpy array.
 
     Parameters:
     - arr (np.ndarray): The input 3D array.
-    - size (int): The size of the cubic kernel. Default is 3, for the current voxel and its 26 neighbors.
+    - kernel_size (int): The size of the cubic kernel. Default is 3, for the current voxel and its 26 neighbors.
 
     Returns:
     - np.ndarray: The array after applying the spatial averaging.
@@ -70,12 +70,13 @@ def spatial_average_3d(arr, kernel_size=3):
     
     return uniform_filter(arr, size=kernel_size, mode='constant', cval=0.0)
 
-def apply_2d_mean_filter(slice, kernel_size=(3, 3)):
+def apply_2D_mean_filter(slice, kernel_size=(3, 3)):
     """Apply a 2D mean filter to a single slice."""
     kernel = np.ones(kernel_size, np.float32) / (kernel_size[0] * kernel_size[1])
     return cv2.filter2D(slice, -1, kernel)
 
-def process_3d_volume_slices_parallel(volume, filter_func, kernel_size=(3, 3), threads=8):
+@print_func_name_args_times()
+def spatial_average_2D(volume, filter_func, kernel_size=(3, 3), threads=8):
     """
     Apply a specified 2D filter function to each slice of a 3D volume in parallel.
 
@@ -110,9 +111,9 @@ def main():
 
     # Apply spatial averaging
     if args.dimensions == 3:
-        img = spatial_average_3d(img, kernel_size=args.kernel_size)
+        img = spatial_average_3D(img, kernel_size=args.kernel_size)
     elif args.dimensions == 2:
-        img = process_3d_volume_slices_parallel(img, apply_2d_mean_filter, kernel_size=(args.kernel_size, args.kernel_size))
+        img = spatial_average_2D(img, D, kernel_size=(args.kernel_size, args.kernel_size))
     else:
         raise ValueError("Dimensions must be 2 or 3.")
 
