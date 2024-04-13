@@ -8,7 +8,8 @@ from rich import print
 from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
-from unravel_utils import get_samples
+from unravel_config import Configuration
+from unravel_utils import print_cmd_and_times, get_samples
 
 
 def parse_args():
@@ -16,8 +17,9 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-c', '--csv', help='path/sample_key.csv w/ directory names and conditions', required=True)
-    parser.add_argument('-a', '--activate', help='Space separated list of conditions to enable processing for (must match sample_key.csv)', required=True)
+    parser.add_argument('-c', '--csv', help='path/sample_key.csv w/ directory names and conditions', required=True, action=SM)
+    parser.add_argument('-a', '--activate', help='Space separated list of conditions to enable processing for (must match sample_key.csv)', required=True, nargs='*', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = """Example usage:     toggle_samples.py -c <path/sample_key.csv> -a <Saline MDMA> -v
     
 For conditions in the activate list, the script will remove the "_" from the sample?? dir name.
@@ -39,28 +41,37 @@ def main():
     
     for sample in samples:
         sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
-
+        stripped_sample_name = sample_path.name.lstrip('_')  # Strip leading underscore for accurate CSV matching
+            
         # Get the condition for the current sample
         mapping_df = pd.read_csv(args.csv)
-        condition = mapping_df[mapping_df['dir_name'] == sample_path.name]['condition'].values[0]
+        condition_df = mapping_df[mapping_df['dir_name'] == stripped_sample_name]['condition']
 
-        print(f"Sample: {sample_path.name}, Condition: {condition}")
-
-        # Check if the current sample is in the list of active samples
-        if condition in args.activate:
-            # Remove the "_" from the sample directory name
-            new_name = sample_path.parent / sample_path.name.lstrip('_')
-            print(f"Activating [default bold]{sample_path.name}[\] with condition [default bold]{condition}")
-            print(f"New name: {new_name}")
+        if not condition_df.empty:
+            condition = condition_df.values[0]
+            if condition in args.activate:
+                # Remove the "_" from the sample directory name
+                new_name = sample_path.parent / stripped_sample_name
+                status = "Activated"
+            else:
+                # Prepend "_" to the sample directory name
+                new_name = sample_path.parent / f'_{stripped_sample_name}'
+                status = "Inactivated"
         else:
-            # Prepend "_" to the sample directory name
-            new_name = sample_path.parent / f'_{sample_path.name}'
-            print(f"Inactivating [default bold]{sample_path.name} with condition [default bold]{condition}")
-            print(f"New name: {new_name}")
+            print(f"No condition found for {stripped_sample_name}, skipping...")
+            continue  # Skip to the next iteration if no condition found
 
         sample_path.rename(new_name)
 
+        if args.verbose: 
+            if status == "Activated":
+                print(f"  [green]{status}[/] [default bold]{stripped_sample_name}[/] ([default bold]{condition}[/]). New path: {new_name}")
+            else: 
+                print(f"[red1]{status}[/] [default bold]{stripped_sample_name}[/] ([default bold]{condition}[/]). New path: {new_name}")
 
-if __name__ == '__main__':
+
+if __name__ == '__main__': 
     install()
-    main()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    print_cmd_and_times(main)()

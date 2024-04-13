@@ -17,13 +17,13 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', metavar='')
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, metavar='')
     parser.add_argument('-i', '--input', help='path/image or path/image_dir', default=None, metavar='')
-    parser.add_argument('-o', '--out_dir_name', help="Output folder name.", metavar='')
+    parser.add_argument('-o', '--out_dir_name', help="Output folder name.", required=True, metavar='')
     parser.add_argument('-s', '--side', help="Side to extend. Options: 'front', 'back', 'left', 'right', 'top', 'bottom'. Default: 'front'", default='front', metavar='')
     parser.add_argument('-e', '--extension', help="Number of voxels to extend", type=int, metavar='')
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
     parser.epilog = """
 Run script from the experiment directory containing sample?? folders or a sample?? folder.
-Example usage: extend_image.py -i ochann -o ochann_extended -v
+Example usage: extend_image.py -i ochann -o ochann_extended -e 100 -s back -v
 """
     return parser.parse_args()
 
