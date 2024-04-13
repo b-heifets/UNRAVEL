@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
+import cv2
 import numpy as np
+from concurrent.futures import ThreadPoolExecutor
 from rich.traceback import install
 from scipy.ndimage import uniform_filter
 
@@ -10,14 +12,17 @@ from unravel_config import Configuration
 from unravel_img_io import load_3D_img, save_as_nii, save_as_tifs, save_as_zarr
 from unravel_utils import print_cmd_and_times, print_func_name_args_times
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Load image and apply 3D spatial averaging', formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/image .czi, path/img.nii.gz, or path/tif_dir', required=True, action=SM)
     parser.add_argument('-o', '--output', help='Output path. Default: None', required=True, action=SM)
+    parser.add_argument('-d', '--dimensions', help='2D or 3D spatial averaging. (2 or 3)', required=True, type=int, action=SM)
+    parser.add_argument('-k', '--kernel_size', help='Size of the kernel for spatial averaging. Default: 3', default=3, type=int, action=SM)
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
     parser.add_argument('-x', '--xy_res', help='xy resolution in um', default=None, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='z resolution in um', default=None, type=float, action=SM)
-    parser.add_argument('-d', '--dtype', help='Data type for .nii.gz. Default: uint16', default='uint16', action=SM)
+    parser.add_argument('-dt', '--dtype', help='Data type for .nii.gz. Default: uint16', default='uint16', action=SM)
     parser.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata. Default: None', default=None, action=SM)
     parser.add_argument('-ao', '--axis_order', help='Default: xyz. (other option: zyx)', default='xyz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -34,11 +39,22 @@ Input image types: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
     - The input array must be 3D.
     - The xy and z resolutions are required for saving the output as .nii.gz.
     - The output is saved as .nii.gz, .tif series, or .zarr.
+
+2D spatial averaging:
+    - Apply a 2D spatial averaging filter to each slice of a 3D numpy array.
+    - Default kernel size is 3x3, for the current pixel and its 8 neighbors.
+    - The output array is the same size as the input array.
+    - The edges of the output array are padded with zeros.
+    - The output array is the same data type as the input array.
+    - The input array must be 3D.
+    - The xy and z resolutions are required for saving the output as .nii.gz.
+    - The output is saved as .nii.gz, .tif series, or .zarr.
 """
     return parser.parse_args()
 
+
 @print_func_name_args_times()
-def spatial_average_3d(arr, size=3):
+def spatial_average_3d(arr, kernel_size=3):
     """
     Apply a 3D spatial averaging filter to a 3D numpy array.
 
@@ -52,7 +68,37 @@ def spatial_average_3d(arr, size=3):
     if arr.ndim != 3:
         raise ValueError("Input array must be 3D.")
     
-    return uniform_filter(arr, size=size, mode='constant', cval=0.0)
+    return uniform_filter(arr, size=kernel_size, mode='constant', cval=0.0)
+
+def apply_2d_mean_filter(slice, kernel_size=(3, 3)):
+    """Apply a 2D mean filter to a single slice."""
+    kernel = np.ones(kernel_size, np.float32) / (kernel_size[0] * kernel_size[1])
+    return cv2.filter2D(slice, -1, kernel)
+
+def process_3d_volume_slices_parallel(volume, filter_func, kernel_size=(3, 3), threads=8):
+    """
+    Apply a specified 2D filter function to each slice of a 3D volume in parallel.
+
+    Parameters:
+    - volume (np.ndarray): The input 3D array.
+    - filter_func (callable): The filter function to apply to each slice.
+    - kernel_size (tuple): The dimensions of the kernel to be used in the filter.
+    - threads (int): The number of parallel threads to use.
+
+    Returns:
+    - np.ndarray: The volume processed with the filter applied to each slice.
+    """
+    processed_volume = np.empty_like(volume)
+    num_cores = min(len(volume), threads)  # Limit the number of cores to the number of slices or specified threads
+
+    with ThreadPoolExecutor(max_workers=num_cores) as executor:
+        # Each slice is processed independently and the result is stored in the corresponding index
+        results = executor.map(filter_func, volume, [kernel_size] * len(volume))
+        for i, processed_slice in enumerate(results):
+            processed_volume[i] = processed_slice
+
+    return processed_volume
+
 
 def main():    
     # Load image and metadata
@@ -63,7 +109,22 @@ def main():
         xy_res, z_res = args.xy_res, args.z_res
 
     # Apply spatial averaging
-    img = spatial_average_3d(img)
+    if args.dimensions == 3:
+        img = spatial_average_3d(img, kernel_size=args.kernel_size)
+    elif args.dimensions == 2:
+        img = process_3d_volume_slices_parallel(img, apply_2d_mean_filter, kernel_size=(args.kernel_size, args.kernel_size))
+    else:
+        raise ValueError("Dimensions must be 2 or 3.")
+
+    # Set the data type for the output
+    if args.dtype == 'uint8':
+        img = img.astype(np.uint8)
+    elif args.dtype == 'uint16':
+        img = img.astype(np.uint16)
+    elif args.dtype == 'float32':
+        img = img.astype(np.float32)
+    else:
+        raise ValueError("Data type must be uint8, uint16, or float32.")
 
     # Save image    
     if args.output.endswith('.nii.gz'):
