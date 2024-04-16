@@ -4,15 +4,15 @@ import argparse
 from rich.traceback import install
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration
-from unravel_img_io import load_3D_img, save_as_nii, save_as_tifs, save_as_zarr
+from unravel_img_io import load_3D_img, save_as_h5, save_as_nii, save_as_tifs, save_as_zarr
 from unravel_utils import print_cmd_and_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load image (.czi, .nii.gz, or tif series) and get metadata', formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/image .czi, path/img.nii.gz, or path/tif_dir', action=SM)
+    parser = argparse.ArgumentParser(description='Load 3D image, [get metadata], and save as the specified image type', formatter_class=SuppressMetavar)
+    parser.add_argument('-i', '--input', help='path/image .czi, path/img.nii.gz, or path/tif_dir', required=True, action=SM)
+    parser.add_argument('-x', '--xy_res', help='xy resolution in um', required=True, type=float, action=SM)
+    parser.add_argument('-z', '--z_res', help='z resolution in um', required=True, type=float, action=SM)
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
-    parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, action=SM)
-    parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)
     parser.add_argument('-o', '--output', help='Output path. Default: None', default=None, action=SM)
     parser.add_argument('-d', '--dtype', help='Data type for .nii.gz. Default: uint16', default='uint16', action=SM)
     parser.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata. Default: None', default=None, action=SM)
@@ -33,23 +33,28 @@ def main():
         xy_res, z_res = args.xy_res, args.z_res
 
     # Print metadata
-    print(f"\n    Type: {type(img)}")
-    print(f"    Image shape: {img.shape}")
-    print(f"    Image dtype: {img.dtype}")
-    print(f"    xy resolution: {xy_res} um")
-    print(f"    z resolution: {z_res} um")
+    if args.verbose:
+        print(f"\n    Type: {type(img)}")
+        print(f"    Image shape: {img.shape}")
+        print(f"    Image dtype: {img.dtype}")
+        print(f"    xy resolution: {xy_res} um")
+        print(f"    z resolution: {z_res} um")
 
     # Save image    
     if args.output.endswith('.nii.gz'):
         save_as_nii(img, args.output, xy_res, z_res, data_type=args.dtype, reference=args.reference)
-    elif args.output.endswith('.tif'):
-        save_as_tifs(img, args.output, ndarray_axis_order=args.axis_order)
     elif args.output.endswith('.zarr'):
         save_as_zarr(img, args.output, ndarray_axis_order=args.axis_order)
-
+    elif args.output.endswith('.h5'):
+        save_as_h5(img, args.output, ndarray_axis_order=args.axis_order)
+    else: 
+        save_as_tifs(img, args.output, ndarray_axis_order=args.axis_order)
 
 if __name__ == '__main__': 
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
     print_cmd_and_times(main)()
+
+
+

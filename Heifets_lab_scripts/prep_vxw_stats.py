@@ -12,7 +12,7 @@ from rich.traceback import install
 from argparse_utils import SuppressMetavar, SM
 from nii_io import convert_dtype
 from prep_reg import prep_reg
-from spatial_averaging import apply_2D_mean_filter, spatial_average_2D, spatial_average_3D, spatial_average_3d
+from spatial_averaging import apply_2D_mean_filter, spatial_average_2D, spatial_average_3D
 from unravel_config import Configuration
 from unravel_img_io import load_3D_img
 from unravel_img_tools import pad_img, rolling_ball_subtraction_opencv_parallel
@@ -89,9 +89,9 @@ def main():
 
             # Apply spatial averaging
             if args.spatial_avg == 3:
-                img = spatial_average_3D(img, kernel_size=args.kernel_size)
+                img = spatial_average_3D(img, kernel_size=3)
             elif args.spatial_avg == 2:
-                img = spatial_average_2D(img, apply_2D_mean_filter, kernel_size=(args.kernel_size, args.kernel_size))
+                img = spatial_average_2D(img, apply_2D_mean_filter, kernel_size=(3, 3))
 
             # Rolling ball background subtraction
             rb_img = rolling_ball_subtraction_opencv_parallel(img, radius=args.rb_radius, threads=args.threads)  
@@ -103,13 +103,13 @@ def main():
             rb_img = pad_img(rb_img, pad_width=0.15)
 
             # Create NIfTI, set header info, and save the input for warp()
+            fixed_reg_input = sample_path / args.fixed_reg_in
             reg_outputs_path = fixed_reg_input.parent
             warp_inputs_dir = reg_outputs_path / "warp_inputs"
             warp_inputs_dir.mkdir(exist_ok=True, parents=True)
             warp_input = str(warp_inputs_dir / f"{sample_path.name}_{args.label}_rb{args.rb_radius}_{args.atlas_name}_space.nii.gz")
             print(f'\n    Setting header info and saving the input for warp() here: {warp_input}\n')
             rb_img = rb_img.astype(np.float32) # Convert the fixed image to FLOAT32 for ANTsPy
-            fixed_reg_input = sample_path / args.fixed_reg_in
             fixed_reg_input_nii = nib.load(fixed_reg_input)
             rb_img_nii = nib.Nifti1Image(rb_img, fixed_reg_input_nii.affine.copy(), fixed_reg_input_nii.header)
             rb_img_nii.set_data_dtype(np.float32) 

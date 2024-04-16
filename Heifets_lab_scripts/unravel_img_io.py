@@ -313,9 +313,13 @@ def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=np.float32, 
 @print_func_name_args_times()
 def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
     """Save <ndarray> as tifs in <Path(tif_dir_out)>"""
+    # Ensure tif_dir_out is a Path object, not a string
+    tif_dir_out = Path(tif_dir_out)
     tif_dir_out.mkdir(parents=True, exist_ok=True)
+    
     if ndarray_axis_order == "xyz":
         ndarray = np.transpose(ndarray, (2, 1, 0)) # Transpose to zyx (tiff expects zyx)
+        
     for i, slice_ in enumerate(ndarray):
         slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
         imwrite(str(slice_file_path), slice_)
@@ -330,3 +334,10 @@ def save_as_zarr(ndarray, output_path, ndarray_axis_order="xyz"):
     compressor = zarr.Blosc(cname='lz4', clevel=9, shuffle=zarr.Blosc.BITSHUFFLE)
     dask_array.to_zarr(output_path, compressor=compressor, overwrite=True)
     print(f"\n    Output: [default bold]{output_path}")
+
+@print_func_name_args_times()
+def save_as_h5(ndarray, output_path, ndarray_axis_order="xyz"):
+    if ndarray_axis_order == "xyz":
+        ndarray = np.transpose(ndarray, (2, 1, 0))
+    with h5py.File(output_path, 'w') as f:
+        f.create_dataset('data', data=ndarray, compression="lzf")
