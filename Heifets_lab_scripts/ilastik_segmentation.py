@@ -67,7 +67,12 @@ def main():
                 print(f"\n\n    {final_output.name} already exists. Skipping.\n")
                 continue
 
+            print(f'\n{segmentation_dir=}\n')
+            print(f'\n{tif_dir=}\n')
+            print(f'\n{final_output=}\n')
+
             if not tif_dir.exists(): 
+
                 # Perform pixel classification and output segmented tifs to output dir
                 tif_dir.mkdir(exist_ok=True, parents=True)
                 ilastik_segmentation(args.input, args.ilastik_prj, tif_dir, ilastik_log=args.ilastik_log)
