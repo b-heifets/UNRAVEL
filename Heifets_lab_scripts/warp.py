@@ -20,7 +20,7 @@ def parse_args():
     parser.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/output.nii.gz', required=True, action=SM)
     parser.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from reg.py)', default=False, action='store_true')
-    parser.add_argument('-inp', '--interpol', help='Type of interpolation (linear [default], nearestNeighbor, multiLabel).', default='linear', action=SM)
+    parser.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity if flag provided', default=False, action='store_true')
     parser.epilog = """
 # Example of forward warping atlas to tissue space:

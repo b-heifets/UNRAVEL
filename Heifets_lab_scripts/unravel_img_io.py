@@ -122,9 +122,9 @@ def load_tifs(tif_path, desired_axis_order="xyz", return_res=False, return_metad
 @print_func_name_args_times()
 def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
     """Load a .nii.gz image and return the ndarray. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)]."""
-    img = nib.load(nii_path)
-    data_dtype = img.header.get_data_dtype()
-    ndarray = np.asanyarray(img.dataobj).astype(data_dtype)
+    nii = nib.load(nii_path)
+    data_type = nii.header.get_data_dtype()
+    ndarray = np.asanyarray(nii.dataobj).astype(data_type)
     ndarray = np.squeeze(ndarray)
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(nii_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
