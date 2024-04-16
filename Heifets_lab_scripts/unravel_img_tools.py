@@ -54,79 +54,51 @@ def reverse_reorient_for_raw_to_nii_conv(ndarray):
     flipped_img = np.fliplr(rotated_img) # Flip horizontally
     return flipped_img
 
-
-# @print_func_name_args_times()
-# def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None):
-#     """Segment tif series with Ilastik."""
-#     tif_dir = str(tif_dir)
-#     tif_list = sorted(glob(f"{tif_dir}/*.tif"))
-#     ilastik_project = str(ilastik_project)
-#     output_dir_ = str(output_dir)
-#     cmd = [
-#         'run_ilastik.sh',
-#         '--headless',
-#         '--project', ilastik_project,
-#         '--export_source', 'Simple Segmentation',
-#         '--output_format', 'tif',
-#         '--output_filename_format', f'{output_dir}/{{nickname}}.tif',
-#     ] + tif_list
-#     if not Path(output_dir_).exists():
-#         if ilastik_log == None:
-#             subprocess.run(cmd)
-#         else:
-#             subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
 @print_func_name_args_times()
 def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None):
     """Segment tif series with Ilastik."""
+    tif_dir = str(tif_dir)
     tif_list = sorted(glob(f"{tif_dir}/*.tif"))
-    if not tif_list:
-        print(f"No TIF files found in {tif_dir}.")
-        return
-
+    ilastik_project = str(ilastik_project)
+    output_dir_ = str(output_dir)
     cmd = [
-        'run_ilastik.sh',  # Make sure this path is correct
+        'run_ilastik.sh',
         '--headless',
         '--project', ilastik_project,
         '--export_source', 'Simple Segmentation',
         '--output_format', 'tif',
-        '--output_filename_format', f'{output_dir}/{{nickname}}.tif'
+        '--output_filename_format', f'{output_dir}/{{nickname}}.tif',
     ] + tif_list
-
-    print("\n    Running Ilastik with command:\n", ' '.join(cmd))
-    result = subprocess.run(cmd, capture_output=True, text=True)
-    if result.returncode != 0:
-        print("\n    Ilastik failed with error:\n", result.stderr)
-    else:
-        print("\n    Ilastik completed successfully.\n")
+    if not Path(output_dir_).exists():
+        if ilastik_log == None:
+            subprocess.run(cmd)
+        else:
+            subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 # @print_func_name_args_times()
-# def ilastik_segmentation_h5(h5_file, ilastik_project, output_file, ilastik_log=None):
-#     """Segment a single h5 file with Ilastik."""
-#     h5_file = str(h5_file)
-#     ilastik_project = str(ilastik_project)
-#     output_dir = Path(output_file).parent
-#     if not Path(output_dir).exists():
-#         Path(output_dir).mkdir(parents=True, exist_ok=True)
-
-#     # Make sure the output directory exists
-#     output_dir.mkdir(parents=True, exist_ok=True)
+# def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None):
+#     """Segment tif series with Ilastik."""
+#     tif_list = sorted(glob(f"{tif_dir}/*.tif"))
+#     if not tif_list:
+#         print(f"No TIF files found in {tif_dir}.")
+#         return
 
 #     cmd = [
-#         'run_ilastik.sh',  # Ensure this path is correct for your setup
+#         'run_ilastik.sh',  # Make sure this path is correct
 #         '--headless',
 #         '--project', ilastik_project,
 #         '--export_source', 'Simple Segmentation',
-#         '--output_format', 'hdf5',
-#         '--output_filename_format', str(output_file),
-#         '--output_internal_path', '/exported_data',  # HDF5 internal dataset path
-#         h5_file
-#     ]
-#     if ilastik_log is None:
-#         subprocess.run(cmd, check=True)
+#         '--output_format', 'tif',
+#         '--output_filename_format', f'{output_dir}/{{nickname}}.tif'
+#     ] + tif_list
+
+#     print("\n    Running Ilastik with command:\n", ' '.join(cmd))
+#     result = subprocess.run(cmd, capture_output=True, text=True)
+#     if result.returncode != 0:
+#         print("\n    Ilastik failed with error:\n", result.stderr)
 #     else:
-#         with open(ilastik_log, 'w') as log_file:
-#             subprocess.run(cmd, stdout=log_file, stderr=log_file)
+#         print("\n    Ilastik completed successfully.\n")
+
 
 @print_func_name_args_times()
 def pad_img(ndarray, pad_width=0.15):
