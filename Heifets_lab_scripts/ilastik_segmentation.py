@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import os
 import nibabel as nib
 from pathlib import Path
 import numpy as np
@@ -32,6 +33,10 @@ This script is for pixel classification.
 """
     return parser.parse_args()
 
+
+def count_files(directory):
+    """Count the number of files in a directory, excluding subdirectories."""
+    return sum(1 for entry in os.scandir(directory) if entry.is_file())
 
 @print_func_name_args_times()
 def save_labels_as_masks(tif_dir, labels, segmentation_dir, output_name):
@@ -67,11 +72,8 @@ def main():
                 print(f"\n\n    {final_output.name} already exists. Skipping.\n")
                 continue
 
-            print(f'\n{segmentation_dir=}\n')
-            print(f'\n{tif_dir=}\n')
-            print(f'\n{final_output=}\n')
-
-            if not tif_dir.exists(): 
+            # Check the number of tifs in the input dir and output dir
+            if not tif_dir.exists() or count_files(args.input) != count_files(tif_dir):
 
                 # Perform pixel classification and output segmented tifs to output dir
                 tif_dir.mkdir(exist_ok=True, parents=True)
