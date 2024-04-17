@@ -28,6 +28,7 @@ def parse_args():
     parser.add_argument('-o', '--output', help='Save as rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
     parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
+    parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -37,6 +38,34 @@ Prereq: ./parameters/metadata.txt (prep_reg.py or metadata.py)
 Usage: to_native6.py -m <path/image_to_warp_from_atlas_space.nii.gz> -o <native>/native_<img>.zarr"""
     return parser.parse_args()
 
+@print_func_name_args_times()
+def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, target_res=50, pad_fraction=0.15, miracl=False):
+    # Calculate zoom factors for xy and z dimensions
+    zf_xy = xy_res / target_res
+    zf_z = z_res / target_res
+    
+    # Calculate expected dimensions of the resampled image (reg input is typically 50um)
+    resampled_dimensions = [
+        round(dim * zf) for dim, zf in zip(original_dimensions, (zf_xy, zf_xy, zf_z))
+    ]
+    
+    # Calculate padding for the resampled image (15% of the resampled dimensions)
+    padded_dimensions = []
+    for dim in resampled_dimensions:
+        # Calculate pad width for one side, then round to the nearest integer
+        pad_width_one_side = np.round(pad_fraction * dim)
+        # Calculate total padding for the dimension (both sides)
+        total_pad = 2 * pad_width_one_side
+        # Calculate new dimension after padding
+        new_dim = dim + total_pad
+        padded_dimensions.append(int(new_dim))
+    
+    # Swap axes if miracl compatibility mode is True
+    if miracl: 
+        resampled_dimensions[0], resampled_dimensions[1] = resampled_dimensions[1], resampled_dimensions[0]
+        padded_dimensions[0], padded_dimensions[1] = padded_dimensions[1], padded_dimensions[0]
+    
+    return np.array(resampled_dimensions), np.array(padded_dimensions)
 
 @print_func_name_args_times()
 def scale_to_full_res(ndarray, full_res_dims, zoom_order=0):
@@ -46,7 +75,7 @@ def scale_to_full_res(ndarray, full_res_dims, zoom_order=0):
     return scaled_img
 
 @print_func_name_args_times()
-def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, miracl, zoom_order, interpol, output=None):
+def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None):
     """Warp image from atlas space to tissue space and scale to full resolution"""
 
     # Warp the moving image to tissue space
@@ -79,6 +108,25 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
         import sys ; sys.exit()
     original_dimensions = np.array([x_dim, y_dim, z_dim])
 
+    # Calculate resampled and padded dimensions
+    resampled_dims, padded_dims = calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, reg_res, pad_fraction=0.15, miracl=miracl)
+
+    # Determine where to start cropping (combined padding size) // 2 for padding on one side
+    crop_mins = (padded_dims - resampled_dims) // 2
+
+    # Find img dims of warped image lacking padding
+    crop_sizes = resampled_dims
+
+    # Perform cropping to remove padding
+    warped_img = warped_img[
+        crop_mins[0]:crop_mins[0] + crop_sizes[0],
+        crop_mins[1]:crop_mins[1] + crop_sizes[1],
+        crop_mins[2]:crop_mins[2] + crop_sizes[2]
+    ]
+
+    print(f'\n{warped_img.shape=}\n')
+    import sys ; sys.exit()
+
     # Scale to full resolution
     native_img = scale_to_full_res(warped_img, original_dimensions, zoom_order=zoom_order)
     
@@ -106,7 +154,7 @@ def main():
             else:
                 output = None
             
-            to_native(sample_path, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.metadata, args.miracl, args.zoom_order, args.interpol, output=output)
+            to_native(sample_path, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=output)
 
             progress.update(task_id, advance=1)
 
