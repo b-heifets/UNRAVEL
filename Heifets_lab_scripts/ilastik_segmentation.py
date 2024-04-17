@@ -62,29 +62,38 @@ def main():
 
             # Define output
             segmentation_dir = sample_path / args.output
-            tif_dir = segmentation_dir / args.output
+            output_tif_dir = segmentation_dir / args.output
             if args.labels: 
                 last_label = args.labels[-1]
                 final_output = segmentation_dir.joinpath(f"{args.output}_{last_label}.nii.gz")
             else: 
-                final_output = tif_dir
+                final_output = output_tif_dir
             if final_output.exists():
                 print(f"\n\n    {final_output.name} already exists. Skipping.\n")
                 continue
 
             # Check the number of tifs in the input dir and output dir
-            if not tif_dir.exists() or count_files(args.input) != count_files(tif_dir):
+            # if not tif_dir.exists() or count_files(args.input) != count_files(tif_dir):
 
                 # Perform pixel classification and output segmented tifs to output dir
-                tif_dir.mkdir(exist_ok=True, parents=True)
-                ilastik_segmentation(args.input, args.ilastik_prj, tif_dir, ilastik_log=args.ilastik_log)
+                # tif_dir.mkdir(exist_ok=True, parents=True)
+                # ilastik_segmentation(input_tif_dir, args.ilastik_prj, tif_dir, ilastik_log=args.ilastik_log)
+            
+            output_tif_dir.mkdir(exist_ok=True, parents=True)
+            input_tif_dir = sample_path / args.input
+            print(f'\n{input_tif_dir=}\n')
+            print(f'\n{args.ilastik_prj=}\n')
+            print(f'\n{output_tif_dir=}\n')
+            print(f'\n{args.ilastik_log=}\n')
+
+            ilastik_segmentation(str(input_tif_dir), str(args.ilastik_prj), str(output_tif_dir), ilastik_log=args.ilastik_log)
 
             # Convert each label to a binary mask and save as .nii.gz
             if args.labels:
-                save_labels_as_masks(tif_dir, args.labels, segmentation_dir, args.output)
+                save_labels_as_masks(output_tif_dir, args.labels, segmentation_dir, args.output)
 
             if args.rm_tifs: 
-                Path(tif_dir).unlink()
+                Path(output_tif_dir).unlink()
 
             progress.update(task_id, advance=1)
 
