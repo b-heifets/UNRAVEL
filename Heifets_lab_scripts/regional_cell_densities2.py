@@ -12,6 +12,7 @@ from rich.live import Live
 from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
+from to_native6 import to_native
 from unravel_config import Configuration
 from unravel_img_io import load_3D_img, load_image_metadata_from_txt
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
@@ -22,22 +23,29 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-a', '--atlas', help='rel_path/native_atlas_split.nii.gz (full res in tissue space; left label IDs increased by 20,000)', required=True, action=SM)
+    parser.add_argument('-c', '--condition', help='One word name for group (prepended to sample ID for regional_cell_densities_summary.py)', required=True, action=SM)
     parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image. Default: ochann_seg_ilastik_1.', default='ochann_seg_ilastik_1', action=SM)
+    parser.add_argument('-a', '--atlas_path', help='rel_path/native_atlas_split.nii.gz (only use this option if this file exists; left label IDs increased by 20,000)', default=None, action=SM)
+    parser.add_argument('-m', '--moving_img', help='path/atlas_image.nii.gz to warp from atlas space', default=None, action=SM)
     parser.add_argument('-o', '--output', help='path/name.csv. Default: region_cell_counts.csv', default='region_cell_counts.csv', action=SM)
-    parser.add_argument('-c', '--condition', help='One word name for group (prepended to sample ID for regional_cell_densities_summary.py)', default=None, action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
     parser.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, action=SM)
+    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
+    parser.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (reg.py). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
+    parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
+    parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """
-Example usage:    regional_cell_densities.py -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36
+Example usage:    
+regional_cell_densities.py -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 (use if atlas is already in native space from to_native6.py)
+regional_cell_densities.py -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36 (use if native atlas is not available; it is not saved [faster])
 
 Inputs within sample?? folders: 
     - <seg_dir>/sample??_<seg_dir>.nii.gz or <seg_dir>/<seg_dir>.nii.gz (from ilastik_segmentation.py)
-    - rel_path/native_atlas_split.nii.gz (from to_native2.sh) # Spacing should be correctly set in the atlas image
-
 """
     return parser.parse_args()
+
+# reg_outputs, fixed_reg_in, moving_img, args.reg_res, args.miracl
 
 
 def get_atlas_region_at_coords(atlas, x, y, z):
@@ -46,22 +54,19 @@ def get_atlas_region_at_coords(atlas, x, y, z):
 
 
 @print_func_name_args_times()
-def count_cells_in_regions(sample_path, seg_img_path, atlas_path, connectivity, condition):
+def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition):
     """Count the number of cells in each region based on atlas region intensities"""
 
-    img = load_3D_img(seg_img_path)
-    atlas = load_3D_img(atlas_path)
-
     # Check that the image and atlas have the same shape
-    if img.shape != atlas.shape:
-        raise ValueError(f"    [red1]Image and atlas have different shapes: {img.shape} != {atlas.shape}")
+    if seg_img.shape != atlas_img.shape:
+        raise ValueError(f"    [red1]Image and atlas have different shapes: {seg_img.shape} != {atlas_img.shape}")
 
     # If the data is big-endian, convert it to little-endian
-    if img.dtype.byteorder == '>':
-        img = img.byteswap().newbyteorder()
-    img = img.astype(np.uint8)
+    if seg_img.dtype.byteorder == '>':
+        seg_img = seg_img.byteswap().newbyteorder()
+    seg_img = seg_img.astype(np.uint8)
 
-    labels_out, n = cc3d.connected_components(img, connectivity=connectivity, out_dtype=np.uint32, return_N=True)
+    labels_out, n = cc3d.connected_components(seg_img, connectivity=connectivity, out_dtype=np.uint32, return_N=True)
 
     print(f"\n    Total cell count: {n}\n")
 
@@ -80,7 +85,7 @@ def count_cells_in_regions(sample_path, seg_img_path, atlas_path, connectivity, 
     centroids_df = pd.DataFrame(centroids, columns=['x', 'y', 'z'])
     
     # Get the region ID for each cell
-    centroids_df['Region_ID'] = centroids_df.apply(lambda row: get_atlas_region_at_coords(atlas, row['x'], row['y'], row['z']), axis=1)
+    centroids_df['Region_ID'] = centroids_df.apply(lambda row: get_atlas_region_at_coords(atlas_img, row['x'], row['y'], row['z']), axis=1)
 
     # Count how many centroids are in each region
     print("    Counting cells in each region")
@@ -188,10 +193,21 @@ def main():
 
             # Resolve paths to segmentation image and atlas
             seg_img_path = next(Path(sample_path, args.seg_dir).glob(f"*{args.seg_dir}.nii.gz"))
-            atlas_path = sample_path / args.atlas
+
+            seg_img = load_3D_img(seg_img_path)
+
+            # Load atlas image
+            if args.atlas is not None and Path(sample_path, args.atlas).exists():
+                atlas_path = sample_path / args.atlas
+                atlas_img = load_3D_img(atlas_path)
+            elif args.moving_img is not None and Path(sample_path, args.moving_img).exists():
+                atlas_img = to_native(sample_path, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.metadata, args.reg_res, args.miracl, '0', 'multiLabel', output=None)
+            else:
+                print("    [red1]Atlas image not found. Please provide a path to the atlas image or the moving image")
+                import sys ; sys.exit()
 
             # Count cells in regions
-            regional_counts_df, region_ids, atlas = count_cells_in_regions(sample_path, seg_img_path, atlas_path, args.connect, args.condition)
+            regional_counts_df, region_ids, atlas = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition)
 
             # Load resolutions and dimensions of full res image for scaling 
             metadata_path = sample_path / args.metadata
