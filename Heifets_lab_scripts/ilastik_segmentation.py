@@ -29,9 +29,45 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Usage:    ilastik_segmentation.py -i cfos -o cfos_seg -ilp path/ilastik_project.ilp
 
-This script is for pixel classification. 
+This script is for running Ilastik's pixel classification workflow in headless mode for each sample. 
+
+To train an Ilastik project, organize training slices into folder (e.g., 3 slices from 3 samples per condition; copy_tifs.py can help).
+
+Add the following the .bashrc or .zshrc (update the path and version): 
+export PATH=/usr/local/ilastik-1.3.3post3-Linux:$PATH 
+alias ilastik=run_ilastik.sh
+
+Launch ilastik (e.g., by running: ilastik # if )
+Pixel Classification -> save as <EXP>_rater1.ilp 
+https://www.ilastik.org/documentation/pixelclassification/pixelclassification
+
+1. Input Data 
+   Drag training slices into ilastik GUI
+   ctrl+A -> right click -> Edit shared properties -> Storage: Copy into project file -> Ok 
+
+2. Feature Selection
+   Select Features... -> select all features (control+a) or an optimized subset (faster but less accurate)
+   (To choose a subset of features, initially select all [control+a], train, turn off Live Updates, click Suggest Features, select a subset, and train again) 
+
+3. Training
+   Double click yellow square -> click yellow rectangle (Color for drawing) -> click in triangle and drag to the right to change color to red -> ok
+   Adjust brightness and contrast as needed (select gradient button and click and drag slowly in the image as needed; faster if zoomed in)
+   Use control + mouse wheel scroll to zoom, press mouse wheel and drag image to pan
+   With label 1 selected, paint on cells
+   With label 2 selected, paint on background
+   Turn on Live Update to preview pixel classification (faster if zoomed in) and refine training. 
+   If label 1 fuses neighboring cells, draw a thin line in between them with label 2. 
+   Toggle eyes show/hide layers and/or adjust transparency of layers. 
+   s will toggle segmentation on and off.
+   p will toggle prediction on and off.
+   If you accidentally pressa and add an extra label, turn off Live Updates and press X to delete the extra label
+   If you want to go back too steps 1 & 2, turn off Live Updates off
+   ChangeCurrent view to see other training slices. Check segmentation for these and refine as needed.
+   Save the project in experiment summary folder and close if using this script to run ilastik in headless mode for segmenting all images. 
 """
     return parser.parse_args()
+
+# TODO: Consolidate ilastik_segmentation() in unravel_img_tools.pys
 
 
 def count_files(directory):

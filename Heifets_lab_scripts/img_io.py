@@ -50,11 +50,9 @@ def main():
     else: 
         save_as_tifs(img, args.output, ndarray_axis_order=args.axis_order)
 
+
 if __name__ == '__main__': 
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
     print_cmd_and_times(main)()
-
-
-
