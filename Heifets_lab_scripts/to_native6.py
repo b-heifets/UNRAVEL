@@ -19,6 +19,9 @@ from warp import warp
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Warp img.nii.gz from atlas space to tissue space and scale to full resolution', formatter_class=SuppressMetavar)
+    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
+    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from atlas space', required=True, action=SM)
     parser.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (reg.py). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor, multiLabel [default], linear, bSpline)', default="multiLabel", action=SM)
@@ -50,10 +53,10 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
     reg_outputs_path = sample_path / reg_outputs
     warp_outputs_dir = reg_outputs_path / "warp_outputs" 
     warp_outputs_dir.mkdir(exist_ok=True, parents=True)
-    warped_nii_path = str(reg_outputs_path / "warp_outputs" / str(Path(moving_img_path).name).replace(".nii.gz", "_in_tissue_space.nii.gz"))
+    warped_nii_path = str(warp_outputs_dir / str(Path(moving_img_path).name).replace(".nii.gz", "_in_tissue_space.nii.gz"))
     if not Path(warped_nii_path).exists():
         print(f'\n    Warping the moving image to tissue space\n')
-        fixed_img_for_reg_path = str(warp_outputs_dir / fixed_reg_in)
+        fixed_img_for_reg_path = str(reg_outputs_path / fixed_reg_in)
         warp(reg_outputs_path, moving_img_path, fixed_img_for_reg_path, warped_nii_path, inverse=False, interpol=interpol)
 
     # Lower bit depth to match atlas space image
