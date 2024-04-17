@@ -24,7 +24,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-c', '--condition', help='One word name for group (prepended to sample ID for regional_cell_densities_summary.py)', required=True, action=SM)
-    parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image. Default: ochann_seg_ilastik_1.', default='ochann_seg_ilastik_1', action=SM)
+    parser.add_argument('-s', '--seg_img_path', help='rel_path/segmentation_image.nii.gz', required=True, action=SM)
     parser.add_argument('-a', '--atlas_path', help='rel_path/native_atlas_split.nii.gz (only use this option if this file exists; left label IDs increased by 20,000)', default=None, action=SM)
     parser.add_argument('-m', '--moving_img', help='path/atlas_image.nii.gz to warp from atlas space', default=None, action=SM)
     parser.add_argument('-o', '--output', help='path/name.csv. Default: region_cell_counts.csv', default='region_cell_counts.csv', action=SM)
@@ -37,11 +37,13 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """
 Example usage:    
-regional_cell_densities.py -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 (use if atlas is already in native space from to_native6.py)
-regional_cell_densities.py -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36 (use if native atlas is not available; it is not saved [faster])
+    - regional_cell_densities.py -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 
+        - Use if atlas is already in native space from to_native6.py
+    - regional_cell_densities.py -rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36
+        - Use if native atlas is not available; it is not saved (faster)
 
-Inputs within sample?? folders: 
-    - <seg_dir>/sample??_<seg_dir>.nii.gz or <seg_dir>/<seg_dir>.nii.gz (from ilastik_segmentation.py)
+Prereqs: 
+    - prep_reg.py, reg.py and ilastik_segmentation.py
 """
     return parser.parse_args()
 
@@ -121,7 +123,7 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
 
     print(f"    Saving region counts to {output_path}\n")
 
-    return region_counts_df, region_ids, atlas
+    return region_counts_df, region_ids, atlas_img
 
 
 def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, condition):
@@ -191,12 +193,10 @@ def main():
 
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            # Resolve paths to segmentation image and atlas
-            seg_img_path = next(Path(sample_path, args.seg_dir).glob(f"*{args.seg_dir}.nii.gz"))
+            # Load the segmentation image
+            seg_img = load_3D_img(sample_path / args.seg_img_path)
 
-            seg_img = load_3D_img(seg_img_path)
-
-            # Load atlas image
+            # Load or generate the native atlas image
             if args.atlas is not None and Path(sample_path, args.atlas).exists():
                 atlas_path = sample_path / args.atlas
                 atlas_img = load_3D_img(atlas_path)
