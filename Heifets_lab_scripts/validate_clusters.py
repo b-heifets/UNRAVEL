@@ -62,7 +62,7 @@ If a relative path is provided, the script will load the image at the specified 
 Next script: cluster_cell_counts.py"""
     return parser.parse_args()
 
-
+# TODO: Make validate_clusters2.py and replace to_native5 with to_native6 for newer scripts
 # TODO: QC. Aggregate .csv results for all samples if args.exp_dirs, script to load image subset.
 # TODO: Make config file for defaults or a command_generator.py script
 
