@@ -12,7 +12,7 @@ from scipy.ndimage import zoom
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration
 from unravel_img_io import load_image_metadata_from_txt, save_as_zarr, save_as_nii
-from unravel_img_tools import reverse_reorient_for_raw_to_nii_conv, unpad_img
+from unravel_img_tools import reverse_reorient_for_raw_to_nii_conv
 from unravel_utils import get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times
 from warp import warp
 
@@ -93,13 +93,6 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
     moving_nii = nib.load(moving_img_path)
     warped_img = np.asanyarray(warped_nii.dataobj, dtype=moving_nii.header.get_data_dtype()).squeeze()
 
-    # Trim padding from warped image and scale to full resolution
-    warped_img = unpad_img(warped_img, pad_width=0.15)
-
-    # Reorient if needed
-    if miracl: 
-        warped_img = reverse_reorient_for_raw_to_nii_conv(warped_img)
-
     # Load resolutions and dimensions of full res image for scaling 
     metadata_path = sample_path / metadata_rel_path
     xy_res, z_res, x_dim, y_dim, z_dim = load_image_metadata_from_txt(metadata_path)
@@ -124,8 +117,9 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
         crop_mins[2]:crop_mins[2] + crop_sizes[2]
     ]
 
-    print(f'\n{warped_img.shape=}\n')
-    import sys ; sys.exit()
+    # Reorient if needed
+    if miracl: 
+        warped_img = reverse_reorient_for_raw_to_nii_conv(warped_img)
 
     # Scale to full resolution
     native_img = scale_to_full_res(warped_img, original_dimensions, zoom_order=zoom_order)
