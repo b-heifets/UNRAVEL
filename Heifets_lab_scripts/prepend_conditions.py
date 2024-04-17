@@ -12,7 +12,7 @@ from unravel_utils import print_cmd_and_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Prepend conditions to filenames based on a CSV key', formatter_class=SuppressMetavar)
-    parser.add_argument('-c', '--csv', help='path/sample_key.csv w/ directory names and conditions', required=True)
+    parser.add_argument('-c', '--csv', help='path/sample_key.csv w/ directory names and conditions', required=True, action=SM)
     parser.add_argument('-f', '--file', help='Rename matching files', action='store_true', default=False)
     parser.add_argument('-d', '--dirs', help='Rename matching dirs', action='store_true', default=False)
     parser.add_argument('-r', '--recursive', help='Recursively rename files/dirs', action='store_true', default=False)
