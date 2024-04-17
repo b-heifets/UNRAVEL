@@ -99,7 +99,6 @@ def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None)
     else:
         print("\n    Ilastik completed successfully.\n")
 
-
 @print_func_name_args_times()
 def pad_img(ndarray, pad_width=0.15):
     """Pads ndarray by 15% of voxels on all sides"""
@@ -108,24 +107,6 @@ def pad_img(ndarray, pad_width=0.15):
     pad_width_y = round(((ndarray.shape[1] * pad_factor) - ndarray.shape[1]) / 2)
     pad_width_z = round(((ndarray.shape[2] * pad_factor) - ndarray.shape[2]) / 2)
     return np.pad(ndarray, ((pad_width_x, pad_width_x), (pad_width_y, pad_width_y), (pad_width_z, pad_width_z)), mode='constant')
-
-@print_func_name_args_times()
-def unpad_img(padded_ndarray, pad_width=0.15):
-    """Unpads an ndarray that was padded by 15% of voxels on all sides."""
-    # Calculate the original image dimensions based on the padded dimensions
-    pad_factor = 1 + 2 * pad_width
-    original_shape_x = round(padded_ndarray.shape[0] / pad_factor)
-    original_shape_y = round(padded_ndarray.shape[1] / pad_factor)
-    original_shape_z = round(padded_ndarray.shape[2] / pad_factor)
-    
-    # Calculate the padding width added to each side
-    pad_width_x = (padded_ndarray.shape[0] - original_shape_x) // 2
-    pad_width_y = (padded_ndarray.shape[1] - original_shape_y) // 2
-    pad_width_z = (padded_ndarray.shape[2] - original_shape_z) // 2
-    
-    # Unpad by slicing the padded ndarray
-    unpad = padded_ndarray[pad_width_x:-pad_width_x, pad_width_y:-pad_width_y, pad_width_z:-pad_width_z]
-    return unpad
 
 @print_func_name_args_times()
 def reorient_ndarray(data, orientation_string):
