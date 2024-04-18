@@ -24,7 +24,6 @@ def parse_args():
     parser.add_argument('-o', '--output', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
-    parser.add_argument('-mp', '--metad_path', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg.py. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-td', '--target_dir', help='path/target_dir name to copy specific slices for brain_mask.py (see usage)', default=None, action=SM)
@@ -96,9 +95,6 @@ def main():
             
             # Define input image path
             img_path = resolve_path(sample_path, args.input)
-
-            # Resolve path to metadata file
-            metadata_path = resolve_path(sample_path, args.metad_path, make_parents=True)
 
             # Load autofluo image [and xy and z voxel size in microns]
             img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)
