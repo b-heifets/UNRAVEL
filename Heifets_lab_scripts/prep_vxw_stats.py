@@ -75,14 +75,14 @@ def main():
 
             output_name = f"{sample_path.name}_{Path(args.output).name}"
             output = sample_path / "atlas_space" / output_name
-            output.mkdir(exist_ok=True, parents=True)
+            output.parent.mkdir(exist_ok=True, parents=True)
             if output.exists():
                 print(f"\n    {output} already exists. Skipping.")
                 continue
             
             # Load full res image [and xy and z voxel size in microns], to be resampled [and reoriented], padded, and warped
             img_path = sample_path / args.input
-            img, xy_res, z_res = load_3D_img(img_path, args.chann_idx, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)
+            img = load_3D_img(img_path, args.chann_idx, "xyz")
 
             # Apply spatial averaging
             if args.spatial_avg == 3:
@@ -94,7 +94,7 @@ def main():
             rb_img = rolling_ball_subtraction_opencv_parallel(img, radius=args.rb_radius, threads=args.threads)  
 
             # Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)
-            rb_img = prep_reg(rb_img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
+            rb_img = prep_reg(rb_img, args.xy_res, args.z_res, args.reg_res, args.zoom_order, args.miracl)
 
             # Warp the image to atlas space
             to_atlas(sample_path, rb_img, args.fixed_reg_in, args.atlas, output, args.interpol, dtype='uint16')
