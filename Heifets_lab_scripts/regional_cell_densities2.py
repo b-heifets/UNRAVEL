@@ -39,7 +39,7 @@ def parse_args():
 Example usage:    
     - regional_cell_densities.py -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 
         - Use if atlas is already in native space from to_native6.py
-    - regional_cell_densities.py -rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36
+    - regional_cell_densities.py -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36
         - Use if native atlas is not available; it is not saved (faster)
 
 Prereqs: 
@@ -47,13 +47,10 @@ Prereqs:
 """
     return parser.parse_args()
 
-# reg_outputs, fixed_reg_in, moving_img, args.reg_res, args.miracl
-
 
 def get_atlas_region_at_coords(atlas, x, y, z):
     """"Get the ndarray atlas region intensity at the given coordinates"""
     return atlas[int(x), int(y), int(z)]
-
 
 @print_func_name_args_times()
 def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition):
@@ -125,7 +122,6 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
 
     return region_counts_df, region_ids, atlas_img
 
-
 def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, condition):
     """Calculate volumes for given regions in an atlas image."""
 
@@ -193,15 +189,23 @@ def main():
 
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
+            # Define output
+            output_dir = sample_path / "regional_cell_densities"
+            output_dir.mkdir(exist_ok=True, parents=True)
+            output = output_dir / args.output
+            if output.exists():
+                print(f"\n\n    {output.name} already exists for {sample_path.name}. Skipping.\n")
+                continue
+
             # Load the segmentation image
             seg_img = load_3D_img(sample_path / args.seg_img_path)
 
             # Load or generate the native atlas image
-            if args.atlas is not None and Path(sample_path, args.atlas).exists():
-                atlas_path = sample_path / args.atlas
+            if args.atlas_path is not None and Path(sample_path, args.atlas_path).exists():
+                atlas_path = sample_path / args.atlas_path
                 atlas_img = load_3D_img(atlas_path)
             elif args.moving_img is not None and Path(sample_path, args.moving_img).exists():
-                atlas_img = to_native(sample_path, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.metadata, args.reg_res, args.miracl, '0', 'multiLabel', output=None)
+                atlas_img = to_native(sample_path, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.metadata, args.reg_res, args.miracl, int(0), 'multiLabel', output=None)
             else:
                 print("    [red1]Atlas image not found. Please provide a path to the atlas image or the moving image")
                 import sys ; sys.exit()
