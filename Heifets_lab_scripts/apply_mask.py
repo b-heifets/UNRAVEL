@@ -7,9 +7,9 @@ from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
+from to_native6 import scale_to_full_res
 from unravel_config import Configuration 
-from unravel_img_io import load_3D_img, resolve_path, save_as_tifs, save_as_nii
-from unravel_img_tools import cluster_IDs
+from unravel_img_io import load_3D_img, load_image_metadata_from_txt, save_as_tifs, save_as_nii, save_as_zarr
 from unravel_utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
@@ -18,27 +18,52 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? folders', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern (sample??) for dirs to process. Else: use cwd', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', action=SM)
-    parser.add_argument('-m', '--mask', help='Mask image path relative to ./ or ./sample??/. "sample??_" in arg replaced as needed.', action=SM)
+    parser.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', required=True, action=SM)
+    parser.add_argument('-mas', '--mask_to_apply', help='path/mask_to_apply.nii.gz (in tissue space)', required=True, action=SM)
+    parser.add_argument('-m', '--mean', help='If provided, conditionally replace values w/ the mean intensity in the brain', action='store_true', default=False)
+    parser.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
     parser.add_argument('-di', '--direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 1', default='less', choices=['greater', 'less'], action=SM)
     parser.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', action=SM)
-    parser.add_argument('-x', '--xyres', help='If output .nii.gz: x/y voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
-    parser.add_argument('-z', '--zres', help='If output .nii.gz: z voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
-    parser.add_argument('-v', '--verbose', help='sIncrease verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = f"""Example usage: apply_mask.py -m iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters"""
+    parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = f""" 
+Example use cases:
+    - Zero out voxels in image where mask > 0 (e.g., to exclude voxels representing artifacts):
+        apply_mask.py -mas 6e10_seg_ilastik_2/sample??_6e10_seg_ilastik_2.nii.gz -i 6e10_rb20 -o 6e10_rb20_wo_artifacts -di greater -v
+    - Zero out voxels in image where mask < 1 (e.g., to preserve signal from segmented microglia clusters):
+        apply_mask.py -mas iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters -v 
+    - Replace voxels in image with the mean intensity in the brain where mask > 0:
+        apply_mask.py -mas FOS_seg_ilastik/FOS_seg_ilastik_2.nii.gz -i FOS -o FOS_wo_halo.zarr -di greater -m -v 
+"""
     return parser.parse_args()
 
+@print_func_name_args_times()
+def mean_intensity_in_brain(img, tissue_mask):
+    """Z-score the image using the mask.
+    
+    Args:
+        - img (str): the ndarray to be z-scored.
+        - mask (str): the brain mask ndarray"""
+
+    # Zero out voxels outside the mask
+    masked_data = img * tissue_mask
+
+    # Calculate mean for masked data
+    masked_nonzero = masked_data[masked_data != 0] # Exclude zero voxels and flatten the array (1D)
+    mean_intensity = masked_nonzero.mean()
+
+    return mean_intensity    
 
 @print_func_name_args_times()
-def apply_mask_to_ndarray(ndarray, mask_ndarray, mask_condition):
+def apply_mask_to_ndarray(ndarray, mask_ndarray, mask_condition, new_value=0):
     """Zero out voxels in ndarray based on mask condition"""
     if mask_ndarray.shape != ndarray.shape:
         raise ValueError("Mask and input image must have the same shape")
 
     if mask_condition == 'greater':
-        ndarray[mask_ndarray > 0] = 0
+        ndarray[mask_ndarray > 0] = new_value
     elif mask_condition == 'less':
-        ndarray[mask_ndarray < 1] = 0
+        ndarray[mask_ndarray < 1] = new_value
 
     return ndarray
 
@@ -49,32 +74,54 @@ def main():
     
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
-        for sample_path in samples:
+        for sample in samples:
+
+            # Resolve path to sample folder
+            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
             
             # Load image
-            img = load_3D_img(resolve_path(sample_path, args.input), return_res=False)
+            img = load_3D_img(sample_path / args.input, return_res=False)
+
+            # Load 50 um tissue mask and scale to full resolution
+            tissue_mask_img = load_3D_img(sample_path / args.tissue_mask)
+
+            # Load metadata
+            metadata_path = sample_path / args.metadata
+            xy_res, z_res, x_dim, y_dim, z_dim = load_image_metadata_from_txt(metadata_path)
+            if xy_res is None:
+                print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ metadata.py")
+                import sys ; sys.exit()
+
+            # Scale to full resolution
+            original_dimensions = np.array([x_dim, y_dim, z_dim])
+            native_tissue_mask = scale_to_full_res(tissue_mask_img, original_dimensions, zoom_order=int(0))
+
+            # Calculate mean intensity in brain
+            if args.mean:
+                mean_intensity = mean_intensity_in_brain(img, native_tissue_mask)
 
             # Check if "sample??_" is in the mask path and replace it with the actual sample name
-            if f"{args.pattern}_" in args.mask:
-                dynamic_mask_path = args.mask.replace(f"{args.pattern}_", f"{sample_path.name}_")
+            if f"{args.pattern}_" in args.mask_to_apply:
+                dynamic_mask_path = args.mask_to_apply.replace(f"{args.pattern}_", f"{sample_path.name}_")
             else:
-                dynamic_mask_path = args.mask
-
-            img_path = resolve_path(sample_path, dynamic_mask_path)
+                dynamic_mask_path = args.mask_to_apply
 
             # Load mask with the updated or original path
-            mask = load_3D_img(img_path, return_res=False)
+            mask = load_3D_img(sample_path / dynamic_mask_path, return_res=False)
 
             # Apply mask to image
-            masked_img = apply_mask_to_ndarray(img, mask, args.direction)
-
-            # Define output path
-            output = resolve_path(sample_path, args.output)
+            if args.mean:
+                img = apply_mask_to_ndarray(img, mask, args.direction, new_value=mean_intensity)
+            else:
+                masked_img = apply_mask_to_ndarray(img, mask, args.direction, new_value=0)
 
             # Save masked image
-            if str(output).endswith('.nii.gz'):
-                output.parent.mkdir(parents=True, exist_ok=True)
-                save_as_nii(masked_img, output, args.xyres, args.zres, img.dtype)
+            output = sample_path / args.output
+            output.parent.mkdir(parents=True, exist_ok=True)
+            if str(output).endswith(".zarr"):
+                save_as_zarr(masked_img, output)
+            elif str(output).endswith('.nii.gz'):
+                save_as_nii(masked_img, output, xy_res, z_res, img.dtype)
             else:
                 output.mkdir(parents=True, exist_ok=True)
                 save_as_tifs(masked_img, output, "xyz")
