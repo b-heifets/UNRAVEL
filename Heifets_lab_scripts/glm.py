@@ -18,7 +18,7 @@ from unravel_utils import print_cmd_and_times
 def parse_args():
     parser = argparse.ArgumentParser(description='Run GLM using FSL randomise.', formatter_class=SuppressMetavar)
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
-    parser.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300)', type=int, default=18000, action=SM)
+    parser.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300). Default: 18000', type=int, default=18000, action=SM)
     parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
     parser.add_argument('--options', help='Additional options for randomise in format option1=value1,option2=value2,...', default='', action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
