@@ -14,6 +14,11 @@ def parse_args():
     parser.add_argument('-i', '--input', help='path/img.nii.gz', action=SM)
     return parser.parse_args()
 
+def nii_axis_codes(nii):
+    """Get and return axes codes (three letter orientation like RAS) from an nibabel NIfTI image"""
+    axcodes_tuple = nib.orientations.aff2axcodes(nii.affine) 
+    axcodes = ''.join(axcodes_tuple) 
+    return axcodes
 
 def main():
     args = parse_args()
@@ -35,10 +40,9 @@ def main():
 
 
     # Print orientation and affine
-    current_axcodes_tuple = nib.orientations.aff2axcodes(nii.affine) 
-    current_axcodes = ''.join(current_axcodes_tuple) 
+    axcodes = nii_axis_codes(nii)
     np.set_printoptions(precision=4, suppress=True)
-    print(f'\nAffine matrix ([default bold]{current_axcodes}[/]):\n{nii.affine}\n')
+    print(f'\nAffine matrix ([default bold]{axcodes}[/]):\n{nii.affine}\n')
 
 
 if __name__ == '__main__':
