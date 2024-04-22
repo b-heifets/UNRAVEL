@@ -8,7 +8,7 @@ from rich.traceback import install
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration
 from unravel_img_io import load_3D_img
-from unravel_utils import print_cmd_and_times
+from unravel_utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Convert images to HDF5 format for ilastik processing.', formatter_class=SuppressMetavar)
