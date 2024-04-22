@@ -1,12 +1,15 @@
 #!/usr/bin/env python3
 
 import argparse
+import nibabel as nib
 import numpy as np
 from argparse_utils import SuppressMetavar, SM
 from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
+from scipy.ndimage import binary_dilation, zoom
+
 from prep_reg import prep_reg
 from unravel_config import Configuration 
 from unravel_img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii, save_as_zarr
@@ -19,9 +22,11 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern (sample??) for dirs to process. Else: use cwd', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', required=True, action=SM)
-    parser.add_argument('-mas', '--seg_mask', help='path/mask_to_apply.nii.gz (in tissue space)', required=True, action=SM)
+    parser.add_argument('-mas', '--seg_mask', help='rel_path/mask_to_apply.nii.gz (in full res tissue space)', required=True, action=SM)
+    parser.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on seg_mask. Default: 0", default=0, type=int, action=SM)
     parser.add_argument('-m', '--mean', help='If provided, conditionally replace values w/ the mean intensity in the brain', action='store_true', default=False)
-    parser.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
+    parser.add_argument('-tmas', '--tissue_mask', help='For the mean itensity. rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
+    parser.add_argument('-omas', '--other_mask', help='For restricting application of -mas. E.g., reg_inputs/autofl_50um_brain_mask_outline.nii.gz (from brain_mask_outline.py)', default=None, action=SM)
     parser.add_argument('-di', '--direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 1', default='less', choices=['greater', 'less'], action=SM)
     parser.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
@@ -36,8 +41,16 @@ Example use cases:
         apply_mask.py -mas iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters -v 
     - Replace voxels in image with the mean intensity in the brain where mask > 0:
         apply_mask.py -mas FOS_seg_ilastik/FOS_seg_ilastik_2.nii.gz -i FOS -o FOS_wo_halo.zarr -di greater -m -v 
+
+This version dilates the full res seg_mask (slow, but precise)
 """
     return parser.parse_args()
+
+@print_func_name_args_times()
+def load_mask(mask_path):
+    """Load .nii.gz and return to an ndarray with a np.bool_ dtype"""
+    mask_nii = nib.load(mask_path)
+    return np.asanyarray(mask_nii.dataobj, dtype=np.bool_).squeeze()
 
 @print_func_name_args_times()
 def mean_intensity_in_brain(img, tissue_mask):
@@ -57,18 +70,37 @@ def mean_intensity_in_brain(img, tissue_mask):
     return mean_intensity    
 
 @print_func_name_args_times()
-def apply_mask_to_ndarray(ndarray, mask_ndarray, mask_condition, new_value=0):
-    """Zero out voxels in ndarray based on mask condition"""
-    if mask_ndarray.shape != ndarray.shape:
-        raise ValueError("Mask and input image must have the same shape")
+def dilate_mask(mask, iterations):
+    """Dilate the given mask (ndarray) by a specified number of iterations."""
+    dilated_mask = binary_dilation(mask, iterations=iterations)
+    return dilated_mask
 
+@print_func_name_args_times()
+def scale_bool_to_full_res(ndarray, full_res_dims):
+    """Scale ndarray to match x, y, z dimensions provided. Uses nearest-neighbor interpolation by default to preserve bool_ data type."""
+    zoom_factors = (full_res_dims[0] / ndarray.shape[0], full_res_dims[1] / ndarray.shape[1], full_res_dims[2] / ndarray.shape[2])
+    return zoom(ndarray, zoom_factors, order=0).astype(np.bool_)
+
+@print_func_name_args_times()
+def apply_mask_to_ndarray(ndarray, mask_ndarray, other_mask=None, mask_condition='less', new_value=0):
+    """Replace voxels in the ndarray with a new_value based on mask conditions. Optionally use a second mask to restrict application spatially."""
+    if mask_ndarray.shape != ndarray.shape:
+        raise ValueError("Primary mask and input image must have the same shape")
+    
+    if other_mask is not None and other_mask.shape != ndarray.shape:
+        raise ValueError("Other mask and input image must have the same shape")
+    
+    # Combine masks if other_mask is provided, using logical AND (both masks need to be True)
+    if other_mask is not None:
+        mask_ndarray = np.logical_and(mask_ndarray, other_mask)  # Both masks must be True to remain True
+    
+    # Apply the combined mask to the ndarray
     if mask_condition == 'greater':
-        ndarray[mask_ndarray > 0] = new_value
+        ndarray[mask_ndarray] = new_value  # mask_ndarray already represents where mask is True
     elif mask_condition == 'less':
-        ndarray[mask_ndarray < 1] = new_value
+        ndarray[~mask_ndarray] = new_value  # Use logical NOT to flip True/False
 
     return ndarray
-
 
 def main():
 
@@ -97,10 +129,10 @@ def main():
                 print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ metadata.py")
                 import sys ; sys.exit()
 
-            # Resample to registration resolution
+            # Resample to registration resolution to get the mean intensity in the brain
             img_resampled = prep_reg(img, xy_res, z_res, args.reg_res, int(1), args.miracl)
 
-            # Load 50 um tissue mask and scale to full resolution
+            # Load 50 um tissue mask 
             tissue_mask_img = load_3D_img(sample_path / args.tissue_mask)
 
             # Calculate mean intensity in brain
@@ -114,16 +146,28 @@ def main():
                 dynamic_mask_path = args.seg_mask
 
             # Load full res mask with the updated or original path
-            mask = load_3D_img(sample_path / dynamic_mask_path, return_res=False)
+            mask = load_mask(sample_path / dynamic_mask_path)
+
+            # Dilate the primary mask
+            if args.dilation > 0: 
+                mask = dilate_mask(mask, args.dilation)
+
+            # Load the other mask and scale to full resolution
+            if args.other_mask:
+                other_mask_img = load_mask(sample_path / args.other_mask)
+
+                metadata_path = sample_path / args.metadata
+                xy_res, z_res, x_dim, y_dim, z_dim = load_image_metadata_from_txt(metadata_path)
+                original_dimensions = np.array([x_dim, y_dim, z_dim])
+                other_mask_img = scale_bool_to_full_res(other_mask_img, original_dimensions).astype(np.bool_)
 
             # Apply mask to image
             if args.mean:
-                masked_img = apply_mask_to_ndarray(img, mask, args.direction, new_value=mean_intensity)
+                masked_img = apply_mask_to_ndarray(img, mask, other_mask=other_mask_img, mask_condition=args.direction, new_value=mean_intensity)
             else:
-                masked_img = apply_mask_to_ndarray(img, mask, args.direction, new_value=0)
+                masked_img = apply_mask_to_ndarray(img, mask, other_mask=other_mask_img, mask_condition=args.direction, new_value=0)
 
             # Save masked image
-            
             output.parent.mkdir(parents=True, exist_ok=True)
             if str(output).endswith(".zarr"):
                 save_as_zarr(masked_img, output)
