@@ -40,10 +40,9 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     Applies the transformations to an image using ANTsPy.
 
     Parameters:
-    moving_img_name (str): Path to the image to be transformed.
-    reg_outputs_path (str): Path to the reg_outputs folder (contains tranformation files)
-    direction: direction of warping (forward or reverse)
-    fixed_img_name (str): Path to the reference image for applying the transform.
+    reg_outputs_path (str): Path to the reg_outputs folder (contains transformation files)
+    moving_img_path (str): Path to the image to be transformed.
+    fixed_img_path (str): Path to the reference image for applying the transform.
     output_path (str): Path where the transformed image will be saved.
     inverse (bool): If True, apply the inverse transformation. Defaults to False.
     interpol (str): Type of interpolation (e.g., 'Linear', 'NearestNeighbor', etc.)
@@ -55,49 +54,32 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
         raise FileNotFoundError(f"No '1Warp.nii.gz' file found in {reg_outputs_path}")
     transforms_prefix = str(transforms_prefix_file.name).replace("1Warp.nii.gz", "")
 
-    # Load images (With forward warping, fixed/moving match reg.py. They are reversed for inverse warping.)
+    # Load images
     fixed_img_ants = ants.image_read(fixed_img_path)
     moving_img_ants = ants.image_read(moving_img_path) 
 
+    # Paths to the transformation files
+    generic_affine_matrix = str(reg_outputs_path / f'{transforms_prefix}0GenericAffine.mat')
+    initial_transform_matrix = str(reg_outputs_path / f'{transforms_prefix}init_tform.mat')
+
     # Apply the transformations
     if inverse:
-        if not Path(reg_outputs_path, 'comptx.nii.gz').exists():
-            # Create a dummy moving image filled with zeros
-            dummy_moving = ants.make_image(moving_img_ants.shape, voxval=0, spacing=moving_img_ants.spacing, origin=moving_img_ants.origin, direction=moving_img_ants.direction)
-
-            # Specify the transformations
-            transforms = [
-                str(reg_outputs_path / f'{transforms_prefix}1InverseWarp.nii.gz'), 
-                str(reg_outputs_path / f'{transforms_prefix}0GenericAffine.mat') 
-            ]
-
-            # Apply the transformations to generate a composite deformation field
-            deformation_field = ants.apply_transforms(
-                fixed=moving_img_ants, 
-                moving=dummy_moving, 
-                transformlist=transforms, 
-                whichtoinvert=[False, True], 
-                compose=f'{reg_outputs_path}/' # dir to output comptx.nii.gz
-            )
-
-        # Applying transformations from registration and initial alignment
-        transforms = [
-            str(reg_outputs_path / f'{transforms_prefix}init_tform.mat'), # Initial transformation matrix 
-            str(reg_outputs_path / 'comptx.nii.gz') # Composite transformation field
-        ]
-        warped_img_ants = ants.apply_transforms(fixed=fixed_img_ants, moving=moving_img_ants, transformlist=transforms, interpolator=interpol)
-
-    else: 
+        deformation_field_inverse = str(reg_outputs_path / f'{transforms_prefix}1InverseWarp.nii.gz')
+        transformlist = [initial_transform_matrix, generic_affine_matrix, deformation_field_inverse]
+        whichtoinvert = [True, True, False]
+    else:
         deformation_field = str(reg_outputs_path / f'{transforms_prefix}1Warp.nii.gz')
-        generic_affine_matrix = str(reg_outputs_path / f'{transforms_prefix}0GenericAffine.mat')
-        initial_transform_matrix = str(reg_outputs_path / f'{transforms_prefix}init_tform.mat')
-        warped_img_ants = ants.apply_transforms(
-            fixed=fixed_img_ants,
-            moving=moving_img_ants,
-            transformlist=[deformation_field, generic_affine_matrix, initial_transform_matrix],
-            interpolator=interpol
-        )
-    
+        transformlist = [deformation_field, generic_affine_matrix, initial_transform_matrix]
+        whichtoinvert = [False, False, False]
+
+    warped_img_ants = ants.apply_transforms(
+        fixed=fixed_img_ants,
+        moving=moving_img_ants,
+        transformlist=transformlist,
+        whichtoinvert=whichtoinvert,
+        interpolator=interpol
+    )
+
     # Convert the ANTsImage to a numpy array 
     warped_img = warped_img_ants.numpy()
 
@@ -107,11 +89,10 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     # Convert dtype of warped image to match the moving image
     moving_img_nii = nib.load(moving_img_path) 
     data_type = moving_img_nii.header.get_data_dtype()
-    if np.issubdtype(data_type, np.unsignedinteger):
-        warped_img[warped_img < 0] = 0 # If output_dtype is unsigned, set negative values to zero
+    warped_img[warped_img < 0] = 0 # Removes negative values from bSpline interpolation
     warped_img = warped_img.astype(data_type)
 
-    # Convert the warped image to NIfTI, copy relevant header information, and save it
+    # Save the transformed image with appropriate header and affine information
     fixed_img_nii = nib.load(fixed_img_path) 
     warped_img_nii = nib.Nifti1Image(warped_img, fixed_img_nii.affine.copy(), fixed_img_nii.header.copy())
     warped_img_nii.set_data_dtype(data_type)
