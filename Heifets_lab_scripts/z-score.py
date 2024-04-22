@@ -17,32 +17,37 @@ from unravel_utils import get_samples, initialize_progress_bar, print_func_name_
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Z-score an image using a brain mask', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='Z-score an atlas space image using a tissue mask and/or an atlas mask', formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-td', '--target_dir', help='path/target_dir name for gathering outputs from all samples (use -e w/ all paths)', default=None, action=SM)
-    parser.add_argument('-i', '--input_suffix', help='Input file name w/o "sample??_" (added automatically). E.g., ochann_rb4_gubra_space.nii.gz', required=True, action=SM)
-    parser.add_argument('-mas1', '--tissue_mask', help='rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
-    parser.add_argument('-mas2', '--optional_mask', help='path/optional_mask.nii.gz (in atlas space)', default=None, action=SM)
-    parser.add_argument('-n', '--no-default-mask', help='Provide flad to avoid use of mas1', action='store_true')
+    parser.add_argument('-i', '--input', help='full_path/img.nii.gz or rel_path/img.nii.gz ("sample??" works for batch processing)', required=True, action=SM)
+    parser.add_argument('-s', '--suffix', help='Output suffix. Default: z (.nii.gz replaced w/ _z.nii.gz)', default='z', action=SM)
+    parser.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
+    parser.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
+    parser.add_argument('-n', '--no_tmask', help='Provide flag to avoid use of tmas', action='store_true')
     parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from reg.py. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz for warping mask to atlas space (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-inp', '--interpol', help='Type of interpolation (nearestNeighbor, multiLabel [default]).', default='multiLabel', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = """Usage:   z-score.py -i ochann_rb4_gubra_space.nii.gz -mas1 reg_inputs/autofl_50um_brain_mask.nii.gz -v
+    parser.epilog = """
 
-Input:  atlas_space/sample??_ochann_rb4_gubra_space.nii.gz    
-Outputs:  atlas_space/sample??_ochann_rb4_gubra_space_z.nii.gz & atlas_space/autofl_50um_brain_mask.nii.gz
+Usage w/ a tissue mask (warped to atlas space):
+z-score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -v
+
+Usage w/ an atlas mask (warped to atlas space):
+z-score.py -i path/img.nii.gz -n -amas path/atlas_mask.nii.gz -v
+
+Usage w/ both masks for side-specific z-scoring
+z-score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v
+
+
+Outputs:  <path/input_img>_z.nii.gz (float32) [& atlas_space/autofl_50um_brain_mask.nii.gz]
 
 z-score = (img.nii.gz - mean pixel intensity in brain)/standard deviation of intensity in brain
 
-Prereqs:
-    - The input image is assumed to be in atlas space (e.g., sample??_ochann_rb4_gubra_space.nii.gz from prep_vxw_stats.py).
-    - A tissue mask is warped to atlas space for z-scoring (e.g., reg_inputs/autofl_50um_brain_mask.nii.gz from prep_reg.py).
-
-Optional:
-    - A second mask (already in atlas space) may be provided to exclude additional voxels.
+Prereqs: prep_vxw_stats.py for inputs [& brain_mask.py for tissue masks]
 """
     return parser.parse_args()
 
@@ -59,9 +64,10 @@ def z_score(img, mask):
     masked_data = img * mask
 
     # Calculate mean and standard deviation for masked data
-    masked_nonzero = masked_data[masked_data != 0] # Exclude zero voxels and flatten the array (1D)
+    masked_nonzero = masked_data[masked_data != 0]  # Exclude zero voxels
+
     mean_intensity = masked_nonzero.mean()
-    std_dev = masked_nonzero.std() 
+    std_dev = masked_nonzero.std()
 
     # Z-score calculation
     z_scored_img = (masked_data - mean_intensity) / std_dev
@@ -70,6 +76,9 @@ def z_score(img, mask):
 
 
 def main(): 
+
+    if args.no_tmask and args.atlas_mask is None: 
+        print("\n    [red]Please provide a path for --atlas_mask if --tissue_mask is not used\n")
 
     if args.target_dir is not None:
         # Create the target directory for copying outputs for vxw_stats.py
@@ -84,32 +93,50 @@ def main():
             
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            input_name = f"{sample_path.name}_{args.input_suffix}"
-            input_path = sample_path / "atlas_space" / input_name
+            if Path(args.input).is_absolute():
+                input_path = Path(args.input)
+                if not input_path.exists():
+                    print(f"\n [red]The specified input file {input_path} does not exist.")
+                    import sys ; sys.exit()
+            else:
+                # Handle relative path or pattern replacement
+                if f"{args.pattern}" in args.input:
+                    input_path = Path(sample_path / args.input.replace(f"{args.pattern}", f"{sample_path.name}"))
+                else:
+                    input_path = Path(sample_path / args.input)
 
-            output = str(input_path).replace('.nii.gz', '_z.nii.gz')
+            output = Path(str(input_path).replace('.nii.gz', f'_{args.suffix}.nii.gz'))
             if output.exists():
                 print(f"\n\n    {output} already exists. Skipping.\n")
                 continue
 
             nii = nib.load(input_path)
-            img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
+            img = np.asanyarray(nii.dataobj, dtype=np.float32).squeeze()
 
-            if not args.no_default_mask:
+            if not args.no_tmask:
                 # Warp tissue mask to atlas space
                 brain_mask_in_tissue_space = load_3D_img(Path(sample_path, args.tissue_mask))
                 mask_output = input_path.parent / Path(args.tissue_mask).name
-                to_atlas(sample_path, brain_mask_in_tissue_space, args.fixed_reg_in, args.atlas, mask_output, args.interpol, dtype='float32')
-                mask = load_3D_img(mask_output)
-            else:
-                # Initialize mask as all true if no default mask is used
-                mask = np.ones(img.shape, dtype=bool)
 
-            if args.optional_mask:
-                optional_mask = load_3D_img(args.optional_mask)
-                mask *= optional_mask
+                fixed_reg_input = Path(sample_path, args.fixed_reg_in)    
+                if not fixed_reg_input.exists():
+                    fixed_reg_input = sample_path / "reg_outputs" / "autofl_50um_fixed_reg_input.nii.gz"
+
+                to_atlas(sample_path, brain_mask_in_tissue_space, fixed_reg_input, args.atlas, mask_output, args.interpol, dtype='float32')
+                mask = load_3D_img(mask_output)
+                mask = np.where(mask > 0, 1, 0).astype(np.uint8)
+
+            if args.atlas_mask:
+                atlas_mask_img = load_3D_img(args.atlas_mask)
+                atlas_mask_img = np.where(atlas_mask_img > 0, 1, 0).astype(np.uint8)
+
+            if args.no_tmask: 
+                mask = atlas_mask_img
+            elif args.atlas_mask: 
+                mask *= atlas_mask_img
 
             z_scored_img = z_score(img, mask)
+            nii.header.set_data_dtype(np.float32)
             z_scored_nii = nib.Nifti1Image(z_scored_img, nii.affine, nii.header)
             nib.save(z_scored_nii, output)
 
