@@ -22,7 +22,7 @@ def parse_args():
     parser.add_argument('-a', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = """Usage:    whole_to_LR_avg.py -v
+    parser.epilog = """Usage:    whole_to_LR_avg.py -k 0.05 -v
 
 Run in the directory with the images to process (e.g in a dir w/ *_ochann_rb4_gubra_space_z.nii.gz)
     
@@ -32,15 +32,23 @@ Output: input_img_LRavg.nii.gz"""
 
 def main(): 
     files = Path().cwd().glob(args.pattern)
+    print(f'\nImages to process: {list(files)}\n')
+
+    files = Path().cwd().glob(args.pattern)
     for file in files:
+        print(f"    Processing {file}\n")
         nii = nib.load(file)
 
         # Smooth the image with a kernel
         if args.kernel > 0:
-            smoothed_image = fslmaths(nii).s(args.smooth).run()
-            
+            print(f"    Smoothing image with a kernel radius of {args.kernel} mm")
+            nii_smoothed = fslmaths(nii).s(args.kernel).run()
+            img = np.asanyarray(nii_smoothed.dataobj, dtype=np.float32).squeeze()
+            kernel_in_um = str(int(args.kernel * 1000))
+        else: 
+            img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
+
         # Mirror the image along the specified axis and shift the content by the specified number of voxels
-        img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
         mirrored_img = mirror(img, axis=args.axis, shift=args.shift)
 
         # Average the original and mirrored images
@@ -48,7 +56,10 @@ def main():
 
         # Save the averaged image
         averaged_nii = nib.Nifti1Image(averaged_img, nii.affine, nii.header)
-        averaged_filename = f"{Path(file).name}".replace('.nii.gz', '_LRavg.nii.gz')
+        if args.kernel > 0:
+            averaged_filename = f"{Path(file).name}".replace('.nii.gz', f'_s{kernel_in_um}_LRavg.nii.gz')
+        else: 
+            averaged_filename = f"{Path(file).name}".replace('.nii.gz', '_LRavg.nii.gz')
         nib.save(averaged_nii, averaged_filename)
         
 
