@@ -97,7 +97,11 @@ def main():
             rb_img = prep_reg(rb_img, args.xy_res, args.z_res, args.reg_res, args.zoom_order, args.miracl)
 
             # Warp the image to atlas space
-            to_atlas(sample_path, rb_img, args.fixed_reg_in, args.atlas, output, args.interpol, dtype='uint16')
+            fixed_reg_input = Path(sample_path, args.fixed_reg_in)    
+            if not fixed_reg_input.exists():
+                fixed_reg_input = sample_path / "reg_outputs" / "autofl_50um_fixed_reg_input.nii.gz"
+
+            to_atlas(sample_path, rb_img, fixed_reg_input, args.atlas, output, args.interpol, dtype='uint16')
 
             # Copy the atlas to atlas_space
             atlas_space = sample_path / "atlas_space"
