@@ -6,7 +6,6 @@ import subprocess
 import ants
 import nibabel as nib
 from ants import n4_bias_field_correction, registration
-from nibabel.orientations import axcodes2ornt, ornt_transform, io_orientation, inv_ornt_aff
 from pathlib import Path
 import numpy as np
 from rich import print
@@ -191,6 +190,11 @@ def main():
                 # Save the warped moving image output
                 ants.image_write(reg['warpedmovout'], output)
                 print(f"\nTransformed moving image saved to: \n{output}")
+
+                # Save the warped fixed image output
+                # warpedfixout = str(Path(reg_outputs_path, str(Path(args.fixed_img).name).replace(".nii.gz", "__warped_to_moving_image.nii.gz")))
+                # ants.image_write(reg['warpedfixout'], warpedfixout)
+                # print(f"\nTransformed fixed image saved to: \n{warpedfixout}")
 
             # Warp the atlas image to the tissue image for checking registration
             warped_atlas = str(Path(reg_outputs_path, str(Path(args.atlas).name).replace(".nii.gz", "_in_tissue_space.nii.gz")))
