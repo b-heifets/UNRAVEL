@@ -23,7 +23,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Plot cell densensities for each region and summarize results.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...', formatter_class=RawTextHelpFormatter)
     parser.add_argument('--groups', nargs='*', help='Group prefixes (e.g., saline meth cbsMeth)', metavar='')
     parser.add_argument('-t', '--test_type', help="Type of statistical test to use: 'tukey' (default), 'dunnett', or 't-test'", choices=['tukey', 'dunnett', 't-test'], default='tukey', metavar='')
-    parser.add_argument('-hemi', help="Hemisphere(s) to process (r, l or both)", choices=['r', 'l', 't-both'], required=True, metavar='')
+    parser.add_argument('-hemi', help="Hemisphere(s) to process (r, l or both)", choices=['r', 'l', 'both'], required=True, metavar='')
     parser.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", metavar='')
     parser.add_argument('-d', '--divide', type=float, help='Divide the cell densities by the specified value for plotting (default is None)', default=None, metavar='')
     parser.add_argument('-y', '--ylabel', help='Y-axis label (Default: cell_density)', default='cell_density', metavar='')
