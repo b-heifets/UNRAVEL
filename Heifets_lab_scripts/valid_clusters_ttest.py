@@ -35,8 +35,12 @@ Example bilateral inputs (if any file has _LH.csv or _RH.csv, the script will at
 Columns in the .csv files:
 sample, cluster_ID, <cell_count|label_volume>, cluster_volume, <cell_density|label_density>, ...
 
+To collect the files:
+
 Outputs: ./cluster_validation_summary/ with cluster_validation_summary.csv, cluster_t_test_results.csv, cluster_validation_summary.txt, significant_cluster_IDs.txt"""
     return parser.parse_args()
+
+# TODO: save or print: Direction, FDR q, p value thresh, Valid clusters, # of valid clusters, # of clusters, Validation rate
 
 
 def main():
@@ -108,7 +112,7 @@ def main():
         # Extract data for each condition
         group_one_data = pd.to_numeric(cluster_data[cluster_data['condition'] == group_one][density_col], errors='coerce') # coerce to NaN if not numeric
         group_two_data = pd.to_numeric(cluster_data[cluster_data['condition'] == group_two][density_col], errors='coerce')
-  
+        
         # Perform unpaired two-tailed t-test
         t_stat, p_value = stats.ttest_ind(group_one_data.dropna(), group_two_data.dropna(), equal_var=False)
 
@@ -127,9 +131,23 @@ def main():
     # Print the name of the working directory
     print(f"Current working directory: [bold green]{Path.cwd().name}")
 
-    if args.verbose:
-        # Output results
-        print(f'\n{t_test_results}\n')
+    # Get the overall mean density for each condition and determine the effect direction
+    group_one_mean = summary_df[summary_df['condition'] == group_one][density_col].mean()
+    group_two_mean = summary_df[summary_df['condition'] == group_two][density_col].mean()
+    if group_one_mean > group_two_mean:
+        effect_direction = '>'
+    elif group_one_mean < group_two_mean:
+        effect_direction = '<'
+    print(f"Effect direction: [default bold]{group_one} {effect_direction} {group_two}")
+
+    # Extract the FDR q value from the first csv file (float after 'FDR' or 'q' in the file name)
+    first_csv_name = csv_files[0]
+    fdr_q = float(first_csv_name.split('FDR')[-1].split('q')[-1].split('_')[0])
+    print(f"FDR q value: [default bold]{fdr_q}")
+
+    # Get the p-value threshold from a .txt file
+    with open('p_value_threshold.txt', 'r') as f:
+        p_value_thresh = float(f.read())
 
     # Print the number of clusters with significant differences
     print(f"Number of sig. clusters: {len(t_test_results[t_test_results['p_value'] < 0.05])}")
@@ -145,6 +163,10 @@ def main():
     significant_cluster_ids = significant_clusters.tolist()
     significant_cluster_ids_str = ' '.join(map(str, significant_cluster_ids)) + '\n'
     print(f"Significant cluster IDs: {significant_cluster_ids_str}")
+
+    if args.verbose:
+        # Output results
+        print(f'\n{t_test_results}\n')
 
     # Make output dir
     output_dir = 'cluster_validation_summary'
