@@ -17,11 +17,17 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-c', '--csv', help='path/sample_key.csv w/ directory names and conditions', required=True, action=SM)
-    parser.add_argument('-a', '--activate', help='Space separated list of conditions to enable processing for (must match sample_key.csv)', required=True, nargs='*', action=SM)
+    parser.add_argument('-t', '--toggle_all', help='Toggle all sample folders to active, ignoring condition checks.', action='store_true', default=False)
+    parser.add_argument('-c', '--csv', help='path/sample_key.csv w/ directory names and conditions', default=None, action=SM)
+    parser.add_argument('-a', '--activate', help='Space separated list of conditions to enable processing for (must match sample_key.csv)', default=None, nargs='*', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Example usage:     toggle_samples.py -c <path/sample_key.csv> -a <Saline MDMA> -v
+    parser.epilog = """
+Usage for toggling all sample?? dirs to active:
+toggle_samples.py -t
     
+Usage for activating sample?? dirs for certain conditions:
+toggle_samples.py -c <path/sample_key.csv> -a <Saline MDMA> -v
+
 For conditions in the activate list, the script will remove the "_" from the sample?? dir name.
 For conditions not in the activate list, the script will prepend "_" to the sample?? dir name.    
 
@@ -31,6 +37,7 @@ The sample_key.csv file should have the following format:
     sample02,treatment
 """    
     return parser.parse_args()
+
 
 def main():
     args = parse_args()
@@ -47,19 +54,22 @@ def main():
         mapping_df = pd.read_csv(args.csv)
         condition_df = mapping_df[mapping_df['dir_name'] == stripped_sample_name]['condition']
 
-        if not condition_df.empty:
-            condition = condition_df.values[0]
-            if condition in args.activate:
-                # Remove the "_" from the sample directory name
-                new_name = sample_path.parent / stripped_sample_name
-                status = "Activated"
-            else:
-                # Prepend "_" to the sample directory name
-                new_name = sample_path.parent / f'_{stripped_sample_name}'
-                status = "Inactivated"
+        if args.toggle_all:
+            new_name = sample_path.parent / stripped_sample_name
+            sample_path.rename(new_name)
+            status = "Activated"
         else:
-            print(f"No condition found for {stripped_sample_name}, skipping...")
-            continue  # Skip to the next iteration if no condition found
+            if not condition_df.empty:
+                condition = condition_df.values[0]
+                if condition in args.activate:
+                    new_name = sample_path.parent / stripped_sample_name
+                    status = "Activated"
+                else:
+                    new_name = sample_path.parent / f'_{stripped_sample_name}'
+                    status = "Inactivated"
+            else:
+                print(f"No condition found for {stripped_sample_name}, skipping...")
+                continue  # Skip to the next iteration if no condition found
 
         sample_path.rename(new_name)
 
