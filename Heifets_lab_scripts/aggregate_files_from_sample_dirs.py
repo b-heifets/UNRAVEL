@@ -25,6 +25,24 @@ def parse_args():
     return parser.parse_args()
 
 
+def aggregate_files_from_sample_dirs(sample_path, pattern, rel_path_to_src_file, target_dir, add_prefix=False, verbose=False):
+    if f"{pattern}_" in rel_path_to_src_file:
+        src_path = sample_path / rel_path_to_src_file.replace(f"{pattern}_", f"{sample_path.name}_")
+    else:
+        src_path = sample_path / rel_path_to_src_file
+
+    if add_prefix: 
+        target_output = target_dir / f"{sample_path.name}_{src_path.name}"
+        if verbose and src_path.exists():
+            print(f"Copying {src_path.name} as {target_output.name}")
+    else:
+        target_output = target_dir / src_path.name
+        if verbose and src_path.exists():
+            print(f"Copying {src_path}")
+    if src_path.exists():
+        shutil.copy(src_path, target_output)
+
+
 def main():
     if args.target_dir is None:
         target_dir = Path().cwd()
@@ -43,21 +61,7 @@ def main():
 
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            if f"{args.pattern}_" in args.input:
-                input_path = sample_path / args.input.replace(f"{args.pattern}_", f"{sample_path.name}_")
-            else:
-                input_path = sample_path / args.input
-
-            if args.add_prefix: 
-                target_output = target_dir / f"{sample_path.name}_{input_path.name}"
-                if args.verbose and input_path.exists():
-                    print(f"Copying {input_path.name} as {target_output.name}")
-            else:
-                target_output = target_dir / input_path.name
-                if args.verbose and input_path.exists():
-                    print(f"Copying {input_path}")
-            if input_path.exists():
-                shutil.copy(input_path, target_output)
+            aggregate_files_from_sample_dirs(sample_path, args.pattern, args.input, target_dir, args.add_prefix, args.verbose)
 
             progress.update(task_id, advance=1)
 
