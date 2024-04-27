@@ -10,9 +10,12 @@ from unravel_utils import print_cmd_and_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Organize bilateral csv outputs from validate_clusters.py', formatter_class=SuppressMetavar)
-    parser.epilog = """Example usage:     validate_clusters_org_data.py
+    parser.epilog = """
+Run this script in the target_dir from valid_clusters_org_data.py
+        
+Usage:     validate_clusters_group_bilateral_data.py
 
-This script organizes the CSV files output by validate_clusters.py into directories based on hemisphere.
+It consolidates CSV files into pooled directories based on hemisphere.
 
 Folder naming convention: 
     - <cluster_validation_dir>_LH for left hemisphere files
@@ -59,7 +62,8 @@ def group_hemisphere_data(base_path):
             
             # Move files from right hemisphere directory to new directory
             for file in rh_dir.iterdir():
-                shutil.move(str(file), new_dir_path)
+                if str(file).endswith('.csv'):
+                    shutil.move(str(file), new_dir_path)
             
             # Remove the original directories
             shutil.rmtree(lh_dir)
