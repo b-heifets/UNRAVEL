@@ -23,10 +23,10 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = """
 Usage for toggling all sample?? dirs to active:
-toggle_samples.py -t
+toggle_samples.py -t -e <list_of_exp_dir_paths>
     
 Usage for activating sample?? dirs for certain conditions:
-toggle_samples.py -c <path/sample_key.csv> -a <Saline MDMA> -v
+toggle_samples.py -c <path/sample_key.csv> -a <Saline MDMA> -v -e <list_of_exp_dir_paths>
 
 For conditions in the activate list, the script will remove the "_" from the sample?? dir name.
 For conditions not in the activate list, the script will prepend "_" to the sample?? dir name.    
@@ -40,7 +40,6 @@ The sample_key.csv file should have the following format:
 
 
 def main():
-    args = parse_args()
 
     active_samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     inactive_samples = get_samples(args.dirs, f'_{args.pattern}', args.exp_paths)
@@ -51,15 +50,16 @@ def main():
         stripped_sample_name = sample_path.name.lstrip('_')  # Strip leading underscore for accurate CSV matching
             
         # Get the condition for the current sample
-        mapping_df = pd.read_csv(args.csv)
-        condition_df = mapping_df[mapping_df['dir_name'] == stripped_sample_name]['condition']
+        if args.csv is not None: 
+            mapping_df = pd.read_csv(args.csv)
+            condition_df = mapping_df[mapping_df['dir_name'] == stripped_sample_name]['condition']
 
         if args.toggle_all:
             new_name = sample_path.parent / stripped_sample_name
-            sample_path.rename(new_name)
+            print(f'{new_name=}')
             status = "Activated"
         else:
-            if not condition_df.empty:
+            if args.csv is not None:
                 condition = condition_df.values[0]
                 if condition in args.activate:
                     new_name = sample_path.parent / stripped_sample_name
@@ -67,9 +67,6 @@ def main():
                 else:
                     new_name = sample_path.parent / f'_{stripped_sample_name}'
                     status = "Inactivated"
-            else:
-                print(f"No condition found for {stripped_sample_name}, skipping...")
-                continue  # Skip to the next iteration if no condition found
 
         sample_path.rename(new_name)
 

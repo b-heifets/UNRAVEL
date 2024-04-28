@@ -28,7 +28,6 @@ def parse_args():
 """
     return parser.parse_args()
 
-# @print_func_name_args_times()
 def cp(src, dest):
     """Copy a file from src path to a dest path, optionally printing the action.
     
@@ -57,13 +56,16 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
         cluster_info = cluster_correction_path / f'{cluster_correction_dir}_cluster_info.txt'
         if cluster_info.exists():
             dest_stats = dest_path / cluster_info.name
-            cp(src=cluster_info, dest=dest_stats)
+            if not dest_stats.exists(): 
+                cp(src=cluster_info, dest=dest_stats)
             
             p_val_thresh_file = cluster_correction_path / p_val_txt
             if p_val_thresh_file.exists():
                 dest_p_val_thresh = dest_path / p_val_txt
-                cp(src=p_val_thresh_file, dest=dest_p_val_thresh)
+                if not dest_p_val_thresh.exists():
+                    cp(src=p_val_thresh_file, dest=dest_p_val_thresh)
 
+@print_func_name_args_times()
 def organize_validation_data(sample_path, clusters_path, validation_dir_pattern, density_type, target_dir, vstats_path, p_val_txt):
     """Organize the cluster validation data.
     
@@ -82,7 +84,8 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
             src_file = validation_dir / f'{density_type}_density_data.csv'
             if src_file.exists():
                 dest_file = dest_path / f'{sample_path.name}__{density_type}_density_data__{validation_dir.name}.csv'
-                cp(src=src_file, dest=dest_file)
+                if not dest_file.exists(): 
+                  cp(src=src_file, dest=dest_file)
 
             if vstats_path is not None:
                 copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt)
