@@ -55,13 +55,14 @@ def calculate_regional_volumes(img, atlas, atlas_res_in_um):
     return dict(zip(uniq_values, volumes))
 
 @print_func_name_args_times()
-def sunburst(img, atlas, atlas_res_in_um, output_rgb_lut):
+def sunburst(img, atlas, atlas_res_in_um, output_path, output_rgb_lut=False):
     """Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy.
     
     Args:
-        - img_ndarray (ndarray): the image ndarray to be analyzed.
-        - atlas_ndarray (ndarray): the atlas ndarray to be used for the analysis.
-        - atlas_res_in_um (tuple): the atlas resolution in microns.
+        - img (ndarray)
+        - atlas (ndarray)
+        - atlas_res_in_um (tuple): the atlas resolution in microns. For example, (25, 25, 25)
+        - output_rgb_lut (bool): flag to output the RGB values for each abbreviation to a CSV file
 
     Outputs:
         - CSV file containing the regional volumes for the sunburst plot (input_sunburst.csv)
@@ -90,19 +91,16 @@ def sunburst(img, atlas, atlas_res_in_um, output_rgb_lut):
     final_df.drop(columns=['max_depth_abbr', 'Region', 'lowered_ID', 'abbreviation'], inplace=True)
 
     # Save the output to a CSV file
-    output_name = str(Path(args.input).name).replace('.nii.gz', '_sunburst.csv')
-    output_path = Path(args.input).parent / output_name
     final_df.to_csv(output_path, index=False)
 
-    print(f'\n\nSunburst data for [magenta bold]{Path(args.input).name}[/]:')    
-    print(f'\n{final_df}\n')
 
     if output_rgb_lut:
         # Save the RGB values for each abbreviation to a CSV file
         rgb_df = pd.read_csv(Path(__file__).parent / 'sunburst_RGBs.csv')
-        rgb_path = Path(args.input).parent / 'sunburst_RGBs.csv'
+        rgb_path = Path(output_path).parent / 'sunburst_RGBs.csv'
         rgb_df.to_csv(rgb_path, index=False)
 
+    return final_df
 
 def main():
 
@@ -119,7 +117,13 @@ def main():
     xyx_res_in_mm = atlas_res[0]
     xyz_res_in_um = xyx_res_in_mm * 1000
 
-    sunburst(img, atlas, xyz_res_in_um, args.output_rgb_lut)
+    output_name = str(Path(args.input).name).replace('.nii.gz', '_sunburst.csv')
+    output_path = Path(args.input).parent / output_name
+    
+    sunburst_df = sunburst(img, atlas, xyz_res_in_um, output_path, args.output_rgb_lut)
+
+    print(f'\n\n[magenta bold]{output_name}[/]:')    
+    print(f'\n{sunburst_df}\n')
 
 
 if __name__ == '__main__':
