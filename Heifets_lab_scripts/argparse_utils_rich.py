@@ -1,0 +1,71 @@
+#!/usr/bin/env python3
+
+import argparse
+from rich_argparse import RichHelpFormatter
+import textwrap
+
+class SuppressMetavar(RichHelpFormatter):
+    def _format_action_invocation(self, action):
+        if not action.option_strings:
+            metavar, = self._metavar_formatter(action, action.dest)(1)
+            return metavar
+        else:
+            parts = []
+            if action.nargs == 0:
+                parts.extend(action.option_strings)
+            else:
+                for option_string in action.option_strings:
+                    parts.append(option_string)
+            return ', '.join(parts)
+    
+    def _fill_text(self, text, width, indent):
+        # This method formats the epilog. Override it to split the text into lines and format each line individually.
+        text_lines = text.splitlines()
+        formatted_lines = [textwrap.fill(line, width, initial_indent=indent, subsequent_indent=indent) for line in text_lines]
+        return '\n'.join(formatted_lines)
+
+# Custom action class to suppress metavar across all nargs configurations
+class SM(argparse.Action):
+    def __init__(self, option_strings, dest, nargs=None, **kwargs):
+        # Forcefully suppress metavar display by setting it to an empty string or an appropriate tuple
+        if nargs is not None:
+            # Use an empty tuple with a count matching nargs when nargs is a specific count or '+'
+            kwargs['metavar'] = tuple('' for _ in range(nargs if isinstance(nargs, int) else 1))
+        else:
+            # Default single metavar suppression
+            kwargs['metavar'] = ''
+        super(SM, self).__init__(option_strings, dest, nargs=nargs, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        # Simply set the value(s) in the namespace
+        if self.nargs is None or self.nargs == 0:
+            setattr(namespace, self.dest, values)  # Directly set the value
+        else:
+            # Handle multiple values as a list
+            current_values = getattr(namespace, self.dest, [])
+            if not isinstance(current_values, list):
+                current_values = [current_values]  # Ensure it is a list
+            current_values.append(values)
+            setattr(namespace, self.dest, current_values)  # Append new values
+
+# # Suppress metavar (this version works when "class SuppressMetavar(RichHelpFormatter):" is set as "class SuppressMetavar(argparse.HelpFormatter):"
+# class SM(argparse.Action):
+#     def __init__(self, option_strings, dest, nargs=None, **kwargs):
+#         if nargs is not None:
+#             kwargs.setdefault('metavar', '')
+#         super(SM, self).__init__(option_strings, dest, nargs=nargs, **kwargs)
+
+#     def __call__(self, parser, namespace, values, option_string=None):
+#         # If this action is for a single value (not expecting multiple values)
+#         if self.nargs is None or self.nargs == 0:
+#             setattr(namespace, self.dest, values)  # Set the single value directly
+#         else:
+#             # If the action expects multiple values, handle it as a list
+#             if isinstance(values, list):
+#                 setattr(namespace, self.dest, values)
+#             else:
+#                 current_values = getattr(namespace, self.dest, [])
+#                 if not isinstance(current_values, list):
+#                     current_values = [current_values]
+#                 current_values.append(values)
+#                 setattr(namespace, self.dest, current_values)
