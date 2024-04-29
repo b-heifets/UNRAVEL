@@ -47,25 +47,3 @@ class SM(argparse.Action):
                 current_values = [current_values]  # Ensure it is a list
             current_values.append(values)
             setattr(namespace, self.dest, current_values)  # Append new values
-
-# # Suppress metavar (this version works when "class SuppressMetavar(RichHelpFormatter):" is set as "class SuppressMetavar(argparse.HelpFormatter):"
-# class SM(argparse.Action):
-#     def __init__(self, option_strings, dest, nargs=None, **kwargs):
-#         if nargs is not None:
-#             kwargs.setdefault('metavar', '')
-#         super(SM, self).__init__(option_strings, dest, nargs=nargs, **kwargs)
-
-#     def __call__(self, parser, namespace, values, option_string=None):
-#         # If this action is for a single value (not expecting multiple values)
-#         if self.nargs is None or self.nargs == 0:
-#             setattr(namespace, self.dest, values)  # Set the single value directly
-#         else:
-#             # If the action expects multiple values, handle it as a list
-#             if isinstance(values, list):
-#                 setattr(namespace, self.dest, values)
-#             else:
-#                 current_values = getattr(namespace, self.dest, [])
-#                 if not isinstance(current_values, list):
-#                     current_values = [current_values]
-#                 current_values.append(values)
-#                 setattr(namespace, self.dest, current_values)
