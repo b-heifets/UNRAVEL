@@ -30,7 +30,7 @@ def parse_args():
     parser.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', metavar='')
     parser.add_argument('-s', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups", default='light:white', metavar='')
     parser.add_argument('-o', '--output', help='Output directory for plots (Default: <args.test_type>_plots)', metavar='')
-    parser.add_argument('-a', "--alt", help="Number of tails and direction for t-test or Dunnett's tests {'two-sided', 'less' (<ctrl), or 'greater'}", default='two-sided', metavar='')
+    parser.add_argument('-a', "--alt", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', metavar='')
     parser.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], metavar='')
     parser.epilog = """Example usage: regional_cell_densities_summary.py --groups Saline MDMA Meth -d 10000 -hemi r
 
@@ -40,6 +40,7 @@ Outputs plots and a summary CSV to the current directory.
 Example hex code list (flank arg w/ double quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']"""
     return parser.parse_args()
 
+# TODO: Dunnett's test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.
 
 def get_region_details(region_id, df):
     # Adjust to account for the unique region IDs.
@@ -73,27 +74,36 @@ def parse_color_argument(color_arg, num_groups, region_id):
         # It's already a list (this would be the case for default values or if the input method changes)
         return color_arg    
 
-def summarize_significance(test_df, region_id):
+def summarize_significance(test_df, id):
+    """Summarize the results of the statistical tests.
+    
+    Args:
+        - test_df (DataFrame): the DataFrame containing the test results (w/ columns: group1, group2, p-value, meandiff)
+        - id (int): the region or cluster ID
+
+    Returns:
+        - summary_df (DataFrame): the DataFrame containing the summarized results
+    """
     summary_rows = []
     for _, row in test_df.iterrows():
         group1, group2 = row['group1'], row['group2']
         # Determine significance level
         sig = ''
-        if row['p-adj'] < 0.0001:
+        if row['p-value'] < 0.0001:
             sig = '****'
-        elif row['p-adj'] < 0.001:
+        elif row['p-value'] < 0.001:
             sig = '***'
-        elif row['p-adj'] < 0.01:
+        elif row['p-value'] < 0.01:
             sig = '**'
-        elif row['p-adj'] < 0.05:
+        elif row['p-value'] < 0.05:
             sig = '*'
         # Determine which group has a higher mean
         meandiff = row['meandiff']
         higher_group = group2 if meandiff > 0 else group1
         summary_rows.append({
-            'Region_ID': region_id,
+            'Region_ID': id,
             'Comparison': f'{group1} vs {group2}',
-            'p-value': row['p-adj'],
+            'p-value': row['p-value'],
             'Higher_Mean_Group': higher_group,
             'Significance': sig
         })
@@ -137,27 +147,27 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         for prefix in args.groups:
             if prefix != args.ctrl_group:
                 other_group_data = df[group_columns[prefix]].values.ravel()
-                t_stat, p_value = ttest_ind(other_group_data, control_data, equal_var=False)  # Perform Welch's t-test
+                t_stat, p_value = ttest_ind(other_group_data, control_data, equal_var=True, alternative=args.alt) # Switched to equal_var=True and alternative=args.alt
                 meandiff = np.mean(other_group_data) - np.mean(control_data)
-                if args.alt == 'less' and meandiff < 0:
-                    p_value /= 2  # For one-tailed test, halve the p-value if the alternative is 'less'
-                    t_stat = -t_stat  # Flip the sign for 'less'
-                elif args.alt == 'greater' and meandiff > 0:
-                    p_value /= 2  # For one-tailed test, halve the p-value if the alternative is 'greater'
-                elif args.alt == 'two-sided':
-                    pass # No change in p value needed for two-sided test
-                else: # Effect direction not consistent with hypothesis 
-                    p_value = 1
+                # if args.alt == 'less' and meandiff < 0:
+                #     p_value /= 2  # For one-tailed test, halve the p-value if the alternative is 'less'
+                #     t_stat = -t_stat  # Flip the sign for 'less'
+                # elif args.alt == 'greater' and meandiff > 0:
+                #     p_value /= 2  # For one-tailed test, halve the p-value if the alternative is 'greater'
+                # elif args.alt == 'two-sided':
+                #     pass # No change in p value needed for two-sided test
+                # else: # Effect direction not consistent with hypothesis 
+                #     p_value = 1
                 test_results.append({
                     'group1': args.ctrl_group,
                     'group2': prefix,
                     't-stat': t_stat,
-                    'p-adj': p_value, # Referring to as p-adj to match the other test types
+                    'p-value': p_value,
                     'meandiff': np.mean(other_group_data) - np.mean(control_data)
                 })
 
         test_results_df = pd.DataFrame(test_results)
-        significant_comparisons = test_results_df[test_results_df['p-adj'] < 0.05]
+        significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
 
     elif args.test_type == 'dunnett':
 
@@ -174,21 +184,22 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         test_results_df = pd.DataFrame({
             'group1': [args.ctrl_group] * len(dunnett_results.pvalue),
             'group2': [prefix for prefix in args.groups if prefix != args.ctrl_group],
-            'p-adj': dunnett_results.pvalue,
+            'p-value': dunnett_results.pvalue,
             'meandiff': np.mean(group2_data, axis=1) - np.mean(control_data) # Calculate the mean difference between each group and the control group
         })
-        significant_comparisons = test_results_df[test_results_df['p-adj'] < 0.05]
+        significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
 
     elif args.test_type == 'tukey':
 
         # Conduct Tukey's HSD test
-        cell_densities = np.array([value for prefix in args.groups for value in df[group_columns[prefix]].values.ravel()]) # Flatten the data
-        labels = np.array([prefix for prefix in args.groups for _ in range(len(df[group_columns[prefix]].values.ravel()))])
-        tukey_results = pairwise_tukeyhsd(cell_densities, labels, alpha=0.05)
+        densities = np.array([value for prefix in args.groups for value in df[group_columns[prefix]].values.ravel()]) # Flatten the data
+        groups = np.array([prefix for prefix in args.groups for _ in range(len(df[group_columns[prefix]].values.ravel()))])
+        tukey_results = pairwise_tukeyhsd(densities, groups, alpha=0.05)
 
         # Extract significant comparisons from Tukey's results
         test_results_df = pd.DataFrame(data=tukey_results.summary().data[1:], columns=tukey_results.summary().data[0])
-        significant_comparisons = test_results_df[test_results_df['p-adj'] < 0.05]
+        test_results_df.rename(columns={'p-adj': 'p-value'}, inplace=True)
+        significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
 
     # Loop for plotting comparison bars and asterisks
     for _, row in significant_comparisons.iterrows():
@@ -200,11 +211,11 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         plt.plot([x1, x1, x2, x2], [y_pos, y_pos + height_diff, y_pos + height_diff, y_pos], lw=1.5, c='black')
         
         # Plotting asterisks based on p-value
-        if row['p-adj'] < 0.0001:
+        if row['p-value'] < 0.0001:
             sig = '****'
-        elif row['p-adj'] < 0.001:
+        elif row['p-value'] < 0.001:
             sig = '***'
-        elif row['p-adj'] < 0.01:
+        elif row['p-value'] < 0.01:
             sig = '**'
         else:
             sig = '*'
@@ -381,8 +392,10 @@ def main():
     # Perform analysis and plotting for each hemisphere
     if args.hemi == 'r':
         sides_to_process = ["R"]
-    else: 
+    elif args.hemi == 'l': 
         sides_to_process = ["L"]
+    else:
+        sides_to_process = ["L", "R"]
 
     for side in sides_to_process:
         print(f"\nPlotting and summarizing data for {side} hemisphere...\n")
@@ -415,3 +428,5 @@ def main():
 if __name__ == '__main__': 
     install()
     main()
+
+# Effect size calculations described in the supplemental information: https://pubmed.ncbi.nlm.nih.gov/37248402/
