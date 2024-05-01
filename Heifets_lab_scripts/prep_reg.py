@@ -48,7 +48,7 @@ Next script: brain_mask.py or reg.py"""
 
 @print_func_name_args_times()
 def prep_reg(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
-    """Prepare the autofluo image for reg.py or mimic preprocessing  for prep_vxw_stats.py.
+    """Prepare the autofluo image for reg.py or mimic preprocessing  for prep_vstats.py.
     
     Args:
         - ndarray (np.ndarray): 3D autofluo or immunofluo image.
