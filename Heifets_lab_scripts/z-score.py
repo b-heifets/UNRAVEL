@@ -47,7 +47,7 @@ Outputs:  <path/input_img>_z.nii.gz (float32) [& atlas_space/autofl_50um_brain_m
 
 z-score = (img.nii.gz - mean pixel intensity in brain)/standard deviation of intensity in brain
 
-Prereqs: prep_vxw_stats.py for inputs [& brain_mask.py for tissue masks]
+Prereqs: prep_vstats.py for inputs [& brain_mask.py for tissue masks]
 """
     return parser.parse_args()
 
@@ -81,7 +81,7 @@ def main():
         print("\n    [red]Please provide a path for --atlas_mask if --tissue_mask is not used\n")
 
     if args.target_dir is not None:
-        # Create the target directory for copying outputs for vxw_stats.py
+        # Create the target directory for copying outputs for vstats.py
         target_dir = Path(args.target_dir)
         target_dir.mkdir(exist_ok=True, parents=True)
 

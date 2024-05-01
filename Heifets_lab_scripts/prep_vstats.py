@@ -44,7 +44,7 @@ def parse_args():
     parser.add_argument('-th', '--threads', help='Number of threads for rolling ball subtraction. Default: 8', default=8, type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
     parser.epilog = """Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir
-Example usage: prep_vxw_stats.py -i ochann -rb 4 -x 3.5232 -z 6 -o ochann_rb4_gubra_space.nii.gz -e <list of paths to experiment directories> -v
+Example usage: prep_vstats.py -i ochann -rb 4 -x 3.5232 -z 6 -o ochann_rb4_gubra_space.nii.gz -e <list of paths to experiment directories> -v
 
 Prereqs: 
 reg.py
@@ -55,13 +55,13 @@ Input examples (path is relative to ./sample??; 1st glob match processed):
 Example output:
 ./sample??/atlas_space/sample??_ochann_rb4_gubra_space.nii.gz
 
-next steps: Aggregate outputs and run vxw_stats.py"""
+next steps: Aggregate outputs and run vstats.py"""
     return parser.parse_args()
 
 
 def main():
     if args.target_dir is not None:
-        # Create the target directory for copying outputs for vxw_stats.py
+        # Create the target directory for copying outputs for vstats.py
         target_dir = Path(args.target_dir)
         target_dir.mkdir(exist_ok=True, parents=True)
 
