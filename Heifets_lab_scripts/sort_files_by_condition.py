@@ -14,6 +14,8 @@ def parse_args():
     parser.add_argument('-td', '--target_dir', help='Name of the folder to move the files to. Default: other_data', default='other_data', action=SM)
     parser.epilog = """Example usage:     sort_files_by_condition.py -c control treatment
 
+This can be run in a folder containing multiple directories to sort files based on the conditions.
+
 A file will be moved if: 
     - the prefix does not match any of the conditions.
     - or the prefix is not in the parent directory name (separator: '_').
