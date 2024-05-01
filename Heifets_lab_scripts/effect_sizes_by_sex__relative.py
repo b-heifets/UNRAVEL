@@ -6,6 +6,7 @@ import pandas as pd
 from scipy.stats import t
 from termcolor import colored
 from argparse_utils import SuppressMetavar, SM
+from effect_sizes import condition_selector, filter_dataframe
 
 def parse_args():
     parser = argparse.ArgumentParser(description='''Calculates the relative effect size for (comparing sexes) for a comparison between two groups for each cluster [or a valid cluster list]''', formatter_class=SuppressMetavar)
@@ -15,7 +16,7 @@ def parse_args():
     parser.add_argument('-c', '--clusters', help='Space separated list of valid cluster IDs (default: process all clusters)', default=None, nargs='*', type=int, action=SM)
     parser.epilog = """Enter M or F in the Sex column.
     
-Example usage:    effect_sizes_by_sex__absolution.py -i densities.csv -c1 saline -c2 psilocybin
+Example usage:    effect_sizes_by_sex__relative.py -i densities.csv -c1 saline -c2 psilocybin
 
 -c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.
 
@@ -32,15 +33,6 @@ CI = Hedge's g +/- t * SE
 0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large"""
     return parser.parse_args()
 
-
-# Create a condition selector to handle pooled data
-def condition_selector(df, condition, unique_conditions):
-    if condition in unique_conditions:
-        return (df['Conditions'] == condition)
-    elif any(cond.startswith(condition) for cond in unique_conditions):
-        return df['Conditions'].str.startswith(condition)
-    else:
-        raise ValueError(colored(f"Condition {condition} not recognized!", 'red'))
     
 # Create a series with the mean, std, and count for each cluster
 def mean_std_count(df, sex, selector, cluster_columns):
@@ -125,14 +117,6 @@ def relative_hedges_g(df, condition_1, condition_2):
 
     return results_df
 
-def filter_dataframe(df, cluster_list):
-    # If no clusters provided, return the original DataFrame
-    if cluster_list is None:
-        return df
-    
-    # Keep only rows where 'Cluster' value after removing "Cluster_" matches an integer in the cluster list
-    return df[df['Cluster'].str.replace('Cluster_', '').astype(int).isin(cluster_list)]
-
 def main():
     args = parse_args()
 
@@ -150,6 +134,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-# Daniel Rijsketic 08/17/2023 & 08/22/23 (Heifets lab)
-# Effect size calculations determined by Austen Casey, Daniel Rijsketic, & Boris Heifets
-# Described in the supplemental information: https://pubmed.ncbi.nlm.nih.gov/37248402/
+# Effect size calculations described in the supplemental information: https://pubmed.ncbi.nlm.nih.gov/37248402/

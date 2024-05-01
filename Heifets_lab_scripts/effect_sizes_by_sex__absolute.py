@@ -6,6 +6,7 @@ import pandas as pd
 from scipy.stats import t
 from termcolor import colored
 from argparse_utils import SuppressMetavar, SM
+from effect_sizes import condition_selector, filter_dataframe
 
 
 def parse_args():
@@ -33,15 +34,6 @@ CI = Hedge's g +/- t * SE
 0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large"""
     return parser.parse_args()
 
-
-# Create a condition selector to handle pooled data
-def condition_selector(df, condition, unique_conditions):
-    if condition in unique_conditions:
-        return (df['Conditions'] == condition)
-    elif any(cond.startswith(condition) for cond in unique_conditions):
-        return df['Conditions'].str.startswith(condition)
-    else:
-        raise ValueError(colored(f"Condition {condition} not recognized!", 'red'))
 
 # Calculate the effect size for each cluster and sex
 def hedges_g(df, condition_1, condition_2, sex): 
@@ -110,14 +102,6 @@ def hedges_g(df, condition_1, condition_2, sex):
     results_df = results_df.iloc[::-1]
 
     return results_df
-
-def filter_dataframe(df, cluster_list):
-    # If no clusters provided, return the original DataFrame
-    if cluster_list is None:
-        return df
-    
-    # Keep only rows where 'Cluster' value after removing "Cluster_" matches an integer in the cluster list
-    return df[df['Cluster'].str.replace('Cluster_', '').astype(int).isin(cluster_list)]
 
 def main():
     args = parse_args()

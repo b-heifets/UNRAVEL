@@ -31,12 +31,26 @@ CI = Hedge's g +/- t * SE
     return parser.parse_args()
 
 
-# Create a condition selector to handle pooled data
-def condition_selector(df, condition, unique_conditions):
+# Create a condition selector to handle pooling of data
+def condition_selector(df, condition, unique_conditions, condition_column='Conditions'):
+    """Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.
+    This function checks if the 'condition' is exactly present in the 'Conditions' column or is a prefix of any condition in this column. 
+    If the exact condition is found, it selects those rows.
+    If the condition is a prefix (e.g., 'saline' matches 'saline-1', 'saline-2'), it selects all rows where the 'Conditions' column starts with this prefix.
+    An error is raised if the condition is neither found as an exact match nor as a prefix.
+    
+    Args:
+        df (pd.DataFrame): DataFrame whose 'Conditions' column contains the conditions of interest.
+        condition (str): The condition or prefix of interest.
+        unique_conditions (list): List of unique conditions in the 'Conditions' column to validate against.
+        
+    Returns:
+        pd.Series: A boolean Series to select rows based on the condition."""
+    
     if condition in unique_conditions:
-        return (df['Conditions'] == condition)
+        return (df[condition_column] == condition)
     elif any(cond.startswith(condition) for cond in unique_conditions):
-        return df['Conditions'].str.startswith(condition)
+        return df[condition_column].str.startswith(condition)
     else:
         raise ValueError(colored(f"Condition {condition} not recognized!", 'red'))
     
@@ -134,3 +148,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# Effect size calculations described in the supplemental information: https://pubmed.ncbi.nlm.nih.gov/37248402/
