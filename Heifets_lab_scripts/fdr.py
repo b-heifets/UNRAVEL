@@ -22,21 +22,64 @@ def parse_args():
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
     parser.add_argument('-q', '--q_value', help='Q-value for FDR correction', required=True, type=float, action=SM)
     parser.add_argument('-ms', '--min_size', help='Min cluster size in voxels. Default: 100', default=100, type=int, action=SM)
+    parser.add_argument('-o', '--output', help='Output directory. Default: input_name_q{args.q_value}"', default=None, action=SM)
+    parser.add_argument('-a1', '--avg_img1', help='path/averaged_immunofluo_group1.nii.gz (g1) for spliting the cluster index based on effect direction', action=SM)
+    parser.add_argument('-a2', '--avg_img2', help='path/averaged_immunofluo_group2.nii.gz (g2) for spliting the cluster index based on effect direction', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = """Usage:    fdr.py -mas path/mask.nii.gz -v
+    parser.epilog = """Usage:    fdr.py -mas path/mask.nii.gz -q 0.05 -i path/vox_p_tstat1.nii.gz -v
     
 Inputs: 
-    - *vox_p_*stat*.nii.gz from glm.py
+    - p value map (e.g., *vox_p_*stat*.nii.gz from vstats.py)    
+
+Outputs saved in the output directory:
+    - FDR-adjusted p value map
+    - Thresholded p value map
+    - Cluster information CSV
+    - Reversed cluster index image (output_dir/input_name_rev_cluster_index.nii.gz)
+    - min_cluster_size_in_voxels.txt
+    - p_value_threshold.txt
+    - 1-p_value_threshold.txt
+
+Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.
+
+Voxel-wise ANOVAs output non-directional p value maps. 
+To split the cluster index based on effect directions, provide the average immunostaining intensity images for each group being contrasted.
+The cluster index will be split into two new cluster index images based on the effect directions (group1 > group2, group2 > group1).
+
+Example: fdr.py -mas mask.nii.gz -q 0.05 -i vox_p_fstat1.nii.gz -a1 averaged_immunofluo_group1.nii.gz -a2 averaged_immunofluo_group2.nii.gz -v
+
+Extra outputs:
+    - Reversed cluster index image for group1 > group2 (output_dir/input_name_g1_gt_g2.nii.gz)
+    - Reversed cluster index image for group2 > group1 (output_dir/input_name_g2_gt_g1.nii.gz)
 """
     return parser.parse_args()
 
-@print_func_name_args_times()
-def fdr_correction(input_path, mask_path, q_value):
-    # Define the command as you would use in the terminal
-    adjusted_pval_output_path = f"{input_path[:-7]}__FDR-adjusted_p_values__q{q_value}.nii.gz"
-    output_thresh = f"{input_path[:-7]}__thresholded_p_values__q{q_value}.nii.gz"
+# TODO: Test generation of directional cluster indices from a non-directional p value map
 
-    # Building the fdr command
+
+@print_func_name_args_times()
+def fdr_correction(input_path, fdr_path, mask_path, q_value):
+    """Perform FDR correction on the input p value map using a mask.
+    
+    Args:
+        - input_path (str): the path to the p value map
+        - fdr_path (str): the path to the output directory
+        - mask_path (str): the path to the mask
+        - q_value (float): the q value for FDR correction
+
+    Saves in the fdr_path:
+        - FDR-adjusted p value map
+        - Thresholded p value map
+
+    Returns:
+        - adjusted_pval_output_path (str): the path to the FDR-adjusted p value map 
+        - probability_threshold (float): the probability threshold for the FDR correction
+        """
+    
+    prefix = str(Path(input_path.name)).replace('.nii.gz', '')
+    adjusted_pval_output_path = fdr_path / f"{prefix}__FDR-adjusted_p_values__q{q_value}.nii.gz"
+    output_thresh = fdr_path / f"{prefix}__thresholded_p_values__q{q_value}.nii.gz"
+
     fdr_command = [
         'fdr', 
         '-i', input_path, 
@@ -55,44 +98,41 @@ def fdr_correction(input_path, mask_path, q_value):
     return adjusted_pval_output_path, float(probability_threshold)
 
 @print_func_name_args_times()
-def reverse_clusters(cluster_index_path):
-    # Load cluster index image
-    cluster_index_nii = nib.load(cluster_index_path)
-    cluster_index_img = np.asanyarray(cluster_index_nii.dataobj, dtype=cluster_index_nii.header.get_data_dtype()).squeeze()
+def reverse_clusters(cluster_index_img):
+    """Reverse the cluster IDs in a cluster index image (ndarray). Return the reversed cluster index ndarray."""
     max_cluster_id = int(cluster_index_img.max())
-    
-    # Prepare output data array
     rev_cluster_index_img = np.zeros_like(cluster_index_img)
     
     # Reassign cluster IDs in reverse order
     for cluster_id in range(1, max_cluster_id + 1):
         rev_cluster_index_img[cluster_index_img == cluster_id] = max_cluster_id - cluster_id + 1
     
-    # Save the new cluster index image
-    rev_cluster_index_nii = nib.Nifti1Image(rev_cluster_index_img, cluster_index_nii.affine, cluster_index_nii.header)
-    nib.save(rev_cluster_index_nii, cluster_index_path.replace("cluster_index.nii.gz", "rev_cluster_index.nii.gz"))
+    return rev_cluster_index_img
 
 
 def main():
 
     cwd = Path().cwd()
     image_name = Path(args.input).name
-    fdr_dir_name = f"{image_name[:-7]}_q{args.q_value}"
-    fdr_path = cwd / fdr_dir_name
 
-    if Path(fdr_path, f"{fdr_dir_name}_rev_cluster_index.nii.gz").exists():
+    if args.output is None:
+        fdr_dir_name = f"{image_name[:-7]}_q{args.q_value}"
+        fdr_path = cwd / fdr_dir_name
+    output = Path(fdr_path, f"{fdr_dir_name}_rev_cluster_index.nii.gz")
+
+    if output.exists():
         print("FDR-adjusted and reversed cluster index images exist, skipping...")
         return
     
     fdr_path.mkdir(exist_ok=True, parents=True)
 
     # Save the min cluster size to a .txt file
-    with open(fdr_path / "min_cluster_size.txt", "w") as f:
+    with open(fdr_path / "min_cluster_size_in_voxels.txt", "w") as f:
         f.write(str(args.min_size))
 
     # FDR Correction
     try:
-        adjusted_pval_output_path, probability_threshold = fdr_correction(args.input, args.mask, args.q_value)
+        adjusted_pval_output_path, probability_threshold = fdr_correction(args.input, fdr_path, args.mask, args.q_value)
     except Exception as e:
         print(str(e))
 
@@ -104,7 +144,6 @@ def main():
 
     # Cluster analysis
     adjusted_pval_nii = nib.load(adjusted_pval_output_path)
-    one_minus_p_thresh = 1 - probability_threshold
     data, titles, result = cluster(
         adjusted_pval_nii,
         args.q_value,
@@ -117,13 +156,59 @@ def main():
     print(df)
     df.to_csv(fdr_path / f"{fdr_dir_name}_cluster_info.csv", index=False)
 
-    # Save the cluster index
+    # Convert cluster index to an ndarray
     for key, value in result.items():
         if isinstance(value, Image):
-            nib.save(value, f"{fdr_path}/{fdr_dir_name}_{key}.nii.gz")
+            cluster_index_nii = value
+            cluster_index_img = np.asanyarray(cluster_index_nii.dataobj, dtype=cluster_index_nii.header.get_data_dtype()).squeeze()
+            # nib.save(value, f"{fdr_path}/{fdr_dir_name}_{key}.nii.gz")
 
     # Reverse cluster ID order in cluster_index
-    reverse_clusters(fdr_path / f"{fdr_path}/{fdr_dir_name}_cluster_index.nii.gz")
+    rev_cluster_index_img = reverse_clusters(cluster_index_img)
+
+    # Lower the data type if the max cluster ID is less than 256 and save the reversed cluster index image
+    max_cluster_id = int(rev_cluster_index_img.max())
+    data_type = np.uint16 if max_cluster_id >= 256 else np.uint8
+    rev_cluster_index_img = rev_cluster_index_img.astype(data_type)
+    rev_cluster_index_nii = nib.Nifti1Image(rev_cluster_index_img, cluster_index_nii.affine, cluster_index_nii.header)
+    rev_cluster_index_nii.set_data_dtype(data_type)
+    nib.save(rev_cluster_index_nii, output)
+
+    if args.avg_img1 and args.avg_img2: 
+        if Path(args.avg_img1).exists() and Path(args.avg_img2).exists():
+            avg_img1 = nib.load(args.avg_img1)
+            avg_img2 = nib.load(args.avg_img2)
+            avg_img1_data = np.asanyarray(avg_img1.dataobj, dtype=avg_img1.header.get_data_dtype()).squeeze()
+            avg_img2_data = np.asanyarray(avg_img2.dataobj, dtype=avg_img2.header.get_data_dtype()).squeeze()
+
+            # Create a dict w/ mean intensities in each cluster for each group
+            cluster_means = {}
+            for cluster_id in range(1, max_cluster_id + 1):
+                cluster_mask = rev_cluster_index_img == cluster_id
+                cluster_means[cluster_id] = {
+                    "group1": avg_img1_data[cluster_mask].mean(),
+                    "group2": avg_img2_data[cluster_mask].mean()
+                }
+
+            # Make two new cluster index images based on the effect directions (group1 > group2, group2 > group1)
+            img_group1_gt_group2 = np.zeros_like(rev_cluster_index_img, dtype=data_type)
+            img_group2_gt_group1 = np.zeros_like(rev_cluster_index_img, dtype=data_type)
+            for cluster_id, means in cluster_means.items():
+                if means["group1"] > means["group2"]:
+                    img_group1_gt_group2[rev_cluster_index_img == cluster_id] = cluster_id
+                else:
+                    img_group2_gt_group1[rev_cluster_index_img == cluster_id] = cluster_id
+
+            # Save the new cluster index images
+            rev_cluster_index_group1_gt_group2 = nib.Nifti1Image(img_group1_gt_group2, rev_cluster_index_nii.affine, rev_cluster_index_nii.header)
+            rev_cluster_index_group2_gt_group1 = nib.Nifti1Image(img_group2_gt_group1, rev_cluster_index_nii.affine, rev_cluster_index_nii.header)
+            rev_cluster_index_group1_gt_group2.set_data_dtype(data_type)
+            rev_cluster_index_group2_gt_group1.set_data_dtype(data_type)
+            nib.save(rev_cluster_index_group1_gt_group2, f"{output.parent}/{output.stem}_g1_gt_g2.nii.gz")
+            nib.save(rev_cluster_index_group2_gt_group1, f"{output.parent}/{output.stem}_g2_gt_g1.nii.gz")
+        else: 
+            print(f"\n [red]The specified average image files do not exist.")
+            import sys ; sys.exit()
 
 
 if __name__ == '__main__': 
