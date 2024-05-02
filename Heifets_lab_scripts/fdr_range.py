@@ -16,7 +16,7 @@ def parse_args():
     parser.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
     parser.add_argument('-q', '--q_values', help='Space-separated list of q values. If omitted, a default list is used.', nargs='*', default=q_values_default, type=float, action=SM)
-    parser.add_argument('-th', '--threads', help='Number of threads. Default: 11', default=11, type=int, action=SM)
+    parser.add_argument('-th', '--threads', help='Number of threads. Default: 22', default=22, type=int, action=SM)
     parser.epilog = """
 Usage: fdr_range.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 0.01 0.001
 
@@ -41,7 +41,6 @@ def fdr_range(input_path, mask_path, q_value):
         - q_value (float): the q value for FDR correction
 
     """
-    print('')
 
     fdr_command = [
         'fdr', 
@@ -51,38 +50,15 @@ def fdr_range(input_path, mask_path, q_value):
         '-q', str(q_value),
     ]
 
-    print(f'[bold]Running FDR correction with q value: {smart_float_format(q_value)}[/]')
-
     result = subprocess.run(fdr_command, capture_output=True, text=True)    
     if result.returncode != 0:
         raise Exception(f"Error in FDR correction: {result.stderr}")
-    print(result.stdout)
 
     # Extract the probability threshold from the output
     probability_threshold = result.stdout.strip().split()[-1]
-    try:
-        probability_threshold_float = float(probability_threshold)
-    except ValueError:
-        raise ValueError(f"Failed to convert probability threshold to float: {probability_threshold}")
+    probability_threshold_float = float(probability_threshold)
 
     return q_value, probability_threshold_float
-
-
-
-def main():
-
-    # FDR Correction
-    q_values_resulting_in_clusters = []
-    for q_value in args.q_values:
-        probability_threshold = fdr_range(args.input, args.mask, q_value)
-        if probability_threshold > 0 and probability_threshold < 0.05:
-            q_values_resulting_in_clusters.append(q_value)
-        if probability_threshold > 0.05:
-            break
-
-    # print the q values resulting in clusters as a space-separated list
-    q_values_resulting_in_clusters_str = ' '.join([str(q) for q in q_values_resulting_in_clusters])
-    print(f'\n[bold]Q values resulting in clusters:[/]\n{q_values_resulting_in_clusters_str}\n')
 
 
 def main():
@@ -103,7 +79,7 @@ def main():
 
     # Convert the sorted list to a string and print
     q_values_resulting_in_clusters_str = ' '.join([smart_float_format(q) for q in q_values_resulting_in_clusters])
-    print(f'\n[bold]Q values resulting in clusters:[/]\n{q_values_resulting_in_clusters_str}\n')
+    print(f'\n[bold]FDR q values resulting in clusters:[/]\n{q_values_resulting_in_clusters_str}\n')
 
 if __name__ == '__main__': 
     install()
