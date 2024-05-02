@@ -5,22 +5,23 @@ import shutil
 import subprocess
 from glob import glob
 import sys
-from fsl.wrappers import randomise, fslmaths, avwutils
+from fsl.wrappers import fslmaths, avwutils
 from pathlib import Path
 from rich import print
 from rich.traceback import install
 
 from argparse_utils import SM, SuppressMetavar
 from unravel_config import Configuration
-from unravel_utils import print_cmd_and_times
+from unravel_utils import print_cmd_and_times, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Run GLM using FSL randomise.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description="Run voxel-wise stats using FSL's randomise_parallel command", formatter_class=SuppressMetavar)
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
     parser.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300). Default: 18000', type=int, default=18000, action=SM)
     parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
-    parser.add_argument('--options', help='Additional options for randomise in format option1=value1,option2=value2,...', default='', action=SM)
+    parser.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--tfce_H 2.0 --T"', nargs='*', default=[])
+    parser.add_argument('-on', '--output_prefix', help='Prefix of output files. Default: current working dir name.', action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
     parser.epilog = """Usage:    vstats.py -mas mask.nii.gz -v
@@ -116,27 +117,36 @@ def get_groups_info():
             groups[prefix] = 1
 
     for group, count in groups.items():
-        print(f"Group {group} has {count} members")
+        print(f"    Group {group} has {count} members")
 
     return groups
 
-def run_randomise(input_file, output_dir, mask_file, permutations, options_str, mat_file, con_file, ftest_file=None):
-    out_root = output_dir / output_dir.parent.name
-    randomise_kwargs = {
-        'input': str(input_file),
-        'out_root': str(out_root),
-        'mask': str(output_dir / mask_file),
-        'design_mat': str(mat_file),
-        'design_con': str(con_file),
-        'num_perm': permutations,
-        'uncorrp': True
-    }
-    if ftest_file:
-        randomise_kwargs['design_fts'] = str(ftest_file)
-    if options_str:
-        additional_opts = dict(opt.split('=') for opt in options_str.split(','))
-        randomise_kwargs.update(additional_opts)
-    randomise(**randomise_kwargs)
+@print_func_name_args_times()
+def run_randomise_parallel(input_image_path, mask_path, permutations, output_name, design_fts_path, options):
+
+    # Construct the command
+    command = [
+        "randomise_parallel",
+        "-i", str(input_image_path),
+        "-m", str(mask_path),
+        "-n", str(permutations),
+        "-o", str(output_name),
+        "-d", "stats/design.mat",
+        "-t", "stats/design.con",
+        "--uncorrp",
+        "-x",
+    ] + options
+
+    if Path(design_fts_path).exists():
+        command += ["-f", design_fts_path]
+
+    # Execute the command
+    process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+    if process.returncode == 0:
+        print(f"Command executed successfully:\n{process.stdout}")
+    else:
+        print(f"Error executing command:\n{process.stderr}")
+
 
 def main(): 
 
@@ -151,7 +161,8 @@ def main():
     # Merge and smooth the input images
     images = glob('*.nii.gz') 
     merged_file = stats_dir / 'all.nii.gz'
-    avwutils.fslmerge('t', str(merged_file), *images)
+    if not merged_file.exists():
+        avwutils.fslmerge('t', str(merged_file), *images)
  
     # Smooth the image with a kernel
     if args.kernel > 0:
@@ -162,24 +173,28 @@ def main():
     else:
         glm_input_file = merged_file
 
+    # Set up required design files or check that they exist
     groups_info = get_groups_info()
     group_keys = list(groups_info.keys())
-
-    mat_file = stats_dir / 'design.mat'
-    con_file = stats_dir / 'design.con'
-
-    # Check if design.fts exists to decide between ANOVA and t-test
     if len(group_keys) == 2:
-        create_design_ttest2(mat_file, groups_info[group_keys[0]], groups_info[group_keys[1]])
+        design_path_and_prefix = stats_dir / 'design'
+        create_design_ttest2(design_path_and_prefix, groups_info[group_keys[0]], groups_info[group_keys[1]])
         print(f"\n    Running t-test for groups {group_keys[0]} and {group_keys[1]}\n")
-        run_randomise(glm_input_file, stats_dir, args.mask, args.permutations, args.options, mat_file, con_file)
     elif len(group_keys) > 2:
+        print("\n    Running ANOVA\n")
         design_fts_path = stats_dir / 'design.fts'
-        if design_fts_path.exists():
-            print("\n    Running ANOVA\n")
-            run_randomise(glm_input_file, stats_dir, args.mask, args.permutations, args.options, mat_file, con_file, design_fts_path)
+        if not design_fts_path.exists():
+            print(f'\n    [red1]{design_fts_path} does not exist. See extended help for setting up files for the ANOVA\n')
+            import sys ; sys.exit() 
     else:
-        print("\n    There should be at least two groups with different prefixes in the input .nii.gz files.\n")
+        print("\n    [red1]There should be at least two groups with different prefixes in the input .nii.gz files.\n")
+
+    if args.output_prefix:
+        output_prefix = args.output_prefix
+    else:
+        output_prefix = cwd.name
+
+    run_randomise_parallel(glm_input_file, args.mask, args.permutations, output_prefix, design_fts_path, args.options)
 
 
 if __name__ == '__main__': 
