@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 
 import argparse
-import pandas as pd
 import subprocess
 import numpy as np
 import nibabel as nib
-from fsl.wrappers import cluster
-from fsl.data.image import Image
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -26,14 +23,13 @@ def parse_args():
     parser.add_argument('-a1', '--avg_img1', help='path/averaged_immunofluo_group1.nii.gz (g1) for spliting the cluster index based on effect direction', action=SM)
     parser.add_argument('-a2', '--avg_img2', help='path/averaged_immunofluo_group2.nii.gz (g2) for spliting the cluster index based on effect direction', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = """Usage:    fdr.py -mas path/mask.nii.gz -q 0.05 -i path/vox_p_tstat1.nii.gz -v
+    parser.epilog = """Usage:    fdr.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 -v
     
 Inputs: 
     - p value map (e.g., *vox_p_*stat*.nii.gz from vstats.py)    
 
 Outputs saved in the output directory:
     - FDR-adjusted p value map
-    - Thresholded p value map
     - Cluster information CSV
     - Reversed cluster index image (output_dir/input_name_rev_cluster_index.nii.gz)
     - min_cluster_size_in_voxels.txt
@@ -58,7 +54,7 @@ Extra outputs:
 
 
 @print_func_name_args_times()
-def fdr_correction(input_path, fdr_path, mask_path, q_value):
+def fdr(input_path, fdr_path, mask_path, q_value):
     """Perform FDR correction on the input p value map using a mask.
     
     Args:
@@ -69,25 +65,23 @@ def fdr_correction(input_path, fdr_path, mask_path, q_value):
 
     Saves in the fdr_path:
         - FDR-adjusted p value map
-        - Thresholded p value map
 
     Returns:
         - adjusted_pval_output_path (str): the path to the FDR-adjusted p value map 
         - probability_threshold (float): the probability threshold for the FDR correction
         """
-    
-    prefix = str(Path(input_path.name)).replace('.nii.gz', '')
-    adjusted_pval_output_path = fdr_path / f"{prefix}__FDR-adjusted_p_values__q{q_value}.nii.gz"
-    output_thresh = fdr_path / f"{prefix}__thresholded_p_values__q{q_value}.nii.gz"
+    print('')
+    prefix = str(Path(input_path).name).replace('.nii.gz', '')
+    adjusted_pval_output_path = fdr_path / f"{prefix}_q{q_value}_adjusted_p_values.nii.gz"
 
     fdr_command = [
         'fdr', 
-        '-i', input_path, 
+        '-i', str(input_path), 
         '--oneminusp', 
-        '-m', mask_path, 
+        '-m', str(mask_path), 
         '-q', str(q_value),
-        '--othresh', output_thresh,
-        '-a', adjusted_pval_output_path
+        '-a', str(adjusted_pval_output_path)
+        # '--othresh=' + str(output_thresh)
     ]
 
     result = subprocess.run(fdr_command, capture_output=True, text=True)    
@@ -95,7 +89,30 @@ def fdr_correction(input_path, fdr_path, mask_path, q_value):
         raise Exception(f"Error in FDR correction: {result.stderr}")
     print(result.stdout)
     probability_threshold = result.stdout.strip().split()[-1]
+    print(f'[default]1-p Threshold is:[/]\n{1-float(probability_threshold)}')
+
     return adjusted_pval_output_path, float(probability_threshold)
+
+@print_func_name_args_times()
+def cluster_index(adj_p_val_img_path, min_size, q_value, output_index):
+
+    print('')
+    thres = 1 - float(q_value)
+
+    command = [
+        'cluster',
+        '-i', adj_p_val_img_path,
+        '-t', str(thres),
+        '--oindex=' + str(output_index),
+        '--minextent=' + str(min_size)
+    ]
+    result = subprocess.run(command, capture_output=True, text=True)
+    if result.returncode != 0:
+        print("Error:", result.stderr)
+    else:
+        print("Output:", result.stdout)
+    return result.stdout
+
 
 @print_func_name_args_times()
 def reverse_clusters(cluster_index_img):
@@ -121,54 +138,49 @@ def main():
     output = Path(fdr_path, f"{fdr_dir_name}_rev_cluster_index.nii.gz")
 
     if output.exists():
-        print("FDR-adjusted and reversed cluster index images exist, skipping...")
+        print("The FDR-corrected reverse cluster index exists, skipping...")
         return
     
     fdr_path.mkdir(exist_ok=True, parents=True)
 
     # Save the min cluster size to a .txt file
     with open(fdr_path / "min_cluster_size_in_voxels.txt", "w") as f:
-        f.write(str(args.min_size))
+        f.write(f"{args.min_size}\n")
 
     # FDR Correction
     try:
-        adjusted_pval_output_path, probability_threshold = fdr_correction(args.input, fdr_path, args.mask, args.q_value)
+        adjusted_pval_output_path, probability_threshold = fdr(args.input, fdr_path, args.mask, args.q_value)
     except Exception as e:
         print(str(e))
 
     # Save the probability threshold and the 1-P threshold to a .txt file
     with open(fdr_path / "p_value_threshold.txt", "w") as f:
-        f.write(str(probability_threshold))
+        f.write(f"{probability_threshold}\n")
     with open(fdr_path / "1-p_value_threshold.txt", "w") as f:
-        f.write(str(1 - probability_threshold))
+        f.write(f"{1 - probability_threshold}\n")
 
-    # Cluster analysis
-    adjusted_pval_nii = nib.load(adjusted_pval_output_path)
-    data, titles, result = cluster(
-        adjusted_pval_nii,
-        args.q_value,
-        load=True,
-        minextent=int(args.min_size),
-        oindex=f"{fdr_path}/{fdr_dir_name}_cluster_index.nii.gz"
-    )
+    # Generate cluster index
+    cluster_index_path = f"{fdr_path}/{fdr_dir_name}_cluster_index.nii.gz"
+    cluster_info = cluster_index(adjusted_pval_output_path, args.min_size, args.q_value, cluster_index_path)
 
-    df = pd.DataFrame(data, columns=titles)
-    print(df)
-    df.to_csv(fdr_path / f"{fdr_dir_name}_cluster_info.csv", index=False)
+    print(cluster_info)
 
-    # Convert cluster index to an ndarray
-    for key, value in result.items():
-        if isinstance(value, Image):
-            cluster_index_nii = value
-            cluster_index_img = np.asanyarray(cluster_index_nii.dataobj, dtype=cluster_index_nii.header.get_data_dtype()).squeeze()
-            # nib.save(value, f"{fdr_path}/{fdr_dir_name}_{key}.nii.gz")
+    # Save the cluster info
+    with open(fdr_path / f"{fdr_dir_name}_cluster_info.csv", "w") as f:
+        f.write(cluster_info)
 
-    # Reverse cluster ID order in cluster_index
-    rev_cluster_index_img = reverse_clusters(cluster_index_img)
+    # Load the cluster index and convert to an ndarray
+    cluster_index_nii = nib.load(cluster_index_path)
+    cluster_index_img = np.asanyarray(cluster_index_nii.dataobj, dtype=np.uint16).squeeze()
 
-    # Lower the data type if the max cluster ID is less than 256 and save the reversed cluster index image
-    max_cluster_id = int(rev_cluster_index_img.max())
+    # Lower the data type if the max cluster ID is less than 256 
+    max_cluster_id = int(cluster_index_img.max())
     data_type = np.uint16 if max_cluster_id >= 256 else np.uint8
+    cluster_index_img = cluster_index_img.astype(data_type)
+
+
+    # Reverse cluster ID order in cluster_index and save it
+    rev_cluster_index_img = reverse_clusters(cluster_index_img)
     rev_cluster_index_img = rev_cluster_index_img.astype(data_type)
     rev_cluster_index_nii = nib.Nifti1Image(rev_cluster_index_img, cluster_index_nii.affine, cluster_index_nii.header)
     rev_cluster_index_nii.set_data_dtype(data_type)
@@ -210,6 +222,7 @@ def main():
             print(f"\n [red]The specified average image files do not exist.")
             import sys ; sys.exit()
 
+    Path(cluster_index_path).unlink()
 
 if __name__ == '__main__': 
     install()
