@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 
 import argparse
+import concurrent.futures
 import subprocess
 import numpy as np
 import nibabel as nib
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -17,13 +19,13 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Perform FDR correction on a p value map to define clusters', formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
-    parser.add_argument('-q', '--q_value', help='Q-value for FDR correction', required=True, type=float, action=SM)
+    parser.add_argument('-q', '--q_value', help='Space-separated list of FDR q values', required=True, nargs='*', type=float, action=SM)
     parser.add_argument('-ms', '--min_size', help='Min cluster size in voxels. Default: 100', default=100, type=int, action=SM)
     parser.add_argument('-o', '--output', help='Output directory. Default: input_name_q{args.q_value}"', default=None, action=SM)
     parser.add_argument('-a1', '--avg_img1', help='path/averaged_immunofluo_group1.nii.gz for spliting the cluster index based on effect direction', action=SM)
     parser.add_argument('-a2', '--avg_img2', help='path/averaged_immunofluo_group2.nii.gz for spliting the cluster index based on effect direction', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = """Usage:    fdr.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 -v
+    parser.epilog = """Usage:    fdr.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05
 
 Inputs: 
     - p value map (e.g., *vox_p_*stat*.nii.gz from vstats.py)    
@@ -166,33 +168,20 @@ def split_clusters_based_on_effect(rev_cluster_index_img, avg_img1, avg_img2, ou
             import sys ; sys.exit()
 
 
-def main():
-
-    cwd = Path().cwd()
-    image_name = Path(args.input).name
-
-    if args.output is None:
-        fdr_dir_name = f"{image_name[:-7]}_q{args.q_value}"
-    else: 
-        fdr_dir_name = f"{args.output}_q{args.q_value}"
+def process_fdr_and_clusters(image_name, cwd, q, min_size, mask, avg_img1, avg_img2, output=None):
+    """Process FDR correction and cluster index generation for a given q value."""
+    if output is None:
+        fdr_dir_name = f"{image_name[:-7]}_q{q}"
+    else:
+        fdr_dir_name = f"{output}_q{q}"
     fdr_path = cwd / fdr_dir_name
     output = Path(fdr_path, f"{fdr_dir_name}_rev_cluster_index.nii.gz")
-
     if output.exists():
-        print("The FDR-corrected reverse cluster index exists, skipping...")
-        return
-    
+        return "The FDR-corrected reverse cluster index exists, skipping..."
     fdr_path.mkdir(exist_ok=True, parents=True)
 
-    # Save the min cluster size to a .txt file
-    with open(fdr_path / "min_cluster_size_in_voxels.txt", "w") as f:
-        f.write(f"{args.min_size}\n")
-
-    # FDR Correction
-    try:
-        adjusted_pval_output_path, probability_threshold = fdr(args.input, fdr_path, args.mask, args.q_value)
-    except Exception as e:
-        print(str(e))
+    # Perform FDR Correction
+    adjusted_pval_output_path, probability_threshold = fdr(input, fdr_path, mask, q)
 
     # Save the probability threshold and the 1-P threshold to a .txt file
     with open(fdr_path / "p_value_threshold.txt", "w") as f:
@@ -200,11 +189,13 @@ def main():
     with open(fdr_path / "1-p_value_threshold.txt", "w") as f:
         f.write(f"{1 - probability_threshold}\n")
 
+    # Save the min cluster size to a .txt file
+    with open(fdr_path / "min_cluster_size_in_voxels.txt", "w") as f:
+        f.write(f"{min_size}\n")
+
     # Generate cluster index
     cluster_index_path = f"{fdr_path}/{fdr_dir_name}_cluster_index.nii.gz"
-    cluster_info = cluster_index(adjusted_pval_output_path, args.min_size, args.q_value, cluster_index_path)
-
-    print(cluster_info)
+    cluster_info = cluster_index(adjusted_pval_output_path, min_size, q, cluster_index_path)
 
     # Save the cluster info
     with open(fdr_path / f"{fdr_dir_name}_cluster_info.csv", "w") as f:
@@ -223,10 +214,36 @@ def main():
     rev_cluster_index_img = reverse_clusters(cluster_index_img, output, data_type, cluster_index_nii)
 
     # Split the cluster index based on the effect directions
-    split_clusters_based_on_effect(rev_cluster_index_img, args.avg_img1, args.avg_img2, output, max_cluster_id, data_type, cluster_index_nii)
+    split_clusters_based_on_effect(rev_cluster_index_img, avg_img1, avg_img2, output, max_cluster_id, data_type, cluster_index_nii)
 
     # Remove the original cluster index file
     Path(cluster_index_path).unlink()
+
+
+def main():
+    cwd = Path().cwd()
+    image_name = Path(args.input).name
+
+    # Prepare directory paths and outputs
+    results = []
+    with ThreadPoolExecutor(max_workers=5) as executor:  # Adjust the number of workers as needed
+        future_to_q = {
+            executor.submit(process_fdr_and_clusters, image_name, cwd, q, args.min_size, args.mask, args.avg_img1, args.avg_img2, args.output): q
+            for q in args.q_value
+        }
+        
+        for future in concurrent.futures.as_completed(future_to_q):
+            q_value = future_to_q[future]
+            try:
+                result = future.result()
+                results.append((q_value, result))
+            except Exception as exc:
+                print(f'{q_value} generated an exception: {exc}')
+
+    # Handle results as needed, e.g., printing or further processing
+    for q_value, result in sorted(results):  # This sorts the results by q_value
+        print(f'Results for q={q_value}: {result}')
+        
 
 if __name__ == '__main__': 
     install()
