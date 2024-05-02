@@ -51,6 +51,8 @@ Prereqs: prep_vstats.py for inputs [& brain_mask.py for tissue masks]
 """
     return parser.parse_args()
 
+# TODO: Set voxels outside the mask(s) to zero
+
 
 @print_func_name_args_times()
 def z_score(img, mask):
