@@ -30,7 +30,8 @@ def process_file(file_path, args):
     if not file_path.is_file():
         return
 
-    new_file_path = file_path.parent / f"{file_path.name}_{args.mas_side}.nii.gz"
+    basename = str(file_path.name).replace('.nii.gz', '')
+    new_file_path = file_path.parent / f"{basename}_{args.mas_side}.nii.gz"
     shutil.copy(file_path, new_file_path)
 
     nii = nib.load(str(file_path))
@@ -38,7 +39,7 @@ def process_file(file_path, args):
     mirrored_img = mirror(img, axis=args.axis, shift=args.shift)
     mirrored_nii = nib.Nifti1Image(mirrored_img, nii.affine, nii.header)
 
-    mirrored_filename = file_path.parent / f"{file_path.stem}_{'LH' if args.mas_side == 'RH' else 'RH'}.nii.gz"
+    mirrored_filename = file_path.parent / f"{basename}_{'LH' if args.mas_side == 'RH' else 'RH'}.nii.gz"
     nib.save(mirrored_nii, mirrored_filename)
 
 def main(): 
