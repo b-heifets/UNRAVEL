@@ -95,7 +95,7 @@ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide
 """
     return parser.parse_args()
 
-# TODO: Add an email option to send a message when the processing is complete. See if fragments can be generated in parallel. 
+# TODO: Add an email option to send a message when the processing is complete. See if fragments can be generated in parallel. Could make avg and avg diff maps in this script (e.g., before merge since this is fast)
 
 def check_fdr_command():
     """Check if the 'fdr' command is available in the system's path."""
@@ -151,7 +151,7 @@ def calculate_fragments(num_contrasts, total_permutations_per_contrast=18000, pe
 def progress_bar_for_randomise(directory, seed_pattern, total_fragments):
     """Monitor the specified directory for files matching the seed pattern and update the progress bar accordingly."""
     path = Path(directory)
-    progress, task_id = initialize_progress_bar(total_fragments, "[red]Processing seeds...")
+    progress, task_id = initialize_progress_bar(total_fragments, "[red]Processing fragments...")
 
     with Live(progress):
         last_count = 0
@@ -168,8 +168,8 @@ def progress_bar_for_randomise(directory, seed_pattern, total_fragments):
             time.sleep(60)  # Delay in seconds before checking the directory again
 
 @print_func_name_args_times()
-def run_randomise_parallel(input_image_path, mask_path, permutations, output_name, design_fts_path, options):
-
+def run_randomise_parallel(input_image_path, mask_path, permutations, output_name, design_fts_path, options, verbose):
+    
     # Construct the command
     command = [
         "randomise_parallel",
@@ -181,17 +181,35 @@ def run_randomise_parallel(input_image_path, mask_path, permutations, output_nam
         "-t", "stats/design.con",
         "--uncorrp",
         "-x"
-    ] + options
+    ] + options # Make sure options is a list of strings
 
-    if Path(design_fts_path).exists():
+    design_fts_path = str(design_fts_path) if Path(design_fts_path).exists() else None
+    if design_fts_path:
         command += ["-f", design_fts_path]
 
-    # Execute the command
-    try:
-        process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
-        print(f"Command executed successfully:\n{process.stdout}")
-    except subprocess.CalledProcessError as e:
-        print(f"Error executing command:\n{e.stderr}")
+    command_line = " ".join(command)
+    print(f"\n[bold]{command_line}\n")
+
+    if verbose:
+        # Execute the command and stream output
+        try:
+            with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1) as proc:
+                for line in proc.stdout:
+                    print(line, end='')  # Print each line as it comes
+            if proc.returncode != 0:
+                print("Error executing command.")
+        except Exception as e:
+            print(f"Error during command execution: {str(e)}")
+    else:
+        # Execute the command silently and capture output
+        try:
+            process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+            if process.returncode == 0:
+                print("randomise_parallel executed successfully\n")
+            else:
+                print("Error executing randomise_parallel:\n" + process.stderr)
+        except subprocess.CalledProcessError as e:
+            print("Error during command execution:\n" + str(e))
 
 
 def main(): 
@@ -208,12 +226,16 @@ def main():
     images = glob('*.nii.gz') 
     merged_file = stats_dir / 'all.nii.gz'
     if not merged_file.exists():
+        print('\n    Merging *.nii.gz into ./stats/all.nii.gz')
         avwutils.fslmerge('t', str(merged_file), *images)
+    else: 
+        print('\n    ./stats/all.nii.gz exists. Skipping...\n')
  
     # Smooth the image with a kernel
     if args.kernel > 0:
         kernel_in_um = int(args.kernel * 1000)
         smoothed_file = merged_file.with_name(f'all_s{kernel_in_um}.nii.gz')
+        print(f'\n    Smoothing all.nii.gz w/ fslmaths stats/all -s {args.kernel} {smoothed_file}')
         fslmaths(merged_file).s(args.kernel).run(output=smoothed_file)
         glm_input_file = smoothed_file
     else:
@@ -222,13 +244,13 @@ def main():
     # Set up required design files or check that they exist
     groups_info = get_groups_info()
     group_keys = list(groups_info.keys())
+    design_fts_path = stats_dir / 'design.fts'
     if len(group_keys) == 2:
         design_path_and_prefix = stats_dir / 'design'
         create_design_ttest2(design_path_and_prefix, groups_info[group_keys[0]], groups_info[group_keys[1]])
         print(f"\n    Running t-test for groups {group_keys[0]} and {group_keys[1]}\n")
     elif len(group_keys) > 2:
         print("\n    Running ANOVA\n")
-        design_fts_path = stats_dir / 'design.fts'
         if not design_fts_path.exists():
             print(f'\n    [red1]{design_fts_path} does not exist. See extended help for setting up files for the ANOVA\n')
             import sys ; sys.exit() 
@@ -246,15 +268,15 @@ def main():
     if len(group_keys) > 2:
         contrasts *= 2
     fragments = calculate_fragments(contrasts, total_permutations_per_contrast=args.permutations, permutations_per_fragment=300)
-    print(f"\n    Total fragments calculated for progress bar: {fragments}\n")
+    print(f"    Total fragments calculated for progress bar: {fragments}")
 
     # Set up and start the monitoring thread
     monitor_thread = threading.Thread(target=progress_bar_for_randomise, args=(stats_dir, "*SEED*.nii.gz", fragments))
     monitor_thread.start()
-    time.sleep(10)  # Wait a moment to ensure the monitoring thread is fully operational
+    time.sleep(1)  # Wait a moment to ensure the monitoring thread is fully operational
 
     # Run the randomise_parallel command
-    run_randomise_parallel(glm_input_file, args.mask, args.permutations, output_prefix, design_fts_path, args.options)
+    run_randomise_parallel(glm_input_file, args.mask, args.permutations, output_prefix, design_fts_path, args.options, args.verbose)
 
     # Ensure the monitoring thread completes
     monitor_thread.join()
