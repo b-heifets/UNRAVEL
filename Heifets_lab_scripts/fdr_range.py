@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import concurrent.futures
 import subprocess
 from rich import print
 from rich.traceback import install
@@ -15,6 +16,7 @@ def parse_args():
     parser.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
     parser.add_argument('-q', '--q_values', help='Space-separated list of q values. If omitted, a default list is used.', nargs='*', default=q_values_default, type=float, action=SM)
+    parser.add_argument('-th', '--threads', help='Number of threads. Default: 11', default=11, type=int, action=SM)
     parser.epilog = """
 Usage: fdr_range.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 0.01 0.001
 
@@ -25,11 +27,12 @@ Inputs:
     return parser.parse_args()
 
 def smart_float_format(value, max_decimals=9):
+
     """Format float with up to `max_decimals` places, but strip unnecessary trailing zeros."""
     formatted = f"{value:.{max_decimals}f}"  # Format with maximum decimal places
     return formatted.rstrip('0').rstrip('.') if '.' in formatted else formatted
 
-def fdr(input_path, mask_path, q_value):
+def fdr_range(input_path, mask_path, q_value):
     """Perform FDR correction on the input p value map using a mask.
     
     Args:
@@ -62,7 +65,8 @@ def fdr(input_path, mask_path, q_value):
     except ValueError:
         raise ValueError(f"Failed to convert probability threshold to float: {probability_threshold}")
 
-    return probability_threshold_float
+    return q_value, probability_threshold_float
+
 
 
 def main():
@@ -70,7 +74,7 @@ def main():
     # FDR Correction
     q_values_resulting_in_clusters = []
     for q_value in args.q_values:
-        probability_threshold = fdr(args.input, args.mask, q_value)
+        probability_threshold = fdr_range(args.input, args.mask, q_value)
         if probability_threshold > 0 and probability_threshold < 0.05:
             q_values_resulting_in_clusters.append(q_value)
         if probability_threshold > 0.05:
@@ -80,6 +84,26 @@ def main():
     q_values_resulting_in_clusters_str = ' '.join([str(q) for q in q_values_resulting_in_clusters])
     print(f'\n[bold]Q values resulting in clusters:[/]\n{q_values_resulting_in_clusters_str}\n')
 
+
+def main():
+    # Initialize ThreadPoolExecutor
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.threads) as executor:
+        # Submit tasks to the executor for each q_value
+        futures = [executor.submit(fdr_range, args.input, args.mask, q_value) for q_value in args.q_values]
+        
+        q_values_resulting_in_clusters = []
+        # Process results as they complete
+        for future in concurrent.futures.as_completed(futures):
+            q_value, probability_threshold = future.result()
+            if 0 < probability_threshold < 0.05:
+                q_values_resulting_in_clusters.append(q_value)
+
+    # Sort q_values numerically
+    q_values_resulting_in_clusters.sort()
+
+    # Convert the sorted list to a string and print
+    q_values_resulting_in_clusters_str = ' '.join([smart_float_format(q) for q in q_values_resulting_in_clusters])
+    print(f'\n[bold]Q values resulting in clusters:[/]\n{q_values_resulting_in_clusters_str}\n')
 
 if __name__ == '__main__': 
     install()
