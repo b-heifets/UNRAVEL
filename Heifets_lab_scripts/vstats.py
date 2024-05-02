@@ -3,16 +3,19 @@
 import argparse
 import shutil
 import subprocess
+import threading
+import time
 from glob import glob
 import sys
 from fsl.wrappers import fslmaths, avwutils
 from pathlib import Path
 from rich import print
+from rich.live import Live
 from rich.traceback import install
 
 from argparse_utils import SM, SuppressMetavar
 from unravel_config import Configuration
-from unravel_utils import print_cmd_and_times, print_func_name_args_times
+from unravel_utils import initialize_progress_bar, print_cmd_and_times, print_func_name_args_times
 
 
 def parse_args():
@@ -20,7 +23,7 @@ def parse_args():
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
     parser.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300). Default: 18000', type=int, default=18000, action=SM)
     parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
-    parser.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--tfce_H 2.0 --T"', nargs='*', default=[])
+    parser.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--seed=1 -T"', nargs='*', default=[])
     parser.add_argument('-on', '--output_prefix', help='Prefix of output files. Default: current working dir name.', action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
@@ -92,7 +95,7 @@ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide
 """
     return parser.parse_args()
 
-# TODO: Add rich progress bar (e.g., increment by 1 for each seed)
+# TODO: Add an email option to send a message when the processing is complete. See if fragments can be generated in parallel. 
 
 def check_fdr_command():
     """Check if the 'fdr' command is available in the system's path."""
@@ -121,6 +124,49 @@ def get_groups_info():
 
     return groups
 
+def parse_design_file(file_path):
+    """Parse the design.con file to extract the number of contrasts."""
+    num_contrasts = 0
+    try:
+        with open(file_path, 'r') as file:
+            for line in file:
+                if line.startswith('/NumContrasts'):
+                    num_contrasts = int(line.split()[1])
+                    break
+    except FileNotFoundError:
+        print("File not found:", file_path)
+        return None
+    except ValueError:
+        print("Error parsing number of contrasts.")
+        return None
+    return num_contrasts
+
+def calculate_fragments(num_contrasts, total_permutations_per_contrast=18000, permutations_per_fragment=300):
+    """Calculate the total number of fragments based on the number of contrasts."""
+    if num_contrasts is None:
+        return "Number of contrasts not determined."
+    total_fragments = (total_permutations_per_contrast * num_contrasts) // permutations_per_fragment
+    return total_fragments
+
+def progress_bar_for_randomise(directory, seed_pattern, total_fragments):
+    """Monitor the specified directory for files matching the seed pattern and update the progress bar accordingly."""
+    path = Path(directory)
+    progress, task_id = initialize_progress_bar(total_fragments, "[red]Processing seeds...")
+
+    with Live(progress):
+        last_count = 0
+
+        while not progress.finished:
+            current_count = sum(1 for _ in path.glob(seed_pattern))
+            if current_count > last_count:
+                last_count = current_count
+                progress.update(task_id, advance=1)
+            elif current_count < last_count: # *SEED* files are removed after processing
+                progress.update(task_id, completed=total_fragments)
+                break
+
+            time.sleep(60)  # Delay in seconds before checking the directory again
+
 @print_func_name_args_times()
 def run_randomise_parallel(input_image_path, mask_path, permutations, output_name, design_fts_path, options):
 
@@ -134,18 +180,18 @@ def run_randomise_parallel(input_image_path, mask_path, permutations, output_nam
         "-d", "stats/design.mat",
         "-t", "stats/design.con",
         "--uncorrp",
-        "-x",
+        "-x"
     ] + options
 
     if Path(design_fts_path).exists():
         command += ["-f", design_fts_path]
 
     # Execute the command
-    process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
-    if process.returncode == 0:
+    try:
+        process = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
         print(f"Command executed successfully:\n{process.stdout}")
-    else:
-        print(f"Error executing command:\n{process.stderr}")
+    except subprocess.CalledProcessError as e:
+        print(f"Error executing command:\n{e.stderr}")
 
 
 def main(): 
@@ -194,7 +240,24 @@ def main():
     else:
         output_prefix = cwd.name
 
+    # Determine the number of fragments for the progress bar
+    design_con_txt = stats_dir / 'design.con'
+    contrasts = parse_design_file(design_con_txt)
+    if len(group_keys) > 2:
+        contrasts *= 2
+    fragments = calculate_fragments(contrasts, total_permutations_per_contrast=args.permutations, permutations_per_fragment=300)
+    print(f"\n    Total fragments calculated for progress bar: {fragments}\n")
+
+    # Set up and start the monitoring thread
+    monitor_thread = threading.Thread(target=progress_bar_for_randomise, args=(stats_dir, "*SEED*.nii.gz", fragments))
+    monitor_thread.start()
+    time.sleep(10)  # Wait a moment to ensure the monitoring thread is fully operational
+
+    # Run the randomise_parallel command
     run_randomise_parallel(glm_input_file, args.mask, args.permutations, output_prefix, design_fts_path, args.options)
+
+    # Ensure the monitoring thread completes
+    monitor_thread.join()
 
 
 if __name__ == '__main__': 
