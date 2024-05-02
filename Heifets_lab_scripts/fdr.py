@@ -134,7 +134,9 @@ def main():
 
     if args.output is None:
         fdr_dir_name = f"{image_name[:-7]}_q{args.q_value}"
-        fdr_path = cwd / fdr_dir_name
+    else: 
+        fdr_dir_name = f"{args.output}_q{args.q_value}"
+    fdr_path = cwd / fdr_dir_name
     output = Path(fdr_path, f"{fdr_dir_name}_rev_cluster_index.nii.gz")
 
     if output.exists():
@@ -188,6 +190,7 @@ def main():
 
     if args.avg_img1 and args.avg_img2: 
         if Path(args.avg_img1).exists() and Path(args.avg_img2).exists():
+            print("\n    Splitting the rev_cluster_index into 2 parts (group 1 > group 2 and group 2 > group 1)\n")
             avg_img1 = nib.load(args.avg_img1)
             avg_img2 = nib.load(args.avg_img2)
             avg_img1_data = np.asanyarray(avg_img1.dataobj, dtype=avg_img1.header.get_data_dtype()).squeeze()
