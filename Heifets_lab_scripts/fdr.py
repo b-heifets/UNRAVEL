@@ -24,6 +24,7 @@ def parse_args():
     parser.add_argument('-o', '--output', help='Output directory. Default: input_name_q{args.q_value}"', default=None, action=SM)
     parser.add_argument('-a1', '--avg_img1', help='path/averaged_immunofluo_group1.nii.gz for spliting the cluster index based on effect direction', action=SM)
     parser.add_argument('-a2', '--avg_img2', help='path/averaged_immunofluo_group2.nii.gz for spliting the cluster index based on effect direction', action=SM)
+    parser.add_argument('-th', '--threads', help='Number of threads. Default: 10', default=10, type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
     parser.epilog = """Usage:    fdr.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05
 
@@ -225,7 +226,7 @@ def main():
 
     # Prepare directory paths and outputs
     results = []
-    with ThreadPoolExecutor(max_workers=5) as executor:  # Adjust the number of workers as needed
+    with ThreadPoolExecutor(max_workers=args.threads) as executor:
         future_to_q = {
             executor.submit(process_fdr_and_clusters, args.input, args.mask, q, args.min_size, args.avg_img1, args.avg_img2, args.output): q
             for q in args.q_value
