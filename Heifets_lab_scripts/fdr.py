@@ -14,7 +14,7 @@ from unravel_utils import print_cmd_and_times, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Run GLM using FSL randomise.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='Perform FDR correction on a p value map to define clusters', formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
     parser.add_argument('-q', '--q_value', help='Q-value for FDR correction', required=True, type=float, action=SM)
@@ -159,8 +159,8 @@ def split_clusters_based_on_effect(rev_cluster_index_img, avg_img1, avg_img2, ou
             rev_cluster_index_g1_lt_g2 = nib.Nifti1Image(img_g1_lt_g2, cluster_index_nii.affine, cluster_index_nii.header)
             rev_cluster_index_g1_gt_g2.set_data_dtype(data_type)
             rev_cluster_index_g1_lt_g2.set_data_dtype(data_type)
-            nib.save(rev_cluster_index_g1_gt_g2, str(output).replace('_v_', '_gt_'))
-            nib.save(rev_cluster_index_g1_lt_g2, str(output).replace('_v_', '_lt_'))
+            nib.save(rev_cluster_index_g1_gt_g2, output.parent / str(output.name).replace('_v_', '_gt_'))
+            nib.save(rev_cluster_index_g1_lt_g2, output.parent / str(output.name).replace('_v_', '_lt_'))
         else: 
             print(f"\n [red]The specified average image files do not exist.")
             import sys ; sys.exit()
