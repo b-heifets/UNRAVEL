@@ -17,8 +17,11 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
+from unravel_config import Config
 from argparse_utils_rich import SuppressMetavar, SM
-
+        
+cfg = Config(Path(__file__).parent / 'test.ini')
+print(type(cfg.test.a))
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Script description',formatter_class=SuppressMetavar)
