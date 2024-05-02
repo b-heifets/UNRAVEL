@@ -168,13 +168,14 @@ def split_clusters_based_on_effect(rev_cluster_index_img, avg_img1, avg_img2, ou
             import sys ; sys.exit()
 
 
-def process_fdr_and_clusters(image_name, cwd, q, min_size, mask, avg_img1, avg_img2, output=None):
+@print_func_name_args_times()
+def process_fdr_and_clusters(input, mask, q, min_size, avg_img1, avg_img2, output=None):
     """Process FDR correction and cluster index generation for a given q value."""
     if output is None:
-        fdr_dir_name = f"{image_name[:-7]}_q{q}"
+        fdr_dir_name = f"{Path(input).name[:-7]}_q{q}"
     else:
         fdr_dir_name = f"{output}_q{q}"
-    fdr_path = cwd / fdr_dir_name
+    fdr_path = Path(input).parent / fdr_dir_name
     output = Path(fdr_path, f"{fdr_dir_name}_rev_cluster_index.nii.gz")
     if output.exists():
         return "The FDR-corrected reverse cluster index exists, skipping..."
@@ -221,14 +222,12 @@ def process_fdr_and_clusters(image_name, cwd, q, min_size, mask, avg_img1, avg_i
 
 
 def main():
-    cwd = Path().cwd()
-    image_name = Path(args.input).name
 
     # Prepare directory paths and outputs
     results = []
     with ThreadPoolExecutor(max_workers=5) as executor:  # Adjust the number of workers as needed
         future_to_q = {
-            executor.submit(process_fdr_and_clusters, image_name, cwd, q, args.min_size, args.mask, args.avg_img1, args.avg_img2, args.output): q
+            executor.submit(process_fdr_and_clusters, args.input, args.mask, q, args.min_size, args.avg_img1, args.avg_img2, args.output): q
             for q in args.q_value
         }
         
@@ -243,7 +242,7 @@ def main():
     # Handle results as needed, e.g., printing or further processing
     for q_value, result in sorted(results):  # This sorts the results by q_value
         print(f'Results for q={q_value}: {result}')
-        
+
 
 if __name__ == '__main__': 
     install()
