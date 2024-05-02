@@ -6,7 +6,6 @@ from rich import print
 from rich.traceback import install
 
 from argparse_utils import SM, SuppressMetavar
-from unravel_config import Configuration
 from unravel_utils import print_cmd_and_times
 
 
@@ -24,6 +23,11 @@ Inputs:
 
 """
     return parser.parse_args()
+
+def smart_float_format(value, max_decimals=9):
+    """Format float with up to `max_decimals` places, but strip unnecessary trailing zeros."""
+    formatted = f"{value:.{max_decimals}f}"  # Format with maximum decimal places
+    return formatted.rstrip('0').rstrip('.') if '.' in formatted else formatted
 
 def fdr(input_path, mask_path, q_value):
     """Perform FDR correction on the input p value map using a mask.
@@ -44,7 +48,7 @@ def fdr(input_path, mask_path, q_value):
         '-q', str(q_value),
     ]
 
-    print(f'[bold]Running FDR correction with q value {q_value}...[/]')
+    print(f'[bold]Running FDR correction with q value: {smart_float_format(q_value)}[/]')
 
     result = subprocess.run(fdr_command, capture_output=True, text=True)    
     if result.returncode != 0:
@@ -55,11 +59,8 @@ def fdr(input_path, mask_path, q_value):
     probability_threshold = result.stdout.strip().split()[-1]
     try:
         probability_threshold_float = float(probability_threshold)
-        print(f'[default]1-p Threshold is:[/]\n{1-float(probability_threshold)}')
     except ValueError:
         raise ValueError(f"Failed to convert probability threshold to float: {probability_threshold}")
-
-    print(f'[default]1-p Threshold is:[/]\n{1-probability_threshold_float}')
 
     return probability_threshold_float
 
@@ -77,11 +78,10 @@ def main():
 
     # print the q values resulting in clusters as a space-separated list
     q_values_resulting_in_clusters_str = ' '.join([str(q) for q in q_values_resulting_in_clusters])
-    print(f'[bold]Q values resulting in clusters:[/]\n{q_values_resulting_in_clusters_str}\n')
+    print(f'\n[bold]Q values resulting in clusters:[/]\n{q_values_resulting_in_clusters_str}\n')
 
 
 if __name__ == '__main__': 
     install()
     args = parse_args()
-    Configuration.verbose = args.verbose
     print_cmd_and_times(main)()
