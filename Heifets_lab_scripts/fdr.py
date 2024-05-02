@@ -240,11 +240,6 @@ def main():
             except Exception as exc:
                 print(f'{q_value} generated an exception: {exc}')
 
-    # Handle results as needed, e.g., printing or further processing
-    for q_value, result in sorted(results):  # This sorts the results by q_value
-        print(f'Results for q={q_value}: {result}')
-
-
 if __name__ == '__main__': 
     install()
     args = parse_args()
