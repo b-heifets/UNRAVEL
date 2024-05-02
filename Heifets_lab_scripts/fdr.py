@@ -20,11 +20,11 @@ def parse_args():
     parser.add_argument('-q', '--q_value', help='Q-value for FDR correction', required=True, type=float, action=SM)
     parser.add_argument('-ms', '--min_size', help='Min cluster size in voxels. Default: 100', default=100, type=int, action=SM)
     parser.add_argument('-o', '--output', help='Output directory. Default: input_name_q{args.q_value}"', default=None, action=SM)
-    parser.add_argument('-a1', '--avg_img1', help='path/averaged_immunofluo_group1.nii.gz (g1) for spliting the cluster index based on effect direction', action=SM)
-    parser.add_argument('-a2', '--avg_img2', help='path/averaged_immunofluo_group2.nii.gz (g2) for spliting the cluster index based on effect direction', action=SM)
+    parser.add_argument('-a1', '--avg_img1', help='path/averaged_immunofluo_group1.nii.gz for spliting the cluster index based on effect direction', action=SM)
+    parser.add_argument('-a2', '--avg_img2', help='path/averaged_immunofluo_group2.nii.gz for spliting the cluster index based on effect direction', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
     parser.epilog = """Usage:    fdr.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 -v
-    
+
 Inputs: 
     - p value map (e.g., *vox_p_*stat*.nii.gz from vstats.py)    
 
@@ -38,20 +38,16 @@ Outputs saved in the output directory:
 
 Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.
 
-Voxel-wise ANOVAs output non-directional p value maps. 
-To split the cluster index based on effect directions, provide the average immunostaining intensity images for each group being contrasted.
-The cluster index will be split into two new cluster index images based on the effect directions (group1 > group2, group2 > group1).
-
-Example: fdr.py -mas mask.nii.gz -q 0.05 -i vox_p_fstat1.nii.gz -a1 averaged_immunofluo_group1.nii.gz -a2 averaged_immunofluo_group2.nii.gz -v
-
-Extra outputs:
-    - Reversed cluster index image for group1 > group2 (output_dir/input_name_g1_gt_g2.nii.gz)
-    - Reversed cluster index image for group2 > group1 (output_dir/input_name_g2_gt_g1.nii.gz)
+Making directional cluster indices from non-directional p value maps output from ANOVAs: 
+    - Provide the average immunostaining intensity images for each group being contrasted (avg.py)
+    - The --output needs to have <group1>_v_<group2> in the name
+    - _v_ will be replaced with _gt_ or _lt_ based on the effect direction 
+    - The cluster index will be split accoding to the effect directions
+    - fdr.py -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v
 """
     return parser.parse_args()
 
-# TODO: Test generation of directional cluster indices from a non-directional p value map
-
+# TODO: could add optional args like in vstats.py for running the fdr command. 
 
 @print_func_name_args_times()
 def fdr(input_path, fdr_path, mask_path, q_value):
@@ -81,7 +77,6 @@ def fdr(input_path, fdr_path, mask_path, q_value):
         '-m', str(mask_path), 
         '-q', str(q_value),
         '-a', str(adjusted_pval_output_path)
-        # '--othresh=' + str(output_thresh)
     ]
 
     result = subprocess.run(fdr_command, capture_output=True, text=True)    
@@ -115,7 +110,7 @@ def cluster_index(adj_p_val_img_path, min_size, q_value, output_index):
 
 
 @print_func_name_args_times()
-def reverse_clusters(cluster_index_img):
+def reverse_clusters(cluster_index_img, output, data_type, cluster_index_nii):
     """Reverse the cluster IDs in a cluster index image (ndarray). Return the reversed cluster index ndarray."""
     max_cluster_id = int(cluster_index_img.max())
     rev_cluster_index_img = np.zeros_like(cluster_index_img)
@@ -123,8 +118,52 @@ def reverse_clusters(cluster_index_img):
     # Reassign cluster IDs in reverse order
     for cluster_id in range(1, max_cluster_id + 1):
         rev_cluster_index_img[cluster_index_img == cluster_id] = max_cluster_id - cluster_id + 1
+
+    rev_cluster_index_img = rev_cluster_index_img.astype(data_type)
+    rev_cluster_index_nii = nib.Nifti1Image(rev_cluster_index_img, cluster_index_nii.affine, cluster_index_nii.header)
+    rev_cluster_index_nii.set_data_dtype(data_type)
+    nib.save(rev_cluster_index_nii, output)
     
     return rev_cluster_index_img
+
+@print_func_name_args_times()
+def split_clusters_based_on_effect(rev_cluster_index_img, avg_img1, avg_img2, output, max_cluster_id, data_type, cluster_index_nii):
+    if avg_img1 and avg_img2: 
+        if Path(avg_img1).exists() and Path(avg_img2).exists():
+            print("\n    Splitting the rev_cluster_index into 2 parts (group 1 > group 2 and group 1 < group 2)\n")
+            avg_img1 = nib.load(avg_img1)
+            avg_img2 = nib.load(avg_img2)
+            avg_img1_data = np.asanyarray(avg_img1.dataobj, dtype=avg_img1.header.get_data_dtype()).squeeze()
+            avg_img2_data = np.asanyarray(avg_img2.dataobj, dtype=avg_img2.header.get_data_dtype()).squeeze()
+
+            # Create a dict w/ mean intensities in each cluster for each group
+            cluster_means = {}
+            for cluster_id in range(1, max_cluster_id + 1):
+                cluster_mask = rev_cluster_index_img == cluster_id
+                cluster_means[cluster_id] = {
+                    "group1": avg_img1_data[cluster_mask].mean(),
+                    "group2": avg_img2_data[cluster_mask].mean()
+                }
+
+            # Make two new cluster index images based on the effect directions (group1 > group2, group2 > group1)
+            img_g1_gt_g2 = np.zeros_like(rev_cluster_index_img, dtype=data_type)
+            img_g1_lt_g2 = np.zeros_like(rev_cluster_index_img, dtype=data_type)
+            for cluster_id, means in cluster_means.items():
+                if means["group1"] > means["group2"]:
+                    img_g1_gt_g2[rev_cluster_index_img == cluster_id] = cluster_id
+                else:
+                    img_g1_lt_g2[rev_cluster_index_img == cluster_id] = cluster_id
+
+            # Save the new cluster index images
+            rev_cluster_index_g1_gt_g2 = nib.Nifti1Image(img_g1_gt_g2, cluster_index_nii.affine, cluster_index_nii.header)
+            rev_cluster_index_g1_lt_g2 = nib.Nifti1Image(img_g1_lt_g2, cluster_index_nii.affine, cluster_index_nii.header)
+            rev_cluster_index_g1_gt_g2.set_data_dtype(data_type)
+            rev_cluster_index_g1_lt_g2.set_data_dtype(data_type)
+            nib.save(rev_cluster_index_g1_gt_g2, str(output).replace('_v_', '_gt_'))
+            nib.save(rev_cluster_index_g1_lt_g2, str(output).replace('_v_', '_lt_'))
+        else: 
+            print(f"\n [red]The specified average image files do not exist.")
+            import sys ; sys.exit()
 
 
 def main():
@@ -180,51 +219,13 @@ def main():
     data_type = np.uint16 if max_cluster_id >= 256 else np.uint8
     cluster_index_img = cluster_index_img.astype(data_type)
 
-
     # Reverse cluster ID order in cluster_index and save it
-    rev_cluster_index_img = reverse_clusters(cluster_index_img)
-    rev_cluster_index_img = rev_cluster_index_img.astype(data_type)
-    rev_cluster_index_nii = nib.Nifti1Image(rev_cluster_index_img, cluster_index_nii.affine, cluster_index_nii.header)
-    rev_cluster_index_nii.set_data_dtype(data_type)
-    nib.save(rev_cluster_index_nii, output)
+    rev_cluster_index_img = reverse_clusters(cluster_index_img, output, data_type, cluster_index_nii)
 
-    if args.avg_img1 and args.avg_img2: 
-        if Path(args.avg_img1).exists() and Path(args.avg_img2).exists():
-            print("\n    Splitting the rev_cluster_index into 2 parts (group 1 > group 2 and group 2 > group 1)\n")
-            avg_img1 = nib.load(args.avg_img1)
-            avg_img2 = nib.load(args.avg_img2)
-            avg_img1_data = np.asanyarray(avg_img1.dataobj, dtype=avg_img1.header.get_data_dtype()).squeeze()
-            avg_img2_data = np.asanyarray(avg_img2.dataobj, dtype=avg_img2.header.get_data_dtype()).squeeze()
+    # Split the cluster index based on the effect directions
+    split_clusters_based_on_effect(rev_cluster_index_img, args.avg_img1, args.avg_img2, output, max_cluster_id, data_type, cluster_index_nii)
 
-            # Create a dict w/ mean intensities in each cluster for each group
-            cluster_means = {}
-            for cluster_id in range(1, max_cluster_id + 1):
-                cluster_mask = rev_cluster_index_img == cluster_id
-                cluster_means[cluster_id] = {
-                    "group1": avg_img1_data[cluster_mask].mean(),
-                    "group2": avg_img2_data[cluster_mask].mean()
-                }
-
-            # Make two new cluster index images based on the effect directions (group1 > group2, group2 > group1)
-            img_group1_gt_group2 = np.zeros_like(rev_cluster_index_img, dtype=data_type)
-            img_group2_gt_group1 = np.zeros_like(rev_cluster_index_img, dtype=data_type)
-            for cluster_id, means in cluster_means.items():
-                if means["group1"] > means["group2"]:
-                    img_group1_gt_group2[rev_cluster_index_img == cluster_id] = cluster_id
-                else:
-                    img_group2_gt_group1[rev_cluster_index_img == cluster_id] = cluster_id
-
-            # Save the new cluster index images
-            rev_cluster_index_group1_gt_group2 = nib.Nifti1Image(img_group1_gt_group2, rev_cluster_index_nii.affine, rev_cluster_index_nii.header)
-            rev_cluster_index_group2_gt_group1 = nib.Nifti1Image(img_group2_gt_group1, rev_cluster_index_nii.affine, rev_cluster_index_nii.header)
-            rev_cluster_index_group1_gt_group2.set_data_dtype(data_type)
-            rev_cluster_index_group2_gt_group1.set_data_dtype(data_type)
-            nib.save(rev_cluster_index_group1_gt_group2, f"{output.parent}/{output.stem}_g1_gt_g2.nii.gz")
-            nib.save(rev_cluster_index_group2_gt_group1, f"{output.parent}/{output.stem}_g2_gt_g1.nii.gz")
-        else: 
-            print(f"\n [red]The specified average image files do not exist.")
-            import sys ; sys.exit()
-
+    # Remove the original cluster index file
     Path(cluster_index_path).unlink()
 
 if __name__ == '__main__': 
