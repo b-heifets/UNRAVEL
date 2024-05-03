@@ -38,6 +38,7 @@ def cp(src, dest):
         - dest (Path): the destination path"""
     shutil.copy(src, dest)
 
+@print_func_name_args_times()
 def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
     """Copy the cluster info, p value threshold, and rev_cluster_index files to the target directory.
     
@@ -93,13 +94,21 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
         - vstats_path (Path): the path to the vstats directory
         - p_val_txt (str): the name of the file with the corrected p value threshold
         - cluster_idx (str): the name of the rev_cluster_index file"""
+
+    validation_dirs = list(clusters_path.glob(validation_dir_pattern))
+    if not validation_dirs:
+        print(f"\n    [red1]No directories found matching pattern: {validation_dir_pattern} in {clusters_path}\n")
+        import sys ; sys.exit()
+
     for validation_dir in clusters_path.glob(validation_dir_pattern):
         if validation_dir.is_dir():
             dest_path = target_dir / validation_dir.name
             dest_path.mkdir(parents=True, exist_ok=True)
             src_csv = validation_dir / f'{density_type}_density_data.csv'
+
             if src_csv.exists():
                 dest_csv = dest_path / f'{sample_path.name}__{density_type}_density_data__{validation_dir.name}.csv'
+                
                 if not dest_csv.exists(): 
                     cp(src=src_csv, dest=dest_csv)
 
