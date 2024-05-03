@@ -21,7 +21,7 @@ def parse_args():
     parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir (the dir vstats.py was run from) to copy p val, info, and index files', required=True, action=SM)
 
     # valid_clusters_4_prepend_conditions.py -c <path/sample_key.csv> -f -r
-    parser.add_argument('-csv', '--sample_key_csv', help='path/sample_key.csv w/ directory names and conditions', required=True, action=SM)
+    parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions', required=True, action=SM)
 
     # valid_clusters_5_stats.py --groups <group1> <group2>
     parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates)',  nargs='+', required=True)
@@ -42,7 +42,7 @@ def run_script(script_name, script_args):
 def main():
     # Load settings for each script from the config file
     cfg = Config(args.config)
-    
+
     # valid_clusters_2_org_data.py
     pattern = cfg.org_data.pattern
     density_type = cfg.org_data.density_type
