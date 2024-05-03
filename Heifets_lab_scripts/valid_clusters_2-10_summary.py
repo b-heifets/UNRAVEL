@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
-import runpy
-import sys
+import subprocess
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -35,15 +34,10 @@ def parse_args():
     return parser.parse_args()
 
 
-def run_script(script_path, script_args):
-    """Run a script with arguments using runpy."""
-    # Temporarily replace sys.argv
-    original_argv = sys.argv
-    sys.argv = [script_path] + script_args
-    runpy.run_path(script_path, run_name="__main__")
-    # Restore original sys.argv
-    sys.argv = original_argv
-
+def run_script(script_name, script_args):
+    """Run a script using subprocess that respects the system's PATH."""
+    command = [script_name] + script_args
+    subprocess.run(command, check=True)
 
 def main():
     # Load settings for each script from the config file
@@ -91,7 +85,6 @@ def main():
     if args.verbose:
         org_data_args.append('-v')
     run_script('valid_clusters_2_org_data.py', org_data_args)
-
     
 
 if __name__ == '__main__':
