@@ -21,8 +21,8 @@ from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samp
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Warps cluster index from atlas space to tissue space, crops clusters and applies segmentation mask', formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? folders', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern (sample??) for dirs to process. Else: use cwd', default='sample??', action=SM)
+    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
 
     # Key args
@@ -214,9 +214,9 @@ def main():
             if args.native_idx and Path(args.native_idx).exists():
                 native_cluster_index = load_3D_img(Path(args.native_idx).exists())
             else:
-                fixed_reg_input = Path(sample_path, args.fixed_reg_in)    
+                fixed_reg_input = Path(sample_path, args.reg_outputs, args.fixed_reg_in) 
                 if not fixed_reg_input.exists():
-                    fixed_reg_input = sample_path / "reg_outputs" / "autofl_50um_fixed_reg_input.nii.gz"
+                    fixed_reg_input = sample_path / args.reg_outputs / "autofl_50um_fixed_reg_input.nii.gz"
                 native_cluster_index = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_idx_path)
 
             # Get clusters to process
