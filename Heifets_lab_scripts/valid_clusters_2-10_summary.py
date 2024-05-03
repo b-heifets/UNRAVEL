@@ -12,7 +12,7 @@ from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration 
 from unravel_utils import print_cmd_and_times
 
-def parse_args(config):
+def parse_args():
     parser = argparse.ArgumentParser(description='Aggregates and analyzes cluster validation data from valid_clusters_1_cell_or_label_densities.py', formatter_class=SuppressMetavar)
     parser.add_argument('-c', '--config', help='Path to the config.ini file. Default: valid_clusters_2-10_summary.ini', default=Path(__file__).parent / 'valid_clusters_2-10_summary.ini', action=SM)
 
