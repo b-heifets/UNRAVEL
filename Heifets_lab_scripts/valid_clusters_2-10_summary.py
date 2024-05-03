@@ -34,10 +34,15 @@ def parse_args():
     return parser.parse_args()
 
 
+# def run_script(script_name, script_args):
+#     """Run a script using subprocess that respects the system's PATH."""
+#     command = [script_name] + script_args
+#     subprocess.run(command, check=True)
+
 def run_script(script_name, script_args):
-    """Run a script using subprocess that respects the system's PATH."""
+    """Run a script using subprocess that respects the system's PATH and captures output."""
     command = [script_name] + script_args
-    subprocess.run(command, check=True)
+    subprocess.run(command, check=True, stdout=None, stderr=None)
 
 def main():
     # Load settings for each script from the config file
