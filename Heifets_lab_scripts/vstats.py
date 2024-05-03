@@ -219,9 +219,9 @@ def main():
         print("\n    [red1]There should be at least two groups with different prefixes in the input .nii.gz files.\n")
 
     if args.output_prefix:
-        output_prefix = args.output_prefix
+        output_prefix = stats_dir / args.output_prefix
     else:
-        output_prefix = cwd.name
+        output_prefix = stats_dir / cwd.name
 
     # Run the randomise_parallel command
     run_randomise_parallel(glm_input_file, args.mask, args.permutations, output_prefix, design_fts_path, args.options, args.verbose)
