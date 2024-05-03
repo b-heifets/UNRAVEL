@@ -11,7 +11,7 @@ from unravel_utils import print_cmd_and_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Determine range of q values for FDR correction that yeilds clusters', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='Outputs a list of FDR q values that yeild clusters', formatter_class=SuppressMetavar)
     q_values_default = [0.00001, 0.00005, 0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99, 0.999, 0.9999]
     parser.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
@@ -79,7 +79,7 @@ def main():
 
     # Convert the sorted list to a string and print
     q_values_resulting_in_clusters_str = ' '.join([smart_float_format(q) for q in q_values_resulting_in_clusters])
-    print(f'\n[bold]FDR q values resulting in clusters:[/]\n{q_values_resulting_in_clusters_str}\n')
+    print(f'\n{q_values_resulting_in_clusters_str}\n')
 
 if __name__ == '__main__': 
     install()

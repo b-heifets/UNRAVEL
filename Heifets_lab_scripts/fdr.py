@@ -69,7 +69,7 @@ def fdr(input_path, fdr_path, mask_path, q_value):
         - adjusted_pval_output_path (str): the path to the FDR-adjusted p value map 
         - probability_threshold (float): the probability threshold for the FDR correction
         """
-    print('')
+
     prefix = str(Path(input_path).name).replace('.nii.gz', '')
     adjusted_pval_output_path = fdr_path / f"{prefix}_q{q_value}_adjusted_p_values.nii.gz"
 

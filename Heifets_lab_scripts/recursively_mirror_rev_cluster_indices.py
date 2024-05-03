@@ -20,7 +20,7 @@ def parse_args():
     parser.add_argument('-a', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
     parser.add_argument('-v', '--verbose', action='store_true', help='Increase verbosity')
-    parser.epilog = """Usage: recursively_mirror_rev_cluster_indices.py -side RH -v"""
+    parser.epilog = """Usage: recursively_mirror_rev_cluster_indices.py -m RH -v"""
     return parser.parse_args()
 
 # TODO: adapt to work with CCFv3 images if needed 
