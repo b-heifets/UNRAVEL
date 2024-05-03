@@ -12,7 +12,7 @@ from rich.live import Live
 from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
-from to_native5 import warp_to_native
+from to_native6 import to_native
 from unravel_config import Configuration 
 from unravel_img_io import load_3D_img, load_image_metadata_from_txt, load_nii_subset, resolve_path
 from unravel_img_tools import cluster_IDs
@@ -32,17 +32,14 @@ def parse_args():
     parser.add_argument('-de', '--density', help='Density to measure: cell_density (default) or label_density', default='cell_density', choices=['cell_density', 'label_density'], action=SM)
     parser.add_argument('-o', '--output', help='rel_path/clusters_info.csv (Default: clusters/<cluster_index_dir>/cluster_data.csv)', default=None, action=SM)
 
-    # Optional warp_to_native() args
+    # Optional to_native() args
     parser.add_argument('-n', '--native_idx', help='Load/save native cluster index from/to rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
-    parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel [slow])', default="nearestNeighbor", action=SM)
+    parser.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (reg.py). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)    parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel [slow])', default="nearestNeighbor", action=SM)
     parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
-    parser.add_argument('-tp', '--tform_prefix', help='Prefix of transforms output from ants.registration. Default: ANTsPy_', default="ANTsPy_", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
-    parser.add_argument('-fr', '--fixed_res', help='Resolution of the fixed image. Default: 25', default='25',type=int, action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
-    parser.add_argument('-l', '--legacy', help='Mode for backward compatibility (accounts for raw to nii reorienting)', action='store_true', default=False)
+    parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
 
     # Optional arg for count_cells()
     parser.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, metavar='')
@@ -62,7 +59,6 @@ If a relative path is provided, the script will load the image at the specified 
 Next script: cluster_cell_counts.py"""
     return parser.parse_args()
 
-# TODO: Make validate_clusters2.py and replace to_native5 with to_native6 for newer scripts
 # TODO: QC. Aggregate .csv results for all samples if args.exp_dirs, script to load image subset.
 # TODO: Make config file for defaults or a command_generator.py script
 
@@ -193,7 +189,9 @@ def main():
     
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
-        for sample_path in samples:
+        for sample in samples:
+
+            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
             
             # Define final output and check if it exists
             cluster_index_dir = str(Path(args.moving_img).name).replace(".nii.gz", "").replace("_rev_cluster_index_", "_")
@@ -207,22 +205,18 @@ def main():
             
             # Use lower bit-depth possible for cluster index
             rev_cluster_index = load_3D_img(args.moving_img)
-            if rev_cluster_index.max() < 256:
-                d_type = "uint8"
-            elif rev_cluster_index.max() < 65536:
-                d_type = "uint16"
 
-            # Define paths relative to sample?? folder
-            fixed_img_path = str(resolve_path(sample_path, args.fixed_img))
-            reg_outputs_path = resolve_path(sample_path, args.reg_outputs)
-            metadata_path = resolve_path(sample_path, args.metadata)
+            # Define paths relative to sample?? folder 
             native_idx_path = resolve_path(sample_path, args.native_idx) if args.native_idx else None
             
             # Load cluster index and convert to ndarray 
             if args.native_idx and Path(args.native_idx).exists():
                 native_cluster_index = load_3D_img(Path(args.native_idx).exists())
             else:
-                native_cluster_index = warp_to_native(args.moving_img, fixed_img_path, reg_outputs_path, args.tform_prefix, args.reg_res, args.fixed_res, args.interpol, metadata_path, args.legacy, args.zoom_order, d_type, output=native_idx_path)
+                fixed_reg_input = Path(sample_path, args.fixed_reg_in)    
+                if not fixed_reg_input.exists():
+                    fixed_reg_input = sample_path / "reg_outputs" / "autofl_50um_fixed_reg_input.nii.gz"
+                native_cluster_index = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_idx_path)
 
             # Get clusters to process
             if args.clusters == "all":
@@ -235,6 +229,7 @@ def main():
             native_cluster_index_cropped, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax = crop_outer_space(native_cluster_index, output_path)
 
             # Load image metadata from .txt
+            metadata_path = resolve_path(sample_path, args.metadata)
             xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
             if xy_res is None or z_res is None: 
                 print("    [red bold]./sample??/parameters/metadata.txt missing. cd to sample?? dir and run: metadata.py")
