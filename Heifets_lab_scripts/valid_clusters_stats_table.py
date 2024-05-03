@@ -11,7 +11,7 @@ from argparse_utils import SuppressMetavar, SM
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Recursively find and concatenate matching csvs (e.g., to summarize cluster validation info)', formatter_class=SuppressMetavar)
-    parser.add_argument('-c', '--csv_pattern', help="Pattern to match csv files. Default: cluster_validation_results.csv", default='cluster_validation_info.csv', action=SM)
+    parser.add_argument('-cp', '--csv_pattern', help="Pattern to match csv files. Default: cluster_validation_results.csv", default='cluster_validation_info.csv', action=SM)
     parser.add_argument('-o', '--output', help='path/output.csv. Default: cluster_validation_summary.csv', default='cluster_validation_summary.csv', action=SM)
     return parser.parse_args()
 

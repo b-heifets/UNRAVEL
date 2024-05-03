@@ -21,7 +21,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Average an image with its mirrored version for voxel-wise stats', formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Pattern to match atlas space input images in the working dir. Default: *.nii.gz', default='*.nii.gz', action=SM)
     parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
-    parser.add_argument('-a', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
+    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
     parser.add_argument('-tp', '--parallel', help='Enable parallel processing with thread pools', default=False, action='store_true')
     parser.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz', default=None, action=SM)

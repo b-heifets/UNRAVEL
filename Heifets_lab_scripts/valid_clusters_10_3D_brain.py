@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import nibabel as nib
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -8,21 +9,20 @@ from rich import print
 from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
+from mirror import mirror
 from unravel_config import Configuration 
-from unravel_img_io import load_3D_img, save_as_nii
 from unravel_utils import print_cmd_and_times
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Prep .nii.gz and RGBA .txt for vizualization in dsi_studio', formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help="path/valid_cluster_index.nii.gz", required=True, action=SM)
+    parser.add_argument('-vci', '--val_clust_idx', help="path/valid_cluster_index.nii.gz", required=True, action=SM)
     parser.add_argument('-m', '--mirror', help='Mirror the image in the x-axis for a bilateral representation. Default: False', action='store_true', default=False)
-    parser.add_argument('-n', '--nudge', help='Nudge two pixels to the left. Default: 2 (for 25 um Gubra atlas space data)', default=2, type=int, action=SM)
-    parser.add_argument('-d', '--direction', help='Default is to nudge left', default=None, choices=[None, '-'], action=SM)
-    parser.add_argument('-a', '--atlas', help='path/gubra_ano_split_25um.nii.gz. Default: gubra_ano_split_25um.nii.gz', default='gubra_ano_split_25um.nii.gz', action=SM)
-    parser.add_argument('-r', '--res', help='x/y/z resolution of input/atlas in microns. Default: 25', default=25, type=int, action=SM)
+    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
+    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
+    parser.add_argument('-sa', '--split_atlas', help='path/gubra_ano_split_25um.nii.gz. Default: gubra_ano_split_25um.nii.gz', default='gubra_ano_split_25um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Example usage: dsi_lut.py -i input.csv
+    parser.epilog = """Example usage: valid_clusters_10_3D_brain.py -i input.csv
 
 Outputs: 
 input_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
@@ -36,20 +36,12 @@ def main():
     args = parse_args()
 
     # Load the input NIFTI file
-    img = load_3D_img(args.input)
-    
-    if args.mirror:
-        # Mirror the image in the x-axis for a bilateral representation
-        mirror_img = np.flip(img, axis=0)
+    nii = nib.load(args.val_clust_idx)
+    img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
 
-        # Nudge two pixels to the left (required for data in 25 um Gubra atlas space)
-        if args.nudge:
-            if args.direction == '-':
-                nudge = -args.nudge
-            else:
-                nudge = args.nudge
-            mirror_img = np.roll(mirror_img, nudge, axis=0)
-            mirror_img[:args.nudge, :, :] = 0 # Make sure the image does not "wrap around"
+    # Make a bilateral version of the cluster index
+    if args.mirror:
+        mirror_img = mirror(img, axis=args.axis, shift=args.shift)
 
         # Combine original and mirrored images
         img = img + mirror_img
@@ -58,15 +50,16 @@ def main():
     img[img > 0] = 1
 
     # Multiply by atlas to apply region IDs to the cluster index
-    atlas_img = load_3D_img(args.atlas)
+    atlas_nii = nib.load(args.split_atlas)
+    atlas_img = np.asanyarray(atlas_nii.dataobj, dtype=atlas_nii.header.get_data_dtype()).squeeze()
     final_data = img * atlas_img
 
     # Save the bilateral version of the cluster index with ABA colors
     if args.mirror:
-        output = args.input.replace('.nii.gz', '_ABA_WB.nii.gz')
+        output = args.val_clust_idx.replace('.nii.gz', '_ABA_WB.nii.gz')
     else:
-        output = args.input.replace('.nii.gz', '_ABA.nii.gz')
-    save_as_nii(final_data, output, xy_res=args.res, z_res=args.res, data_type=atlas_img.dtype, reference=args.atlas)
+        output = args.val_clust_idx.replace('.nii.gz', '_ABA.nii.gz')
+    nib.save(nib.Nifti1Image(final_data, atlas_nii.affine, atlas_nii.header), output)
 
     # Calculate and save histogram
     histogram, _ = np.histogram(final_data, bins=21144, range=(0, 21144))
@@ -81,7 +74,7 @@ def main():
     color_map = pd.read_csv(Path(__file__).parent / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
 
     # Delete rgba.txt if it exists (used for coloring the regions in DSI Studio)
-    txt_output = str(Path(args.input).parent / "rgba.txt")
+    txt_output = str(Path(args.val_clust_idx).parent / "rgba.txt")
     if Path(txt_output).exists():
         Path(txt_output).unlink()
 
@@ -98,7 +91,6 @@ def main():
             f.write(rgba_str + '\n')
     
     print(f"\n    Output: [default bold]{txt_output}")
-
 
 
 if __name__ == '__main__':

@@ -22,7 +22,7 @@ def parse_args():
     parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', metavar='')
     parser.add_argument('--labels', nargs='*', help='Group Labels in same order', metavar='')
     parser.add_argument('-t', '--test', help='Choose between "tukey" and "dunnett" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett'], metavar='')
-    parser.add_argument('-a', "--alt", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', metavar='')
+    parser.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', metavar='')
     parser.add_argument('-s', '--show_plot', help='Show plot if flag is provided', action='store_true')
 
     parser.epilog = "regional_IF_mean_intensities_summary.py -r 1 --order group3 group2 group1 --labels Group_3 Group_2 Group_1 -t dunnnett"
@@ -187,4 +187,4 @@ if __name__ == "__main__":
 
     # Process each region ID
     for region_id in region_ids_to_process:
-        plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=args.test, show_plot=args.show_plot, alt=args.alt)
+        plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=args.test, show_plot=args.show_plot, alt=args.alternate)

@@ -18,15 +18,17 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='Glob pattern matching cluster validation output dirs to copy data from', required=True, action=SM)
-    parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir (vstats.py dir)', default=None, action=SM)
+    parser.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/)', required=True, action=SM)
+    parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir (the dir vstats.py was run from) to copy p val, info, and index files if provided', default=None, action=SM)
     parser.add_argument('-dt', '--density_type', help='Type of density data to aggregate (cell [default] or label).', default='cell', action=SM)
     parser.add_argument('-td', '--target_dir', help='path/dir to copy results. If omitted, copy data to the cwd', default=None, action=SM)
     parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from fdr.py). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Usage: valid_clusters_org_data.py -e <list of experiment directories> -i '*' -td <target_dir> -vd <path/vstats_dir> -v
+    parser.epilog = """Usage: valid_clusters_2_org_data.py -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
 """
     return parser.parse_args()
+
+# TODO: Copy the rev_cluster_index.nii.gz to the target_dir
 
 def cp(src, dest):
     """Copy a file from src path to a dest path, optionally printing the action.
@@ -37,7 +39,7 @@ def cp(src, dest):
     shutil.copy(src, dest)
 
 def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
-    """Process statistical files associated with cluster corrections.
+    """Copy the cluster info, p value threshold, and rev_cluster_index files to the target directory.
     
     Args:
         - validation_dir (Path): the path to the validation directory
@@ -65,9 +67,22 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
                 if not dest_p_val_thresh.exists():
                     cp(src=p_val_thresh_file, dest=dest_p_val_thresh)
 
+            if validation_dir_name.endswith('_LH'):
+                rev_cluster_index_path = cluster_correction_path / f'{cluster_correction_dir}_rev_cluster_index_LH.nii.gz'
+            elif validation_dir_name.endswith('_RH'):
+                rev_cluster_index_path = cluster_correction_path / f'{cluster_correction_dir}_rev_cluster_index_RH.nii.gz'
+            else:
+                rev_cluster_index_path = cluster_correction_path / f'{cluster_correction_dir}_rev_cluster_index.nii.gz'
+
+            if rev_cluster_index_path.exists():
+                dest_rev_cluster_index = dest_path / rev_cluster_index_path.name
+                if not dest_rev_cluster_index.exists():
+                    cp(src=rev_cluster_index_path, dest=dest_rev_cluster_index)
+
+
 @print_func_name_args_times()
 def organize_validation_data(sample_path, clusters_path, validation_dir_pattern, density_type, target_dir, vstats_path, p_val_txt):
-    """Organize the cluster validation data.
+    """Copy the cluster validation, p value, cluster info, and rev_cluster_index files to the target directory.
     
     Args:
         - sample_path (Path): the path to the sample directory
@@ -76,16 +91,17 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
         - density_type (str): the type of density data to aggregate (cell or label)
         - target_dir (Path): the path to the target directory
         - vstats_path (Path): the path to the vstats directory
-        - p_val_txt (str): the name of the file with the corrected p value threshold"""
+        - p_val_txt (str): the name of the file with the corrected p value threshold
+        - cluster_idx (str): the name of the rev_cluster_index file"""
     for validation_dir in clusters_path.glob(validation_dir_pattern):
         if validation_dir.is_dir():
             dest_path = target_dir / validation_dir.name
             dest_path.mkdir(parents=True, exist_ok=True)
-            src_file = validation_dir / f'{density_type}_density_data.csv'
-            if src_file.exists():
-                dest_file = dest_path / f'{sample_path.name}__{density_type}_density_data__{validation_dir.name}.csv'
-                if not dest_file.exists(): 
-                  cp(src=src_file, dest=dest_file)
+            src_csv = validation_dir / f'{density_type}_density_data.csv'
+            if src_csv.exists():
+                dest_csv = dest_path / f'{sample_path.name}__{density_type}_density_data__{validation_dir.name}.csv'
+                if not dest_csv.exists(): 
+                    cp(src=src_csv, dest=dest_csv)
 
             if vstats_path is not None:
                 copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt)
@@ -106,7 +122,7 @@ def main():
 
             clusters_path = sample_path / 'clusters'
             if clusters_path.exists():
-                organize_validation_data(sample_path, clusters_path, args.input, args.density_type, target_dir, args.vstats_path, args.p_val_txt)
+                organize_validation_data(sample_path, clusters_path, args.cluster_val_dirs, args.density_type, target_dir, args.vstats_path, args.p_val_txt)
             
             progress.update(task_id, advance=1)
 

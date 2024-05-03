@@ -14,19 +14,19 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from argparse_utils import SuppressMetavar, SM
 from effect_sizes import condition_selector
 from unravel_utils import initialize_progress_bar
-from valid_clusters_summary import valid_clusters_summary
+from valid_clusters_stats_table import valid_clusters_summary
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Validate clusters based on differences in cell/object or label density w/ t-tests.', formatter_class=SuppressMetavar)
     parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates)',  nargs='+', required=True)
     parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group data (e.g., see info for examples)',  nargs='*', default=None, action=SM)
-    parser.add_argument('-a', "--alt", help="Number of tails and direction ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
+    parser.add_argument('-alt', "--alternate", help="Number of tails and direction ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
     parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from fdr.py). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """
     
-T-test usage:   valid_cluster_stats.py --groups <group1> <group2>
-Tukey's test usage: valid_cluster_stats.py --groups <group1> <group2> <group3> <group4> ...
+T-test usage:   valid_clusters_5_stats.py --groups <group1> <group2>
+Tukey's test usage: valid_clusters_5_stats.py --groups <group1> <group2> <group3> <group4> ...
 
 Input subdirs: * 
 Input files: *_density_data.csv from validate_clusters.py (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
@@ -47,7 +47,7 @@ Example bilateral inputs (if any file has _LH.csv or _RH.csv, the script will at
 
 Examples:
     - Grouping data by condition prefixes: 
-        valid_cluster_stats.py --groups psilocybin saline --condition_prefixes saline psilocybin
+        valid_clusters_5_stats.py --groups psilocybin saline --condition_prefixes saline psilocybin
         - This will treat all 'psilocybin*' conditions as one group and all 'saline*' conditions as another
         - Since there will then effectively be two conditions in this case, they will be compared using a t-test
 
@@ -265,14 +265,14 @@ def main():
         # Check the number of groups and perform the appropriate statistical test
         if len(args.groups) == 2:
             # Perform a t-test
-            if args.alt not in ['two-sided', 'less', 'greater']:
+            if args.alternate not in ['two-sided', 'less', 'greater']:
                 print("Error: Invalid alternative hypothesis. Please specify 'two-sided', 'less', or 'greater'.")
                 return
-            elif args.alt == 'two-sided':
-                print(f"Running [gold1 bold]{args.alt} unpaired t-tests")
+            elif args.alternate == 'two-sided':
+                print(f"Running [gold1 bold]{args.alternate} unpaired t-tests")
             else:
                 print(f"Running [gold1 bold]one-sided unpaired t-tests")
-            stats_df = valid_clusters_t_test(data_df, args.groups[0], args.groups[1], density_col, args.alt)
+            stats_df = valid_clusters_t_test(data_df, args.groups[0], args.groups[1], density_col, args.alternate)
         else:
             # Perform a Tukey's test
             print(f"Running [gold1 bold]Tukey's tests")

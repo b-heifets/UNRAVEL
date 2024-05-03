@@ -12,9 +12,12 @@ from argparse_utils import SuppressMetavar, SM
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Organize cell_count|label_volume, cluster_volume, and <cell|label>_density data from cluster and sample and save as csv', formatter_class=SuppressMetavar)
-    parser.add_argument('-a', '--all', help='Also save CSVs w/ cell_count|label_volume and cluster_volume data', action='store_true', default=False)
-    parser.add_argument('-c', '--clusters', help='List of valid cluster IDs to include in the summary. Default: all clusters', nargs='+', type=int, action=SM)
-    parser.epilog = """Inputs: *.csv from validate_clusters.py (in working dir)
+    parser.add_argument('-sa', '--save_all', help='Also save CSVs w/ cell_count|label_volume and cluster_volume data', action='store_true', default=False)
+    parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs to include in the summary.', nargs='+', type=int, required=True, action=SM)
+    parser.epilog = """
+Usage: valid_clusters_9_prism.py -ids 1 2 3
+        
+Inputs: *.csv from valid_clusters_2_org_data.py (in working dir)
 
 CSV naming conventions:
 - Condition: first word before '_' in the file name
@@ -161,7 +164,7 @@ def main():
     Path(output_dir).mkdir(exist_ok=True)
 
     # Save the summary tables to .csv files
-    if args.all:
+    if args.save_all:
         data_col_summary_df.to_csv(Path('cluster_validation_summary') / f'{data_col}_summary.csv', index=False)
         cluster_volume_summary_df.to_csv(Path('cluster_validation_summary') / 'cluster_volume_summary.csv', index=False)
     if args.clusters is not None:

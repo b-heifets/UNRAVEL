@@ -30,7 +30,7 @@ def parse_args():
     parser.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', metavar='')
     parser.add_argument('-s', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups", default='light:white', metavar='')
     parser.add_argument('-o', '--output', help='Output directory for plots (Default: <args.test_type>_plots)', metavar='')
-    parser.add_argument('-a', "--alt", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', metavar='')
+    parser.add_argument('-alt', "--alternate", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', metavar='')
     parser.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], metavar='')
     parser.epilog = """Example usage: regional_cell_densities_summary.py --groups Saline MDMA Meth -d 10000 -hemi r
 
@@ -147,14 +147,14 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         for prefix in args.groups:
             if prefix != args.ctrl_group:
                 other_group_data = df[group_columns[prefix]].values.ravel()
-                t_stat, p_value = ttest_ind(other_group_data, control_data, equal_var=True, alternative=args.alt) # Switched to equal_var=True and alternative=args.alt
+                t_stat, p_value = ttest_ind(other_group_data, control_data, equal_var=True, alternative=args.alternate) # Switched to equal_var=True and alternative=args.alternate
                 meandiff = np.mean(other_group_data) - np.mean(control_data)
-                # if args.alt == 'less' and meandiff < 0:
+                # if args.alternate == 'less' and meandiff < 0:
                 #     p_value /= 2  # For one-tailed test, halve the p-value if the alternative is 'less'
                 #     t_stat = -t_stat  # Flip the sign for 'less'
-                # elif args.alt == 'greater' and meandiff > 0:
+                # elif args.alternate == 'greater' and meandiff > 0:
                 #     p_value /= 2  # For one-tailed test, halve the p-value if the alternative is 'greater'
-                # elif args.alt == 'two-sided':
+                # elif args.alternate == 'two-sided':
                 #     pass # No change in p value needed for two-sided test
                 # else: # Effect direction not consistent with hypothesis 
                 #     p_value = 1
@@ -176,7 +176,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         control_data = df[group_columns[args.ctrl_group]].values.ravel()
 
         # The * operator unpacks the list so that each array is a separate argument, as required by dunnett
-        dunnett_results = dunnett(*data, control=control_data, alternative=args.alt)
+        dunnett_results = dunnett(*data, control=control_data, alternative=args.alternate)
 
         group2_data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
 
@@ -313,10 +313,10 @@ def main():
         df.iloc[:, 5:] = df.iloc[:, 5:].div(args.divide)
 
     # Prepare output directories
-    if args.alt == 'two-sided':
+    if args.alternate == 'two-sided':
         suffix = ''
     else:
-        suffix = f"_{args.alt}" # Add suffix to indicate the alternative hypothesis
+        suffix = f"_{args.alternate}" # Add suffix to indicate the alternative hypothesis
 
     # Make output directories
     if args.output:

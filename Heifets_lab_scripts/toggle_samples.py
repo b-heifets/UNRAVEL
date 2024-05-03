@@ -18,7 +18,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-t', '--toggle_all', help='Toggle all sample folders to active, ignoring condition checks.', action='store_true', default=False)
-    parser.add_argument('-c', '--csv', help='path/sample_key.csv w/ directory names and conditions', default=None, action=SM)
+    parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions', default=None, action=SM)
     parser.add_argument('-a', '--activate', help='Space separated list of conditions to enable processing for (must match sample_key.csv)', default=None, nargs='*', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = """
@@ -50,8 +50,8 @@ def main():
         stripped_sample_name = sample_path.name.lstrip('_')  # Strip leading underscore for accurate CSV matching
             
         # Get the condition for the current sample
-        if args.csv is not None: 
-            mapping_df = pd.read_csv(args.csv)
+        if args.sample_key is not None: 
+            mapping_df = pd.read_csv(args.sample_key)
             condition_df = mapping_df[mapping_df['dir_name'] == stripped_sample_name]['condition']
 
         if args.toggle_all:
@@ -59,7 +59,7 @@ def main():
             print(f'{new_name=}')
             status = "Activated"
         else:
-            if args.csv is not None:
+            if args.sample_key is not None:
                 condition = condition_df.values[0]
                 if condition in args.activate:
                     new_name = sample_path.parent / stripped_sample_name

@@ -12,11 +12,11 @@ from unravel_utils import print_cmd_and_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Prepend conditions to filenames based on a CSV key', formatter_class=SuppressMetavar)
-    parser.add_argument('-c', '--csv', help='path/sample_key.csv w/ directory names and conditions', required=True, action=SM)
+    parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions', required=True, action=SM)
     parser.add_argument('-f', '--file', help='Rename matching files', action='store_true', default=False)
     parser.add_argument('-d', '--dirs', help='Rename matching dirs', action='store_true', default=False)
     parser.add_argument('-r', '--recursive', help='Recursively rename files/dirs', action='store_true', default=False)
-    parser.epilog = """Example usage:     prepend_conditions.py -c <path/sample_key.csv> -f -r
+    parser.epilog = """Example usage:     valid_clusters_4_prepend_conditions.py -c <path/sample_key.csv> -f -r
 
 This script renames files in the current directory based on the conditions specified in the CSV file.
 
@@ -31,6 +31,8 @@ For example, if the CSV contains the following rows:
 Files will be renamed as follows:
     'sample01_file.csv' --> 'control_sample01_file.csv'
     'sample02_file.csv' --> 'treatment_sample02_file.csv'.
+
+If needed, files and/or folders can be renamed with rename.py
 """    
     return parser.parse_args()
 
@@ -56,7 +58,7 @@ def prepend_conditions(base_path, csv_file, rename_files, rename_dirs, recursive
 
 def main():
     base_path = Path.cwd() 
-    prepend_conditions(base_path, args.csv, args.file, args.dirs, args.recursive)
+    prepend_conditions(base_path, args.sample_key, args.file, args.dirs, args.recursive)
 
 
 if __name__ == '__main__':

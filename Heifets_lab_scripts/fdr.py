@@ -47,6 +47,10 @@ Making directional cluster indices from non-directional p value maps output from
     - _v_ will be replaced with _gt_ or _lt_ based on the effect direction 
     - The cluster index will be split accoding to the effect directions
     - fdr.py -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v
+
+For bilateral data processed with a hemispheric mask, next run recursively_mirror_rev_cluster_indices.py to mirror the cluster indices to the other hemisphere.
+
+For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with valid_clusters_1_cell_or_label_densities.py.
 """
     return parser.parse_args()
 

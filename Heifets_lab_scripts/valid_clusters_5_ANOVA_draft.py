@@ -10,8 +10,8 @@ from statsmodels.formula.api import ols
 from statsmodels.stats.anova import anova_lm
 
 from argparse_utils import SuppressMetavar, SM
-from valid_clusters_stats import cluster_validation_data_df
-from valid_clusters_summary import valid_clusters_summary
+from valid_clusters_5_stats import cluster_validation_data_df
+from valid_clusters_stats_table import valid_clusters_summary
 
 
 def parse_args():
@@ -20,9 +20,9 @@ def parse_args():
     parser.add_argument('--valid_criterion', help='Criterion for cluster validity, corresponding to one of the factors or "interaction"', required=True)
     parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from fdr.py). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Usage:   valid_clusters_2x2_ANOVA.py -f1 <group1_prefix> <group2_prefix> -f2 <group3_prefix> <group4_prefix> -vc <valid_criterion> -v
+    parser.epilog = """Usage:   valid_clusters_5_ANOVA.py -f1 <group1_prefix> <group2_prefix> -f2 <group3_prefix> <group4_prefix> -vc <valid_criterion> -v
 
-For post hoc comparisons, use the valid_clusters_stats.py
+For post hoc comparisons, use the valid_clusters_5_stats.py
 
 Input subdirs: * 
 Input files: *_density_data.csv from validate_clusters.py (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    

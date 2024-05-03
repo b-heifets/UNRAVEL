@@ -14,12 +14,12 @@ from sunburst import sunburst
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Create a cluster index with valid clusters from a given NIfTI image.', formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='Path to the reverse cluster index NIfTI file.', required=True, action=SM)
+    parser.add_argument('-ci', '--cluster_idx', help='Path to the reverse cluster index NIfTI file.', required=True, action=SM)
     parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs.', nargs='+', type=int, required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/name_of_the_output_directory. Default: valid_clusters', default='valid_clusters', action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
-    parser.epilog = """Usage:    valid_cluster_index.py -i path/rev_cluster_index.nii.gz -ids 1 2 3 -a path/atlas.nii.gz
+    parser.epilog = """Usage:    valid_clusters_6_index.py -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3
     
 Outputs: path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz and path/valid_clusters/cluster_*_sunburst.csv"""
     return parser.parse_args()
@@ -46,7 +46,7 @@ def generate_sunburst(cluster, img, atlas, xyz_res_in_um, data_type, output_dir)
 def main():
     args = parse_args()
 
-    nii = nib.load(args.input)
+    nii = nib.load(args.cluster_idx)
     img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
     max_cluster_id = int(img.max())
     data_type = np.uint16 if max_cluster_id >= 256 else np.uint8
@@ -76,7 +76,7 @@ def main():
         for future in futures:
             future.result()  # wait for all threads to complete
 
-    output_image_path = output_dir / str(Path(args.input).name).replace('.nii.gz', '_valid_clusters.nii.gz')
+    output_image_path = output_dir / str(Path(args.cluster_idx).name).replace('.nii.gz', '_valid_clusters.nii.gz')
     nib.save(nib.Nifti1Image(valid_cluster_index, nii.affine, nii.header), output_image_path)
     
     # Generate the sunburst plot for the valid cluster index

@@ -89,6 +89,8 @@ Example of preparing for a ANOVA:
 Background: 
 https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/GLM 
 https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide
+
+Afterwards run fdr.py to correct for multiple comparisons.
 """
     return parser.parse_args()
 

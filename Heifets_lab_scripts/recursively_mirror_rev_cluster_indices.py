@@ -17,10 +17,13 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Recursively process img.nii.gz files, apply mirroring, and save new files.', formatter_class=SuppressMetavar)
     parser.add_argument('-m', '--mas_side', help='Side of the brain corresponding to the mask used for vstats.py and fdr.py (RH or LH)', choices=['RH', 'LH'], required=True, action=SM)
     parser.add_argument('-p', '--pattern', help='Glob pattern to match files. Default: **/*rev_cluster_index.nii.gz', default='**/*rev_cluster_index.nii.gz', action=SM)
-    parser.add_argument('-a', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
+    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
     parser.add_argument('-v', '--verbose', action='store_true', help='Increase verbosity')
-    parser.epilog = """Usage: recursively_mirror_rev_cluster_indices.py -m RH -v"""
+    parser.epilog = """Usage: recursively_mirror_rev_cluster_indices.py -m RH -v
+    
+Use this script after fdr.py to mirror the cluster indices for the other side of the brain before running valid_clusters_1_cell_or_label_densities.py    
+"""
     return parser.parse_args()
 
 # TODO: adapt to work with CCFv3 images if needed 
