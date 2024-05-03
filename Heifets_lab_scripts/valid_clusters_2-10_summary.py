@@ -45,7 +45,7 @@ def run_script(script_path, script_args):
     sys.argv = original_argv
 
 
-def main(config):
+def main():
     # Load settings for each script from the config file
     cfg = Config(args.config)
     
@@ -69,10 +69,6 @@ def main(config):
     # valid_clusters_7_table.py
     top_regions = cfg.table.top_regions
     percent_vol = cfg.table.percent_vol
-
-    # valid_clusters_8_table.py
-    top_regions = cfg.prism.top_regions
-    percent_vol = cfg.prism.percent_vol
 
     # valid_clusters_9_prism.py
     save_all = cfg.prism.save_all
