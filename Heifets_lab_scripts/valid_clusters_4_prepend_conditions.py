@@ -16,7 +16,7 @@ def parse_args():
     parser.add_argument('-f', '--file', help='Rename matching files', action='store_true', default=False)
     parser.add_argument('-d', '--dirs', help='Rename matching dirs', action='store_true', default=False)
     parser.add_argument('-r', '--recursive', help='Recursively rename files/dirs', action='store_true', default=False)
-    parser.epilog = """Example usage:     valid_clusters_4_prepend_conditions.py -c <path/sample_key.csv> -f -r
+    parser.epilog = """Example usage:     valid_clusters_4_prepend_conditions.py -sk <path/sample_key.csv> -f -r
 
 This script renames files in the current directory based on the conditions specified in the CSV file.
 

@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 from rich import print
 from rich.traceback import install
+from aggregate_files_w_recursive_search import find_and_copy_files
 from unravel_config import Config
 
 from argparse_utils import SuppressMetavar, SM
@@ -53,15 +54,10 @@ def main():
     density_type = cfg.org_data.density_type
     p_val_txt = cfg.org_data.p_val_txt
 
-    # valid_clusters_4_prepend_conditions.py
-    file = cfg.prepend_conditions.file
-    recursive = cfg.prepend_conditions.recursive
-
     # valid_clusters_5_stats.py
     alternate = cfg.stats.alternate
     
     # valid_clusters_6_index.py
-    output = cfg.index.output # valid_clusters output directory
     atlas = cfg.index.atlas
     output_rgb_lut = cfg.index.output_rgb_lut
 
@@ -90,7 +86,132 @@ def main():
     if args.verbose:
         org_data_args.append('-v')
     run_script('valid_clusters_2_org_data.py', org_data_args)
+
+
+    ### rev_cluster_index not copied. Troubleshoot this. #############################
+
+
+
+
+
+    # Run valid_clusters_3_group_bilateral_data.py
+    run_script('valid_clusters_3_group_bilateral_data.py', [])
+
+    # Run valid_clusters_4_prepend_conditions.py
+    prepend_conditions_args = [
+        '-sk', args.sample_key,
+        '-f', True,
+        '-r', True
+    ]
+    run_script('valid_clusters_4_prepend_conditions.py', prepend_conditions_args)
+
+    # Run valid_clusters_5_stats.py
+    stats_args = [
+        '--groups', ' '.join(args.groups),
+        '-cp', ' '.join(args.condition_prefixes),
+        '-alt', alternate,
+        '-pvt', p_val_txt
+    ]
+    if args.verbose:
+        stats_args.append('-v')
+    run_script('valid_clusters_5_stats.py', stats_args)
+
+    # Run valid_clusters_6_index.py
+    test_type = 't-test' if len(args.groups) == 2 else 'Tukey' if len(args.groups) > 2 else 'Invalid number of groups'
+    if test_type == 'Invalid number of groups':
+        print(f'\n    [red]{test_type}[/]\n')
+        return
+
     
+    # Iterate over all subdirectories in the current working directory
+    for subdir in [d for d in Path.cwd().iterdir() if d.is_dir()]:
+        stats_output = subdir / '_cluster_validation_info'
+        valid_clusters_ids_txt = stats_output / 'valid_cluster_IDs_t-test.txt' if len(args.groups) == 2 else stats_output / 'valid_cluster_IDs_tukey.txt'
+        if valid_clusters_ids_txt.exists():
+            with open(valid_clusters_ids_txt, 'r') as f:
+                valid_cluster_ids = f.read().split()
+
+        # Get the corresponding reverse cluster index file
+        if str(subdir).endswith('_LH'):
+            rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index_LH.nii.gz'
+        elif str(subdir).endswith('_RH'):
+            rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index_RH.nii.gz'
+        else:
+            rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index.nii.gz'
+
+        valid_clusters_dir = subdir / 'valid_clusters'
+
+        index_args = [
+            '-ci', rev_cluster_index_path,
+            '-ids', ' '.join(valid_cluster_ids),
+            '-vcd', valid_clusters_dir,
+            '-a', atlas
+        ]
+        if output_rgb_lut:
+            index_args.append('-rgb')
+        run_script('valid_clusters_6_index.py', index_args)
+
+        # Run valid_clusters_7_table.py
+        table_args = [
+            '-vcd', valid_clusters_dir,
+            '-t', top_regions,
+            '-pv', percent_vol
+        ]
+        if args.verbose:
+            table_args.append('-v')
+        run_script('valid_clusters_7_table.py', table_args)
+
+    # Aggregate *_valid_clusters_table.xlsx files
+    find_and_copy_files('*_valid_clusters_table.xlsx', Path().cwd(), 'valid_clusters_tables_and_legend')
+
+    # Run valid_clusters_8_legend.py
+    legend_args = [
+        '-p', 'valid_clusters_tables_and_legend'
+    ]
+    run_script('valid_clusters_8_legend.py', legend_args)
+
+    
+    for subdir in [d for d in Path.cwd().iterdir() if d.is_dir()]:
+        stats_output = subdir / '_cluster_validation_info'
+        valid_clusters_ids_txt = stats_output / 'valid_cluster_IDs_t-test.txt' if len(args.groups) == 2 else stats_output / 'valid_cluster_IDs_tukey.txt'
+        if valid_clusters_ids_txt.exists():
+            with open(valid_clusters_ids_txt, 'r') as f:
+                valid_cluster_ids = f.read().split()
+
+        # Run valid_clusters_9_prism.py
+        prism_args = [
+            '-ids', ' '.join(valid_cluster_ids),
+            '-p', Path().cwd() / subdir,
+        ]
+        if save_all:
+            prism_args.append('-sa')
+        run_script('valid_clusters_9_prism.py', prism_args)
+
+        # Get the corresponding reverse cluster index file
+        if str(subdir).endswith('_LH'):
+            rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index_LH.nii.gz'
+        elif str(subdir).endswith('_RH'):
+            rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index_RH.nii.gz'
+        else:
+            rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index.nii.gz'
+
+        valid_clusters_dir = subdir / 'valid_clusters'
+
+        # Run valid_clusters_10_3D_brain.py
+        brain_args = [
+            '-vci', rev_cluster_index_path,
+            '-m', mirror,
+            '-ax', axis,
+            '-s', shift,
+            '-sa', split_atlas
+        ]
+        if args.verbose:
+            brain_args.append('-v')
+        run_script('valid_clusters_10_3D_brain.py', brain_args)
+
+    # Aggregate *_ABA.nii.gz files and the rgba.txt file into a new directory #### WB
+    find_and_copy_files('*_ABA.nii.gz', Path().cwd(), '3D_brain_images')
+    # Need to rename the rgba.txt file so it has the same name as the corresponding NIfTI file
 
 if __name__ == '__main__':
     install()

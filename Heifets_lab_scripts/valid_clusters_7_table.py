@@ -18,6 +18,7 @@ from rich.traceback import install
 def parse_args():
     parser = argparse.ArgumentParser(description='''Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.''',
                                      formatter_class=SuppressMetavar)
+    parser.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from valid_clusters_6_index.py (else cwd)', action=SM)
     parser.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
     parser.add_argument('-pv', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -183,16 +184,12 @@ def calculate_top_regions(df, top_n, percent_vol_threshold, verbose=False):
     else:
         return None
     
-def get_top_regions_and_percent_vols(cluster_dir, top_regions, percent_vol, verbose=False):
-    # Load the CSV file into a DataFrame
-    cluster_path = Path(cluster_dir).resolve()
-    csv_files = glob(f'{cluster_path}/*_sunburst.csv')
-    input_csv = csv_files[0] # first match
-    df = pd.read_csv(input_csv)
+def get_top_regions_and_percent_vols(sunburst_csv_path, top_regions, percent_vol, verbose=False):
+    df = pd.read_csv(sunburst_csv_path)
 
     # Check if the DataFrame is empty print a message and return
     if df.empty:
-        print(f'\n{input_csv} is empty. Exiting...')
+        print(f'\n{sunburst_csv_path} is empty. Exiting...')
         import sys ; sys.exit()
 
     # Fill NaN values in the original DataFrame
@@ -205,7 +202,7 @@ def get_top_regions_and_percent_vols(cluster_dir, top_regions, percent_vol, verb
     df_final = undo_fill_with_original(df_filled_sorted, df)
 
     # Save the sorted DataFrame to a new CSV file
-    sorted_path = input_csv.replace('sunburst.csv', 'sunburst_sorted.csv')
+    sorted_path = str(sunburst_csv_path).replace('sunburst.csv', 'sunburst_sorted.csv')
     df_final.to_csv(sorted_path, index=False)
 
     if verbose:
@@ -249,7 +246,7 @@ def get_top_regions_and_percent_vols(cluster_dir, top_regions, percent_vol, verb
             print(f'\n{top_region_names_and_percent_vols=}')
 
             # Save the top regions DataFrame to a new CSV file
-            top_regions_path = input_csv.replace('sunburst.csv', 'sunburst_top_regions.csv')
+            top_regions_path = str(sunburst_csv_path).replace('sunburst.csv', 'sunburst_top_regions.csv')
             top_regions_df.to_csv(top_regions_path, index=False)
         else:
             # Attempt to collapse the hierarchy further
@@ -287,13 +284,11 @@ def main():
     args = parse_args()
 
     # Find cluster_* dirs in the current dir
-    cluster_dirs = glob('cluster_*')
+    valid_clusters_dir = args.val_clusters_dir if args.val_clusters_dir else Path.cwd()
+    cluster_sunburst_csvs = valid_clusters_dir.glob('cluster_*_sunburst.csv')
 
-    # Remove non-directories from the list
-    cluster_dirs = [d for d in cluster_dirs if Path(d).is_dir()]
-
-    # Remove dirs that don't end with a number
-    cluster_dirs = [d for d in cluster_dirs if d.split('_')[-1].isdigit()]
+    # Remove directories from the list
+    cluster_sunburst_csvs = [f for f in cluster_sunburst_csvs if f.is_file()]
 
     # Generate dynamic column names based on args.top_regions
     column_names = ['Cluster'] + ['Volume'] + ['CoG'] + ['~Region'] + ['ID_Path'] + [f'Top_Region_{i+1}' for i in range(args.top_regions)]
@@ -336,14 +331,16 @@ def main():
     ccfv3_info_df = pd.read_csv(Path(__file__).parent / 'CCFv3_info.csv', usecols=columns_to_load)
 
     # For each cluster directory
-    for cluster_dir in cluster_dirs:
-        cluster_num = cluster_dir.split('_')[-1]  # Extract cluster number from directory name
+    for cluster_sunburst_csv in cluster_sunburst_csvs:
+
+        # Get the cluster number from the file name 'cluster_*_sunburst.csv'
+        cluster_num = str(cluster_sunburst_csv.name).split('_')[1]
 
         # Get the CoG string for the current cluster from the dictionary
         cog_string = cluster_CoGs.get(cluster_num) if cluster_CoGs.get(cluster_num) else "Not found"
 
         # Get the top regions and their percentage volumes for the current cluster
-        top_regions_and_percent_vols, cluster_volume = get_top_regions_and_percent_vols(cluster_dir, args.top_regions, args.percent_vol, args.verbose)
+        top_regions_and_percent_vols, cluster_volume = get_top_regions_and_percent_vols(cluster_sunburst_csv, args.top_regions, args.percent_vol, args.verbose)
 
         # Get the top region
         top_region = top_regions_and_percent_vols[0].split(' ')[0]
@@ -506,14 +503,14 @@ def main():
     print(f"\nBrighter cell fills in the 'Volume' column represent larger volumes (log(10) scaled and normalized to the max volume).\n")
 
     # Save the workbook to a file
-    excel_file_path = 'valid_clusters_table.xlsx'
+    excel_file_path = valid_clusters_dir / 'valid_clusters_table.xlsx'
     wb.save(excel_file_path)
     print(f"Excel file saved at {excel_file_path}")
 
     # Get the anatomically sorted list of cluster IDs and save it to a .txt file
     valid_cluster_ids = top_regions_and_percent_vols_df['Cluster'].tolist()
     valid_cluster_ids_str = ' '.join(map(str, valid_cluster_ids)) + '\n'
-    with open('valid_cluster_IDs_sorted_by_anatomy.txt', 'w') as f:
+    with open(valid_clusters_dir / 'valid_cluster_IDs_sorted_by_anatomy.txt', 'w') as f:
         f.write(valid_cluster_ids_str)
 
 

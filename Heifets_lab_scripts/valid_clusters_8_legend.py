@@ -15,8 +15,8 @@ from openpyxl.styles import Alignment
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='''Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.''',
-                                     formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.', formatter_class=SuppressMetavar)
+    parser.add_argument('-p', '--path', help='Path to the directory containing the *_valid_clusters_table.xlsx files. Default: current working directory', action=SM)
     parser.epilog = """Example usage:    valid_clusters_8_legend.py
 
 Prerequisites: valid_cluster_table.sh has been run and the resulting .xlsx files are in the working directory.
@@ -58,8 +58,10 @@ def apply_rgb_to_cell(ws, df_w_rgb, col_w_labels, col_num):
 
 
 def main():
+    path = parse_args().path or Path.cwd()
+
     # Find cluster_* dirs in the current dir
-    xlsx_files = glob('*_valid_clusters_table.xlsx')
+    xlsx_files = path.glob('*_valid_clusters_table.xlsx')
 
     # Filter out files starting with '~$'
     xlsx_files = [f for f in xlsx_files if not f.split('/')[-1].startswith('~$')]
@@ -281,7 +283,7 @@ def main():
             cell.alignment = Alignment(horizontal='center', vertical='center')
 
     # Save the workbook to a file
-    excel_file_path = 'legend.xlsx'
+    excel_file_path = path / 'legend.xlsx'
     wb.save(excel_file_path)
 
 if __name__ == '__main__':
