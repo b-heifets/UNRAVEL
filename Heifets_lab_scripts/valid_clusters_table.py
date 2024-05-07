@@ -15,10 +15,13 @@ from openpyxl.styles import Border, Side, Font, Alignment
 from rich import print
 from rich.traceback import install
 
+from unravel_config import Configuration
+from unravel_utils import print_cmd_and_times
+
 def parse_args():
     parser = argparse.ArgumentParser(description='''Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.''',
                                      formatter_class=SuppressMetavar)
-    parser.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from valid_clusters_6_index.py (else cwd)', action=SM)
+    parser.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from valid_clusters_index.py (else cwd)', action=SM)
     parser.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
     parser.add_argument('-pv', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -123,9 +126,6 @@ def collapse_hierarchy(df, verbose=False):
         # Identify regions that can be collapsed into their parent
         collapsible_regions = can_collapse(df, depth_col)
 
-        if verbose:
-            print(f'\n{collapsible_regions=}\n')
-
         # If collapsible_regions is not empty, proceed with collapsing
         if not collapsible_regions.empty:
             
@@ -175,9 +175,6 @@ def calculate_top_regions(df, top_n, percent_vol_threshold, verbose=False):
     # Calculate the percentage of the total volume the top regions represent
     percent_vol = top_regions_volume / total_volume
 
-    if verbose:
-        print(f'The percentage of the total volume the top {top_n} regions represents: {percent_vol}\n')
-
     # Check if the top regions meet the percentage volume criterion
     if percent_vol >= percent_vol_threshold:
         return top_regions_df
@@ -202,12 +199,10 @@ def get_top_regions_and_percent_vols(sunburst_csv_path, top_regions, percent_vol
     df_final = undo_fill_with_original(df_filled_sorted, df)
 
     # Save the sorted DataFrame to a new CSV file
-    sorted_path = str(sunburst_csv_path).replace('sunburst.csv', 'sunburst_sorted.csv')
-    df_final.to_csv(sorted_path, index=False)
-
-    if verbose:
-        print(f'\nSunburst csv sorted by region hierarchy : \n')
-        print(f'{df_final}\n')
+    sorted_parent_path = sunburst_csv_path.parent / '_sorted_sunburst_CSVs'
+    sorted_parent_path.mkdir(parents=True, exist_ok=True)
+    sorted_csv_name = str(sunburst_csv_path.name).replace('sunburst.csv', 'sunburst_sorted.csv')
+    df_final.to_csv(sorted_parent_path / sorted_csv_name, index=False)
 
     # Attempt to calculate top regions, collapsing as necessary
     criteria_met = False
@@ -220,10 +215,6 @@ def get_top_regions_and_percent_vols(sunburst_csv_path, top_regions, percent_vol
             # If a top region contributes to less than 1% of the total volume, remove it
             total_volume = df_final['Volume_(mm^3)'].sum()
             top_regions_df = top_regions_df[top_regions_df['Volume_(mm^3)'] / total_volume > 0.01]
-            
-            if verbose:
-                print(f'\nTop regions meeting the volume criterion:\n')
-                print(f'{top_regions_df}\n')
 
             # Initialize lists to hold the top region names and their aggregate volumes
             top_region_names_and_percent_vols = []
@@ -242,20 +233,14 @@ def get_top_regions_and_percent_vols(sunburst_csv_path, top_regions, percent_vol
                 # Append the region name and the percentage volume to the list
                 top_region_names_and_percent_vols.append(f'{region_name} ({percent_vol}%)')
 
-            print(f'\n{total_volume=} mm^3')
-            print(f'\n{top_region_names_and_percent_vols=}')
-
             # Save the top regions DataFrame to a new CSV file
-            top_regions_path = str(sunburst_csv_path).replace('sunburst.csv', 'sunburst_top_regions.csv')
-            top_regions_df.to_csv(top_regions_path, index=False)
+            top_regions_parent_path = sunburst_csv_path.parent / '_top_regions_for_each_cluster'
+            top_regions_parent_path.mkdir(parents=True, exist_ok=True)
+            top_regions_csv_name = str(sunburst_csv_path.name).replace('sunburst.csv', 'sunburst_top_regions.csv')
+            top_regions_df.to_csv(top_regions_parent_path / top_regions_csv_name, index=False)
         else:
             # Attempt to collapse the hierarchy further
             df_final = collapse_hierarchy(df_final, verbose)
-
-            if verbose:
-                print(f'\nTop regions do not meet the volume criterion. Collapsing the hierarchy:\n')
-                print(f'{df_final}\n')
-
             if df_final.empty:
                 break  # Exit if no further collapsing is possible
 
@@ -281,10 +266,9 @@ def get_fill_color(value, max_value):
 
 
 def main():
-    args = parse_args()
 
     # Find cluster_* dirs in the current dir
-    valid_clusters_dir = args.val_clusters_dir if args.val_clusters_dir else Path.cwd()
+    valid_clusters_dir = Path(args.val_clusters_dir) if args.val_clusters_dir else Path.cwd()
     cluster_sunburst_csvs = valid_clusters_dir.glob('cluster_*_sunburst.csv')
 
     # Remove directories from the list
@@ -294,11 +278,12 @@ def main():
     column_names = ['Cluster'] + ['Volume'] + ['CoG'] + ['~Region'] + ['ID_Path'] + [f'Top_Region_{i+1}' for i in range(args.top_regions)]
 
     # Load the *cluster_info.txt file from the parent dir to get the cluster Centroid of Gravity (CoG)
-    cluster_info_files = glob('*cluster_info.txt')
+    cluster_info_txt_parent = Path(args.val_clusters_dir).parent if args.val_clusters_dir else Path.cwd()
+    cluster_info_files = list(cluster_info_txt_parent.glob('*cluster_info.txt'))
     
     # If no cluster_info.txt file is found, exit
     if not cluster_info_files:
-        print(f'\nNo *cluster_info.txt file found in {Path.cwd()}. Exiting...')
+        print(f'\n    [red]No *cluster_info.txt file found in {cluster_info_txt_parent}. Exiting...')
         return
     else:
         cluster_info_file = cluster_info_files[0] # first match
@@ -376,8 +361,8 @@ def main():
 
     # Convert the 'Volume' column to 4 decimal places
     top_regions_and_percent_vols_df['Volume'] = top_regions_and_percent_vols_df['Volume'].round(4)
-    print(f'\n The top regions and their percentage volumes for each cluster: \n')
-    print(f'\n{top_regions_and_percent_vols_df}\n')
+    print(f'\nThe top regions and their percentage volumes for each cluster:')
+    print(f'\n{top_regions_and_percent_vols_df.to_string(index=False)}\n')
 
     # Load csv with RGB values 
     sunburst_RGBs_df = pd.read_csv(Path(__file__).parent / 'sunburst_RGBs.csv', header=None)
@@ -425,18 +410,6 @@ def main():
                 ws.cell(row=ws.max_row, column=top_region_column_num).fill = fill
                 ws.cell(row=ws.max_row, column=top_region_column_num).border = thin_border
 
-    # Apply a thin border style to cells with content
-    for row in ws.iter_rows():
-        for cell in row:
-            if cell.value:  # If the cell has content
-                cell.border = thin_border
-                cell.font = Font(name='Arial', size=11)
-
-    # Apply the font to the header row
-    header_font = Font(name='Arial', bold=True)
-    for cell in ws['1:1']:
-        cell.font = header_font
-
     # Insert a new row at the top
     ws.insert_rows(1)
 
@@ -477,10 +450,6 @@ def main():
         for cell in row:
             cell.alignment = Alignment(horizontal='center', vertical='center')
 
-    # Make column B bold
-    for cell in ws['B']:
-        cell.font = Font(bold=True)
-
     # Format column C such that the brightness of the fill is proportional to the volume / total volume and the text brightness is inversely proportional to the fill brightness
     # total_volume = top_regions_and_percent_vols_df['Volume'].sum()
     volumes = top_regions_and_percent_vols_df['Volume'].tolist()
@@ -499,13 +468,58 @@ def main():
         # Set the font color based on the inverse of the fill color's brightness
         cell.font = Font(color=font_color)
 
-    # Print message about the coloring of the volume column
-    print(f"\nBrighter cell fills in the 'Volume' column represent larger volumes (log(10) scaled and normalized to the max volume).\n")
+    # Apply a thin border style to cells with content
+    for row in ws.iter_rows():
+        for cell in row:
+            if cell.value:  # If the cell has content
+                cell.border = thin_border
+                cell.font = Font(name='Arial', size=11)
 
+    # Apply the font to the header row
+    header_font = Font(name='Arial', bold=True)
+    for cell in ws['2:2']:
+        cell.font = header_font
+
+    # Make column B bold
+    for cell in ws['B']:
+        cell.font = Font(name='Arial', bold=True)
+    
+    # Additional step to ensure cells from column F onwards are black
+    for row in ws.iter_rows(min_col=6): 
+        for cell in row:
+            if cell.font:  # If the cell already has font settings applied
+                cell.font = Font(name='Arial', size=cell.font.size, bold=cell.font.bold, color='FF000000')
+            else:
+                cell.font = Font(name='Arial', color='FF000000')
+
+    # Iterate through the cells and merge cells with the same value in column 5
+    current_region = None
+    first_row = None
+
+    # Adjusted min_row to 2 and min_col/max_col to merge_column because of the added padding row and column
+    merge_column = 5
+    for row in ws.iter_rows(min_row=2, max_row=ws.max_row - 1, min_col=merge_column, max_col=merge_column):
+        cell = row[0]  # row[0] since we're only looking at one column, and iter_rows yields tuples
+        if cell.value != current_region:
+            # If the cell value changes, merge the previous cells if there are more than one with the same value
+            if first_row and first_row < cell.row - 1:
+                ws.merge_cells(start_row=first_row, start_column=merge_column, end_row=cell.row - 1, end_column=merge_column)
+            # Update the current region and reset the first_row to the current cell's row
+            current_region = cell.value
+            first_row = cell.row
+
+    # After the loop, check and merge the last set of cells if needed
+    if first_row and first_row < ws.max_row:
+        ws.merge_cells(start_row=first_row, start_column=merge_column, end_row=ws.max_row - 1, end_column=merge_column)
+
+    for cell in ws['E']:
+        cell.alignment = Alignment(horizontal='center', vertical='center')
+    
     # Save the workbook to a file
-    excel_file_path = valid_clusters_dir / 'valid_clusters_table.xlsx'
+    excel_file_path = valid_clusters_dir / f'{valid_clusters_dir.parent.name}_valid_clusters_table.xlsx'
     wb.save(excel_file_path)
     print(f"Excel file saved at {excel_file_path}")
+    print(f"\nBrighter cell fills in the 'Volume' column represent larger volumes (log(10) scaled and normalized to the max volume).")
 
     # Get the anatomically sorted list of cluster IDs and save it to a .txt file
     valid_cluster_ids = top_regions_and_percent_vols_df['Cluster'].tolist()
@@ -516,4 +530,6 @@ def main():
 
 if __name__ == '__main__':
     install()
-    main()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    print_cmd_and_times(main)()

@@ -53,7 +53,7 @@ def main():
     output_dir.mkdir(exist_ok=True, parents=True)
     output_image_path = output_dir / str(Path(args.cluster_idx).name).replace('.nii.gz', f'_{output_dir.name}.nii.gz')
     if output_image_path.exists():
-        print(f"\n\n    {output_image_path.name} already exists. Skipping.\n")
+        print(f"\n    {output_image_path.name} already exists. Skipping.")
         return
 
     nii = nib.load(args.cluster_idx)

@@ -37,6 +37,18 @@ img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
 def main():
     args = parse_args()
 
+    if args.mirror:
+        output = args.input.replace('.nii.gz', '_ABA_WB.nii.gz')
+    else:
+        output = args.input.replace('.nii.gz', '_ABA.nii.gz')
+        
+    txt_output = args.input.replace('.nii.gz', '_rgba.txt')
+
+    if Path(output).exists() and Path(txt_output).exists():
+        print(f'{output} and {Path(txt_output).name} exist. Skipping.')
+        return
+        
+
     # Load the input NIFTI file
     nii = nib.load(args.input)
     img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
@@ -57,10 +69,7 @@ def main():
     final_data = img * atlas_img
 
     # Save the bilateral version of the cluster index with ABA colors
-    if args.mirror:
-        output = args.input.replace('.nii.gz', '_ABA_WB.nii.gz')
-    else:
-        output = args.input.replace('.nii.gz', '_ABA.nii.gz')
+
     nib.save(nib.Nifti1Image(final_data, atlas_nii.affine, atlas_nii.header), output)
 
     # Calculate and save histogram
@@ -76,7 +85,7 @@ def main():
     color_map = pd.read_csv(Path(__file__).parent / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
 
     # Delete rgba.txt if it exists (used for coloring the regions in DSI Studio)
-    txt_output = str(Path(args.input).parent / "rgba.txt")
+    
     if Path(txt_output).exists():
         Path(txt_output).unlink()
 
@@ -91,8 +100,6 @@ def main():
         # Save the RGBA values to a .txt file
         with open(txt_output, 'a') as f:
             f.write(rgba_str + '\n')
-    
-    print(f"\n    Output: [default bold]{txt_output}")
 
 
 if __name__ == '__main__':

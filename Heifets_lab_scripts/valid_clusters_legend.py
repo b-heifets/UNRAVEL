@@ -13,10 +13,14 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Border, Side, Font
 from openpyxl.styles import Alignment
 
+from unravel_config import Configuration
+from unravel_utils import print_cmd_and_times
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.', formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--path', help='Path to the directory containing the *_valid_clusters_table.xlsx files. Default: current working directory', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Example usage:    valid_clusters_legend.py
 
 Prerequisites: valid_cluster_table.sh has been run and the resulting .xlsx files are in the working directory.
@@ -58,16 +62,16 @@ def apply_rgb_to_cell(ws, df_w_rgb, col_w_labels, col_num):
 
 
 def main():
-    path = parse_args().path or Path.cwd()
+    path = Path(args.path) if args.path else Path.cwd()
 
     # Find cluster_* dirs in the current dir
     xlsx_files = path.glob('*_valid_clusters_table.xlsx')
 
     # Filter out files starting with '~$'
-    xlsx_files = [f for f in xlsx_files if not f.split('/')[-1].startswith('~$')]
+    xlsx_files = [f for f in xlsx_files if not str(f).split('/')[-1].startswith('~$')]
 
     # Filter out files that start with legend
-    xlsx_files = [f for f in xlsx_files if not f.split('/')[-1].startswith('legend')]
+    xlsx_files = [f for f in xlsx_files if not str(f).split('/')[-1].startswith('legend')]
 
     # Initialize a set to store unique regions from all files, accounting for headers in the second row
     all_unique_regions = set() # Using a set to avoid duplicates
@@ -282,10 +286,32 @@ def main():
         for cell in row:
             cell.alignment = Alignment(horizontal='center', vertical='center')
 
+    # Ensure that fonts are black
+    for row in ws.iter_rows(min_col=2): 
+        for cell in row:
+            if cell.font:  # If the cell already has font settings applied
+                cell.font = Font(name='Arial', size=cell.font.size, bold=cell.font.bold, color='FF000000')
+            else:
+                cell.font = Font(name='Arial', color='FF000000')
+
     # Save the workbook to a file
     excel_file_path = path / 'legend.xlsx'
     wb.save(excel_file_path)
 
+    # Save text for figure legend 
+    fig_legend_txt = path / "fig_legend.txt"
+    with open(fig_legend_txt, "w") as file:
+        file.write(f'\n{all_unique_regions=}\n')
+        file.write(f'\n{unique_regions_collapsed=}\n')
+        if len(other_regions_w_digits) > 0:
+            file.write(f"\nNumbers ({layers_set}) = cortical layers (with these exceptions {other_regions_w_digits})\n")
+        else:
+            file.write(f"\nNumbers ({layers_set}) = cortical layers\n")
+        file.write(f'\nAdditional abbreviations not shown in the region abbreviation legend (SI table): {other_abbreviation_to_definitions}\n')
+
+
 if __name__ == '__main__':
     install()
-    main()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    print_cmd_and_times(main)()

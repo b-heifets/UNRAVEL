@@ -8,13 +8,16 @@ from rich import print
 from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
+from unravel_config import Configuration
+from unravel_utils import print_cmd_and_times
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Organize cell_count|label_volume, cluster_volume, and <cell|label>_density data from cluster and sample and save as csv', formatter_class=SuppressMetavar)
-    parser.add_argument('-sa', '--save_all', help='Also save CSVs w/ cell_count|label_volume and cluster_volume data', action='store_true', default=False)
     parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs to include in the summary.', nargs='+', type=int, required=True, action=SM)
-    parser.add_argument('-p', '--path', help='Path to the directory containing the CSV files from valid_clusters_cell_or_label_densities.py. Default: current directory', action=SM)
+    parser.add_argument('-sa', '--save_all', help='Also save CSVs w/ cell_count|label_volume and cluster_volume data', action='store_true', default=False)
+    parser.add_argument('-p', '--path', help='Path to the directory containing the CSV files from validate_clusters.py. Default: current directory', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """
 Usage: valid_clusters_9_prism.py -ids 1 2 3
         
@@ -50,28 +53,29 @@ def generate_summary_table(csv_files, data_column_name):
     data_by_condition = {}
 
     # Check if any files contain hemisphere indicators
-    has_hemisphere = any('_LH.csv' in file or '_RH.csv' in file for file in csv_files)
+    has_hemisphere = any('_LH.csv' in str(file) or '_RH.csv' in str(file) for file in csv_files)
 
     # Loop through each file in the working directory
     for file in csv_files:
 
         # Extract the condition and sample name
-        parts = file.split('_')
+        parts = str(Path(file).name).split('_')
         condition = parts[0]
         sample = parts[1] 
 
+        if has_hemisphere:
         # if has_hemisphere, pool data from LH and RH files
-        if file.endswith('_RH.csv'):
-            continue # Skip RH files
+            if str(file).endswith('_RH.csv'):
+                continue # Skip RH files
 
-        if file.endswith('_LH.csv'):
-            LH_df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
-            RH_df = pd.read_csv(file.replace('_LH.csv', '_RH.csv'), usecols=['sample', 'cluster_ID', data_column_name])
+            if str(file).endswith('_LH.csv'):
+                LH_df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
+                RH_df = pd.read_csv(str(file).replace('_LH.csv', '_RH.csv'), usecols=['sample', 'cluster_ID', data_column_name])
 
-            # Sum the data_col of the LH and RH dataframes
-            df = pd.concat([LH_df, RH_df], ignore_index=True).groupby(['sample', 'cluster_ID']).agg( # Group by sample and cluster_ID
-                **{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='sum')} # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method
-            ).reset_index() # Reset the index to avoid a multi-index dataframe
+                # Sum the data_col of the LH and RH dataframes
+                df = pd.concat([LH_df, RH_df], ignore_index=True).groupby(['sample', 'cluster_ID']).agg( # Group by sample and cluster_ID
+                    **{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='sum')} # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method
+                ).reset_index() # Reset the index to avoid a multi-index dataframe
 
         else:
             # Load the CSV file into a pandas dataframe
@@ -115,7 +119,7 @@ def main():
     path = Path(args.path) if args.path else Path.cwd()
 
     # Load all .csv files
-    csv_files = path.glob('*.csv')
+    csv_files = list(path.glob('*.csv'))
 
     # Load the first .csv file to check for data columns and set the appropriate column names
     first_df = pd.read_csv(csv_files[0])
@@ -137,15 +141,15 @@ def main():
     density_col_summary_df = generate_summary_table(csv_files, density_col)
 
     # Exclude clusters that are not in the list of valid clusters
-    if args.clusters is not None:
-        data_col_summary_df = data_col_summary_df[data_col_summary_df['cluster_ID'].isin(args.clusters)]
-        cluster_volume_summary_df = cluster_volume_summary_df[cluster_volume_summary_df['cluster_ID'].isin(args.clusters)]
-        density_col_summary_df = density_col_summary_df[density_col_summary_df['cluster_ID'].isin(args.clusters)]
+    if args.valid_cluster_ids is not None:
+        data_col_summary_df = data_col_summary_df[data_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
+        cluster_volume_summary_df = cluster_volume_summary_df[cluster_volume_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
+        density_col_summary_df = density_col_summary_df[density_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
 
-        # Sort data frames such that the 'cluster_ID' column matches the order of clusters in args.clusters
-        data_col_summary_df = data_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.clusters)}))
-        cluster_volume_summary_df = cluster_volume_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.clusters)}))
-        density_col_summary_df = density_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.clusters)}))
+        # Sort data frames such that the 'cluster_ID' column matches the order of clusters in args.valid_cluster_ids
+        data_col_summary_df = data_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
+        cluster_volume_summary_df = cluster_volume_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
+        density_col_summary_df = density_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
 
     # Sum each column in the summary tables other than the 'cluster_ID' column, which could be dropped
     data_col_summary_df_sum = data_col_summary_df.sum()
@@ -163,7 +167,7 @@ def main():
     density_col_summary_df_sum = density_col_summary_df_sum.drop('cluster_ID').reset_index().T
 
     # Make output dir
-    output_dir = path / 'cluster_validation_summary'
+    output_dir = path / '_valid_clusters_prism'
     Path(output_dir).mkdir(exist_ok=True)
 
     # Save the summary tables to .csv files
@@ -171,15 +175,18 @@ def main():
         data_col_summary_df.to_csv(output_dir / f'{data_col}_summary.csv', index=False)
         cluster_volume_summary_df.to_csv(output_dir / 'cluster_volume_summary.csv', index=False)
 
-    if args.clusters is not None:
+    if args.valid_cluster_ids is not None:
         density_col_summary_df.to_csv(output_dir / f'{density_col}_summary_for_valid_clusters.csv', index=False)
         density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_valid_clusters.csv', index=False)
     else:
         density_col_summary_df.to_csv(output_dir / f'{density_col}_summary.csv', index=False)
         density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_clusters.csv', index=False)
 
-    print(f"Saved results in [bright_magenta]./cluster_validation_summary/")
+    print(f"\n    Saved results in [bright_magenta]./_valid_clusters_prism/")
+
 
 if __name__ == '__main__':
     install()
-    main()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    print_cmd_and_times(main)()

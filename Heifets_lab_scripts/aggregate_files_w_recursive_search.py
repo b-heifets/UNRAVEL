@@ -14,7 +14,7 @@ def find_and_copy_files(pattern, src_dir, dest_dir):
     for file_path in src_dir.rglob(pattern): # Use rglob for recursive globbing
         if dest_dir not in file_path.parents:
             shutil.copy(str(file_path), dest_dir)
-            print(f"Copied: {file_path} to {dest_dir}")
+            # print(f"Copied: {file_path} to {dest_dir}")
 
 def main():
     parser = argparse.ArgumentParser(description="Recusively copy files matching a pattern.")

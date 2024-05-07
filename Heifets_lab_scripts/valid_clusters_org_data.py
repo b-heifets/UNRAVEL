@@ -10,7 +10,7 @@ from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration 
-from unravel_utils import print_cmd_and_times, initialize_progress_bar, get_samples, print_func_name_args_times
+from unravel_utils import print_cmd_and_times, get_samples
 
 
 def parse_args():

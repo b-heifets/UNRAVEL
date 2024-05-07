@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import argparse
+import nibabel as nib
+import numpy as np
 import subprocess
 from pathlib import Path
 from rich import print
@@ -11,6 +13,7 @@ from unravel_config import Config
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration 
 from unravel_utils import print_cmd_and_times
+from valid_clusters_org_data import cp
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Aggregates and analyzes cluster validation data from validate_clusters.py', formatter_class=SuppressMetavar)
@@ -31,6 +34,8 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """ Usage: valid_clusters_summary.py -c <path/config.ini> -e <exp dir paths> -cvd '*' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -v
 
+The current working directory should not have other directories when running this script for the first time. Directories from valid_clusters_org_data.py are ok though.
+
 Runs scripts in this order:
     - valid_clusters_org_data.py
     - valid_clusters_group_bilateral_data.py
@@ -44,6 +49,8 @@ Runs scripts in this order:
 
 """
     return parser.parse_args()
+
+# TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this
 
 
 def run_script(script_name, script_args):
@@ -104,9 +111,13 @@ def main():
         if args.verbose:
             stats_args.append('-v')
         run_script('valid_clusters_stats.py', stats_args)
+
+    dsi_dir = Path().cwd() / '3D_brains'
+    dsi_dir.mkdir(parents=True, exist_ok=True) 
     
     # Iterate over all subdirectories in the current working directory and run the following scripts
-    for subdir in [d for d in Path.cwd().iterdir() if d.is_dir()]:
+    for subdir in [d for d in Path.cwd().iterdir() if d.is_dir() and d.name != '3D_brains' and d.name != 'valid_clusters_tables_and_legend']:
+
         stats_output = subdir / '_cluster_validation_info'
         valid_clusters_ids_txt = stats_output / 'valid_cluster_IDs_t-test.txt' if len(args.groups) == 2 else stats_output / 'valid_cluster_IDs_tukey.txt'
 
@@ -114,7 +125,14 @@ def main():
             with open(valid_clusters_ids_txt, 'r') as f:
                 valid_cluster_ids = f.read().split()
 
-        rev_cluster_index_path = next(subdir.glob('*rev_cluster_index*.nii.gz'))
+        rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index.nii.gz'
+        if not Path(rev_cluster_index_path).exists():
+            rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index_RH.nii.gz'
+        if not Path(rev_cluster_index_path).exists():        
+            rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index_LH.nii.gz'
+        if not Path(rev_cluster_index_path).exists():
+            rev_cluster_index_path = next(subdir.glob("*rev_cluster_index*"))
+
         valid_clusters_index_dir = subdir / cfg.index.valid_clusters_dir
         
         # Run valid_clusters_index.py
@@ -131,50 +149,67 @@ def main():
         run_script('valid_clusters_index.py', index_args)
 
         # Run 3D_brain.py
+        valid_cluster_index_path = valid_clusters_index_dir / str(rev_cluster_index_path.name).replace('.nii.gz', f'_{cfg.index.valid_clusters_dir}.nii.gz')
         brain_args = [
-            '-i', rev_cluster_index_path,
-            '-m', cfg.brain.mirror,
+            '-i', valid_cluster_index_path,
             '-ax', cfg.brain.axis,
             '-s', cfg.brain.shift,
             '-sa', cfg.brain.split_atlas
         ]
+        if cfg.brain.mirror: 
+            brain_args.append('-m')
         if args.verbose:
             brain_args.append('-v')
         run_script('3D_brain.py', brain_args)
 
-        # # Run valid_clusters_prism.py
-        # prism_args = [
-        #     '-ids', *valid_cluster_ids,
-        #     '-p', Path().cwd() / subdir,
-        # ]
-        # if cfg.prism.save_all:
-        #     prism_args.append('-sa')
-        # run_script('valid_clusters_prism.py', prism_args)
+        # Aggregate files from 3D_brains.py
+        if cfg.brain.mirror: 
+            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA_WB.nii.gz', subdir, dsi_dir)
+        else:
+            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA.nii.gz', subdir, dsi_dir)
+        find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_rgba.txt', subdir, dsi_dir)
 
-        # # Run valid_clusters_table.py
-        # table_args = [
-        #     '-vcd', valid_clusters_dir,
-        #     '-t', cfg.table.top_regions,
-        #     '-pv', cfg.table.percent_vol
-        # ]
-        # if args.verbose:
-        #     table_args.append('-v')
-        # run_script('valid_clusters_table.py', table_args)
+        # Run valid_clusters_prism.py
+        prism_args = [
+            '-ids', *valid_cluster_ids,
+            '-p', subdir,
+        ]
+        if cfg.prism.save_all:
+            prism_args.append('-sa')
+        if args.verbose:
+            prism_args.append('-v')
+        run_script('valid_clusters_prism.py', prism_args)
 
+        # Run valid_clusters_table.py
+        table_args = [
+            '-vcd', valid_clusters_index_dir,
+            '-t', cfg.table.top_regions,
+            '-pv', cfg.table.percent_vol
+        ]
+        if args.verbose:
+            table_args.append('-v')
+        run_script('valid_clusters_table.py', table_args)
 
-    import sys ; sys.exit()
+        find_and_copy_files('*_valid_clusters_table.xlsx', subdir, Path().cwd() / 'valid_clusters_tables_and_legend')
+
+    # Copy the atlas and binarize it for visualization in DSI studio
+    dest_atlas = dsi_dir / Path(cfg.index.atlas).name
+    if not dest_atlas.exists():
+        cp(cfg.index.atlas, dsi_dir)
+        atlas_nii = nib.load(dest_atlas)
+        atlas_img = np.asanyarray(atlas_nii.dataobj, dtype=atlas_nii.header.get_data_dtype()).squeeze()
+        atlas_img[atlas_img > 0] = 1
+        atlas_img.astype(np.uint8)
+        atlas_nii_bin = nib.Nifti1Image(atlas_img, atlas_nii.affine, atlas_nii.header)
+        atlas_nii_bin.header.set_data_dtype(np.uint8)
+        nib.save(atlas_nii_bin, str(dest_atlas).replace('.nii.gz', '_bin.nii.gz'))
 
     # Run valid_clusters_legend.py
-    find_and_copy_files('*_valid_clusters_table.xlsx', Path().cwd(), 'valid_clusters_tables_and_legend')
+   
     legend_args = [
         '-p', 'valid_clusters_tables_and_legend'
     ]
     run_script('valid_clusters_legend.py', legend_args)
-
-    #################### Would this be helpful? #####################################
-    # Aggregate *_ABA.nii.gz files and the rgba.txt file into a new directory #### WB
-    # find_and_copy_files('*_ABA.nii.gz', Path().cwd(), '3D_brain_images')
-    # Need to rename the rgba.txt file so it has the same name as the corresponding NIfTI file
 
 
 if __name__ == '__main__':
@@ -182,6 +217,3 @@ if __name__ == '__main__':
     args = parse_args()
     Configuration.verbose = args.verbose
     print_cmd_and_times(main)()
-
-
-# Scripts 4 and 7 are more general (also relevant to rstats). --> rename
