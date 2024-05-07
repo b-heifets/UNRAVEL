@@ -70,6 +70,13 @@ def generate_summary_table(csv_files, data_column_name):
 
             if str(file).endswith('_LH.csv'):
                 LH_df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
+
+                if not Path(str(file).replace('_LH.csv', '_RH.csv')).exists():
+                    print(f"[red]    {Path(str(file).replace('_LH.csv', '_RH.csv'))} is missing")
+                    with open(file.parent / "missing_csv_files.txt", 'a') as f:
+                        f.write(f"{Path(str(file).replace('_LH.csv', '_RH.csv'))} is missing")
+                    continue # skip processing for this sample
+
                 RH_df = pd.read_csv(str(file).replace('_LH.csv', '_RH.csv'), usecols=['sample', 'cluster_ID', data_column_name])
 
                 # Sum the data_col of the LH and RH dataframes

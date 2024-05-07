@@ -49,7 +49,7 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Run from a sample?? folder.
 
-Example usage:     valid_clusters_1_cell_or_label_densities.py -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
+Example usage:     validate_clusters.py -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
 
 cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
 

@@ -241,6 +241,13 @@ def main():
         if not csv_files:
             continue  # Skip directories with no CSV files
 
+        # Make output dir
+        output_dir = Path(subdir) / '_cluster_validation_info'
+        output_dir.mkdir(exist_ok=True)
+        validation_info_csv = output_dir / 'cluster_validation_info_t-test.csv' if len(args.groups) == 2 else output_dir / 'cluster_validation_info_tukey.csv'
+        if validation_info_csv.exists():
+            continue
+
         # Load the first .csv file to check for data columns and set the appropriate column names
         first_df = pd.read_csv(csv_files[0])
         if 'cell_count' in first_df.columns:
@@ -278,10 +285,6 @@ def main():
             # Perform a Tukey's test
             print(f"Running [gold1 bold]Tukey's tests")
             stats_df = perform_tukey_test(data_df, args.groups, density_col)
-
-        # Make output dir
-        output_dir = Path(subdir) / '_cluster_validation_info'
-        output_dir.mkdir(exist_ok=True)
 
         # Save the results to a .csv file
         stats_results_csv = output_dir / 't-test_results.csv' if len(args.groups) == 2 else output_dir / 'tukey_results.csv'
@@ -359,7 +362,7 @@ def main():
             '# of clusters': [total_clusters],
             'Validation rate': [f"{len(significant_cluster_ids) / total_clusters * 100}%"]
         })
-        validation_info_csv = output_dir / 'cluster_validation_info_t-test.csv' if len(args.groups) == 2 else output_dir / 'cluster_validation_info_tukey.csv'
+        
         data_df.to_csv(validation_info_csv, index=False)
 
     # Concat all cluster_validation_info.csv files

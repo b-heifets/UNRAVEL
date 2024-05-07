@@ -50,7 +50,7 @@ Runs scripts in this order:
 """
     return parser.parse_args()
 
-# TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this
+# TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis])
 
 
 def run_script(script_name, script_args):
@@ -118,6 +118,11 @@ def main():
     # Iterate over all subdirectories in the current working directory and run the following scripts
     for subdir in [d for d in Path.cwd().iterdir() if d.is_dir() and d.name != '3D_brains' and d.name != 'valid_clusters_tables_and_legend']:
 
+        # Load all .csv files in the current subdirectory
+        csv_files = list(subdir.glob('*.csv'))
+        if not csv_files:
+            continue  # Skip directories with no CSV files
+
         stats_output = subdir / '_cluster_validation_info'
         valid_clusters_ids_txt = stats_output / 'valid_cluster_IDs_t-test.txt' if len(args.groups) == 2 else stats_output / 'valid_cluster_IDs_tukey.txt'
 
@@ -132,6 +137,10 @@ def main():
             rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index_LH.nii.gz'
         if not Path(rev_cluster_index_path).exists():
             rev_cluster_index_path = next(subdir.glob("*rev_cluster_index*"))
+
+        if rev_cluster_index_path is None:
+            print(f"No valid cluster index file found in {subdir}. Skipping...")
+            continue  # Skip this directory and move to the next
 
         valid_clusters_index_dir = subdir / cfg.index.valid_clusters_dir
         
