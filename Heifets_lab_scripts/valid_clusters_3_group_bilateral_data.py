@@ -5,11 +5,13 @@ import shutil
 from pathlib import Path
 from rich.traceback import install
 
-from argparse_utils import SuppressMetavar, SM
-from unravel_utils import print_cmd_and_times
+from argparse_utils import SuppressMetavar
+from unravel_config import Configuration
+from unravel_utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Organize bilateral csv outputs from valid_clusters_1_cell_or_label_densities.py', formatter_class=SuppressMetavar)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """
 Run this script in the target_dir from valid_clusters_2_org_data.py
         
@@ -37,7 +39,7 @@ The resulting directory structure will be:
 """
     return parser.parse_args()
 
-
+@print_func_name_args_times()
 def group_hemisphere_data(base_path):
 
     # Collect all relevant directories
@@ -55,15 +57,18 @@ def group_hemisphere_data(base_path):
         if rh_dir:  # Only proceed if both left and right directories exist
             new_dir_path = base_path / common_name
             new_dir_path.mkdir(exist_ok=True)
-            
+
             # Move files from left hemisphere directory to new directory
             for file in lh_dir.iterdir():
-                shutil.move(str(file), new_dir_path)
+                dest_file = Path(new_dir_path, file.name)
+                if not dest_file.exists():
+                    shutil.move(str(file), dest_file)
             
             # Move files from right hemisphere directory to new directory
             for file in rh_dir.iterdir():
-                if str(file).endswith('.csv'):
-                    shutil.move(str(file), new_dir_path)
+                dest_file = Path(new_dir_path, file.name)
+                if not dest_file.exists():
+                    shutil.move(str(file), dest_file)
             
             # Remove the original directories
             shutil.rmtree(lh_dir)
@@ -73,10 +78,18 @@ def group_hemisphere_data(base_path):
 def main():
     base_path = Path.cwd()
 
-    group_hemisphere_data(base_path)
+
+    has_hemisphere = False
+    for subdir in [d for d in Path.cwd().iterdir() if d.is_dir()]:
+        if str(subdir).endswith('_LH') or str(subdir).endswith('_RH'):
+            has_hemisphere = True
+
+    if has_hemisphere: 
+        group_hemisphere_data(base_path)
 
 
 if __name__ == '__main__':
     install()
     args = parse_args()
+    Configuration.verbose = args.verbose
     print_cmd_and_times(main)()

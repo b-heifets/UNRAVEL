@@ -54,7 +54,6 @@ def calculate_regional_volumes(img, atlas, atlas_res_in_um):
 
     return dict(zip(uniq_values, volumes))
 
-@print_func_name_args_times()
 def sunburst(img, atlas, atlas_res_in_um, output_path, output_rgb_lut=False):
     """Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy.
     

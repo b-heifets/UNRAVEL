@@ -38,7 +38,6 @@ def cp(src, dest):
         - dest (Path): the destination path"""
     shutil.copy(src, dest)
 
-@print_func_name_args_times()
 def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
     """Copy the cluster info, p value threshold, and rev_cluster_index files to the target directory.
     
@@ -50,6 +49,7 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
     vstats_path = Path(vstats_path)
     if vstats_path.exists():
         validation_dir_name = str(validation_dir.name)
+        validation_dir_name = validation_dir_name.replace('_gt_', '_v_').replace('_lt_', '_v_')
         if validation_dir_name.endswith('_LH') or validation_dir_name.endswith('_RH'):
             cluster_correction_dir = validation_dir_name[:-3]  # Remove last 3 characters (_LH or _RH)
         else:
@@ -62,26 +62,24 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             if not dest_stats.exists(): 
                 cp(src=cluster_info, dest=dest_stats)
             
-            p_val_thresh_file = cluster_correction_path / p_val_txt
-            if p_val_thresh_file.exists():
-                dest_p_val_thresh = dest_path / p_val_txt
-                if not dest_p_val_thresh.exists():
-                    cp(src=p_val_thresh_file, dest=dest_p_val_thresh)
+        p_val_thresh_file = cluster_correction_path / p_val_txt
+        if p_val_thresh_file.exists():
+            dest_p_val_thresh = dest_path / p_val_txt
+            if not dest_p_val_thresh.exists():
+                cp(src=p_val_thresh_file, dest=dest_p_val_thresh)
 
-            if validation_dir_name.endswith('_LH'):
-                rev_cluster_index_path = cluster_correction_path / f'{cluster_correction_dir}_rev_cluster_index_LH.nii.gz'
-            elif validation_dir_name.endswith('_RH'):
-                rev_cluster_index_path = cluster_correction_path / f'{cluster_correction_dir}_rev_cluster_index_RH.nii.gz'
-            else:
-                rev_cluster_index_path = cluster_correction_path / f'{cluster_correction_dir}_rev_cluster_index.nii.gz'
+        if validation_dir_name.endswith('_LH'):
+            rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)[:-3]}_rev_cluster_index_LH.nii.gz'
+        elif validation_dir_name.endswith('_RH'):
+            rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)[:-3]}_rev_cluster_index_RH.nii.gz'
+        else:
+            rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)}_rev_cluster_index.nii.gz'
 
-            if rev_cluster_index_path.exists():
-                dest_rev_cluster_index = dest_path / rev_cluster_index_path.name
-                if not dest_rev_cluster_index.exists():
-                    cp(src=rev_cluster_index_path, dest=dest_rev_cluster_index)
+        if rev_cluster_index_path.exists():
+            dest_rev_cluster_index = dest_path / rev_cluster_index_path.name
+            if not dest_rev_cluster_index.exists():
+                cp(src=rev_cluster_index_path, dest=dest_rev_cluster_index)
 
-
-@print_func_name_args_times()
 def organize_validation_data(sample_path, clusters_path, validation_dir_pattern, density_type, target_dir, vstats_path, p_val_txt):
     """Copy the cluster validation, p value, cluster info, and rev_cluster_index files to the target directory.
     
@@ -123,17 +121,13 @@ def main():
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
-    with Live(progress):
-        for sample in samples:
+    for sample in samples:
 
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+        sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            clusters_path = sample_path / 'clusters'
-            if clusters_path.exists():
-                organize_validation_data(sample_path, clusters_path, args.cluster_val_dirs, args.density_type, target_dir, args.vstats_path, args.p_val_txt)
-            
-            progress.update(task_id, advance=1)
+        clusters_path = sample_path / 'clusters'
+        if clusters_path.exists():
+            organize_validation_data(sample_path, clusters_path, args.cluster_val_dirs, args.density_type, target_dir, args.vstats_path, args.p_val_txt)
 
 
 if __name__ == '__main__':

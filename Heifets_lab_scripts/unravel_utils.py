@@ -51,8 +51,6 @@ def get_samples(sample_dir_list=None, sample_dir_pattern="sample??", exp_dir_pat
 
     # Search for sample folders within each experiment directory in exp_dir_paths and add their full paths
     if exp_dir_paths:
-        exp_dir_paths = str(exp_dir_paths).split() # Split on spaces
-        exp_dir_paths = [Path(p) for p in exp_dir_paths]
         for exp_dir in exp_dir_paths:
             exp_path = Path(exp_dir).resolve()
             if exp_path.is_dir():

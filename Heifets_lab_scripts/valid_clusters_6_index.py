@@ -10,15 +10,18 @@ from rich.traceback import install
 
 from argparse_utils import SM, SuppressMetavar
 from sunburst import sunburst
+from unravel_config import Configuration
+from unravel_utils import print_cmd_and_times
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Create a cluster index with valid clusters from a given NIfTI image.', formatter_class=SuppressMetavar)
     parser.add_argument('-ci', '--cluster_idx', help='Path to the reverse cluster index NIfTI file.', required=True, action=SM)
     parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs.', nargs='+', type=int, required=True, action=SM)
-    parser.add_argument('-vcd', '--valid_clusters_dir', help='path/name_of_the_output_directory. Default: valid_clusters', default='valid_clusters', action=SM)
+    parser.add_argument('-vcd', '--valid_clusters_dir', help='path/name_of_the_output_directory. Default: valid_clusters', default='_valid_clusters', action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """Usage:    valid_clusters_6_index.py -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3
     
 Outputs: path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz and path/valid_clusters/cluster_*_sunburst.csv"""
@@ -46,6 +49,13 @@ def generate_sunburst(cluster, img, atlas, xyz_res_in_um, data_type, output_dir)
 def main():
     args = parse_args()
 
+    output_dir = Path(args.valid_clusters_dir)
+    output_dir.mkdir(exist_ok=True, parents=True)
+    output_image_path = output_dir / str(Path(args.cluster_idx).name).replace('.nii.gz', f'_{output_dir.name}.nii.gz')
+    if output_image_path.exists():
+        print(f"\n\n    {output_image_path.name} already exists. Skipping.\n")
+        return
+
     nii = nib.load(args.cluster_idx)
     img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
     max_cluster_id = int(img.max())
@@ -56,10 +66,6 @@ def main():
     atlas = np.asanyarray(atlas_nii.dataobj, dtype=atlas_nii.header.get_data_dtype()).squeeze()
     atlas_res = atlas_nii.header.get_zooms() # (x, y, z) in mm
     xyz_res_in_um = atlas_res[0] * 1000
-
-    # Create the output directory
-    output_dir = Path(args.output)
-    output_dir.mkdir(exist_ok=True, parents=True)
     
     # Write valid cluster indices to a file
     with open(output_dir / 'valid_clusters.txt', 'w') as file:
@@ -76,16 +82,15 @@ def main():
         for future in futures:
             future.result()  # Wait for all threads to complete
 
-    output_image_path = output_dir / str(Path(args.cluster_idx).name).replace('.nii.gz', '_valid_clusters.nii.gz')
+    print(f'    Saved valid cluster index: {output_image_path}')
     nib.save(nib.Nifti1Image(valid_cluster_index, nii.affine, nii.header), output_image_path)
     
     # Generate the sunburst plot for the valid cluster index
     sunburst_df = sunburst(valid_cluster_index, atlas, xyz_res_in_um, output_dir / 'valid_clusters_sunburst.csv', args.output_rgb_lut)
 
-    print(f'\n\nSunburst DataFrame for [magenta bold]{output_image_path.name}[/]:')    
-    print(f'\n{sunburst_df}\n')
-
 
 if __name__ == '__main__':
     install()
-    main()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    print_cmd_and_times(main)()

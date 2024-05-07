@@ -13,7 +13,8 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from argparse_utils import SuppressMetavar, SM
 from effect_sizes import condition_selector
-from unravel_utils import initialize_progress_bar
+from unravel_config import Configuration
+from unravel_utils import initialize_progress_bar, print_cmd_and_times
 from valid_clusters_stats_table import valid_clusters_summary
 
 def parse_args():
@@ -88,17 +89,17 @@ def cluster_validation_data_df(density_col, has_hemisphere, csv_files, groups, d
                 side = str(file.name).split('_')[-1].split('.')[0]
                 df = pd.read_csv(file)
                 df = df.drop(columns=['xmin', 'xmax', 'ymin', 'ymax', 'zmin', 'zmax'])
-                df['condition'] = condition_name # Add the condition to the df
-                df['side'] = side # Add the side 
+                df['condition'] = condition_name  # Add the condition to the df
+                df['side'] = side  # Add the side 
                 data_df = pd.concat([data_df, df], ignore_index=True)
 
         # Pool data by condition, sample, and cluster_ID
-        data_df = data_df.groupby(['condition', 'sample', 'cluster_ID']).agg( # Group by condition, sample, and cluster_ID
-            **{data_col_pooled: pd.NamedAgg(column=data_col, aggfunc='sum'), # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method 
-            'pooled_cluster_volume': pd.NamedAgg(column='cluster_volume', aggfunc='sum')} # Sum cluster_volume
+        data_df = data_df.groupby(['condition', 'sample', 'cluster_ID']).agg(  # Group by condition, sample, and cluster_ID
+            **{data_col_pooled: pd.NamedAgg(column=data_col, aggfunc='sum'),  # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method 
+            'pooled_cluster_volume': pd.NamedAgg(column='cluster_volume', aggfunc='sum')}  # Sum cluster_volume
         ).reset_index() # Reset the index to avoid a multi-index dataframe
 
-        data_df[density_col] = data_df[data_col_pooled] / data_df['pooled_cluster_volume'] # Add a column for cell/label density
+        data_df[density_col] = data_df[data_col_pooled] / data_df['pooled_cluster_volume']  # Add a column for cell/label density
     else:
         # Process files without hemisphere pooling
         print(f"Organizing [red1 bold]unilateral[/] [dark_orange bold]{density_col}[/] data...")
@@ -233,7 +234,7 @@ def main():
 
     # Iterate over all subdirectories in the current working directory
     for subdir in [d for d in current_dir.iterdir() if d.is_dir()]:
-        print(f"\nProcessing directory: [bold]{subdir.name}[/]")
+        print(f"\nProcessing directory: [default bold]{subdir.name}[/]")
 
         # Load all .csv files in the current subdirectory
         csv_files = list(subdir.glob('*.csv'))
@@ -252,10 +253,10 @@ def main():
         
         # Get the total number of clusters
         total_clusters = len(first_df['cluster_ID'].unique())
-        
+
         # Check if any files contain hemisphere indicators
         has_hemisphere = any('_LH.csv' in str(file.name) or '_RH.csv' in str(file.name) for file in csv_files)
-        
+
         # Aggregate the data from all .csv files and pool the data if hemispheres are present
         data_df = cluster_validation_data_df(density_col, has_hemisphere, csv_files, args.groups, data_col, data_col_pooled, args.condition_prefixes)
         if data_df.empty:
@@ -277,9 +278,6 @@ def main():
             # Perform a Tukey's test
             print(f"Running [gold1 bold]Tukey's tests")
             stats_df = perform_tukey_test(data_df, args.groups, density_col)
-
-        if args.verbose:
-            print(f'\n{stats_df}\n') 
 
         # Make output dir
         output_dir = Path(subdir) / '_cluster_validation_info'
@@ -373,4 +371,6 @@ def main():
 
 if __name__ == '__main__':
     install()
-    main()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    print_cmd_and_times(main)()
