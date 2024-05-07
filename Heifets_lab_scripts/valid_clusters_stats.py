@@ -26,8 +26,8 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """
     
-T-test usage:   valid_clusters_5_stats.py --groups <group1> <group2>
-Tukey's test usage: valid_clusters_5_stats.py --groups <group1> <group2> <group3> <group4> ...
+T-test usage:   valid_clusters_stats.py --groups <group1> <group2>
+Tukey's test usage: valid_clusters_stats.py --groups <group1> <group2> <group3> <group4> ...
 
 Input subdirs: * 
 Input files: *_density_data.csv from validate_clusters.py (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
@@ -48,7 +48,7 @@ Example bilateral inputs (if any file has _LH.csv or _RH.csv, the script will at
 
 Examples:
     - Grouping data by condition prefixes: 
-        valid_clusters_5_stats.py --groups psilocybin saline --condition_prefixes saline psilocybin
+        valid_clusters_stats.py --groups psilocybin saline --condition_prefixes saline psilocybin
         - This will treat all 'psilocybin*' conditions as one group and all 'saline*' conditions as another
         - Since there will then effectively be two conditions in this case, they will be compared using a t-test
 

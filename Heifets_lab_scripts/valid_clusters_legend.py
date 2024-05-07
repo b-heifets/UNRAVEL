@@ -17,7 +17,7 @@ from openpyxl.styles import Alignment
 def parse_args():
     parser = argparse.ArgumentParser(description='Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.', formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--path', help='Path to the directory containing the *_valid_clusters_table.xlsx files. Default: current working directory', action=SM)
-    parser.epilog = """Example usage:    valid_clusters_8_legend.py
+    parser.epilog = """Example usage:    valid_clusters_legend.py
 
 Prerequisites: valid_cluster_table.sh has been run and the resulting .xlsx files are in the working directory.
 

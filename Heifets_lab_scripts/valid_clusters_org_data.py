@@ -24,7 +24,7 @@ def parse_args():
     parser.add_argument('-td', '--target_dir', help='path/dir to copy results. If omitted, copy data to the cwd', default=None, action=SM)
     parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from fdr.py). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Usage: valid_clusters_2_org_data.py -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
+    parser.epilog = """Usage: valid_clusters_org_data.py -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
 """
     return parser.parse_args()
 

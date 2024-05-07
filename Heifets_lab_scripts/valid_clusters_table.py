@@ -22,7 +22,7 @@ def parse_args():
     parser.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
     parser.add_argument('-pv', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Example usage:    valid_clusters_7_table.py
+    parser.epilog = """Example usage:    valid_clusters_table.py
 
 Prerequisites: valid_cluster_index.sh has been run. Run this script from the <valid_clusters> dir. *cluster_info.txt in working dir.
 

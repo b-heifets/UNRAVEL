@@ -16,16 +16,18 @@ from unravel_utils import print_cmd_and_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Prep .nii.gz and RGBA .txt for vizualization in dsi_studio', formatter_class=SuppressMetavar)
-    parser.add_argument('-vci', '--val_clust_idx', help="path/valid_cluster_index.nii.gz", required=True, action=SM)
+    parser.add_argument('-i', '--input', help="path/img.nii.gz (e.g., valid cluster index)", required=True, action=SM)
     parser.add_argument('-m', '--mirror', help='Mirror the image in the x-axis for a bilateral representation. Default: False', action='store_true', default=False)
     parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
     parser.add_argument('-sa', '--split_atlas', help='path/gubra_ano_split_25um.nii.gz. Default: gubra_ano_split_25um.nii.gz', default='gubra_ano_split_25um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Example usage: valid_clusters_10_3D_brain.py -i input.csv
+    parser.epilog = """Example usage: 3D_brain.py -i input.csv
+
+The input image will be binarized and multiplied by the split atlas to apply region IDs.
 
 Outputs: 
-input_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
+img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
 
 """
     
@@ -36,7 +38,7 @@ def main():
     args = parse_args()
 
     # Load the input NIFTI file
-    nii = nib.load(args.val_clust_idx)
+    nii = nib.load(args.input)
     img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
 
     # Make a bilateral version of the cluster index
@@ -56,9 +58,9 @@ def main():
 
     # Save the bilateral version of the cluster index with ABA colors
     if args.mirror:
-        output = args.val_clust_idx.replace('.nii.gz', '_ABA_WB.nii.gz')
+        output = args.input.replace('.nii.gz', '_ABA_WB.nii.gz')
     else:
-        output = args.val_clust_idx.replace('.nii.gz', '_ABA.nii.gz')
+        output = args.input.replace('.nii.gz', '_ABA.nii.gz')
     nib.save(nib.Nifti1Image(final_data, atlas_nii.affine, atlas_nii.header), output)
 
     # Calculate and save histogram
@@ -74,7 +76,7 @@ def main():
     color_map = pd.read_csv(Path(__file__).parent / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
 
     # Delete rgba.txt if it exists (used for coloring the regions in DSI Studio)
-    txt_output = str(Path(args.val_clust_idx).parent / "rgba.txt")
+    txt_output = str(Path(args.input).parent / "rgba.txt")
     if Path(txt_output).exists():
         Path(txt_output).unlink()
 

@@ -22,7 +22,7 @@ def parse_args():
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Usage:    valid_clusters_6_index.py -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3
+    parser.epilog = """Usage:    valid_clusters_index.py -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3
     
 Outputs: path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz and path/valid_clusters/cluster_*_sunburst.csv"""
     return parser.parse_args()

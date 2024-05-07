@@ -13,7 +13,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Organize bilateral csv outputs from valid_clusters_1_cell_or_label_densities.py', formatter_class=SuppressMetavar)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """
-Run this script in the target_dir from valid_clusters_2_org_data.py
+Run this script in the target_dir from valid_clusters_org_data.py
         
 Usage:     validate_clusters_3_group_bilateral_data.py
 
