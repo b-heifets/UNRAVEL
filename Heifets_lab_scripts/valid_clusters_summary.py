@@ -47,10 +47,15 @@ Runs scripts in this order:
     - valid_clusters_table.py
     - valid_clusters_legend.py
 
+The sample_key.csv file should have the following format:
+    dir_name,condition
+    sample01,control
+    sample02,treatment
+
 """
     return parser.parse_args()
 
-# TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. 
+# TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. Could make cells vs. labels are arg. 
 
 
 def run_script(script_name, script_args):
