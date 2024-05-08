@@ -75,7 +75,7 @@ def generate_summary_table(csv_files, data_column_name):
                     print(f"[red]    {Path(str(file).replace('_LH.csv', '_RH.csv'))} is missing")
                     with open(file.parent / "missing_csv_files.txt", 'a') as f:
                         f.write(f"{Path(str(file).replace('_LH.csv', '_RH.csv'))} is missing")
-                    continue # skip processing for this sample
+                    import sys ; sys.exit()
 
                 RH_df = pd.read_csv(str(file).replace('_LH.csv', '_RH.csv'), usecols=['sample', 'cluster_ID', data_column_name])
 
@@ -127,6 +127,10 @@ def main():
 
     # Load all .csv files
     csv_files = list(path.glob('*.csv'))
+
+    if not csv_files:
+        print(f"\n[red]    No CSV files found in {path}.[/]")
+        import sys ; sys.exit()
 
     # Load the first .csv file to check for data columns and set the appropriate column names
     first_df = pd.read_csv(csv_files[0])
