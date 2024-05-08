@@ -22,7 +22,7 @@ def parse_args():
 
 This script renames files in the current directory based on the conditions specified in the CSV file.
 
-The CSV file should have two columns: 'dir_name' and 'condition'.
+The sample_key.csv should have two columns: 'dir_name' and 'condition'.
 The script will prepend the 'condition' to the filenames matching the 'dir_name' prefix.
 
 For example, if the CSV contains the following rows:
