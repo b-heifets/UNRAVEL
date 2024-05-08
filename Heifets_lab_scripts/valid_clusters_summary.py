@@ -50,7 +50,7 @@ Runs scripts in this order:
 """
     return parser.parse_args()
 
-# TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis])
+# TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. 
 
 
 def run_script(script_name, script_args):
