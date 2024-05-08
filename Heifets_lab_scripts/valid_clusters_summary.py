@@ -130,6 +130,10 @@ def main():
             with open(valid_clusters_ids_txt, 'r') as f:
                 valid_cluster_ids = f.read().split()
 
+        if not valid_cluster_ids:
+            print(f"\n    [bold]No valid clusters detected for {subdir}. Skipping remaining scripts.\n")
+            continue
+
         rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index.nii.gz'
         if not Path(rev_cluster_index_path).exists():
             rev_cluster_index_path = subdir / f'{subdir.name}_rev_cluster_index_RH.nii.gz'
@@ -200,25 +204,27 @@ def main():
         run_script('valid_clusters_table.py', table_args)
 
         find_and_copy_files('*_valid_clusters_table.xlsx', subdir, Path().cwd() / 'valid_clusters_tables_and_legend')
+    
+    if Path('valid_clusters_tables_and_legend').exists():
 
-    # Copy the atlas and binarize it for visualization in DSI studio
-    dest_atlas = dsi_dir / Path(cfg.index.atlas).name
-    if not dest_atlas.exists():
-        cp(cfg.index.atlas, dsi_dir)
-        atlas_nii = nib.load(dest_atlas)
-        atlas_img = np.asanyarray(atlas_nii.dataobj, dtype=atlas_nii.header.get_data_dtype()).squeeze()
-        atlas_img[atlas_img > 0] = 1
-        atlas_img.astype(np.uint8)
-        atlas_nii_bin = nib.Nifti1Image(atlas_img, atlas_nii.affine, atlas_nii.header)
-        atlas_nii_bin.header.set_data_dtype(np.uint8)
-        nib.save(atlas_nii_bin, str(dest_atlas).replace('.nii.gz', '_bin.nii.gz'))
+        # Copy the atlas and binarize it for visualization in DSI studio
+        dest_atlas = dsi_dir / Path(cfg.index.atlas).name
+        if not dest_atlas.exists():
+            cp(cfg.index.atlas, dsi_dir)
+            atlas_nii = nib.load(dest_atlas)
+            atlas_img = np.asanyarray(atlas_nii.dataobj, dtype=atlas_nii.header.get_data_dtype()).squeeze()
+            atlas_img[atlas_img > 0] = 1
+            atlas_img.astype(np.uint8)
+            atlas_nii_bin = nib.Nifti1Image(atlas_img, atlas_nii.affine, atlas_nii.header)
+            atlas_nii_bin.header.set_data_dtype(np.uint8)
+            nib.save(atlas_nii_bin, str(dest_atlas).replace('.nii.gz', '_bin.nii.gz'))
 
-    # Run valid_clusters_legend.py
-   
-    legend_args = [
-        '-p', 'valid_clusters_tables_and_legend'
-    ]
-    run_script('valid_clusters_legend.py', legend_args)
+        # Run valid_clusters_legend.py
+    
+        legend_args = [
+            '-p', 'valid_clusters_tables_and_legend'
+        ]
+        run_script('valid_clusters_legend.py', legend_args)
 
 
 if __name__ == '__main__':

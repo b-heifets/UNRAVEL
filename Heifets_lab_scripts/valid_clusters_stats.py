@@ -297,6 +297,8 @@ def main():
             effect_direction = '>'
         elif group_one_mean < group_two_mean:
             effect_direction = '<'
+        elif group_one_mean == group_two_mean: 
+            effect_direction = '=='
 
         if len(args.groups) == 2:
             print(f"Effect direction: [green bold]{args.groups[0]} {effect_direction} {args.groups[1]}")
