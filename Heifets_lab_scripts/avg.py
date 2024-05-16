@@ -53,7 +53,7 @@ def main():
     averaged_nii = nib.Nifti1Image(average_image, affine, header)
     averaged_nii.set_data_dtype(data_type)
     nib.save(averaged_nii, "avg.nii.gz")
-    print("Saved averaged image to ave.nii.gz\n")
+    print("Saved averaged image to avg.nii.gz\n")
 
 
 if __name__ == '__main__': 

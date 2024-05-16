@@ -19,9 +19,9 @@ def parse_args():
     parser.add_argument('-p', '--path', help='Path to the directory containing the CSV files from validate_clusters.py. Default: current directory', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = """
-Usage: valid_clusters_9_prism.py -ids 1 2 3
+Usage: valid_clusters_prism.py -ids 1 2 3
         
-Inputs: *.csv from valid_clusters_2_org_data.py (in working dir)
+Inputs: *.csv from valid_clusters_org_data.py (in working dir)
 
 CSV naming conventions:
 - Condition: first word before '_' in the file name

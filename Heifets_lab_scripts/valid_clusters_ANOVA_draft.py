@@ -135,7 +135,7 @@ def main():
             print(f'\n{stats_df}\n') 
 
         # Make output dir
-        output_dir = Path(subdir) / '_cluster_validation_info'
+        output_dir = Path(subdir) / '_valid_clusters_stats'
         output_dir.mkdir(exist_ok=True)
 
         # Save the results to a .csv file

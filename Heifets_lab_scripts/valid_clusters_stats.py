@@ -242,7 +242,7 @@ def main():
             continue  # Skip directories with no CSV files
 
         # Make output dir
-        output_dir = Path(subdir) / '_cluster_validation_info'
+        output_dir = Path(subdir) / '_valid_clusters_stats'
         output_dir.mkdir(exist_ok=True)
         validation_info_csv = output_dir / 'cluster_validation_info_t-test.csv' if len(args.groups) == 2 else output_dir / 'cluster_validation_info_tukey.csv'
         if validation_info_csv.exists():

@@ -43,8 +43,8 @@ Runs scripts in this order:
     - valid_clusters_stats.py
     - valid_clusters_index.py
     - 3D_brain.py
-    - valid_clusters_prism.py
     - valid_clusters_table.py
+    - valid_clusters_prism.py
     - valid_clusters_legend.py
 
 The sample_key.csv file should have the following format:
@@ -55,7 +55,7 @@ The sample_key.csv file should have the following format:
 """
     return parser.parse_args()
 
-# TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. Could make cells vs. labels are arg. 
+# TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. Could make cells vs. labels are arg. Could add a raw data output organized for the SI table. # The valid cluster sunburst could have the val dir name and be copied to a central location
 
 
 def run_script(script_name, script_args):
@@ -128,7 +128,7 @@ def main():
         if not csv_files:
             continue  # Skip directories with no CSV files
 
-        stats_output = subdir / '_cluster_validation_info'
+        stats_output = subdir / '_valid_clusters_stats'
         valid_clusters_ids_txt = stats_output / 'valid_cluster_IDs_t-test.txt' if len(args.groups) == 2 else stats_output / 'valid_cluster_IDs_tukey.txt'
 
         if valid_clusters_ids_txt.exists():
@@ -183,17 +183,6 @@ def main():
             find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA.nii.gz', subdir, dsi_dir)
         find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_rgba.txt', subdir, dsi_dir)
 
-        # Run valid_clusters_prism.py
-        prism_args = [
-            '-ids', *valid_cluster_ids,
-            '-p', subdir,
-        ]
-        if cfg.prism.save_all:
-            prism_args.append('-sa')
-        if args.verbose:
-            prism_args.append('-v')
-        run_script('valid_clusters_prism.py', prism_args)
-
         # Run valid_clusters_table.py
         table_args = [
             '-vcd', valid_clusters_index_dir,
@@ -203,8 +192,24 @@ def main():
         if args.verbose:
             table_args.append('-v')
         run_script('valid_clusters_table.py', table_args)
-
         find_and_copy_files('*_valid_clusters_table.xlsx', subdir, Path().cwd() / 'valid_clusters_tables_and_legend')
+
+        # Run valid_clusters_prism.py
+        valid_cluster_ids_sorted_txt = valid_clusters_index_dir / 'valid_cluster_IDs_sorted_by_anatomy.txt'
+        if valid_cluster_ids_sorted_txt.exists():
+            with open(valid_cluster_ids_sorted_txt, 'r') as f:
+                valid_cluster_ids_sorted = f.read().split()
+        else: 
+            valid_cluster_ids_sorted = valid_cluster_ids
+        prism_args = [
+            '-ids', *valid_cluster_ids_sorted,
+            '-p', subdir,
+        ]
+        if cfg.prism.save_all:
+            prism_args.append('-sa')
+        if args.verbose:
+            prism_args.append('-v')
+        run_script('valid_clusters_prism.py', prism_args)
 
     # Copy the atlas and binarize it for visualization in DSI studio
     dest_atlas = dsi_dir / Path(cfg.index.atlas).name
