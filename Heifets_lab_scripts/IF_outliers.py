@@ -9,7 +9,7 @@ from unravel_config import Configuration
 from rich import print
 from rich.live import Live
 from unravel_img_io import load_3D_img
-from unravel_utils import print_cmd_and_times, print_func_name_args_times, get_progress_bar
+from unravel_utils import print_cmd_and_times, initialize_progress_bar
 
 
 def parse_args():
@@ -45,7 +45,7 @@ def main():
     mean_values = []
 
     # For each image, calculate the mean intensity value within the masked region.
-    progress = get_progress_bar(total_tasks=len(images))
+    progress = initialize_progress_bar(total_tasks=len(images))
     task_id = progress.add_task("[red]Getting means...", total=len(images))
     with Live(progress):
         for idx, img in enumerate(images):
