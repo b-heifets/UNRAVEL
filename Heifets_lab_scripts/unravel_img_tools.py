@@ -86,10 +86,10 @@ def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None)
     cmd = [
         'run_ilastik.sh',  # Make sure this path is correct
         '--headless',
-        '--project', ilastik_project,
+        '--project', str(ilastik_project),
         '--export_source', 'Simple Segmentation',
         '--output_format', 'tif',
-        '--output_filename_format', f'{output_dir}/{{nickname}}.tif'
+        '--output_filename_format', f'{str(output_dir)}/{{nickname}}.tif'
     ] + tif_list
 
     print("\n    Running Ilastik with command:\n", ' '.join(cmd))
