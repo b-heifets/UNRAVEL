@@ -81,7 +81,10 @@ def main():
                 continue
             
             # Load full res image [and xy and z voxel size in microns], to be resampled [and reoriented], padded, and warped
-            img_path = sample_path / args.input
+            img_path = next(sample_path.glob(str(args.input)), None)
+            if img_path is None:
+                print(f"No files match the pattern {args.input} in {sample_path}")
+                continue
             img = load_3D_img(img_path, args.chann_idx, "xyz")
 
             # Apply spatial averaging
