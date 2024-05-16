@@ -6,7 +6,6 @@ import cc3d
 import numpy as np
 import os
 import pandas as pd
-import shutil
 from pathlib import Path
 from rich import print
 from rich.live import Live

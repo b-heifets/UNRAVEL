@@ -44,7 +44,7 @@ Sorting by heirarchy and volume:
 """
     return parser.parse_args()
 
-# TODO: Make sure table is fully arial. Add in merging for the ~Region column
+# TODO: Correct font color for the volumes column. 'fiber tracts' is filled with white rather than the color of the fiber tracts
 
 
 def fill_na_with_last_known(df):
