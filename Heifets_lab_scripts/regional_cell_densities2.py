@@ -205,7 +205,10 @@ def main():
                 atlas_path = sample_path / args.atlas_path
                 atlas_img = load_3D_img(atlas_path)
             elif args.moving_img is not None and Path(sample_path, args.moving_img).exists():
-                atlas_img = to_native(sample_path, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.metadata, args.reg_res, args.miracl, int(0), 'multiLabel', output=None)
+                fixed_reg_input = Path(sample_path, args.fixed_reg_in)    
+                if not fixed_reg_input.exists():
+                    fixed_reg_input = sample_path / "reg_outputs" / "autofl_50um_fixed_reg_input.nii.gz"
+                atlas_img = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.moving_img, args.metadata, args.reg_res, args.miracl, int(0), 'multiLabel', output=None)
             else:
                 print("    [red1]Atlas image not found. Please provide a path to the atlas image or the moving image")
                 import sys ; sys.exit()
