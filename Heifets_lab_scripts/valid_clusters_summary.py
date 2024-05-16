@@ -193,6 +193,25 @@ def main():
             table_args.append('-v')
         run_script('valid_clusters_table.py', table_args)
         find_and_copy_files('*_valid_clusters_table.xlsx', subdir, Path().cwd() / 'valid_clusters_tables_and_legend')
+    
+    if Path('valid_clusters_tables_and_legend').exists():
+
+        # Run valid_clusters_prism.py
+        valid_cluster_ids_sorted_txt = valid_clusters_index_dir / 'valid_cluster_IDs_sorted_by_anatomy.txt'
+        if valid_cluster_ids_sorted_txt.exists():
+            with open(valid_cluster_ids_sorted_txt, 'r') as f:
+                valid_cluster_ids_sorted = f.read().split()
+        else: 
+            valid_cluster_ids_sorted = valid_cluster_ids
+        prism_args = [
+            '-ids', *valid_cluster_ids_sorted,
+            '-p', subdir,
+        ]
+        if cfg.prism.save_all:
+            prism_args.append('-sa')
+        if args.verbose:
+            prism_args.append('-v')
+        run_script('valid_clusters_prism.py', prism_args)
 
         # Run valid_clusters_prism.py
         valid_cluster_ids_sorted_txt = valid_clusters_index_dir / 'valid_cluster_IDs_sorted_by_anatomy.txt'
@@ -223,12 +242,12 @@ def main():
         atlas_nii_bin.header.set_data_dtype(np.uint8)
         nib.save(atlas_nii_bin, str(dest_atlas).replace('.nii.gz', '_bin.nii.gz'))
 
-    # Run valid_clusters_legend.py
-   
-    legend_args = [
-        '-p', 'valid_clusters_tables_and_legend'
-    ]
-    run_script('valid_clusters_legend.py', legend_args)
+        # Run valid_clusters_legend.py
+    
+        legend_args = [
+            '-p', 'valid_clusters_tables_and_legend'
+        ]
+        run_script('valid_clusters_legend.py', legend_args)
 
 
 if __name__ == '__main__':

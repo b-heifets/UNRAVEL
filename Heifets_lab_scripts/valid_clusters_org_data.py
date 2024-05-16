@@ -30,6 +30,19 @@ def parse_args():
 
 # TODO: Copy the rev_cluster_index.nii.gz to the target_dir
 
+def find_matching_directory(base_path, long_name):
+    base_path = Path(base_path)
+
+    # Get all directories in base_path
+    dirs = [d for d in base_path.iterdir() if d.is_dir()]
+
+    # Find the directory whose name is a substring of long_name
+    for dir in dirs:
+        if dir.name in long_name:
+            return dir.name
+
+    return None
+
 def cp(src, dest):
     """Copy a file from src path to a dest path, optionally printing the action.
     
@@ -46,6 +59,7 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
         - dest_path (Path): the path to the new directory
         - vstats_path (Path): the path to the vstats directory
         - p_val_txt (str): the name of the file with the corrected p value threshold"""
+
     vstats_path = Path(vstats_path)
     if vstats_path.exists():
         validation_dir_name = str(validation_dir.name)
@@ -55,6 +69,11 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
         else:
             cluster_correction_dir = validation_dir_name
         cluster_correction_path = vstats_path / 'stats' / cluster_correction_dir
+        if not cluster_correction_path.exists():
+            cluster_correction_dir = find_matching_directory(vstats_path / 'stats', cluster_correction_dir)
+            cluster_correction_path = vstats_path / 'stats' / cluster_correction_dir
+        if not cluster_correction_path.exists():
+            print(f'\n    [red]Path for copying the rev_cluster_index.nii.gz and p value threshold does not exist: {cluster_correction_path}\n')
 
         cluster_info = cluster_correction_path / f'{cluster_correction_dir}_cluster_info.txt'
         if cluster_info.exists():
@@ -67,6 +86,8 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             dest_p_val_thresh = dest_path / p_val_txt
             if not dest_p_val_thresh.exists():
                 cp(src=p_val_thresh_file, dest=dest_p_val_thresh)
+        else: 
+            print(f'\n    [red]The p value threshold txt ({p_val_thresh_file}) does not exist\n')
 
         if validation_dir_name.endswith('_LH'):
             rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)[:-3]}_rev_cluster_index_LH.nii.gz'
@@ -74,11 +95,17 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)[:-3]}_rev_cluster_index_RH.nii.gz'
         else:
             rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)}_rev_cluster_index.nii.gz'
+        if not rev_cluster_index_path.exists(): 
+            suffix = str(validation_dir_name).replace(str(cluster_correction_path.name), '')
+            rev_cluster_index_path =  cluster_correction_path / f"{cluster_correction_path.name}_rev_cluster_index{suffix}.nii.gz"
 
         if rev_cluster_index_path.exists():
             dest_rev_cluster_index = dest_path / rev_cluster_index_path.name
             if not dest_rev_cluster_index.exists():
                 cp(src=rev_cluster_index_path, dest=dest_rev_cluster_index)
+        else: 
+            print(f'\n    [red]The rev_cluster_index.nii.gz ({rev_cluster_index_path}) does not exist\n')
+            import sys ; sys.exit()
 
 def organize_validation_data(sample_path, clusters_path, validation_dir_pattern, density_type, target_dir, vstats_path, p_val_txt):
     """Copy the cluster validation, p value, cluster info, and rev_cluster_index files to the target directory.
