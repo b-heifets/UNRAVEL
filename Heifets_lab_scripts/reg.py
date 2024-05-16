@@ -94,6 +94,9 @@ def main():
  
             # Define inputs and outputs for the fixed image
             fixed_img_nii_path = resolve_path(sample_path, args.fixed_img)
+            if not fixed_img_nii_path.exists():
+                print(f"\n    [red]The fixed image to be padded for registration ({fixed_img_nii_path}) does not exist. Exiting.\n")
+                import sys ; sys.exit()
             fixed_img_for_reg = str(Path(args.fixed_img).name).replace(".nii.gz", "_fixed_reg_input.nii.gz")
             fixed_img_for_reg_path = str(Path(reg_outputs_path, fixed_img_for_reg))
 
@@ -137,6 +140,15 @@ def main():
 
             # Generate the initial transform matrix for aligning the moving image to the fixed image
             if not Path(reg_outputs_path, f"{args.tform_prefix}init_tform.mat").exists():
+
+                # Check if required files exist
+                if not Path(fixed_img_for_reg_path).exists(): 
+                    print(f"\n    [red]The fixed image for registration ({fixed_img_for_reg_path})does not exist. Exiting.\n")
+                    import sys ; sys.exit()
+                if not Path(args.moving_img).exists(): 
+                    print(f"\n    [red]The moving image for registration ({args.moving_img}) does not exist. Exiting.\n")
+                    import sys ; sys.exit()
+
                 print(f'\n\n    Generating the initial transform matrix for aligning the moving image (e.g., template) to the fixed image (e.g., tissue) \n')
                 script_path = Path(Path(os.path.abspath(__file__)).parent, 'ANTsPy_affine_initializer.py')
                 command = [
