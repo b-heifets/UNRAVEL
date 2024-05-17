@@ -24,7 +24,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-c', '--condition', help='One word name for group (prepended to sample ID for regional_cell_densities_summary.py)', required=True, action=SM)
-    parser.add_argument('-s', '--seg_img_path', help='rel_path/segmentation_image.nii.gz', required=True, action=SM)
+    parser.add_argument('-s', '--seg_img_path', help='rel_path/segmentation_image.nii.gz (can be glob pattern)', required=True, action=SM)
     parser.add_argument('-a', '--atlas_path', help='rel_path/native_atlas_split.nii.gz (only use this option if this file exists; left label IDs increased by 20,000)', default=None, action=SM)
     parser.add_argument('-m', '--moving_img', help='path/atlas_image.nii.gz to warp from atlas space', default=None, action=SM)
     parser.add_argument('-o', '--output', help='path/name.csv. Default: region_cell_counts.csv', default='region_cell_counts.csv', action=SM)
@@ -198,7 +198,11 @@ def main():
                 continue
 
             # Load the segmentation image
-            seg_img = load_3D_img(sample_path / args.seg_img_path)
+            seg_img_path = next(sample_path.glob(str(args.seg_img_path)), None)
+            if seg_img_path is None:
+                print(f"No files match the pattern {args.seg_img_path} in {sample_path}")
+                continue
+            seg_img = load_3D_img(seg_img_path)
 
             # Load or generate the native atlas image
             if args.atlas_path is not None and Path(sample_path, args.atlas_path).exists():
