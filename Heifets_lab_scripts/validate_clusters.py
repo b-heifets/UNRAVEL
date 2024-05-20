@@ -27,7 +27,7 @@ def parse_args():
 
     # Key args
     parser.add_argument('-m', '--moving_img', help='path/*_rev_cluster_index.nii.gz to warp from atlas space', required=True, action=SM)
-    parser.add_argument('-s', '--seg', help='Dir name for segmentation image (e.g., cfos_seg_ilastik_1) or rel_path/seg_img.nii.gz', required=True, action=SM)
+    parser.add_argument('-s', '--seg', help='rel_path/seg_img.nii.gz. 1st glob match processed', required=True, action=SM)
     parser.add_argument('-c', '--clusters', help='Clusters to process: all or list of clusters (e.g., 1 3 4). Default: all', nargs='*', default='all', action=SM)
     parser.add_argument('-de', '--density', help='Density to measure: cell_density (default) or label_density', default='cell_density', choices=['cell_density', 'label_density'], action=SM)
     parser.add_argument('-o', '--output', help='rel_path/clusters_info.csv (Default: clusters/<cluster_index_dir>/cluster_data.csv)', default=None, action=SM)
@@ -239,10 +239,10 @@ def main():
             cluster_bbox_data = cluster_bbox_parallel(native_cluster_index_cropped, clusters)
 
             # Load the segmentation image and crop it to the outer bounds of all clusters
-            if Path(sample_path, args.seg).is_dir() and not str(args.seg).endswith(".zarr"):
-                seg_path = Path(sample_path, args.seg, f"{sample_path.name}_{args.seg}.nii.gz")
-            else:
-                seg_path = resolve_path(sample_path, args.seg)
+            seg_path = next(sample_path.glob(str(args.seg)), None)
+            if seg_path is None:
+                print(f"\n    [red bold]No files match the pattern {args.seg} in {sample_path}\n")
+                continue
             seg_cropped = load_nii_subset(seg_path, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax)
 
             # Process each cluster to count cells or measure volume, in parallel
