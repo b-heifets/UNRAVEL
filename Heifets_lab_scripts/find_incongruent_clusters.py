@@ -67,7 +67,7 @@ def main():
     for subdir in [d for d in current_dir.iterdir() if d.is_dir() and (substring_str1 in d.name or substring_str2 in d.name)]:
         print(f"\nProcessing directory: [default bold]{subdir.name}[/]")
 
-        df = pd.read_csv(subdir / "_cluster_validation_info" / args.csv_name)
+        df = pd.read_csv(subdir / "_valid_clusters_stats" / args.csv_name)
         incongruent_clusters = find_incongruent_clusters(df, args.lesser_group, args.greater_group)
         
         if incongruent_clusters:
