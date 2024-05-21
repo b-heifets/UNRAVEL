@@ -204,7 +204,7 @@ def process_fdr_and_clusters(input, mask, q, min_size, avg_img1, avg_img2, outpu
     cluster_info = cluster_index(adjusted_pval_output_path, min_size, q, cluster_index_path)
 
     # Save the cluster info
-    with open(fdr_path / f"{fdr_dir_name}_cluster_info.csv", "w") as f:
+    with open(fdr_path / f"{fdr_dir_name}_cluster_info.txt", "w") as f:
         f.write(cluster_info)
 
     # Load the cluster index and convert to an ndarray
