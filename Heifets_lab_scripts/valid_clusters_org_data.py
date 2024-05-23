@@ -80,6 +80,8 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             dest_stats = dest_path / cluster_info.name
             if not dest_stats.exists(): 
                 cp(src=cluster_info, dest=dest_stats)
+        else: 
+            print(f'\n    [red]The cluster_info.txt ({cluster_info}) does not exist\n')
             
         p_val_thresh_file = cluster_correction_path / p_val_txt
         if p_val_thresh_file.exists():

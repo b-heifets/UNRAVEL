@@ -144,11 +144,15 @@ def main():
             rev_cluster_index_path = next(subdir.glob("*rev_cluster_index*"))
 
         if rev_cluster_index_path is None:
-            print(f"No valid cluster index file found in {subdir}. Skipping...")
+            print(f"    No valid cluster index file found in {subdir}. Skipping...")
             continue  # Skip this directory and move to the next
 
         valid_clusters_index_dir = subdir / cfg.index.valid_clusters_dir
         
+        if len(valid_cluster_ids) == 0: 
+            print(f"    No clusters were valid for {subdir}. Skipping...")
+            continue
+
         # Run valid_clusters_index.py
         index_args = [
             '-ci', rev_cluster_index_path,

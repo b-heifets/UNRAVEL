@@ -16,8 +16,8 @@ from unravel_utils import print_cmd_and_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Create a cluster index with valid clusters from a given NIfTI image.', formatter_class=SuppressMetavar)
-    parser.add_argument('-ci', '--cluster_idx', help='Path to the reverse cluster index NIfTI file.', required=True, action=SM)
-    parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs.', nargs='+', type=int, required=True, action=SM)
+    parser.add_argument('-ci', '--cluster_idx', help='Path to the reverse cluster index NIfTI file.', default=None, action=SM)
+    parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs.', nargs='+', type=int, default=None, action=SM)
     parser.add_argument('-vcd', '--valid_clusters_dir', help='path/name_of_the_output_directory. Default: valid_clusters', default='_valid_clusters', action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
@@ -48,6 +48,14 @@ def generate_sunburst(cluster, img, atlas, xyz_res_in_um, data_type, output_dir)
 
 def main():
     args = parse_args()
+
+    if args.cluster_idx is None: 
+        print(f"\n    No cluster index provided. Skipping.")
+        return
+
+    if args.valid_cluster_ids is None: 
+        print(f"\n    No valid clusters provided. Skipping.")
+        return
 
     output_dir = Path(args.valid_clusters_dir)
     output_dir.mkdir(exist_ok=True, parents=True)
