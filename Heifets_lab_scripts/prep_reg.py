@@ -22,8 +22,8 @@ def parse_args():
     parser.add_argument('-i', '--input', help='Full res image input path relative (rel_path) to ./sample??', required=True, action=SM)
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
     parser.add_argument('-o', '--output', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
-    parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
-    parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
+    parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns of the input image. Default: get via metadata', default=None, type=float, action=SM)
+    parser.add_argument('-z', '--z_res', help='z voxel size in microns of the input image. Default: get via metadata', default=None, type=float, action=SM)
     parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg.py. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-td', '--target_dir', help='path/target_dir name to copy specific slices for brain_mask.py (see usage)', default=None, action=SM)
@@ -51,9 +51,9 @@ def prep_reg(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
     """Prepare the autofluo image for reg.py or mimic preprocessing  for prep_vstats.py.
     
     Args:
-        - ndarray (np.ndarray): 3D autofluo or immunofluo image.
-        - xy_res (float): x/y resolution in microns.
-        - z_res (float): z resolution in microns.
+        - ndarray (np.ndarray): full res 3D autofluo image.
+        - xy_res (float): x/y resolution in microns of ndarray.
+        - z_res (float): z resolution in microns of ndarray.
         - reg_res (int): Resample input to this resolution in microns for reg.py.
         - zoom_order (int): Order for resampling (scipy.ndimage.zoom).
         - miracl (bool): Include reorientation step to mimic MIRACL's tif to .nii.gz conversion.
@@ -96,18 +96,18 @@ def main():
             # Define input image path
             img_path = resolve_path(sample_path, args.input)
 
-            # Load autofluo image [and xy and z voxel size in microns]
+            # Load full res autofluo image [and xy and z voxel size in microns]
             img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)
 
             # Prepare the autofluo image for registration
             img_resampled = prep_reg(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
 
-            # Save autofluo image as tif series (for brain_mask.py)
+            # Save the prepped autofluo image as tif series (for brain_mask.py)
             tif_dir = Path(str(output).replace('.nii.gz', '_tifs'))
             tif_dir.mkdir(parents=True, exist_ok=True)
             save_as_tifs(img_resampled, tif_dir, "xyz")
 
-            # Save autofl image (for reg.py if skipping brain_mask.py and for applying the brain mask)
+            # Save the prepped autofl image (for reg.py if skipping brain_mask.py and for applying the brain mask)
             save_as_nii(img_resampled, output, args.reg_res, args.reg_res, np.uint16)
 
             if args.target_dir is not None:
