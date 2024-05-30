@@ -1,0 +1,51 @@
+######################################
+###### Installation of UNRAVEL #######
+######################################
+
+# Please send questions/issues to danrijs@stanford.edu, so we can improve this guide for future users.
+
+# We developed scripts locally on a linux system (Ubuntu 18.04). If you are using Windows, you could install Windows Subsystem for Linux.
+
+# Open a terminal and cd to where you want to clone the UNRAVEl GitHub repository
+
+# Clone https://github.com/b-heifets/UNRAVEL
+https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository
+git clone https://github.com/b-heifets/UNRAVEL.git
+git checkout dev
+
+# Install pyenv to install python and to create a virtual environment:
+https://github.com/pyenv/pyenv?tab=readme-ov-file#installation
+
+# Install python3.11
+
+# Create and activate a virtual environment
+pyenv virtualenv 3.11.3 unravel
+pyenv activate unravel
+
+# Install pip if needed
+https://pip.pypa.io/en/stable/installation/
+
+# Install unravel locally
+pip install -e .
+
+# Download atlas/template files and locate them in ./atlas/
+https://drive.google.com/drive/folders/1WE0mCJNT6IcqccMxuxUyog5-mYXM8q06?usp=share_link
+
+# Confirm the install and get started by viewing the help guide in prep_reg.py
+prep_reg.py -h
+
+# Update scripts with: 
+git pull
+
+
+##########################################
+######## Editing .bashrc or .zshrc #######
+##########################################
+
+# Add the following to .bashrc and change /usr/local/ to path to fsl, etc.
+export PATH=$PATH:/usr/local/fsl/bin
+export FSLDIR=/usr/local/fsl
+PATH=${FSLDIR}/bin:${PATH}
+. ${FSLDIR}/etc/fslconf/fsl.sh
+export FSLDIR PATH
+export PATH=/usr/local/ilastik-1.3.3post3-Linux:$PATH

@@ -3,21 +3,34 @@
 \
 UNRAVEL is a command line tool for:
 * Voxel-wise analysis of fluorescent signals (e.g., c-Fos immunofluorescence) across the mouse brains in atlas space
-* Validation of hot/cold spots via c-Fos+ cell density quantification and montages at cellular resolution
+* Validation of hot/cold spots via cell/label density quantification at cellular resolution
 
 \
 Publications: 
 * UNRAVELing the synergistic effects of psilocybin and environment on brain-wide immediate early gene expression in mice 
     * [Neuropsychopharmacology](https://www.nature.com/articles/s41386-023-01613-4)
-    * [bioRxiv](https://www.biorxiv.org/content/10.1101/2023.02.19.528997v1)
 
 \
-[UNRAVEL guide:](https://office365stanford-my.sharepoint.com/:p:/g/personal/danrijs_stanford_edu/EbQN54e7SwRHgkmw3yn8fgcBz1xG22AICtZx8nsPrOLFtg?e=S159PM)
-* Notes dependencies, paths to update, organization of files/folders, and info on running scripts:
-* Key scripts: find_clusters.sh, glm.sh, and validate_clusters2.sh
-* Scripts can be run in a modular fashion:
-    * overview.sh -> prep_tifs.sh or czi_to_tif.sh -> 488_to_nii.sh -> reg.sh -> rb.sh -> z_brain_template_mask.sh -> glm.sh -> validate_clusters2.sh 
-* Scripts start with a help guide. View by running: <script>.sh help
+Guide: 
+* Example workflow for region-wise and voxel-wise c-Fos+ cell densities:
+    * prep_reg.py
+    * copy_tifs.py
+    * brain_mask.py
+    * reg.py
+    * check_reg.py
+    * regional_cell_densities.py
+    * regional_cell_densities_summary.py
+    * prep_vstats.py
+    * z-score.py
+    * aggregate_files_from_sample_dirs.py
+    * whole_to_LR_avg.py
+    * vstats.py
+    * fdr_range.py
+    * fdr.py
+    * recursively_mirror_rev_cluster_indices.py
+    * ilastik_segmentation.py
+    * validate_clusters.py
+    * valid_clusters_summary.py
 
 \
 For command line interface help, please review [Unix tutorials](https://andysbrainbook.readthedocs.io/en/latest/index.html)

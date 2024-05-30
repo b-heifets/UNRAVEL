@@ -675,25 +675,13 @@ Public License instead of this License.  But first, please read
 
 
 Relevant licenses:
-3D Slicer - https://slicer.readthedocs.io/en/latest/user_guide/about.html#license
 Allen Institute - https://alleninstitute.org/terms-of-use/
 ANTs - https://www.nitrc.org/projects/ants
-Bash - https://www.gnu.org/licenses/gpl-3.0.html
-CLIJ - https://github.com/clij/clij2/blob/master/license.txt
-Convert-3D - https://sourceforge.net/projects/c3d/
-FIJI - https://github.com/fiji/fiji/blob/master/LICENSES
 FSL - https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence
 Gubra - https://github.com/Gubra-ApS/LSFM-mouse-brain-atlas/blob/master/LICENCE.txt
-ilastik - https://github.com/ilastik/ilastik/blob/main/LICENSE
-ITK-SNAP - https://www.nitrc.org/projects/itk-snap/
-ImageMagick - https://imagemagick.org/script/license.php
-MIRACL - (MIRACL_LICENSE.md in https://github.com/b-heifets/UNRAVEL/scripts_from_MIRACL/ and here https://github.com/AICONSlab/MIRACL/blob/master/LICENSE.md)
+Ilastik - https://github.com/ilastik/ilastik/blob/main/LICENSE
+MIRACL - https://github.com/AICONSlab/MIRACL/blob/master/LICENSE.md
 Nibabel - https://nipy.org/nibabel/#license
 Numpy - https://numpy.org/doc/stable/license.html
 Pandas - https://github.com/pandas-dev/pandas/blob/main/LICENSE
 Python - https://www.python.org/about/
-
-
-
-
-
