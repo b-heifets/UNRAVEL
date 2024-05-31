@@ -26,7 +26,7 @@ def parse_args():
     parser.add_argument('-i', '--input', help='If path/input_dir_w_tifs does not exist, provide a rel_path/image to make it', action=SM)
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 1', default=1, type=int, metavar='')
     parser.add_argument('-o', '--output', help='output dir name', default=None, action=SM)
-    parser.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', nargs='+', type=int, action=SM)
+    parser.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', default=1, nargs='+', type=int, action=SM)
     parser.add_argument('-rmi', '--rm_in_tifs', help='Delete the dir w/ the input tifs (e.g., if a *.czi was the input)', action='store_true', default=False)
     parser.add_argument('-rmo', '--rm_out_tifs', help='Delete the dir w/ the output tifs', action='store_true', default=False)
     parser.add_argument('-log', '--ilastik_log', help='Show Ilastik log', action='store_true')
