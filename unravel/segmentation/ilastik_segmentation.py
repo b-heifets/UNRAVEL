@@ -3,15 +3,16 @@
 import argparse
 import os
 import nibabel as nib
-from pathlib import Path
 import numpy as np
+from glob import glob
+from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
 
 from unravel.argparse_utils import SuppressMetavar, SM
 from unravel.config import Configuration
-from unravel.img_io import load_3D_img
+from unravel.img_io import load_3D_img, save_as_tifs
 from unravel.img_tools import ilastik_segmentation
 from unravel.utils import get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times
 
@@ -22,7 +23,7 @@ def parse_args():
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
     parser.add_argument('-t', '--tifs_dir', help='path/input_dir_w_tifs', required=True, action=SM)
-    parser.add_argument('-i', '--input', help='If path/input_dir_w_tifs does not exist, provide a path/image to make it', action=SM)
+    parser.add_argument('-i', '--input', help='If path/input_dir_w_tifs does not exist, provide a rel_path/image to make it', action=SM)
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 1', default=1, type=int, metavar='')
     parser.add_argument('-o', '--output', help='output dir name', default=None, action=SM)
     parser.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', nargs='+', type=int, action=SM)
@@ -66,7 +67,7 @@ https://www.ilastik.org/documentation/pixelclassification/pixelclassification
    s will toggle segmentation on and off.
    p will toggle prediction on and off.
    If you accidentally pressa and add an extra label, turn off Live Updates and press X to delete the extra label
-   If you want to go back too steps 1 & 2, turn off Live Updates off
+   If you want to go back to steps 1 & 2, turn off Live Updates off
    ChangeCurrent view to see other training slices. Check segmentation for these and refine as needed.
    Save the project in experiment summary folder and close if using this script to run ilastik in headless mode for segmenting all images. 
 """
@@ -113,7 +114,8 @@ def main():
             # Define path to input tifs and create them if they don't exist
             input_tif_dir = sample_path / args.tifs_dir
             if not input_tif_dir.exists():
-                img = load_3D_img(args.input, channel=args.channel) 
+                img_path = next(sample_path.glob(str(args.input)), None)
+                img = load_3D_img(img_path, channel=args.channel) 
                 save_as_tifs(img, input_tif_dir)
 
             # Perform pixel classification and output segmented tifs to output dir
