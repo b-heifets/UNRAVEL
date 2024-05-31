@@ -105,6 +105,8 @@ def main():
             # Define output and skip processing if it already exists
             segmentation_dir = sample_path / args.output
             output_tif_dir = segmentation_dir / args.output
+            if not isinstance(args.labels, list):
+                args.labels = [args.labels]
             last_label = args.labels[-1]
             final_output = segmentation_dir.joinpath(f"{args.output}_{last_label}.nii.gz")
             if final_output.exists():
