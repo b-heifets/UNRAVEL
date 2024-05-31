@@ -3,15 +3,16 @@
 import argparse
 import os
 import nibabel as nib
-from pathlib import Path
 import numpy as np
+from glob import glob
+from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
 
 from argparse_utils import SuppressMetavar, SM
 from unravel_config import Configuration
-from unravel_img_io import load_3D_img
+from unravel_img_io import load_3D_img, save_as_tifs
 from unravel_img_tools import ilastik_segmentation
 from unravel_utils import get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times
 
@@ -21,13 +22,18 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
-    parser.add_argument('-i', '--input', help='path/input_dir_w_tifs', required=True, action=SM)
+    parser.add_argument('-t', '--tifs_dir', help='path/input_dir_w_tifs', required=True, action=SM)
+    parser.add_argument('-i', '--input', help='If path/input_dir_w_tifs does not exist, provide a rel_path/image to make it', action=SM)
+    parser.add_argument('-c', '--channel', help='.czi channel number. Default: 1', default=1, type=int, metavar='')
     parser.add_argument('-o', '--output', help='output dir name', default=None, action=SM)
-    parser.add_argument('-l', '--labels', help='List of labels to save as binary .nii.gz images', nargs='+', type=int, default=None, action=SM)
-    parser.add_argument('-rm', '--rm_tifs', help='Delete the dir w/ tifs', action='store_true', default=False)
+    parser.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', nargs='+', type=int, action=SM)
+    parser.add_argument('-rmi', '--rm_in_tifs', help='Delete the dir w/ the input tifs (e.g., if a *.czi was the input)', action='store_true', default=False)
+    parser.add_argument('-rmo', '--rm_out_tifs', help='Delete the dir w/ the output tifs', action='store_true', default=False)
     parser.add_argument('-log', '--ilastik_log', help='Show Ilastik log', action='store_true')
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Usage:    ilastik_segmentation.py -i cfos -o cfos_seg -ilp path/ilastik_project.ilp
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
+    parser.epilog = """Usage:
+ilastik_segmentation.py -t cfos -o cfos_seg -ilp path/ilastik_project.ilp
+ilastik_segmentation.py -i *.czi -t cfos -o cfos_seg -ilp path/ilastik_project.ilp
 
 This script is for running Ilastik's pixel classification workflow in headless mode for each sample. 
 
@@ -67,7 +73,7 @@ https://www.ilastik.org/documentation/pixelclassification/pixelclassification
 """
     return parser.parse_args()
 
-# TODO: Consolidate ilastik_segmentation() in unravel_img_tools.pys
+# TODO: Consolidate ilastik_segmentation() in unravel_img_tools.py
 
 
 def count_files(directory):
@@ -96,39 +102,35 @@ def main():
             # Resolve path to sample folder
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            # Define output
+            # Define output and skip processing if it already exists
             segmentation_dir = sample_path / args.output
             output_tif_dir = segmentation_dir / args.output
-            if args.labels: 
-                last_label = args.labels[-1]
-                final_output = segmentation_dir.joinpath(f"{args.output}_{last_label}.nii.gz")
-            else: 
-                final_output = output_tif_dir
+            last_label = args.labels[-1]
+            final_output = segmentation_dir.joinpath(f"{args.output}_{last_label}.nii.gz")
             if final_output.exists():
                 print(f"\n\n    {final_output.name} already exists. Skipping.\n")
                 continue
-
-            # Check the number of tifs in the input dir and output dir
-            # if not tif_dir.exists() or count_files(args.input) != count_files(tif_dir):
-
-                # Perform pixel classification and output segmented tifs to output dir
-                # tif_dir.mkdir(exist_ok=True, parents=True)
-                # ilastik_segmentation(input_tif_dir, args.ilastik_prj, tif_dir, ilastik_log=args.ilastik_log)
             
-            output_tif_dir.mkdir(exist_ok=True, parents=True)
-            input_tif_dir = sample_path / args.input
-            print(f'\n{input_tif_dir=}\n')
-            print(f'\n{args.ilastik_prj=}\n')
-            print(f'\n{output_tif_dir=}\n')
-            print(f'\n{args.ilastik_log=}\n')
+            # Define path to input tifs and create them if they don't exist
+            input_tif_dir = sample_path / args.tifs_dir
+            if not input_tif_dir.exists():
+                img_path = next(sample_path.glob(str(args.input)), None)
+                img = load_3D_img(img_path, channel=args.channel) 
+                save_as_tifs(img, input_tif_dir)
 
+            # Perform pixel classification and output segmented tifs to output dir
+            output_tif_dir.mkdir(exist_ok=True, parents=True)
             ilastik_segmentation(str(input_tif_dir), str(args.ilastik_prj), str(output_tif_dir), ilastik_log=args.ilastik_log)
 
             # Convert each label to a binary mask and save as .nii.gz
-            if args.labels:
-                save_labels_as_masks(output_tif_dir, args.labels, segmentation_dir, args.output)
+            save_labels_as_masks(output_tif_dir, args.labels, segmentation_dir, args.output)
 
-            if args.rm_tifs: 
+            # Remove input tifs if requested
+            if args.rm_in_tifs: 
+                Path(input_tif_dir).unlink()
+
+            # Remove output tifs if requested
+            if args.rm_out_tifs: 
                 Path(output_tif_dir).unlink()
 
             progress.update(task_id, advance=1)
