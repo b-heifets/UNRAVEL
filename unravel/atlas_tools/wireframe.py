@@ -51,6 +51,7 @@ def process_intensity(args):
 
 def generate_wireframe(atlas_ndarray, unique_intensities):
     """Generate a wireframe image of an atlas NIfTI file where outlines are outside the regions and not inside smaller regions.
+    
     Args:
         atlas_ndarray (np.ndarray): A 3D numpy array of an atlas NIfTI file.
         unique_intensities (np.ndarray): A list of unique intensity values in the atlas ndarray (sorted from smallest to largest regions)

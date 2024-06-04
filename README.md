@@ -28,7 +28,7 @@ Guide:
     * fdr_range.py
     * fdr.py
     * recursively_mirror_rev_cluster_indices.py
-    * ilastik_segmentation.py
+    * ilastik_pixel_classification.py
     * validate_clusters.py
     * valid_clusters_summary.py
 

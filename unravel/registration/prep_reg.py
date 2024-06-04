@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import argparse
+import shutil
 import numpy as np
 from pathlib import Path
 from rich import print
@@ -8,7 +9,6 @@ from rich.live import Live
 from rich.traceback import install
 
 from unravel.argparse_utils import SuppressMetavar, SM
-from copy_tifs import copy_specific_slices
 from unravel.config import Configuration 
 from unravel.img_io import load_3D_img, resolve_path, save_as_tifs, save_as_nii
 from unravel.img_tools import resample, reorient_for_raw_to_nii_conv
@@ -45,6 +45,25 @@ Outputs:
 Next script: brain_mask.py or reg.py"""
     return parser.parse_args()
 
+
+def copy_specific_slices(sample_path, source_dir, target_dir, slice_numbers):
+    """Copy the specified slices to the target directory.
+    
+    Args:
+        - sample_path (Path): Path to the sample directory.
+        - source_dir (Path): Path to the source directory containing the .tif files.
+        - target_dir (Path): Path to the target directory where the selected slices will be copied.
+        - slice_numbers (list): List of slice numbers to copy."""
+    
+    for file_path in source_dir.glob('*.tif'):
+        if any(file_path.stem.endswith(f"{slice:04}") for slice in map(int, slice_numbers)):
+            dest_file = target_dir / f'{sample_path.name}_{file_path.name}'
+            shutil.copy(file_path, dest_file)
+            if args.verbose:
+                print(f"Copied {file_path} to {dest_file}")
+        else:
+            if args.verbose:
+                print(f"File {file_path.name} does not match specified slices and was not copied.")
 
 @print_func_name_args_times()
 def prep_reg(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):

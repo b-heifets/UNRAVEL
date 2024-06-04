@@ -1,0 +1,632 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>voxel_stats.vstats &#8212; UNRAVEL 1.0.0-beta documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../../_static/documentation_options.js?v=3fd7a760"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/voxel_stats/vstats';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">UNRAVEL 1.0.0-beta documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../modules.html">
+    unravel
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../modules.html">
+    unravel
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">voxel_stats.vstats</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for voxel_stats.vstats</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">fsl.wrappers</span> <span class="kn">import</span> <span class="n">fslmaths</span><span class="p">,</span> <span class="n">avwutils</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
+<span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
+
+<span class="kn">from</span> <span class="nn">unravel.argparse_utils</span> <span class="kn">import</span> <span class="n">SM</span><span class="p">,</span> <span class="n">SuppressMetavar</span>
+<span class="kn">from</span> <span class="nn">unravel.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">unravel.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
+
+
+<div class="viewcode-block" id="parse_args">
+<a class="viewcode-back" href="../../voxel_stats.html#voxel_stats.vstats.parse_args">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Run voxel-wise stats using FSL&#39;s randomise_parallel command&quot;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mas&#39;</span><span class="p">,</span> <span class="s1">&#39;--mask&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/mask.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--permutations&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of permutations (divisible by 300). Default: 18000&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">18000</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-k&#39;</span><span class="p">,</span> <span class="s1">&#39;--kernel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Smoothing kernel radius in mm if &gt; 0. Default: 0 &#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-opt&#39;</span><span class="p">,</span> <span class="s1">&#39;--options&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Additional options for randomise, specified like &quot;--seed=1 -T&quot;&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-on&#39;</span><span class="p">,</span> <span class="s1">&#39;--output_prefix&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Prefix of output files. Default: current working dir name.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--atlas&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Usage:    vstats.py -mas mask.nii.gz -v</span>
+
+<span class="s2">Prereqs: </span>
+<span class="s2">    - Input images from prep_vstats.py, z-score.py, or whole_to_LR_avg.py</span>
+<span class="s2">    - FSL installed and the following added to .bashrc or .zshrc (or run in terminal):</span>
+<span class="s2">export FSLDIR=/usr/local/fsl</span>
+<span class="s2">export PATH=$</span><span class="si">{FSLDIR}</span><span class="s2">/bin:$</span><span class="si">{PATH}</span>
+<span class="s2">. $</span><span class="si">{FSLDIR}</span><span class="s2">/etc/fslconf/fsl.sh</span>
+<span class="s2">export FSLDIR PATH</span>
+<span class="s2">    - Source the .bashrc or .zshrc file (e.g., source ~/.bashrc) or restart the terminal</span>
+<span class="s2">    </span>
+<span class="s2">Inputs: </span>
+<span class="s2">    - Make glm folder named succiently (e.g., glm_&lt;EX&gt;_rb&lt;4&gt;_z_&lt;contrast&gt; for t-test or anova_&lt;EX&gt;_rb&lt;4&gt;_z)</span>
+<span class="s2">    - Add *.nii.gz prepended with the condition (e.g., drug_sample01_gubra_space_z.nii.gz)</span>
+<span class="s2">        - Optional: use prepend_conditions.py to add the condition to the file names</span>
+<span class="s2">        - The condition should be one word (e.g., drug, saline, etc.)</span>
+<span class="s2">        - Group order is alphabetical (e.g., drug is group 1 and saline is group 2)</span>
+<span class="s2">        - The input images should be in the working directory</span>
+<span class="s2">        - View the images in fsleyes to ensure they are aligned and the sides are correct</span>
+<span class="s2">    - With whole brains, left and right sides can be averaged with whole_to_LR_avg.py, then use a unilateral hemisphere mask.</span>
+
+<span class="s2">If glm_folder/stats/design.fts exists, run ANOVA, else run t-test.</span>
+
+<span class="s2">Outputs are in glm_folder/stats.</span>
+
+<span class="s2">T-test outputs:</span>
+<span class="s2">    - vox_p_tstat1.nii.gz: uncorrected p values for tstat1 (group 1 &gt; group 2)</span>
+<span class="s2">    - vox_p_tstat2.nii.gz: uncorrected p values for tstat2 (group 1 &lt; group 2)</span>
+
+<span class="s2">ANOVA outputs:</span>
+<span class="s2">    - vox_p_fstat1.nii.gz: uncorrected p values for fstat1 (1st contrast, e.g., drug vs saline)</span>
+<span class="s2">    - vox_p_fstat2.nii.gz: uncorrected p values for fstat2 (2nd contrast, e.g., context1 vs context2)</span>
+<span class="s2">    - vox_p_fstat3.nii.gz: uncorrected p values for fstat3 (3rd contrast, e.g., interaction)</span>
+
+<span class="s2">Example of preparing for a ANOVA: </span>
+<span class="s2">    - For a 2x2 ANOVA, before running this script make ./anova_&lt;EX&gt;_rb&lt;4&gt;_z/stats/design/</span>
+<span class="s2">    - Open terminal from ./stats and run: fsl</span>
+<span class="s2">    - Misc -&gt; GLM Setup</span>
+<span class="s2">    - GLM Setup window: </span>
+<span class="s2">        - Higher-level / non-timeseries design </span>
+<span class="s2">        - # inputs: &lt;total # of samples&gt; </span>
+<span class="s2">    - EVs tab in GLM window: </span>
+<span class="s2">        - # of main EVs: 4 </span>
+<span class="s2">        - Name EVs (e.g., EV1 = group 1) </span>
+<span class="s2">        - Group should be 1 for all </span>
+<span class="s2">    - Make design matrix: </span>
+<span class="s2">        - Under EV1 enter 1 for each subject in group 1 (1 row/subject). EV2-4 are 0 for these rows </span>
+<span class="s2">        - Under EV2 enter 1 for each subject in group 2, starting w/ row after the last row for group 1  </span>
+<span class="s2">        - Follow this pattern for EV3 and EV4 </span>
+<span class="s2">    - Contrasts &amp; F-tests tab in GLM window: </span>
+<span class="s2">        - Contrasts: 3 </span>
+<span class="s2">            - C1: Main_effect_&lt;e.g.,drug&gt; 1 1 -1 -1 (e.g., EV1/2 are drug groups and EV3/4 are saline groups) </span>
+<span class="s2">            - C2: Main_effect_&lt;e.g., context&gt; 1 -1 1 -1 (e.g., EV1/3 were in context1 and EV2/4 were in context2 )</span>
+<span class="s2">            - C3: Interaction 1 -1 -1 1 </span>
+<span class="s2">        - F-tests: 3</span>
+<span class="s2">            - F1: click upper left box </span>
+<span class="s2">            - F2: click middle box</span>
+<span class="s2">            - F3: click lower right box</span>
+<span class="s2">    - GLM Setup window: </span>
+<span class="s2">        - Save -&gt; click design -&gt; OK </span>
+<span class="s2">    - Run: vstats.py from anova folder </span>
+
+<span class="s2">Background: </span>
+<span class="s2">https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/GLM </span>
+<span class="s2">https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide</span>
+
+<span class="s2">Afterwards run fdr.py to correct for multiple comparisons.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
+
+
+<span class="c1"># TODO: Add an email option to send a message when the processing is complete. Add progress bar. See if fragments can be generated in parallel. Could make avg and avg diff maps in this script (e.g., before merge since this is fast)</span>
+
+<div class="viewcode-block" id="check_fdr_command">
+<a class="viewcode-back" href="../../voxel_stats.html#voxel_stats.vstats.check_fdr_command">[docs]</a>
+<span class="k">def</span> <span class="nf">check_fdr_command</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the &#39;fdr&#39; command is available in the system&#39;s path.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">&#39;fdr&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: The &#39;fdr&#39; command is not available. Please ensure that it is installed and in your PATH.&quot;</span><span class="p">)</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="create_design_ttest2">
+<a class="viewcode-back" href="../../voxel_stats.html#voxel_stats.vstats.create_design_ttest2">[docs]</a>
+<span class="k">def</span> <span class="nf">create_design_ttest2</span><span class="p">(</span><span class="n">mat_file</span><span class="p">,</span> <span class="n">group1_size</span><span class="p">,</span> <span class="n">group2_size</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create design matrix for a two-group unpaired t-test.&quot;&quot;&quot;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;design_ttest2&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">mat_file</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">group1_size</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">group2_size</span><span class="p">)]</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_groups_info">
+<a class="viewcode-back" href="../../voxel_stats.html#voxel_stats.vstats.get_groups_info">[docs]</a>
+<span class="k">def</span> <span class="nf">get_groups_info</span><span class="p">():</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.nii.gz&#39;</span><span class="p">))</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+            <span class="n">groups</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">groups</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="k">for</span> <span class="n">group</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">groups</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2"> has </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s2"> members&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">groups</span></div>
+
+
+<div class="viewcode-block" id="calculate_fragments">
+<a class="viewcode-back" href="../../voxel_stats.html#voxel_stats.vstats.calculate_fragments">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_fragments</span><span class="p">(</span><span class="n">num_contrasts</span><span class="p">,</span> <span class="n">total_permutations_per_contrast</span><span class="o">=</span><span class="mi">18000</span><span class="p">,</span> <span class="n">permutations_per_fragment</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the total number of fragments based on the number of contrasts.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">num_contrasts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;Number of contrasts not determined.&quot;</span>
+    <span class="n">total_fragments</span> <span class="o">=</span> <span class="p">(</span><span class="n">total_permutations_per_contrast</span> <span class="o">*</span> <span class="n">num_contrasts</span><span class="p">)</span> <span class="o">//</span> <span class="n">permutations_per_fragment</span>
+    <span class="k">return</span> <span class="n">total_fragments</span></div>
+
+
+<div class="viewcode-block" id="run_randomise_parallel">
+<a class="viewcode-back" href="../../voxel_stats.html#voxel_stats.vstats.run_randomise_parallel">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">run_randomise_parallel</span><span class="p">(</span><span class="n">input_image_path</span><span class="p">,</span> <span class="n">mask_path</span><span class="p">,</span> <span class="n">permutations</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">design_fts_path</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
+    
+    <span class="c1"># Construct the command</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">&quot;randomise_parallel&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">input_image_path</span><span class="p">),</span>
+        <span class="s2">&quot;-m&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">mask_path</span><span class="p">),</span>
+        <span class="s2">&quot;-n&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">permutations</span><span class="p">),</span>
+        <span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_name</span><span class="p">),</span>
+        <span class="s2">&quot;-d&quot;</span><span class="p">,</span> <span class="s2">&quot;stats/design.mat&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-t&quot;</span><span class="p">,</span> <span class="s2">&quot;stats/design.con&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;--uncorrp&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;-x&quot;</span>
+    <span class="p">]</span> <span class="o">+</span> <span class="n">options</span> <span class="c1"># Make sure options is a list of strings</span>
+
+    <span class="n">design_fts_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">design_fts_path</span><span class="p">)</span> <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">design_fts_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">design_fts_path</span><span class="p">:</span>
+        <span class="n">command</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="n">design_fts_path</span><span class="p">]</span>
+
+    <span class="n">command_line</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold]</span><span class="si">{</span><span class="n">command_line</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="c1"># Execute the command and stream output</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bufsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="k">as</span> <span class="n">proc</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">proc</span><span class="o">.</span><span class="n">stdout</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>  <span class="c1"># Print each line as it comes</span>
+            <span class="k">if</span> <span class="n">proc</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error executing command.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error during command execution: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Execute the command silently and capture output</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">process</span><span class="o">.</span><span class="n">returncode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;randomise_parallel executed successfully</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error executing randomise_parallel:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="n">process</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">CalledProcessError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error during command execution:</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../voxel_stats.html#voxel_stats.vstats.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span> 
+
+    <span class="n">cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+    <span class="n">stats_dir</span> <span class="o">=</span> <span class="n">cwd</span> <span class="o">/</span> <span class="s1">&#39;stats&#39;</span>
+    <span class="n">stats_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Copy the mask and the atlas to the stats directory using shutil</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">stats_dir</span><span class="p">)</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="p">,</span> <span class="n">stats_dir</span><span class="p">)</span>
+
+    <span class="c1"># Merge and smooth the input images</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.nii.gz&#39;</span><span class="p">)</span> 
+    <span class="n">merged_file</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">&#39;all.nii.gz&#39;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">merged_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    Merging *.nii.gz into ./stats/all.nii.gz&#39;</span><span class="p">)</span>
+        <span class="n">avwutils</span><span class="o">.</span><span class="n">fslmerge</span><span class="p">(</span><span class="s1">&#39;t&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">merged_file</span><span class="p">),</span> <span class="o">*</span><span class="n">images</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    ./stats/all.nii.gz exists. Skipping...</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+ 
+    <span class="c1"># Smooth the image with a kernel</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">kernel</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">kernel_in_um</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">kernel</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+        <span class="n">smoothed_file</span> <span class="o">=</span> <span class="n">merged_file</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;all_s</span><span class="si">{</span><span class="n">kernel_in_um</span><span class="si">}</span><span class="s1">.nii.gz&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    Smoothing all.nii.gz w/ fslmaths stats/all -s </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">kernel</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">smoothed_file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">fslmaths</span><span class="p">(</span><span class="n">merged_file</span><span class="p">)</span><span class="o">.</span><span class="n">s</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">kernel</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="n">smoothed_file</span><span class="p">)</span>
+        <span class="n">glm_input_file</span> <span class="o">=</span> <span class="n">smoothed_file</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">glm_input_file</span> <span class="o">=</span> <span class="n">merged_file</span>
+
+    <span class="c1"># Set up required design files or check that they exist</span>
+    <span class="n">groups_info</span> <span class="o">=</span> <span class="n">get_groups_info</span><span class="p">()</span>
+    <span class="n">group_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">groups_info</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">design_fts_path</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">&#39;design.fts&#39;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_keys</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">design_path_and_prefix</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="s1">&#39;design&#39;</span>
+        <span class="n">create_design_ttest2</span><span class="p">(</span><span class="n">design_path_and_prefix</span><span class="p">,</span> <span class="n">groups_info</span><span class="p">[</span><span class="n">group_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">groups_info</span><span class="p">[</span><span class="n">group_keys</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Running t-test for groups </span><span class="si">{</span><span class="n">group_keys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> and </span><span class="si">{</span><span class="n">group_keys</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">group_keys</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Running ANOVA</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">design_fts_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    [red1]</span><span class="si">{</span><span class="n">design_fts_path</span><span class="si">}</span><span class="s1"> does not exist. See extended help for setting up files for the ANOVA</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span> 
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]There should be at least two groups with different prefixes in the input .nii.gz files.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output_prefix</span><span class="p">:</span>
+        <span class="n">output_prefix</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">output_prefix</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output_prefix</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="n">cwd</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="c1"># Run the randomise_parallel command</span>
+    <span class="n">run_randomise_parallel</span><span class="p">(</span><span class="n">glm_input_file</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">permutations</span><span class="p">,</span> <span class="n">output_prefix</span><span class="p">,</span> <span class="n">design_fts_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">options</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span> 
+    <span class="n">install</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+    <span class="n">print_cmd_and_times</span><span class="p">(</span><span class="n">main</span><span class="p">)()</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Daniel Ryskamp Rijsketic, Austen Casey, Boris Heifets.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

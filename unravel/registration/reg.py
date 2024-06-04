@@ -13,7 +13,7 @@ from rich.live import Live
 from rich.traceback import install
 from scipy.ndimage import gaussian_filter
 
-from image_tools.reorient_nii import reorient_nii
+from image_io.reorient_nii import reorient_nii
 from unravel.argparse_utils import SM, SuppressMetavar
 from unravel.config import Configuration
 from unravel.img_io import resolve_path

@@ -1,0 +1,382 @@
+.
+├── LICENSE
+├── README.md
+├── _other
+│   ├── _testing
+│   │   ├── _test.ini
+│   │   └── _test.py
+│   ├── brain_mask_outline.py
+│   ├── drafts
+│   │   ├── check_reg_fsleyes.py
+│   │   ├── cluster_ttests.py
+│   │   ├── fsleyes.py
+│   │   ├── h5_to_tifs_batch.py
+│   │   ├── img_math_draft.py
+│   │   ├── load_czi_subset.py
+│   │   ├── native_cluster_crop.py
+│   │   ├── native_cluster_crop_legacy.py
+│   │   ├── native_clusters_crop.py
+│   │   ├── native_clusters_mean_IF_in_seg.py
+│   │   ├── prep_ilastik_h5.py
+│   │   ├── setup.py
+│   │   ├── sexes_to_cluster_densities_csv.py
+│   │   └── valid_clusters_ANOVA_draft.py
+│   └── example_scripts
+│       ├── example_script_for_processing_samples.py
+│       └── example_script_for_processing_samples_w_comments.py
+├── docs
+│   ├── Makefile
+│   ├── _build
+│   │   ├── doctrees
+│   │   │   ├── environment.pickle
+│   │   │   ├── index.doctree
+│   │   │   ├── modules.doctree
+│   │   │   ├── unravel.atlas_tools.doctree
+│   │   │   ├── unravel.cluster_correction.doctree
+│   │   │   ├── unravel.cluster_validation.doctree
+│   │   │   ├── unravel.cluster_validation.effect_sizes.doctree
+│   │   │   ├── unravel.doctree
+│   │   │   ├── unravel.image_io.doctree
+│   │   │   ├── unravel.image_tools.doctree
+│   │   │   ├── unravel.region_stats.doctree
+│   │   │   ├── unravel.registration.doctree
+│   │   │   ├── unravel.seg.doctree
+│   │   │   ├── unravel.unravel.doctree
+│   │   │   ├── unravel.utilities.doctree
+│   │   │   ├── unravel.voxel_stats.doctree
+│   │   │   └── unravel.warp.doctree
+│   │   └── html
+│   │       ├── _sources
+│   │       │   ├── index.rst.txt
+│   │       │   ├── modules.rst.txt
+│   │       │   ├── unravel.atlas_tools.rst.txt
+│   │       │   ├── unravel.cluster_correction.rst.txt
+│   │       │   ├── unravel.cluster_validation.effect_sizes.rst.txt
+│   │       │   ├── unravel.cluster_validation.rst.txt
+│   │       │   ├── unravel.image_io.rst.txt
+│   │       │   ├── unravel.image_tools.rst.txt
+│   │       │   ├── unravel.region_stats.rst.txt
+│   │       │   ├── unravel.registration.rst.txt
+│   │       │   ├── unravel.rst.txt
+│   │       │   ├── unravel.seg.rst.txt
+│   │       │   ├── unravel.unravel.rst.txt
+│   │       │   ├── unravel.utilities.rst.txt
+│   │       │   ├── unravel.voxel_stats.rst.txt
+│   │       │   └── unravel.warp.rst.txt
+│   │       ├── _static
+│   │       │   ├── basic.css
+│   │       │   ├── doctools.js
+│   │       │   ├── documentation_options.js
+│   │       │   ├── file.png
+│   │       │   ├── language_data.js
+│   │       │   ├── minus.png
+│   │       │   ├── plus.png
+│   │       │   ├── pygments.css
+│   │       │   ├── scripts
+│   │       │   │   ├── bootstrap.js
+│   │       │   │   ├── bootstrap.js.LICENSE.txt
+│   │       │   │   ├── bootstrap.js.map
+│   │       │   │   ├── pydata-sphinx-theme.js
+│   │       │   │   └── pydata-sphinx-theme.js.map
+│   │       │   ├── searchtools.js
+│   │       │   ├── sphinx_highlight.js
+│   │       │   ├── styles
+│   │       │   │   ├── bootstrap.css
+│   │       │   │   ├── bootstrap.css.map
+│   │       │   │   ├── pydata-sphinx-theme.css
+│   │       │   │   ├── pydata-sphinx-theme.css.map
+│   │       │   │   └── theme.css
+│   │       │   ├── vendor
+│   │       │   │   └── fontawesome
+│   │       │   │       └── 6.5.2
+│   │       │   │           ├── LICENSE.txt
+│   │       │   │           ├── css
+│   │       │   │           │   └── all.min.css
+│   │       │   │           ├── js
+│   │       │   │           │   ├── all.min.js
+│   │       │   │           │   └── all.min.js.LICENSE.txt
+│   │       │   │           └── webfonts
+│   │       │   │               ├── fa-brands-400.ttf
+│   │       │   │               ├── fa-brands-400.woff2
+│   │       │   │               ├── fa-regular-400.ttf
+│   │       │   │               ├── fa-regular-400.woff2
+│   │       │   │               ├── fa-solid-900.ttf
+│   │       │   │               ├── fa-solid-900.woff2
+│   │       │   │               ├── fa-v4compatibility.ttf
+│   │       │   │               └── fa-v4compatibility.woff2
+│   │       │   └── webpack-macros.html
+│   │       ├── genindex.html
+│   │       ├── index.html
+│   │       ├── modules.html
+│   │       ├── objects.inv
+│   │       ├── py-modindex.html
+│   │       ├── search.html
+│   │       ├── searchindex.js
+│   │       ├── unravel.atlas_tools.html
+│   │       ├── unravel.cluster_correction.html
+│   │       ├── unravel.cluster_validation.effect_sizes.html
+│   │       ├── unravel.cluster_validation.html
+│   │       ├── unravel.html
+│   │       ├── unravel.image_io.html
+│   │       ├── unravel.image_tools.html
+│   │       ├── unravel.region_stats.html
+│   │       ├── unravel.registration.html
+│   │       ├── unravel.seg.html
+│   │       ├── unravel.unravel.html
+│   │       ├── unravel.utilities.html
+│   │       ├── unravel.voxel_stats.html
+│   │       └── unravel.warp.html
+│   ├── _static
+│   ├── _templates
+│   ├── conf.py
+│   ├── index.rst
+│   ├── make.bat
+│   ├── modules.rst
+│   ├── unravel.atlas_tools.rst
+│   ├── unravel.cluster_correction.rst
+│   ├── unravel.cluster_validation.effect_sizes.rst
+│   ├── unravel.cluster_validation.rst
+│   ├── unravel.image_io.rst
+│   ├── unravel.image_tools.rst
+│   ├── unravel.region_stats.rst
+│   ├── unravel.registration.rst
+│   ├── unravel.rst
+│   ├── unravel.seg.rst
+│   ├── unravel.unravel.rst
+│   ├── unravel.utilities.rst
+│   ├── unravel.voxel_stats.rst
+│   └── unravel.warp.rst
+├── installation.txt
+├── project_structure.txt
+├── pyproject.toml
+├── unravel
+│   ├── __init__.py
+│   ├── __pycache__
+│   │   └── __init__.cpython-311.pyc
+│   ├── atlas_tools
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── relabel_nii.cpython-311.pyc
+│   │   │   └── wireframe.cpython-311.pyc
+│   │   ├── relabel_nii.py
+│   │   └── wireframe.py
+│   ├── cluster_correction
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── fdr.cpython-311.pyc
+│   │   │   ├── fdr_range.cpython-311.pyc
+│   │   │   └── recursively_mirror_rev_cluster_indices.cpython-311.pyc
+│   │   ├── fdr.py
+│   │   ├── fdr_range.py
+│   │   └── recursively_mirror_rev_cluster_indices.py
+│   ├── cluster_validation
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── brain_model.cpython-311.pyc
+│   │   │   ├── crop_clusters.cpython-311.pyc
+│   │   │   ├── find_incongruent_clusters.cpython-311.pyc
+│   │   │   ├── sunburst.cpython-311.pyc
+│   │   │   ├── valid_clusters_group_bilateral_data.cpython-311.pyc
+│   │   │   ├── valid_clusters_index.cpython-311.pyc
+│   │   │   ├── valid_clusters_legend.cpython-311.pyc
+│   │   │   ├── valid_clusters_org_data.cpython-311.pyc
+│   │   │   ├── valid_clusters_prism.cpython-311.pyc
+│   │   │   ├── valid_clusters_stats.cpython-311.pyc
+│   │   │   ├── valid_clusters_stats_table.cpython-311.pyc
+│   │   │   ├── valid_clusters_summary.cpython-311.pyc
+│   │   │   ├── valid_clusters_table.cpython-311.pyc
+│   │   │   └── validate_clusters.cpython-311.pyc
+│   │   ├── brain_model.py
+│   │   ├── crop_clusters.py
+│   │   ├── effect_sizes
+│   │   │   ├── __init__.py
+│   │   │   ├── __pycache__
+│   │   │   │   ├── __init__.cpython-311.pyc
+│   │   │   │   └── effect_sizes.cpython-311.pyc
+│   │   │   ├── effect_sizes.py
+│   │   │   ├── effect_sizes_by_sex__absolute.py
+│   │   │   └── effect_sizes_by_sex__relative.py
+│   │   ├── find_incongruent_clusters.py
+│   │   ├── sunburst.py
+│   │   ├── valid_clusters_group_bilateral_data.py
+│   │   ├── valid_clusters_index.py
+│   │   ├── valid_clusters_legend.py
+│   │   ├── valid_clusters_org_data.py
+│   │   ├── valid_clusters_prism.py
+│   │   ├── valid_clusters_stats.py
+│   │   ├── valid_clusters_stats_table.py
+│   │   ├── valid_clusters_summary.ini
+│   │   ├── valid_clusters_summary.py
+│   │   ├── valid_clusters_table.py
+│   │   └── validate_clusters.py
+│   ├── image_io
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── h5_to_tifs.cpython-311.pyc
+│   │   │   ├── img_io.cpython-311.pyc
+│   │   │   ├── img_to_npy.cpython-311.pyc
+│   │   │   ├── nii_hd.cpython-311.pyc
+│   │   │   ├── nii_info.cpython-311.pyc
+│   │   │   ├── nii_io.cpython-311.pyc
+│   │   │   ├── nii_to_tifs.cpython-311.pyc
+│   │   │   ├── nii_to_zarr.cpython-311.pyc
+│   │   │   ├── reorient_nii.cpython-311.pyc
+│   │   │   ├── tif_to_tifs.cpython-311.pyc
+│   │   │   └── zarr_to_nii.cpython-311.pyc
+│   │   ├── h5_to_tifs.py
+│   │   ├── img_io.py
+│   │   ├── img_to_npy.py
+│   │   ├── nii_hd.py
+│   │   ├── nii_info.py
+│   │   ├── nii_io.py
+│   │   ├── nii_to_tifs.py
+│   │   ├── nii_to_zarr.py
+│   │   ├── reorient_nii.py
+│   │   ├── tif_to_tifs.py
+│   │   └── zarr_to_nii.py
+│   ├── image_tools
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── avg.cpython-311.pyc
+│   │   │   ├── bbox.cpython-311.pyc
+│   │   │   ├── extend_image.cpython-311.pyc
+│   │   │   ├── max.cpython-311.pyc
+│   │   │   ├── pad_img.cpython-311.pyc
+│   │   │   ├── spatial_averaging.cpython-311.pyc
+│   │   │   ├── tif_DoG.cpython-311.pyc
+│   │   │   ├── tif_rb.cpython-311.pyc
+│   │   │   ├── transpose_axes.cpython-311.pyc
+│   │   │   └── uniq_intensities.cpython-311.pyc
+│   │   ├── avg.py
+│   │   ├── bbox.py
+│   │   ├── extend_image.py
+│   │   ├── max.py
+│   │   ├── pad_img.py
+│   │   ├── spatial_averaging.py
+│   │   ├── tif_DoG.py
+│   │   ├── tif_rb.py
+│   │   ├── transpose_axes.py
+│   │   └── uniq_intensities.py
+│   ├── region_stats
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── regional_IF_mean_intensities.cpython-311.pyc
+│   │   │   ├── regional_IF_mean_intensities_in_segmented_voxels.cpython-311.pyc
+│   │   │   ├── regional_IF_mean_intensities_summary.cpython-311.pyc
+│   │   │   ├── regional_cell_densities.cpython-311.pyc
+│   │   │   ├── regional_cell_densities_summary.cpython-311.pyc
+│   │   │   ├── regional_counts.cpython-311.pyc
+│   │   │   └── regional_volumes.cpython-311.pyc
+│   │   ├── regional_IF_mean_intensities.py
+│   │   ├── regional_IF_mean_intensities_in_segmented_voxels.py
+│   │   ├── regional_IF_mean_intensities_summary.py
+│   │   ├── regional_cell_densities.py
+│   │   ├── regional_cell_densities_summary.py
+│   │   ├── regional_counts.py
+│   │   └── regional_volumes.py
+│   ├── registration
+│   │   ├── ANTsPy_affine_initializer.py
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   └── prep_reg.cpython-311.pyc
+│   │   ├── check_brain_mask.py
+│   │   ├── check_reg.py
+│   │   ├── metadata.py
+│   │   ├── prep_reg.py
+│   │   └── reg.py
+│   ├── seg
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── brain_mask.cpython-311.pyc
+│   │   │   ├── copy_tifs.cpython-311.pyc
+│   │   │   └── ilastik_pixel_classification.cpython-311.pyc
+│   │   ├── brain_mask.py
+│   │   ├── copy_tifs.py
+│   │   └── ilastik_pixel_classification.py
+│   ├── unravel
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── argparse_utils.cpython-311.pyc
+│   │   │   ├── argparse_utils_rich.cpython-311.pyc
+│   │   │   ├── config.cpython-311.pyc
+│   │   │   ├── img_io.cpython-311.pyc
+│   │   │   ├── img_tools.cpython-311.pyc
+│   │   │   └── utils.cpython-311.pyc
+│   │   ├── argparse_utils.py
+│   │   ├── argparse_utils_rich.py
+│   │   ├── config.py
+│   │   ├── csvs
+│   │   │   ├── CCFv3_info.csv
+│   │   │   ├── gubra__regionID_side_IDpath_region_abbr.csv
+│   │   │   ├── gubra__region_ID_side_name_abbr.csv
+│   │   │   ├── regional_summary.csv
+│   │   │   ├── sunburst_IDPath_Abbrv.csv
+│   │   │   ├── sunburst_IDPath_Abbrv_wo_root.csv
+│   │   │   └── sunburst_RGBs.csv
+│   │   ├── img_io.py
+│   │   ├── img_tools.py
+│   │   └── utils.py
+│   ├── utilities
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── aggregate_files_from_sample_dirs.cpython-311.pyc
+│   │   │   ├── aggregate_files_w_recursive_search.cpython-311.pyc
+│   │   │   ├── clean_tif_dirs.cpython-311.pyc
+│   │   │   ├── prepend_conditions.cpython-311.pyc
+│   │   │   ├── rename.cpython-311.pyc
+│   │   │   └── toggle_samples.cpython-311.pyc
+│   │   ├── aggregate_files_from_sample_dirs.py
+│   │   ├── aggregate_files_w_recursive_search.py
+│   │   ├── clean_tif_dirs.py
+│   │   ├── prepend_conditions.py
+│   │   ├── rename.py
+│   │   └── toggle_samples.py
+│   ├── voxel_stats
+│   │   ├── __init__.py
+│   │   ├── __pycache__
+│   │   │   ├── __init__.cpython-311.pyc
+│   │   │   ├── apply_mask.cpython-311.pyc
+│   │   │   ├── hemi_to_LR_avg.cpython-311.pyc
+│   │   │   ├── mirror.cpython-311.pyc
+│   │   │   ├── prep_vstats.cpython-311.pyc
+│   │   │   ├── vstats.cpython-311.pyc
+│   │   │   ├── whole_to_LR_avg.cpython-311.pyc
+│   │   │   └── z_score.cpython-311.pyc
+│   │   ├── apply_mask.py
+│   │   ├── hemi_to_LR_avg.py
+│   │   ├── mirror.py
+│   │   ├── other
+│   │   │   ├── IF_outliers.py
+│   │   │   └── r_to_p.py
+│   │   ├── prep_vstats.py
+│   │   ├── vstats.py
+│   │   ├── whole_to_LR_avg.py
+│   │   └── z_score.py
+│   └── warp
+│       ├── __init__.py
+│       ├── __pycache__
+│       │   ├── __init__.cpython-311.pyc
+│       │   ├── to_atlas.cpython-311.pyc
+│       │   └── warp.cpython-311.pyc
+│       ├── to_atlas.py
+│       ├── to_native.py
+│       └── warp.py
+└── unravel.egg-info
+    ├── PKG-INFO
+    ├── SOURCES.txt
+    ├── dependency_links.txt
+    ├── entry_points.txt
+    ├── requires.txt
+    └── top_level.txt
+
+52 directories, 328 files

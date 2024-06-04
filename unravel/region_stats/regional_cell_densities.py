@@ -43,9 +43,11 @@ Example usage:
         - Use if native atlas is not available; it is not saved (faster)
 
 Prereqs: 
-    - prep_reg.py, reg.py and ilastik_segmentation.py
+    - prep_reg.py, reg.py and ilastik_pixel_classification.py
 """
     return parser.parse_args()
+
+# TODO: Add option to get regional label densities --> rename to regional_densities.py --> update the summary script 
 
 
 def get_atlas_region_at_coords(atlas, x, y, z):

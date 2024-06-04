@@ -48,7 +48,7 @@ This version dilates the full res seg_mask (slow, but precise)
 
 @print_func_name_args_times()
 def load_mask(mask_path):
-    """Load .nii.gz and return to an ndarray with a np.bool_ dtype"""
+    """Load .nii.gz and return to an ndarray with a binary dtype"""
     mask_nii = nib.load(mask_path)
     return np.asanyarray(mask_nii.dataobj, dtype=np.bool_).squeeze()
 
@@ -77,7 +77,7 @@ def dilate_mask(mask, iterations):
 
 @print_func_name_args_times()
 def scale_bool_to_full_res(ndarray, full_res_dims):
-    """Scale ndarray to match x, y, z dimensions provided. Uses nearest-neighbor interpolation by default to preserve bool_ data type."""
+    """Scale ndarray to match x, y, z dimensions provided. Uses nearest-neighbor interpolation by default to preserve a binary data type."""
     zoom_factors = (full_res_dims[0] / ndarray.shape[0], full_res_dims[1] / ndarray.shape[1], full_res_dims[2] / ndarray.shape[2])
     return zoom(ndarray, zoom_factors, order=0).astype(np.bool_)
 

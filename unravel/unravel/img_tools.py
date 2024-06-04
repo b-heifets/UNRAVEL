@@ -3,7 +3,7 @@
 """ This module contains functions processing 3D images: 
     - resample: Resample a 3D ndarray.
     - reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space
-    - ilastik_segmentation: Segment tif series with Ilastik.
+    - pixel_classification: Segment tif series with Ilastik.
     - pad_img: Pad an ndarray by a specified percentage.
     - reorient_ndarray: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).
     - reorient_ndarray2: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).
@@ -56,7 +56,7 @@ def reverse_reorient_for_raw_to_nii_conv(ndarray):
     return flipped_img
 
 # @print_func_name_args_times()
-# def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None):
+# def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_log=None):
 #     """Segment tif series with Ilastik."""
 #     tif_dir = str(tif_dir)
 #     tif_list = sorted(glob(f"{tif_dir}/*.tif"))
@@ -77,8 +77,8 @@ def reverse_reorient_for_raw_to_nii_conv(ndarray):
 #             subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 @print_func_name_args_times()
-def ilastik_segmentation(tif_dir, ilastik_project, output_dir, ilastik_log=None):
-    """Segment tif series with Ilastik."""
+def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_log=None):
+    """Segment tif series with Ilastik using pixel classification."""
     tif_list = sorted(glob(f"{tif_dir}/*.tif"))
     if not tif_list:
         print(f"No TIF files found in {tif_dir}.")

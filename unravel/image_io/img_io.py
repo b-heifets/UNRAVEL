@@ -24,6 +24,8 @@ Output image types: .nii.gz, .tif series, .zarr
 """
     return parser.parse_args()
 
+# TODO: Test if other scripts in image_io are redundant and can be removed
+
 
 def main():    
     # Load image and metadata

@@ -3,19 +3,18 @@
 """ This module contains functions for loading and saving 3D images.
 
 The main functions are:
-- load_3D_img: Load a 3D image from a .czi, .nii.gz, or .tif series and return the ndarray.
-    - Supported file types: .czi, .ome.tif series, .tif series, .nii.gz, .h5:
-    - Loading functions (load_czi, load_tifs, load_nii, load_h5) return the ndarray and optionally resolutions and/or metadata.
-    - Parameters:
-        - desired_axis_order=xyz (other option: "zyx")
-        - If return_res=True returns: ndarray, xy_res, z_res (resolution = voxel size in microns)
-        - If return_metadata=True returns: ndarray, xy_res, z_res, x_dim, y_dim, z_dim (image dimensions)
-        - If save_metadata=True saves metadata to parameters/metadata.txt
-    - Helper functions: extract_resolution, load_image_metadata_from_txt, save_metadata_to_file, metadata, return_3D_img
-- Functions for saving ndarrays:
-    - save_as_nii: Save a numpy array as a .nii.gz image.
-    - save_as_tifs: Save a 3D ndarray as a series of tif images.
-
+    - load_3D_img: Load a 3D image from a .czi, .nii.gz, or .tif series and return the ndarray.
+        - Supported file types: .czi, .ome.tif series, .tif series, .nii.gz, .h5:
+        - Loading functions (load_czi, load_tifs, load_nii, load_h5) return the ndarray and optionally resolutions and/or metadata.
+        - Parameters:
+            - desired_axis_order=xyz (other option: "zyx")
+            - If return_res=True returns: ndarray, xy_res, z_res (resolution = voxel size in microns)
+            - If return_metadata=True returns: ndarray, xy_res, z_res, x_dim, y_dim, z_dim (image dimensions)
+            - If save_metadata=True saves metadata to parameters/metadata.txt
+        - Helper functions: extract_resolution, load_image_metadata_from_txt, save_metadata_to_file, metadata, return_3D_img
+    - Functions for saving ndarrays:
+        - save_as_nii: Save a numpy array as a .nii.gz image.
+        - save_as_tifs: Save a 3D ndarray as a series of tif images.
 """
 
 import re
@@ -40,7 +39,7 @@ from utils import print_func_name_args_times
 # Load 3D image (load_3D_img()), get/save metadata, and return ndarray [with metadata]
 
 def return_3D_img(ndarray, return_metadata=False, return_res=False, xy_res=None, z_res=None, x_dim=None, y_dim=None, z_dim=None):
-    """Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim). """
+    """Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim)"""
     if return_metadata:
         return ndarray, xy_res, z_res, x_dim, y_dim, z_dim
     elif return_res:

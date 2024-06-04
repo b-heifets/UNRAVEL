@@ -11,7 +11,6 @@ from rich.live import Live
 from scipy.stats import ttest_ind
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
-from effect_sizes import condition_selector
 from unravel.argparse_utils import SuppressMetavar, SM
 from unravel.config import Configuration
 from unravel.utils import initialize_progress_bar, print_cmd_and_times
@@ -61,6 +60,28 @@ Outputs:
 
 # TODO: Test grouping of conditions. Test w/ label densities data. Could set up dunnett's tests and/or holm sidak tests.
 
+
+def condition_selector(df, condition, unique_conditions, condition_column='Conditions'):
+    """Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.
+    This function checks if the 'condition' is exactly present in the 'Conditions' column or is a prefix of any condition in this column. 
+    If the exact condition is found, it selects those rows.
+    If the condition is a prefix (e.g., 'saline' matches 'saline-1', 'saline-2'), it selects all rows where the 'Conditions' column starts with this prefix.
+    An error is raised if the condition is neither found as an exact match nor as a prefix.
+    
+    Args:
+        df (pd.DataFrame): DataFrame whose 'Conditions' column contains the conditions of interest.
+        condition (str): The condition or prefix of interest.
+        unique_conditions (list): List of unique conditions in the 'Conditions' column to validate against.
+        
+    Returns:
+        pd.Series: A boolean Series to select rows based on the condition."""
+    
+    if condition in unique_conditions:
+        return (df[condition_column] == condition)
+    elif any(cond.startswith(condition) for cond in unique_conditions):
+        return df[condition_column].str.startswith(condition)
+    else:
+        raise ValueError(colored(f"Condition {condition} not recognized!", 'red'))
 
 def cluster_validation_data_df(density_col, has_hemisphere, csv_files, groups, data_col, data_col_pooled, condition_prefixes=None):
     """Aggregate the data from all .csv files, pool bilateral data if hemispheres are present, optionally pool data by condition, and return the DataFrame.
