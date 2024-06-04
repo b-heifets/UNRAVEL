@@ -6,7 +6,7 @@ import nibabel as nib
 import numpy as np
 import tifffile as tif
 
-from unravel.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():

@@ -6,9 +6,9 @@ import numpy as np
 from rich import print
 from rich.traceback import install
 
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.config import Configuration
-from unravel.utils import print_cmd_and_times
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='.nii.gz and print header using nibabel.', formatter_class=SuppressMetavar)

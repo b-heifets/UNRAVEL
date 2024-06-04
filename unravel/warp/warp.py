@@ -8,9 +8,9 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.argparse_utils import SM, SuppressMetavar
-from unravel.config import Configuration
-from unravel.utils import print_func_name_args_times, print_cmd_and_times
+from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
+from unravel.core.utils import print_func_name_args_times, print_cmd_and_times
 
 
 def parse_args():

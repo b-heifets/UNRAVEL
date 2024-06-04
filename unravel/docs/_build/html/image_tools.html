@@ -41,7 +41,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'image_tools';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="region_stats package" href="region_stats.html" />
+    <link rel="next" title="image_tools.atlas package" href="image_tools.atlas.html" />
     <link rel="prev" title="image_io package" href="image_io.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -258,17 +258,18 @@ document.write(`
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="atlas_tools.html">atlas_tools package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cluster_correction.html">cluster_correction package</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_validation.html">cluster_validation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.effect_sizes.html">cluster_validation.effect_sizes package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_stats.html">cluster_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html">cluster_stats.effect_sizes package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="image_io.html">image_io package</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">image_tools package</a></li>
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">image_tools package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html">image_tools.atlas package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="region_stats.html">region_stats package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="registration.html">registration package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="segmentation.html">segmentation package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register.html">register package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">segment package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unravel.html">unravel package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">utilities package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="voxel_stats.html">voxel_stats package</a></li>
@@ -332,6 +333,30 @@ document.write(`
                   
   <section id="image-tools-package">
 <h1>image_tools package<a class="headerlink" href="#image-tools-package" title="Link to this heading">#</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="image_tools.atlas.html">image_tools.atlas package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html#module-image_tools.atlas.relabel_nii">image_tools.atlas.relabel_nii module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="image_tools.atlas.html#image_tools.atlas.relabel_nii.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_tools.atlas.html#image_tools.atlas.relabel_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html#module-image_tools.atlas.wireframe">image_tools.atlas.wireframe module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="image_tools.atlas.html#image_tools.atlas.wireframe.generate_wireframe"><code class="docutils literal notranslate"><span class="pre">generate_wireframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_tools.atlas.html#image_tools.atlas.wireframe.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_tools.atlas.html#image_tools.atlas.wireframe.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_tools.atlas.html#image_tools.atlas.wireframe.process_intensity"><code class="docutils literal notranslate"><span class="pre">process_intensity()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html#module-image_tools.atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
 </section>
@@ -564,11 +589,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="region_stats.html"
+       href="image_tools.atlas.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">region_stats package</p>
+        <p class="prev-next-title">image_tools.atlas package</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -590,6 +615,7 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-image_tools.avg">image_tools.avg module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#image_tools.avg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

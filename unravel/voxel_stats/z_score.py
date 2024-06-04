@@ -9,11 +9,11 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.argparse_utils import SM, SuppressMetavar
-from unravel.config import Configuration
-from unravel.img_io import load_3D_img
-from unravel.utils import get_samples, initialize_progress_bar, print_func_name_args_times, print_cmd_and_times
-from warp.to_atlas import to_atlas
+from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
+from unravel.core.img_io import load_3D_img
+from unravel.core.utils import get_samples, initialize_progress_bar, print_func_name_args_times, print_cmd_and_times
+from unravel.warp.to_atlas import to_atlas
 
 
 def parse_args():

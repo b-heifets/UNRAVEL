@@ -17,8 +17,8 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.argparse_utils_rich import SuppressMetavar, SM
-from unravel.config import Config
+from unravel.core.argparse_utils_rich import SuppressMetavar, SM
+from unravel.core.config import Config
         
 cfg = Config(Path(__file__).parent / 'test.ini')
 print(type(cfg.test.a))

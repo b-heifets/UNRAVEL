@@ -6,24 +6,26 @@
 import os
 import sys
 
+print(sys.executable)
+
 sys.path.insert(0, os.path.abspath('..'))
 
-# Print the sys.path for debugging purposes
-print("Modified sys.path:", sys.path)
+print(sys.path)
 
-sys.path.append('../atlas_tools')
-sys.path.append('../cluster_correction')
-sys.path.append('../cluster_validation')
-sys.path.append('../cluster_validation/effect_sizes')
-sys.path.append('../image_io')
-sys.path.append('../image_tools')
-sys.path.append('../region_stats')
-sys.path.append('../registration')
-sys.path.append('../segmentation')
-sys.path.append('../unravel')
-sys.path.append('../utilities')
-sys.path.append('../voxel_stats')
-sys.path.append('../warp')
+sys.path.append(os.path.abspath('../cluster_stats'))
+sys.path.append(os.path.abspath('../cluster_stats/effect_sizes'))
+sys.path.append(os.path.abspath('../image_io'))
+sys.path.append(os.path.abspath('../image_tools'))
+sys.path.append(os.path.abspath('../image_tools/atlas'))
+sys.path.append(os.path.abspath('../region_stats'))
+sys.path.append(os.path.abspath('../register'))
+sys.path.append(os.path.abspath('../segment'))
+sys.path.append(os.path.abspath('../unravel'))
+sys.path.append(os.path.abspath('../utilities'))
+sys.path.append(os.path.abspath('../voxel_stats'))
+sys.path.append(os.path.abspath('../warp'))
+
+print(sys.path)
 
 
 # -- Project information -----------------------------------------------------
@@ -39,8 +41,10 @@ release = '1.0.0-beta'
 
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages'
+    'sphinx.ext.githubpages', 
+    'sphinx.ext.todo'
 ]
 
 

@@ -6,9 +6,9 @@ from glob import glob
 from pathlib import Path
 from rich.traceback import install
 
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.config import Configuration
-from unravel.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 
 def parse_args():
@@ -18,7 +18,7 @@ def parse_args():
     parser.add_argument('-d', '--dirs', help='Rename matching dirs', action='store_true', default=False)
     parser.add_argument('-r', '--recursive', help='Recursively rename files/dirs', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Example usage:     valid_clusters_4_prepend_conditions.py -sk <path/sample_key.csv> -f -r
+    parser.epilog = """Example usage:     prepend_conditions.py -sk <path/sample_key.csv> -f -r
 
 This script renames files in the current directory based on the conditions specified in the CSV file.
 

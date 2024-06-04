@@ -9,11 +9,11 @@ from rich.live import Live
 from rich.traceback import install
 from scipy.ndimage import binary_dilation, zoom
 
-from registration.prep_reg import prep_reg
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.config import Configuration 
-from unravel.img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii, save_as_zarr
-from unravel.utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
+from register.prep_reg import prep_reg
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration 
+from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii, save_as_zarr
+from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
 def parse_args():

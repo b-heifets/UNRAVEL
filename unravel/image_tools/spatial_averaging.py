@@ -7,10 +7,10 @@ from concurrent.futures import ThreadPoolExecutor
 from rich.traceback import install
 from scipy.ndimage import uniform_filter
 
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.config import Configuration
-from unravel.img_io import load_3D_img, save_as_nii, save_as_tifs, save_as_zarr
-from unravel.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.img_io import load_3D_img, save_as_nii, save_as_tifs, save_as_zarr
+from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 
 def parse_args():

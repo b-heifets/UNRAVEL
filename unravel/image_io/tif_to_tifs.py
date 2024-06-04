@@ -9,7 +9,7 @@ from rich import print
 from tifffile import imwrite
 import tifffile 
 
-from unravel.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():

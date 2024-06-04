@@ -6,7 +6,7 @@ import numpy as np
 from rich import print
 from rich.traceback import install
 
-from unravel.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_utils import SM, SuppressMetavar
 
 
 def parse_args():

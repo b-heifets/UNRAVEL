@@ -5,10 +5,10 @@ import nibabel as nib
 import numpy as np
 from rich.traceback import install
 
-from nii_info import nii_axis_codes
-from reorient_nii import reorient_nii
-from unravel.argparse_utils import SM, SuppressMetavar
-from unravel.img_tools import pad_img
+from unravel.image_io.nii_info import nii_axis_codes
+from unravel.image_io.reorient_nii import reorient_nii
+from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.img_tools import pad_img
 
 
 def parse_args():

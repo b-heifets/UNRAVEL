@@ -10,7 +10,7 @@ import warnings
 from matplotlib.ticker import MaxNLocator
 from scipy.stats import ttest_ind
 
-from unravel.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 warnings.simplefilter(action='ignore', category=FutureWarning)

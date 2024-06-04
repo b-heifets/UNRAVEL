@@ -5,8 +5,8 @@ import os
 import pandas as pd
 from termcolor import colored
 
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.utils import print_cmd
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.utils import print_cmd
 
 def parse_args():
     """

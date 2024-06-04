@@ -5,7 +5,7 @@ import os
 import subprocess
 from glob import glob
 
-from unravel.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Run fsleyes with given display range and files.', formatter_class=SuppressMetavar)

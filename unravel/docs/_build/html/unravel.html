@@ -42,7 +42,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="utilities package" href="utilities.html" />
-    <link rel="prev" title="segmentation package" href="segmentation.html" />
+    <link rel="prev" title="segment package" href="segment.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -258,17 +258,18 @@ document.write(`
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="atlas_tools.html">atlas_tools package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cluster_correction.html">cluster_correction package</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_validation.html">cluster_validation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.effect_sizes.html">cluster_validation.effect_sizes package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_stats.html">cluster_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html">cluster_stats.effect_sizes package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="image_io.html">image_io package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="image_tools.html">image_tools package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="image_tools.html">image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html">image_tools.atlas package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="region_stats.html">region_stats package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="registration.html">registration package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="segmentation.html">segmentation package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register.html">register package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">segment package</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">unravel package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">utilities package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="voxel_stats.html">voxel_stats package</a></li>
@@ -502,9 +503,9 @@ If return_metadata=True, returns ndarray, xy_res, z_res, x_dim, y_dim, z_dim</p>
 <dt class="sig sig-object py" id="unravel.img_io.resolve_path">
 <span class="sig-prename descclassname"><span class="pre">unravel.img_io.</span></span><span class="sig-name descname"><span class="pre">resolve_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upstream_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_or_pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_parents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/img_io.html#resolve_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.img_io.resolve_path" title="Link to this definition">#</a></dt>
 <dd><p>Returns full path or Path(upstream_path, path_or_pattern) and [makes parent dirs].</p>
-<p>Conditional returns: 
-1) If path_or_pattern is absolute, return Path(path_or_pattern). 
-2) If Path(upstream_path, relative_path).exists(), return Path(upstream_path, path_or_pattern) 
+<p>Conditional returns:
+1) If path_or_pattern is absolute, return Path(path_or_pattern).
+2) If Path(upstream_path, relative_path).exists(), return Path(upstream_path, path_or_pattern)
 3) If Path(upstream_path, [rel_path/]glob_pattern), return Path of first match
 4) If not Path(upstream_path, relative_path).exists(), return full path
 5) Else, return None</p>
@@ -560,7 +561,7 @@ If return_metadata=True, returns ndarray, xy_res, z_res, x_dim, y_dim, z_dim</p>
 </section>
 <section id="module-unravel.img_tools">
 <span id="unravel-img-tools-module"></span><h2>unravel.img_tools module<a class="headerlink" href="#module-unravel.img_tools" title="Link to this heading">#</a></h2>
-<p>This module contains functions processing 3D images: 
+<p>This module contains functions processing 3D images:
 - resample: Resample a 3D ndarray.
 - reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space
 - pixel_classification: Segment tif series with Ilastik.
@@ -586,10 +587,13 @@ If return_metadata=True, returns ndarray, xy_res, z_res, x_dim, y_dim, z_dim</p>
 <dt class="sig sig-object py" id="unravel.img_tools.find_bounding_box">
 <span class="sig-prename descclassname"><span class="pre">unravel.img_tools.</span></span><span class="sig-name descname"><span class="pre">find_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/img_tools.html#find_bounding_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.img_tools.find_bounding_box" title="Link to this definition">#</a></dt>
 <dd><p>Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.</p>
-<dl class="simple">
-<dt>Parameters:</dt><dd><p>ndarray: 3D numpy array to search within.
-cluster_ID (int): Cluster intensity to find bbox for. If None, return bbox for all clusters.
-output_file_path (str): File path to write the bounding box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ndarray</strong> – 3D numpy array to search within.</p></li>
+<li><p><strong>cluster_ID</strong> (<em>int</em>) – Cluster intensity to find bbox for. If None, return bbox for all clusters.</p></li>
+<li><p><strong>output_file_path</strong> (<em>str</em>) – File path to write the bounding box.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -615,7 +619,7 @@ output_file_path (str): File path to write the bounding box.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.img_tools.reorient_for_raw_to_nii_conv">
 <span class="sig-prename descclassname"><span class="pre">unravel.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_for_raw_to_nii_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/img_tools.html#reorient_for_raw_to_nii_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.img_tools.reorient_for_raw_to_nii_conv" title="Link to this definition">#</a></dt>
-<dd><p>Reorient resampled ndarray for registration or warping to atlas space 
+<dd><p>Reorient resampled ndarray for registration or warping to atlas space
 (legacy mode mimics MIRACL’s tif to .nii.gz conversion)</p>
 </dd></dl>
 
@@ -635,12 +639,15 @@ output_file_path (str): File path to write the bounding box.</p>
 <dt class="sig sig-object py" id="unravel.img_tools.resample">
 <span class="sig-prename descclassname"><span class="pre">unravel.img_tools.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/img_tools.html#resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.img_tools.resample" title="Link to this definition">#</a></dt>
 <dd><p>Resample a 3D ndarray</p>
-<dl class="simple">
-<dt>Parameters:</dt><dd><p>ndarray: 3D ndarray to resample
-xy_res: x/y voxel size in microns (for the original image)
-z_res: z voxel size in microns
-res: resolution in microns for the resampled image
-zoom_order: SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ndarray</strong> – 3D ndarray to resample</p></li>
+<li><p><strong>xy_res</strong> – x/y voxel size in microns (for the original image)</p></li>
+<li><p><strong>z_res</strong> – z voxel size in microns</p></li>
+<li><p><strong>res</strong> – resolution in microns for the resampled image</p></li>
+<li><p><strong>zoom_order</strong> – SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -654,7 +661,7 @@ zoom_order: SciPy zoom order for resampling the native image. Default: 1 (biline
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.img_tools.rolling_ball_subtraction_opencv_parallel">
 <span class="sig-prename descclassname"><span class="pre">unravel.img_tools.</span></span><span class="sig-name descname"><span class="pre">rolling_ball_subtraction_opencv_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/img_tools.html#rolling_ball_subtraction_opencv_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.img_tools.rolling_ball_subtraction_opencv_parallel" title="Link to this definition">#</a></dt>
-<dd><p>Subtract background from &lt;ndarray&gt; using OpenCV. 
+<dd><p>Subtract background from &lt;ndarray&gt; using OpenCV.
 Uses multiple threads to process slices in parallel.
 Radius is the radius of the rolling ball in pixels.
 Returns ndarray with background subtracted.</p>
@@ -715,13 +722,14 @@ Returns ndarray with background subtracted.</p>
 <dt class="sig sig-object py" id="unravel.utils.copy_files">
 <span class="sig-prename descclassname"><span class="pre">unravel.utils.</span></span><span class="sig-name descname"><span class="pre">copy_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utils.html#copy_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utils.copy_files" title="Link to this definition">#</a></dt>
 <dd><p>Copy the specified slices to the target directory.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><ul class="simple">
-<li><p>source_dir (Path): Path to the source directory containing the .tif files.</p></li>
-<li><p>target_dir (Path): Path to the target directory where the selected slices will be copied.</p></li>
-<li><p>filename (str): Name of the file to copy.</p></li>
-<li><p>sample_path (Path): Path to the sample directory (provide to prepend to the filename).</p></li>
-<li><p>verbose (bool): Increase verbosity.</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source_dir</strong> (<em>-</em>) – Path to the source directory containing the .tif files.</p></li>
+<li><p><strong>target_dir</strong> (<em>-</em>) – Path to the target directory where the selected slices will be copied.</p></li>
+<li><p><strong>filename</strong> (<em>-</em>) – Name of the file to copy.</p></li>
+<li><p><strong>sample_path</strong> (<em>-</em>) – Path to the sample directory (provide to prepend to the filename).</p></li>
+<li><p><strong>verbose</strong> (<em>-</em>) – Increase verbosity.</p></li>
 </ul>
 </dd>
 </dl>
@@ -789,12 +797,12 @@ If both sample_dir_list and exp_dir_paths are provided, paths are added to the l
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="segmentation.html"
+       href="segment.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">segmentation package</p>
+        <p class="prev-next-title">segment package</p>
       </div>
     </a>
     <a class="right-next"

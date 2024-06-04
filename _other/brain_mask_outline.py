@@ -8,9 +8,9 @@ from rich.live import Live
 from rich.traceback import install
 from scipy.ndimage import binary_erosion, binary_dilation
 
-from unravel.argparse_utils import SM, SuppressMetavar
-from unravel.config import Configuration
-from unravel.utils import get_samples, initialize_progress_bar, print_cmd_and_times
+from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
+from unravel.core.utils import get_samples, initialize_progress_bar, print_cmd_and_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Create and dilate the outline of a brain mask from a .nii.gz file.", formatter_class=SuppressMetavar)

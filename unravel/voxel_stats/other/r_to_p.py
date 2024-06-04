@@ -8,10 +8,10 @@ from rich.traceback import install
 from scipy.stats import norm
 from statsmodels.stats.multitest import multipletests
 
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.config import Configuration
-from unravel.img_io import load_3D_img, save_as_nii
-from unravel.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.img_io import load_3D_img, save_as_nii
+from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Converts correlation map to z-score, p value, and FDR p value maps', formatter_class=SuppressMetavar)

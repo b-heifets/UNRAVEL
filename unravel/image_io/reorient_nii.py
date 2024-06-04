@@ -7,7 +7,7 @@ from nibabel.orientations import axcodes2ornt, ornt_transform, io_orientation, a
 from rich import print
 from rich.traceback import install
 
-from unravel.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
@@ -148,10 +148,9 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
         form_code (int): Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned). Default: None (get from the input NIfTI image)
 
     Returns:
-        if apply:
-            new_nii (nibabel.nifti1.Nifti1Image): NIfTI image with the new orientation
-        else:
-            new_affine (np.ndarray): New affine matrix
+        If apply True: new_nii (nibabel.nifti1.Nifti1Image): NIfTI image with the new orientation
+        If apply False: new_affine (np.ndarray): New affine matrix
+        
     """
 
     # Optionally apply the orientation change to the image data

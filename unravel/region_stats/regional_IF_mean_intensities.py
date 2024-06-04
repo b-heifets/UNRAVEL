@@ -5,7 +5,7 @@ import nibabel as nib
 import numpy as np
 import csv
 
-from unravel.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():

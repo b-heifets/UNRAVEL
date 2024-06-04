@@ -4,14 +4,12 @@ unravel
 .. toctree::
    :maxdepth: 4
 
-   atlas_tools
-   cluster_correction
-   cluster_validation
+   cluster_stats
    image_io
    image_tools
    region_stats
-   registration
-   segmentation
+   register
+   segment
    unravel
    utilities
    voxel_stats

@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 import shutil
 
-from unravel.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def find_and_copy_files(pattern, src_dir, dest_dir):

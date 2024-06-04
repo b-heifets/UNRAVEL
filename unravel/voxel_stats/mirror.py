@@ -7,9 +7,9 @@ import nibabel as nib
 from pathlib import Path
 from rich.traceback import install
 
-from unravel.argparse_utils import SM, SuppressMetavar
-from unravel.config import Configuration
-from unravel.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Load *.nii.gz, smooth, flip copy, average, save .nii.gz', formatter_class=SuppressMetavar)

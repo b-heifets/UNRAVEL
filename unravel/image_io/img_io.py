@@ -3,10 +3,10 @@
 import argparse
 from rich.traceback import install
 
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.config import Configuration
-from unravel.img_io import load_3D_img, save_as_h5, save_as_nii, save_as_tifs, save_as_zarr
-from unravel.utils import print_cmd_and_times
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.img_io import load_3D_img, save_as_h5, save_as_nii, save_as_tifs, save_as_zarr
+from unravel.core.utils import print_cmd_and_times
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Load 3D image, [get metadata], and save as the specified image type', formatter_class=SuppressMetavar)

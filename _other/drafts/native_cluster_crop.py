@@ -7,11 +7,11 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.config import Configuration
-from unravel.img_io import load_3D_img, load_image_metadata_from_txt, save_as_nii, load_nii_subset
-from unravel.img_tools import crop
-from unravel.utils import print_cmd_and_times, print_func_name_args_times, load_text_from_file
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, save_as_nii, load_nii_subset
+from unravel.core.img_tools import crop
+from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, load_text_from_file
 
 
 def parse_args():

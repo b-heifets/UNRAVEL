@@ -5,7 +5,7 @@ import subprocess
 from glob import glob
 from rich.traceback import install
 
-from unravel.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():

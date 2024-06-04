@@ -9,7 +9,7 @@ from pathlib import Path
 from rich import print
 from tifffile import imwrite 
 
-from unravel.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 

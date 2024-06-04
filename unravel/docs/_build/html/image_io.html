@@ -42,7 +42,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="image_tools package" href="image_tools.html" />
-    <link rel="prev" title="cluster_validation.effect_sizes package" href="cluster_validation.effect_sizes.html" />
+    <link rel="prev" title="cluster_stats.effect_sizes package" href="cluster_stats.effect_sizes.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -258,17 +258,18 @@ document.write(`
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="atlas_tools.html">atlas_tools package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cluster_correction.html">cluster_correction package</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_validation.html">cluster_validation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.effect_sizes.html">cluster_validation.effect_sizes package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_stats.html">cluster_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html">cluster_stats.effect_sizes package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">image_io package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="image_tools.html">image_tools package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="image_tools.html">image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html">image_tools.atlas package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="region_stats.html">region_stats package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="registration.html">registration package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="segmentation.html">segmentation package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register.html">register package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">segment package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unravel.html">unravel package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">utilities package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="voxel_stats.html">voxel_stats package</a></li>
@@ -518,19 +519,22 @@ If return_res=True returns: ndarray, xy_res, z_res (resolution in um)</p>
 <dt class="sig sig-object py" id="image_io.reorient_nii.reorient_nii">
 <span class="sig-prename descclassname"><span class="pre">image_io.reorient_nii.</span></span><span class="sig-name descname"><span class="pre">reorient_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/image_io/reorient_nii.html#reorient_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#image_io.reorient_nii.reorient_nii" title="Link to this definition">#</a></dt>
 <dd><p>Reorient a NIfTI image or its affine matrix to a target orientation.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>nii_path (str): Path to the NIfTI image
-target_ort (str): Target orientation axis codes (e.g., RAS)
-zero_origin (bool): Zero the origin of the affine matrix. Default: False
-apply (bool): Apply the new orientation to the ndarray data. Default: False
-form_code (int): Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned). Default: None (get from the input NIfTI image)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nii_path</strong> (<em>str</em>) – Path to the NIfTI image</p></li>
+<li><p><strong>target_ort</strong> (<em>str</em>) – Target orientation axis codes (e.g., RAS)</p></li>
+<li><p><strong>zero_origin</strong> (<em>bool</em>) – Zero the origin of the affine matrix. Default: False</p></li>
+<li><p><strong>apply</strong> (<em>bool</em>) – Apply the new orientation to the ndarray data. Default: False</p></li>
+<li><p><strong>form_code</strong> (<em>int</em>) – Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned). Default: None (get from the input NIfTI image)</p></li>
+</ul>
 </dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>if apply:</dt><dd><p>new_nii (nibabel.nifti1.Nifti1Image): NIfTI image with the new orientation</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>new_nii (nibabel.nifti1.Nifti1Image): NIfTI image with the new orientation
+If apply False: new_affine (np.ndarray): New affine matrix</p>
 </dd>
-<dt>else:</dt><dd><p>new_affine (np.ndarray): New affine matrix</p>
-</dd>
-</dl>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If apply True</p>
 </dd>
 </dl>
 </dd></dl>
@@ -539,10 +543,13 @@ form_code (int): Set the sform and qform codes for spatial coordinate type (1 = 
 <dt class="sig sig-object py" id="image_io.reorient_nii.transform_nii_affine">
 <span class="sig-prename descclassname"><span class="pre">image_io.reorient_nii.</span></span><span class="sig-name descname"><span class="pre">transform_nii_affine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/image_io/reorient_nii.html#transform_nii_affine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#image_io.reorient_nii.transform_nii_affine" title="Link to this definition">#</a></dt>
 <dd><p>Transform the affine matrix of a NIfTI image to a target orientation and return the new affine matrix</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>nii (nibabel.nifti1.Nifti1Image): NIfTI image
-target_ort (str): Target orientation axis codes (e.g., RAS)
-zero_origin (bool): Zero the origin of the affine matrix. Default: False</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nii</strong> (<em>nibabel.nifti1.Nifti1Image</em>) – NIfTI image</p></li>
+<li><p><strong>target_ort</strong> (<em>str</em>) – Target orientation axis codes (e.g., RAS)</p></li>
+<li><p><strong>zero_origin</strong> (<em>bool</em>) – Zero the origin of the affine matrix. Default: False</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -632,12 +639,12 @@ If return_res=True returns: ndarray, xy_res, z_res (resolution in um)</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="cluster_validation.effect_sizes.html"
+       href="cluster_stats.effect_sizes.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">cluster_validation.effect_sizes package</p>
+        <p class="prev-next-title">cluster_stats.effect_sizes package</p>
       </div>
     </a>
     <a class="right-next"

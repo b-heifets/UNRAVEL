@@ -458,10 +458,9 @@ document.write(`
 <span class="sd">        form_code (int): Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned). Default: None (get from the input NIfTI image)</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        if apply:</span>
-<span class="sd">            new_nii (nibabel.nifti1.Nifti1Image): NIfTI image with the new orientation</span>
-<span class="sd">        else:</span>
-<span class="sd">            new_affine (np.ndarray): New affine matrix</span>
+<span class="sd">        If apply True: new_nii (nibabel.nifti1.Nifti1Image): NIfTI image with the new orientation</span>
+<span class="sd">        If apply False: new_affine (np.ndarray): New affine matrix</span>
+<span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Optionally apply the orientation change to the image data</span>

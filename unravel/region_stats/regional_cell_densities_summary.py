@@ -17,8 +17,8 @@ from rich.traceback import install
 from scipy.stats import ttest_ind
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.utils import initialize_progress_bar
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.utils import initialize_progress_bar
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Plot cell densensities for each region and summarize results.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...', formatter_class=SuppressMetavar)

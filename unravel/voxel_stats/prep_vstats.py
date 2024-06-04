@@ -7,14 +7,14 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from registration.prep_reg import prep_reg
-from unravel.argparse_utils import SuppressMetavar, SM
-from image_tools.spatial_averaging import apply_2D_mean_filter, spatial_average_2D, spatial_average_3D
-from warp.to_atlas import to_atlas
-from unravel.config import Configuration
-from unravel.img_io import load_3D_img
-from unravel.img_tools import rolling_ball_subtraction_opencv_parallel
-from unravel.utils import print_cmd_and_times, initialize_progress_bar, get_samples
+from unravel.image_tools.spatial_averaging import apply_2D_mean_filter, spatial_average_2D, spatial_average_3D
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.img_io import load_3D_img
+from unravel.core.img_tools import rolling_ball_subtraction_opencv_parallel
+from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples
+from unravel.register.prep_reg import prep_reg
+from unravel.warp.to_atlas import to_atlas
 
 
 def parse_args():

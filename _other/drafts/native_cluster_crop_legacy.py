@@ -6,11 +6,11 @@ import numpy as np
 from rich import print
 from rich.traceback import install
 
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.config import Configuration
-from unravel.img_io import load_3D_img, save_as_nii
-from unravel.img_tools import crop
-from unravel.utils import print_cmd_and_times, print_func_name_args_times, load_text_from_file
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.img_io import load_3D_img, save_as_nii
+from unravel.core.img_tools import crop
+from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, load_text_from_file
 
 
 def parse_args():

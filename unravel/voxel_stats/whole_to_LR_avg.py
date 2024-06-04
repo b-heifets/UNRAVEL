@@ -12,9 +12,9 @@ from concurrent.futures import ThreadPoolExecutor
 
 from apply_mask import load_mask
 from mirror import mirror
-from unravel.argparse_utils import SM, SuppressMetavar
-from unravel.config import Configuration
-from unravel.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 
 def parse_args():

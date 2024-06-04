@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 from rich import print
 from rich.live import Live
 
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.config import Configuration
-from unravel.img_io import load_3D_img
-from unravel.utils import print_cmd_and_times, initialize_progress_bar
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.img_io import load_3D_img
+from unravel.core.utils import print_cmd_and_times, initialize_progress_bar
 
 
 def parse_args():

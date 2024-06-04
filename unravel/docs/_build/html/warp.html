@@ -257,17 +257,18 @@ document.write(`
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="atlas_tools.html">atlas_tools package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cluster_correction.html">cluster_correction package</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_validation.html">cluster_validation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.effect_sizes.html">cluster_validation.effect_sizes package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_stats.html">cluster_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html">cluster_stats.effect_sizes package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="image_io.html">image_io package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="image_tools.html">image_tools package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="image_tools.html">image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html">image_tools.atlas package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="region_stats.html">region_stats package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="registration.html">registration package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="segmentation.html">segmentation package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register.html">register package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">segment package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unravel.html">unravel package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">utilities package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="voxel_stats.html">voxel_stats package</a></li>
@@ -356,15 +357,16 @@ document.write(`
 <dt class="sig sig-object py" id="warp.to_atlas.to_atlas">
 <span class="sig-prename descclassname"><span class="pre">warp.to_atlas.</span></span><span class="sig-name descname"><span class="pre">to_atlas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_reg_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uint16'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/warp/to_atlas.html#to_atlas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#warp.to_atlas.to_atlas" title="Link to this definition">#</a></dt>
 <dd><p>Warp the image to atlas space using ANTsPy.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><ul class="simple">
-<li><p>sample_path (Path): Path to the sample directory.</p></li>
-<li><p>img (np.ndarray): 3D image.</p></li>
-<li><p>fixed_reg_in (str): Name of the fixed image for registration.</p></li>
-<li><p>atlas (str): Path to the atlas.</p></li>
-<li><p>output (str): Path to the output.</p></li>
-<li><p>interpol (str): Type of interpolation (linear, bSpline, nearestNeighbor, multiLabel).</p></li>
-<li><p>dtype (str): Desired dtype for output (e.g., uint8, uint16). Default: uint16</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_path</strong> (<em>-</em>) – Path to the sample directory.</p></li>
+<li><p><strong>img</strong> (<em>-</em>) – 3D image.</p></li>
+<li><p><strong>fixed_reg_in</strong> (<em>-</em>) – Name of the fixed image for registration.</p></li>
+<li><p><strong>atlas</strong> (<em>-</em>) – Path to the atlas.</p></li>
+<li><p><strong>output</strong> (<em>-</em>) – Path to the output.</p></li>
+<li><p><strong>interpol</strong> (<em>-</em>) – Type of interpolation (linear, bSpline, nearestNeighbor, multiLabel).</p></li>
+<li><p><strong>dtype</strong> (<em>-</em>) – Desired dtype for output (e.g., uint8, uint16). Default: uint16</p></li>
 </ul>
 </dd>
 </dl>

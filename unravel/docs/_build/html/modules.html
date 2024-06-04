@@ -41,7 +41,7 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'modules';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="atlas_tools package" href="atlas_tools.html" />
+    <link rel="next" title="cluster_stats package" href="cluster_stats.html" />
     <link rel="prev" title="Welcome to UNRAVEL’s documentation!" href="index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -258,17 +258,18 @@ document.write(`
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="atlas_tools.html">atlas_tools package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cluster_correction.html">cluster_correction package</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_validation.html">cluster_validation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.effect_sizes.html">cluster_validation.effect_sizes package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_stats.html">cluster_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html">cluster_stats.effect_sizes package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="image_io.html">image_io package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="image_tools.html">image_tools package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="image_tools.html">image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html">image_tools.atlas package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="region_stats.html">region_stats package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="registration.html">registration package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="segmentation.html">segmentation package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register.html">register package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">segment package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unravel.html">unravel package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">utilities package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="voxel_stats.html">voxel_stats package</a></li>
@@ -331,169 +332,134 @@ document.write(`
 <h1>unravel<a class="headerlink" href="#unravel" title="Link to this heading">#</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="atlas_tools.html">atlas_tools package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="atlas_tools.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="atlas_tools.html#module-atlas_tools.relabel_nii">atlas_tools.relabel_nii module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="atlas_tools.html#atlas_tools.relabel_nii.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="atlas_tools.html#atlas_tools.relabel_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="atlas_tools.html#module-atlas_tools.wireframe">atlas_tools.wireframe module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="atlas_tools.html#atlas_tools.wireframe.generate_wireframe"><code class="docutils literal notranslate"><span class="pre">generate_wireframe()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="atlas_tools.html#atlas_tools.wireframe.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="atlas_tools.html#atlas_tools.wireframe.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="atlas_tools.html#atlas_tools.wireframe.process_intensity"><code class="docutils literal notranslate"><span class="pre">process_intensity()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="atlas_tools.html#module-atlas_tools">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cluster_correction.html">cluster_correction package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cluster_correction.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_correction.html#module-cluster_correction.fdr">cluster_correction.fdr module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.fdr.cluster_index"><code class="docutils literal notranslate"><span class="pre">cluster_index()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.fdr.fdr"><code class="docutils literal notranslate"><span class="pre">fdr()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.fdr.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.fdr.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.fdr.process_fdr_and_clusters"><code class="docutils literal notranslate"><span class="pre">process_fdr_and_clusters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.fdr.reverse_clusters"><code class="docutils literal notranslate"><span class="pre">reverse_clusters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.fdr.split_clusters_based_on_effect"><code class="docutils literal notranslate"><span class="pre">split_clusters_based_on_effect()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_correction.html#module-cluster_correction.fdr_range">cluster_correction.fdr_range module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.fdr_range.fdr_range"><code class="docutils literal notranslate"><span class="pre">fdr_range()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.fdr_range.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.fdr_range.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.fdr_range.smart_float_format"><code class="docutils literal notranslate"><span class="pre">smart_float_format()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_correction.html#module-cluster_correction.recursively_mirror_rev_cluster_indices">cluster_correction.recursively_mirror_rev_cluster_indices module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.recursively_mirror_rev_cluster_indices.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.recursively_mirror_rev_cluster_indices.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_correction.html#cluster_correction.recursively_mirror_rev_cluster_indices.process_file"><code class="docutils literal notranslate"><span class="pre">process_file()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_correction.html#module-cluster_correction">Module contents</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cluster_validation.html">cluster_validation package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#subpackages">Subpackages</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.effect_sizes.html">cluster_validation.effect_sizes package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="cluster_validation.effect_sizes.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cluster_validation.effect_sizes.html#module-cluster_validation.effect_sizes.effect_sizes">cluster_validation.effect_sizes.effect_sizes module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cluster_validation.effect_sizes.html#module-cluster_validation.effect_sizes.effect_sizes_by_sex__absolute">cluster_validation.effect_sizes.effect_sizes_by_sex__absolute module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cluster_validation.effect_sizes.html#module-cluster_validation.effect_sizes.effect_sizes_by_sex__relative">cluster_validation.effect_sizes.effect_sizes_by_sex__relative module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="cluster_validation.effect_sizes.html#module-cluster_validation.effect_sizes">Module contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cluster_stats.html">cluster_stats package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html">cluster_stats.effect_sizes package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="cluster_stats.effect_sizes.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cluster_stats.effect_sizes.html#module-cluster_stats.effect_sizes.effect_sizes">cluster_stats.effect_sizes.effect_sizes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cluster_stats.effect_sizes.html#module-cluster_stats.effect_sizes.effect_sizes_by_sex__absolute">cluster_stats.effect_sizes.effect_sizes_by_sex__absolute module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cluster_stats.effect_sizes.html#module-cluster_stats.effect_sizes.effect_sizes_by_sex__relative">cluster_stats.effect_sizes.effect_sizes_by_sex__relative module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cluster_stats.effect_sizes.html#module-cluster_stats.effect_sizes">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.brain_model">cluster_validation.brain_model module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.brain_model.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.brain_model.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.brain_model">cluster_stats.brain_model module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.brain_model.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.brain_model.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.crop_clusters">cluster_validation.crop_clusters module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.crop_clusters.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.crop_clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.crop_clusters.save_cropped_img"><code class="docutils literal notranslate"><span class="pre">save_cropped_img()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.crop_clusters">cluster_stats.crop_clusters module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.crop_clusters.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.crop_clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.crop_clusters.save_cropped_img"><code class="docutils literal notranslate"><span class="pre">save_cropped_img()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.find_incongruent_clusters">cluster_validation.find_incongruent_clusters module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.find_incongruent_clusters.find_incongruent_clusters"><code class="docutils literal notranslate"><span class="pre">find_incongruent_clusters()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.find_incongruent_clusters.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.find_incongruent_clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.fdr">cluster_stats.fdr module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.fdr.cluster_index"><code class="docutils literal notranslate"><span class="pre">cluster_index()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.fdr.fdr"><code class="docutils literal notranslate"><span class="pre">fdr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.fdr.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.fdr.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.fdr.process_fdr_and_clusters"><code class="docutils literal notranslate"><span class="pre">process_fdr_and_clusters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.fdr.reverse_clusters"><code class="docutils literal notranslate"><span class="pre">reverse_clusters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.fdr.split_clusters_based_on_effect"><code class="docutils literal notranslate"><span class="pre">split_clusters_based_on_effect()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.sunburst">cluster_validation.sunburst module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.sunburst.calculate_regional_volumes"><code class="docutils literal notranslate"><span class="pre">calculate_regional_volumes()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.sunburst.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.sunburst.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.sunburst.sunburst"><code class="docutils literal notranslate"><span class="pre">sunburst()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.fdr_range">cluster_stats.fdr_range module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.fdr_range.fdr_range"><code class="docutils literal notranslate"><span class="pre">fdr_range()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.fdr_range.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.fdr_range.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.fdr_range.smart_float_format"><code class="docutils literal notranslate"><span class="pre">smart_float_format()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.valid_clusters_group_bilateral_data">cluster_validation.valid_clusters_group_bilateral_data module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_group_bilateral_data.group_hemisphere_data"><code class="docutils literal notranslate"><span class="pre">group_hemisphere_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_group_bilateral_data.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_group_bilateral_data.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.find_incongruent_clusters">cluster_stats.find_incongruent_clusters module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.find_incongruent_clusters.find_incongruent_clusters"><code class="docutils literal notranslate"><span class="pre">find_incongruent_clusters()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.find_incongruent_clusters.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.find_incongruent_clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.valid_clusters_index">cluster_validation.valid_clusters_index module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_index.generate_sunburst"><code class="docutils literal notranslate"><span class="pre">generate_sunburst()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_index.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_index.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.group_bilateral_data">cluster_stats.group_bilateral_data module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.group_bilateral_data.group_hemisphere_data"><code class="docutils literal notranslate"><span class="pre">group_hemisphere_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.group_bilateral_data.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.group_bilateral_data.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.valid_clusters_legend">cluster_validation.valid_clusters_legend module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_legend.apply_rgb_to_cell"><code class="docutils literal notranslate"><span class="pre">apply_rgb_to_cell()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_legend.extract_unique_regions_from_file"><code class="docutils literal notranslate"><span class="pre">extract_unique_regions_from_file()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_legend.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_legend.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.index">cluster_stats.index module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.index.generate_sunburst"><code class="docutils literal notranslate"><span class="pre">generate_sunburst()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.index.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.index.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.valid_clusters_org_data">cluster_validation.valid_clusters_org_data module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_org_data.copy_stats_files"><code class="docutils literal notranslate"><span class="pre">copy_stats_files()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_org_data.cp"><code class="docutils literal notranslate"><span class="pre">cp()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_org_data.find_matching_directory"><code class="docutils literal notranslate"><span class="pre">find_matching_directory()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_org_data.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_org_data.organize_validation_data"><code class="docutils literal notranslate"><span class="pre">organize_validation_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_org_data.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.legend">cluster_stats.legend module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.legend.apply_rgb_to_cell"><code class="docutils literal notranslate"><span class="pre">apply_rgb_to_cell()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.legend.extract_unique_regions_from_file"><code class="docutils literal notranslate"><span class="pre">extract_unique_regions_from_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.legend.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.legend.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.valid_clusters_prism">cluster_validation.valid_clusters_prism module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_prism.generate_summary_table"><code class="docutils literal notranslate"><span class="pre">generate_summary_table()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_prism.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_prism.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_prism.sort_samples"><code class="docutils literal notranslate"><span class="pre">sort_samples()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.org_data">cluster_stats.org_data module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.org_data.copy_stats_files"><code class="docutils literal notranslate"><span class="pre">copy_stats_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.org_data.cp"><code class="docutils literal notranslate"><span class="pre">cp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.org_data.find_matching_directory"><code class="docutils literal notranslate"><span class="pre">find_matching_directory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.org_data.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.org_data.organize_validation_data"><code class="docutils literal notranslate"><span class="pre">organize_validation_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.org_data.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.valid_clusters_stats">cluster_validation.valid_clusters_stats module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_stats.cluster_validation_data_df"><code class="docutils literal notranslate"><span class="pre">cluster_validation_data_df()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_stats.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_stats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_stats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_stats.perform_tukey_test"><code class="docutils literal notranslate"><span class="pre">perform_tukey_test()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_stats.valid_clusters_t_test"><code class="docutils literal notranslate"><span class="pre">valid_clusters_t_test()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.prism">cluster_stats.prism module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.prism.generate_summary_table"><code class="docutils literal notranslate"><span class="pre">generate_summary_table()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.prism.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.prism.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.prism.sort_samples"><code class="docutils literal notranslate"><span class="pre">sort_samples()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.valid_clusters_stats_table">cluster_validation.valid_clusters_stats_table module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_stats_table.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_stats_table.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_stats_table.valid_clusters_summary"><code class="docutils literal notranslate"><span class="pre">valid_clusters_summary()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.recursively_mirror_rev_cluster_indices">cluster_stats.recursively_mirror_rev_cluster_indices module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.recursively_mirror_rev_cluster_indices.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.recursively_mirror_rev_cluster_indices.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.recursively_mirror_rev_cluster_indices.process_file"><code class="docutils literal notranslate"><span class="pre">process_file()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.valid_clusters_summary">cluster_validation.valid_clusters_summary module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_summary.run_script"><code class="docutils literal notranslate"><span class="pre">run_script()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#cluster-stats-stats-module">cluster_stats.stats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.stats_table">cluster_stats.stats_table module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.stats_table.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.stats_table.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.stats_table.valid_clusters_summary"><code class="docutils literal notranslate"><span class="pre">valid_clusters_summary()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.valid_clusters_table">cluster_validation.valid_clusters_table module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_table.calculate_top_regions"><code class="docutils literal notranslate"><span class="pre">calculate_top_regions()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_table.can_collapse"><code class="docutils literal notranslate"><span class="pre">can_collapse()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_table.collapse_hierarchy"><code class="docutils literal notranslate"><span class="pre">collapse_hierarchy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_table.fill_na_with_last_known"><code class="docutils literal notranslate"><span class="pre">fill_na_with_last_known()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_table.get_fill_color"><code class="docutils literal notranslate"><span class="pre">get_fill_color()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_table.get_top_regions_and_percent_vols"><code class="docutils literal notranslate"><span class="pre">get_top_regions_and_percent_vols()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_table.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_table.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_table.sort_sunburst_hierarchy"><code class="docutils literal notranslate"><span class="pre">sort_sunburst_hierarchy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.valid_clusters_table.undo_fill_with_original"><code class="docutils literal notranslate"><span class="pre">undo_fill_with_original()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.sunburst">cluster_stats.sunburst module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.sunburst.calculate_regional_volumes"><code class="docutils literal notranslate"><span class="pre">calculate_regional_volumes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.sunburst.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.sunburst.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.sunburst.sunburst"><code class="docutils literal notranslate"><span class="pre">sunburst()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation.validate_clusters">cluster_validation.validate_clusters module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.validate_clusters.cluster_bbox"><code class="docutils literal notranslate"><span class="pre">cluster_bbox()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.validate_clusters.cluster_bbox_parallel"><code class="docutils literal notranslate"><span class="pre">cluster_bbox_parallel()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.validate_clusters.count_cells"><code class="docutils literal notranslate"><span class="pre">count_cells()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.validate_clusters.crop_outer_space"><code class="docutils literal notranslate"><span class="pre">crop_outer_space()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.validate_clusters.density_in_cluster"><code class="docutils literal notranslate"><span class="pre">density_in_cluster()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.validate_clusters.density_in_cluster_parallel"><code class="docutils literal notranslate"><span class="pre">density_in_cluster_parallel()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.validate_clusters.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_validation.html#cluster_validation.validate_clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.table">cluster_stats.table module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.table.calculate_top_regions"><code class="docutils literal notranslate"><span class="pre">calculate_top_regions()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.table.can_collapse"><code class="docutils literal notranslate"><span class="pre">can_collapse()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.table.collapse_hierarchy"><code class="docutils literal notranslate"><span class="pre">collapse_hierarchy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.table.fill_na_with_last_known"><code class="docutils literal notranslate"><span class="pre">fill_na_with_last_known()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.table.get_fill_color"><code class="docutils literal notranslate"><span class="pre">get_fill_color()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.table.get_top_regions_and_percent_vols"><code class="docutils literal notranslate"><span class="pre">get_top_regions_and_percent_vols()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.table.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.table.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.table.sort_sunburst_hierarchy"><code class="docutils literal notranslate"><span class="pre">sort_sunburst_hierarchy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.table.undo_fill_with_original"><code class="docutils literal notranslate"><span class="pre">undo_fill_with_original()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html#module-cluster_validation">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.valid_clusters_summary">cluster_stats.valid_clusters_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats.validate_clusters">cluster_stats.validate_clusters module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.validate_clusters.cluster_bbox"><code class="docutils literal notranslate"><span class="pre">cluster_bbox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.validate_clusters.cluster_bbox_parallel"><code class="docutils literal notranslate"><span class="pre">cluster_bbox_parallel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.validate_clusters.count_cells"><code class="docutils literal notranslate"><span class="pre">count_cells()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.validate_clusters.crop_outer_space"><code class="docutils literal notranslate"><span class="pre">crop_outer_space()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.validate_clusters.density_in_cluster"><code class="docutils literal notranslate"><span class="pre">density_in_cluster()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.validate_clusters.density_in_cluster_parallel"><code class="docutils literal notranslate"><span class="pre">density_in_cluster_parallel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.validate_clusters.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.html#cluster_stats.validate_clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.html#module-cluster_stats">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="image_io.html">image_io package</a><ul>
@@ -575,6 +541,16 @@ document.write(`
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="image_tools.html">image_tools package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="image_tools.atlas.html">image_tools.atlas package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="image_tools.atlas.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="image_tools.atlas.html#module-image_tools.atlas.relabel_nii">image_tools.atlas.relabel_nii module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="image_tools.atlas.html#module-image_tools.atlas.wireframe">image_tools.atlas.wireframe module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="image_tools.atlas.html#module-image_tools.atlas">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="image_tools.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_tools.html#module-image_tools.avg">image_tools.avg module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="image_tools.html#image_tools.avg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
@@ -697,69 +673,69 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="region_stats.html#module-region_stats">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="registration.html">registration package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="registration.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="registration.html#module-registration.ANTsPy_affine_initializer">registration.ANTsPy_affine_initializer module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.ANTsPy_affine_initializer.affine_initializer_wrapper"><code class="docutils literal notranslate"><span class="pre">affine_initializer_wrapper()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.ANTsPy_affine_initializer.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.ANTsPy_affine_initializer.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.ANTsPy_affine_initializer.run_with_timeout"><code class="docutils literal notranslate"><span class="pre">run_with_timeout()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="register.html">register package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="register.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="register.html#module-register.ANTsPy_affine_initializer">register.ANTsPy_affine_initializer module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.ANTsPy_affine_initializer.affine_initializer_wrapper"><code class="docutils literal notranslate"><span class="pre">affine_initializer_wrapper()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.ANTsPy_affine_initializer.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.ANTsPy_affine_initializer.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.ANTsPy_affine_initializer.run_with_timeout"><code class="docutils literal notranslate"><span class="pre">run_with_timeout()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="registration.html#module-registration.check_brain_mask">registration.check_brain_mask module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.check_brain_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.check_brain_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="register.html#module-register.check_brain_mask">register.check_brain_mask module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.check_brain_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.check_brain_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="registration.html#module-registration.check_reg">registration.check_reg module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.check_reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.check_reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="register.html#module-register.check_reg">register.check_reg module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.check_reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.check_reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="registration.html#module-registration.metadata">registration.metadata module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.metadata.get_dims_from_tifs"><code class="docutils literal notranslate"><span class="pre">get_dims_from_tifs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.metadata.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.metadata.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.metadata.print_metadata"><code class="docutils literal notranslate"><span class="pre">print_metadata()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="register.html#module-register.metadata">register.metadata module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.metadata.get_dims_from_tifs"><code class="docutils literal notranslate"><span class="pre">get_dims_from_tifs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.metadata.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.metadata.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.metadata.print_metadata"><code class="docutils literal notranslate"><span class="pre">print_metadata()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="registration.html#module-registration.prep_reg">registration.prep_reg module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.prep_reg.copy_specific_slices"><code class="docutils literal notranslate"><span class="pre">copy_specific_slices()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.prep_reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.prep_reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.prep_reg.prep_reg"><code class="docutils literal notranslate"><span class="pre">prep_reg()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="register.html#module-register.prep_reg">register.prep_reg module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.prep_reg.copy_specific_slices"><code class="docutils literal notranslate"><span class="pre">copy_specific_slices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.prep_reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.prep_reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.prep_reg.prep_reg"><code class="docutils literal notranslate"><span class="pre">prep_reg()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="registration.html#module-registration.reg">registration.reg module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.reg.bias_correction"><code class="docutils literal notranslate"><span class="pre">bias_correction()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="registration.html#registration.reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="register.html#module-register.reg">register.reg module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.reg.bias_correction"><code class="docutils literal notranslate"><span class="pre">bias_correction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="register.html#register.reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="registration.html#module-registration">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="register.html#module-register">Module contents</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="segmentation.html">segmentation package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="segmentation.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="segmentation.html#module-segmentation.brain_mask">segmentation.brain_mask module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="segmentation.html#segmentation.brain_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="segmentation.html#segmentation.brain_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">segment package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="segment.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segment.html#module-segment.brain_mask">segment.brain_mask module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="segment.html#segment.brain_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="segment.html#segment.brain_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="segmentation.html#module-segmentation.copy_tifs">segmentation.copy_tifs module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="segmentation.html#segmentation.copy_tifs.copy_specific_slices"><code class="docutils literal notranslate"><span class="pre">copy_specific_slices()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="segmentation.html#segmentation.copy_tifs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="segmentation.html#segmentation.copy_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="segment.html#module-segment.copy_tifs">segment.copy_tifs module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="segment.html#segment.copy_tifs.copy_specific_slices"><code class="docutils literal notranslate"><span class="pre">copy_specific_slices()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="segment.html#segment.copy_tifs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="segment.html#segment.copy_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="segmentation.html#module-segmentation.ilastik_pixel_classification">segmentation.ilastik_pixel_classification module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="segmentation.html#segmentation.ilastik_pixel_classification.count_files"><code class="docutils literal notranslate"><span class="pre">count_files()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="segmentation.html#segmentation.ilastik_pixel_classification.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="segmentation.html#segmentation.ilastik_pixel_classification.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="segmentation.html#segmentation.ilastik_pixel_classification.save_labels_as_masks"><code class="docutils literal notranslate"><span class="pre">save_labels_as_masks()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="segment.html#module-segment.ilastik_pixel_classification">segment.ilastik_pixel_classification module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="segment.html#segment.ilastik_pixel_classification.count_files"><code class="docutils literal notranslate"><span class="pre">count_files()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="segment.html#segment.ilastik_pixel_classification.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="segment.html#segment.ilastik_pixel_classification.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="segment.html#segment.ilastik_pixel_classification.save_labels_as_masks"><code class="docutils literal notranslate"><span class="pre">save_labels_as_masks()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="segmentation.html#module-segmentation">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segment.html#module-segment">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="unravel.html">unravel package</a><ul>
@@ -992,11 +968,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="atlas_tools.html"
+       href="cluster_stats.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">atlas_tools package</p>
+        <p class="prev-next-title">cluster_stats package</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

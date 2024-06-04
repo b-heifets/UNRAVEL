@@ -4,7 +4,7 @@ import argparse
 from pathlib import Path
 from rich.traceback import install
 
-from unravel.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Recursively rename files and/or directories by replacing text in filenames.', formatter_class=SuppressMetavar)

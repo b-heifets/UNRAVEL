@@ -9,10 +9,10 @@ from rich import print
 from rich.traceback import install
 from tifffile import imwrite 
 
-from image_io.h5_to_tifs import load_h5
-from unravel.argparse_utils import SuppressMetavar, SM
-from unravel.config import Configuration
-from unravel.utils import print_cmd_and_times
+from unravel.image_io.h5_to_tifs import load_h5
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():

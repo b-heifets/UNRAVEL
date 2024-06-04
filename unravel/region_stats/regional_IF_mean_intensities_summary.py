@@ -12,7 +12,7 @@ from pathlib import Path
 from scipy.stats import dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
-from unravel.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 region_ID_name_abbr_csv = "/Users/Danielthy/Documents/_Heifets_lab_data/_Lightsheet_microscopy_data/#Gubra/gubra_region_ID_name_abbr.csv"

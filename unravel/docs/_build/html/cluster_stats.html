@@ -1,0 +1,1153 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>cluster_stats package &#8212; UNRAVEL 1.0.0-beta documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="_static/documentation_options.js?v=3fd7a760"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'cluster_stats';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="cluster_stats.effect_sizes package" href="cluster_stats.effect_sizes.html" />
+    <link rel="prev" title="unravel" href="modules.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">UNRAVEL 1.0.0-beta documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    unravel
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <button class="sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    unravel
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">cluster_stats package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html">cluster_stats.effect_sizes package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="image_io.html">image_io package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="image_tools.html">image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html">image_tools.atlas package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="region_stats.html">region_stats package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register.html">register package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">segment package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unravel.html">unravel package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utilities.html">utilities package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voxel_stats.html">voxel_stats package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="warp.html">warp package</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">unravel</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">cluster_stat...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="cluster-stats-package">
+<h1>cluster_stats package<a class="headerlink" href="#cluster-stats-package" title="Link to this heading">#</a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cluster_stats.effect_sizes.html">cluster_stats.effect_sizes package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html#module-cluster_stats.effect_sizes.effect_sizes">cluster_stats.effect_sizes.effect_sizes module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes.filter_dataframe"><code class="docutils literal notranslate"><span class="pre">filter_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes.hedges_g"><code class="docutils literal notranslate"><span class="pre">hedges_g()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html#module-cluster_stats.effect_sizes.effect_sizes_by_sex__absolute">cluster_stats.effect_sizes.effect_sizes_by_sex__absolute module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.filter_dataframe"><code class="docutils literal notranslate"><span class="pre">filter_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.hedges_g"><code class="docutils literal notranslate"><span class="pre">hedges_g()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html#module-cluster_stats.effect_sizes.effect_sizes_by_sex__relative">cluster_stats.effect_sizes.effect_sizes_by_sex__relative module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes_by_sex__relative.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes_by_sex__relative.filter_dataframe"><code class="docutils literal notranslate"><span class="pre">filter_dataframe()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes_by_sex__relative.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes_by_sex__relative.mean_std_count"><code class="docutils literal notranslate"><span class="pre">mean_std_count()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes_by_sex__relative.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats.effect_sizes.html#cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g"><code class="docutils literal notranslate"><span class="pre">relative_hedges_g()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html#module-cluster_stats.effect_sizes">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-cluster_stats.brain_model">
+<span id="cluster-stats-brain-model-module"></span><h2>cluster_stats.brain_model module<a class="headerlink" href="#module-cluster_stats.brain_model" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.brain_model.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.brain_model.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/brain_model.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.brain_model.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.brain_model.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.brain_model.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/brain_model.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.brain_model.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats.crop_clusters">
+<span id="cluster-stats-crop-clusters-module"></span><h2>cluster_stats.crop_clusters module<a class="headerlink" href="#module-cluster_stats.crop_clusters" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.crop_clusters.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.crop_clusters.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/crop_clusters.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.crop_clusters.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.crop_clusters.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.crop_clusters.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/crop_clusters.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.crop_clusters.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.crop_clusters.save_cropped_img">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.crop_clusters.</span></span><span class="sig-name descname"><span class="pre">save_cropped_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_cropped</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/crop_clusters.html#save_cropped_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.crop_clusters.save_cropped_img" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats.fdr">
+<span id="cluster-stats-fdr-module"></span><h2>cluster_stats.fdr module<a class="headerlink" href="#module-cluster_stats.fdr" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.fdr.cluster_index">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">cluster_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adj_p_val_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/fdr.html#cluster_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.fdr.cluster_index" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.fdr.fdr">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">fdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fdr_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/fdr.html#fdr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.fdr.fdr" title="Link to this definition">#</a></dt>
+<dd><p>Perform FDR correction on the input p value map using a mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_path</strong> (<em>-</em>) – the path to the p value map</p></li>
+<li><p><strong>fdr_path</strong> (<em>-</em>) – the path to the output directory</p></li>
+<li><p><strong>mask_path</strong> (<em>-</em>) – the path to the mask</p></li>
+<li><p><strong>q_value</strong> (<em>-</em>) – the q value for FDR correction</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Saves in the fdr_path:</dt><dd><ul class="simple">
+<li><p>FDR-adjusted p value map</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the path to the FDR-adjusted p value map
+- probability_threshold (float): the probability threshold for the FDR correction</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>adjusted_pval_output_path (str)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.fdr.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/fdr.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.fdr.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.fdr.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/fdr.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.fdr.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.fdr.process_fdr_and_clusters">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">process_fdr_and_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_img1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_img2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/fdr.html#process_fdr_and_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.fdr.process_fdr_and_clusters" title="Link to this definition">#</a></dt>
+<dd><p>Process FDR correction and cluster index generation for a given q value.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.fdr.reverse_clusters">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">reverse_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_index_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_index_nii</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/fdr.html#reverse_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.fdr.reverse_clusters" title="Link to this definition">#</a></dt>
+<dd><p>Reverse the cluster IDs in a cluster index image (ndarray). Return the reversed cluster index ndarray.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.fdr.split_clusters_based_on_effect">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">split_clusters_based_on_effect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rev_cluster_index_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_img1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_img2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_cluster_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_index_nii</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/fdr.html#split_clusters_based_on_effect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.fdr.split_clusters_based_on_effect" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats.fdr_range">
+<span id="cluster-stats-fdr-range-module"></span><h2>cluster_stats.fdr_range module<a class="headerlink" href="#module-cluster_stats.fdr_range" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.fdr_range.fdr_range">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.fdr_range.</span></span><span class="sig-name descname"><span class="pre">fdr_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/fdr_range.html#fdr_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.fdr_range.fdr_range" title="Link to this definition">#</a></dt>
+<dd><p>Perform FDR correction on the input p value map using a mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_path</strong> (<em>-</em>) – the path to the p value map</p></li>
+<li><p><strong>mask_path</strong> (<em>-</em>) – the path to the mask</p></li>
+<li><p><strong>q_value</strong> (<em>-</em>) – the q value for FDR correction</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.fdr_range.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.fdr_range.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/fdr_range.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.fdr_range.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.fdr_range.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.fdr_range.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/fdr_range.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.fdr_range.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.fdr_range.smart_float_format">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.fdr_range.</span></span><span class="sig-name descname"><span class="pre">smart_float_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_decimals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/fdr_range.html#smart_float_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.fdr_range.smart_float_format" title="Link to this definition">#</a></dt>
+<dd><p>Format float with up to <cite>max_decimals</cite> places, but strip unnecessary trailing zeros.</p>
+</dd></dl>
+
+</section>
+<section id="module-cluster_stats.find_incongruent_clusters">
+<span id="cluster-stats-find-incongruent-clusters-module"></span><h2>cluster_stats.find_incongruent_clusters module<a class="headerlink" href="#module-cluster_stats.find_incongruent_clusters" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.find_incongruent_clusters.find_incongruent_clusters">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.find_incongruent_clusters.</span></span><span class="sig-name descname"><span class="pre">find_incongruent_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_lower_mean_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_higher_mean_group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/find_incongruent_clusters.html#find_incongruent_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.find_incongruent_clusters.find_incongruent_clusters" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.find_incongruent_clusters.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.find_incongruent_clusters.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/find_incongruent_clusters.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.find_incongruent_clusters.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.find_incongruent_clusters.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.find_incongruent_clusters.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/find_incongruent_clusters.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.find_incongruent_clusters.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats.group_bilateral_data">
+<span id="cluster-stats-group-bilateral-data-module"></span><h2>cluster_stats.group_bilateral_data module<a class="headerlink" href="#module-cluster_stats.group_bilateral_data" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.group_bilateral_data.group_hemisphere_data">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.group_bilateral_data.</span></span><span class="sig-name descname"><span class="pre">group_hemisphere_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/group_bilateral_data.html#group_hemisphere_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.group_bilateral_data.group_hemisphere_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.group_bilateral_data.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.group_bilateral_data.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/group_bilateral_data.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.group_bilateral_data.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.group_bilateral_data.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.group_bilateral_data.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/group_bilateral_data.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.group_bilateral_data.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats.index">
+<span id="cluster-stats-index-module"></span><h2>cluster_stats.index module<a class="headerlink" href="#module-cluster_stats.index" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.index.generate_sunburst">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.index.</span></span><span class="sig-name descname"><span class="pre">generate_sunburst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xyz_res_in_um</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/index.html#generate_sunburst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.index.generate_sunburst" title="Link to this definition">#</a></dt>
+<dd><p>Generate a sunburst plot for a given cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cluster</strong> (<em>-</em>) – the cluster ID.</p></li>
+<li><p><strong>img</strong> (<em>-</em>) – the input image ndarray.</p></li>
+<li><p><strong>atlas</strong> (<em>-</em>) – the atlas ndarray.</p></li>
+<li><p><strong>atlas_res_in_um</strong> (<em>-</em>) – the atlas resolution in microns. For example, (25, 25, 25)</p></li>
+<li><p><strong>data_type</strong> (<em>-</em>) – the data type of the image.</p></li>
+<li><p><strong>output_dir</strong> (<em>-</em>) – the output directory.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.index.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.index.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/index.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.index.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.index.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.index.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/index.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.index.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats.legend">
+<span id="cluster-stats-legend-module"></span><h2>cluster_stats.legend module<a class="headerlink" href="#module-cluster_stats.legend" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.legend.apply_rgb_to_cell">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.legend.</span></span><span class="sig-name descname"><span class="pre">apply_rgb_to_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ws</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_w_rgb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_w_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/legend.html#apply_rgb_to_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.legend.apply_rgb_to_cell" title="Link to this definition">#</a></dt>
+<dd><p>Apply RGB values to cells in the worksheet.</p>
+<p>Parameters: ws (openpyxl worksheet), df_w_rgb (DataFrame with RGB values), col_w_labels (column with region labels), region (region name), col_num (column number to apply the RGB values starting from 0)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.legend.extract_unique_regions_from_file">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.legend.</span></span><span class="sig-name descname"><span class="pre">extract_unique_regions_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/legend.html#extract_unique_regions_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.legend.extract_unique_regions_from_file" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.legend.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.legend.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/legend.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.legend.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.legend.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.legend.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/legend.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.legend.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats.org_data">
+<span id="cluster-stats-org-data-module"></span><h2>cluster_stats.org_data module<a class="headerlink" href="#module-cluster_stats.org_data" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.org_data.copy_stats_files">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">copy_stats_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validation_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vstats_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_val_txt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/org_data.html#copy_stats_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.org_data.copy_stats_files" title="Link to this definition">#</a></dt>
+<dd><p>Copy the cluster info, p value threshold, and rev_cluster_index files to the target directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>validation_dir</strong> (<em>-</em>) – the path to the validation directory</p></li>
+<li><p><strong>dest_path</strong> (<em>-</em>) – the path to the new directory</p></li>
+<li><p><strong>vstats_path</strong> (<em>-</em>) – the path to the vstats directory</p></li>
+<li><p><strong>p_val_txt</strong> (<em>-</em>) – the name of the file with the corrected p value threshold</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.org_data.cp">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">cp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/org_data.html#cp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.org_data.cp" title="Link to this definition">#</a></dt>
+<dd><p>Copy a file from src path to a dest path, optionally printing the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src</strong> (<em>-</em>) – the source path</p></li>
+<li><p><strong>dest</strong> (<em>-</em>) – the destination path</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.org_data.find_matching_directory">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">find_matching_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/org_data.html#find_matching_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.org_data.find_matching_directory" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.org_data.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/org_data.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.org_data.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.org_data.organize_validation_data">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">organize_validation_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_dir_pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vstats_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_val_txt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/org_data.html#organize_validation_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.org_data.organize_validation_data" title="Link to this definition">#</a></dt>
+<dd><p>Copy the cluster validation, p value, cluster info, and rev_cluster_index files to the target directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_path</strong> (<em>-</em>) – the path to the sample directory</p></li>
+<li><p><strong>clusters_path</strong> (<em>-</em>) – the path to the clusters directory</p></li>
+<li><p><strong>validation_dir_pattern</strong> (<em>-</em>) – the pattern to match the validation directories</p></li>
+<li><p><strong>density_type</strong> (<em>-</em>) – the type of density data to aggregate (cell or label)</p></li>
+<li><p><strong>target_dir</strong> (<em>-</em>) – the path to the target directory</p></li>
+<li><p><strong>vstats_path</strong> (<em>-</em>) – the path to the vstats directory</p></li>
+<li><p><strong>p_val_txt</strong> (<em>-</em>) – the name of the file with the corrected p value threshold</p></li>
+<li><p><strong>cluster_idx</strong> (<em>-</em>) – the name of the rev_cluster_index file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.org_data.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/org_data.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.org_data.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats.prism">
+<span id="cluster-stats-prism-module"></span><h2>cluster_stats.prism module<a class="headerlink" href="#module-cluster_stats.prism" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.prism.generate_summary_table">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.prism.</span></span><span class="sig-name descname"><span class="pre">generate_summary_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_column_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/prism.html#generate_summary_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.prism.generate_summary_table" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.prism.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.prism.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/prism.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.prism.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.prism.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.prism.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/prism.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.prism.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.prism.sort_samples">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.prism.</span></span><span class="sig-name descname"><span class="pre">sort_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/prism.html#sort_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.prism.sort_samples" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats.recursively_mirror_rev_cluster_indices">
+<span id="cluster-stats-recursively-mirror-rev-cluster-indices-module"></span><h2>cluster_stats.recursively_mirror_rev_cluster_indices module<a class="headerlink" href="#module-cluster_stats.recursively_mirror_rev_cluster_indices" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.recursively_mirror_rev_cluster_indices.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.recursively_mirror_rev_cluster_indices.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/recursively_mirror_rev_cluster_indices.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.recursively_mirror_rev_cluster_indices.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.recursively_mirror_rev_cluster_indices.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.recursively_mirror_rev_cluster_indices.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/recursively_mirror_rev_cluster_indices.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.recursively_mirror_rev_cluster_indices.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.recursively_mirror_rev_cluster_indices.process_file">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.recursively_mirror_rev_cluster_indices.</span></span><span class="sig-name descname"><span class="pre">process_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/recursively_mirror_rev_cluster_indices.html#process_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.recursively_mirror_rev_cluster_indices.process_file" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="cluster-stats-stats-module">
+<h2>cluster_stats.stats module<a class="headerlink" href="#cluster-stats-stats-module" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-cluster_stats.stats_table">
+<span id="cluster-stats-stats-table-module"></span><h2>cluster_stats.stats_table module<a class="headerlink" href="#module-cluster_stats.stats_table" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.stats_table.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.stats_table.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/stats_table.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.stats_table.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.stats_table.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.stats_table.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/stats_table.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.stats_table.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.stats_table.valid_clusters_summary">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.stats_table.</span></span><span class="sig-name descname"><span class="pre">valid_clusters_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/stats_table.html#valid_clusters_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.stats_table.valid_clusters_summary" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats.sunburst">
+<span id="cluster-stats-sunburst-module"></span><h2>cluster_stats.sunburst module<a class="headerlink" href="#module-cluster_stats.sunburst" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.sunburst.calculate_regional_volumes">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.sunburst.</span></span><span class="sig-name descname"><span class="pre">calculate_regional_volumes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_res_in_um</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/sunburst.html#calculate_regional_volumes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.sunburst.calculate_regional_volumes" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the volumes of labeled regions in the input image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>-</em>) – the input image ndarray.</p></li>
+<li><p><strong>atlas</strong> (<em>-</em>) – the atlas ndarray.</p></li>
+<li><p><strong>atlas_res_in_um</strong> (<em>-</em>) – the atlas resolution in in microns.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary of region volumes (key = region ID, value = volume in mm^3)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>volumes_dict (dict)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.sunburst.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.sunburst.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/sunburst.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.sunburst.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.sunburst.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.sunburst.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/sunburst.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.sunburst.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.sunburst.sunburst">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.sunburst.</span></span><span class="sig-name descname"><span class="pre">sunburst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_res_in_um</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_rgb_lut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/sunburst.html#sunburst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.sunburst.sunburst" title="Link to this definition">#</a></dt>
+<dd><p>Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>-</em>)</p></li>
+<li><p><strong>atlas</strong> (<em>-</em>)</p></li>
+<li><p><strong>atlas_res_in_um</strong> (<em>-</em>) – the atlas resolution in microns. For example, (25, 25, 25)</p></li>
+<li><p><strong>output_rgb_lut</strong> (<em>-</em>) – flag to output the RGB values for each abbreviation to a CSV file</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>CSV file containing the regional volumes for the sunburst plot (input_sunburst.csv)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-cluster_stats.table">
+<span id="cluster-stats-table-module"></span><h2>cluster_stats.table module<a class="headerlink" href="#module-cluster_stats.table" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.table.calculate_top_regions">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">calculate_top_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_vol_threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/table.html#calculate_top_regions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.table.calculate_top_regions" title="Link to this definition">#</a></dt>
+<dd><p>Identify the top regions based on the dynamically collapsed hierarchy,
+ensuring they meet the specified percentage volume criterion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df_collapsed</strong> – DataFrame with the hierarchy collapsed where meaningful.</p></li>
+<li><p><strong>top_n</strong> – The number of top regions to identify.</p></li>
+<li><p><strong>percent_vol_threshold</strong> – The minimum percentage of total volume these regions should represent.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>DataFrame with the top regions and their volumes if the criterion is met; otherwise, None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.table.can_collapse">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">can_collapse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth_col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/table.html#can_collapse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.table.can_collapse" title="Link to this definition">#</a></dt>
+<dd><p>Determine if regions in the specified depth column can be collapsed.
+Returns a DataFrame with regions that can be collapsed based on volume and count criteria.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.table.collapse_hierarchy">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">collapse_hierarchy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/table.html#collapse_hierarchy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.table.collapse_hierarchy" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.table.fill_na_with_last_known">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">fill_na_with_last_known</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/table.html#fill_na_with_last_known"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.table.fill_na_with_last_known" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.table.get_fill_color">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">get_fill_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/table.html#get_fill_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.table.get_fill_color" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.table.get_top_regions_and_percent_vols">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">get_top_regions_and_percent_vols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sunburst_csv_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_vol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/table.html#get_top_regions_and_percent_vols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.table.get_top_regions_and_percent_vols" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.table.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/table.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.table.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.table.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/table.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.table.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.table.sort_sunburst_hierarchy">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">sort_sunburst_hierarchy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/table.html#sort_sunburst_hierarchy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.table.sort_sunburst_hierarchy" title="Link to this definition">#</a></dt>
+<dd><p>Sort the DataFrame by hierarchy and volume.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.table.undo_fill_with_original">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">undo_fill_with_original</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_sorted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_original</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/table.html#undo_fill_with_original"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.table.undo_fill_with_original" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats.valid_clusters_summary">
+<span id="cluster-stats-valid-clusters-summary-module"></span><h2>cluster_stats.valid_clusters_summary module<a class="headerlink" href="#module-cluster_stats.valid_clusters_summary" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-cluster_stats.validate_clusters">
+<span id="cluster-stats-validate-clusters-module"></span><h2>cluster_stats.validate_clusters module<a class="headerlink" href="#module-cluster_stats.validate_clusters" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.validate_clusters.cluster_bbox">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.validate_clusters.</span></span><span class="sig-name descname"><span class="pre">cluster_bbox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_ID</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">native_cluster_index_cropped</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/validate_clusters.html#cluster_bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.validate_clusters.cluster_bbox" title="Link to this definition">#</a></dt>
+<dd><p>Get bounding box for the current cluster. Return cluster_ID, xmin, xmax, ymin, ymax, zmin, zmax.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.validate_clusters.cluster_bbox_parallel">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.validate_clusters.</span></span><span class="sig-name descname"><span class="pre">cluster_bbox_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">native_cluster_index_cropped</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/validate_clusters.html#cluster_bbox_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.validate_clusters.cluster_bbox_parallel" title="Link to this definition">#</a></dt>
+<dd><p>Get bounding boxes for each cluster in parallel. Return list of results.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.validate_clusters.count_cells">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.validate_clusters.</span></span><span class="sig-name descname"><span class="pre">count_cells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seg_in_cluster</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/validate_clusters.html#count_cells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.validate_clusters.count_cells" title="Link to this definition">#</a></dt>
+<dd><p>Count cells (objects) in each cluster using connected-components-3d
+Return the number of cells in the cluster.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.validate_clusters.crop_outer_space">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.validate_clusters.</span></span><span class="sig-name descname"><span class="pre">crop_outer_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">native_cluster_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/validate_clusters.html#crop_outer_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.validate_clusters.crop_outer_space" title="Link to this definition">#</a></dt>
+<dd><p>Crop outer space around all clusters and save bounding box to .txt file (outer_bounds.txt)
+Return cropped native_cluster_index, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.validate_clusters.density_in_cluster">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.validate_clusters.</span></span><span class="sig-name descname"><span class="pre">density_in_cluster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">native_cluster_index_cropped</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg_cropped</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cell_count'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/validate_clusters.html#density_in_cluster"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.validate_clusters.density_in_cluster" title="Link to this definition">#</a></dt>
+<dd><p>Measure cell count or volume of segmented voxels in the current cluster.
+For cell densities, return: cluster_ID, cell_count, cluster_volume_in_cubic_mm, cell_density, xmin, xmax, ymin, ymax, zmin, zmax
+For label densities, return: cluster_ID, seg_volume_in_cubic_mm, cluster_volume_in_cubic_mm, label_density, xmin, xmax, ymin, ymax, zmin, zmax.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.validate_clusters.density_in_cluster_parallel">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.validate_clusters.</span></span><span class="sig-name descname"><span class="pre">density_in_cluster_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_bbox_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">native_cluster_index_cropped</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg_cropped</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cell_count'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/validate_clusters.html#density_in_cluster_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.validate_clusters.density_in_cluster_parallel" title="Link to this definition">#</a></dt>
+<dd><p>Measure cell count or volume of segmented voxels in each cluster in parallel. Return list of results.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.validate_clusters.main">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.validate_clusters.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/validate_clusters.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.validate_clusters.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="cluster_stats.validate_clusters.parse_args">
+<span class="sig-prename descclassname"><span class="pre">cluster_stats.validate_clusters.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/cluster_stats/validate_clusters.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cluster_stats.validate_clusters.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-cluster_stats">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-cluster_stats" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="modules.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">unravel</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="cluster_stats.effect_sizes.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">cluster_stats.effect_sizes package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#subpackages">Subpackages</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.brain_model">cluster_stats.brain_model module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.brain_model.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.brain_model.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.crop_clusters">cluster_stats.crop_clusters module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.crop_clusters.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.crop_clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.crop_clusters.save_cropped_img"><code class="docutils literal notranslate"><span class="pre">save_cropped_img()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.fdr">cluster_stats.fdr module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.fdr.cluster_index"><code class="docutils literal notranslate"><span class="pre">cluster_index()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.fdr.fdr"><code class="docutils literal notranslate"><span class="pre">fdr()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.fdr.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.fdr.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.fdr.process_fdr_and_clusters"><code class="docutils literal notranslate"><span class="pre">process_fdr_and_clusters()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.fdr.reverse_clusters"><code class="docutils literal notranslate"><span class="pre">reverse_clusters()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.fdr.split_clusters_based_on_effect"><code class="docutils literal notranslate"><span class="pre">split_clusters_based_on_effect()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.fdr_range">cluster_stats.fdr_range module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.fdr_range.fdr_range"><code class="docutils literal notranslate"><span class="pre">fdr_range()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.fdr_range.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.fdr_range.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.fdr_range.smart_float_format"><code class="docutils literal notranslate"><span class="pre">smart_float_format()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.find_incongruent_clusters">cluster_stats.find_incongruent_clusters module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.find_incongruent_clusters.find_incongruent_clusters"><code class="docutils literal notranslate"><span class="pre">find_incongruent_clusters()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.find_incongruent_clusters.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.find_incongruent_clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.group_bilateral_data">cluster_stats.group_bilateral_data module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.group_bilateral_data.group_hemisphere_data"><code class="docutils literal notranslate"><span class="pre">group_hemisphere_data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.group_bilateral_data.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.group_bilateral_data.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.index">cluster_stats.index module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.index.generate_sunburst"><code class="docutils literal notranslate"><span class="pre">generate_sunburst()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.index.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.index.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.legend">cluster_stats.legend module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.legend.apply_rgb_to_cell"><code class="docutils literal notranslate"><span class="pre">apply_rgb_to_cell()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.legend.extract_unique_regions_from_file"><code class="docutils literal notranslate"><span class="pre">extract_unique_regions_from_file()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.legend.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.legend.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.org_data">cluster_stats.org_data module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.org_data.copy_stats_files"><code class="docutils literal notranslate"><span class="pre">copy_stats_files()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.org_data.cp"><code class="docutils literal notranslate"><span class="pre">cp()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.org_data.find_matching_directory"><code class="docutils literal notranslate"><span class="pre">find_matching_directory()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.org_data.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.org_data.organize_validation_data"><code class="docutils literal notranslate"><span class="pre">organize_validation_data()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.org_data.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.prism">cluster_stats.prism module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.prism.generate_summary_table"><code class="docutils literal notranslate"><span class="pre">generate_summary_table()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.prism.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.prism.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.prism.sort_samples"><code class="docutils literal notranslate"><span class="pre">sort_samples()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.recursively_mirror_rev_cluster_indices">cluster_stats.recursively_mirror_rev_cluster_indices module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.recursively_mirror_rev_cluster_indices.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.recursively_mirror_rev_cluster_indices.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.recursively_mirror_rev_cluster_indices.process_file"><code class="docutils literal notranslate"><span class="pre">process_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-stats-stats-module">cluster_stats.stats module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.stats_table">cluster_stats.stats_table module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.stats_table.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.stats_table.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.stats_table.valid_clusters_summary"><code class="docutils literal notranslate"><span class="pre">valid_clusters_summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.sunburst">cluster_stats.sunburst module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.sunburst.calculate_regional_volumes"><code class="docutils literal notranslate"><span class="pre">calculate_regional_volumes()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.sunburst.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.sunburst.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.sunburst.sunburst"><code class="docutils literal notranslate"><span class="pre">sunburst()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.table">cluster_stats.table module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.table.calculate_top_regions"><code class="docutils literal notranslate"><span class="pre">calculate_top_regions()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.table.can_collapse"><code class="docutils literal notranslate"><span class="pre">can_collapse()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.table.collapse_hierarchy"><code class="docutils literal notranslate"><span class="pre">collapse_hierarchy()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.table.fill_na_with_last_known"><code class="docutils literal notranslate"><span class="pre">fill_na_with_last_known()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.table.get_fill_color"><code class="docutils literal notranslate"><span class="pre">get_fill_color()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.table.get_top_regions_and_percent_vols"><code class="docutils literal notranslate"><span class="pre">get_top_regions_and_percent_vols()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.table.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.table.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.table.sort_sunburst_hierarchy"><code class="docutils literal notranslate"><span class="pre">sort_sunburst_hierarchy()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.table.undo_fill_with_original"><code class="docutils literal notranslate"><span class="pre">undo_fill_with_original()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.valid_clusters_summary">cluster_stats.valid_clusters_summary module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats.validate_clusters">cluster_stats.validate_clusters module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.validate_clusters.cluster_bbox"><code class="docutils literal notranslate"><span class="pre">cluster_bbox()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.validate_clusters.cluster_bbox_parallel"><code class="docutils literal notranslate"><span class="pre">cluster_bbox_parallel()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.validate_clusters.count_cells"><code class="docutils literal notranslate"><span class="pre">count_cells()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.validate_clusters.crop_outer_space"><code class="docutils literal notranslate"><span class="pre">crop_outer_space()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.validate_clusters.density_in_cluster"><code class="docutils literal notranslate"><span class="pre">density_in_cluster()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.validate_clusters.density_in_cluster_parallel"><code class="docutils literal notranslate"><span class="pre">density_in_cluster_parallel()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.validate_clusters.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster_stats.validate_clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-cluster_stats">Module contents</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="_sources/cluster_stats.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Daniel Ryskamp Rijsketic, Austen Casey, Boris Heifets.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

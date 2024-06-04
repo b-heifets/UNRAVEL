@@ -258,17 +258,18 @@ document.write(`
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="atlas_tools.html">atlas_tools package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cluster_correction.html">cluster_correction package</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_validation.html">cluster_validation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.effect_sizes.html">cluster_validation.effect_sizes package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_stats.html">cluster_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html">cluster_stats.effect_sizes package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="image_io.html">image_io package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="image_tools.html">image_tools package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="image_tools.html">image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html">image_tools.atlas package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="region_stats.html">region_stats package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="registration.html">registration package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="segmentation.html">segmentation package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register.html">register package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">segment package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unravel.html">unravel package</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">utilities package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="voxel_stats.html">voxel_stats package</a></li>
@@ -372,15 +373,20 @@ document.write(`
 <dt class="sig sig-object py" id="utilities.clean_tif_dirs.clean_tifs_dir">
 <span class="sig-prename descclassname"><span class="pre">utilities.clean_tif_dirs.</span></span><span class="sig-name descname"><span class="pre">clean_tifs_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_tif_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">move</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/utilities/clean_tif_dirs.html#clean_tifs_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#utilities.clean_tif_dirs.clean_tifs_dir" title="Link to this definition">#</a></dt>
 <dd><dl class="simple">
-<dt>Clean up a directory containing TIF files:  </dt><dd><ul class="simple">
+<dt>Clean up a directory containing TIF files:</dt><dd><ul class="simple">
 <li><p>Move subdirs to parent dir</p></li>
 <li><p>Move non-TIF files to parent dir.</p></li>
 <li><p>Replace spaces in TIF file names with underscores.</p></li>
 </ul>
 </dd>
-<dt>Args:</dt><dd><p>path_to_tif_dir (str): Path to the directory containing the TIF files.
-move (bool): Enable moving of subdirs and non-TIF files to parent dir.
-verbose (bool): Increase verbosity.</p>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_to_tif_dir</strong> (<em>str</em>) – Path to the directory containing the TIF files.</p></li>
+<li><p><strong>move</strong> (<em>bool</em>) – Enable moving of subdirs and non-TIF files to parent dir.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Increase verbosity.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -437,14 +443,15 @@ verbose (bool): Increase verbosity.</p>
 <dd><p>Renames files and/or directories in the specified directory, replacing old_text
 with new_text in the filenames. Can operate recursively and selectively based
 on type.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><ul class="simple">
-<li><p>directory (Path): the directory to search for files and/or directories</p></li>
-<li><p>old_text (str): the text to be replaced in the filenames</p></li>
-<li><p>new_text (str): the text to replace with in the filenames</p></li>
-<li><p>recursive (bool): whether to perform the renaming recursively</p></li>
-<li><p>rename_type (str): what to rename: “files”, “dirs”, or “both” (default: both)</p></li>
-<li><p>dry_run (bool): if true, print changes without making them</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>-</em>) – the directory to search for files and/or directories</p></li>
+<li><p><strong>old_text</strong> (<em>-</em>) – the text to be replaced in the filenames</p></li>
+<li><p><strong>new_text</strong> (<em>-</em>) – the text to replace with in the filenames</p></li>
+<li><p><strong>recursive</strong> (<em>-</em>) – whether to perform the renaming recursively</p></li>
+<li><p><strong>rename_type</strong> (<em>-</em>) – what to rename: “files”, “dirs”, or “both” (default: both)</p></li>
+<li><p><strong>dry_run</strong> (<em>-</em>) – if true, print changes without making them</p></li>
 </ul>
 </dd>
 </dl>

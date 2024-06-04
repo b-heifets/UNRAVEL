@@ -1,6 +1,14 @@
 image\_tools package
 ====================
 
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   image_tools.atlas
+
 Submodules
 ----------
 

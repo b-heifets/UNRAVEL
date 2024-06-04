@@ -258,17 +258,18 @@ document.write(`
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="atlas_tools.html">atlas_tools package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cluster_correction.html">cluster_correction package</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_validation.html">cluster_validation package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.effect_sizes.html">cluster_validation.effect_sizes package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="cluster_stats.html">cluster_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats.effect_sizes.html">cluster_stats.effect_sizes package</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="image_io.html">image_io package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="image_tools.html">image_tools package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="image_tools.html">image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools.atlas.html">image_tools.atlas package</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1"><a class="reference internal" href="region_stats.html">region_stats package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="registration.html">registration package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="segmentation.html">segmentation package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="register.html">register package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">segment package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="unravel.html">unravel package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="utilities.html">utilities package</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">voxel_stats package</a></li>
@@ -364,10 +365,11 @@ document.write(`
 <dt class="sig sig-object py" id="voxel_stats.apply_mask.mean_intensity_in_brain">
 <span class="sig-prename descclassname"><span class="pre">voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">mean_intensity_in_brain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tissue_mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/voxel_stats/apply_mask.html#mean_intensity_in_brain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voxel_stats.apply_mask.mean_intensity_in_brain" title="Link to this definition">#</a></dt>
 <dd><p>Z-score the image using the mask.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><ul class="simple">
-<li><p>img (str): the ndarray to be z-scored.</p></li>
-<li><p>mask (str): the brain mask ndarray</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>-</em>) – the ndarray to be z-scored.</p></li>
+<li><p><strong>mask</strong> (<em>-</em>) – the brain mask ndarray</p></li>
 </ul>
 </dd>
 </dl>
@@ -414,10 +416,13 @@ document.write(`
 <dt class="sig sig-object py" id="voxel_stats.mirror.mirror">
 <span class="sig-prename descclassname"><span class="pre">voxel_stats.mirror.</span></span><span class="sig-name descname"><span class="pre">mirror</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/voxel_stats/mirror.html#mirror"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voxel_stats.mirror.mirror" title="Link to this definition">#</a></dt>
 <dd><p>Mirror an image along the specified axis and shift the content by the specified number of voxels.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>img (np.ndarray): Image data to mirror
-axis (int): Axis to flip the image along. Default: 0
-shift (int): Number of voxels to shift content after flipping. Default: 2 (useful when the atlas is not centered)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>np.ndarray</em>) – Image data to mirror</p></li>
+<li><p><strong>axis</strong> (<em>int</em>) – Axis to flip the image along. Default: 0</p></li>
+<li><p><strong>shift</strong> (<em>int</em>) – Number of voxels to shift content after flipping. Default: 2 (useful when the atlas is not centered)</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -516,10 +521,11 @@ shift (int): Number of voxels to shift content after flipping. Default: 2 (usefu
 <dt class="sig sig-object py" id="voxel_stats.z_score.z_score">
 <span class="sig-prename descclassname"><span class="pre">voxel_stats.z_score.</span></span><span class="sig-name descname"><span class="pre">z_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/voxel_stats/z_score.html#z_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#voxel_stats.z_score.z_score" title="Link to this definition">#</a></dt>
 <dd><p>Z-score the image using the mask.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><ul class="simple">
-<li><p>img (str): the ndarray to be z-scored.</p></li>
-<li><p>mask (str): the brain mask ndarray</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>-</em>) – the ndarray to be z-scored.</p></li>
+<li><p><strong>mask</strong> (<em>-</em>) – the brain mask ndarray</p></li>
 </ul>
 </dd>
 </dl>

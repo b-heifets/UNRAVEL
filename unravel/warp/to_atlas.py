@@ -8,14 +8,14 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from image_io.nii_io import convert_dtype
-from registration.prep_reg import prep_reg
-from unravel.argparse_utils import SM, SuppressMetavar
-from unravel.config import Configuration
-from unravel.img_io import load_3D_img
-from unravel.img_tools import pad_img
-from unravel.utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
-from warp import warp
+from unravel.image_io.nii_io import convert_dtype
+from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
+from unravel.core.img_io import load_3D_img
+from unravel.core.img_tools import pad_img
+from unravel.core.utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
+from unravel.register.prep_reg import prep_reg
+from unravel.warp.warp import warp
 
 
 def parse_args():
