@@ -8,7 +8,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii
 from unravel.core.img_tools import find_bounding_box, cluster_IDs, crop
-from unravel.core.argparse_utilsutils import print_cmd_and_times, load_text_from_file
+from unravel.core.utils import print_cmd_and_times, load_text_from_file
 
 
 def parse_args():

@@ -14,7 +14,7 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import initialize_progress_bar, print_cmd_and_times
-from unravel.core.cluster_stats.stats_table import valid_clusters_summary
+from unravel.cluster_stats.stats_table import valid_clusters_summary
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Validate clusters based on differences in cell/object or label density w/ t-tests.', formatter_class=SuppressMetavar)

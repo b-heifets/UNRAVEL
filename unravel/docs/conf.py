@@ -6,26 +6,19 @@
 import os
 import sys
 
-print(sys.executable)
-
 sys.path.insert(0, os.path.abspath('..'))
-
-print(sys.path)
-
 sys.path.append(os.path.abspath('../cluster_stats'))
 sys.path.append(os.path.abspath('../cluster_stats/effect_sizes'))
+sys.path.append(os.path.abspath('../core'))
 sys.path.append(os.path.abspath('../image_io'))
 sys.path.append(os.path.abspath('../image_tools'))
 sys.path.append(os.path.abspath('../image_tools/atlas'))
 sys.path.append(os.path.abspath('../region_stats'))
 sys.path.append(os.path.abspath('../register'))
 sys.path.append(os.path.abspath('../segment'))
-sys.path.append(os.path.abspath('../unravel'))
 sys.path.append(os.path.abspath('../utilities'))
 sys.path.append(os.path.abspath('../voxel_stats'))
 sys.path.append(os.path.abspath('../warp'))
-
-print(sys.path)
 
 
 # -- Project information -----------------------------------------------------

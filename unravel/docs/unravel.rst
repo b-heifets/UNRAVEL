@@ -1,56 +1,22 @@
 unravel package
 ===============
 
-Submodules
-----------
+Subpackages
+-----------
 
-unravel.argparse\_utils module
-------------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: unravel.argparse_utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-unravel.argparse\_utils\_rich module
-------------------------------------
-
-.. automodule:: unravel.argparse_utils_rich
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-unravel.config module
----------------------
-
-.. automodule:: unravel.config
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-unravel.img\_io module
-----------------------
-
-.. automodule:: unravel.img_io
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-unravel.img\_tools module
--------------------------
-
-.. automodule:: unravel.img_tools
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-unravel.utils module
---------------------
-
-.. automodule:: unravel.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   unravel.cluster_stats
+   unravel.core
+   unravel.image_io
+   unravel.image_tools
+   unravel.region_stats
+   unravel.register
+   unravel.segment
+   unravel.utilities
+   unravel.voxel_stats
+   unravel.warp
 
 Module contents
 ---------------

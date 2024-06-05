@@ -1,0 +1,645 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>unravel.cluster_stats.effect_sizes package &#8212; UNRAVEL 1.0.0-beta documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="_static/documentation_options.js?v=3fd7a760"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel.cluster_stats.effect_sizes';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="unravel.core package" href="unravel.core.html" />
+    <link rel="prev" title="unravel.cluster_stats package" href="unravel.cluster_stats.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">UNRAVEL 1.0.0-beta documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    unravel
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+    <button class="sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item current active">
+  <a class="nav-link nav-internal" href="modules.html">
+    unravel
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="unravel.html">unravel package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="unravel.cluster_stats.html">unravel.cluster_stats package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">unravel.cluster_stats.effect_sizes package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="unravel.core.html">unravel.core package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unravel.image_io.html">unravel.image_io package</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="unravel.image_tools.html">unravel.image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="unravel.image_tools.atlas.html">unravel.image_tools.atlas package</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="unravel.region_stats.html">unravel.region_stats package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unravel.register.html">unravel.register package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unravel.segment.html">unravel.segment package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unravel.utilities.html">unravel.utilities package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unravel.voxel_stats.html">unravel.voxel_stats package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unravel.warp.html">unravel.warp package</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="modules.html" class="nav-link">unravel</a></li>
+    
+    
+    <li class="breadcrumb-item"><i class="fa-solid fa-ellipsis"></i></li>
+    
+    
+    <li class="breadcrumb-item"><a href="unravel.cluster_stats.html" class="nav-link">unravel.cluster_stats package</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">unravel.clus...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="unravel-cluster-stats-effect-sizes-package">
+<h1>unravel.cluster_stats.effect_sizes package<a class="headerlink" href="#unravel-cluster-stats-effect-sizes-package" title="Link to this heading">#</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+</section>
+<section id="module-unravel.cluster_stats.effect_sizes.effect_sizes">
+<span id="unravel-cluster-stats-effect-sizes-effect-sizes-module"></span><h2>unravel.cluster_stats.effect_sizes.effect_sizes module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes.condition_selector">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">condition_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Conditions'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#condition_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.condition_selector" title="Link to this definition">#</a></dt>
+<dd><p>Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.
+This function checks if the ‘condition’ is exactly present in the ‘Conditions’ column or is a prefix of any condition in this column.
+If the exact condition is found, it selects those rows.
+If the condition is a prefix (e.g., ‘saline’ matches ‘saline-1’, ‘saline-2’), it selects all rows where the ‘Conditions’ column starts with this prefix.
+An error is raised if the condition is neither found as an exact match nor as a prefix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame whose ‘Conditions’ column contains the conditions of interest.</p></li>
+<li><p><strong>condition</strong> (<em>str</em>) – The condition or prefix of interest.</p></li>
+<li><p><strong>unique_conditions</strong> (<em>list</em>) – List of unique conditions in the ‘Conditions’ column to validate against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A boolean Series to select rows based on the condition.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes.filter_dataframe">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#filter_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.filter_dataframe" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes.hedges_g">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">hedges_g</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#hedges_g"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.hedges_g" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute">
+<span id="unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-absolute-module"></span><h2>unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.condition_selector">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">condition_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Conditions'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#condition_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.condition_selector" title="Link to this definition">#</a></dt>
+<dd><p>Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.
+This function checks if the ‘condition’ is exactly present in the ‘Conditions’ column or is a prefix of any condition in this column.
+If the exact condition is found, it selects those rows.
+If the condition is a prefix (e.g., ‘saline’ matches ‘saline-1’, ‘saline-2’), it selects all rows where the ‘Conditions’ column starts with this prefix.
+An error is raised if the condition is neither found as an exact match nor as a prefix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame whose ‘Conditions’ column contains the conditions of interest.</p></li>
+<li><p><strong>condition</strong> (<em>str</em>) – The condition or prefix of interest.</p></li>
+<li><p><strong>unique_conditions</strong> (<em>list</em>) – List of unique conditions in the ‘Conditions’ column to validate against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A boolean Series to select rows based on the condition.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.filter_dataframe">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#filter_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.filter_dataframe" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.hedges_g">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">hedges_g</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sex</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#hedges_g"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.hedges_g" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative">
+<span id="unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-relative-module"></span><h2>unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.condition_selector">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">condition_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Conditions'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#condition_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.condition_selector" title="Link to this definition">#</a></dt>
+<dd><p>Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.
+This function checks if the ‘condition’ is exactly present in the ‘Conditions’ column or is a prefix of any condition in this column.
+If the exact condition is found, it selects those rows.
+If the condition is a prefix (e.g., ‘saline’ matches ‘saline-1’, ‘saline-2’), it selects all rows where the ‘Conditions’ column starts with this prefix.
+An error is raised if the condition is neither found as an exact match nor as a prefix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame whose ‘Conditions’ column contains the conditions of interest.</p></li>
+<li><p><strong>condition</strong> (<em>str</em>) – The condition or prefix of interest.</p></li>
+<li><p><strong>unique_conditions</strong> (<em>list</em>) – List of unique conditions in the ‘Conditions’ column to validate against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A boolean Series to select rows based on the condition.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.filter_dataframe">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#filter_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.filter_dataframe" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.mean_std_count">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">mean_std_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#mean_std_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.mean_std_count" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">relative_hedges_g</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#relative_hedges_g"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-unravel.cluster_stats.effect_sizes">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes" title="Link to this heading">#</a></h2>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="unravel.cluster_stats.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">unravel.cluster_stats package</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="unravel.core.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">unravel.core package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes">unravel.cluster_stats.effect_sizes.effect_sizes module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes.filter_dataframe"><code class="docutils literal notranslate"><span class="pre">filter_dataframe()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes.hedges_g"><code class="docutils literal notranslate"><span class="pre">hedges_g()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.filter_dataframe"><code class="docutils literal notranslate"><span class="pre">filter_dataframe()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.hedges_g"><code class="docutils literal notranslate"><span class="pre">hedges_g()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.filter_dataframe"><code class="docutils literal notranslate"><span class="pre">filter_dataframe()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.mean_std_count"><code class="docutils literal notranslate"><span class="pre">mean_std_count()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g"><code class="docutils literal notranslate"><span class="pre">relative_hedges_g()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.cluster_stats.effect_sizes">Module contents</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="_sources/unravel.cluster_stats.effect_sizes.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, Daniel Ryskamp Rijsketic, Austen Casey, Boris Heifets.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

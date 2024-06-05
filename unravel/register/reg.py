@@ -13,13 +13,13 @@ from rich.live import Live
 from rich.traceback import install
 from scipy.ndimage import gaussian_filter
 
-from image_io.reorient_nii import reorient_nii
-from unravel.argparse_utils import SM, SuppressMetavar
-from unravel.config import Configuration
-from unravel.img_io import resolve_path
-from unravel.img_tools import pad_img
-from unravel.utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
-from warp import warp
+from unravel.image_io.reorient_nii import reorient_nii
+from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
+from unravel.core.img_io import resolve_path
+from unravel.core.img_tools import pad_img
+from unravel.core.utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
+from unravel.warp.warp import warp
 
 
 def parse_args():
