@@ -1,8 +1,9 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -27,16 +28,16 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/image_tools/spatial_averaging';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -315,9 +316,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
 
 
-<div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.parse_args">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Load image and apply 3D spatial averaging&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image .czi, path/img.nii.gz, or path/tif_dir&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output path. Default: None&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -357,10 +356,7 @@ document.write(`
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="spatial_average_3D">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.spatial_average_3D">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<div class="viewcode-block" id="spatial_average_3D"><a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.spatial_average_3D">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">spatial_average_3D</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply a 3D spatial averaging filter to a 3D numpy array.</span>
@@ -377,18 +373,12 @@ document.write(`
     
     <span class="k">return</span> <span class="n">uniform_filter</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;constant&#39;</span><span class="p">,</span> <span class="n">cval</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="apply_2D_mean_filter">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.apply_2D_mean_filter">[docs]</a>
-<span class="k">def</span> <span class="nf">apply_2D_mean_filter</span><span class="p">(</span><span class="nb">slice</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
+<div class="viewcode-block" id="apply_2D_mean_filter"><a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.apply_2D_mean_filter">[docs]</a><span class="k">def</span> <span class="nf">apply_2D_mean_filter</span><span class="p">(</span><span class="nb">slice</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply a 2D mean filter to a single slice.&quot;&quot;&quot;</span>
     <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">filter2D</span><span class="p">(</span><span class="nb">slice</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="spatial_average_2D">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.spatial_average_2D">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<div class="viewcode-block" id="spatial_average_2D"><a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.spatial_average_2D">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">spatial_average_2D</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">filter_func</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">threads</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Apply a specified 2D filter function to each slice of a 3D volume in parallel.</span>
@@ -414,10 +404,9 @@ document.write(`
     <span class="k">return</span> <span class="n">processed_volume</span></div>
 
 
-
-<div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>    
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    
     <span class="c1"># Load image and metadata</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">z_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -450,7 +439,6 @@ document.write(`
         <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">axis_order</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zarr&#39;</span><span class="p">):</span>
         <span class="n">save_as_zarr</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">axis_order</span><span class="p">)</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span> 
@@ -508,7 +496,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     <br/>
   </p>
 </div>

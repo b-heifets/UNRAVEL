@@ -1,12 +1,13 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="./" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
     <title>unravel.cluster_stats.effect_sizes package &#8212; UNRAVEL 1.0.0-beta documentation</title>
   
@@ -28,16 +29,16 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="_static/documentation_options.js?v=3fd7a760"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'unravel.cluster_stats.effect_sizes';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -343,15 +344,15 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="unravel-cluster-stats-effect-sizes-package">
-<h1>unravel.cluster_stats.effect_sizes package<a class="headerlink" href="#unravel-cluster-stats-effect-sizes-package" title="Link to this heading">#</a></h1>
+<h1>unravel.cluster_stats.effect_sizes package<a class="headerlink" href="#unravel-cluster-stats-effect-sizes-package" title="Permalink to this heading">#</a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
 </section>
 <section id="module-unravel.cluster_stats.effect_sizes.effect_sizes">
-<span id="unravel-cluster-stats-effect-sizes-effect-sizes-module"></span><h2>unravel.cluster_stats.effect_sizes.effect_sizes module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes" title="Link to this heading">#</a></h2>
+<span id="unravel-cluster-stats-effect-sizes-effect-sizes-module"></span><h2>unravel.cluster_stats.effect_sizes.effect_sizes module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes" title="Permalink to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes.condition_selector">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">condition_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Conditions'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#condition_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.condition_selector" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">condition_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Conditions'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#condition_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.condition_selector" title="Permalink to this definition">#</a></dt>
 <dd><p>Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.
 This function checks if the ‘condition’ is exactly present in the ‘Conditions’ column or is a prefix of any condition in this column.
 If the exact condition is found, it selects those rows.
@@ -376,30 +377,30 @@ An error is raised if the condition is neither found as an exact match nor as a 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes.filter_dataframe">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#filter_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.filter_dataframe" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#filter_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.filter_dataframe" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes.hedges_g">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">hedges_g</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#hedges_g"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.hedges_g" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">hedges_g</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#hedges_g"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.hedges_g" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.main" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.main" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.parse_args" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.parse_args" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
 <section id="module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute">
-<span id="unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-absolute-module"></span><h2>unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute" title="Link to this heading">#</a></h2>
+<span id="unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-absolute-module"></span><h2>unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute" title="Permalink to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.condition_selector">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">condition_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Conditions'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#condition_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.condition_selector" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">condition_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Conditions'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#condition_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.condition_selector" title="Permalink to this definition">#</a></dt>
 <dd><p>Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.
 This function checks if the ‘condition’ is exactly present in the ‘Conditions’ column or is a prefix of any condition in this column.
 If the exact condition is found, it selects those rows.
@@ -424,30 +425,30 @@ An error is raised if the condition is neither found as an exact match nor as a 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.filter_dataframe">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#filter_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.filter_dataframe" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#filter_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.filter_dataframe" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.hedges_g">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">hedges_g</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sex</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#hedges_g"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.hedges_g" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">hedges_g</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sex</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#hedges_g"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.hedges_g" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.main" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.main" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.parse_args" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute.parse_args" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
 <section id="module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative">
-<span id="unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-relative-module"></span><h2>unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative" title="Link to this heading">#</a></h2>
+<span id="unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-relative-module"></span><h2>unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative" title="Permalink to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.condition_selector">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">condition_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Conditions'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#condition_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.condition_selector" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">condition_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Conditions'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#condition_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.condition_selector" title="Permalink to this definition">#</a></dt>
 <dd><p>Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.
 This function checks if the ‘condition’ is exactly present in the ‘Conditions’ column or is a prefix of any condition in this column.
 If the exact condition is found, it selects those rows.
@@ -472,32 +473,32 @@ An error is raised if the condition is neither found as an exact match nor as a 
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.filter_dataframe">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#filter_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.filter_dataframe" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">filter_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#filter_dataframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.filter_dataframe" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.main" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.main" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.mean_std_count">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">mean_std_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#mean_std_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.mean_std_count" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">mean_std_count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sex</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_columns</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#mean_std_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.mean_std_count" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.parse_args" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.parse_args" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">relative_hedges_g</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#relative_hedges_g"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.</span></span><span class="sig-name descname"><span class="pre">relative_hedges_g</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#relative_hedges_g"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
 <section id="module-unravel.cluster_stats.effect_sizes">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes" title="Link to this heading">#</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes" title="Permalink to this heading">#</a></h2>
 </section>
 </section>
 
@@ -620,7 +621,7 @@ An error is raised if the condition is neither found as an exact match nor as a 
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     <br/>
   </p>
 </div>

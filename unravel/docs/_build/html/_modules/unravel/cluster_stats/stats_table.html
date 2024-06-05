@@ -1,8 +1,9 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -27,16 +28,16 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/stats_table';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -311,18 +312,13 @@ document.write(`
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 
 
-<div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.stats_table.parse_args">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.stats_table.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Recursively find and concatenate matching csvs (e.g., to summarize cluster validation info)&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="s1">&#39;--csv_pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Pattern to match csv files. Default: cluster_validation_results.csv&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;cluster_validation_info.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/output.csv. Default: cluster_validation_summary.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;cluster_validation_summary.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="valid_clusters_summary">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.stats_table.valid_clusters_summary">[docs]</a>
-<span class="k">def</span> <span class="nf">valid_clusters_summary</span><span class="p">(</span><span class="n">csv_pattern</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+<div class="viewcode-block" id="valid_clusters_summary"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.stats_table.valid_clusters_summary">[docs]</a><span class="k">def</span> <span class="nf">valid_clusters_summary</span><span class="p">(</span><span class="n">csv_pattern</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
     <span class="c1"># Use glob to find all matching CSV files recursively</span>
     <span class="n">csv_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;**/</span><span class="si">{</span><span class="n">csv_pattern</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">csv_files</span><span class="p">:</span>
@@ -341,14 +337,10 @@ document.write(`
     <span class="n">output</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">concatenated_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.stats_table.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.stats_table.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
     <span class="n">valid_clusters_summary</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csv_pattern</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
@@ -404,7 +396,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     <br/>
   </p>
 </div>

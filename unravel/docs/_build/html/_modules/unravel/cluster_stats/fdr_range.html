@@ -1,8 +1,9 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -27,16 +28,16 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/fdr_range';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -312,9 +313,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span>
 
 
-<div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.parse_args">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Outputs a list of FDR q values that yeild clusters&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">q_values_default</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.00001</span><span class="p">,</span> <span class="mf">0.00005</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">,</span> <span class="mf">0.9999</span><span class="p">]</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/p_value_map.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -330,19 +329,13 @@ document.write(`
 <span class="s2">&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="smart_float_format">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.smart_float_format">[docs]</a>
-<span class="k">def</span> <span class="nf">smart_float_format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">max_decimals</span><span class="o">=</span><span class="mi">9</span><span class="p">):</span>
+<div class="viewcode-block" id="smart_float_format"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.smart_float_format">[docs]</a><span class="k">def</span> <span class="nf">smart_float_format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">max_decimals</span><span class="o">=</span><span class="mi">9</span><span class="p">):</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format float with up to `max_decimals` places, but strip unnecessary trailing zeros.&quot;&quot;&quot;</span>
     <span class="n">formatted</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">max_decimals</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span>  <span class="c1"># Format with maximum decimal places</span>
     <span class="k">return</span> <span class="n">formatted</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;0&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="s1">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">formatted</span> <span class="k">else</span> <span class="n">formatted</span></div>
 
-
-<div class="viewcode-block" id="fdr_range">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.fdr_range">[docs]</a>
-<span class="k">def</span> <span class="nf">fdr_range</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">mask_path</span><span class="p">,</span> <span class="n">q_value</span><span class="p">):</span>
+<div class="viewcode-block" id="fdr_range"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.fdr_range">[docs]</a><span class="k">def</span> <span class="nf">fdr_range</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">mask_path</span><span class="p">,</span> <span class="n">q_value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform FDR correction on the input p value map using a mask.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -371,10 +364,9 @@ document.write(`
     <span class="k">return</span> <span class="n">q_value</span><span class="p">,</span> <span class="n">probability_threshold_float</span></div>
 
 
-
-<div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    
     <span class="c1"># Initialize ThreadPoolExecutor</span>
     <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">threads</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
         <span class="c1"># Submit tasks to the executor for each q_value</span>
@@ -393,7 +385,6 @@ document.write(`
     <span class="c1"># Convert the sorted list to a string and print</span>
     <span class="n">q_values_resulting_in_clusters_str</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">smart_float_format</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">q_values_resulting_in_clusters</span><span class="p">])</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">q_values_resulting_in_clusters_str</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
-
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span> 
     <span class="n">install</span><span class="p">()</span>
@@ -449,7 +440,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     <br/>
   </p>
 </div>

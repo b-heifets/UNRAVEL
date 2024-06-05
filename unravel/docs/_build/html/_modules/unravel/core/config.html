@@ -1,8 +1,9 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -27,16 +28,16 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/core/config';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -305,17 +306,12 @@ document.write(`
 <span class="kn">import</span> <span class="nn">configparser</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
-<div class="viewcode-block" id="AttrDict">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.AttrDict">[docs]</a>
-<span class="k">class</span> <span class="nc">AttrDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+<div class="viewcode-block" id="AttrDict"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.AttrDict">[docs]</a><span class="k">class</span> <span class="nc">AttrDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A dictionary that allows attribute access.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="p">[</span><span class="n">name</span><span class="p">]</span></div>
 
-
-<div class="viewcode-block" id="Config">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.Config">[docs]</a>
-<span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
+<div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to read configuration from a file and allow attribute access using RawConfigParser.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">RawConfigParser</span><span class="p">()</span>
@@ -332,14 +328,10 @@ document.write(`
     <span class="k">def</span> <span class="nf">_strip_comments</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Strip inline comments from configuration values.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s*#.*$&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">M</span><span class="p">)</span></div>
-
     
-<div class="viewcode-block" id="Configuration">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.Configuration">[docs]</a>
-<span class="k">class</span> <span class="nc">Configuration</span><span class="p">:</span>
+<div class="viewcode-block" id="Configuration"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.Configuration">[docs]</a><span class="k">class</span> <span class="nc">Configuration</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to hold configuration settings.&quot;&quot;&quot;</span>
     <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span></div>
-
 </pre></div>
 
                 </article>
@@ -390,7 +382,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     <br/>
   </p>
 </div>

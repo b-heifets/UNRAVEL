@@ -1,8 +1,9 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -27,16 +28,16 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/image_io/nii_to_zarr';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -314,9 +315,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
 
 
-<div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.nii_to_zarr.parse_args">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.nii_to_zarr.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Convert .nii.gz to .zarr&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image.zarr&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -328,16 +327,12 @@ document.write(`
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="nii_to_ndarray">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.nii_to_zarr.nii_to_ndarray">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<div class="viewcode-block" id="nii_to_ndarray"><a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.nii_to_zarr.nii_to_ndarray">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">nii_to_ndarray</span><span class="p">(</span><span class="n">img_path</span><span class="p">):</span>
     <span class="n">nii_img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>   
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">nii_img</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)</span> <span class="c1"># Preserves dtype</span>
     <span class="n">d_type</span> <span class="o">=</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">dtype</span>
     <span class="k">return</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">d_type</span></div>
-
 
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">save_as_zarr</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
@@ -345,9 +340,7 @@ document.write(`
     <span class="n">compressor</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">Blosc</span><span class="p">(</span><span class="n">cname</span><span class="o">=</span><span class="s1">&#39;lz4&#39;</span><span class="p">,</span> <span class="n">clevel</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">Blosc</span><span class="o">.</span><span class="n">BITSHUFFLE</span><span class="p">)</span>
     <span class="n">dask_array</span><span class="o">.</span><span class="n">to_zarr</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">compressor</span><span class="o">=</span><span class="n">compressor</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<div class="viewcode-block" id="save_as_zarr">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.nii_to_zarr.save_as_zarr">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<div class="viewcode-block" id="save_as_zarr"><a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.nii_to_zarr.save_as_zarr">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">save_as_zarr</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">d_type</span><span class="p">):</span>
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">d_type</span><span class="p">)</span>
     <span class="n">dask_array</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
@@ -355,10 +348,9 @@ document.write(`
     <span class="n">dask_array</span><span class="o">.</span><span class="n">to_zarr</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">compressor</span><span class="o">=</span><span class="n">compressor</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.nii_to_zarr.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
-<div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.nii_to_zarr.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">img</span><span class="p">,</span> <span class="n">d_type</span> <span class="o">=</span> <span class="n">nii_to_ndarray</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
@@ -367,7 +359,6 @@ document.write(`
         <span class="n">output_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.nii.gz&quot;</span><span class="p">,</span> <span class="s2">&quot;.zarr&quot;</span><span class="p">)</span>
 
     <span class="n">save_as_zarr</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">d_type</span><span class="p">)</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
@@ -425,7 +416,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     <br/>
   </p>
 </div>

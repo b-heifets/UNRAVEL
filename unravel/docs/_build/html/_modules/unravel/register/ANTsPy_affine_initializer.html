@@ -1,8 +1,9 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -27,16 +28,16 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/register/ANTsPy_affine_initializer';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -314,9 +315,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SM</span><span class="p">,</span> <span class="n">SuppressMetavar</span>
 
 
-<div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.parse_args">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Run ants.affine_initializer as a seperate process to kill it after a time out&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--fixed_img&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/fixed_image.nii.gz (e.g., autofl_50um_masked_fixed_reg_input.nii.gz)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--moving_img&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/moving_image.nii.gz (e.g., template)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -338,10 +337,7 @@ document.write(`
 <span class="s2">&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
-
-<div class="viewcode-block" id="affine_initializer_wrapper">
-<a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.affine_initializer_wrapper">[docs]</a>
-<span class="k">def</span> <span class="nf">affine_initializer_wrapper</span><span class="p">(</span><span class="n">fixed_image_path</span><span class="p">,</span> <span class="n">moving_image_path</span><span class="p">,</span> <span class="n">reg_outputs_path</span><span class="p">,</span> <span class="n">queue</span><span class="p">):</span>
+<div class="viewcode-block" id="affine_initializer_wrapper"><a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.affine_initializer_wrapper">[docs]</a><span class="k">def</span> <span class="nf">affine_initializer_wrapper</span><span class="p">(</span><span class="n">fixed_image_path</span><span class="p">,</span> <span class="n">moving_image_path</span><span class="p">,</span> <span class="n">reg_outputs_path</span><span class="p">,</span> <span class="n">queue</span><span class="p">):</span>
 
     <span class="c1"># Load the fixed and moving images</span>
     <span class="n">fixed_image</span> <span class="o">=</span> <span class="n">ants</span><span class="o">.</span><span class="n">image_read</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">fixed_image_path</span><span class="p">))</span>
@@ -362,10 +358,7 @@ document.write(`
         <span class="c1"># Use a queue to pass the result back to the main process</span>
         <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">txfn</span><span class="p">)</span></div>
 
-
-<div class="viewcode-block" id="run_with_timeout">
-<a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.run_with_timeout">[docs]</a>
-<span class="k">def</span> <span class="nf">run_with_timeout</span><span class="p">(</span><span class="n">fixed_image</span><span class="p">,</span> <span class="n">moving_image</span><span class="p">,</span> <span class="n">reg_outputs_path</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
+<div class="viewcode-block" id="run_with_timeout"><a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.run_with_timeout">[docs]</a><span class="k">def</span> <span class="nf">run_with_timeout</span><span class="p">(</span><span class="n">fixed_image</span><span class="p">,</span> <span class="n">moving_image</span><span class="p">,</span> <span class="n">reg_outputs_path</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
 
     <span class="c1"># Queue for inter-process communication</span>
     <span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
@@ -388,17 +381,13 @@ document.write(`
         <span class="k">return</span> <span class="n">queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span> 
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span> 
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     
     <span class="c1"># Run the affine initializer with a specified timeout (in seconds)</span>
     <span class="n">run_with_timeout</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">fixed_img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">moving_img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">time_out</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The affine initializer did not complete successfully w/ 10 second timeout. Lengthen the timeout period of ANTsPy_affine_initializer.py (.e.g, 180 seconds)&quot;</span><span class="p">)</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span> 
@@ -454,7 +443,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     <br/>
   </p>
 </div>

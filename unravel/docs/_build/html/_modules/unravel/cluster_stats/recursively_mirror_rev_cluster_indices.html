@@ -1,8 +1,9 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -27,16 +28,16 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/recursively_mirror_rev_cluster_indices';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -315,9 +316,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span>
 <span class="kn">from</span> <span class="nn">voxel_stats.mirror</span> <span class="kn">import</span> <span class="n">mirror</span>
 
-<div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.parse_args">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Recursively process img.nii.gz files, apply mirroring, and save new files.&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--mas_side&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Side of the brain corresponding to the mask used for vstats.py and fdr.py (RH or LH)&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RH&#39;</span><span class="p">,</span> <span class="s1">&#39;LH&#39;</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Glob pattern to match files. Default: **/*rev_cluster_index.nii.gz&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;**/*rev_cluster_index.nii.gz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -330,13 +329,10 @@ document.write(`
 <span class="s2">&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
-
 <span class="c1"># TODO: adapt to work with CCFv3 images if needed </span>
 
 
-<div class="viewcode-block" id="process_file">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.process_file">[docs]</a>
-<span class="k">def</span> <span class="nf">process_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="process_file"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.process_file">[docs]</a><span class="k">def</span> <span class="nf">process_file</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">file_path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
         <span class="k">return</span>
 
@@ -352,16 +348,14 @@ document.write(`
     <span class="n">mirrored_filename</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">basename</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="s1">&#39;LH&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">args</span><span class="o">.</span><span class="n">mas_side</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;RH&#39;</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;RH&#39;</span><span class="si">}</span><span class="s2">.nii.gz&quot;</span>
     <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">mirrored_nii</span><span class="p">,</span> <span class="n">mirrored_filename</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span> 
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
-<div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span> 
     <span class="n">root_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
     <span class="n">files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">root_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">pattern</span><span class="p">))</span>
 
     <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
         <span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">file</span><span class="p">:</span> <span class="n">process_file</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">args</span><span class="p">),</span> <span class="n">files</span><span class="p">)</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span> 
@@ -419,7 +413,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     <br/>
   </p>
 </div>

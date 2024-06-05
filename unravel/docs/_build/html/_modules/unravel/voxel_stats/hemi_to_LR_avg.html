@@ -1,8 +1,9 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -27,16 +28,16 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/voxel_stats/hemi_to_LR_avg';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -320,9 +321,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
 
 
-<div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.hemi_to_LR_avg.parse_args">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.hemi_to_LR_avg.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Automatically average hemisphere images with their mirrored counterparts&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-k&#39;</span><span class="p">,</span> <span class="s1">&#39;--kernel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Smoothing kernel radius in mm if &gt; 0. Default: 0 &#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ax&#39;</span><span class="p">,</span> <span class="s1">&#39;--axis&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Axis to flip the image along. Default: 0&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -337,10 +336,7 @@ document.write(`
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="hemi_to_LR_avg">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.hemi_to_LR_avg.hemi_to_LR_avg">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<div class="viewcode-block" id="hemi_to_LR_avg"><a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.hemi_to_LR_avg.hemi_to_LR_avg">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">hemi_to_LR_avg</span><span class="p">(</span><span class="n">lh_file</span><span class="p">,</span> <span class="n">rh_file</span><span class="p">,</span> <span class="n">kernel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">shift</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">atlas_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">path</span> <span class="o">=</span> <span class="n">lh_file</span><span class="o">.</span><span class="n">parent</span>
     <span class="n">output_filename</span> <span class="o">=</span> <span class="n">rh_file</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_RH.nii.gz&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;_s</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">kernel</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000</span><span class="p">))</span><span class="si">}</span><span class="s1">_LRavg.nii.gz&#39;</span> <span class="k">if</span> <span class="n">kernel</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;_LRavg.nii.gz&#39;</span><span class="p">)</span>
@@ -379,10 +375,8 @@ document.write(`
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Saved averaged image to </span><span class="si">{</span><span class="n">output_filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
-
-<div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.hemi_to_LR_avg.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span> 
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.hemi_to_LR_avg.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span> 
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
     <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
     <span class="n">rh_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*_RH.nii.gz&#39;</span><span class="p">))</span>
@@ -394,7 +388,6 @@ document.write(`
         <span class="k">for</span> <span class="n">rh_file</span> <span class="ow">in</span> <span class="n">rh_files</span><span class="p">:</span>
             <span class="n">lh_file</span> <span class="o">=</span> <span class="n">path</span> <span class="o">/</span> <span class="nb">str</span><span class="p">(</span><span class="n">rh_file</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_RH.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;_LH.nii.gz&#39;</span><span class="p">)</span>
             <span class="n">hemi_to_LR_avg</span><span class="p">(</span><span class="n">lh_file</span><span class="p">,</span> <span class="n">rh_file</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">kernel</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">axis</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">shift</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">atlas_mask</span><span class="p">)</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span> 
@@ -452,7 +445,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     <br/>
   </p>
 </div>

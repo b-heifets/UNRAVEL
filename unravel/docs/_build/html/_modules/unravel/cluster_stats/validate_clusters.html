@@ -1,8 +1,9 @@
 
+
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="../../../" >
+<html lang="en" data-content_root="" >
 
   <head>
     <meta charset="utf-8" />
@@ -27,16 +28,16 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
-    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/validate_clusters';</script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -321,9 +322,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">warp.to_native</span> <span class="kn">import</span> <span class="n">to_native</span>
 
 
-<div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.parse_args">[docs]</a>
-<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Warps cluster index from atlas space to tissue space, crops clusters and applies segmentation mask&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process.&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pattern for sample?? dirs. Use cwd if no matches.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sample??&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -364,13 +363,10 @@ document.write(`
 <span class="s2">Next script: cluster_cell_counts.py&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
-
 <span class="c1"># TODO: QC. Aggregate .csv results for all samples if args.exp_dirs, script to load image subset.</span>
 <span class="c1"># TODO: Make config file for defaults or a command_generator.py script</span>
 
-<div class="viewcode-block" id="crop_outer_space">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.crop_outer_space">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<div class="viewcode-block" id="crop_outer_space"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.crop_outer_space">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">crop_outer_space</span><span class="p">(</span><span class="n">native_cluster_index</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Crop outer space around all clusters and save bounding box to .txt file (outer_bounds.txt) </span>
 <span class="sd">    Return cropped native_cluster_index, outer_xmin, outer_xmax, outer_ymin, outer_ymax, outer_zmin, outer_zmax&quot;&quot;&quot;</span>
@@ -400,10 +396,7 @@ document.write(`
     
     <span class="k">return</span> <span class="n">native_cluster_index_cropped</span><span class="p">,</span> <span class="n">outer_xmin</span><span class="p">,</span> <span class="n">outer_xmax</span><span class="p">,</span> <span class="n">outer_ymin</span><span class="p">,</span> <span class="n">outer_ymax</span><span class="p">,</span> <span class="n">outer_zmin</span><span class="p">,</span> <span class="n">outer_zmax</span></div>
 
-
-<div class="viewcode-block" id="cluster_bbox">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.cluster_bbox">[docs]</a>
-<span class="k">def</span> <span class="nf">cluster_bbox</span><span class="p">(</span><span class="n">cluster_ID</span><span class="p">,</span> <span class="n">native_cluster_index_cropped</span><span class="p">):</span>
+<div class="viewcode-block" id="cluster_bbox"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.cluster_bbox">[docs]</a><span class="k">def</span> <span class="nf">cluster_bbox</span><span class="p">(</span><span class="n">cluster_ID</span><span class="p">,</span> <span class="n">native_cluster_index_cropped</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get bounding box for the current cluster. Return cluster_ID, xmin, xmax, ymin, ymax, zmin, zmax.&quot;&quot;&quot;</span>
     <span class="n">cluster_mask</span> <span class="o">=</span> <span class="n">native_cluster_index_cropped</span> <span class="o">==</span> <span class="n">cluster_ID</span>
     <span class="n">presence_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">cluster_mask</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
@@ -416,10 +409,7 @@ document.write(`
 
     <span class="k">return</span> <span class="n">cluster_ID</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span></div>
 
-
-<div class="viewcode-block" id="cluster_bbox_parallel">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.cluster_bbox_parallel">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<div class="viewcode-block" id="cluster_bbox_parallel"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.cluster_bbox_parallel">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">cluster_bbox_parallel</span><span class="p">(</span><span class="n">native_cluster_index_cropped</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get bounding boxes for each cluster in parallel. Return list of results.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
@@ -436,10 +426,7 @@ document.write(`
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cluster </span><span class="si">{</span><span class="n">cluster_ID</span><span class="si">}</span><span class="s1"> generated an exception: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">results</span></div>
 
-
-<div class="viewcode-block" id="count_cells">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.count_cells">[docs]</a>
-<span class="k">def</span> <span class="nf">count_cells</span><span class="p">(</span><span class="n">seg_in_cluster</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+<div class="viewcode-block" id="count_cells"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.count_cells">[docs]</a><span class="k">def</span> <span class="nf">count_cells</span><span class="p">(</span><span class="n">seg_in_cluster</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Count cells (objects) in each cluster using connected-components-3d</span>
 <span class="sd">    Return the number of cells in the cluster.&quot;&quot;&quot;</span>
 
@@ -453,10 +440,7 @@ document.write(`
 
     <span class="k">return</span> <span class="n">n</span></div>
 
-
-<div class="viewcode-block" id="density_in_cluster">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.density_in_cluster">[docs]</a>
-<span class="k">def</span> <span class="nf">density_in_cluster</span><span class="p">(</span><span class="n">cluster_data</span><span class="p">,</span> <span class="n">native_cluster_index_cropped</span><span class="p">,</span> <span class="n">seg_cropped</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="s1">&#39;cell_count&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="density_in_cluster"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.density_in_cluster">[docs]</a><span class="k">def</span> <span class="nf">density_in_cluster</span><span class="p">(</span><span class="n">cluster_data</span><span class="p">,</span> <span class="n">native_cluster_index_cropped</span><span class="p">,</span> <span class="n">seg_cropped</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="s1">&#39;cell_count&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Measure cell count or volume of segmented voxels in the current cluster.</span>
 <span class="sd">    For cell densities, return: cluster_ID, cell_count, cluster_volume_in_cubic_mm, cell_density, xmin, xmax, ymin, ymax, zmin, zmax</span>
 <span class="sd">    For label densities, return: cluster_ID, seg_volume_in_cubic_mm, cluster_volume_in_cubic_mm, label_density, xmin, xmax, ymin, ymax, zmin, zmax.</span>
@@ -484,11 +468,8 @@ document.write(`
         <span class="n">seg_volume_in_cubic_mm</span> <span class="o">=</span> <span class="p">((</span><span class="n">xy_res</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">z_res</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">count_nonzero</span><span class="p">(</span><span class="n">seg_in_cluster</span><span class="p">)</span> <span class="o">/</span> <span class="mf">1e9</span>
         <span class="n">label_density</span> <span class="o">=</span> <span class="n">seg_volume_in_cubic_mm</span> <span class="o">/</span> <span class="n">cluster_volume_in_cubic_mm</span> <span class="o">*</span> <span class="mi">100</span>
         <span class="k">return</span> <span class="n">cluster_ID</span><span class="p">,</span> <span class="n">seg_volume_in_cubic_mm</span><span class="p">,</span> <span class="n">cluster_volume_in_cubic_mm</span><span class="p">,</span> <span class="n">label_density</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span></div>
-
     
-<div class="viewcode-block" id="density_in_cluster_parallel">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.density_in_cluster_parallel">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<div class="viewcode-block" id="density_in_cluster_parallel"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.density_in_cluster_parallel">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">density_in_cluster_parallel</span><span class="p">(</span><span class="n">cluster_bbox_results</span><span class="p">,</span> <span class="n">native_cluster_index_cropped</span><span class="p">,</span> <span class="n">seg_cropped</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="s1">&#39;cell_count&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Measure cell count or volume of segmented voxels in each cluster in parallel. Return list of results.&quot;&quot;&quot;</span>
     <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
@@ -506,10 +487,8 @@ document.write(`
     <span class="k">return</span> <span class="n">results</span></div>
 
 
-
-<div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.main">[docs]</a>
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
     <span class="n">samples</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dirs</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">exp_paths</span><span class="p">)</span>
     
@@ -609,7 +588,6 @@ document.write(`
             <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 
 
-
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">install</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
@@ -665,7 +643,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
     <br/>
   </p>
 </div>
