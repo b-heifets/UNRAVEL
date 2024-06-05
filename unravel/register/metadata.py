@@ -47,7 +47,8 @@ def get_dims_from_tifs(tifs_path):
     return x_dim, y_dim, z_dim
 
 
-def main(): 
+def main():
+    args = parse_args()
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
 

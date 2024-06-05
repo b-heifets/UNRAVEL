@@ -36,6 +36,7 @@ def example_function(img_path):
 
 
 def main(): # This is the main function that is called at the bottom of the script
+    args = parse_args()
     samples = get_samples(args.dirs, args.pattern) # get_samples() returns a list of sample directories
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress): # This starts the progress bar

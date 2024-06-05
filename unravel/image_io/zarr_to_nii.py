@@ -42,6 +42,8 @@ def save_as_nii(ndarray, output_path):
 
 
 def main():
+    args = parse_args()
+
     img = zarr_to_ndarray(args.input)
     output_path = define_zarr_to_nii_output(args.output)
     save_as_nii(img, output_path)

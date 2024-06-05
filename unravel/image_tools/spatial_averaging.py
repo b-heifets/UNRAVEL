@@ -101,7 +101,9 @@ def spatial_average_2D(volume, filter_func, kernel_size=(3, 3), threads=8):
     return processed_volume
 
 
-def main():    
+def main():
+    args = parse_args()
+    
     # Load image and metadata
     if args.xy_res is None or args.z_res is None:
         img, xy_res, z_res = load_3D_img(args.input, return_res=True)

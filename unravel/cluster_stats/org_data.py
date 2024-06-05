@@ -144,6 +144,7 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
 
 
 def main():
+    args = parse_args()
 
     target_dir = Path(args.target_dir).resolve() if args.target_dir else Path.cwd()
     target_dir.mkdir(exist_ok=True, parents=True)

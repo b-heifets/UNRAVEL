@@ -8,6 +8,8 @@ import os
 import pandas as pd
 import seaborn as sns
 import textwrap
+from rich import print
+from rich.traceback import install
 from pathlib import Path
 from scipy.stats import dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
@@ -15,12 +17,10 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
-region_ID_name_abbr_csv = "/Users/Danielthy/Documents/_Heifets_lab_data/_Lightsheet_microscopy_data/#Gubra/gubra_region_ID_name_abbr.csv"
-
 def parse_args():
     parser = argparse.ArgumentParser(description='Plot mean IF intensity for a given region intensity ID for 3+ groups (only works for positive data)', formatter_class=SuppressMetavar)
     parser.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', action=SM)
-    parser.add_argument('-l', '--lut', help='LUT csv name (in unravel/csvs/). Default: gubra__region_ID_side_name_abbr.csv', default="gubra__region_ID_side_name_abbr.csv", action=SM)
+    parser.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: gubra__region_ID_side_name_abbr.csv', default="gubra__region_ID_side_name_abbr.csv", action=SM)
     parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', action=SM)
     parser.add_argument('--labels', nargs='*', help='Group Labels in same order', action=SM)
     parser.add_argument('-t', '--test', help='Choose between "tukey" and "dunnett" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett'], action=SM)
@@ -29,6 +29,7 @@ def parse_args():
 
     parser.epilog = "regional_IF_mean_intensities_summary.py -r 1 --order group3 group2 group1 --labels Group_3 Group_2 Group_1 -t dunnnett"
     return parser.parse_args()
+
 
 # Set Arial as the font
 mpl.rcParams['font.family'] = 'Arial'
@@ -63,7 +64,7 @@ def get_all_region_ids(csv_path):
     region_df = pd.read_csv(csv_path)
     return region_df["Region_ID"].tolist()
 
-def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_csv, test_type='tukey', show_plot=False, alt='two-sided'):
+def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tukey', show_plot=False, alt='two-sided'):
     df = load_data(region_id)
     region_name, region_abbr = get_region_details(region_id, csv_path)
     
@@ -171,10 +172,11 @@ def plot_data(region_id, order=None, labels=None, csv_path=region_ID_name_abbr_c
     plt.savefig(f'region_{region_id}_{region_abbr}.pdf')
     plt.close()
 
-    if args.show_plot:
+    if show_plot:
         plt.show()
 
-if __name__ == "__main__":
+
+def main():
     args = parse_args()
 
     if (args.order and not args.labels) or (not args.order and args.labels):
@@ -184,9 +186,16 @@ if __name__ == "__main__":
         raise ValueError("The number of entries in --order and --labels must match.")
 
     # If region IDs are provided using -r, use them; otherwise, get all region IDs from the CSV
-    lut = Path(__file__).parent.parent / 'csvs' / args.lut
+    lut = Path(__file__).parent.parent / 'core' / 'csvs' / args.lut
     region_ids_to_process = args.region_ids if args.region_ids else get_all_region_ids(lut)
 
     # Process each region ID
     for region_id in region_ids_to_process:
+        csv_path = Path(__file__).parent.parent / 'csvs' / args.lut
+
         plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=args.test, show_plot=args.show_plot, alt=args.alternate)
+
+
+if __name__ == "__main__":
+    install()
+    main()

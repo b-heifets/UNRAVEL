@@ -46,6 +46,8 @@ Next script: reg.py"""
 
 
 def main():
+    args = parse_args()
+
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
 
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")

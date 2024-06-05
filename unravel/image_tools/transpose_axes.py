@@ -31,7 +31,9 @@ def transpose_img(ndarray, axis_1, axis_2, axis_3):
     """Transposes axes of ndarray"""
     return ndarray.transpose(axis_1, axis_2, axis_3)
 
-def main():    
+def main():
+    args = parse_args()
+    
     if args.return_res:
         img, xy_res, z_res = load_3D_img(args.input, args.channel, desired_axis_order=args.axis_order, return_res=args.return_res)
     else:

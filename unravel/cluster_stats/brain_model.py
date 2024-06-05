@@ -82,7 +82,7 @@ def main():
     present_regions = np.where(histogram > 0)[0] + 1 # Add 1 to account for the background
 
     # Get R, G, B values for each region
-    color_map = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
+    color_map = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
 
     # Delete rgba.txt if it exists (used for coloring the regions in DSI Studio)
     

@@ -100,7 +100,8 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     nib.save(warped_img_nii, output_path)
 
 
-def main(): 
+def main():
+    args = parse_args()
 
     reg_outputs_path = Path(args.reg_outputs).resolve()
     moving_img_path = str(Path(args.moving_img).resolve())

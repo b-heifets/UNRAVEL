@@ -27,6 +27,7 @@ check_reg.py -e <list of experiment directories> -td <target_output_dir"""
 
 
 def main():
+    args = parse_args()
 
     # Create the target directory for copying the selected slices
     target_dir = Path(args.target_dir) if args.target_dir is not None else Path.cwd()

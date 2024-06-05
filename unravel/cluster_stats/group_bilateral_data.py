@@ -76,8 +76,9 @@ def group_hemisphere_data(base_path):
 
 
 def main():
-    base_path = Path.cwd()
+    args = parse_args()
 
+    base_path = Path.cwd()
 
     has_hemisphere = False
     for subdir in [d for d in Path.cwd().iterdir() if d.is_dir()]:

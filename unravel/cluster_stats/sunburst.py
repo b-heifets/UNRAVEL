@@ -69,8 +69,8 @@ def sunburst(img, atlas, atlas_res_in_um, output_path, output_rgb_lut=False):
 
     volumes_dict = calculate_regional_volumes(img, atlas, atlas_res_in_um)
 
-    sunburst_df = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'sunburst_IDPath_Abbrv.csv')
-    ccf_df = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'CCFv3_info.csv', usecols=['lowered_ID', 'abbreviation'])
+    sunburst_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'sunburst_IDPath_Abbrv.csv')
+    ccf_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'CCFv3_info.csv', usecols=['lowered_ID', 'abbreviation'])
 
     # Create a mapping from region ID to volume
     histo_df = pd.DataFrame(list(volumes_dict.items()), columns=['Region', 'Volume_(mm^3)'])
@@ -95,13 +95,14 @@ def sunburst(img, atlas, atlas_res_in_um, output_path, output_rgb_lut=False):
 
     if output_rgb_lut:
         # Save the RGB values for each abbreviation to a CSV file
-        rgb_df = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'sunburst_RGBs.csv')
+        rgb_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'sunburst_RGBs.csv')
         rgb_path = Path(output_path).parent / 'sunburst_RGBs.csv'
         rgb_df.to_csv(rgb_path, index=False)
 
     return final_df
 
 def main():
+    args = parse_args()
 
     # Load the input image and convert to numpy array
     nii = nib.load(args.input)

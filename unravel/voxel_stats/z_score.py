@@ -77,7 +77,8 @@ def z_score(img, mask):
     return z_scored_img
 
 
-def main(): 
+def main():
+    args = parse_args()
 
     if args.no_tmask and args.atlas_mask is None: 
         print("\n    [red]Please provide a path for --atlas_mask if --tissue_mask is not used\n")

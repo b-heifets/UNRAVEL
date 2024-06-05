@@ -62,6 +62,8 @@ def fdr_range(input_path, mask_path, q_value):
 
 
 def main():
+    args = parse_args()
+    
     # Initialize ThreadPoolExecutor
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.threads) as executor:
         # Submit tasks to the executor for each q_value

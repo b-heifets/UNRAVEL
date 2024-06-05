@@ -18,6 +18,8 @@ def parse_args():
 
 
 def main():
+    args = parse_args()
+
     np.set_printoptions(precision=4, suppress=True)
 
     nii = nib.load(args.input)

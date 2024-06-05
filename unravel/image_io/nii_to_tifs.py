@@ -33,6 +33,7 @@ def nii_to_tifs(nii_path, output_dir):
 
 def main():
     args = parse_args()
+    
     nii_to_tifs(args.input, args.output_dir)
 
 if __name__ == '__main__':

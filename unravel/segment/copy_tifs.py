@@ -53,6 +53,7 @@ def copy_specific_slices(sample_path, source_dir, target_dir, slice_numbers):
 
 
 def main():
+    args = parse_args()
 
     # Create the target directory for copying the selected slices
     target_dir = Path(args.output)

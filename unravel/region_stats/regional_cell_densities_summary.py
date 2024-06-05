@@ -62,7 +62,7 @@ def parse_color_argument(color_arg, num_groups, region_id):
         elif color_arg == 'ABA':
             # Determine the RGB color for bars based on the region_id
             combined_region_id = region_id if region_id < 20000 else region_id - 20000
-            results_df = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
+            results_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
             region_rgb = results_df[results_df['Region_ID'] == combined_region_id][['R', 'G', 'B']]
             rgb = tuple(region_rgb.iloc[0].values)
             rgb_normalized = tuple([x / 255.0 for x in rgb])
@@ -246,7 +246,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     has_significant_results = True if significant_comparisons.shape[0] > 0 else False
 
     # Extract the general region for the filename (output file name prefix for sorting by region)
-    regional_summary = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
+    regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
     region_id = region_id if region_id < 20000 else region_id - 20000 # Adjust if left hemi
     general_region = regional_summary.loc[regional_summary['Region_ID'] == region_id, 'General_Region'].values[0]
 
@@ -386,7 +386,7 @@ def main():
                 progress.update(task_id, advance=1)
 
         # Merge with the original regional_summary.csv and write to a new CSV
-        regional_summary = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'regional_summary.csv')
+        regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'regional_summary.csv')
         final_summary_pooled = pd.merge(regional_summary, all_summaries_pooled, on='Region_ID', how='left') 
         final_summary_pooled.to_csv(Path(out_dir) / '__significance_summary_pooled.csv', index=False)
 
@@ -416,7 +416,7 @@ def main():
                 progress.update(task_id, advance=1)
 
         # Merge with the original regional_summary.csv and write to a new CSV
-        regional_summary = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'regional_summary.csv')
+        regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'regional_summary.csv')
 
         # Adjust Region_ID for left hemisphere
         if side == "L":

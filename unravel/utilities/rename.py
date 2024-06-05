@@ -52,6 +52,7 @@ def rename_files(directory, old_text, new_text, recursive=False, rename_type='bo
 
 def main():
     args = parse_args()
+    
     rename_files(Path().cwd(), args.old_text, args.new_text, args.recursive, args.type, args.dry_run)
 
 

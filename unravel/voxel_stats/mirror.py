@@ -42,6 +42,7 @@ def mirror(img, axis=0, shift=2):
 
 
 def main(): 
+    args = parse_args()
 
     files = Path().cwd().glob(args.pattern)
     for file in files:

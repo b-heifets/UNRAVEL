@@ -266,6 +266,7 @@ def get_fill_color(value, max_value):
 
 
 def main():
+    args = parse_args()
 
     # Find cluster_* dirs in the current dir
     valid_clusters_dir = Path(args.val_clusters_dir) if args.val_clusters_dir else Path.cwd()
@@ -313,7 +314,7 @@ def main():
     columns_to_load = ['abbreviation', 'general_region',  'structure_id_path']
 
     # Load the specified columns from the CSV with CCFv3 info
-    ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'CCFv3_info.csv', usecols=columns_to_load)
+    ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'CCFv3_info.csv', usecols=columns_to_load)
 
     # For each cluster directory
     for cluster_sunburst_csv in cluster_sunburst_csvs:
@@ -365,7 +366,7 @@ def main():
     print(f'\n{top_regions_and_percent_vols_df.to_string(index=False)}\n')
 
     # Load csv with RGB values 
-    sunburst_RGBs_df = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'sunburst_RGBs.csv', header=None)
+    sunburst_RGBs_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'sunburst_RGBs.csv', header=None)
 
     # Parse the dataframe to get a dictionary of region names and their corresponding RGB values
     rgb_values = {}

@@ -40,6 +40,7 @@ def z_to_p(z_map):
 
 
 def main():
+    args = parse_args()
 
     # Load Pearson correlation map
     if args.xy_res is None or args.z_res is None:

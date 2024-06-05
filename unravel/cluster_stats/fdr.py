@@ -227,6 +227,7 @@ def process_fdr_and_clusters(input, mask, q, min_size, avg_img1, avg_img2, outpu
 
 
 def main():
+    args = parse_args()
 
     # Prepare directory paths and outputs
     results = []

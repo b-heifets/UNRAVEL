@@ -7,7 +7,7 @@ from glob import glob
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 
-def parse_arguments():
+def parse_args():
     parser = argparse.ArgumentParser(description='Run fsleyes with given display range and files.', formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--inputs', help='List of .nii.gz files to view or if empty all .nii.gz files in the current directory.', nargs='*', default=None)
     parser.add_argument('-min', '--display_range_min', help='Minimum display range value.', default=0, type=float)
@@ -16,7 +16,7 @@ def parse_arguments():
     return parser.parse_args()
 
 def main():
-    args = parse_arguments()
+    args = parse_args()
     
     # If no files are specified, use all .nii.gz files in the current directory
     if not args.inputs:

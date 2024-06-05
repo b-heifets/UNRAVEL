@@ -60,6 +60,8 @@ def prepend_conditions(base_path, csv_file, rename_files, rename_dirs, recursive
 
 
 def main():
+    args = parse_args()
+
     base_path = Path.cwd() 
     prepend_conditions(base_path, args.sample_key, args.file, args.dirs, args.recursive)
 

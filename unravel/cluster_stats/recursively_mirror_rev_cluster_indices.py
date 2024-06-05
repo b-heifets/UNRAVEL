@@ -46,6 +46,8 @@ def process_file(file_path, args):
     nib.save(mirrored_nii, mirrored_filename)
 
 def main(): 
+    args = parse_args()
+
     root_path = Path().resolve()
     files = list(root_path.glob(args.pattern))
 

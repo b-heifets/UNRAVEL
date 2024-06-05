@@ -34,6 +34,7 @@ def example_function(img_path):
 
 
 def main():    
+    args = parse_args()
     samples = get_samples(args.dirs, args.pattern)
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):

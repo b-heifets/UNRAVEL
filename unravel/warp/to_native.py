@@ -135,6 +135,8 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
 
 
 def main():
+    args = parse_args()
+
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
 
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")

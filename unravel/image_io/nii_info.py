@@ -22,6 +22,7 @@ def nii_axis_codes(nii):
 
 def main():
     args = parse_args()
+    
     nii = nib.load(args.input)
     
     np.set_printoptions(precision=2, suppress=True)

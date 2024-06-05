@@ -73,6 +73,7 @@ def hemi_to_LR_avg(lh_file, rh_file, kernel=0, axis=0, shift=2, atlas_mask=None)
 
 
 def main(): 
+    args = parse_args()
 
     path = Path.cwd()
     rh_files = list(path.glob('*_RH.nii.gz'))

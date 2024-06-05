@@ -83,6 +83,8 @@ def clean_tifs_dir(path_to_tif_dir, move, verbose):
                 file.rename(new_file_path)
 
 def main():
+    args = parse_args()
+
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")

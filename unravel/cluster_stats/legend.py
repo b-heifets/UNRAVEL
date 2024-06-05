@@ -62,6 +62,8 @@ def apply_rgb_to_cell(ws, df_w_rgb, col_w_labels, col_num):
 
 
 def main():
+    args = parse_args()
+
     path = Path(args.path) if args.path else Path.cwd()
 
     # Find cluster_* dirs in the current dir
@@ -89,7 +91,7 @@ def main():
     columns_to_load = ['structure_id_path', 'very_general_region',  'collapsed_region_name', 'abbreviation', 'collapsed_region', 'other_abbreviation', 'other_abbreviation_defined', 'layer', 'sunburst']
 
     # Load the specified columns from the CSV with CCFv3 info
-    ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'csv' / 'CCFv3_info.csv', usecols=columns_to_load)
+    ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'CCFv3_info.csv', usecols=columns_to_load)
 
     # Creat a dictionary to hold the mappings for the region abbreviation to collapsed region abbreviation
     abbreviation_to_collapsed_dict = dict(zip(ccfv3_info_df['abbreviation'], ccfv3_info_df['collapsed_region']))

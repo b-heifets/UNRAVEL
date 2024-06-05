@@ -44,7 +44,7 @@ def region_volumes(cluster_index_path, atlas_path):
     volumes_in_cubic_mm = ((xy_res**2) * z_res) * histo / 1000000000
 
     # Load csv and get region IDs
-    region_volumes_df = pd.read_csv(Path(__file__).parent.parent / 'gubra__regionID_side_IDpath_region_abbr.csv')
+    region_volumes_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'gubra__regionID_side_IDpath_region_abbr.csv')
     region_ids = region_volumes_df['Region_ID']
 
     # Slice np.array using list to get regional volumes
@@ -64,7 +64,7 @@ def region_volumes(cluster_index_path, atlas_path):
     region_volumes_combined_df['Side'] = 'LR'
 
     # Load dataframe template (depths in ABA hierarchy w/ region abbreviations)
-    sunburst_df = pd.read_csv(Path(__file__).parent.parent / 'sunburst_IDPath_Abbrv.csv')
+    sunburst_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'sunburst_IDPath_Abbrv.csv')
     
     # Add combined volumes to sunburst_df
     sunburst_df['Volume_(mm^3)'] = region_volumes_combined_df['Volume_(mm^3)']
@@ -94,6 +94,8 @@ def region_volumes(cluster_index_path, atlas_path):
 
 
 def main():
+    args = parse_args()
+
     region_volumes(args.index, args.atlas)
 
 

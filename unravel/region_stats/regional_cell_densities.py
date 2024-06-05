@@ -99,7 +99,7 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
     region_counts_series = region_counts_series.rename_axis('Region_ID').reset_index(name=f'{condition}_{sample_name}')
 
     # Load csv with region IDs, sides, ID_paths, names, and abbreviations
-    region_info_df = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'gubra__regionID_side_IDpath_region_abbr.csv')
+    region_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'gubra__regionID_side_IDpath_region_abbr.csv')
 
     # Merge the region counts into the region information dataframe
     region_counts_df = region_info_df.merge(region_counts_series, on='Region_ID', how='left')
@@ -142,7 +142,7 @@ def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, co
     regional_volumes = {region_id: voxel_counts[region_id] * voxel_volume for region_id in region_ids}
 
     # Merge the regional volumes into the region information dataframe
-    region_info_df = pd.read_csv(Path(__file__).parent.parent / 'unravel' / 'csvs' / 'gubra__regionID_side_IDpath_region_abbr.csv')
+    region_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'gubra__regionID_side_IDpath_region_abbr.csv')
     sample_name = sample_path.name
     region_info_df[f'{condition}_{sample_name}'] = region_info_df['Region_ID'].map(regional_volumes)
     regional_volumes_df = region_info_df.fillna(0)

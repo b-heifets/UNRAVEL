@@ -193,6 +193,8 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
     return new_nii
 
 def main():
+    args = parse_args()
+
     nii = nib.load(args.input)
     new_nii = reorient_nii(nii, args.target_ort, zero_origin=args.zero_origin, apply=args.apply, form_code=args.form_code)
 

@@ -185,6 +185,7 @@ def density_in_cluster_parallel(cluster_bbox_results, native_cluster_index_cropp
 
 
 def main():
+    args = parse_args()
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     

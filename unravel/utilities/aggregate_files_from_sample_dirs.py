@@ -44,6 +44,8 @@ def aggregate_files_from_sample_dirs(sample_path, pattern, rel_path_to_src_file,
 
 
 def main():
+    args = parse_args()
+
     if args.target_dir is None:
         target_dir = Path().cwd()
     else: 

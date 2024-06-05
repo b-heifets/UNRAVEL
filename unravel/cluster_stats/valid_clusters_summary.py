@@ -66,6 +66,8 @@ def run_script(script_name, script_args):
     subprocess.run(command, check=True, stdout=None, stderr=None)
 
 def main():
+    args = parse_args()
+
     # Load settings from the config file
     if Path(args.config).exists():
         cfg = Config(args.config)

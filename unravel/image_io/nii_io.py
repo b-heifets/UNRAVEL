@@ -79,6 +79,7 @@ def convert_dtype(ndarray, data_type, scale_mode='none', fixed_scale_range=None,
 
 
 def main():
+    args = parse_args()
 
     # Load the .nii.gz file
     nii_path = args.input if args.input.endswith('.nii.gz') else f'{args.input}.nii.gz'

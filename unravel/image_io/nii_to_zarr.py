@@ -46,6 +46,8 @@ def save_as_zarr(ndarray, output_path, d_type):
 
 
 def main():
+    args = parse_args()
+
     img, d_type = nii_to_ndarray(args.input)
 
     if args.output:

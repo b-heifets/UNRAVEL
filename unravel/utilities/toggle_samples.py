@@ -40,6 +40,7 @@ The sample_key.csv file should have the following format:
 
 
 def main():
+    args = parse_args()
 
     active_samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     inactive_samples = get_samples(args.dirs, f'_{args.pattern}', args.exp_paths)

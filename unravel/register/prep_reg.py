@@ -92,6 +92,7 @@ def prep_reg(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
 
 
 def main():
+    args = parse_args()
 
     if args.target_dir is not None:
         # Create the target directory for copying the selected slices for brain_mask.py
@@ -139,7 +140,7 @@ def main():
 
 
 if __name__ == '__main__':
-    install()
     args = parse_args()
+    install()
     Configuration.verbose = args.verbose
     print_cmd_and_times(main)()

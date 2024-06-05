@@ -106,7 +106,8 @@ def to_atlas(sample_path, img, fixed_reg_in, atlas, output, interpol, dtype='uin
         nib.save(output_nii, output)
 
 
-def main():    
+def main():
+    args = parse_args()
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
 

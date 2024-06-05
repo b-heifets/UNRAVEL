@@ -38,6 +38,7 @@ def detect_outliers(values):
 
 
 def main():
+    args = parse_args()
 
     mask = load_3D_img(args.mask)
 

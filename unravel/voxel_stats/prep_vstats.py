@@ -60,6 +60,8 @@ next steps: Aggregate outputs and run vstats.py"""
 
 
 def main():
+    args = parse_args()
+
     if args.target_dir is not None:
         # Create the target directory for copying outputs for vstats.py
         target_dir = Path(args.target_dir)

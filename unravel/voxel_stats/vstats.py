@@ -175,7 +175,8 @@ def run_randomise_parallel(input_image_path, mask_path, permutations, output_nam
             print("Error during command execution:\n" + str(e))
 
 
-def main(): 
+def main():
+    args = parse_args()
 
     cwd = Path.cwd()
     stats_dir = cwd / 'stats'

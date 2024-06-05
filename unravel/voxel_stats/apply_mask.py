@@ -103,6 +103,7 @@ def apply_mask_to_ndarray(ndarray, mask_ndarray, other_mask=None, mask_condition
     return ndarray
 
 def main():
+    args = parse_args()
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     

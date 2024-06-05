@@ -20,7 +20,8 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     return parser.parse_args()
 
-def main():    
+def main():
+    args = parse_args() 
 
     img = load_3D_img(args.input)
 

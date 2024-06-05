@@ -74,7 +74,9 @@ def whole_to_LR_avg(file, kernel=0, axis=0, shift=2, atlas_mask=None):
     nib.save(averaged_nii, averaged_filename)
 
 
-def main(): 
+def main():
+    args = parse_args()
+
     files = Path().cwd().glob(args.pattern)
     print(f'\nImages to process: {list(files)}\n')
 

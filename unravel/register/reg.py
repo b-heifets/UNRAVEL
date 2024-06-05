@@ -78,7 +78,8 @@ def bias_correction(image_path, mask_path=None, shrink_factor=2, verbose=False):
     return ndarray
 
 
-def main(): 
+def main():
+    args = parse_args()
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
 

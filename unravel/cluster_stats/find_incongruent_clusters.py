@@ -56,6 +56,7 @@ def find_incongruent_clusters(df, expected_lower_mean_group, expected_higher_mea
 
 
 def main():
+    args = parse_args()
 
     current_dir = Path.cwd()
 

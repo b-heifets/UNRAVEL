@@ -18,6 +18,7 @@ def parse_args():
     return parser.parse_args()
 
 def main():
+    args = parse_args()
 
     img = load_3D_img(args.input, desired_axis_order=args.axis_order)
 

@@ -95,6 +95,7 @@ def binarize_image(image, threshold, true_val=1, false_val=0):
     return np.where(image > threshold, true_val, false_val)
 
 def main():    
+    args = parse_args()
 
     image1 = load_3D_img(args.image1)
     image2 = load_3D_img(args.image2)

@@ -39,7 +39,9 @@ def save_cropped_img(img_cropped, xy_res, z_res, args, cluster=None):
     else:
         save_as_nii(img_cropped, save_path, xy_res, z_res, data_type='uint16')
 
-def main():    
+def main(): 
+    args = parse_args()
+   
     if args.xy_res is None or args.z_res is None:
         img, xy_res, z_res = load_3D_img(args.input, return_res=True)
     else:
