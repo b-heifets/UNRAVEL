@@ -40,11 +40,10 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "python-cfonts",
     "pydata_sphinx_theme",
-    "rst-to-myst[sphinx]",
     "sphinx",
-    "sphinx-autobuild", 
-    "python-cfonts"
+    "sphinx-autobuild"
 ]
 
 [project.urls]
