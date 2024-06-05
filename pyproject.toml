@@ -38,6 +38,17 @@ dependencies = [
     "zarr>=2.14.2,<3.0.0"
 ]
 
+[project.optional-dependencies]
+dev = [
+    "pydata_sphinx_theme",
+    "rst-to-myst[sphinx]",
+    "sphinx",
+    "sphinx-autobuild"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/b-heifets/UNRAVEL"
+
 [tool.setuptools]
 package-dir = {"" = "."}
 packages = ["unravel"]

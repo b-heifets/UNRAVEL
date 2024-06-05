@@ -14,6 +14,7 @@ from unravel.core.img_io import load_3D_img, resolve_path, save_as_tifs, save_as
 from unravel.core.img_tools import resample, reorient_for_raw_to_nii_conv
 from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples, print_func_name_args_times
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Loads full resolution autofluo image and resamples to 50 um for registration', formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
