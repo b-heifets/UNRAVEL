@@ -1,24 +1,19 @@
 ![Alt text](_other/images/UNRAVEL_logo.png)
 
-#### UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images 
-
-UNRAVEL is a command line tool for:
+## UNRAVEL is a command line tool for:
 * Voxel-wise analysis of fluorescent signals (e.g., c-Fos immunofluorescence) across the mouse brains in atlas space
 * Validation of hot/cold spots via cell/label density quantification at cellular resolution
-
 
 ## Publications: 
 * UNRAVELing the synergistic effects of psilocybin and environment on brain-wide immediate early gene expression in mice 
     * [Neuropsychopharmacology](https://www.nature.com/articles/s41386-023-01613-4)
 
-
 ## IF/iDISCO+/LSFM guide: 
 [Heifets lab guide to immunofluorescence staining, iDISCO+, & lightsheet fluorescence microscopy](https://docs.google.com/document/d/16yowBhiBQWz8_VX2t9Rf6Xo3Ub4YPYD6qeJP6vJo6P4/edit?usp=sharing)
 
-
 ## UNRAVEL guide: 
 * Example workflow for region-wise and voxel-wise c-Fos+ cell densities:
-    * prep_reg.py
+    * prep_reg.py (To see help, run: prep_reg.py -h)
     * copy_tifs.py
     * brain_mask.py
     * reg.py
@@ -36,7 +31,6 @@ UNRAVEL is a command line tool for:
     * ilastik_pixel_classification.py
     * validate_clusters.py
     * valid_clusters_summary.py
-
 
 \
 Please send questions/suggestions to:
