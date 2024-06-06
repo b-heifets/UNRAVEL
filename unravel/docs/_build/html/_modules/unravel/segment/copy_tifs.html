@@ -29,6 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -39,6 +40,7 @@
     <script src="../../../_static/doctools.js"></script>
     <script src="../../../_static/sphinx_highlight.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/segment/copy_tifs';</script>
+    <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -129,6 +131,27 @@
   <ul class="bd-navbar-elements navbar-nav">
     
 <li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide.html">
+    Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../commands.html">
+    Commands
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../modules.html">
     unravel
   </a>
@@ -216,6 +239,27 @@ document.write(`
 <nav class="navbar-nav">
   <ul class="bd-navbar-elements navbar-nav">
     
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide.html">
+    Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../commands.html">
+    Commands
+  </a>
+</li>
+
+
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../modules.html">
     unravel
@@ -330,7 +374,7 @@ document.write(`
 <span class="s2">copy_tifs.py -i reg_inputs/autofl_50um_tifs -s 0010 0060 0110 -o ilastik_brain_mask</span>
 
 <span class="s2">To prep for ilastik_pixel_classification.py to segment full resolution immunofluorescence images: </span>
-<span class="s2">copy_tifs.py -i reg_inputs/autofl_50um_tifs -s 0100 0500 1000 -o ilastik_segmentation</span>
+<span class="s2">copy_tifs.py -i raw_tif_dir -s 0100 0500 1000 -o ilastik_segmentation</span>
 <span class="s2">&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 

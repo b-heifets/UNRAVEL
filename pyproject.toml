@@ -40,6 +40,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
+    "myst-parser",
     "python-cfonts",
     "pydata_sphinx_theme",
     "sphinx",
@@ -61,7 +62,7 @@ build-backend = "setuptools.build_meta"
 relabel_nii = "unravel.image_tools.atlas.relable_nii:main"
 wireframe = "unravel.image_tools.atlas.wireframe:main"
 fdr_range = "unravel.cluster_stats.fdr_range:main"
-fdr = "unravel.cluster_stats.fdr:main"
+fdr_ = "unravel.cluster_stats.fdr:main"
 recursive_mirror_index = "unravel.cluster_stats.recursively_mirror_rev_cluster_indices:main"
 brain_model = "unravel.cluster_stats.brain_model:main"
 find_incongruent_clusters = "unravel.cluster_stats.find_incongruent_clusters:main"

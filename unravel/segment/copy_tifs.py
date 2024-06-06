@@ -27,7 +27,7 @@ To prep for brain_mask.py (if --mask_dir <path/mask_dir> and -e <exp dir paths> 
 copy_tifs.py -i reg_inputs/autofl_50um_tifs -s 0010 0060 0110 -o ilastik_brain_mask
 
 To prep for ilastik_pixel_classification.py to segment full resolution immunofluorescence images: 
-copy_tifs.py -i reg_inputs/autofl_50um_tifs -s 0100 0500 1000 -o ilastik_segmentation
+copy_tifs.py -i raw_tif_dir -s 0100 0500 1000 -o ilastik_segmentation
 """
     return parser.parse_args()
 

@@ -11,7 +11,7 @@ from rich.traceback import install
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import print_cmd_and_times
-from voxel_stats.mirror import mirror
+from unravel.voxel_stats.mirror import mirror
 
 
 def parse_args():
@@ -22,7 +22,7 @@ def parse_args():
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
     parser.add_argument('-sa', '--split_atlas', help='path/gubra_ano_split_25um.nii.gz. Default: gubra_ano_split_25um.nii.gz', default='gubra_ano_split_25um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Example usage: 3D_brain.py -i input.csv
+    parser.epilog = """Example usage: brain_model.py -i input.csv -m -sa path/gubra_ano_split_25um.nii.gz -v
 
 The input image will be binarized and multiplied by the split atlas to apply region IDs.
 

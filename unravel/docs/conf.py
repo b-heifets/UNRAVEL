@@ -45,6 +45,8 @@ extensions = [
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+todo_include_todos = True
+
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -52,3 +54,19 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'pydata_sphinx_theme'
 html_static_path = ['_static']
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown',
+}
+master_doc = 'index'
+
+# Add custom CSS
+html_static_path = ['_static']
+html_favicon = '_static/favicon.png'
+html_css_files = [
+    'custom.css',
+]
+
+# Generate anchors for headings up to h3
+myst_heading_anchors = 3  

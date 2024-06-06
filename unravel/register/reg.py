@@ -23,7 +23,7 @@ from unravel.warp.warp import warp
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Registers average template brain/atlas to downsampled autofl brain. Check accuracy w/ ./reg_final outputs in itksnap or fsleyes', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='Registers average template brain/atlas to resampled autofl brain. Check accuracy w/ ./reg_final outputs in itksnap or fsleyes', formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
