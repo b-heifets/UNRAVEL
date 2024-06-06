@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="./" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>unravel.core package &#8212; UNRAVEL 1.0.0-beta documentation</title>
   
@@ -29,17 +28,17 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=981a9575" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/documentation_options.js?v=3fd7a760"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'unravel.core';</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -383,235 +382,495 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="unravel-core-package">
-<h1>unravel.core package<a class="headerlink" href="#unravel-core-package" title="Permalink to this heading">#</a></h1>
+<h1>unravel.core package<a class="headerlink" href="#unravel-core-package" title="Link to this heading">#</a></h1>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
 </section>
 <section id="module-unravel.core.argparse_utils">
-<span id="unravel-core-argparse-utils-module"></span><h2>unravel.core.argparse_utils module<a class="headerlink" href="#module-unravel.core.argparse_utils" title="Permalink to this heading">#</a></h2>
+<span id="unravel-core-argparse-utils-module"></span><h2>unravel.core.argparse_utils module<a class="headerlink" href="#module-unravel.core.argparse_utils" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.argparse_utils.SM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils.</span></span><span class="sig-name descname"><span class="pre">SM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/argparse_utils.html#SM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils.SM" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils.</span></span><span class="sig-name descname"><span class="pre">SM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/argparse_utils.html#SM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils.SM" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.argparse_utils.SuppressMetavar">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils.</span></span><span class="sig-name descname"><span class="pre">SuppressMetavar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/argparse_utils.html#SuppressMetavar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils.SuppressMetavar" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils.</span></span><span class="sig-name descname"><span class="pre">SuppressMetavar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/argparse_utils.html#SuppressMetavar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils.SuppressMetavar" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HelpFormatter</span></code></p>
 </dd></dl>
 
 </section>
 <section id="module-unravel.core.argparse_utils_rich">
-<span id="unravel-core-argparse-utils-rich-module"></span><h2>unravel.core.argparse_utils_rich module<a class="headerlink" href="#module-unravel.core.argparse_utils_rich" title="Permalink to this heading">#</a></h2>
+<span id="unravel-core-argparse-utils-rich-module"></span><h2>unravel.core.argparse_utils_rich module<a class="headerlink" href="#module-unravel.core.argparse_utils_rich" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.argparse_utils_rich.SM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils_rich.</span></span><span class="sig-name descname"><span class="pre">SM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/argparse_utils_rich.html#SM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils_rich.SM" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils_rich.</span></span><span class="sig-name descname"><span class="pre">SM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/argparse_utils_rich.html#SM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils_rich.SM" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code></p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.argparse_utils_rich.SuppressMetavar">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils_rich.</span></span><span class="sig-name descname"><span class="pre">SuppressMetavar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">console</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Console</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/argparse_utils_rich.html#SuppressMetavar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils_rich.SuppressMetavar" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils_rich.</span></span><span class="sig-name descname"><span class="pre">SuppressMetavar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">console</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Console</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/argparse_utils_rich.html#SuppressMetavar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils_rich.SuppressMetavar" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RichHelpFormatter</span></code></p>
 </dd></dl>
 
 </section>
 <section id="module-unravel.core.config">
-<span id="unravel-core-config-module"></span><h2>unravel.core.config module<a class="headerlink" href="#module-unravel.core.config" title="Permalink to this heading">#</a></h2>
+<span id="unravel-core-config-module"></span><h2>unravel.core.config module<a class="headerlink" href="#module-unravel.core.config" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.config.AttrDict">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.config.</span></span><span class="sig-name descname"><span class="pre">AttrDict</span></span><a class="reference internal" href="_modules/unravel/core/config.html#AttrDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.config.AttrDict" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.config.</span></span><span class="sig-name descname"><span class="pre">AttrDict</span></span><a class="reference internal" href="_modules/unravel/core/config.html#AttrDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.config.AttrDict" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
 <p>A dictionary that allows attribute access.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.config.Config">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.config.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/config.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.config.Config" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.config.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/config.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.config.Config" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class to read configuration from a file and allow attribute access using RawConfigParser.</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.config.Configuration">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.config.</span></span><span class="sig-name descname"><span class="pre">Configuration</span></span><a class="reference internal" href="_modules/unravel/core/config.html#Configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.config.Configuration" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.config.</span></span><span class="sig-name descname"><span class="pre">Configuration</span></span><a class="reference internal" href="_modules/unravel/core/config.html#Configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.config.Configuration" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>A class to hold configuration settings.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="unravel.core.config.Configuration.verbose">
-<span class="sig-name descname"><span class="pre">verbose</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#unravel.core.config.Configuration.verbose" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">verbose</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#unravel.core.config.Configuration.verbose" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-unravel.core.img_io">
-<span id="unravel-core-img-io-module"></span><h2>unravel.core.img_io module<a class="headerlink" href="#module-unravel.core.img_io" title="Permalink to this heading">#</a></h2>
+<span id="unravel-core-img-io-module"></span><h2>unravel.core.img_io module<a class="headerlink" href="#module-unravel.core.img_io" title="Link to this heading">#</a></h2>
 <p>This module contains functions for loading and saving 3D images.</p>
-<dl class="simple">
-<dt>The main functions are:</dt><dd><ul class="simple">
-<li><dl class="simple">
-<dt>load_3D_img: Load a 3D image from a .czi, .nii.gz, or .tif series and return the ndarray.</dt><dd><ul>
-<li><p>Supported file types: .czi, .ome.tif series, .tif series, .nii.gz, .h5:</p></li>
-<li><p>Loading functions (load_czi, load_tifs, load_nii, load_h5) return the ndarray and optionally resolutions and/or metadata.</p></li>
-<li><dl class="simple">
-<dt>Parameters:</dt><dd><ul>
-<li><p>desired_axis_order=xyz (other option: “zyx”)</p></li>
-<li><p>If return_res=True returns: ndarray, xy_res, z_res (resolution = voxel size in microns)</p></li>
-<li><p>If return_metadata=True returns: ndarray, xy_res, z_res, x_dim, y_dim, z_dim (image dimensions)</p></li>
-<li><p>If save_metadata=True saves metadata to parameters/metadata.txt</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><p>Helper functions: extract_resolution, load_image_metadata_from_txt, save_metadata_to_file, metadata, return_3D_img</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Functions for saving ndarrays:</dt><dd><ul>
+<section id="main-functions">
+<h3>Main Functions:<a class="headerlink" href="#main-functions" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>load_3D_img: Load a 3D image from a .czi, .nii.gz, or .tif series and return the ndarray.</p></li>
 <li><p>save_as_nii: Save a numpy array as a .nii.gz image.</p></li>
 <li><p>save_as_tifs: Save a 3D ndarray as a series of tif images.</p></li>
 </ul>
-</dd>
-</dl>
-</li>
+</section>
+<section id="helper-functions">
+<h3>Helper Functions:<a class="headerlink" href="#helper-functions" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>extract_resolution</p></li>
+<li><p>load_image_metadata_from_txt</p></li>
+<li><p>save_metadata_to_file</p></li>
+<li><p>metadata</p></li>
+<li><p>return_3D_img</p></li>
 </ul>
-</dd>
-</dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.extract_resolution">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">extract_resolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#extract_resolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.extract_resolution" title="Permalink to this definition">#</a></dt>
-<dd><p>Extract resolution from image metadata. Returns xy_res, z_res in microns.</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">extract_resolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#extract_resolution"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.extract_resolution" title="Link to this definition">#</a></dt>
+<dd><p>Extract resolution from image metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>img_path</strong> (<em>str</em>) – The path to the image file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns (xy_res, z_res) in microns.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.load_3D_img">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_3D_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_3D_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_3D_img" title="Permalink to this definition">#</a></dt>
-<dd><p>Load path to.czi, .nii.gz, .ome.tif, tifs_dir, tifs_dir/first.tif, .h5).
-Default: desired_axis_order=xyz (other option: axis_order=”zyx”)
-Default: returns: ndarray
-If return_res=True, returns: ndarray, xy_res, z_res (resolution in um)
-If return_metadata=True, returns ndarray, xy_res, z_res, x_dim, y_dim, z_dim</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_3D_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_3D_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_3D_img" title="Link to this definition">#</a></dt>
+<dd><p>Load a 3D image from various file formats and return the ndarray.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img_path</strong> (<em>str</em>) – The path to the image file.</p></li>
+<li><p><strong>channel</strong> (<em>int</em><em>, </em><em>optional</em>) – The channel to load. Default is 0.</p></li>
+<li><p><strong>desired_axis_order</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired order of the image axes. Default is ‘xyz’.</p></li>
+<li><p><strong>return_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return resolutions. Default is False.</p></li>
+<li><p><strong>return_metadata</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return metadata. Default is False.</p></li>
+<li><p><strong>xy_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the xy-plane.</p></li>
+<li><p><strong>z_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the z-plane.</p></li>
+<li><p><strong>save_metadata</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save metadata file. Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>ndarray</em> – The loaded 3D image array.</p></li>
+<li><p><em>tuple, optional</em> – If return_res is True, returns (ndarray, xy_res, z_res).</p></li>
+<li><p><em>tuple, optional</em> – If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.load_czi">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_czi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">czi_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_czi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_czi" title="Permalink to this definition">#</a></dt>
-<dd><p>Loads image.czi channel. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)].</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_czi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">czi_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_czi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_czi" title="Link to this definition">#</a></dt>
+<dd><p>Load a .czi image and return the ndarray.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>czi_path</strong> (<em>str</em>) – The path to the .czi file.</p></li>
+<li><p><strong>channel</strong> (<em>int</em><em>, </em><em>optional</em>) – The channel to load. Default is 0.</p></li>
+<li><p><strong>desired_axis_order</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired order of the image axes. Default is ‘xyz’.</p></li>
+<li><p><strong>return_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return resolutions. Default is False.</p></li>
+<li><p><strong>return_metadata</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return metadata. Default is False.</p></li>
+<li><p><strong>save_metadata</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save metadata file. Default is None.</p></li>
+<li><p><strong>xy_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the xy-plane.</p></li>
+<li><p><strong>z_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the z-plane.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>ndarray</em> – The loaded 3D image array.</p></li>
+<li><p><em>tuple, optional</em> – If return_res is True, returns (ndarray, xy_res, z_res).</p></li>
+<li><p><em>tuple, optional</em> – If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.load_h5">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hdf5_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_h5" title="Permalink to this definition">#</a></dt>
-<dd><p>Load full res image from an HDF5 image (.h5). Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)].</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hdf5_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_h5" title="Link to this definition">#</a></dt>
+<dd><p>Load full resolution image from an HDF5 file (.h5) and return the ndarray.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hdf5_path</strong> (<em>str</em>) – The path to the .h5 file.</p></li>
+<li><p><strong>desired_axis_order</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired order of the image axes. Default is ‘xyz’.</p></li>
+<li><p><strong>return_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return resolutions. Default is False.</p></li>
+<li><p><strong>return_metadata</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return metadata. Default is False.</p></li>
+<li><p><strong>save_metadata</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save metadata file. Default is None.</p></li>
+<li><p><strong>xy_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the xy-plane.</p></li>
+<li><p><strong>z_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the z-plane.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>ndarray</em> – The loaded 3D image array.</p></li>
+<li><p><em>tuple, optional</em> – If return_res is True, returns (ndarray, xy_res, z_res).</p></li>
+<li><p><em>tuple, optional</em> – If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.load_image_metadata_from_txt">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_image_metadata_from_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./parameters/metadata*'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_image_metadata_from_txt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_image_metadata_from_txt" title="Permalink to this definition">#</a></dt>
-<dd><p>Loads ./parameters/metadata* and returns xy_res, z_res, x_dim, y_dim, z_dim | None if file not found.</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_image_metadata_from_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'./parameters/metadata*'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_image_metadata_from_txt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_image_metadata_from_txt" title="Link to this definition">#</a></dt>
+<dd><p>Load metadata from a text file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>metadata</strong> (<em>str</em><em>, </em><em>optional</em>) – The path or pattern to the metadata file. Default is ‘./parameters/metadata*’.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns (xy_res, z_res, x_dim, y_dim, z_dim) or (None, None, None, None, None) if file not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.load_nii">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_nii" title="Permalink to this definition">#</a></dt>
-<dd><p>Load a .nii.gz image and return the ndarray. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)].</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_nii" title="Link to this definition">#</a></dt>
+<dd><p>Load a .nii.gz image and return the ndarray.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nii_path</strong> (<em>str</em>) – The path to the .nii.gz file.</p></li>
+<li><p><strong>desired_axis_order</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired order of the image axes. Default is ‘xyz’.</p></li>
+<li><p><strong>return_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return resolutions. Default is False.</p></li>
+<li><p><strong>return_metadata</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return metadata. Default is False.</p></li>
+<li><p><strong>save_metadata</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save metadata file. Default is None.</p></li>
+<li><p><strong>xy_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the xy-plane.</p></li>
+<li><p><strong>z_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the z-plane.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>ndarray</em> – The loaded 3D image array.</p></li>
+<li><p><em>tuple, optional</em> – If return_res is True, returns (ndarray, xy_res, z_res).</p></li>
+<li><p><em>tuple, optional</em> – If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.load_nii_orientation">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_nii_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_nii_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_nii_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_nii_orientation" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_nii_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_nii_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_nii_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_nii_orientation" title="Link to this definition">#</a></dt>
 <dd><p>Load a .nii.gz file and return its orientation (affine matrix).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_nii_path</strong> (<em>str</em>) – The path to the .nii.gz file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The affine matrix of the .nii.gz file.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.load_nii_subset">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_nii_subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmax</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_nii_subset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_nii_subset" title="Permalink to this definition">#</a></dt>
-<dd><p>Load a spatial subset of a path/img.nii.gz and return an ndarray.</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_nii_subset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xmax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ymax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zmax</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_nii_subset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_nii_subset" title="Link to this definition">#</a></dt>
+<dd><p>Load a spatial subset of a .nii.gz file and return an ndarray.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nii_path</strong> (<em>str</em>) – The path to the .nii.gz file.</p></li>
+<li><p><strong>xmin</strong> (<em>int</em>) – The spatial coordinates defining the subset.</p></li>
+<li><p><strong>xmax</strong> (<em>int</em>) – The spatial coordinates defining the subset.</p></li>
+<li><p><strong>ymin</strong> (<em>int</em>) – The spatial coordinates defining the subset.</p></li>
+<li><p><strong>ymax</strong> (<em>int</em>) – The spatial coordinates defining the subset.</p></li>
+<li><p><strong>zmin</strong> (<em>int</em>) – The spatial coordinates defining the subset.</p></li>
+<li><p><strong>zmax</strong> (<em>int</em>) – The spatial coordinates defining the subset.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded subset of the 3D image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.load_tifs">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tif_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel_loading</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_tifs" title="Permalink to this definition">#</a></dt>
-<dd><p>Loads tif series [in parallel]. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)].</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tif_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel_loading</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_tifs" title="Link to this definition">#</a></dt>
+<dd><p>Load a series of .tif images and return the ndarray.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tif_path</strong> (<em>str</em>) – The path to the .tif files.</p></li>
+<li><p><strong>desired_axis_order</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired order of the image axes. Default is ‘xyz’.</p></li>
+<li><p><strong>return_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return resolutions. Default is False.</p></li>
+<li><p><strong>return_metadata</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return metadata. Default is False.</p></li>
+<li><p><strong>save_metadata</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save metadata file. Default is None.</p></li>
+<li><p><strong>xy_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the xy-plane.</p></li>
+<li><p><strong>z_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the z-plane.</p></li>
+<li><p><strong>parallel_loading</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to load images in parallel. Default is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>ndarray</em> – The loaded 3D image array.</p></li>
+<li><p><em>tuple, optional</em> – If return_res is True, returns (ndarray, xy_res, z_res).</p></li>
+<li><p><em>tuple, optional</em> – If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.load_zarr">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_zarr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zarr_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_zarr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_zarr" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_zarr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zarr_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#load_zarr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_zarr" title="Link to this definition">#</a></dt>
+<dd><p>Load a .zarr image and return the ndarray.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>zarr_path</strong> (<em>str</em>) – The path to the .zarr file.</p></li>
+<li><p><strong>desired_axis_order</strong> (<em>str</em><em>, </em><em>optional</em>) – The desired order of the image axes. Default is ‘xyz’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The loaded 3D image array.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.metadata">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.metadata" title="Permalink to this definition">#</a></dt>
-<dd><p>Extract and handle metadata, including saving to a file if requested. Returns: xy_res, z_res, x_dim, y_dim, z_dim</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.metadata" title="Link to this definition">#</a></dt>
+<dd><p>Extract and handle metadata, including saving to a file if requested.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>str</em>) – The path to the image file.</p></li>
+<li><p><strong>ndarray</strong> (<em>ndarray</em>) – The 3D image array.</p></li>
+<li><p><strong>return_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return resolutions. Default is False.</p></li>
+<li><p><strong>return_metadata</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return metadata. Default is False.</p></li>
+<li><p><strong>xy_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the xy-plane.</p></li>
+<li><p><strong>z_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the z-plane.</p></li>
+<li><p><strong>save_metadata</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save metadata file. Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Returns (xy_res, z_res, x_dim, y_dim, z_dim).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.resolve_path">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">resolve_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upstream_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_or_pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_parents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#resolve_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.resolve_path" title="Permalink to this definition">#</a></dt>
-<dd><p>Returns full path or Path(upstream_path, path_or_pattern) and [makes parent dirs].</p>
-<p>Conditional returns:
-1) If path_or_pattern is absolute, return Path(path_or_pattern).
-2) If Path(upstream_path, relative_path).exists(), return Path(upstream_path, path_or_pattern)
-3) If Path(upstream_path, [rel_path/]glob_pattern), return Path of first match
-4) If not Path(upstream_path, relative_path).exists(), return full path
-5) Else, return None</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">resolve_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">upstream_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_or_pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">make_parents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#resolve_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.resolve_path" title="Link to this definition">#</a></dt>
+<dd><p>Returns full path or Path(upstream_path, path_or_pattern) and optionally creates parent directories.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>upstream_path</strong> (<em>str</em>) – The base path.</p></li>
+<li><p><strong>path_or_pattern</strong> (<em>str</em>) – The relative path or glob pattern.</p></li>
+<li><p><strong>make_parents</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to create parent directories if they don’t exist. Default is True.</p></li>
+<li><p><strong>is_file</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the path is a file. Default is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The resolved path or None if not found.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Path or None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.return_3D_img">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">return_3D_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#return_3D_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.return_3D_img" title="Permalink to this definition">#</a></dt>
-<dd><p>Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim)</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">return_3D_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#return_3D_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.return_3D_img" title="Link to this definition">#</a></dt>
+<dd><p>Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ndarray</strong> (<em>ndarray</em>) – The 3D image array.</p></li>
+<li><p><strong>return_metadata</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return metadata. Default is False.</p></li>
+<li><p><strong>return_res</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return resolutions. Default is False.</p></li>
+<li><p><strong>xy_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the xy-plane.</p></li>
+<li><p><strong>z_res</strong> (<em>float</em><em>, </em><em>optional</em>) – The resolution in the z-plane.</p></li>
+<li><p><strong>x_dim</strong> (<em>int</em><em>, </em><em>optional</em>) – The size of the image in the x-dimension.</p></li>
+<li><p><strong>y_dim</strong> (<em>int</em><em>, </em><em>optional</em>) – The size of the image in the y-dimension.</p></li>
+<li><p><strong>z_dim</strong> (<em>int</em><em>, </em><em>optional</em>) – The size of the image in the z-dimension.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>ndarray</em> – The 3D image array.</p></li>
+<li><p><em>tuple, optional</em> – If return_res is True, returns (ndarray, xy_res, z_res).</p></li>
+<li><p><em>tuple, optional</em> – If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</p></li>
+</ul>
+</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.save_as_h5">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#save_as_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_h5" title="Permalink to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#save_as_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_h5" title="Link to this definition">#</a></dt>
+<dd><p>Save an ndarray to an HDF5 file (.h5).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ndarray</strong> (<em>ndarray</em>) – The 3D image array to save.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – The path to save the .h5 file.</p></li>
+<li><p><strong>ndarray_axis_order</strong> (<em>str</em><em>, </em><em>optional</em>) – The order of the ndarray axes. Default is ‘xyz’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.save_as_nii">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type=&lt;class</span> <span class="pre">'numpy.float32'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#save_as_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_nii" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type=&lt;class</span> <span class="pre">'numpy.float32'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#save_as_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_nii" title="Link to this definition">#</a></dt>
 <dd><p>Save a numpy array as a .nii.gz image with the option to retain the orientation of an input .nii.gz file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ndarray</strong> – The numpy array to save.</p></li>
-<li><p><strong>output</strong> – Output file path.</p></li>
-<li><p><strong>xy_res</strong> – XY resolution in microns.</p></li>
-<li><p><strong>z_res</strong> – Z resolution in microns.</p></li>
-<li><p><strong>data_type</strong> – Data type for the NIFTI image.</p></li>
-<li><p><strong>reference</strong> – Either an affine matrix or a path to a .nii.gz file to retain its orientation.</p></li>
+<li><p><strong>ndarray</strong> (<em>ndarray</em>) – The numpy array to save.</p></li>
+<li><p><strong>output</strong> (<em>str</em>) – Output file path.</p></li>
+<li><p><strong>xy_res</strong> (<em>float</em><em>, </em><em>optional</em>) – XY resolution in microns. Default is 1000.</p></li>
+<li><p><strong>z_res</strong> (<em>float</em><em>, </em><em>optional</em>) – Z resolution in microns. Default is 1000.</p></li>
+<li><p><strong>data_type</strong> (<em>data-type</em><em>, </em><em>optional</em>) – Data type for the NIFTI image. Default is np.float32.</p></li>
+<li><p><strong>reference</strong> (<em>str</em><em> or </em><em>ndarray</em><em>, </em><em>optional</em>) – Either an affine matrix or a path to a .nii.gz file to retain its orientation. Default is None.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.save_as_tifs">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tif_dir_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#save_as_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_tifs" title="Permalink to this definition">#</a></dt>
-<dd><p>Save &lt;ndarray&gt; as tifs in &lt;Path(tif_dir_out)&gt;</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tif_dir_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#save_as_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_tifs" title="Link to this definition">#</a></dt>
+<dd><p>Save an ndarray as a series of .tif images.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ndarray</strong> (<em>ndarray</em>) – The 3D image array to save.</p></li>
+<li><p><strong>tif_dir_out</strong> (<em>str</em>) – The directory to save the .tif files.</p></li>
+<li><p><strong>ndarray_axis_order</strong> (<em>str</em><em>, </em><em>optional</em>) – The order of the ndarray axes. Default is ‘xyz’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.save_as_zarr">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_zarr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#save_as_zarr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_zarr" title="Permalink to this definition">#</a></dt>
-<dd><p>Save ndarray to specified path</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_zarr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#save_as_zarr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_zarr" title="Link to this definition">#</a></dt>
+<dd><p>Save an ndarray to a .zarr file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ndarray</strong> (<em>ndarray</em>) – The 3D image array to save.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – The path to save the .zarr file.</p></li>
+<li><p><strong>ndarray_axis_order</strong> (<em>str</em><em>, </em><em>optional</em>) – The order of the ndarray axes. Default is ‘xyz’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.save_metadata_to_file">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_metadata_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'parameters/metadata.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#save_metadata_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_metadata_to_file" title="Permalink to this definition">#</a></dt>
-<dd><p>Save metadata to .txt file</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_metadata_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'parameters/metadata.txt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_io.html#save_metadata_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_metadata_to_file" title="Link to this definition">#</a></dt>
+<dd><p>Save metadata to a text file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xy_res</strong> (<em>float</em>) – The resolution in the xy-plane.</p></li>
+<li><p><strong>z_res</strong> (<em>float</em>) – The resolution in the z-plane.</p></li>
+<li><p><strong>x_dim</strong> (<em>int</em>) – The size of the image in the x-dimension.</p></li>
+<li><p><strong>y_dim</strong> (<em>int</em>) – The size of the image in the y-dimension.</p></li>
+<li><p><strong>z_dim</strong> (<em>int</em>) – The size of the image in the z-dimension.</p></li>
+<li><p><strong>save_metadata</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to save metadata file. Default is ‘parameters/metadata.txt’.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
 <section id="module-unravel.core.img_tools">
-<span id="unravel-core-img-tools-module"></span><h2>unravel.core.img_tools module<a class="headerlink" href="#module-unravel.core.img_tools" title="Permalink to this heading">#</a></h2>
+<span id="unravel-core-img-tools-module"></span><h2>unravel.core.img_tools module<a class="headerlink" href="#module-unravel.core.img_tools" title="Link to this heading">#</a></h2>
 <p>This module contains functions processing 3D images:
 - resample: Resample a 3D ndarray.
 - reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space
@@ -624,19 +883,19 @@ If return_metadata=True, returns ndarray, xy_res, z_res, x_dim, y_dim, z_dim</p>
 - find_bounding_box: Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.cluster_IDs">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">cluster_IDs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_extent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_IDs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_sizes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#cluster_IDs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.cluster_IDs" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">cluster_IDs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_extent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_IDs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_sizes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#cluster_IDs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.cluster_IDs" title="Link to this definition">#</a></dt>
 <dd><p>Prints cluster IDs [and sizes] for clusters &gt; minextent voxels</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.crop">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">crop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#crop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.crop" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">crop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#crop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.crop" title="Link to this definition">#</a></dt>
 <dd><p>Crop an ndarray to the specified bounding box (xmin:xmax, ymin:ymax, zmin:zmax)</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.find_bounding_box">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">find_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#find_bounding_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.find_bounding_box" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">find_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#find_bounding_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.find_bounding_box" title="Link to this definition">#</a></dt>
 <dd><p>Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -651,44 +910,44 @@ If return_metadata=True, returns ndarray, xy_res, z_res, x_dim, y_dim, z_dim</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.pad_img">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">pad_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#pad_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.pad_img" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">pad_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#pad_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.pad_img" title="Link to this definition">#</a></dt>
 <dd><p>Pads ndarray by 15% of voxels on all sides</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.pixel_classification">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">pixel_classification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tif_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ilastik_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ilastik_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#pixel_classification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.pixel_classification" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">pixel_classification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tif_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ilastik_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ilastik_log</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#pixel_classification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.pixel_classification" title="Link to this definition">#</a></dt>
 <dd><p>Segment tif series with Ilastik using pixel classification.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.process_slice">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">process_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct_element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#process_slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.process_slice" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">process_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct_element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#process_slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.process_slice" title="Link to this definition">#</a></dt>
 <dd><p>Subtract background from &lt;slice&gt; using OpenCV.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.reorient_for_raw_to_nii_conv">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_for_raw_to_nii_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#reorient_for_raw_to_nii_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_for_raw_to_nii_conv" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_for_raw_to_nii_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#reorient_for_raw_to_nii_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_for_raw_to_nii_conv" title="Link to this definition">#</a></dt>
 <dd><p>Reorient resampled ndarray for registration or warping to atlas space
 (legacy mode mimics MIRACL’s tif to .nii.gz conversion)</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.reorient_ndarray">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_ndarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#reorient_ndarray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_ndarray" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_ndarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#reorient_ndarray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_ndarray" title="Link to this definition">#</a></dt>
 <dd><p>Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention).</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.reorient_ndarray2">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_ndarray2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#reorient_ndarray2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_ndarray2" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_ndarray2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#reorient_ndarray2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_ndarray2" title="Link to this definition">#</a></dt>
 <dd><p>Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention).</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.resample">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.resample" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.resample" title="Link to this definition">#</a></dt>
 <dd><p>Resample a 3D ndarray</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -705,13 +964,13 @@ If return_metadata=True, returns ndarray, xy_res, z_res, x_dim, y_dim, z_dim</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reverse_reorient_for_raw_to_nii_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#reverse_reorient_for_raw_to_nii_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reverse_reorient_for_raw_to_nii_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#reverse_reorient_for_raw_to_nii_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv" title="Link to this definition">#</a></dt>
 <dd><p>After warping to native space, reorients image to match tissue</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">rolling_ball_subtraction_opencv_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#rolling_ball_subtraction_opencv_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">rolling_ball_subtraction_opencv_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/img_tools.html#rolling_ball_subtraction_opencv_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel" title="Link to this definition">#</a></dt>
 <dd><p>Subtract background from &lt;ndarray&gt; using OpenCV.
 Uses multiple threads to process slices in parallel.
 Radius is the radius of the rolling ball in pixels.
@@ -720,14 +979,14 @@ Returns ndarray with background subtracted.</p>
 
 </section>
 <section id="module-unravel.core.utils">
-<span id="unravel-core-utils-module"></span><h2>unravel.core.utils module<a class="headerlink" href="#module-unravel.core.utils" title="Permalink to this heading">#</a></h2>
+<span id="unravel-core-utils-module"></span><h2>unravel.core.utils module<a class="headerlink" href="#module-unravel.core.utils" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.utils.AverageTimePerIterationColumn">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">AverageTimePerIterationColumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Column</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#AverageTimePerIterationColumn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.AverageTimePerIterationColumn" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">AverageTimePerIterationColumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Column</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#AverageTimePerIterationColumn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.AverageTimePerIterationColumn" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ProgressColumn</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unravel.core.utils.AverageTimePerIterationColumn.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Task</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Text</span></span></span><a class="reference internal" href="_modules/unravel/core/utils.html#AverageTimePerIterationColumn.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.AverageTimePerIterationColumn.render" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Task</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Text</span></span></span><a class="reference internal" href="_modules/unravel/core/utils.html#AverageTimePerIterationColumn.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.AverageTimePerIterationColumn.render" title="Link to this definition">#</a></dt>
 <dd><p>Should return a renderable object.</p>
 </dd></dl>
 
@@ -735,11 +994,11 @@ Returns ndarray with background subtracted.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.utils.CustomMofNCompleteColumn">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">CustomMofNCompleteColumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Column</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomMofNCompleteColumn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomMofNCompleteColumn" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">CustomMofNCompleteColumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'/'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Column</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomMofNCompleteColumn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomMofNCompleteColumn" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">MofNCompleteColumn</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unravel.core.utils.CustomMofNCompleteColumn.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Text</span></span></span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomMofNCompleteColumn.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomMofNCompleteColumn.render" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Text</span></span></span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomMofNCompleteColumn.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomMofNCompleteColumn.render" title="Link to this definition">#</a></dt>
 <dd><p>Show completed/total.</p>
 </dd></dl>
 
@@ -747,11 +1006,11 @@ Returns ndarray with background subtracted.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.utils.CustomTimeElapsedColumn">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">CustomTimeElapsedColumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Column</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomTimeElapsedColumn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomTimeElapsedColumn" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">CustomTimeElapsedColumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Column</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomTimeElapsedColumn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomTimeElapsedColumn" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TimeElapsedColumn</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unravel.core.utils.CustomTimeElapsedColumn.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Text</span></span></span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomTimeElapsedColumn.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomTimeElapsedColumn.render" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Text</span></span></span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomTimeElapsedColumn.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomTimeElapsedColumn.render" title="Link to this definition">#</a></dt>
 <dd><p>Show time elapsed.</p>
 </dd></dl>
 
@@ -759,11 +1018,11 @@ Returns ndarray with background subtracted.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.utils.CustomTimeRemainingColumn">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">CustomTimeRemainingColumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compact</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elapsed_when_finished</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Column</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomTimeRemainingColumn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomTimeRemainingColumn" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">CustomTimeRemainingColumn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compact</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elapsed_when_finished</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">table_column</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Column</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomTimeRemainingColumn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomTimeRemainingColumn" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TimeRemainingColumn</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unravel.core.utils.CustomTimeRemainingColumn.render">
-<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Text</span></span></span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomTimeRemainingColumn.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomTimeRemainingColumn.render" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Text</span></span></span><a class="reference internal" href="_modules/unravel/core/utils.html#CustomTimeRemainingColumn.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.CustomTimeRemainingColumn.render" title="Link to this definition">#</a></dt>
 <dd><p>Show time remaining.</p>
 </dd></dl>
 
@@ -771,7 +1030,7 @@ Returns ndarray with background subtracted.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.utils.copy_files">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">copy_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#copy_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.copy_files" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">copy_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#copy_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.copy_files" title="Link to this definition">#</a></dt>
 <dd><p>Copy the specified slices to the target directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -788,14 +1047,14 @@ Returns ndarray with background subtracted.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.utils.get_dir_name_from_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">get_dir_name_from_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#get_dir_name_from_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.get_dir_name_from_args" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">get_dir_name_from_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#get_dir_name_from_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.get_dir_name_from_args" title="Link to this definition">#</a></dt>
 <dd><p>This function checks args and kwargs for a file or directory path
 and returns a string based on the name of the file or directory.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.utils.get_samples">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">get_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_dir_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_dir_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sample??'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_dir_paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#get_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.get_samples" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">get_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_dir_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_dir_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sample??'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_dir_paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#get_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.get_samples" title="Link to this definition">#</a></dt>
 <dd><p>Return a list of full paths to sample directories (dirs) based on the dir list, pattern, and/or experiment dirs.</p>
 <p>This function searches for dirs matching a specific pattern (default “sample??”) within the given experiment dirs.
 If a sample_dir_list is provided, it uses the full paths from the list or resolves them if necessary.
@@ -811,29 +1070,29 @@ If both sample_dir_list and exp_dir_paths are provided, paths are added to the l
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.utils.initialize_progress_bar">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">initialize_progress_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_of_items_to_iterate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'[red]Processing...'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#initialize_progress_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.initialize_progress_bar" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">initialize_progress_bar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_of_items_to_iterate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task_message</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'[red]Processing...'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#initialize_progress_bar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.initialize_progress_bar" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.utils.load_text_from_file">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">load_text_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#load_text_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.load_text_from_file" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">load_text_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#load_text_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.load_text_from_file" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.utils.print_cmd_and_times">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">print_cmd_and_times</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#print_cmd_and_times"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.print_cmd_and_times" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">print_cmd_and_times</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#print_cmd_and_times"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.print_cmd_and_times" title="Link to this definition">#</a></dt>
 <dd><p>A decorator to print the script name, arguments, start/end times, use rich traceback, and log commands to a hidden file.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.utils.print_func_name_args_times">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">print_func_name_args_times</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">print_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#print_func_name_args_times"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.print_func_name_args_times" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">print_func_name_args_times</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">print_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/core/utils.html#print_func_name_args_times"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.print_func_name_args_times" title="Link to this definition">#</a></dt>
 <dd><p>A decorator that prints the function name, arguments, duration, and memory usage of the function it decorates.</p>
 </dd></dl>
 
 </section>
 <section id="module-unravel.core">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unravel.core" title="Permalink to this heading">#</a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unravel.core" title="Link to this heading">#</a></h2>
 </section>
 </section>
 
@@ -904,6 +1163,8 @@ If both sample_dir_list and exp_dir_paths are provided, paths are added to the l
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.core.img_io">unravel.core.img_io module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#main-functions">Main Functions:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#helper-functions">Helper Functions:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.extract_resolution"><code class="docutils literal notranslate"><span class="pre">extract_resolution()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_3D_img"><code class="docutils literal notranslate"><span class="pre">load_3D_img()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_czi"><code class="docutils literal notranslate"><span class="pre">load_czi()</span></code></a></li>
@@ -1012,7 +1273,7 @@ If both sample_dir_list and exp_dir_paths are provided, paths are added to the l
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>

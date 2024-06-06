@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 
-""" This module contains functions for loading and saving 3D images.
+"""
+This module contains functions for loading and saving 3D images.
 
-The main functions are:
-    - load_3D_img: Load a 3D image from a .czi, .nii.gz, or .tif series and return the ndarray.
-        - Supported file types: .czi, .ome.tif series, .tif series, .nii.gz, .h5:
-        - Loading functions (load_czi, load_tifs, load_nii, load_h5) return the ndarray and optionally resolutions and/or metadata.
-        - Parameters:
-            - desired_axis_order=xyz (other option: "zyx")
-            - If return_res=True returns: ndarray, xy_res, z_res (resolution = voxel size in microns)
-            - If return_metadata=True returns: ndarray, xy_res, z_res, x_dim, y_dim, z_dim (image dimensions)
-            - If save_metadata=True saves metadata to parameters/metadata.txt
-        - Helper functions: extract_resolution, load_image_metadata_from_txt, save_metadata_to_file, metadata, return_3D_img
-    - Functions for saving ndarrays:
-        - save_as_nii: Save a numpy array as a .nii.gz image.
-        - save_as_tifs: Save a 3D ndarray as a series of tif images.
+Main Functions:
+---------------
+- load_3D_img: Load a 3D image from a .czi, .nii.gz, or .tif series and return the ndarray.
+- save_as_nii: Save a numpy array as a .nii.gz image.
+- save_as_tifs: Save a 3D ndarray as a series of tif images.
+
+Helper Functions:
+-----------------
+- extract_resolution
+- load_image_metadata_from_txt
+- save_metadata_to_file
+- metadata
+- return_3D_img
 """
 
 import re
@@ -39,7 +40,37 @@ from unravel.core.utils import print_func_name_args_times
 # Load 3D image (load_3D_img()), get/save metadata, and return ndarray [with metadata]
 
 def return_3D_img(ndarray, return_metadata=False, return_res=False, xy_res=None, z_res=None, x_dim=None, y_dim=None, z_dim=None):
-    """Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim)"""
+    """
+    Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim).
+
+    Parameters
+    ----------
+    ndarray : ndarray
+        The 3D image array.
+    return_metadata : bool, optional
+        Whether to return metadata. Default is False.
+    return_res : bool, optional
+        Whether to return resolutions. Default is False.
+    xy_res : float, optional
+        The resolution in the xy-plane.
+    z_res : float, optional
+        The resolution in the z-plane.
+    x_dim : int, optional
+        The size of the image in the x-dimension.
+    y_dim : int, optional
+        The size of the image in the y-dimension.
+    z_dim : int, optional
+        The size of the image in the z-dimension.
+
+    Returns
+    -------
+    ndarray
+        The 3D image array.
+    tuple, optional
+        If return_res is True, returns (ndarray, xy_res, z_res).
+    tuple, optional
+        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
+    """
     if return_metadata:
         return ndarray, xy_res, z_res, x_dim, y_dim, z_dim
     elif return_res:
@@ -47,7 +78,31 @@ def return_3D_img(ndarray, return_metadata=False, return_res=False, xy_res=None,
     return ndarray
 
 def metadata(file_path, ndarray, return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=None):
-    """Extract and handle metadata, including saving to a file if requested. Returns: xy_res, z_res, x_dim, y_dim, z_dim"""
+    """
+    Extract and handle metadata, including saving to a file if requested.
+
+    Parameters
+    ----------
+    file_path : str
+        The path to the image file.
+    ndarray : ndarray
+        The 3D image array.
+    return_res : bool, optional
+        Whether to return resolutions. Default is False.
+    return_metadata : bool, optional
+        Whether to return metadata. Default is False.
+    xy_res : float, optional
+        The resolution in the xy-plane.
+    z_res : float, optional
+        The resolution in the z-plane.
+    save_metadata : str, optional
+        Path to save metadata file. Default is None.
+
+    Returns
+    -------
+    tuple
+        Returns (xy_res, z_res, x_dim, y_dim, z_dim).
+    """
     x_dim, y_dim, z_dim = None, None, None
     if return_res or return_metadata:
         if xy_res is None and z_res is None:
@@ -58,7 +113,19 @@ def metadata(file_path, ndarray, return_res=False, return_metadata=False, xy_res
     return xy_res, z_res, x_dim, y_dim, z_dim
 
 def extract_resolution(img_path):
-    """Extract resolution from image metadata. Returns xy_res, z_res in microns."""
+    """
+    Extract resolution from image metadata.
+
+    Parameters
+    ----------
+    img_path : str
+        The path to the image file.
+
+    Returns
+    -------
+    tuple
+        Returns (xy_res, z_res) in microns.
+    """
     xy_res, z_res = None, None
     if str(img_path).endswith('.czi'):
         czi = CziFile(img_path)
@@ -92,7 +159,37 @@ def extract_resolution(img_path):
 
 @print_func_name_args_times()
 def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
-    """Loads image.czi channel. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)]."""
+    """
+    Load a .czi image and return the ndarray.
+
+    Parameters
+    ----------
+    czi_path : str
+        The path to the .czi file.
+    channel : int, optional
+        The channel to load. Default is 0.
+    desired_axis_order : str, optional
+        The desired order of the image axes. Default is 'xyz'.
+    return_res : bool, optional
+        Whether to return resolutions. Default is False.
+    return_metadata : bool, optional
+        Whether to return metadata. Default is False.
+    save_metadata : str, optional
+        Path to save metadata file. Default is None.
+    xy_res : float, optional
+        The resolution in the xy-plane.
+    z_res : float, optional
+        The resolution in the z-plane.
+
+    Returns
+    -------
+    ndarray
+        The loaded 3D image array.
+    tuple, optional
+        If return_res is True, returns (ndarray, xy_res, z_res).
+    tuple, optional
+        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
+    """
     czi = CziFile(czi_path)
     ndarray = np.squeeze(czi.read_image(C=channel)[0])
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
@@ -101,9 +198,39 @@ def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, re
     
 @print_func_name_args_times()
 def load_tifs(tif_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None, parallel_loading=True):
-    """Loads tif series [in parallel]. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)]."""
+    """
+    Load a series of .tif images and return the ndarray.
+
+    Parameters
+    ----------
+    tif_path : str
+        The path to the .tif files.
+    desired_axis_order : str, optional
+        The desired order of the image axes. Default is 'xyz'.
+    return_res : bool, optional
+        Whether to return resolutions. Default is False.
+    return_metadata : bool, optional
+        Whether to return metadata. Default is False.
+    save_metadata : str, optional
+        Path to save metadata file. Default is None.
+    xy_res : float, optional
+        The resolution in the xy-plane.
+    z_res : float, optional
+        The resolution in the z-plane.
+    parallel_loading : bool, optional
+        Whether to load images in parallel. Default is True.
+
+    Returns
+    -------
+    ndarray
+        The loaded 3D image array.
+    tuple, optional
+        If return_res is True, returns (ndarray, xy_res, z_res).
+    tuple, optional
+        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
+    """
     def load_single_tif(tif_file):
-        """Load a single tif file using OpenCV and return ndarray."""
+        """Load a single .tif file using OpenCV and return the ndarray."""
         img = cv2.imread(str(tif_file), cv2.IMREAD_UNCHANGED)
         return img
     tif_files = sorted(Path(tif_path).parent.glob("*.tif"))
@@ -121,7 +248,35 @@ def load_tifs(tif_path, desired_axis_order="xyz", return_res=False, return_metad
 
 @print_func_name_args_times()
 def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
-    """Load a .nii.gz image and return the ndarray. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)]."""
+    """
+    Load a .nii.gz image and return the ndarray.
+
+    Parameters
+    ----------
+    nii_path : str
+        The path to the .nii.gz file.
+    desired_axis_order : str, optional
+        The desired order of the image axes. Default is 'xyz'.
+    return_res : bool, optional
+        Whether to return resolutions. Default is False.
+    return_metadata : bool, optional
+        Whether to return metadata. Default is False.
+    save_metadata : str, optional
+        Path to save metadata file. Default is None.
+    xy_res : float, optional
+        The resolution in the xy-plane.
+    z_res : float, optional
+        The resolution in the z-plane.
+
+    Returns
+    -------
+    ndarray
+        The loaded 3D image array.
+    tuple, optional
+        If return_res is True, returns (ndarray, xy_res, z_res).
+    tuple, optional
+        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
+    """
     nii = nib.load(nii_path)
     data_type = nii.header.get_data_dtype()
     ndarray = np.asanyarray(nii.dataobj).astype(data_type)
@@ -132,14 +287,56 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
 
 @print_func_name_args_times()
 def load_nii_subset(nii_path, xmin, xmax, ymin, ymax, zmin, zmax):
-    """Load a spatial subset of a path/img.nii.gz and return an ndarray."""
+    """
+    Load a spatial subset of a .nii.gz file and return an ndarray.
+
+    Parameters
+    ----------
+    nii_path : str
+        The path to the .nii.gz file.
+    xmin, xmax, ymin, ymax, zmin, zmax : int
+        The spatial coordinates defining the subset.
+
+    Returns
+    -------
+    ndarray
+        The loaded subset of the 3D image.
+    """
     proxy_img = nib.load(nii_path)    
     subset_array = proxy_img.dataobj[xmin:xmax, ymin:ymax, zmin:zmax]
     return np.squeeze(subset_array)
 
 @print_func_name_args_times() 
 def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
-    """Load full res image from an HDF5 image (.h5). Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)]."""
+    """
+    Load full resolution image from an HDF5 file (.h5) and return the ndarray.
+
+    Parameters
+    ----------
+    hdf5_path : str
+        The path to the .h5 file.
+    desired_axis_order : str, optional
+        The desired order of the image axes. Default is 'xyz'.
+    return_res : bool, optional
+        Whether to return resolutions. Default is False.
+    return_metadata : bool, optional
+        Whether to return metadata. Default is False.
+    save_metadata : str, optional
+        Path to save metadata file. Default is None.
+    xy_res : float, optional
+        The resolution in the xy-plane.
+    z_res : float, optional
+        The resolution in the z-plane.
+
+    Returns
+    -------
+    ndarray
+        The loaded 3D image array.
+    tuple, optional
+        If return_res is True, returns (ndarray, xy_res, z_res).
+    tuple, optional
+        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
+    """
     with h5py.File(hdf5_path, 'r') as f:
         full_res_dataset_name = next(iter(f.keys())) # Assumes first dataset = full res image
         dataset = f[full_res_dataset_name]
@@ -151,20 +348,45 @@ def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metada
 
 @print_func_name_args_times()
 def load_zarr(zarr_path, desired_axis_order="xyz"):
+    """
+    Load a .zarr image and return the ndarray.
+
+    Parameters
+    ----------
+    zarr_path : str
+        The path to the .zarr file.
+    desired_axis_order : str, optional
+        The desired order of the image axes. Default is 'xyz'.
+
+    Returns
+    -------
+    ndarray
+        The loaded 3D image array.
+    """
     zarr_dataset = zarr.open(zarr_path, mode='r')
     ndarray = np.array(zarr_dataset)
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
     return ndarray
 
 def resolve_path(upstream_path, path_or_pattern, make_parents=True, is_file=True):
-    """Returns full path or Path(upstream_path, path_or_pattern) and [makes parent dirs]. 
+    """
+    Returns full path or Path(upstream_path, path_or_pattern) and optionally creates parent directories.
 
-    Conditional returns: 
-    1) If path_or_pattern is absolute, return Path(path_or_pattern). 
-    2) If Path(upstream_path, relative_path).exists(), return Path(upstream_path, path_or_pattern) 
-    3) If Path(upstream_path, [rel_path/]glob_pattern), return Path of first match
-    4) If not Path(upstream_path, relative_path).exists(), return full path
-    5) Else, return None
+    Parameters
+    ----------
+    upstream_path : str
+        The base path.
+    path_or_pattern : str
+        The relative path or glob pattern.
+    make_parents : bool, optional
+        Whether to create parent directories if they don't exist. Default is True.
+    is_file : bool, optional
+        Whether the path is a file. Default is True.
+
+    Returns
+    -------
+    Path or None
+        The resolved path or None if not found.
     """
     if Path(path_or_pattern).is_absolute():
         if is_file:
@@ -192,7 +414,24 @@ def resolve_path(upstream_path, path_or_pattern, make_parents=True, is_file=True
     return None
 
 def save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata='parameters/metadata.txt'):
-    """Save metadata to .txt file"""
+    """
+    Save metadata to a text file.
+
+    Parameters
+    ----------
+    xy_res : float
+        The resolution in the xy-plane.
+    z_res : float
+        The resolution in the z-plane.
+    x_dim : int
+        The size of the image in the x-dimension.
+    y_dim : int
+        The size of the image in the y-dimension.
+    z_dim : int
+        The size of the image in the z-dimension.
+    save_metadata : str, optional
+        Path to save metadata file. Default is 'parameters/metadata.txt'.
+    """
     save_metadata = Path(save_metadata)
     save_metadata.parent.mkdir(parents=True, exist_ok=True)
     if not save_metadata.exists():
@@ -203,7 +442,19 @@ def save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata='par
             f.write(f"Voxel size: {xy_res}x{xy_res}x{z_res} micron^3\n")    
 
 def load_image_metadata_from_txt(metadata="./parameters/metadata*"):
-    """Loads ./parameters/metadata* and returns xy_res, z_res, x_dim, y_dim, z_dim | None if file not found."""
+    """
+    Load metadata from a text file.
+
+    Parameters
+    ----------
+    metadata : str, optional
+        The path or pattern to the metadata file. Default is './parameters/metadata*'.
+
+    Returns
+    -------
+    tuple
+        Returns (xy_res, z_res, x_dim, y_dim, z_dim) or (None, None, None, None, None) if file not found.
+    """
     file_paths = glob(str(metadata))
     if file_paths:
         with open(file_paths[0], 'r') as file:
@@ -229,12 +480,37 @@ def load_image_metadata_from_txt(metadata="./parameters/metadata*"):
 
 @print_func_name_args_times()
 def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=None): 
-    """Load path to.czi, .nii.gz, .ome.tif, tifs_dir, tifs_dir/first.tif, .h5).
-    Default: desired_axis_order=xyz (other option: axis_order="zyx")
-    Default: returns: ndarray
-    If return_res=True, returns: ndarray, xy_res, z_res (resolution in um)
-    If return_metadata=True, returns ndarray, xy_res, z_res, x_dim, y_dim, z_dim
-    """ 
+    """
+    Load a 3D image from various file formats and return the ndarray.
+
+    Parameters
+    ----------
+    img_path : str
+        The path to the image file.
+    channel : int, optional
+        The channel to load. Default is 0.
+    desired_axis_order : str, optional
+        The desired order of the image axes. Default is 'xyz'.
+    return_res : bool, optional
+        Whether to return resolutions. Default is False.
+    return_metadata : bool, optional
+        Whether to return metadata. Default is False.
+    xy_res : float, optional
+        The resolution in the xy-plane.
+    z_res : float, optional
+        The resolution in the z-plane.
+    save_metadata : str, optional
+        Path to save metadata file. Default is None.
+
+    Returns
+    -------
+    ndarray
+        The loaded 3D image array.
+    tuple, optional
+        If return_res is True, returns (ndarray, xy_res, z_res).
+    tuple, optional
+        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
+    """
 
     # If file_path points to dir containing tifs, resolve path to first .tif
     img_path = Path(img_path)
@@ -273,7 +549,19 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
 
 # Save images
 def load_nii_orientation(input_nii_path):
-    """Load a .nii.gz file and return its orientation (affine matrix)."""
+    """
+    Load a .nii.gz file and return its orientation (affine matrix).
+
+    Parameters
+    ----------
+    input_nii_path : str
+        The path to the .nii.gz file.
+
+    Returns
+    -------
+    ndarray
+        The affine matrix of the .nii.gz file.
+    """
     nii = nib.load(str(input_nii_path))
     return nii.affine
 
@@ -281,13 +569,25 @@ def load_nii_orientation(input_nii_path):
 def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=np.float32, reference=None):
     """
     Save a numpy array as a .nii.gz image with the option to retain the orientation of an input .nii.gz file.
-    
-    :param ndarray: The numpy array to save.
-    :param output: Output file path.
-    :param xy_res: XY resolution in microns.
-    :param z_res: Z resolution in microns.
-    :param data_type: Data type for the NIFTI image.
-    :param reference: Either an affine matrix or a path to a .nii.gz file to retain its orientation.
+
+    Parameters
+    ----------
+    ndarray : ndarray
+        The numpy array to save.
+    output : str
+        Output file path.
+    xy_res : float, optional
+        XY resolution in microns. Default is 1000.
+    z_res : float, optional
+        Z resolution in microns. Default is 1000.
+    data_type : data-type, optional
+        Data type for the NIFTI image. Default is np.float32.
+    reference : str or ndarray, optional
+        Either an affine matrix or a path to a .nii.gz file to retain its orientation. Default is None.
+
+    Returns
+    -------
+    None
     """
     output = Path(output).resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
@@ -312,7 +612,22 @@ def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=np.float32, 
 
 @print_func_name_args_times()
 def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
-    """Save <ndarray> as tifs in <Path(tif_dir_out)>"""
+    """
+    Save an ndarray as a series of .tif images.
+
+    Parameters
+    ----------
+    ndarray : ndarray
+        The 3D image array to save.
+    tif_dir_out : str
+        The directory to save the .tif files.
+    ndarray_axis_order : str, optional
+        The order of the ndarray axes. Default is 'xyz'.
+
+    Returns
+    -------
+    None
+    """
     # Ensure tif_dir_out is a Path object, not a string
     tif_dir_out = Path(tif_dir_out)
     tif_dir_out.mkdir(parents=True, exist_ok=True)
@@ -327,7 +642,22 @@ def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
 
 @print_func_name_args_times()
 def save_as_zarr(ndarray, output_path, ndarray_axis_order="xyz"):
-    """Save ndarray to specified path"""
+    """
+    Save an ndarray to a .zarr file.
+
+    Parameters
+    ----------
+    ndarray : ndarray
+        The 3D image array to save.
+    output_path : str
+        The path to save the .zarr file.
+    ndarray_axis_order : str, optional
+        The order of the ndarray axes. Default is 'xyz'.
+
+    Returns
+    -------
+    None
+    """
     if ndarray_axis_order == "xyz":
         ndarray = np.transpose(ndarray, (2, 1, 0))
     dask_array = da.from_array(ndarray, chunks='auto')
@@ -337,6 +667,22 @@ def save_as_zarr(ndarray, output_path, ndarray_axis_order="xyz"):
 
 @print_func_name_args_times()
 def save_as_h5(ndarray, output_path, ndarray_axis_order="xyz"):
+    """
+    Save an ndarray to an HDF5 file (.h5).
+
+    Parameters
+    ----------
+    ndarray : ndarray
+        The 3D image array to save.
+    output_path : str
+        The path to save the .h5 file.
+    ndarray_axis_order : str, optional
+        The order of the ndarray axes. Default is 'xyz'.
+
+    Returns
+    -------
+    None
+    """
     if ndarray_axis_order == "xyz":
         ndarray = np.transpose(ndarray, (2, 1, 0))
     with h5py.File(output_path, 'w') as f:

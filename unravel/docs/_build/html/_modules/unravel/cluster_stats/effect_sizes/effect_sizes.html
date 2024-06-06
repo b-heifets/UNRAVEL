@@ -1,9 +1,8 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../../../../" >
 
   <head>
     <meta charset="utf-8" />
@@ -28,17 +27,17 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=981a9575" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-    <script src="../../../../_static/doctools.js"></script>
-    <script src="../../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../../_static/documentation_options.js?v=3fd7a760"></script>
+    <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/effect_sizes/effect_sizes';</script>
     <link rel="icon" href="../../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -355,7 +354,9 @@ document.write(`
 
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 
-<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+<div class="viewcode-block" id="parse_args">
+<a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.parse_args">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;Calculates the effect size for a comparison between two groups for each cluster [or a valid cluster list]&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input_csv&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV with densities (Columns: Samples, Conditions, Cluster_1, Cluster_2, ...)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c1&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_1&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;First condition of interest from csv (e.g., saline [data matching prefix pooled])&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -379,8 +380,11 @@ document.write(`
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
+
 <span class="c1"># Create a condition selector to handle pooling of data</span>
-<div class="viewcode-block" id="condition_selector"><a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.condition_selector">[docs]</a><span class="k">def</span> <span class="nf">condition_selector</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">unique_conditions</span><span class="p">,</span> <span class="n">condition_column</span><span class="o">=</span><span class="s1">&#39;Conditions&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="condition_selector">
+<a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.condition_selector">[docs]</a>
+<span class="k">def</span> <span class="nf">condition_selector</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">unique_conditions</span><span class="p">,</span> <span class="n">condition_column</span><span class="o">=</span><span class="s1">&#39;Conditions&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.</span>
 <span class="sd">    This function checks if the &#39;condition&#39; is exactly present in the &#39;Conditions&#39; column or is a prefix of any condition in this column. </span>
 <span class="sd">    If the exact condition is found, it selects those rows.</span>
@@ -401,9 +405,12 @@ document.write(`
         <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">condition_column</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">colored</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Condition </span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2"> not recognized!&quot;</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">))</span></div>
+
     
 <span class="c1"># Calculate the effect size for each cluster and sex</span>
-<div class="viewcode-block" id="hedges_g"><a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.hedges_g">[docs]</a><span class="k">def</span> <span class="nf">hedges_g</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition_1</span><span class="p">,</span> <span class="n">condition_2</span><span class="p">):</span> 
+<div class="viewcode-block" id="hedges_g">
+<a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.hedges_g">[docs]</a>
+<span class="k">def</span> <span class="nf">hedges_g</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition_1</span><span class="p">,</span> <span class="n">condition_2</span><span class="p">):</span> 
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
     <span class="n">cluster_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">if</span> <span class="n">col</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;Cluster&#39;</span><span class="p">)]</span>
@@ -470,7 +477,10 @@ document.write(`
 
     <span class="k">return</span> <span class="n">results_df</span></div>
 
-<div class="viewcode-block" id="filter_dataframe"><a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.filter_dataframe">[docs]</a><span class="k">def</span> <span class="nf">filter_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cluster_list</span><span class="p">):</span>
+
+<div class="viewcode-block" id="filter_dataframe">
+<a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.filter_dataframe">[docs]</a>
+<span class="k">def</span> <span class="nf">filter_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cluster_list</span><span class="p">):</span>
     <span class="c1"># If no clusters provided, return the original DataFrame</span>
     <span class="k">if</span> <span class="n">cluster_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">df</span>
@@ -479,7 +489,10 @@ document.write(`
     <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;Cluster_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">cluster_list</span><span class="p">)]</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
     <span class="c1"># Generate CSVs with effect sizes</span>
@@ -492,6 +505,7 @@ document.write(`
         <span class="n">effect_sizes_filtered</span> <span class="o">=</span> <span class="n">filter_dataframe</span><span class="p">(</span><span class="n">effect_sizes</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">clusters</span><span class="p">)</span>
         <span class="n">filtered_output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input_csv</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">_Hedges_g_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">condition_1</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">condition_2</span><span class="si">}</span><span class="s2">_valid_clusters.csv&quot;</span>
         <span class="n">effect_sizes_filtered</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">filtered_output</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
@@ -548,7 +562,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>

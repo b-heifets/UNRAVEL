@@ -81,6 +81,10 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
     pip install -e .
     ```
 
+```{todo}
+Add support for conda
+```
+
 8. **Download atlas/template files and locate them in `./atlas/`:**
     [Google Drive Link](https://drive.google.com/drive/folders/1WE0mCJNT6IcqccMxuxUyog5-mYXM8q06?usp=share_link)
 

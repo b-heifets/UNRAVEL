@@ -9,7 +9,7 @@
 ## Organize sample folders and raw data
    * Make a folder named after each condition in the experiment folder(s)
       * Make sample?? folders in these and add raw data to them
-      * For example, place a *.czi, *.hf, or folder(s) with tif series into each sample folder
+         * Place a *.czi, *.hf, or one or more folder(s) with tif series into each sample folder
       * Batch processing is easy if you use this convention for naming sample folders: 
          * sample01
          * sample02
@@ -68,9 +68,9 @@
 ```
          
 ## Make an exp_notes.txt
-   * This helps for keeping track of paths, commands etc.
-   * Most scripts automatically log the command used to run them, outputing .command_log.txt
-      * This is a hidden file. Use control + h to view it on Linux or: 
+   * This helps for keeping track of paths, commands, etc.
+   * Most scripts automatically log the command used to run them, appending to .command_log.txt in the current working directory
+      * This is a hidden file. Use control+h to view it on Linux. 
 ```bash
 touch exp_notes.txt  # Make the .txt file
 
@@ -96,7 +96,7 @@ exp
 ```
 
 ## Commands/scripts
-For help on a command/script, run
+For help/info on a command/script, run
 ```
 <command> -h
 
@@ -112,7 +112,7 @@ clean_tifs -t <dir_name> -v -m -e $DIRS
 ```
 
 ## Typical workflow: 
-   * Refer to this outline of common commands for analysis steps [Commands](commands.md)
+   * Follow this outline of common commands for analysis steps [Commands](commands.md)
 
 
 ```{todo}

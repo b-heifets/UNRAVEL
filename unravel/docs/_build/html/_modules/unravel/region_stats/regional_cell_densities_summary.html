@@ -1,9 +1,8 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../../../" >
 
   <head>
     <meta charset="utf-8" />
@@ -28,17 +27,17 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=981a9575" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/regional_cell_densities_summary';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -367,7 +366,9 @@ document.write(`
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">initialize_progress_bar</span>
 
-<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+<div class="viewcode-block" id="parse_args">
+<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.parse_args">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Plot cell densensities for each region and summarize results.</span><span class="se">\n</span><span class="s1"> CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Group prefixes (e.g., saline meth cbsMeth)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--test_type&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Type of statistical test to use: &#39;tukey&#39; (default), &#39;dunnett&#39;, or &#39;t-test&#39;&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tukey&#39;</span><span class="p">,</span> <span class="s1">&#39;dunnett&#39;</span><span class="p">,</span> <span class="s1">&#39;t-test&#39;</span><span class="p">],</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;tukey&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -388,14 +389,20 @@ document.write(`
 <span class="s2">Example hex code list (flank arg w/ double quotes): [&#39;#2D67C8&#39;, &#39;#27AF2E&#39;, &#39;#D32525&#39;, &#39;#7F25D3&#39;]&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
+
 <span class="c1"># TODO: Dunnett&#39;s test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.</span>
 
-<div class="viewcode-block" id="get_region_details"><a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.get_region_details">[docs]</a><span class="k">def</span> <span class="nf">get_region_details</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+<div class="viewcode-block" id="get_region_details">
+<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.get_region_details">[docs]</a>
+<span class="k">def</span> <span class="nf">get_region_details</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
     <span class="c1"># Adjust to account for the unique region IDs.</span>
     <span class="n">region_row</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Region_ID&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region_id</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Region_ID&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region_id</span> <span class="o">+</span> <span class="mi">20000</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">region_row</span><span class="p">[</span><span class="s2">&quot;Region&quot;</span><span class="p">],</span> <span class="n">region_row</span><span class="p">[</span><span class="s2">&quot;Abbr&quot;</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="parse_color_argument"><a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.parse_color_argument">[docs]</a><span class="k">def</span> <span class="nf">parse_color_argument</span><span class="p">(</span><span class="n">color_arg</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
+
+<div class="viewcode-block" id="parse_color_argument">
+<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.parse_color_argument">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_color_argument</span><span class="p">(</span><span class="n">color_arg</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">color_arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">color_arg</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">color_arg</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">):</span>
             <span class="c1"># It&#39;s a string representation of a list, so evaluate it safely</span>
@@ -422,7 +429,10 @@ document.write(`
         <span class="c1"># It&#39;s already a list (this would be the case for default values or if the input method changes)</span>
         <span class="k">return</span> <span class="n">color_arg</span>    </div>
 
-<div class="viewcode-block" id="summarize_significance"><a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.summarize_significance">[docs]</a><span class="k">def</span> <span class="nf">summarize_significance</span><span class="p">(</span><span class="n">test_df</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+
+<div class="viewcode-block" id="summarize_significance">
+<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.summarize_significance">[docs]</a>
+<span class="k">def</span> <span class="nf">summarize_significance</span><span class="p">(</span><span class="n">test_df</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Summarize the results of the statistical tests.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -457,7 +467,10 @@ document.write(`
         <span class="p">})</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">summary_rows</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="process_and_plot_data"><a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.process_and_plot_data">[docs]</a><span class="k">def</span> <span class="nf">process_and_plot_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">region_abbr</span><span class="p">,</span> <span class="n">side</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">group_columns</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+<div class="viewcode-block" id="process_and_plot_data">
+<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.process_and_plot_data">[docs]</a>
+<span class="k">def</span> <span class="nf">process_and_plot_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">region_abbr</span><span class="p">,</span> <span class="n">side</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">group_columns</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
 
     <span class="c1"># Reshaping the data for plotting</span>
     <span class="n">reshaped_data</span> <span class="o">=</span> <span class="p">[]</span>
@@ -612,7 +625,10 @@ document.write(`
     <span class="k">return</span> <span class="n">test_results_df</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_cell_densities_summary.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     
     <span class="c1"># Find all CSV files in the current directory matching *cell_densities.csv</span>
@@ -773,6 +789,7 @@ document.write(`
         <span class="n">final_summary</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;__significance_summary_</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span> 
     <span class="n">install</span><span class="p">()</span>
     <span class="n">main</span><span class="p">()</span>
@@ -828,7 +845,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>

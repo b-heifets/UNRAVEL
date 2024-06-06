@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="./" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Guide &#8212; UNRAVEL 1.0.0-beta documentation</title>
   
@@ -29,17 +28,17 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=981a9575" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/documentation_options.js?v=3fd7a760"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'guide';</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -356,9 +355,9 @@ document.write(`
                 <article class="bd-article">
                   
   <section id="guide">
-<h1>Guide<a class="headerlink" href="#guide" title="Permalink to this heading">#</a></h1>
+<h1>Guide<a class="headerlink" href="#guide" title="Link to this heading">#</a></h1>
 <section id="stitch-z-stacks-if-needed">
-<h2>Stitch z-stacks if needed<a class="headerlink" href="#stitch-z-stacks-if-needed" title="Permalink to this heading">#</a></h2>
+<h2>Stitch z-stacks if needed<a class="headerlink" href="#stitch-z-stacks-if-needed" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>We use <a class="reference external" href="https://www.micro-shop.zeiss.com/en/us/softwarefinder/software-categories/zen-blue/">ZEN (blue edition)</a> since we have a <a class="reference external" href="https://www.zeiss.com/microscopy/en/products/light-microscopes/light-sheet-microscopes/lightsheet-7.html">Zeiss Lightsheet 7</a></p></li>
 <li><p>Open source options:</p>
@@ -370,12 +369,15 @@ document.write(`
 </ul>
 </section>
 <section id="organize-sample-folders-and-raw-data">
-<h2>Organize sample folders and raw data<a class="headerlink" href="#organize-sample-folders-and-raw-data" title="Permalink to this heading">#</a></h2>
+<h2>Organize sample folders and raw data<a class="headerlink" href="#organize-sample-folders-and-raw-data" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Make a folder named after each condition in the experiment folder(s)</p>
 <ul>
-<li><p>Make sample?? folders in these and add raw data to them</p></li>
-<li><p>For example, place a *.czi, *.hf, or folder(s) with tif series into each sample folder</p></li>
+<li><p>Make sample?? folders in these and add raw data to them</p>
+<ul>
+<li><p>Place a *.czi, *.hf, or one or more folder(s) with tif series into each sample folder</p></li>
+</ul>
+</li>
 <li><p>Batch processing is easy if you use this convention for naming sample folders:</p>
 <ul>
 <li><p>sample01</p></li>
@@ -390,7 +392,7 @@ document.write(`
 </ul>
 </section>
 <section id="example-experiment-folder-structure">
-<h2>Example experiment folder structure<a class="headerlink" href="#example-experiment-folder-structure" title="Permalink to this heading">#</a></h2>
+<h2>Example experiment folder structure<a class="headerlink" href="#example-experiment-folder-structure" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.
 ├──<span class="w"> </span>notes.txt
 ├──<span class="w"> </span>env_var.sh
@@ -428,7 +430,7 @@ document.write(`
 </div>
 </section>
 <section id="example-sample-structure">
-<h2>Example sample?? structure<a class="headerlink" href="#example-sample-structure" title="Permalink to this heading">#</a></h2>
+<h2>Example sample?? structure<a class="headerlink" href="#example-sample-structure" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.
 ├──<span class="w"> </span>atlas_space
 ├──<span class="w"> </span>cfos_seg_ilastik_1
@@ -442,12 +444,12 @@ document.write(`
 </div>
 </section>
 <section id="make-an-exp-notes-txt">
-<h2>Make an exp_notes.txt<a class="headerlink" href="#make-an-exp-notes-txt" title="Permalink to this heading">#</a></h2>
+<h2>Make an exp_notes.txt<a class="headerlink" href="#make-an-exp-notes-txt" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>This helps for keeping track of paths, commands etc.</p></li>
-<li><p>Most scripts automatically log the command used to run them, outputing .command_log.txt</p>
+<li><p>This helps for keeping track of paths, commands, etc.</p></li>
+<li><p>Most scripts automatically log the command used to run them, appending to .command_log.txt in the current working directory</p>
 <ul>
-<li><p>This is a hidden file. Use control + h to view it on Linux or:</p></li>
+<li><p>This is a hidden file. Use control+h to view it on Linux.</p></li>
 </ul>
 </li>
 </ul>
@@ -460,7 +462,7 @@ cat<span class="w"> </span>.command_log.txt<span class="w"> </span><span class="
 </div>
 </section>
 <section id="make-a-sample-key-csv-with-this-organization">
-<h2>Make a sample_key.csv with this organization:<a class="headerlink" href="#make-a-sample-key-csv-with-this-organization" title="Permalink to this heading">#</a></h2>
+<h2>Make a sample_key.csv with this organization:<a class="headerlink" href="#make-a-sample-key-csv-with-this-organization" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>dir_name,condition</p></li>
 <li><p>sample01,control</p></li>
@@ -468,7 +470,7 @@ cat<span class="w"> </span>.command_log.txt<span class="w"> </span><span class="
 </ul>
 </section>
 <section id="define-environmental-variables-in-a-env-var-sh-for-sourcing">
-<h2>Define environmental variables in a env_var.sh for sourcing<a class="headerlink" href="#define-environmental-variables-in-a-env-var-sh-for-sourcing" title="Permalink to this heading">#</a></h2>
+<h2>Define environmental variables in a env_var.sh for sourcing<a class="headerlink" href="#define-environmental-variables-in-a-env-var-sh-for-sourcing" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Environmental variables ($WITH_ALL_CAPS) make it easier to run the commands.</p></li>
 <li><p>For example, $ATLAS can be entered for each command rather than typing or pasting the path/name each time</p></li>
@@ -482,8 +484,8 @@ exp
 </div>
 </section>
 <section id="commands-scripts">
-<h2>Commands/scripts<a class="headerlink" href="#commands-scripts" title="Permalink to this heading">#</a></h2>
-<p>For help on a command/script, run</p>
+<h2>Commands/scripts<a class="headerlink" href="#commands-scripts" title="Link to this heading">#</a></h2>
+<p>For help/info on a command/script, run</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">command</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">h</span>
 
 <span class="c1"># Or </span>
@@ -492,7 +494,7 @@ exp
 </div>
 </section>
 <section id="optional-clean-tifs">
-<h2>Optional: clean tifs<a class="headerlink" href="#optional-clean-tifs" title="Permalink to this heading">#</a></h2>
+<h2>Optional: clean tifs<a class="headerlink" href="#optional-clean-tifs" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>If raw data is in the form of a tif series, consider running:</p></li>
 </ul>
@@ -501,9 +503,9 @@ exp
 </div>
 </section>
 <section id="typical-workflow">
-<h2>Typical workflow:<a class="headerlink" href="#typical-workflow" title="Permalink to this heading">#</a></h2>
+<h2>Typical workflow:<a class="headerlink" href="#typical-workflow" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Refer to this outline of common commands for analysis steps <a class="reference internal" href="commands.html"><span class="std std-doc">Commands</span></a></p></li>
+<li><p>Follow this outline of common commands for analysis steps <a class="reference internal" href="commands.html"><span class="std std-doc">Commands</span></a></p></li>
 </ul>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
@@ -614,7 +616,7 @@ exp
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>

@@ -1,9 +1,8 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../../../" >
 
   <head>
     <meta charset="utf-8" />
@@ -28,17 +27,17 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=981a9575" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/table';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -365,7 +364,9 @@ document.write(`
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span>
 
-<div class="viewcode-block" id="parse_args"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.parse_args">[docs]</a><span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+<div class="viewcode-block" id="parse_args">
+<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.parse_args">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.&#39;&#39;&#39;</span><span class="p">,</span>
                                      <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-vcd&#39;</span><span class="p">,</span> <span class="s1">&#39;--val_clusters_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the valid_clusters dir output from index.py (else cwd)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -391,10 +392,13 @@ document.write(`
 <span class="s2">&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
+
 <span class="c1"># TODO: Correct font color for the volumes column. &#39;fiber tracts&#39; is filled with white rather than the color of the fiber tracts</span>
 
 
-<div class="viewcode-block" id="fill_na_with_last_known"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.fill_na_with_last_known">[docs]</a><span class="k">def</span> <span class="nf">fill_na_with_last_known</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<div class="viewcode-block" id="fill_na_with_last_known">
+<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.fill_na_with_last_known">[docs]</a>
+<span class="k">def</span> <span class="nf">fill_na_with_last_known</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
     <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
 
     <span class="c1"># Fill NaN with the last known non-NaN value within each row for depth columns</span>
@@ -403,7 +407,10 @@ document.write(`
 
     <span class="k">return</span> <span class="n">df_filled</span></div>
 
-<div class="viewcode-block" id="sort_sunburst_hierarchy"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.sort_sunburst_hierarchy">[docs]</a><span class="k">def</span> <span class="nf">sort_sunburst_hierarchy</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+
+<div class="viewcode-block" id="sort_sunburst_hierarchy">
+<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.sort_sunburst_hierarchy">[docs]</a>
+<span class="k">def</span> <span class="nf">sort_sunburst_hierarchy</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort the DataFrame by hierarchy and volume.&quot;&quot;&quot;</span>
 
     <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
@@ -436,7 +443,10 @@ document.write(`
 
     <span class="k">return</span> <span class="n">df</span></div>
 
-<div class="viewcode-block" id="undo_fill_with_original"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.undo_fill_with_original">[docs]</a><span class="k">def</span> <span class="nf">undo_fill_with_original</span><span class="p">(</span><span class="n">df_sorted</span><span class="p">,</span> <span class="n">df_original</span><span class="p">):</span>
+
+<div class="viewcode-block" id="undo_fill_with_original">
+<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.undo_fill_with_original">[docs]</a>
+<span class="k">def</span> <span class="nf">undo_fill_with_original</span><span class="p">(</span><span class="n">df_sorted</span><span class="p">,</span> <span class="n">df_original</span><span class="p">):</span>
     <span class="c1"># Ensure the original DataFrame has not been altered; otherwise, use a saved copy before any modifications</span>
     <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_original</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
     
@@ -446,7 +456,10 @@ document.write(`
     
     <span class="k">return</span> <span class="n">df_sorted</span></div>
 
-<div class="viewcode-block" id="can_collapse"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.can_collapse">[docs]</a><span class="k">def</span> <span class="nf">can_collapse</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">depth_col</span><span class="p">):</span>
+
+<div class="viewcode-block" id="can_collapse">
+<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.can_collapse">[docs]</a>
+<span class="k">def</span> <span class="nf">can_collapse</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">depth_col</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determine if regions in the specified depth column can be collapsed.</span>
 <span class="sd">    Returns a DataFrame with regions that can be collapsed based on volume and count criteria.</span>
@@ -462,7 +475,10 @@ document.write(`
 
     <span class="k">return</span> <span class="n">pooling_potential</span> <span class="c1"># DataFrame with regions that can be collapsed based on volume and count criteria (Depth_*, Volume_Sum, Count)</span></div>
 
-<div class="viewcode-block" id="collapse_hierarchy"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.collapse_hierarchy">[docs]</a><span class="k">def</span> <span class="nf">collapse_hierarchy</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="collapse_hierarchy">
+<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.collapse_hierarchy">[docs]</a>
+<span class="k">def</span> <span class="nf">collapse_hierarchy</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">volume_column</span> <span class="o">=</span> <span class="s1">&#39;Volume_(mm^3)&#39;</span>
     <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
 
@@ -499,7 +515,10 @@ document.write(`
             <span class="k">return</span> <span class="n">df</span></div>
 
 
-<div class="viewcode-block" id="calculate_top_regions"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.calculate_top_regions">[docs]</a><span class="k">def</span> <span class="nf">calculate_top_regions</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">top_n</span><span class="p">,</span> <span class="n">percent_vol_threshold</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="calculate_top_regions">
+<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.calculate_top_regions">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_top_regions</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">top_n</span><span class="p">,</span> <span class="n">percent_vol_threshold</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Identify the top regions based on the dynamically collapsed hierarchy,</span>
 <span class="sd">    ensuring they meet the specified percentage volume criterion.</span>
@@ -527,8 +546,11 @@ document.write(`
         <span class="k">return</span> <span class="n">top_regions_df</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span></div>
+
     
-<div class="viewcode-block" id="get_top_regions_and_percent_vols"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.get_top_regions_and_percent_vols">[docs]</a><span class="k">def</span> <span class="nf">get_top_regions_and_percent_vols</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="p">,</span> <span class="n">top_regions</span><span class="p">,</span> <span class="n">percent_vol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="get_top_regions_and_percent_vols">
+<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.get_top_regions_and_percent_vols">[docs]</a>
+<span class="k">def</span> <span class="nf">get_top_regions_and_percent_vols</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="p">,</span> <span class="n">top_regions</span><span class="p">,</span> <span class="n">percent_vol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="p">)</span>
 
     <span class="c1"># Check if the DataFrame is empty print a message and return</span>
@@ -593,8 +615,11 @@ document.write(`
 
     <span class="k">return</span> <span class="n">top_region_names_and_percent_vols</span><span class="p">,</span> <span class="n">total_volume</span></div>
 
+
 <span class="c1"># Function to create fill color based on the volume</span>
-<div class="viewcode-block" id="get_fill_color"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.get_fill_color">[docs]</a><span class="k">def</span> <span class="nf">get_fill_color</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">):</span>
+<div class="viewcode-block" id="get_fill_color">
+<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.get_fill_color">[docs]</a>
+<span class="k">def</span> <span class="nf">get_fill_color</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">):</span>
     <span class="c1"># Apply a log transform to the volume to enhance visibility of smaller values</span>
     <span class="c1"># Adding 1 to the value to avoid log(0), and another 1 to max_value to ensure the max_value maps to 1 after log transform</span>
     <span class="n">log_transformed_value</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  
@@ -612,7 +637,10 @@ document.write(`
     <span class="k">return</span> <span class="n">fill_color</span><span class="p">,</span> <span class="n">font_color</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.main">[docs]</a>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
     <span class="c1"># Find cluster_* dirs in the current dir</span>
@@ -876,6 +904,7 @@ document.write(`
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">valid_cluster_ids_str</span><span class="p">)</span></div>
 
 
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">install</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
@@ -931,7 +960,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>

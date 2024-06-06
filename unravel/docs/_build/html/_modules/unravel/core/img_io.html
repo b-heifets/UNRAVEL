@@ -1,9 +1,8 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../../../" >
 
   <head>
     <meta charset="utf-8" />
@@ -28,17 +27,17 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=981a9575" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
 <link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
-    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-    <script src="../../../_static/doctools.js"></script>
-    <script src="../../../_static/sphinx_highlight.js"></script>
+    <script src="../../../_static/documentation_options.js?v=3fd7a760"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/core/img_io';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -347,21 +346,22 @@ document.write(`
   <h1>Source code for unravel.core.img_io</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="sd">&quot;&quot;&quot; This module contains functions for loading and saving 3D images.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains functions for loading and saving 3D images.</span>
 
-<span class="sd">The main functions are:</span>
-<span class="sd">    - load_3D_img: Load a 3D image from a .czi, .nii.gz, or .tif series and return the ndarray.</span>
-<span class="sd">        - Supported file types: .czi, .ome.tif series, .tif series, .nii.gz, .h5:</span>
-<span class="sd">        - Loading functions (load_czi, load_tifs, load_nii, load_h5) return the ndarray and optionally resolutions and/or metadata.</span>
-<span class="sd">        - Parameters:</span>
-<span class="sd">            - desired_axis_order=xyz (other option: &quot;zyx&quot;)</span>
-<span class="sd">            - If return_res=True returns: ndarray, xy_res, z_res (resolution = voxel size in microns)</span>
-<span class="sd">            - If return_metadata=True returns: ndarray, xy_res, z_res, x_dim, y_dim, z_dim (image dimensions)</span>
-<span class="sd">            - If save_metadata=True saves metadata to parameters/metadata.txt</span>
-<span class="sd">        - Helper functions: extract_resolution, load_image_metadata_from_txt, save_metadata_to_file, metadata, return_3D_img</span>
-<span class="sd">    - Functions for saving ndarrays:</span>
-<span class="sd">        - save_as_nii: Save a numpy array as a .nii.gz image.</span>
-<span class="sd">        - save_as_tifs: Save a 3D ndarray as a series of tif images.</span>
+<span class="sd">Main Functions:</span>
+<span class="sd">---------------</span>
+<span class="sd">- load_3D_img: Load a 3D image from a .czi, .nii.gz, or .tif series and return the ndarray.</span>
+<span class="sd">- save_as_nii: Save a numpy array as a .nii.gz image.</span>
+<span class="sd">- save_as_tifs: Save a 3D ndarray as a series of tif images.</span>
+
+<span class="sd">Helper Functions:</span>
+<span class="sd">-----------------</span>
+<span class="sd">- extract_resolution</span>
+<span class="sd">- load_image_metadata_from_txt</span>
+<span class="sd">- save_metadata_to_file</span>
+<span class="sd">- metadata</span>
+<span class="sd">- return_3D_img</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">re</span>
@@ -385,16 +385,75 @@ document.write(`
 
 <span class="c1"># Load 3D image (load_3D_img()), get/save metadata, and return ndarray [with metadata]</span>
 
-<div class="viewcode-block" id="return_3D_img"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.return_3D_img">[docs]</a><span class="k">def</span> <span class="nf">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim)&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="return_3D_img">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.return_3D_img">[docs]</a>
+<span class="k">def</span> <span class="nf">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ndarray : ndarray</span>
+<span class="sd">        The 3D image array.</span>
+<span class="sd">    return_metadata : bool, optional</span>
+<span class="sd">        Whether to return metadata. Default is False.</span>
+<span class="sd">    return_res : bool, optional</span>
+<span class="sd">        Whether to return resolutions. Default is False.</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        The resolution in the xy-plane.</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        The resolution in the z-plane.</span>
+<span class="sd">    x_dim : int, optional</span>
+<span class="sd">        The size of the image in the x-dimension.</span>
+<span class="sd">    y_dim : int, optional</span>
+<span class="sd">        The size of the image in the y-dimension.</span>
+<span class="sd">    z_dim : int, optional</span>
+<span class="sd">        The size of the image in the z-dimension.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        The 3D image array.</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_res is True, returns (ndarray, xy_res, z_res).</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">return_metadata</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span>
     <span class="k">elif</span> <span class="n">return_res</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span>
     <span class="k">return</span> <span class="n">ndarray</span></div>
 
-<div class="viewcode-block" id="metadata"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.metadata">[docs]</a><span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract and handle metadata, including saving to a file if requested. Returns: xy_res, z_res, x_dim, y_dim, z_dim&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="metadata">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.metadata">[docs]</a>
+<span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract and handle metadata, including saving to a file if requested.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_path : str</span>
+<span class="sd">        The path to the image file.</span>
+<span class="sd">    ndarray : ndarray</span>
+<span class="sd">        The 3D image array.</span>
+<span class="sd">    return_res : bool, optional</span>
+<span class="sd">        Whether to return resolutions. Default is False.</span>
+<span class="sd">    return_metadata : bool, optional</span>
+<span class="sd">        Whether to return metadata. Default is False.</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        The resolution in the xy-plane.</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        The resolution in the z-plane.</span>
+<span class="sd">    save_metadata : str, optional</span>
+<span class="sd">        Path to save metadata file. Default is None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        Returns (xy_res, z_res, x_dim, y_dim, z_dim).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">return_res</span> <span class="ow">or</span> <span class="n">return_metadata</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">z_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -404,8 +463,23 @@ document.write(`
             <span class="n">save_metadata_to_file</span><span class="p">(</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="n">save_metadata</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span></div>
 
-<div class="viewcode-block" id="extract_resolution"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.extract_resolution">[docs]</a><span class="k">def</span> <span class="nf">extract_resolution</span><span class="p">(</span><span class="n">img_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract resolution from image metadata. Returns xy_res, z_res in microns.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="extract_resolution">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.extract_resolution">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_resolution</span><span class="p">(</span><span class="n">img_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extract resolution from image metadata.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img_path : str</span>
+<span class="sd">        The path to the image file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        Returns (xy_res, z_res) in microns.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.czi&#39;</span><span class="p">):</span>
         <span class="n">czi</span> <span class="o">=</span> <span class="n">CziFile</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
@@ -437,20 +511,86 @@ document.write(`
             <span class="n">z_res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  
     <span class="k">return</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span></div>
 
-<div class="viewcode-block" id="load_czi"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_czi">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+
+<div class="viewcode-block" id="load_czi">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_czi">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_czi</span><span class="p">(</span><span class="n">czi_path</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads image.czi channel. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)].&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a .czi image and return the ndarray.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    czi_path : str</span>
+<span class="sd">        The path to the .czi file.</span>
+<span class="sd">    channel : int, optional</span>
+<span class="sd">        The channel to load. Default is 0.</span>
+<span class="sd">    desired_axis_order : str, optional</span>
+<span class="sd">        The desired order of the image axes. Default is &#39;xyz&#39;.</span>
+<span class="sd">    return_res : bool, optional</span>
+<span class="sd">        Whether to return resolutions. Default is False.</span>
+<span class="sd">    return_metadata : bool, optional</span>
+<span class="sd">        Whether to return metadata. Default is False.</span>
+<span class="sd">    save_metadata : str, optional</span>
+<span class="sd">        Path to save metadata file. Default is None.</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        The resolution in the xy-plane.</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        The resolution in the z-plane.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        The loaded 3D image array.</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_res is True, returns (ndarray, xy_res, z_res).</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">czi</span> <span class="o">=</span> <span class="n">CziFile</span><span class="p">(</span><span class="n">czi_path</span><span class="p">)</span>
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">czi</span><span class="o">.</span><span class="n">read_image</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="n">channel</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="k">if</span> <span class="n">desired_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span> <span class="k">else</span> <span class="n">ndarray</span>
     <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">(</span><span class="n">czi_path</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">)</span></div>
+
     
-<div class="viewcode-block" id="load_tifs"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_tifs">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<div class="viewcode-block" id="load_tifs">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_tifs">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_tifs</span><span class="p">(</span><span class="n">tif_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parallel_loading</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads tif series [in parallel]. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)].&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a series of .tif images and return the ndarray.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tif_path : str</span>
+<span class="sd">        The path to the .tif files.</span>
+<span class="sd">    desired_axis_order : str, optional</span>
+<span class="sd">        The desired order of the image axes. Default is &#39;xyz&#39;.</span>
+<span class="sd">    return_res : bool, optional</span>
+<span class="sd">        Whether to return resolutions. Default is False.</span>
+<span class="sd">    return_metadata : bool, optional</span>
+<span class="sd">        Whether to return metadata. Default is False.</span>
+<span class="sd">    save_metadata : str, optional</span>
+<span class="sd">        Path to save metadata file. Default is None.</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        The resolution in the xy-plane.</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        The resolution in the z-plane.</span>
+<span class="sd">    parallel_loading : bool, optional</span>
+<span class="sd">        Whether to load images in parallel. Default is True.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        The loaded 3D image array.</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_res is True, returns (ndarray, xy_res, z_res).</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">load_single_tif</span><span class="p">(</span><span class="n">tif_file</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a single tif file using OpenCV and return ndarray.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a single .tif file using OpenCV and return the ndarray.&quot;&quot;&quot;</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tif_file</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_UNCHANGED</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">img</span>
     <span class="n">tif_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">tif_path</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.tif&quot;</span><span class="p">))</span>
@@ -466,9 +606,40 @@ document.write(`
     <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">(</span><span class="n">tif_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="load_nii"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_nii">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+
+<div class="viewcode-block" id="load_nii">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_nii">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_nii</span><span class="p">(</span><span class="n">nii_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a .nii.gz image and return the ndarray. Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)].&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a .nii.gz image and return the ndarray.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nii_path : str</span>
+<span class="sd">        The path to the .nii.gz file.</span>
+<span class="sd">    desired_axis_order : str, optional</span>
+<span class="sd">        The desired order of the image axes. Default is &#39;xyz&#39;.</span>
+<span class="sd">    return_res : bool, optional</span>
+<span class="sd">        Whether to return resolutions. Default is False.</span>
+<span class="sd">    return_metadata : bool, optional</span>
+<span class="sd">        Whether to return metadata. Default is False.</span>
+<span class="sd">    save_metadata : str, optional</span>
+<span class="sd">        Path to save metadata file. Default is None.</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        The resolution in the xy-plane.</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        The resolution in the z-plane.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        The loaded 3D image array.</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_res is True, returns (ndarray, xy_res, z_res).</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">nii_path</span><span class="p">)</span>
     <span class="n">data_type</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_data_dtype</span><span class="p">()</span>
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">nii</span><span class="o">.</span><span class="n">dataobj</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>
@@ -477,16 +648,64 @@ document.write(`
     <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">(</span><span class="n">nii_path</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="n">save_metadata</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="load_nii_subset"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_nii_subset">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+
+<div class="viewcode-block" id="load_nii_subset">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_nii_subset">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_nii_subset</span><span class="p">(</span><span class="n">nii_path</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a spatial subset of a path/img.nii.gz and return an ndarray.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a spatial subset of a .nii.gz file and return an ndarray.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    nii_path : str</span>
+<span class="sd">        The path to the .nii.gz file.</span>
+<span class="sd">    xmin, xmax, ymin, ymax, zmin, zmax : int</span>
+<span class="sd">        The spatial coordinates defining the subset.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        The loaded subset of the 3D image.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">proxy_img</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">nii_path</span><span class="p">)</span>    
     <span class="n">subset_array</span> <span class="o">=</span> <span class="n">proxy_img</span><span class="o">.</span><span class="n">dataobj</span><span class="p">[</span><span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">zmin</span><span class="p">:</span><span class="n">zmax</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">subset_array</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="load_h5"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_h5">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span> 
+
+<div class="viewcode-block" id="load_h5">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_h5">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span> 
 <span class="k">def</span> <span class="nf">load_h5</span><span class="p">(</span><span class="n">hdf5_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load full res image from an HDF5 image (.h5). Returns the ndarray [and res: (xy_res, z_res) or metadata: (xy_res, z_res, x_dim, y_dim, z_dim)].&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load full resolution image from an HDF5 file (.h5) and return the ndarray.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    hdf5_path : str</span>
+<span class="sd">        The path to the .h5 file.</span>
+<span class="sd">    desired_axis_order : str, optional</span>
+<span class="sd">        The desired order of the image axes. Default is &#39;xyz&#39;.</span>
+<span class="sd">    return_res : bool, optional</span>
+<span class="sd">        Whether to return resolutions. Default is False.</span>
+<span class="sd">    return_metadata : bool, optional</span>
+<span class="sd">        Whether to return metadata. Default is False.</span>
+<span class="sd">    save_metadata : str, optional</span>
+<span class="sd">        Path to save metadata file. Default is None.</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        The resolution in the xy-plane.</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        The resolution in the z-plane.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        The loaded 3D image array.</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_res is True, returns (ndarray, xy_res, z_res).</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">hdf5_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">full_res_dataset_name</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span> <span class="c1"># Assumes first dataset = full res image</span>
         <span class="n">dataset</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">full_res_dataset_name</span><span class="p">]</span>
@@ -496,22 +715,53 @@ document.write(`
         <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">(</span><span class="n">hdf5_path</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="n">save_metadata</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="load_zarr"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_zarr">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+
+<div class="viewcode-block" id="load_zarr">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_zarr">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_zarr</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a .zarr image and return the ndarray.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    zarr_path : str</span>
+<span class="sd">        The path to the .zarr file.</span>
+<span class="sd">    desired_axis_order : str, optional</span>
+<span class="sd">        The desired order of the image axes. Default is &#39;xyz&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        The loaded 3D image array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">zarr_dataset</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">zarr_dataset</span><span class="p">)</span>
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="k">if</span> <span class="n">desired_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span> <span class="k">else</span> <span class="n">ndarray</span>
     <span class="k">return</span> <span class="n">ndarray</span></div>
 
-<div class="viewcode-block" id="resolve_path"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.resolve_path">[docs]</a><span class="k">def</span> <span class="nf">resolve_path</span><span class="p">(</span><span class="n">upstream_path</span><span class="p">,</span> <span class="n">path_or_pattern</span><span class="p">,</span> <span class="n">make_parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_file</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns full path or Path(upstream_path, path_or_pattern) and [makes parent dirs]. </span>
 
-<span class="sd">    Conditional returns: </span>
-<span class="sd">    1) If path_or_pattern is absolute, return Path(path_or_pattern). </span>
-<span class="sd">    2) If Path(upstream_path, relative_path).exists(), return Path(upstream_path, path_or_pattern) </span>
-<span class="sd">    3) If Path(upstream_path, [rel_path/]glob_pattern), return Path of first match</span>
-<span class="sd">    4) If not Path(upstream_path, relative_path).exists(), return full path</span>
-<span class="sd">    5) Else, return None</span>
+<div class="viewcode-block" id="resolve_path">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.resolve_path">[docs]</a>
+<span class="k">def</span> <span class="nf">resolve_path</span><span class="p">(</span><span class="n">upstream_path</span><span class="p">,</span> <span class="n">path_or_pattern</span><span class="p">,</span> <span class="n">make_parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_file</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns full path or Path(upstream_path, path_or_pattern) and optionally creates parent directories.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    upstream_path : str</span>
+<span class="sd">        The base path.</span>
+<span class="sd">    path_or_pattern : str</span>
+<span class="sd">        The relative path or glob pattern.</span>
+<span class="sd">    make_parents : bool, optional</span>
+<span class="sd">        Whether to create parent directories if they don&#39;t exist. Default is True.</span>
+<span class="sd">    is_file : bool, optional</span>
+<span class="sd">        Whether the path is a file. Default is True.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Path or None</span>
+<span class="sd">        The resolved path or None if not found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">path_or_pattern</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">is_file</span><span class="p">:</span>
@@ -538,8 +788,28 @@ document.write(`
 
     <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="save_metadata_to_file"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_metadata_to_file">[docs]</a><span class="k">def</span> <span class="nf">save_metadata_to_file</span><span class="p">(</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="s1">&#39;parameters/metadata.txt&#39;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save metadata to .txt file&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="save_metadata_to_file">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_metadata_to_file">[docs]</a>
+<span class="k">def</span> <span class="nf">save_metadata_to_file</span><span class="p">(</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="s1">&#39;parameters/metadata.txt&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save metadata to a text file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    xy_res : float</span>
+<span class="sd">        The resolution in the xy-plane.</span>
+<span class="sd">    z_res : float</span>
+<span class="sd">        The resolution in the z-plane.</span>
+<span class="sd">    x_dim : int</span>
+<span class="sd">        The size of the image in the x-dimension.</span>
+<span class="sd">    y_dim : int</span>
+<span class="sd">        The size of the image in the y-dimension.</span>
+<span class="sd">    z_dim : int</span>
+<span class="sd">        The size of the image in the z-dimension.</span>
+<span class="sd">    save_metadata : str, optional</span>
+<span class="sd">        Path to save metadata file. Default is &#39;parameters/metadata.txt&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">save_metadata</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">save_metadata</span><span class="p">)</span>
     <span class="n">save_metadata</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">save_metadata</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -549,8 +819,23 @@ document.write(`
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Depth:  </span><span class="si">{</span><span class="n">z_dim</span><span class="o">*</span><span class="n">z_res</span><span class="si">}</span><span class="s2"> microns (</span><span class="si">{</span><span class="n">z_dim</span><span class="si">}</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Voxel size: </span><span class="si">{</span><span class="n">xy_res</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">xy_res</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">z_res</span><span class="si">}</span><span class="s2"> micron^3</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>    </div>
 
-<div class="viewcode-block" id="load_image_metadata_from_txt"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_image_metadata_from_txt">[docs]</a><span class="k">def</span> <span class="nf">load_image_metadata_from_txt</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="s2">&quot;./parameters/metadata*&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Loads ./parameters/metadata* and returns xy_res, z_res, x_dim, y_dim, z_dim | None if file not found.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="load_image_metadata_from_txt">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_image_metadata_from_txt">[docs]</a>
+<span class="k">def</span> <span class="nf">load_image_metadata_from_txt</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="s2">&quot;./parameters/metadata*&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load metadata from a text file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    metadata : str, optional</span>
+<span class="sd">        The path or pattern to the metadata file. Default is &#39;./parameters/metadata*&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    tuple</span>
+<span class="sd">        Returns (xy_res, z_res, x_dim, y_dim, z_dim) or (None, None, None, None, None) if file not found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">file_paths</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">metadata</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">file_paths</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
@@ -574,14 +859,42 @@ document.write(`
         <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span></div>
 
-<div class="viewcode-block" id="load_3D_img"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_3D_img">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+
+<div class="viewcode-block" id="load_3D_img">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_3D_img">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_3D_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span> 
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load path to.czi, .nii.gz, .ome.tif, tifs_dir, tifs_dir/first.tif, .h5).</span>
-<span class="sd">    Default: desired_axis_order=xyz (other option: axis_order=&quot;zyx&quot;)</span>
-<span class="sd">    Default: returns: ndarray</span>
-<span class="sd">    If return_res=True, returns: ndarray, xy_res, z_res (resolution in um)</span>
-<span class="sd">    If return_metadata=True, returns ndarray, xy_res, z_res, x_dim, y_dim, z_dim</span>
-<span class="sd">    &quot;&quot;&quot;</span> 
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a 3D image from various file formats and return the ndarray.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    img_path : str</span>
+<span class="sd">        The path to the image file.</span>
+<span class="sd">    channel : int, optional</span>
+<span class="sd">        The channel to load. Default is 0.</span>
+<span class="sd">    desired_axis_order : str, optional</span>
+<span class="sd">        The desired order of the image axes. Default is &#39;xyz&#39;.</span>
+<span class="sd">    return_res : bool, optional</span>
+<span class="sd">        Whether to return resolutions. Default is False.</span>
+<span class="sd">    return_metadata : bool, optional</span>
+<span class="sd">        Whether to return metadata. Default is False.</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        The resolution in the xy-plane.</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        The resolution in the z-plane.</span>
+<span class="sd">    save_metadata : str, optional</span>
+<span class="sd">        Path to save metadata file. Default is None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        The loaded 3D image array.</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_res is True, returns (ndarray, xy_res, z_res).</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># If file_path points to dir containing tifs, resolve path to first .tif</span>
     <span class="n">img_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
@@ -618,23 +931,53 @@ document.write(`
         <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
 
+
 <span class="c1"># Save images</span>
-<div class="viewcode-block" id="load_nii_orientation"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_nii_orientation">[docs]</a><span class="k">def</span> <span class="nf">load_nii_orientation</span><span class="p">(</span><span class="n">input_nii_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a .nii.gz file and return its orientation (affine matrix).&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="load_nii_orientation">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_nii_orientation">[docs]</a>
+<span class="k">def</span> <span class="nf">load_nii_orientation</span><span class="p">(</span><span class="n">input_nii_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a .nii.gz file and return its orientation (affine matrix).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    input_nii_path : str</span>
+<span class="sd">        The path to the .nii.gz file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        The affine matrix of the .nii.gz file.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">input_nii_path</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">nii</span><span class="o">.</span><span class="n">affine</span></div>
 
-<div class="viewcode-block" id="save_as_nii"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_nii">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+
+<div class="viewcode-block" id="save_as_nii">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_nii">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">save_as_nii</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save a numpy array as a .nii.gz image with the option to retain the orientation of an input .nii.gz file.</span>
-<span class="sd">    </span>
-<span class="sd">    :param ndarray: The numpy array to save.</span>
-<span class="sd">    :param output: Output file path.</span>
-<span class="sd">    :param xy_res: XY resolution in microns.</span>
-<span class="sd">    :param z_res: Z resolution in microns.</span>
-<span class="sd">    :param data_type: Data type for the NIFTI image.</span>
-<span class="sd">    :param reference: Either an affine matrix or a path to a .nii.gz file to retain its orientation.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ndarray : ndarray</span>
+<span class="sd">        The numpy array to save.</span>
+<span class="sd">    output : str</span>
+<span class="sd">        Output file path.</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        XY resolution in microns. Default is 1000.</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        Z resolution in microns. Default is 1000.</span>
+<span class="sd">    data_type : data-type, optional</span>
+<span class="sd">        Data type for the NIFTI image. Default is np.float32.</span>
+<span class="sd">    reference : str or ndarray, optional</span>
+<span class="sd">        Either an affine matrix or a path to a .nii.gz file to retain its orientation. Default is None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
     <span class="n">output</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -657,9 +1000,27 @@ document.write(`
     <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">nifti_img</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">))</span>    
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Output: [default bold]</span><span class="si">{</span><span class="n">output</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="save_as_tifs"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_tifs">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+
+<div class="viewcode-block" id="save_as_tifs">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_tifs">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">save_as_tifs</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">tif_dir_out</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save &lt;ndarray&gt; as tifs in &lt;Path(tif_dir_out)&gt;&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save an ndarray as a series of .tif images.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ndarray : ndarray</span>
+<span class="sd">        The 3D image array to save.</span>
+<span class="sd">    tif_dir_out : str</span>
+<span class="sd">        The directory to save the .tif files.</span>
+<span class="sd">    ndarray_axis_order : str, optional</span>
+<span class="sd">        The order of the ndarray axes. Default is &#39;xyz&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Ensure tif_dir_out is a Path object, not a string</span>
     <span class="n">tif_dir_out</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tif_dir_out</span><span class="p">)</span>
     <span class="n">tif_dir_out</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -672,9 +1033,27 @@ document.write(`
         <span class="n">imwrite</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">slice_file_path</span><span class="p">),</span> <span class="n">slice_</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Output: [default bold]</span><span class="si">{</span><span class="n">tif_dir_out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="save_as_zarr"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_zarr">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+
+<div class="viewcode-block" id="save_as_zarr">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_zarr">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">save_as_zarr</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save ndarray to specified path&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save an ndarray to a .zarr file.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ndarray : ndarray</span>
+<span class="sd">        The 3D image array to save.</span>
+<span class="sd">    output_path : str</span>
+<span class="sd">        The path to save the .zarr file.</span>
+<span class="sd">    ndarray_axis_order : str, optional</span>
+<span class="sd">        The order of the ndarray axes. Default is &#39;xyz&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ndarray_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span><span class="p">:</span>
         <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
     <span class="n">dask_array</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
@@ -682,12 +1061,32 @@ document.write(`
     <span class="n">dask_array</span><span class="o">.</span><span class="n">to_zarr</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">compressor</span><span class="o">=</span><span class="n">compressor</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Output: [default bold]</span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="save_as_h5"><a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_h5">[docs]</a><span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+
+<div class="viewcode-block" id="save_as_h5">
+<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_h5">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">save_as_h5</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save an ndarray to an HDF5 file (.h5).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ndarray : ndarray</span>
+<span class="sd">        The 3D image array to save.</span>
+<span class="sd">    output_path : str</span>
+<span class="sd">        The path to save the .h5 file.</span>
+<span class="sd">    ndarray_axis_order : str, optional</span>
+<span class="sd">        The order of the ndarray axes. Default is &#39;xyz&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ndarray_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span><span class="p">:</span>
         <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
     <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">f</span><span class="o">.</span><span class="n">create_dataset</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;lzf&quot;</span><span class="p">)</span></div>
+
 </pre></div>
 
                 </article>
@@ -738,7 +1137,7 @@ document.write(`
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 6.2.1.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>
