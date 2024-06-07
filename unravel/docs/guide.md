@@ -119,3 +119,8 @@ clean_tifs -t <dir_name> -v -m -e $DIRS
 Add support for CCFv3 2020
 ```
 
+:::{note}
+:class: dropdown
+
+Testing
+:::
