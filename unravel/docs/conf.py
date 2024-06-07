@@ -41,12 +41,13 @@ extensions = [
     'sphinx.ext.todo'
 ]
 
-# Enable docstring inheritance
+autodoc_default_options = {
+    'members': True,
+    'undoc-members': True,
+    'show-inheritance': True,
+}
 autodoc_inherit_docstrings = True
-
-# Use type hints for function signatures
 autodoc_typehints = 'description'
-
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
