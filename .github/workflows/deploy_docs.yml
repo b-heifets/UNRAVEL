@@ -11,10 +11,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.x'
 
@@ -25,7 +25,7 @@ jobs:
 
     - name: Build documentation
       run: |
-        cd path/to/your/documentation
+        cd unravel/docs
         make html
 
     - name: Deploy to GitHub Pages
@@ -33,4 +33,4 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages
-        publish_dir: ./path/to/your/documentation/_build/html
+        publish_dir: ./unravel/docs/_build/html
