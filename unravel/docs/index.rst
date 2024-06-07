@@ -11,10 +11,17 @@
 
 .. raw:: html
 
+    <style>
+        video {
+            border: none;
+            outline: none;
+        }
+    </style>
+
     <div style="display: flex; justify-content: space-between;">
         <div style="flex: 1; margin-right: 10px;">
             <a href="https://www.nature.com/articles/s41386-023-01613-4" target="_blank">
-                <video width="100%" autoplay muted>
+                <video width="100%" autoplay muted playsinline>
                   <source src="_static/psilocybin_up_valid_clusters.mp4" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
@@ -22,7 +29,7 @@
         </div>
         <div style="flex: 1; margin-left: 10px;">
             <a href="https://www.nature.com/articles/s41386-023-01613-4" target="_blank">
-                <video width="100%" autoplay muted>
+                <video width="100%" autoplay muted playsinline>
                   <source src="_static/psilocybin_up_sunburst.mp4" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
