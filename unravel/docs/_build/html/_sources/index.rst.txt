@@ -11,6 +11,13 @@
 
 .. raw:: html
 
+    <style>
+        video {
+            border: none;
+            outline: none;
+        }
+    </style>
+
     <div style="display: flex; justify-content: space-between;">
         <div style="flex: 1; margin-right: 10px;">
             <a href="https://www.nature.com/articles/s41386-023-01613-4" target="_blank">
