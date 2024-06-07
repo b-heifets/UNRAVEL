@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import shutil
 import nibabel as nib
 import numpy as np
 from glob import glob
@@ -128,12 +129,14 @@ def main():
             save_labels_as_masks(output_tif_dir, args.labels, segmentation_dir, args.output)
 
             # Remove input tifs if requested
-            if args.rm_in_tifs: 
-                Path(input_tif_dir).unlink()
+            if args.rm_in_tifs:
+                if input_tif_dir.is_dir():
+                    shutil.rmtree(input_tif_dir)
 
             # Remove output tifs if requested
-            if args.rm_out_tifs: 
-                Path(output_tif_dir).unlink()
+            if args.rm_out_tifs:
+                if output_tif_dir.is_dir():
+                    shutil.rmtree(output_tif_dir)
 
             progress.update(task_id, advance=1)
 
