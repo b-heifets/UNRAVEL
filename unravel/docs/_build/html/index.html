@@ -389,17 +389,8 @@ document.write(`
 <h2>Contact us<a class="headerlink" href="#contact-us" title="Link to this heading">#</a></h2>
 <p>If you have any questions, suggestions, or are interested in collaborations and contributions, please reach out to us.</p>
 </section>
-<section id="support-is-welcome-for">
-<h2>Support is welcome for:<a class="headerlink" href="#support-is-welcome-for" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Analysis of new datasets</p></li>
-<li><p>Development of new features</p></li>
-<li><p>Maintenance of the codebase</p></li>
-<li><p>Guidance of new users</p></li>
-</ul>
-</section>
-<section id="primary-team-members">
-<h2>Primary team members:<a class="headerlink" href="#primary-team-members" title="Link to this heading">#</a></h2>
+<section id="developers">
+<h2>Developers<a class="headerlink" href="#developers" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><strong>Daniel Ryskamp Rijsketic</strong> (lead developer and maintainer) - <a class="reference external" href="mailto:danrijs&#37;&#52;&#48;stanford&#46;edu">danrijs<span>&#64;</span>stanford<span>&#46;</span>edu</a></p></li>
 <li><p><strong>Austen Casey</strong> (developer) - <a class="reference external" href="mailto:abcasey&#37;&#52;&#48;stanford&#46;edu">abcasey<span>&#64;</span>stanford<span>&#46;</span>edu</a></p></li>
@@ -416,20 +407,29 @@ document.write(`
 <li><p><strong>Nick Gregory</strong> (guidance) - <a class="reference external" href="mailto:ngregory&#37;&#52;&#48;stanford&#46;edu">ngregory<span>&#64;</span>stanford<span>&#46;</span>edu</a></p></li>
 </ul>
 </section>
-<section id="main-dependencies-and-or-sources-of-inspiration">
-<h2>Main dependencies and/or sources of inspiration:<a class="headerlink" href="#main-dependencies-and-or-sources-of-inspiration" title="Link to this heading">#</a></h2>
+<section id="main-dependencies">
+<h2>Main dependencies:<a class="headerlink" href="#main-dependencies" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://portal.brain-map.org/">Allen Institute for Brain Science</a></p></li>
 <li><p><a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki">FSL</a></p></li>
+<li><p><a class="reference external" href="https://git.fmrib.ox.ac.uk/fsl/fslpy">fslpy</a></p></li>
+<li><p><a class="reference external" href="https://github.com/ANTsX/ANTsPy">ANTsPy</a></p></li>
 <li><p><a class="reference external" href="https://www.ilastik.org/">Ilastik</a></p></li>
 <li><p><a class="reference external" href="https://nipy.org/nibabel/">nibabel</a></p></li>
 <li><p><a class="reference external" href="https://numpy.org/">numpy</a></p></li>
 <li><p><a class="reference external" href="https://www.scipy.org/">scipy</a></p></li>
-<li><p><a class="reference external" href="https://github.com/ANTsX/ANTsPy">ANTsPy</a></p></li>
-<li><p><a class="reference external" href="https://pypi.org/project/connected-components-3d/">cc3d</a></p></li>
 <li><p><a class="reference external" href="https://pandas.pydata.org/">pandas</a></p></li>
-<li><p><a class="reference external" href="https://miracl.readthedocs.io/en/latest/">MIRACL</a></p></li>
-<li><p><a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/33063286/">iDISCO/LSFM-specific atlas</a></p></li>
+<li><p><a class="reference external" href="https://pypi.org/project/connected-components-3d/">cc3d</a></p></li>
+<li><p>Registration and warping workflows were inspired by <a class="reference external" href="https://miracl.readthedocs.io/en/latest/">MIRACL</a></p></li>
+</ul>
+</section>
+<section id="support-is-welcome-for">
+<h2>Support is welcome for:<a class="headerlink" href="#support-is-welcome-for" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Analysis of new datasets</p></li>
+<li><p>Development of new features</p></li>
+<li><p>Maintenance of the codebase</p></li>
+<li><p>Guidance of new users</p></li>
 </ul>
 <br><div class="toctree-wrapper compound">
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Contents:</span></p>
@@ -447,10 +447,11 @@ document.write(`
 <li class="toctree-l2"><a class="reference internal" href="guide.html#example-sample-structure">Example sample?? structure</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#make-an-exp-notes-txt">Make an exp_notes.txt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#make-a-sample-key-csv-with-this-organization">Make a sample_key.csv with this organization:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#define-environmental-variables-in-a-env-var-sh-for-sourcing">Define environmental variables in a env_var.sh for sourcing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide.html#define-common-variables-in-a-shell-script">Define common variables in a shell script</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#commands-scripts">Commands/scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#optional-clean-tifs">Optional: clean tifs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#typical-workflow">Typical workflow:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide.html#registration">Registration</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a><ul>
@@ -532,10 +533,10 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-started">Getting started</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-vizualizer">UNRAVEL vizualizer</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#contact-us">Contact us</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#support-is-welcome-for">Support is welcome for:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#primary-team-members">Primary team members:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#developers">Developers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additional-contributions-from">Additional contributions from:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-dependencies-and-or-sources-of-inspiration">Main dependencies and/or sources of inspiration:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#main-dependencies">Main dependencies:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#support-is-welcome-for">Support is welcome for:</a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#indices">Indices</a></li>

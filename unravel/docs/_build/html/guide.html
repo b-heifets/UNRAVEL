@@ -469,16 +469,15 @@ cat<span class="w"> </span>.command_log.txt<span class="w"> </span><span class="
 <li><p>sample02,treatment</p></li>
 </ul>
 </section>
-<section id="define-environmental-variables-in-a-env-var-sh-for-sourcing">
-<h2>Define environmental variables in a env_var.sh for sourcing<a class="headerlink" href="#define-environmental-variables-in-a-env-var-sh-for-sourcing" title="Link to this heading">#</a></h2>
+<section id="define-common-variables-in-a-shell-script">
+<h2>Define common variables in a shell script<a class="headerlink" href="#define-common-variables-in-a-shell-script" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Environmental variables ($WITH_ALL_CAPS) make it easier to run the commands.</p></li>
-<li><p>For example, $ATLAS can be entered for each command rather than typing or pasting the path/name each time</p></li>
-<li><p>They can be set for the duration of terminal session by sourcing (loading) a shell script where they are defined.</p></li>
-<li><p>Copy the example env_var.sh file from /UNRAVEL/_other/env_var_gubra.sh, update paths, etc. and add an alias</p></li>
-<li><p>Add: alias exp=”. /path/env_var_gubra.sh” to your .bashrc or .zshrc termina config file</p></li>
+<li><p>To make commands easier to run, define common variables in a shell script (e.g., env_var.sh)</p></li>
+<li><p>Source the script to load variables in each terminal session</p></li>
+<li><p>Copy /UNRAVEL/_other/env_var_gubra.sh to an experiment folder and update values of each variable</p></li>
+<li><p>Add: <strong>alias exp=”. /path/env_var.sh”</strong> to your .bashrc or .zshrc terminal config file</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the alias to source the variables before running commands/scripts</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the alias in the terminal to source the variables before running commands/scripts using the variables</span>
 exp
 </pre></div>
 </div>
@@ -511,10 +510,12 @@ exp
 <p class="admonition-title">Todo</p>
 <p>Add support for CCFv3 2020</p>
 </div>
-<p>:::{note}
-:class: dropdown</p>
-<p>Testing
-:::</p>
+</section>
+<section id="registration">
+<h2>Registration<a class="headerlink" href="#registration" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">iDISCO/LSFM-specific</span> <span class="pre">atlas</span> <span class="pre">&lt;https://pubmed.ncbi.nlm.nih.gov/33063286/&gt;</span></code>_</p></li>
+</ul>
 </section>
 </section>
 
@@ -570,10 +571,11 @@ exp
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-sample-structure">Example sample?? structure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-an-exp-notes-txt">Make an exp_notes.txt</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-a-sample-key-csv-with-this-organization">Make a sample_key.csv with this organization:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-environmental-variables-in-a-env-var-sh-for-sourcing">Define environmental variables in a env_var.sh for sourcing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-common-variables-in-a-shell-script">Define common variables in a shell script</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commands-scripts">Commands/scripts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-clean-tifs">Optional: clean tifs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-workflow">Typical workflow:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#registration">Registration</a></li>
 </ul>
   </nav></div>
 

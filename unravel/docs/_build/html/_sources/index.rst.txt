@@ -82,15 +82,8 @@ Contact us
 ----------
 If you have any questions, suggestions, or are interested in collaborations and contributions, please reach out to us. 
 
-Support is welcome for:
------------------------
-* Analysis of new datasets
-* Development of new features
-* Maintenance of the codebase
-* Guidance of new users
-
-Primary team members:
----------------------
+Developers
+----------
 * **Daniel Ryskamp Rijsketic** (lead developer and maintainer) - `danrijs@stanford.edu <mailto:danrijs@stanford.edu>`_
 * **Austen Casey** (developer) - `abcasey@stanford.edu <mailto:abcasey@stanford.edu>`_
 * **MetaCell** (UNRAVEL vizualizer developers) - `info@metacell.us <info@metacell.us>`_
@@ -103,19 +96,26 @@ Additional contributions from:
 * **Wesley Zhao** (guidance) - `weszhao@stanford.edu <mailto:weszhao@stanford.edu>`_
 * **Nick Gregory** (guidance) - `ngregory@stanford.edu <mailto:ngregory@stanford.edu>`_
 
-Main dependencies and/or sources of inspiration:
+Main dependencies:
 ------------------------------------------------
 * `Allen Institute for Brain Science <https://portal.brain-map.org/>`_
 * `FSL <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki>`_
+* `fslpy <https://git.fmrib.ox.ac.uk/fsl/fslpy>`_
+* `ANTsPy <https://github.com/ANTsX/ANTsPy>`_
 * `Ilastik <https://www.ilastik.org/>`_
 * `nibabel <https://nipy.org/nibabel/>`_
 * `numpy <https://numpy.org/>`_
 * `scipy <https://www.scipy.org/>`_
-* `ANTsPy <https://github.com/ANTsX/ANTsPy>`_
-* `cc3d <https://pypi.org/project/connected-components-3d/>`_
 * `pandas <https://pandas.pydata.org/>`_
-* `MIRACL <https://miracl.readthedocs.io/en/latest/>`_
-* `iDISCO/LSFM-specific atlas <https://pubmed.ncbi.nlm.nih.gov/33063286/>`_
+* `cc3d <https://pypi.org/project/connected-components-3d/>`_
+* Registration and warping workflows were inspired by `MIRACL <https://miracl.readthedocs.io/en/latest/>`_
+
+Support is welcome for:
+-----------------------
+* Analysis of new datasets
+* Development of new features
+* Maintenance of the codebase
+* Guidance of new users
 
 .. raw:: html
 
