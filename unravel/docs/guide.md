@@ -84,14 +84,13 @@ cat .command_log.txt | tail -10  # View last 10 lines
    * sample01,control
    * sample02,treatment
 
-## Define environmental variables in a env_var.sh for sourcing
-* Environmental variables ($WITH_ALL_CAPS) make it easier to run the commands. 
-* For example, $ATLAS can be entered for each command rather than typing or pasting the path/name each time
-* They can be set for the duration of terminal session by sourcing (loading) a shell script where they are defined. 
-* Copy the example env_var.sh file from /UNRAVEL/_other/env_var_gubra.sh, update paths, etc. and add an alias
-* Add: alias exp=". /path/env_var_gubra.sh" to your .bashrc or .zshrc termina config file
+## Define common variables in a shell script
+* To make commands easier to run, define common variables in a shell script (e.g., env_var.sh)
+* Source the script to load variables in each terminal session
+* Copy /UNRAVEL/_other/env_var_gubra.sh to an experiment folder and update values of each variable
+* Add: **alias exp=". /path/env_var.sh"** to your .bashrc or .zshrc terminal config file
 ```bash
-# Run the alias to source the variables before running commands/scripts
+# Run the alias in the terminal to source the variables before running commands/scripts using the variables
 exp
 ```
 
@@ -118,9 +117,5 @@ clean_tifs -t <dir_name> -v -m -e $DIRS
 ```{todo}
 Add support for CCFv3 2020
 ```
-
-:::{note}
-:class: dropdown
-
-Testing
-:::
+## Registration 
+* `iDISCO/LSFM-specific atlas <https://pubmed.ncbi.nlm.nih.gov/33063286/>`_
