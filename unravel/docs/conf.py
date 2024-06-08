@@ -55,7 +55,6 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 todo_include_todos = True
 
 
-
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
@@ -67,6 +66,15 @@ source_suffix = {
     '.md': 'markdown',
 }
 master_doc = 'index'
+
+html_context = {
+   "default_mode": "dark"
+}
+
+html_theme_options = {
+    # Omitted `theme-switcher` so there is no light mode
+    "navbar_end": ["navbar-icon-links"]
+}
 
 # Add custom CSS
 html_static_path = ['_static']
