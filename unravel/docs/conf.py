@@ -72,8 +72,15 @@ html_context = {
 }
 
 html_theme_options = {
-    # Omitted `theme-switcher` so there is no light mode
-    "navbar_end": ["navbar-icon-links"]
+    "navbar_end": ["navbar-icon-links"],  # Omit `theme-switcher` to disable light mode
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/b-heifets/UNRAVEL",
+            "icon": "fab fa-github-square",
+            "type": "fontawesome",
+        }
+    ],
 }
 
 # Add custom CSS
