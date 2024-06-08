@@ -27,7 +27,7 @@ sys.path.append(os.path.abspath('../warp'))
 project = 'UNRAVEL'
 copyright = '2024, Daniel Ryskamp Rijsketic, Austen Casey, Boris Heifets'
 author = 'Daniel Ryskamp Rijsketic, Austen Casey, Boris Heifets'
-release = '1.0.0-beta'
+release = '1.0.0'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
