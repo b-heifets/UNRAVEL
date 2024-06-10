@@ -23,6 +23,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install sphinx myst-parser pydata-sphinx-theme
 
+    - name: Debug information
+      run: |
+        echo "Listing current directory:"
+        ls -la
+        echo "Listing unravel/docs directory:"
+        ls -la unravel/docs
+
     - name: Build documentation
       run: |
         cd unravel/docs
@@ -33,5 +40,4 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_branch: gh-pages
-        publish_dir: ./unravel/docs/_build/html
-
+        publish_dir: unravel/docs/_build/html
