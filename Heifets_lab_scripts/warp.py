@@ -61,6 +61,8 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     # Paths to the transformation files
     generic_affine_matrix = str(reg_outputs_path / f'{transforms_prefix}0GenericAffine.mat')
     initial_transform_matrix = str(reg_outputs_path / f'{transforms_prefix}init_tform.mat')
+    if not Path(reg_outputs_path / f'{transforms_prefix}init_tform.mat').exists():
+        initial_transform_matrix = str(reg_outputs_path / 'init_tform.mat') # For backward compatibility
 
     # Apply the transformations
     if inverse:
