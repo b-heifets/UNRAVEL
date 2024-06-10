@@ -82,7 +82,7 @@ html_theme_options = {
         }
     ],
 }
-html_title = "UNRAVEL documentation"
+html_title = "UNRAVEL docs"
 
 
 # Add custom CSS
