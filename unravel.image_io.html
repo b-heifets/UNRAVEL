@@ -394,38 +394,292 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
 </section>
-<section id="unravel-image-io-h5-to-tifs-module">
-<h2>unravel.image_io.h5_to_tifs module<a class="headerlink" href="#unravel-image-io-h5-to-tifs-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_io.h5_to_tifs">
+<span id="unravel-image-io-h5-to-tifs-module"></span><h2>unravel.image_io.h5_to_tifs module<a class="headerlink" href="#module-unravel.image_io.h5_to_tifs" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.find_largest_h5_file">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">find_largest_h5_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/h5_to_tifs.html#find_largest_h5_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.find_largest_h5_file" title="Link to this definition">#</a></dt>
+<dd><p>Find and return the path to the largest .h5 file in the current directory</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.load_h5">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">load_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hdf5_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/h5_to_tifs.html#load_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.load_h5" title="Link to this definition">#</a></dt>
+<dd><p>Load full res image from an HDF5 file (.h5) and return ndarray
+Default: axis_order=xyz (other option: axis_order=”zyx”)
+Default: returns: ndarray
+If return_res=True returns: ndarray, xy_res, z_res (resolution in um)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/h5_to_tifs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.metadata_from_h5">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">metadata_from_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hdf5_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/h5_to_tifs.html#metadata_from_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.metadata_from_h5" title="Link to this definition">#</a></dt>
+<dd><p>Returns tuple with xy_voxel_size and z_voxel_size in microns from full res HDF5 image</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/h5_to_tifs.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.save_as_tifs">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">save_as_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tif_dir_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/h5_to_tifs.html#save_as_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.save_as_tifs" title="Link to this definition">#</a></dt>
+<dd><p>Save &lt;ndarray&gt; as tifs in &lt;Path(tif_dir_out)&gt;</p>
+</dd></dl>
+
 </section>
-<section id="unravel-image-io-img-io-module">
-<h2>unravel.image_io.img_io module<a class="headerlink" href="#unravel-image-io-img-io-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_io.img_io">
+<span id="unravel-image-io-img-io-module"></span><h2>unravel.image_io.img_io module<a class="headerlink" href="#module-unravel.image_io.img_io" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.img_io.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.img_io.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/img_io.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.img_io.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.img_io.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.img_io.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/img_io.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.img_io.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-image-io-img-to-npy-module">
-<h2>unravel.image_io.img_to_npy module<a class="headerlink" href="#unravel-image-io-img-to-npy-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_io.img_to_npy">
+<span id="unravel-image-io-img-to-npy-module"></span><h2>unravel.image_io.img_to_npy module<a class="headerlink" href="#module-unravel.image_io.img_to_npy" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.img_to_npy.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.img_to_npy.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/img_to_npy.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.img_to_npy.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.img_to_npy.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.img_to_npy.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/img_to_npy.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.img_to_npy.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-image-io-nii-hd-module">
-<h2>unravel.image_io.nii_hd module<a class="headerlink" href="#unravel-image-io-nii-hd-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_io.nii_hd">
+<span id="unravel-image-io-nii-hd-module"></span><h2>unravel.image_io.nii_hd module<a class="headerlink" href="#module-unravel.image_io.nii_hd" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_hd.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_hd.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_hd.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_hd.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_hd.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_hd.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_hd.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_hd.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-image-io-nii-info-module">
-<h2>unravel.image_io.nii_info module<a class="headerlink" href="#unravel-image-io-nii-info-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_io.nii_info">
+<span id="unravel-image-io-nii-info-module"></span><h2>unravel.image_io.nii_info module<a class="headerlink" href="#module-unravel.image_io.nii_info" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_info.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_info.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_info.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_info.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_info.nii_axis_codes">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_info.</span></span><span class="sig-name descname"><span class="pre">nii_axis_codes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_info.html#nii_axis_codes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_info.nii_axis_codes" title="Link to this definition">#</a></dt>
+<dd><p>Get and return axes codes (three letter orientation like RAS) from an nibabel NIfTI image</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_info.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_info.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_info.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_info.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-image-io-nii-io-module">
-<h2>unravel.image_io.nii_io module<a class="headerlink" href="#unravel-image-io-nii-io-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_io.nii_io">
+<span id="unravel-image-io-nii-io-module"></span><h2>unravel.image_io.nii_io module<a class="headerlink" href="#module-unravel.image_io.nii_io" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_io.convert_dtype">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_io.</span></span><span class="sig-name descname"><span class="pre">convert_dtype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'none'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_scale_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zscore_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(-3,</span> <span class="pre">3)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">255)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_io.html#convert_dtype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_io.convert_dtype" title="Link to this definition">#</a></dt>
+<dd><p>Convert the data type of an ndarray and optionally scale the data.</p>
+<p>Parameters:
+- ndarray: Input ndarray.
+- data_type: Target data type.
+- scale_mode: ‘none’, ‘standard’, or ‘zscore’. Determines the scaling approach.
+- fixed_scale_range: Tuple indicating the fixed range for scaling if scale_mode is ‘fixed’.
+- zscore_range: Tuple indicating the z-score range for scaling if scale_mode is ‘zscore’.
+- target_range: Tuple indicating the target range for the data type conversion.</p>
+<p>Returns:
+- Converted ndarray with the specified data type and scaling.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_io.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_io.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_io.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_io.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_io.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_io.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_io.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_io.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-image-io-nii-to-tifs-module">
-<h2>unravel.image_io.nii_to_tifs module<a class="headerlink" href="#unravel-image-io-nii-to-tifs-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_io.nii_to_tifs">
+<span id="unravel-image-io-nii-to-tifs-module"></span><h2>unravel.image_io.nii_to_tifs module<a class="headerlink" href="#module-unravel.image_io.nii_to_tifs" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_to_tifs.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_to_tifs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_to_tifs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_to_tifs.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_to_tifs.nii_to_tifs">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_to_tifs.</span></span><span class="sig-name descname"><span class="pre">nii_to_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_to_tifs.html#nii_to_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_to_tifs.nii_to_tifs" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_to_tifs.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_to_tifs.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_to_tifs.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_to_tifs.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-image-io-nii-to-zarr-module">
-<h2>unravel.image_io.nii_to_zarr module<a class="headerlink" href="#unravel-image-io-nii-to-zarr-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_io.nii_to_zarr">
+<span id="unravel-image-io-nii-to-zarr-module"></span><h2>unravel.image_io.nii_to_zarr module<a class="headerlink" href="#module-unravel.image_io.nii_to_zarr" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_to_zarr.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_to_zarr.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_to_zarr.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_to_zarr.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_to_zarr.nii_to_ndarray">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_to_zarr.</span></span><span class="sig-name descname"><span class="pre">nii_to_ndarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_to_zarr.html#nii_to_ndarray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_to_zarr.nii_to_ndarray" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_to_zarr.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_to_zarr.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_to_zarr.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_to_zarr.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.nii_to_zarr.save_as_zarr">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_to_zarr.</span></span><span class="sig-name descname"><span class="pre">save_as_zarr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d_type</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/nii_to_zarr.html#save_as_zarr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_to_zarr.save_as_zarr" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-image-io-reorient-nii-module">
-<h2>unravel.image_io.reorient_nii module<a class="headerlink" href="#unravel-image-io-reorient-nii-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_io.reorient_nii">
+<span id="unravel-image-io-reorient-nii-module"></span><h2>unravel.image_io.reorient_nii module<a class="headerlink" href="#module-unravel.image_io.reorient_nii" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.reorient_nii.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.reorient_nii.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/reorient_nii.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.reorient_nii.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.reorient_nii.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.reorient_nii.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/reorient_nii.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.reorient_nii.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.reorient_nii.reorient_nii">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.reorient_nii.</span></span><span class="sig-name descname"><span class="pre">reorient_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/reorient_nii.html#reorient_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.reorient_nii.reorient_nii" title="Link to this definition">#</a></dt>
+<dd><p>Reorient a NIfTI image or its affine matrix to a target orientation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nii_path</strong> (<em>str</em>) – Path to the NIfTI image</p></li>
+<li><p><strong>target_ort</strong> (<em>str</em>) – Target orientation axis codes (e.g., RAS)</p></li>
+<li><p><strong>zero_origin</strong> (<em>bool</em>) – Zero the origin of the affine matrix. Default: False</p></li>
+<li><p><strong>apply</strong> (<em>bool</em>) – Apply the new orientation to the ndarray data. Default: False</p></li>
+<li><p><strong>form_code</strong> (<em>int</em>) – Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned). Default: None (get from the input NIfTI image)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>new_nii (nibabel.nifti1.Nifti1Image): NIfTI image with the new orientation
+If apply False: new_affine (np.ndarray): New affine matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If apply True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.reorient_nii.transform_nii_affine">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.reorient_nii.</span></span><span class="sig-name descname"><span class="pre">transform_nii_affine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/reorient_nii.html#transform_nii_affine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.reorient_nii.transform_nii_affine" title="Link to this definition">#</a></dt>
+<dd><p>Transform the affine matrix of a NIfTI image to a target orientation and return the new affine matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nii</strong> (<em>nibabel.nifti1.Nifti1Image</em>) – NIfTI image</p></li>
+<li><p><strong>target_ort</strong> (<em>str</em>) – Target orientation axis codes (e.g., RAS)</p></li>
+<li><p><strong>zero_origin</strong> (<em>bool</em>) – Zero the origin of the affine matrix. Default: False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="unravel-image-io-tif-to-tifs-module">
-<h2>unravel.image_io.tif_to_tifs module<a class="headerlink" href="#unravel-image-io-tif-to-tifs-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_io.tif_to_tifs">
+<span id="unravel-image-io-tif-to-tifs-module"></span><h2>unravel.image_io.tif_to_tifs module<a class="headerlink" href="#module-unravel.image_io.tif_to_tifs" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.tif_to_tifs.find_largest_tif_file">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.tif_to_tifs.</span></span><span class="sig-name descname"><span class="pre">find_largest_tif_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/tif_to_tifs.html#find_largest_tif_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.tif_to_tifs.find_largest_tif_file" title="Link to this definition">#</a></dt>
+<dd><p>Find and return the path to the largest .tif file in the current directory</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.tif_to_tifs.load_3D_tif">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.tif_to_tifs.</span></span><span class="sig-name descname"><span class="pre">load_3D_tif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tif_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/tif_to_tifs.html#load_3D_tif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.tif_to_tifs.load_3D_tif" title="Link to this definition">#</a></dt>
+<dd><p>Load full res image from a 3D .tif and return ndarray
+Default: axis_order=xyz (other option: axis_order=”zyx”)
+Default: returns: ndarray
+If return_res=True returns: ndarray, xy_res, z_res (resolution in um)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.tif_to_tifs.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.tif_to_tifs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/tif_to_tifs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.tif_to_tifs.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.tif_to_tifs.metadata_from_3D_tif">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.tif_to_tifs.</span></span><span class="sig-name descname"><span class="pre">metadata_from_3D_tif</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tif_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/tif_to_tifs.html#metadata_from_3D_tif"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.tif_to_tifs.metadata_from_3D_tif" title="Link to this definition">#</a></dt>
+<dd><p>Returns tuple with xy_voxel_size and z_voxel_size in microns from a 3D .tif</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.tif_to_tifs.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.tif_to_tifs.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/tif_to_tifs.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.tif_to_tifs.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.tif_to_tifs.save_as_tifs">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.tif_to_tifs.</span></span><span class="sig-name descname"><span class="pre">save_as_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tif_dir_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/tif_to_tifs.html#save_as_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.tif_to_tifs.save_as_tifs" title="Link to this definition">#</a></dt>
+<dd><p>Save &lt;ndarray&gt; as tifs in &lt;Path(tif_dir_out)&gt;</p>
+</dd></dl>
+
 </section>
-<section id="unravel-image-io-zarr-to-nii-module">
-<h2>unravel.image_io.zarr_to_nii module<a class="headerlink" href="#unravel-image-io-zarr-to-nii-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_io.zarr_to_nii">
+<span id="unravel-image-io-zarr-to-nii-module"></span><h2>unravel.image_io.zarr_to_nii module<a class="headerlink" href="#module-unravel.image_io.zarr_to_nii" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.zarr_to_nii.define_zarr_to_nii_output">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.zarr_to_nii.</span></span><span class="sig-name descname"><span class="pre">define_zarr_to_nii_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/zarr_to_nii.html#define_zarr_to_nii_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.zarr_to_nii.define_zarr_to_nii_output" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.zarr_to_nii.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.zarr_to_nii.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/zarr_to_nii.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.zarr_to_nii.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.zarr_to_nii.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.zarr_to_nii.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/zarr_to_nii.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.zarr_to_nii.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.zarr_to_nii.save_as_nii">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.zarr_to_nii.</span></span><span class="sig-name descname"><span class="pre">save_as_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/zarr_to_nii.html#save_as_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.zarr_to_nii.save_as_nii" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.zarr_to_nii.zarr_to_ndarray">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.zarr_to_nii.</span></span><span class="sig-name descname"><span class="pre">zarr_to_ndarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_io/zarr_to_nii.html#zarr_to_ndarray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.zarr_to_nii.zarr_to_ndarray" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-unravel.image_io">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unravel.image_io" title="Link to this heading">#</a></h2>
@@ -479,17 +733,79 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-h5-to-tifs-module">unravel.image_io.h5_to_tifs module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-img-io-module">unravel.image_io.img_io module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-img-to-npy-module">unravel.image_io.img_to_npy module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-nii-hd-module">unravel.image_io.nii_hd module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-nii-info-module">unravel.image_io.nii_info module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-nii-io-module">unravel.image_io.nii_io module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-nii-to-tifs-module">unravel.image_io.nii_to_tifs module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-nii-to-zarr-module">unravel.image_io.nii_to_zarr module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-reorient-nii-module">unravel.image_io.reorient_nii module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-tif-to-tifs-module">unravel.image_io.tif_to_tifs module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-zarr-to-nii-module">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io.h5_to_tifs">unravel.image_io.h5_to_tifs module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.find_largest_h5_file"><code class="docutils literal notranslate"><span class="pre">find_largest_h5_file()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.load_h5"><code class="docutils literal notranslate"><span class="pre">load_h5()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.metadata_from_h5"><code class="docutils literal notranslate"><span class="pre">metadata_from_h5()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.save_as_tifs"><code class="docutils literal notranslate"><span class="pre">save_as_tifs()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io.img_io">unravel.image_io.img_io module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.img_io.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.img_io.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io.img_to_npy">unravel.image_io.img_to_npy module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.img_to_npy.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.img_to_npy.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io.nii_hd">unravel.image_io.nii_hd module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_hd.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_hd.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io.nii_info">unravel.image_io.nii_info module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_info.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_info.nii_axis_codes"><code class="docutils literal notranslate"><span class="pre">nii_axis_codes()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_info.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io.nii_io">unravel.image_io.nii_io module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_io.convert_dtype"><code class="docutils literal notranslate"><span class="pre">convert_dtype()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_io.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_io.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io.nii_to_tifs">unravel.image_io.nii_to_tifs module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_to_tifs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_to_tifs.nii_to_tifs"><code class="docutils literal notranslate"><span class="pre">nii_to_tifs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_to_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io.nii_to_zarr">unravel.image_io.nii_to_zarr module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_to_zarr.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_to_zarr.nii_to_ndarray"><code class="docutils literal notranslate"><span class="pre">nii_to_ndarray()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_to_zarr.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_to_zarr.save_as_zarr"><code class="docutils literal notranslate"><span class="pre">save_as_zarr()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io.reorient_nii">unravel.image_io.reorient_nii module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.reorient_nii.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.reorient_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.reorient_nii.reorient_nii"><code class="docutils literal notranslate"><span class="pre">reorient_nii()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.reorient_nii.transform_nii_affine"><code class="docutils literal notranslate"><span class="pre">transform_nii_affine()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io.tif_to_tifs">unravel.image_io.tif_to_tifs module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.tif_to_tifs.find_largest_tif_file"><code class="docutils literal notranslate"><span class="pre">find_largest_tif_file()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.tif_to_tifs.load_3D_tif"><code class="docutils literal notranslate"><span class="pre">load_3D_tif()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.tif_to_tifs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.tif_to_tifs.metadata_from_3D_tif"><code class="docutils literal notranslate"><span class="pre">metadata_from_3D_tif()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.tif_to_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.tif_to_tifs.save_as_tifs"><code class="docutils literal notranslate"><span class="pre">save_as_tifs()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io.zarr_to_nii">unravel.image_io.zarr_to_nii module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.zarr_to_nii.define_zarr_to_nii_output"><code class="docutils literal notranslate"><span class="pre">define_zarr_to_nii_output()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.zarr_to_nii.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.zarr_to_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.zarr_to_nii.save_as_nii"><code class="docutils literal notranslate"><span class="pre">save_as_nii()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.zarr_to_nii.zarr_to_ndarray"><code class="docutils literal notranslate"><span class="pre">zarr_to_ndarray()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_io">Module contents</a></li>
 </ul>
   </nav></div>

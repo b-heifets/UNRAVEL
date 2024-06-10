@@ -399,11 +399,68 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
 </section>
-<section id="unravel-image-tools-atlas-relabel-nii-module">
-<h2>unravel.image_tools.atlas.relabel_nii module<a class="headerlink" href="#unravel-image-tools-atlas-relabel-nii-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_tools.atlas.relabel_nii">
+<span id="unravel-image-tools-atlas-relabel-nii-module"></span><h2>unravel.image_tools.atlas.relabel_nii module<a class="headerlink" href="#module-unravel.image_tools.atlas.relabel_nii" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_tools.atlas.relabel_nii.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.atlas.relabel_nii.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_tools/atlas/relabel_nii.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.atlas.relabel_nii.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_tools.atlas.relabel_nii.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.atlas.relabel_nii.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_tools/atlas/relabel_nii.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.atlas.relabel_nii.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-image-tools-atlas-wireframe-module">
-<h2>unravel.image_tools.atlas.wireframe module<a class="headerlink" href="#unravel-image-tools-atlas-wireframe-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.image_tools.atlas.wireframe">
+<span id="unravel-image-tools-atlas-wireframe-module"></span><h2>unravel.image_tools.atlas.wireframe module<a class="headerlink" href="#module-unravel.image_tools.atlas.wireframe" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_tools.atlas.wireframe.generate_wireframe">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.atlas.wireframe.</span></span><span class="sig-name descname"><span class="pre">generate_wireframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlas_ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_intensities</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_tools/atlas/wireframe.html#generate_wireframe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.atlas.wireframe.generate_wireframe" title="Link to this definition">#</a></dt>
+<dd><p>Generate a wireframe image of an atlas NIfTI file where outlines are outside the regions and not inside smaller regions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atlas_ndarray</strong> (<em>np.ndarray</em>) – A 3D numpy array of an atlas NIfTI file.</p></li>
+<li><p><strong>unique_intensities</strong> (<em>np.ndarray</em>) – A list of unique intensity values in the atlas ndarray (sorted from smallest to largest regions)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A binary wireframe image (1 = wireframe, 0 = background; uint8)
+wireframe_image_IDs (np.ndarray): A wireframe image with region IDs (uint16)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>wireframe_image (np.ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_tools.atlas.wireframe.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.atlas.wireframe.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_tools/atlas/wireframe.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.atlas.wireframe.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_tools.atlas.wireframe.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.atlas.wireframe.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_tools/atlas/wireframe.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.atlas.wireframe.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_tools.atlas.wireframe.process_intensity">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.atlas.wireframe.</span></span><span class="sig-name descname"><span class="pre">process_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/image_tools/atlas/wireframe.html#process_intensity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.atlas.wireframe.process_intensity" title="Link to this definition">#</a></dt>
+<dd><p>Process a single intensity: generate its binary mask, dilate, and find boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> (<em>tuple</em>) – A tuple containing the ndarray and the intensity value.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Returns a tuple with:</dt><dd><p>binary_mask (np.ndarray): A binary mask for the given intensity.
+boundary (np.ndarray): A binary boundary mask for the given intensity</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-unravel.image_tools.atlas">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unravel.image_tools.atlas" title="Link to this heading">#</a></h2>
@@ -457,8 +514,18 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-tools-atlas-relabel-nii-module">unravel.image_tools.atlas.relabel_nii module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-tools-atlas-wireframe-module">unravel.image_tools.atlas.wireframe module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_tools.atlas.relabel_nii">unravel.image_tools.atlas.relabel_nii module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.atlas.relabel_nii.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.atlas.relabel_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_tools.atlas.wireframe">unravel.image_tools.atlas.wireframe module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.atlas.wireframe.generate_wireframe"><code class="docutils literal notranslate"><span class="pre">generate_wireframe()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.atlas.wireframe.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.atlas.wireframe.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.atlas.wireframe.process_intensity"><code class="docutils literal notranslate"><span class="pre">process_intensity()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.image_tools.atlas">Module contents</a></li>
 </ul>
   </nav></div>

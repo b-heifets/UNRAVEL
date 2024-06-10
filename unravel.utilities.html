@@ -394,8 +394,23 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
 </section>
-<section id="unravel-utilities-aggregate-files-from-sample-dirs-module">
-<h2>unravel.utilities.aggregate_files_from_sample_dirs module<a class="headerlink" href="#unravel-utilities-aggregate-files-from-sample-dirs-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.utilities.aggregate_files_from_sample_dirs">
+<span id="unravel-utilities-aggregate-files-from-sample-dirs-module"></span><h2>unravel.utilities.aggregate_files_from_sample_dirs module<a class="headerlink" href="#module-unravel.utilities.aggregate_files_from_sample_dirs" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.aggregate_files_from_sample_dirs.aggregate_files_from_sample_dirs">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.aggregate_files_from_sample_dirs.</span></span><span class="sig-name descname"><span class="pre">aggregate_files_from_sample_dirs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rel_path_to_src_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/aggregate_files_from_sample_dirs.html#aggregate_files_from_sample_dirs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.aggregate_files_from_sample_dirs.aggregate_files_from_sample_dirs" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.aggregate_files_from_sample_dirs.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.aggregate_files_from_sample_dirs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/aggregate_files_from_sample_dirs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.aggregate_files_from_sample_dirs.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.aggregate_files_from_sample_dirs.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.aggregate_files_from_sample_dirs.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/aggregate_files_from_sample_dirs.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.aggregate_files_from_sample_dirs.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-unravel.utilities.aggregate_files_w_recursive_search">
 <span id="unravel-utilities-aggregate-files-w-recursive-search-module"></span><h2>unravel.utilities.aggregate_files_w_recursive_search module<a class="headerlink" href="#module-unravel.utilities.aggregate_files_w_recursive_search" title="Link to this heading">#</a></h2>
@@ -415,17 +430,109 @@
 <dd></dd></dl>
 
 </section>
-<section id="unravel-utilities-clean-tif-dirs-module">
-<h2>unravel.utilities.clean_tif_dirs module<a class="headerlink" href="#unravel-utilities-clean-tif-dirs-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.utilities.clean_tif_dirs">
+<span id="unravel-utilities-clean-tif-dirs-module"></span><h2>unravel.utilities.clean_tif_dirs module<a class="headerlink" href="#module-unravel.utilities.clean_tif_dirs" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.clean_tif_dirs.clean_tifs_dir">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.clean_tif_dirs.</span></span><span class="sig-name descname"><span class="pre">clean_tifs_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_tif_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">move</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/clean_tif_dirs.html#clean_tifs_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.clean_tif_dirs.clean_tifs_dir" title="Link to this definition">#</a></dt>
+<dd><dl class="simple">
+<dt>Clean up a directory containing TIF files:</dt><dd><ul class="simple">
+<li><p>Move subdirs to parent dir</p></li>
+<li><p>Move non-TIF files to parent dir.</p></li>
+<li><p>Replace spaces in TIF file names with underscores.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path_to_tif_dir</strong> (<em>str</em>) – Path to the directory containing the TIF files.</p></li>
+<li><p><strong>move</strong> (<em>bool</em>) – Enable moving of subdirs and non-TIF files to parent dir.</p></li>
+<li><p><strong>verbose</strong> (<em>bool</em>) – Increase verbosity.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.clean_tif_dirs.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.clean_tif_dirs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/clean_tif_dirs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.clean_tif_dirs.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.clean_tif_dirs.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.clean_tif_dirs.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/clean_tif_dirs.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.clean_tif_dirs.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-utilities-prepend-conditions-module">
-<h2>unravel.utilities.prepend_conditions module<a class="headerlink" href="#unravel-utilities-prepend-conditions-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.utilities.prepend_conditions">
+<span id="unravel-utilities-prepend-conditions-module"></span><h2>unravel.utilities.prepend_conditions module<a class="headerlink" href="#module-unravel.utilities.prepend_conditions" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.prepend_conditions.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.prepend_conditions.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/prepend_conditions.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.prepend_conditions.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.prepend_conditions.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.prepend_conditions.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/prepend_conditions.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.prepend_conditions.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.prepend_conditions.prepend_conditions">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.prepend_conditions.</span></span><span class="sig-name descname"><span class="pre">prepend_conditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/prepend_conditions.html#prepend_conditions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.prepend_conditions.prepend_conditions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.prepend_conditions.rename_items">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.prepend_conditions.</span></span><span class="sig-name descname"><span class="pre">rename_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/prepend_conditions.html#rename_items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.prepend_conditions.rename_items" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-utilities-rename-module">
-<h2>unravel.utilities.rename module<a class="headerlink" href="#unravel-utilities-rename-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.utilities.rename">
+<span id="unravel-utilities-rename-module"></span><h2>unravel.utilities.rename module<a class="headerlink" href="#module-unravel.utilities.rename" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.rename.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.rename.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/rename.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.rename.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.rename.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.rename.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/rename.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.rename.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.rename.rename_files">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.rename.</span></span><span class="sig-name descname"><span class="pre">rename_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">old_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'both'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry_run</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/rename.html#rename_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.rename.rename_files" title="Link to this definition">#</a></dt>
+<dd><p>Renames files and/or directories in the specified directory, replacing old_text
+with new_text in the filenames. Can operate recursively and selectively based
+on type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>-</em>) – the directory to search for files and/or directories</p></li>
+<li><p><strong>old_text</strong> (<em>-</em>) – the text to be replaced in the filenames</p></li>
+<li><p><strong>new_text</strong> (<em>-</em>) – the text to replace with in the filenames</p></li>
+<li><p><strong>recursive</strong> (<em>-</em>) – whether to perform the renaming recursively</p></li>
+<li><p><strong>rename_type</strong> (<em>-</em>) – what to rename: “files”, “dirs”, or “both” (default: both)</p></li>
+<li><p><strong>dry_run</strong> (<em>-</em>) – if true, print changes without making them</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="unravel-utilities-toggle-samples-module">
-<h2>unravel.utilities.toggle_samples module<a class="headerlink" href="#unravel-utilities-toggle-samples-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.utilities.toggle_samples">
+<span id="unravel-utilities-toggle-samples-module"></span><h2>unravel.utilities.toggle_samples module<a class="headerlink" href="#module-unravel.utilities.toggle_samples" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.toggle_samples.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.toggle_samples.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/toggle_samples.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.toggle_samples.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.toggle_samples.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.toggle_samples.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/utilities/toggle_samples.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.toggle_samples.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-unravel.utilities">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unravel.utilities" title="Link to this heading">#</a></h2>
@@ -479,17 +586,42 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-utilities-aggregate-files-from-sample-dirs-module">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.utilities.aggregate_files_from_sample_dirs">unravel.utilities.aggregate_files_from_sample_dirs module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_from_sample_dirs.aggregate_files_from_sample_dirs"><code class="docutils literal notranslate"><span class="pre">aggregate_files_from_sample_dirs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_from_sample_dirs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_from_sample_dirs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.utilities.aggregate_files_w_recursive_search">unravel.utilities.aggregate_files_w_recursive_search module</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_w_recursive_search.find_and_copy_files"><code class="docutils literal notranslate"><span class="pre">find_and_copy_files()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_w_recursive_search.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_w_recursive_search.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-utilities-clean-tif-dirs-module">unravel.utilities.clean_tif_dirs module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-utilities-prepend-conditions-module">unravel.utilities.prepend_conditions module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-utilities-rename-module">unravel.utilities.rename module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-utilities-toggle-samples-module">unravel.utilities.toggle_samples module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.utilities.clean_tif_dirs">unravel.utilities.clean_tif_dirs module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.clean_tif_dirs.clean_tifs_dir"><code class="docutils literal notranslate"><span class="pre">clean_tifs_dir()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.clean_tif_dirs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.clean_tif_dirs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.utilities.prepend_conditions">unravel.utilities.prepend_conditions module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.prepend_conditions.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.prepend_conditions.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.prepend_conditions.prepend_conditions"><code class="docutils literal notranslate"><span class="pre">prepend_conditions()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.prepend_conditions.rename_items"><code class="docutils literal notranslate"><span class="pre">rename_items()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.utilities.rename">unravel.utilities.rename module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.rename.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.rename.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.rename.rename_files"><code class="docutils literal notranslate"><span class="pre">rename_files()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.utilities.toggle_samples">unravel.utilities.toggle_samples module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.toggle_samples.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.toggle_samples.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.utilities">Module contents</a></li>
 </ul>
   </nav></div>

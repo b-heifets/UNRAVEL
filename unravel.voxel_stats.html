@@ -394,26 +394,201 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
 </section>
-<section id="unravel-voxel-stats-apply-mask-module">
-<h2>unravel.voxel_stats.apply_mask module<a class="headerlink" href="#unravel-voxel-stats-apply-mask-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.voxel_stats.apply_mask">
+<span id="unravel-voxel-stats-apply-mask-module"></span><h2>unravel.voxel_stats.apply_mask module<a class="headerlink" href="#module-unravel.voxel_stats.apply_mask" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.apply_mask_to_ndarray">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">apply_mask_to_ndarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'less'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/apply_mask.html#apply_mask_to_ndarray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.apply_mask_to_ndarray" title="Link to this definition">#</a></dt>
+<dd><p>Replace voxels in the ndarray with a new_value based on mask conditions. Optionally use a second mask to restrict application spatially.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.dilate_mask">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">dilate_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/apply_mask.html#dilate_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.dilate_mask" title="Link to this definition">#</a></dt>
+<dd><p>Dilate the given mask (ndarray) by a specified number of iterations.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.load_mask">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">load_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/apply_mask.html#load_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.load_mask" title="Link to this definition">#</a></dt>
+<dd><p>Load .nii.gz and return to an ndarray with a binary dtype</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/apply_mask.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.mean_intensity_in_brain">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">mean_intensity_in_brain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tissue_mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/apply_mask.html#mean_intensity_in_brain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.mean_intensity_in_brain" title="Link to this definition">#</a></dt>
+<dd><p>Z-score the image using the mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>-</em>) – the ndarray to be z-scored.</p></li>
+<li><p><strong>mask</strong> (<em>-</em>) – the brain mask ndarray</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/apply_mask.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.scale_bool_to_full_res">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">scale_bool_to_full_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_res_dims</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/apply_mask.html#scale_bool_to_full_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.scale_bool_to_full_res" title="Link to this definition">#</a></dt>
+<dd><p>Scale ndarray to match x, y, z dimensions provided. Uses nearest-neighbor interpolation by default to preserve a binary data type.</p>
+</dd></dl>
+
 </section>
-<section id="unravel-voxel-stats-hemi-to-lr-avg-module">
-<h2>unravel.voxel_stats.hemi_to_LR_avg module<a class="headerlink" href="#unravel-voxel-stats-hemi-to-lr-avg-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.voxel_stats.hemi_to_LR_avg">
+<span id="unravel-voxel-stats-hemi-to-lr-avg-module"></span><h2>unravel.voxel_stats.hemi_to_LR_avg module<a class="headerlink" href="#module-unravel.voxel_stats.hemi_to_LR_avg" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.hemi_to_LR_avg.hemi_to_LR_avg">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.hemi_to_LR_avg.</span></span><span class="sig-name descname"><span class="pre">hemi_to_LR_avg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lh_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rh_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/hemi_to_LR_avg.html#hemi_to_LR_avg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.hemi_to_LR_avg.hemi_to_LR_avg" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.hemi_to_LR_avg.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.hemi_to_LR_avg.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/hemi_to_LR_avg.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.hemi_to_LR_avg.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.hemi_to_LR_avg.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.hemi_to_LR_avg.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/hemi_to_LR_avg.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.hemi_to_LR_avg.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-voxel-stats-mirror-module">
-<h2>unravel.voxel_stats.mirror module<a class="headerlink" href="#unravel-voxel-stats-mirror-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.voxel_stats.mirror">
+<span id="unravel-voxel-stats-mirror-module"></span><h2>unravel.voxel_stats.mirror module<a class="headerlink" href="#module-unravel.voxel_stats.mirror" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.mirror.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.mirror.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/mirror.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.mirror.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.mirror.mirror">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.mirror.</span></span><span class="sig-name descname"><span class="pre">mirror</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/mirror.html#mirror"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.mirror.mirror" title="Link to this definition">#</a></dt>
+<dd><p>Mirror an image along the specified axis and shift the content by the specified number of voxels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>np.ndarray</em>) – Image data to mirror</p></li>
+<li><p><strong>axis</strong> (<em>int</em>) – Axis to flip the image along. Default: 0</p></li>
+<li><p><strong>shift</strong> (<em>int</em>) – Number of voxels to shift content after flipping. Default: 2 (useful when the atlas is not centered)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.mirror.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.mirror.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/mirror.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.mirror.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-voxel-stats-prep-vstats-module">
-<h2>unravel.voxel_stats.prep_vstats module<a class="headerlink" href="#unravel-voxel-stats-prep-vstats-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.voxel_stats.prep_vstats">
+<span id="unravel-voxel-stats-prep-vstats-module"></span><h2>unravel.voxel_stats.prep_vstats module<a class="headerlink" href="#module-unravel.voxel_stats.prep_vstats" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.prep_vstats.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.prep_vstats.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/prep_vstats.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.prep_vstats.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.prep_vstats.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.prep_vstats.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/prep_vstats.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.prep_vstats.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-voxel-stats-vstats-module">
-<h2>unravel.voxel_stats.vstats module<a class="headerlink" href="#unravel-voxel-stats-vstats-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.voxel_stats.vstats">
+<span id="unravel-voxel-stats-vstats-module"></span><h2>unravel.voxel_stats.vstats module<a class="headerlink" href="#module-unravel.voxel_stats.vstats" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.calculate_fragments">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">calculate_fragments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_contrasts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_permutations_per_contrast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">18000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permutations_per_fragment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/vstats.html#calculate_fragments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.calculate_fragments" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the total number of fragments based on the number of contrasts.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.check_fdr_command">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">check_fdr_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/vstats.html#check_fdr_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.check_fdr_command" title="Link to this definition">#</a></dt>
+<dd><p>Check if the ‘fdr’ command is available in the system’s path.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.create_design_ttest2">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">create_design_ttest2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group1_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group2_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/vstats.html#create_design_ttest2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.create_design_ttest2" title="Link to this definition">#</a></dt>
+<dd><p>Create design matrix for a two-group unpaired t-test.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.get_groups_info">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">get_groups_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/vstats.html#get_groups_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.get_groups_info" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/vstats.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/vstats.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.run_randomise_parallel">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">run_randomise_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permutations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_fts_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/vstats.html#run_randomise_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.run_randomise_parallel" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-voxel-stats-whole-to-lr-avg-module">
-<h2>unravel.voxel_stats.whole_to_LR_avg module<a class="headerlink" href="#unravel-voxel-stats-whole-to-lr-avg-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.voxel_stats.whole_to_LR_avg">
+<span id="unravel-voxel-stats-whole-to-lr-avg-module"></span><h2>unravel.voxel_stats.whole_to_LR_avg module<a class="headerlink" href="#module-unravel.voxel_stats.whole_to_LR_avg" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.whole_to_LR_avg.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.whole_to_LR_avg.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/whole_to_LR_avg.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.whole_to_LR_avg.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.whole_to_LR_avg.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.whole_to_LR_avg.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/whole_to_LR_avg.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.whole_to_LR_avg.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.whole_to_LR_avg.whole_to_LR_avg">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.whole_to_LR_avg.</span></span><span class="sig-name descname"><span class="pre">whole_to_LR_avg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/whole_to_LR_avg.html#whole_to_LR_avg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.whole_to_LR_avg.whole_to_LR_avg" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unravel-voxel-stats-z-score-module">
-<h2>unravel.voxel_stats.z_score module<a class="headerlink" href="#unravel-voxel-stats-z-score-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.voxel_stats.z_score">
+<span id="unravel-voxel-stats-z-score-module"></span><h2>unravel.voxel_stats.z_score module<a class="headerlink" href="#module-unravel.voxel_stats.z_score" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.z_score.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.z_score.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/z_score.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.z_score.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.z_score.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.z_score.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/z_score.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.z_score.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.z_score.z_score">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.z_score.</span></span><span class="sig-name descname"><span class="pre">z_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/voxel_stats/z_score.html#z_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.z_score.z_score" title="Link to this definition">#</a></dt>
+<dd><p>Z-score the image using the mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>-</em>) – the ndarray to be z-scored.</p></li>
+<li><p><strong>mask</strong> (<em>-</em>) – the brain mask ndarray</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-unravel.voxel_stats">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unravel.voxel_stats" title="Link to this heading">#</a></h2>
@@ -467,13 +642,55 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-voxel-stats-apply-mask-module">unravel.voxel_stats.apply_mask module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-voxel-stats-hemi-to-lr-avg-module">unravel.voxel_stats.hemi_to_LR_avg module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-voxel-stats-mirror-module">unravel.voxel_stats.mirror module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-voxel-stats-prep-vstats-module">unravel.voxel_stats.prep_vstats module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-voxel-stats-vstats-module">unravel.voxel_stats.vstats module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-voxel-stats-whole-to-lr-avg-module">unravel.voxel_stats.whole_to_LR_avg module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-voxel-stats-z-score-module">unravel.voxel_stats.z_score module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.voxel_stats.apply_mask">unravel.voxel_stats.apply_mask module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.apply_mask_to_ndarray"><code class="docutils literal notranslate"><span class="pre">apply_mask_to_ndarray()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.dilate_mask"><code class="docutils literal notranslate"><span class="pre">dilate_mask()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.load_mask"><code class="docutils literal notranslate"><span class="pre">load_mask()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.mean_intensity_in_brain"><code class="docutils literal notranslate"><span class="pre">mean_intensity_in_brain()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.scale_bool_to_full_res"><code class="docutils literal notranslate"><span class="pre">scale_bool_to_full_res()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.voxel_stats.hemi_to_LR_avg">unravel.voxel_stats.hemi_to_LR_avg module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.hemi_to_LR_avg.hemi_to_LR_avg"><code class="docutils literal notranslate"><span class="pre">hemi_to_LR_avg()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.hemi_to_LR_avg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.hemi_to_LR_avg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.voxel_stats.mirror">unravel.voxel_stats.mirror module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.mirror.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.mirror.mirror"><code class="docutils literal notranslate"><span class="pre">mirror()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.mirror.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.voxel_stats.prep_vstats">unravel.voxel_stats.prep_vstats module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.prep_vstats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.prep_vstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.voxel_stats.vstats">unravel.voxel_stats.vstats module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.calculate_fragments"><code class="docutils literal notranslate"><span class="pre">calculate_fragments()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.check_fdr_command"><code class="docutils literal notranslate"><span class="pre">check_fdr_command()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.create_design_ttest2"><code class="docutils literal notranslate"><span class="pre">create_design_ttest2()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.get_groups_info"><code class="docutils literal notranslate"><span class="pre">get_groups_info()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.run_randomise_parallel"><code class="docutils literal notranslate"><span class="pre">run_randomise_parallel()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.voxel_stats.whole_to_LR_avg">unravel.voxel_stats.whole_to_LR_avg module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.whole_to_LR_avg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.whole_to_LR_avg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.whole_to_LR_avg.whole_to_LR_avg"><code class="docutils literal notranslate"><span class="pre">whole_to_LR_avg()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.voxel_stats.z_score">unravel.voxel_stats.z_score module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.z_score.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.z_score.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.z_score.z_score"><code class="docutils literal notranslate"><span class="pre">z_score()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.voxel_stats">Module contents</a></li>
 </ul>
   </nav></div>

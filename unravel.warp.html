@@ -393,14 +393,99 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">#</a></h2>
 </section>
-<section id="unravel-warp-to-atlas-module">
-<h2>unravel.warp.to_atlas module<a class="headerlink" href="#unravel-warp-to-atlas-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.warp.to_atlas">
+<span id="unravel-warp-to-atlas-module"></span><h2>unravel.warp.to_atlas module<a class="headerlink" href="#module-unravel.warp.to_atlas" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.to_atlas.copy_nii_header">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_atlas.</span></span><span class="sig-name descname"><span class="pre">copy_nii_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_img</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/to_atlas.html#copy_nii_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_atlas.copy_nii_header" title="Link to this definition">#</a></dt>
+<dd><p>Copy header info from nii_img to new_img</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.to_atlas.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_atlas.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/to_atlas.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_atlas.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.to_atlas.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_atlas.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/to_atlas.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_atlas.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.to_atlas.to_atlas">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_atlas.</span></span><span class="sig-name descname"><span class="pre">to_atlas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_reg_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uint16'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/to_atlas.html#to_atlas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_atlas.to_atlas" title="Link to this definition">#</a></dt>
+<dd><p>Warp the image to atlas space using ANTsPy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_path</strong> (<em>-</em>) – Path to the sample directory.</p></li>
+<li><p><strong>img</strong> (<em>-</em>) – 3D image.</p></li>
+<li><p><strong>fixed_reg_in</strong> (<em>-</em>) – Name of the fixed image for registration.</p></li>
+<li><p><strong>atlas</strong> (<em>-</em>) – Path to the atlas.</p></li>
+<li><p><strong>output</strong> (<em>-</em>) – Path to the output.</p></li>
+<li><p><strong>interpol</strong> (<em>-</em>) – Type of interpolation (linear, bSpline, nearestNeighbor, multiLabel).</p></li>
+<li><p><strong>dtype</strong> (<em>-</em>) – Desired dtype for output (e.g., uint8, uint16). Default: uint16</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="unravel-warp-to-native-module">
-<h2>unravel.warp.to_native module<a class="headerlink" href="#unravel-warp-to-native-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.warp.to_native">
+<span id="unravel-warp-to-native-module"></span><h2>unravel.warp.to_native module<a class="headerlink" href="#module-unravel.warp.to_native" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.to_native.calculate_resampled_padded_dimensions">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_native.</span></span><span class="sig-name descname"><span class="pre">calculate_resampled_padded_dimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_dimensions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miracl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/to_native.html#calculate_resampled_padded_dimensions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_native.calculate_resampled_padded_dimensions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.to_native.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_native.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/to_native.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_native.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.to_native.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_native.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/to_native.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_native.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.to_native.scale_to_full_res">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_native.</span></span><span class="sig-name descname"><span class="pre">scale_to_full_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_res_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/to_native.html#scale_to_full_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_native.scale_to_full_res" title="Link to this definition">#</a></dt>
+<dd><p>Scale ndarray to match x, y, z dimensions provided as ndarray (order=0 is nearest-neighbor). Returns scaled ndarray.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.to_native.to_native">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_native.</span></span><span class="sig-name descname"><span class="pre">to_native</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_reg_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_rel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miracl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/to_native.html#to_native"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_native.to_native" title="Link to this definition">#</a></dt>
+<dd><p>Warp image from atlas space to tissue space and scale to full resolution</p>
+</dd></dl>
+
 </section>
-<section id="unravel-warp-warp-module">
-<h2>unravel.warp.warp module<a class="headerlink" href="#unravel-warp-warp-module" title="Link to this heading">#</a></h2>
+<section id="module-unravel.warp.warp">
+<span id="unravel-warp-warp-module"></span><h2>unravel.warp.warp module<a class="headerlink" href="#module-unravel.warp.warp" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.warp.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.warp.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/warp.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.warp.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.warp.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.warp.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/warp.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.warp.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.warp.warp.warp">
+<span class="sig-prename descclassname"><span class="pre">unravel.warp.warp.</span></span><span class="sig-name descname"><span class="pre">warp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg_outputs_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/unravel/warp/warp.html#warp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.warp.warp" title="Link to this definition">#</a></dt>
+<dd><p>Applies the transformations to an image using ANTsPy.</p>
+<p>Parameters:
+reg_outputs_path (str): Path to the reg_outputs folder (contains transformation files)
+moving_img_path (str): Path to the image to be transformed.
+fixed_img_path (str): Path to the reference image for applying the transform.
+output_path (str): Path where the transformed image will be saved.
+inverse (bool): If True, apply the inverse transformation. Defaults to False.
+interpol (str): Type of interpolation (e.g., ‘Linear’, ‘NearestNeighbor’, etc.)</p>
+</dd></dl>
+
 </section>
 <section id="module-unravel.warp">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unravel.warp" title="Link to this heading">#</a></h2>
@@ -445,9 +530,27 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-warp-to-atlas-module">unravel.warp.to_atlas module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-warp-to-native-module">unravel.warp.to_native module</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-warp-warp-module">unravel.warp.warp module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.warp.to_atlas">unravel.warp.to_atlas module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_atlas.copy_nii_header"><code class="docutils literal notranslate"><span class="pre">copy_nii_header()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_atlas.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_atlas.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_atlas.to_atlas"><code class="docutils literal notranslate"><span class="pre">to_atlas()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.warp.to_native">unravel.warp.to_native module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.calculate_resampled_padded_dimensions"><code class="docutils literal notranslate"><span class="pre">calculate_resampled_padded_dimensions()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.scale_to_full_res"><code class="docutils literal notranslate"><span class="pre">scale_to_full_res()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.to_native"><code class="docutils literal notranslate"><span class="pre">to_native()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.warp.warp">unravel.warp.warp module</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.warp.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.warp.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.warp.warp"><code class="docutils literal notranslate"><span class="pre">warp()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-unravel.warp">Module contents</a></li>
 </ul>
   </nav></div>
