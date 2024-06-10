@@ -82,6 +82,8 @@ html_theme_options = {
         }
     ],
 }
+html_title = "UNRAVEL documentation"
+
 
 # Add custom CSS
 html_static_path = ['_static']
