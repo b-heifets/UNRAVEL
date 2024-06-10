@@ -49,6 +49,7 @@ autodoc_default_options = {
     'undoc-members': True,
     'show-inheritance': True,
 }
+autodoc_member_order = 'bysource'
 autodoc_inherit_docstrings = True
 autodoc_typehints = 'description'
 

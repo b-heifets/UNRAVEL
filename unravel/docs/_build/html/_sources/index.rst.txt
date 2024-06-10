@@ -54,7 +54,6 @@ UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet
 * Additional support was provided by `the Shamloo lab <https://med.stanford.edu/neurosurgery/research/shamloo.html>`_
 
 
-
 Getting started
 ---------------
 * `Guide on immunofluorescence staining, iDISCO+, & lightsheet fluorescence microscopy <https://docs.google.com/document/d/16yowBhiBQWz8_VX2t9Rf6Xo3Ub4YPYD6qeJP6vJo6P4/edit?usp=sharing>`_
@@ -70,31 +69,33 @@ Getting started
 * Documentation on modules and functions in the :doc:`unravel`
 
 
-UNRAVEL vizualizer
+UNRAVEL visualizer
 -------------------
-* `UNRAVEL vizualizer <https://cfos.dev.metacell.us/>`_ is a web-based tool for visualizing and exploring 3D maps output from UNRAVEL
-* `UNRAVEL vizualizer GitHub repo <https://github.com/MetaCell/cfos-visualizer/>`_
+* `UNRAVEL visualizer <https://cfos.dev.metacell.us/>`_ is a web-based tool for visualizing and exploring 3D maps output from UNRAVEL
+* `UNRAVEL visualizer GitHub repo <https://github.com/MetaCell/cfos-visualizer/>`_
 * Developed by `MetaCell <https://metacell.us/>`_ with support from the `Heifets lab <https://heifetslab.stanford.edu/>`_
-
 
 .. raw:: html
 
     <div style="text-align: center;">
         <a href="https://cfos.dev.metacell.us/" target="_blank">
-            <img id="unravel-visualizer" src="_static/UNRAVEL_vizualizer.png" alt="UNRAVEL visualizer">
+            <img id="unravel-visualizer" src="_static/UNRAVEL_visualizer.png" alt="UNRAVEL visualizer">
         </a>
     </div>
+
 
 Contact us
 ----------
 If you have any questions, suggestions, or are interested in collaborations and contributions, please reach out to us. 
 
+
 Developers
 ----------
 * **Daniel Ryskamp Rijsketic** (lead developer and maintainer) - `danrijs@stanford.edu <mailto:danrijs@stanford.edu>`_
 * **Austen Casey** (developer) - `abcasey@stanford.edu <mailto:abcasey@stanford.edu>`_
-* **MetaCell** (UNRAVEL vizualizer developers) - `info@metacell.us <info@metacell.us>`_
+* **MetaCell** (UNRAVEL visualizer developers) - `info@metacell.us <info@metacell.us>`_
 * **Boris Heifets** (PI) - `bheifets@stanford.edu <mailto:bheifets@stanford.edu>`_
+
 
 Additional contributions from:
 ------------------------------
@@ -102,6 +103,7 @@ Additional contributions from:
 * **Daniel Barbosa** (early contributer and guidance) - `Dbarbosa@pennmedicine.upenn.edu <mailto:Dbarbosa@pennmedicine.upenn.edu>`_
 * **Wesley Zhao** (guidance) - `weszhao@stanford.edu <mailto:weszhao@stanford.edu>`_
 * **Nick Gregory** (guidance) - `ngregory@stanford.edu <mailto:ngregory@stanford.edu>`_
+
 
 Main dependencies:
 ------------------------------------------------
@@ -116,6 +118,7 @@ Main dependencies:
 * `pandas <https://pandas.pydata.org/>`_
 * `cc3d <https://pypi.org/project/connected-components-3d/>`_
 * Registration and warping workflows were inspired by `MIRACL <https://miracl.readthedocs.io/en/latest/>`_
+
 
 Support is welcome for:
 -----------------------
@@ -140,6 +143,7 @@ Support is welcome for:
 .. raw:: html
 
     <br>
+
 
 Indices
 =======

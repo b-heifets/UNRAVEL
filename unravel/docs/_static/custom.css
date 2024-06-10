@@ -3,7 +3,7 @@ img {
 }
 
 #unravel-visualizer {
-    background-color: white !important;
+    background-color: transparent !important;
     filter: none !important;
     opacity: 1 !important;
 }

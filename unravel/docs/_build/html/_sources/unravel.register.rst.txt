@@ -4,30 +4,6 @@ unravel.register package
 Submodules
 ----------
 
-unravel.register.ANTsPy\_affine\_initializer module
----------------------------------------------------
-
-.. automodule:: unravel.register.ANTsPy_affine_initializer
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-unravel.register.check\_brain\_mask module
-------------------------------------------
-
-.. automodule:: unravel.register.check_brain_mask
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-unravel.register.check\_reg module
-----------------------------------
-
-.. automodule:: unravel.register.check_reg
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 unravel.register.metadata module
 --------------------------------
 
@@ -44,6 +20,14 @@ unravel.register.prep\_reg module
    :undoc-members:
    :show-inheritance:
 
+unravel.register.check\_brain\_mask module
+------------------------------------------
+
+.. automodule:: unravel.register.check_brain_mask
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 unravel.register.reg module
 ---------------------------
 
@@ -51,6 +35,23 @@ unravel.register.reg module
    :members:
    :undoc-members:
    :show-inheritance:
+
+unravel.register.ANTsPy\_affine\_initializer module
+---------------------------------------------------
+
+.. automodule:: unravel.register.ANTsPy_affine_initializer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+unravel.register.check\_reg module
+----------------------------------
+
+.. automodule:: unravel.register.check_reg
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 
 Module contents
 ---------------
