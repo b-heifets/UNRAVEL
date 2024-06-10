@@ -26,8 +26,8 @@ If -c is used, outputs a CSV with the effect sizes and CI for valid clusters:
 
 The effect size is calculated as the unbiased Hedge\'s g effect sizes (corrected for sample size): 
 
-Hegde'\s g = ((c2-c1)/spooled*corr_factor)
-CI = Hedge's g +/- t * SE
+Hedges' g = ((c2-c1)/spooled*corr_factor)
+CI = Hedges' g +/- t * SE
 0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large"""
     return parser.parse_args()
 
