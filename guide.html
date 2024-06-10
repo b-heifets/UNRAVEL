@@ -29,7 +29,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=122099b5" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=165b5da3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -379,93 +379,75 @@
 <section id="organize-sample-folders-and-raw-data">
 <h2>Organize sample folders and raw data<a class="headerlink" href="#organize-sample-folders-and-raw-data" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Make a folder named after each condition in the experiment folder(s)</p>
-<ul>
-<li><p>Make sample?? folders in these and add raw data to them</p>
-<ul>
-<li><p>Place a *.czi, *.hf, or one or more folder(s) with tif series into each sample folder</p></li>
+<li><p>Make a folder named after each condition in the experiment folder(s)</p></li>
 </ul>
-</li>
-<li><p>Batch processing is easy if you use this convention for naming sample folders:</p>
-<ul>
-<li><p>sample01</p></li>
-<li><p>sample02</p></li>
-<li><p>…</p></li>
-<li><p>Use a csv, Google sheet, etc. for linking sample IDs to IDs w/ this convention</p></li>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span><span class="c1"># This root level folder is referred to as the experiment directory (exp dir) </span>
+├──<span class="w"> </span>Control
+└──<span class="w"> </span>Treatment
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Make sample?? folders in the folders named after each condition</p></li>
 </ul>
-</li>
-<li><p>Other patterns for looping can be specified (many scripts have a -p option for that)</p></li>
-</ul>
-</li>
-</ul>
-</section>
-<section id="example-experiment-folder-structure">
-<h2>Example experiment folder structure<a class="headerlink" href="#example-experiment-folder-structure" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.
-├──<span class="w"> </span>notes.txt
-├──<span class="w"> </span>env_var.sh
-├──<span class="w"> </span>sample_key.csv
 ├──<span class="w"> </span>Control
 │<span class="w">   </span>├──<span class="w"> </span>sample01
 │<span class="w">   </span>└──<span class="w"> </span>sample02
-├──<span class="w"> </span>Treatment
-│<span class="w">   </span>├──<span class="w"> </span>sample03
-│<span class="w">   </span>└──<span class="w"> </span>sample04
-├──<span class="w"> </span>atlas
-│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_25um_bin.nii.gz
-│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_combined_25um.nii.gz
-│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_split_25um.nii.gz
-│<span class="w">   </span>├──<span class="w"> </span>gubra_mask_25um_wo_ventricles_root_fibers_LH.nii.gz
-│<span class="w">   </span>├──<span class="w"> </span>gubra_mask_25um_wo_ventricles_root_fibers_RH.nii.gz
-│<span class="w">   </span>└──<span class="w"> </span>gubra_template_25um.nii.gz
-├──<span class="w"> </span>reg_results
-├──<span class="w"> </span>ilastik_brain_mask
-│<span class="w">   </span>├──<span class="w"> </span>brain_mask.ilp
-│<span class="w">   </span>├──<span class="w"> </span>sample01_slice_0000.tif
-│<span class="w">   </span>├──<span class="w"> </span>sample01_slice_0005.tif
-│<span class="w">   </span>├──<span class="w"> </span>sample01_slice_0050.tif
-│<span class="w">   </span>├──<span class="w"> </span>...
-│<span class="w">   </span>└──<span class="w"> </span>sample04_slice_0050.tif
-├──<span class="w"> </span>vstats
-│<span class="w">   </span>└──<span class="w"> </span>Control_v_Treatment
-├──<span class="w"> </span>cluster_validation
-│<span class="w">   </span>└──<span class="w"> </span>Control_v_Treatment
-└──<span class="w"> </span>regional_cell_densities
-<span class="w">    </span>├──<span class="w"> </span>Control_sample01_regional_cell_densities.csv
-<span class="w">    </span>├──<span class="w"> </span>...
-<span class="w">    </span>└──<span class="w"> </span>Treatment_sample04_regional_cell_densities.csv
+└──<span class="w"> </span>Treatment
+<span class="w">    </span>├──<span class="w"> </span>sample03
+<span class="w">    </span>└──<span class="w"> </span>sample04
 </pre></div>
 </div>
-</section>
-<section id="example-sample-structure">
-<h2>Example sample?? structure<a class="headerlink" href="#example-sample-structure" title="Link to this heading">#</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Naming directories (dirs) like sample01, sample02, etc., makes batch processing easy.</p>
+<p>Use a csv, Google sheet, or whatever else for linking sample IDs to IDs w/ this convention.</p>
+<p>Other patterns (e.g., sample???) may be used (commands/scripts have a -p option for that).</p>
+</div>
+<ul class="simple">
+<li><p>Add raw data (e.g., image.czi, image.h5, or folder(s) with tif series) to each sample?? dir</p></li>
+</ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.
-├──<span class="w"> </span>atlas_space
-├──<span class="w"> </span>cfos_seg_ilastik_1
-├──<span class="w"> </span>clusters
-├──<span class="w"> </span>parameters
-├──<span class="w"> </span>reg_inputs
-├──<span class="w"> </span>regional_cell_densities
-├──<span class="w"> </span>reg_outputs
-└──<span class="w"> </span>*.czi
+├──<span class="w"> </span>Control
+│<span class="w">   </span>├──<span class="w"> </span>sample01
+│<span class="w">   </span>│<span class="w">   </span>└──<span class="w"> </span>&lt;raw<span class="w"> </span>image<span class="o">(</span>s<span class="o">)</span>&gt;
+│<span class="w">   </span>└──<span class="w"> </span>sample02
+│<span class="w">        </span>└──<span class="w"> </span>&lt;raw<span class="w"> </span>image<span class="o">(</span>s<span class="o">)</span>&gt;
+└──<span class="w"> </span>Treatment
+<span class="w">    </span>├──<span class="w"> </span>sample03
+<span class="w">    </span>│<span class="w">   </span>└──<span class="w"> </span>&lt;raw<span class="w"> </span>image<span class="o">(</span>s<span class="o">)</span>&gt;
+<span class="w">    </span>└──<span class="w"> </span>sample04
+<span class="w">        </span>└──<span class="w"> </span>&lt;raw<span class="w"> </span>image<span class="o">(</span>s<span class="o">)</span>&gt;
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Multiple exp dirs maybe used (the -e flag in commands/scripts specifies the path to each exp dir).</p>
+<p>For example, if there is not enough storage on a drive, consider using multiple drives.</p>
+<p>Spreading data across 2-4 external drives allows for faster parallel processing.</p>
+<p>If SSDs are used, distrubuting data may not speed up processing as much.</p>
 </div>
 </section>
 <section id="make-an-exp-notes-txt">
 <h2>Make an exp_notes.txt<a class="headerlink" href="#make-an-exp-notes-txt" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>This helps for keeping track of paths, commands, etc.</p></li>
-<li><p>Most scripts automatically log the command used to run them, appending to .command_log.txt in the current working directory</p>
-<ul>
-<li><p>This is a hidden file. Use control+h to view it on Linux.</p></li>
 </ul>
-</li>
-</ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>touch<span class="w"> </span>exp_notes.txt<span class="w">  </span><span class="c1"># Make the .txt file</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path/exp_dir&gt;<span class="w">  </span><span class="c1"># Change the current working directory to an exp dir</span>
 
-cat<span class="w"> </span>.command_log.txt<span class="w">  </span><span class="c1"># View command history for the current working directory</span>
+touch<span class="w"> </span>exp_notes.txt<span class="w">  </span><span class="c1"># Make the .txt file</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Most scripts log the command used to run them, appending to ./.command_log.txt</p>
+<p>This is a hidden file. Use control+h to view it on Linux.</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># View command history for the current working directory</span>
+cat<span class="w"> </span>.command_log.txt<span class="w">  </span>
 
-cat<span class="w"> </span>.command_log.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10<span class="w">  </span><span class="c1"># View last 10 lines</span>
+<span class="c1"># View last 10 lines</span>
+cat<span class="w"> </span>.command_log.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10<span class="w">  </span>
 </pre></div>
 </div>
 </section>
@@ -482,10 +464,17 @@ cat<span class="w"> </span>.command_log.txt<span class="w"> </span><span class="
 <ul class="simple">
 <li><p>To make commands easier to run, define common variables in a shell script (e.g., env_var.sh)</p></li>
 <li><p>Source the script to load variables in each terminal session</p></li>
-<li><p>Copy /UNRAVEL/_other/env_var_gubra.sh to an experiment folder and update values of each variable</p></li>
-<li><p>Add: <strong>alias exp=”. /path/env_var.sh”</strong> to your .bashrc or .zshrc terminal config file</p></li>
+<li><p>Copy /UNRAVEL/_other/env_var_gubra.sh to an exp dir and update each variable</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run the alias in the terminal to source the variables before running commands/scripts using the variables</span>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Add this line to your .bashrc or .zshrc terminal config file:
+alias exp=”. /path/env_var.sh”</p>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Source the updated config file</span>
+.<span class="w"> </span>~/.zshrc
+
+<span class="c1"># Run the alias to source the variables before using them to run commands/scripts</span>
 exp
 </pre></div>
 </div>
@@ -524,6 +513,58 @@ exp
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">iDISCO/LSFM-specific</span> <span class="pre">atlas</span> <span class="pre">&lt;https://pubmed.ncbi.nlm.nih.gov/33063286/&gt;</span></code>_</p></li>
 </ul>
+</section>
+<section id="example-sample-folder-structure-after-analysis">
+<h2>Example sample?? folder structure after analysis<a class="headerlink" href="#example-sample-folder-structure-after-analysis" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.
+├──<span class="w"> </span>atlas_space<span class="w">  </span><span class="c1"># Dir with images warped to atlas space</span>
+├──<span class="w"> </span>cfos_seg_ilastik_1<span class="w">  </span><span class="c1"># Example dir with segmentations from ilastik</span>
+├──<span class="w"> </span>clusters<span class="w">  </span><span class="c1"># Dir with cell/label density CSVs from validate_clusters.py</span>
+├──<span class="w"> </span>parameters<span class="w">  </span><span class="c1"># Optional dir for things like metadata.txt</span>
+├──<span class="w"> </span>reg_inputs<span class="w">  </span><span class="c1"># prep_reg.py (autofl image resampled for reg) and brain_mask.py (mask, masked autofl)</span>
+├──<span class="w"> </span>regional_cell_densities<span class="w">  </span><span class="c1"># CSVs with regional cell densities data</span>
+├──<span class="w"> </span>reg_outputs<span class="w">  </span><span class="c1"># Outputs from reg.py. These images are typically padded w/ empty voxels. </span>
+└──<span class="w"> </span>&lt;raw<span class="w"> </span>image<span class="w"> </span>or<span class="w"> </span>images&gt;
+</pre></div>
+</div>
+</section>
+<section id="example-experiment-folder-structure-after-analysis">
+<h2>Example experiment folder structure after analysis<a class="headerlink" href="#example-experiment-folder-structure-after-analysis" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.
+├──<span class="w"> </span>notes.txt
+├──<span class="w"> </span>env_var.sh
+├──<span class="w"> </span>sample_key.csv
+├──<span class="w"> </span>Control
+│<span class="w">   </span>├──<span class="w"> </span>sample01
+│<span class="w">   </span>└──<span class="w"> </span>sample02
+├──<span class="w"> </span>Treatment
+│<span class="w">   </span>├──<span class="w"> </span>sample03
+│<span class="w">   </span>└──<span class="w"> </span>sample04
+├──<span class="w"> </span>atlas
+│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_25um_bin.nii.gz
+│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_combined_25um.nii.gz
+│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_split_25um.nii.gz
+│<span class="w">   </span>├──<span class="w"> </span>gubra_mask_25um_wo_ventricles_root_fibers_LH.nii.gz
+│<span class="w">   </span>├──<span class="w"> </span>gubra_mask_25um_wo_ventricles_root_fibers_RH.nii.gz
+│<span class="w">   </span>└──<span class="w"> </span>gubra_template_25um.nii.gz
+├──<span class="w"> </span>reg_results
+├──<span class="w"> </span>ilastik_brain_mask
+│<span class="w">   </span>├──<span class="w"> </span>brain_mask.ilp
+│<span class="w">   </span>├──<span class="w"> </span>sample01_slice_0000.tif
+│<span class="w">   </span>├──<span class="w"> </span>sample01_slice_0005.tif
+│<span class="w">   </span>├──<span class="w"> </span>sample01_slice_0050.tif
+│<span class="w">   </span>├──<span class="w"> </span>...
+│<span class="w">   </span>└──<span class="w"> </span>sample04_slice_0050.tif
+├──<span class="w"> </span>vstats
+│<span class="w">   </span>└──<span class="w"> </span>Control_v_Treatment
+├──<span class="w"> </span>cluster_validation
+│<span class="w">   </span>└──<span class="w"> </span>Control_v_Treatment
+└──<span class="w"> </span>regional_cell_densities
+<span class="w">    </span>├──<span class="w"> </span>Control_sample01_regional_cell_densities.csv
+<span class="w">    </span>├──<span class="w"> </span>...
+<span class="w">    </span>└──<span class="w"> </span>Treatment_sample04_regional_cell_densities.csv
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -575,8 +616,6 @@ exp
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stitch-z-stacks-if-needed">Stitch z-stacks if needed</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#organize-sample-folders-and-raw-data">Organize sample folders and raw data</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-experiment-folder-structure">Example experiment folder structure</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-sample-structure">Example sample?? structure</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-an-exp-notes-txt">Make an exp_notes.txt</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-a-sample-key-csv-with-this-organization">Make a sample_key.csv with this organization:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-common-variables-in-a-shell-script">Define common variables in a shell script</a></li>
@@ -584,6 +623,8 @@ exp
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-clean-tifs">Optional: clean tifs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-workflow">Typical workflow:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#registration">Registration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-sample-folder-structure-after-analysis">Example sample?? folder structure after analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-experiment-folder-structure-after-analysis">Example experiment folder structure after analysis</a></li>
 </ul>
   </nav></div>
 
