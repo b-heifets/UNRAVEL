@@ -1,0 +1,14 @@
+img {
+    background-color: transparent;
+}
+
+#unravel-visualizer {
+    background-color: white !important;
+    filter: none !important;
+    opacity: 1 !important;
+}
+
+#unravel-logo {
+    margin-bottom: 30px; /* Adjust the value to create the desired spacing */
+    background-color: transparent !important;
+}
