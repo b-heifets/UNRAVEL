@@ -28,6 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/image_tools/spatial_averaging';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,8 +158,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -264,8 +271,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -368,7 +375,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Load image and apply 3D spatial averaging&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image .czi, path/img.nii.gz, or path/tif_dir&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -411,7 +418,7 @@
 
 
 <div class="viewcode-block" id="spatial_average_3D">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.spatial_average_3D">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.spatial_average_3D">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">spatial_average_3D</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -431,7 +438,7 @@
 
 
 <div class="viewcode-block" id="apply_2D_mean_filter">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.apply_2D_mean_filter">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.apply_2D_mean_filter">[docs]</a>
 <span class="k">def</span> <span class="nf">apply_2D_mean_filter</span><span class="p">(</span><span class="nb">slice</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply a 2D mean filter to a single slice.&quot;&quot;&quot;</span>
     <span class="n">kernel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">kernel_size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">kernel_size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -439,7 +446,7 @@
 
 
 <div class="viewcode-block" id="spatial_average_2D">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.spatial_average_2D">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.spatial_average_2D">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">spatial_average_2D</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">filter_func</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">threads</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -468,7 +475,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.spatial_averaging.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     

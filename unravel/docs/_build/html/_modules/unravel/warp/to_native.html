@@ -28,6 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/warp/to_native';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,8 +158,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -264,8 +271,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -372,7 +379,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.warp.html#unravel.warp.to_native.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/warp/to_native.html#unravel.warp.to_native.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Warp img.nii.gz from atlas space to tissue space and scale to full resolution&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process.&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -396,7 +403,7 @@
 
 
 <div class="viewcode-block" id="calculate_resampled_padded_dimensions">
-<a class="viewcode-back" href="../../../unravel.warp.html#unravel.warp.to_native.calculate_resampled_padded_dimensions">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/warp/to_native.html#unravel.warp.to_native.calculate_resampled_padded_dimensions">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">calculate_resampled_padded_dimensions</span><span class="p">(</span><span class="n">original_dimensions</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">target_res</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">pad_fraction</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">miracl</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="c1"># Calculate zoom factors for xy and z dimensions</span>
@@ -428,7 +435,7 @@
 
 
 <div class="viewcode-block" id="scale_to_full_res">
-<a class="viewcode-back" href="../../../unravel.warp.html#unravel.warp.to_native.scale_to_full_res">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/warp/to_native.html#unravel.warp.to_native.scale_to_full_res">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">scale_to_full_res</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">full_res_dims</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale ndarray to match x, y, z dimensions provided as ndarray (order=0 is nearest-neighbor). Returns scaled ndarray.&quot;&quot;&quot;</span>
@@ -438,7 +445,7 @@
 
 
 <div class="viewcode-block" id="to_native">
-<a class="viewcode-back" href="../../../unravel.warp.html#unravel.warp.to_native.to_native">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/warp/to_native.html#unravel.warp.to_native.to_native">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">to_native</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">reg_outputs</span><span class="p">,</span> <span class="n">fixed_reg_in</span><span class="p">,</span> <span class="n">moving_img_path</span><span class="p">,</span> <span class="n">metadata_rel_path</span><span class="p">,</span> <span class="n">reg_res</span><span class="p">,</span> <span class="n">miracl</span><span class="p">,</span> <span class="n">zoom_order</span><span class="p">,</span> <span class="n">interpol</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Warp image from atlas space to tissue space and scale to full resolution&quot;&quot;&quot;</span>
@@ -501,7 +508,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.warp.html#unravel.warp.to_native.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/warp/to_native.html#unravel.warp.to_native.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

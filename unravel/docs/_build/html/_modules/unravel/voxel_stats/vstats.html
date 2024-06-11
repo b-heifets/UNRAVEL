@@ -28,6 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/voxel_stats/vstats';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,8 +158,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -264,8 +271,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -370,7 +377,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.vstats.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Run voxel-wise stats using FSL&#39;s randomise_parallel command&quot;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mas&#39;</span><span class="p">,</span> <span class="s1">&#39;--mask&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/mask.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -454,7 +461,7 @@
 <span class="c1"># TODO: Add an email option to send a message when the processing is complete. Add progress bar. See if fragments can be generated in parallel. Could make avg and avg diff maps in this script (e.g., before merge since this is fast)</span>
 
 <div class="viewcode-block" id="check_fdr_command">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.vstats.check_fdr_command">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.check_fdr_command">[docs]</a>
 <span class="k">def</span> <span class="nf">check_fdr_command</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if the &#39;fdr&#39; command is available in the system&#39;s path.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">&#39;fdr&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -463,7 +470,7 @@
 
 
 <div class="viewcode-block" id="create_design_ttest2">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.vstats.create_design_ttest2">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.create_design_ttest2">[docs]</a>
 <span class="k">def</span> <span class="nf">create_design_ttest2</span><span class="p">(</span><span class="n">mat_file</span><span class="p">,</span> <span class="n">group1_size</span><span class="p">,</span> <span class="n">group2_size</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create design matrix for a two-group unpaired t-test.&quot;&quot;&quot;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;design_ttest2&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">mat_file</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">group1_size</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">group2_size</span><span class="p">)]</span>
@@ -471,7 +478,7 @@
 
 
 <div class="viewcode-block" id="get_groups_info">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.vstats.get_groups_info">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.get_groups_info">[docs]</a>
 <span class="k">def</span> <span class="nf">get_groups_info</span><span class="p">():</span>
     <span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.nii.gz&#39;</span><span class="p">))</span>
     <span class="n">groups</span> <span class="o">=</span> <span class="p">{}</span>
@@ -490,7 +497,7 @@
 
 
 <div class="viewcode-block" id="calculate_fragments">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.vstats.calculate_fragments">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.calculate_fragments">[docs]</a>
 <span class="k">def</span> <span class="nf">calculate_fragments</span><span class="p">(</span><span class="n">num_contrasts</span><span class="p">,</span> <span class="n">total_permutations_per_contrast</span><span class="o">=</span><span class="mi">18000</span><span class="p">,</span> <span class="n">permutations_per_fragment</span><span class="o">=</span><span class="mi">300</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the total number of fragments based on the number of contrasts.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">num_contrasts</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -500,7 +507,7 @@
 
 
 <div class="viewcode-block" id="run_randomise_parallel">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.vstats.run_randomise_parallel">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.run_randomise_parallel">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">run_randomise_parallel</span><span class="p">(</span><span class="n">input_image_path</span><span class="p">,</span> <span class="n">mask_path</span><span class="p">,</span> <span class="n">permutations</span><span class="p">,</span> <span class="n">output_name</span><span class="p">,</span> <span class="n">design_fts_path</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span> <span class="n">verbose</span><span class="p">):</span>
     
@@ -548,7 +555,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.vstats.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

@@ -1,5 +1,37 @@
 #!/usr/bin/env python3
 
+"""
+This script loads full resolution images (.czi, .nii.gz, or TIF series) to extract metadata and save it to ./parameters/metadata.txt.
+
+The script supports multiple experiment directories and patterns for identifying sample directories. It processes each sample directory to load images, extract metadata, and save the metadata to a specified path.
+
+Usage:
+    metadata.py -i rel_path/full_res_img (can use glob patterns)
+    metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable
+
+Inputs:
+    - .czi, .nii.gz, or TIF series (path should be relative to ./sample??)
+
+Outputs:
+    - ./parameters/metadata.txt (path should be relative to ./sample??)
+
+Arguments:
+    -e, --exp_paths : List of experiment directory paths with sample?? directories to process. (default: None)
+    -p, --pattern   : Pattern for sample?? directories. Uses the current working directory if no matches are found. (default: 'sample??')
+    -d, --dirs      : List of sample?? directory names or paths to directories to process. (default: None)
+    -i, --input     : Path to the full resolution image (relative to ./sample??). (required)
+    -m, --metad_path: Path to the metadata file. (default: "parameters/metadata.txt")
+    -x, --xy_res    : XY resolution in micrometers. (default: None)
+    -z, --z_res     : Z resolution in micrometers. (default: None)
+    -v, --verbose   : Increase verbosity. (default: False)
+
+Examples:
+    Run this script from an experiment or sample?? folder if using a relative input path.
+    
+    metadata.py -i rel_path/full_res_img (can use glob patterns)
+    metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable
+"""
+
 import argparse
 from pathlib import Path
 import cv2

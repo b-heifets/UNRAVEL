@@ -41,7 +41,8 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages', 
-    'sphinx.ext.todo'
+    'sphinx.ext.todo', 
+    'sphinx_togglebutton'
 ]
 
 autodoc_default_options = {
@@ -52,6 +53,10 @@ autodoc_default_options = {
 autodoc_member_order = 'bysource'
 autodoc_inherit_docstrings = True
 autodoc_typehints = 'description'
+
+myst_enable_extensions = [
+    "colon_fence"
+]
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']

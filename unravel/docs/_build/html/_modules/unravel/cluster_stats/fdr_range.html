@@ -28,6 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/fdr_range';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,8 +158,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -264,8 +271,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -365,7 +372,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr_range.html#unravel.cluster_stats.fdr_range.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Outputs a list of FDR q values that yeild clusters&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">q_values_default</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.00001</span><span class="p">,</span> <span class="mf">0.00005</span><span class="p">,</span> <span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.0005</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">,</span> <span class="mf">0.999</span><span class="p">,</span> <span class="mf">0.9999</span><span class="p">]</span>
@@ -384,7 +391,7 @@
 
 
 <div class="viewcode-block" id="smart_float_format">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.smart_float_format">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr_range.html#unravel.cluster_stats.fdr_range.smart_float_format">[docs]</a>
 <span class="k">def</span> <span class="nf">smart_float_format</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">max_decimals</span><span class="o">=</span><span class="mi">9</span><span class="p">):</span>
 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Format float with up to `max_decimals` places, but strip unnecessary trailing zeros.&quot;&quot;&quot;</span>
@@ -393,7 +400,7 @@
 
 
 <div class="viewcode-block" id="fdr_range">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.fdr_range">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr_range.html#unravel.cluster_stats.fdr_range.fdr_range">[docs]</a>
 <span class="k">def</span> <span class="nf">fdr_range</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">mask_path</span><span class="p">,</span> <span class="n">q_value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform FDR correction on the input p value map using a mask.</span>
 <span class="sd">    </span>
@@ -425,7 +432,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr_range.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr_range.html#unravel.cluster_stats.fdr_range.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     

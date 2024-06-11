@@ -28,6 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/core/config';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,8 +158,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -264,8 +271,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -358,7 +365,7 @@
 <span class="kn">import</span> <span class="nn">re</span>
 
 <div class="viewcode-block" id="AttrDict">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.AttrDict">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/config.html#unravel.core.config.AttrDict">[docs]</a>
 <span class="k">class</span> <span class="nc">AttrDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A dictionary that allows attribute access.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -366,7 +373,7 @@
 
 
 <div class="viewcode-block" id="Config">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.Config">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/config.html#unravel.core.config.Config">[docs]</a>
 <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to read configuration from a file and allow attribute access using RawConfigParser.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file</span><span class="p">):</span>
@@ -387,7 +394,7 @@
 
     
 <div class="viewcode-block" id="Configuration">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.Configuration">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/config.html#unravel.core.config.Configuration">[docs]</a>
 <span class="k">class</span> <span class="nc">Configuration</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to hold configuration settings.&quot;&quot;&quot;</span>
     <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span></div>

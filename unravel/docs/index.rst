@@ -66,7 +66,7 @@ Getting started
 
 * :doc:`guide`
 * :doc:`commands`
-* Documentation on modules and functions in the :doc:`unravel`
+
 
 
 UNRAVEL visualizer
@@ -132,13 +132,13 @@ Support is welcome for:
     <br>
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
    installation
    guide
    commands
-   modules
+   unravel/toc
 
 .. raw:: html
 

@@ -28,6 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/utilities/prepend_conditions';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,8 +158,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -264,8 +271,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -366,7 +373,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.utilities.html#unravel.utilities.prepend_conditions.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/utilities/prepend_conditions.html#unravel.utilities.prepend_conditions.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Prepend conditions to filenames based on a CSV key&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sk&#39;</span><span class="p">,</span> <span class="s1">&#39;--sample_key&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/sample_key.csv w/ directory names and conditions&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -397,7 +404,7 @@
 
 
 <div class="viewcode-block" id="rename_items">
-<a class="viewcode-back" href="../../../unravel.utilities.html#unravel.utilities.prepend_conditions.rename_items">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/utilities/prepend_conditions.html#unravel.utilities.prepend_conditions.rename_items">[docs]</a>
 <span class="k">def</span> <span class="nf">rename_items</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">dir_name</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">rename_files</span><span class="p">,</span> <span class="n">rename_dirs</span><span class="p">,</span> <span class="n">recursive</span><span class="p">):</span>
     <span class="n">search_pattern</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;**/</span><span class="si">{</span><span class="n">dir_name</span><span class="si">}</span><span class="s1">*&#39;</span> <span class="k">if</span> <span class="n">recursive</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dir_name</span><span class="si">}</span><span class="s1">*&#39;</span>    
     <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">search_pattern</span><span class="p">):</span>
@@ -410,7 +417,7 @@
 
 
 <div class="viewcode-block" id="prepend_conditions">
-<a class="viewcode-back" href="../../../unravel.utilities.html#unravel.utilities.prepend_conditions.prepend_conditions">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/utilities/prepend_conditions.html#unravel.utilities.prepend_conditions.prepend_conditions">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">prepend_conditions</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">csv_file</span><span class="p">,</span> <span class="n">rename_files</span><span class="p">,</span> <span class="n">rename_dirs</span><span class="p">,</span> <span class="n">recursive</span><span class="p">):</span>
     <span class="n">mapping_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_file</span><span class="p">)</span>
@@ -423,7 +430,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.utilities.html#unravel.utilities.prepend_conditions.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/utilities/prepend_conditions.html#unravel.utilities.prepend_conditions.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

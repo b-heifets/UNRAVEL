@@ -28,6 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/fdr';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,8 +158,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -264,8 +271,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -370,7 +377,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Perform FDR correction on a p value map to define clusters&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/p_value_map.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -414,7 +421,7 @@
 <span class="c1"># TODO: could add optional args like in vstats.py for running the fdr command. </span>
 
 <div class="viewcode-block" id="fdr">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.fdr">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.fdr">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">fdr</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">fdr_path</span><span class="p">,</span> <span class="n">mask_path</span><span class="p">,</span> <span class="n">q_value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform FDR correction on the input p value map using a mask.</span>
@@ -456,7 +463,7 @@
 
 
 <div class="viewcode-block" id="cluster_index">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.cluster_index">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.cluster_index">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">cluster_index</span><span class="p">(</span><span class="n">adj_p_val_img_path</span><span class="p">,</span> <span class="n">min_size</span><span class="p">,</span> <span class="n">q_value</span><span class="p">,</span> <span class="n">output_index</span><span class="p">):</span>
 
@@ -480,7 +487,7 @@
 
 
 <div class="viewcode-block" id="reverse_clusters">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.reverse_clusters">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.reverse_clusters">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">reverse_clusters</span><span class="p">(</span><span class="n">cluster_index_img</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">cluster_index_nii</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reverse the cluster IDs in a cluster index image (ndarray). Return the reversed cluster index ndarray.&quot;&quot;&quot;</span>
@@ -500,7 +507,7 @@
 
 
 <div class="viewcode-block" id="split_clusters_based_on_effect">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.split_clusters_based_on_effect">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.split_clusters_based_on_effect">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">split_clusters_based_on_effect</span><span class="p">(</span><span class="n">rev_cluster_index_img</span><span class="p">,</span> <span class="n">avg_img1</span><span class="p">,</span> <span class="n">avg_img2</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">max_cluster_id</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">cluster_index_nii</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">avg_img1</span> <span class="ow">and</span> <span class="n">avg_img2</span><span class="p">:</span> 
@@ -543,7 +550,7 @@
 
 
 <div class="viewcode-block" id="process_fdr_and_clusters">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.process_fdr_and_clusters">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.process_fdr_and_clusters">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">process_fdr_and_clusters</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">min_size</span><span class="p">,</span> <span class="n">avg_img1</span><span class="p">,</span> <span class="n">avg_img2</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Process FDR correction and cluster index generation for a given q value.&quot;&quot;&quot;</span>
@@ -599,7 +606,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

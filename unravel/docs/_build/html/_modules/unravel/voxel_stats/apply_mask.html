@@ -28,6 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/voxel_stats/apply_mask';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,8 +158,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -264,8 +271,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -371,7 +378,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.apply_mask.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Loads image and mask. Zeros out voxels in image based on mask and direction args&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? folders&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -404,7 +411,7 @@
 
 
 <div class="viewcode-block" id="load_mask">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.apply_mask.load_mask">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.load_mask">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_mask</span><span class="p">(</span><span class="n">mask_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load .nii.gz and return to an ndarray with a binary dtype&quot;&quot;&quot;</span>
@@ -413,7 +420,7 @@
 
 
 <div class="viewcode-block" id="mean_intensity_in_brain">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.apply_mask.mean_intensity_in_brain">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.mean_intensity_in_brain">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">mean_intensity_in_brain</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">tissue_mask</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Z-score the image using the mask.</span>
@@ -433,7 +440,7 @@
 
 
 <div class="viewcode-block" id="dilate_mask">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.apply_mask.dilate_mask">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.dilate_mask">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">dilate_mask</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Dilate the given mask (ndarray) by a specified number of iterations.&quot;&quot;&quot;</span>
@@ -442,7 +449,7 @@
 
 
 <div class="viewcode-block" id="scale_bool_to_full_res">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.apply_mask.scale_bool_to_full_res">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.scale_bool_to_full_res">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">scale_bool_to_full_res</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">full_res_dims</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Scale ndarray to match x, y, z dimensions provided. Uses nearest-neighbor interpolation by default to preserve a binary data type.&quot;&quot;&quot;</span>
@@ -451,7 +458,7 @@
 
 
 <div class="viewcode-block" id="apply_mask_to_ndarray">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.apply_mask.apply_mask_to_ndarray">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.apply_mask_to_ndarray">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">apply_mask_to_ndarray</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">mask_ndarray</span><span class="p">,</span> <span class="n">other_mask</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mask_condition</span><span class="o">=</span><span class="s1">&#39;less&#39;</span><span class="p">,</span> <span class="n">new_value</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Replace voxels in the ndarray with a new_value based on mask conditions. Optionally use a second mask to restrict application spatially.&quot;&quot;&quot;</span>
@@ -475,7 +482,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.voxel_stats.html#unravel.voxel_stats.apply_mask.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

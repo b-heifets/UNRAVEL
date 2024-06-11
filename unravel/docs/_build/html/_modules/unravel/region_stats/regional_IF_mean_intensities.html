@@ -28,6 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/regional_IF_mean_intensities';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,8 +158,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -264,8 +271,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -363,7 +370,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_IF_mean_intensities.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">DEFAULT_ATLAS</span> <span class="o">=</span> <span class="s1">&#39;/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz&#39;</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Measure mean intensity of immunofluorescence staining in brain regions.&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
@@ -375,7 +382,7 @@
 
 
 <div class="viewcode-block" id="calculate_mean_intensity">
-<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_IF_mean_intensities.calculate_mean_intensity">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.calculate_mean_intensity">[docs]</a>
 <span class="k">def</span> <span class="nf">calculate_mean_intensity</span><span class="p">(</span><span class="n">atlas</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">regions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates mean intensity for each region in the atlas.&quot;&quot;&quot;</span>
 
@@ -411,7 +418,7 @@
 
 
 <div class="viewcode-block" id="write_to_csv">
-<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_IF_mean_intensities.write_to_csv">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.write_to_csv">[docs]</a>
 <span class="k">def</span> <span class="nf">write_to_csv</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Writes the data to a CSV file.&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
@@ -422,7 +429,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_IF_mean_intensities.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

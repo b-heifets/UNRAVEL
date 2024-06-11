@@ -28,6 +28,7 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/validate_clusters';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -151,8 +158,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -264,8 +271,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -374,7 +381,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/validate_clusters.html#unravel.cluster_stats.validate_clusters.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/label densities&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process.&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -421,7 +428,7 @@
 <span class="c1"># TODO: Make config file for defaults or a command_generator.py script</span>
 
 <div class="viewcode-block" id="crop_outer_space">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.crop_outer_space">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/validate_clusters.html#unravel.cluster_stats.validate_clusters.crop_outer_space">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">crop_outer_space</span><span class="p">(</span><span class="n">native_cluster_index</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Crop outer space around all clusters and save bounding box to .txt file (outer_bounds.txt) </span>
@@ -454,7 +461,7 @@
 
 
 <div class="viewcode-block" id="cluster_bbox">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.cluster_bbox">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/validate_clusters.html#unravel.cluster_stats.validate_clusters.cluster_bbox">[docs]</a>
 <span class="k">def</span> <span class="nf">cluster_bbox</span><span class="p">(</span><span class="n">cluster_ID</span><span class="p">,</span> <span class="n">native_cluster_index_cropped</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get bounding box for the current cluster. Return cluster_ID, xmin, xmax, ymin, ymax, zmin, zmax.&quot;&quot;&quot;</span>
     <span class="n">cluster_mask</span> <span class="o">=</span> <span class="n">native_cluster_index_cropped</span> <span class="o">==</span> <span class="n">cluster_ID</span>
@@ -470,7 +477,7 @@
 
 
 <div class="viewcode-block" id="cluster_bbox_parallel">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.cluster_bbox_parallel">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/validate_clusters.html#unravel.cluster_stats.validate_clusters.cluster_bbox_parallel">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">cluster_bbox_parallel</span><span class="p">(</span><span class="n">native_cluster_index_cropped</span><span class="p">,</span> <span class="n">clusters</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get bounding boxes for each cluster in parallel. Return list of results.&quot;&quot;&quot;</span>
@@ -490,7 +497,7 @@
 
 
 <div class="viewcode-block" id="count_cells">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.count_cells">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/validate_clusters.html#unravel.cluster_stats.validate_clusters.count_cells">[docs]</a>
 <span class="k">def</span> <span class="nf">count_cells</span><span class="p">(</span><span class="n">seg_in_cluster</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Count cells (objects) in each cluster using connected-components-3d</span>
 <span class="sd">    Return the number of cells in the cluster.&quot;&quot;&quot;</span>
@@ -507,7 +514,7 @@
 
 
 <div class="viewcode-block" id="density_in_cluster">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.density_in_cluster">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/validate_clusters.html#unravel.cluster_stats.validate_clusters.density_in_cluster">[docs]</a>
 <span class="k">def</span> <span class="nf">density_in_cluster</span><span class="p">(</span><span class="n">cluster_data</span><span class="p">,</span> <span class="n">native_cluster_index_cropped</span><span class="p">,</span> <span class="n">seg_cropped</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="s1">&#39;cell_count&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Measure cell count or volume of segmented voxels in the current cluster.</span>
 <span class="sd">    For cell densities, return: cluster_ID, cell_count, cluster_volume_in_cubic_mm, cell_density, xmin, xmax, ymin, ymax, zmin, zmax</span>
@@ -539,7 +546,7 @@
 
     
 <div class="viewcode-block" id="density_in_cluster_parallel">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.density_in_cluster_parallel">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/validate_clusters.html#unravel.cluster_stats.validate_clusters.density_in_cluster_parallel">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">density_in_cluster_parallel</span><span class="p">(</span><span class="n">cluster_bbox_results</span><span class="p">,</span> <span class="n">native_cluster_index_cropped</span><span class="p">,</span> <span class="n">seg_cropped</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="s1">&#39;cell_count&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Measure cell count or volume of segmented voxels in each cluster in parallel. Return list of results.&quot;&quot;&quot;</span>
@@ -560,7 +567,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.validate_clusters.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/validate_clusters.html#unravel.cluster_stats.validate_clusters.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
