@@ -420,6 +420,9 @@
     <span class="c1"># Paths to the transformation files</span>
     <span class="n">generic_affine_matrix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">transforms_prefix</span><span class="si">}</span><span class="s1">0GenericAffine.mat&#39;</span><span class="p">)</span>
     <span class="n">initial_transform_matrix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">transforms_prefix</span><span class="si">}</span><span class="s1">init_tform.mat&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">transforms_prefix</span><span class="si">}</span><span class="s1">init_tform.mat&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">initial_transform_matrix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="s1">&#39;init_tform.mat&#39;</span><span class="p">)</span> <span class="c1"># For backward compatibility</span>
+
 
     <span class="c1"># Apply the transformations</span>
     <span class="k">if</span> <span class="n">inverse</span><span class="p">:</span>
