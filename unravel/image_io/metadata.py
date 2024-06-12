@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 """
-This script loads full resolution images (.czi, .nii.gz, or TIF series) to extract metadata and save it to ./parameters/metadata.txt.
+This script saves x/y and z voxel sizes in microns as well as image dimensions to a metadata file in each sample directory.
 
-The script supports multiple experiment directories and patterns for identifying sample directories. It processes each sample directory to load images, extract metadata, and save the metadata to a specified path.
+Run this script from an experiment, sample?? folder, or provide -e/--exp_paths and -d/--dirs arguments to specify the experiment and sample directories.
 
-Run this script from an experiment or sample?? folder if using a relative input path.
-
-Usage:
+Usage for when metadata is extractable:
     metadata.py -i rel_path/full_res_img (can use glob patterns)
+
+Usage for when metadata is not extractable:
     metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable
 
 Inputs:
@@ -16,10 +16,6 @@ Inputs:
 
 Outputs:
     - ./parameters/metadata.txt (path should be relative to ./sample??)
-
-Examples:
-    
-    
 """
 
 import argparse

@@ -153,13 +153,6 @@
 </li>
 
 
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../commands.html">
-    Commands
-  </a>
-</li>
-
-
 <li class="nav-item pst-header-nav-item current active">
   <a class="nav-link nav-internal" href="../toc.html">
     unravel package
@@ -264,13 +257,6 @@
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../guide.html">
     Guide
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../commands.html">
-    Commands
   </a>
 </li>
 
@@ -576,8 +562,8 @@ S: Superior / I: Inferior</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>nii</strong> (<em>nibabel.nifti1.Nifti1Image</em>) – NIfTI image</p></li>
-<li><p><strong>target_ort</strong> (<em>str</em>) – Target orientation axis codes (e.g., RAS)</p></li>
-<li><p><strong>zero_origin</strong> (<em>bool</em>) – Zero the origin of the affine matrix. Default: False</p></li>
+<li><p><strong>target_ort</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Target orientation axis codes (e.g., RAS)</p></li>
+<li><p><strong>zero_origin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Zero the origin of the affine matrix. Default: False</p></li>
 </ul>
 </dd>
 </dl>
@@ -590,11 +576,11 @@ S: Superior / I: Inferior</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nii_path</strong> (<em>str</em>) – Path to the NIfTI image</p></li>
-<li><p><strong>target_ort</strong> (<em>str</em>) – Target orientation axis codes (e.g., RAS)</p></li>
-<li><p><strong>zero_origin</strong> (<em>bool</em>) – Zero the origin of the affine matrix. Default: False</p></li>
-<li><p><strong>apply</strong> (<em>bool</em>) – Apply the new orientation to the ndarray data. Default: False</p></li>
-<li><p><strong>form_code</strong> (<em>int</em>) – Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned). Default: None (get from the input NIfTI image)</p></li>
+<li><p><strong>nii_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Path to the NIfTI image</p></li>
+<li><p><strong>target_ort</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Target orientation axis codes (e.g., RAS)</p></li>
+<li><p><strong>zero_origin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Zero the origin of the affine matrix. Default: False</p></li>
+<li><p><strong>apply</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Apply the new orientation to the ndarray data. Default: False</p></li>
+<li><p><strong>form_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned). Default: None (get from the input NIfTI image)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>

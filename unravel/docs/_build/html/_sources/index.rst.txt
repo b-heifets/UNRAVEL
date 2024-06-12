@@ -76,8 +76,7 @@ Getting started
     pip install unravel
 
 * :doc:`guide`
-* :doc:`commands`
-
+* :doc:`unravel/toc`
 
 
 UNRAVEL visualizer
@@ -148,7 +147,6 @@ Support is welcome for:
 
    installation
    guide
-   commands
    unravel/toc
 
 .. raw:: html

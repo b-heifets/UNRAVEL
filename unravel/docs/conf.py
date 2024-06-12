@@ -40,10 +40,16 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages', 
-    'sphinx.ext.todo', 
-    'sphinx_togglebutton'
+    'sphinx.ext.githubpages',
+    'sphinx.ext.todo',
+    'sphinx_togglebutton',
+    'sphinx.ext.intersphinx'
 ]
+
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3', None),
+    'sphinx': ('https://www.sphinx-doc.org/en/master/', None),
+}
 
 autodoc_default_options = {
     'members': True,

@@ -153,13 +153,6 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="unravel/toc.html">
     unravel package
   </a>
@@ -265,13 +258,6 @@
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="guide.html">
     Guide
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="commands.html">
-    Commands
   </a>
 </li>
 
@@ -395,7 +381,7 @@
 </div>
 <ul class="simple">
 <li><p><a class="reference internal" href="guide.html"><span class="doc">Guide</span></a></p></li>
-<li><p><a class="reference internal" href="commands.html"><span class="doc">Commands</span></a></p></li>
+<li><p><a class="reference internal" href="unravel/toc.html"><span class="doc">unravel package</span></a></p></li>
 </ul>
 </section>
 <section id="unravel-visualizer">
@@ -466,111 +452,65 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="guide.html">Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#back-up-raw-data">Back up raw data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#stitch-z-stacks-if-needed">Stitch z-stacks if needed</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#create-sample-folders">Create sample folders</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#add-raw-or-stitched-images-to-each-sample-folder">Add raw or stitched images to each sample?? folder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#make-an-exp-notes-txt">Make an exp_notes.txt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#make-a-sample-key-csv-with-this-organization">Make a sample_key.csv with this organization:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#define-common-variables-in-a-shell-script">Define common variables in a shell script</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#commands-scripts">Commands/scripts</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#optional-clean-tifs">Optional: clean tifs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#typical-analysis-workflow">Typical analysis workflow:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#set-up">Set up</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#unravel-image-io-metadata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.metadata</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#back-up-raw-data">Back up raw data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#stitch-z-stacks">Stitch z-stacks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#make-sample-folders">Make sample folders</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#add-images-to-sample-dirs">Add images to sample?? dirs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#log-exp-paths-commands-etc">Log exp paths, commands, etc.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#make-a-sample-key-csv">Make a sample_key.csv:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#define-common-variables-in-a-shell-script">Define common variables in a shell script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#help-on-commands-scripts">Help on commands/scripts</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#optional-clean-tifs">Optional: clean tifs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#note-x-y-and-z-voxel-sizes">Note x/y and z voxel sizes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#registration">Registration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#prep-reg"><code class="docutils literal notranslate"><span class="pre">prep_reg</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#copy-tifs"><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#brain-mask"><code class="docutils literal notranslate"><span class="pre">brain_mask</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#reg"><code class="docutils literal notranslate"><span class="pre">reg</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#check-reg"><code class="docutils literal notranslate"><span class="pre">check_reg</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide.html#analysis-steps">Analysis steps:</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#registration">Registration</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#prep-reg"><code class="docutils literal notranslate"><span class="pre">prep_reg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#copy-tifs"><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#brain-mask"><code class="docutils literal notranslate"><span class="pre">brain_mask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#reg"><code class="docutils literal notranslate"><span class="pre">reg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#check-reg"><code class="docutils literal notranslate"><span class="pre">check_reg</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#segmentation">Segmentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#id1"><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#seg"><code class="docutils literal notranslate"><span class="pre">seg</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#segmentation">Segmentation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#id1"><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#seg"><code class="docutils literal notranslate"><span class="pre">seg</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#voxel-wise-stats">Voxel-wise stats</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#prep-vstats"><code class="docutils literal notranslate"><span class="pre">prep_vstats</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#z-score"><code class="docutils literal notranslate"><span class="pre">z_score</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#agg-files-from-dirs"><code class="docutils literal notranslate"><span class="pre">agg_files_from_dirs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#whole-to-avg"><code class="docutils literal notranslate"><span class="pre">whole_to_avg</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#prepend-conditions"><code class="docutils literal notranslate"><span class="pre">prepend_conditions</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#vstats"><code class="docutils literal notranslate"><span class="pre">vstats</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#voxel-wise-stats">Voxel-wise stats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#prep-vstats"><code class="docutils literal notranslate"><span class="pre">prep_vstats</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#z-score"><code class="docutils literal notranslate"><span class="pre">z_score</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#agg-files-from-dirs"><code class="docutils literal notranslate"><span class="pre">agg_files_from_dirs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#whole-to-avg"><code class="docutils literal notranslate"><span class="pre">whole_to_avg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#prepend-conditions"><code class="docutils literal notranslate"><span class="pre">prepend_conditions</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#vstats"><code class="docutils literal notranslate"><span class="pre">vstats</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#cluster-correction">Cluster correction</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#avg"><code class="docutils literal notranslate"><span class="pre">avg</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#fdr-range"><code class="docutils literal notranslate"><span class="pre">fdr_range</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#fdr"><code class="docutils literal notranslate"><span class="pre">fdr_</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#recursive-mirror-index"><code class="docutils literal notranslate"><span class="pre">recursive_mirror_index</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#cluster-correction">Cluster correction</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#avg"><code class="docutils literal notranslate"><span class="pre">avg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#fdr-range"><code class="docutils literal notranslate"><span class="pre">fdr_range</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#fdr"><code class="docutils literal notranslate"><span class="pre">fdr_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#recursive-mirror-index"><code class="docutils literal notranslate"><span class="pre">recursive_mirror_index</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#cluster-validation">Cluster validation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#validate-clusters"><code class="docutils literal notranslate"><span class="pre">validate_clusters</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#summary"><code class="docutils literal notranslate"><span class="pre">summary</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#cluster-validation">Cluster validation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#validate-clusters"><code class="docutils literal notranslate"><span class="pre">validate_clusters</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#summary"><code class="docutils literal notranslate"><span class="pre">summary</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#region-wise-stats">Region-wise stats</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#rstats"><code class="docutils literal notranslate"><span class="pre">rstats</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#rstats-summary"><code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#region-wise-stats">Region-wise stats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#rstats"><code class="docutils literal notranslate"><span class="pre">rstats</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#rstats-summary"><code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#other">Other</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#nii-info"><code class="docutils literal notranslate"><span class="pre">nii_info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#other">Other</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#nii-info"><code class="docutils literal notranslate"><span class="pre">nii_info</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#id2">Registration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#example-sample-folder-structure-after-analysis">Example sample?? folder structure after analysis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="guide.html#example-experiment-folder-structure-after-analysis">Example experiment folder structure after analysis</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="commands.html">Commands</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="commands.html#registration">Registration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#metadata"><code class="docutils literal notranslate"><span class="pre">metadata</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#prep-reg"><code class="docutils literal notranslate"><span class="pre">prep_reg</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#copy-tifs"><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#brain-mask"><code class="docutils literal notranslate"><span class="pre">brain_mask</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#reg"><code class="docutils literal notranslate"><span class="pre">reg</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#check-reg"><code class="docutils literal notranslate"><span class="pre">check_reg</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="commands.html#segmentation">Segmentation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#id1"><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#seg"><code class="docutils literal notranslate"><span class="pre">seg</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="commands.html#voxel-wise-stats">Voxel-wise stats</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#prep-vstats"><code class="docutils literal notranslate"><span class="pre">prep_vstats</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#z-score"><code class="docutils literal notranslate"><span class="pre">z_score</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#agg-files-from-dirs"><code class="docutils literal notranslate"><span class="pre">agg_files_from_dirs</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#whole-to-avg"><code class="docutils literal notranslate"><span class="pre">whole_to_avg</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#prepend-conditions"><code class="docutils literal notranslate"><span class="pre">prepend_conditions</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#vstats"><code class="docutils literal notranslate"><span class="pre">vstats</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="commands.html#cluster-correction">Cluster correction</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#avg"><code class="docutils literal notranslate"><span class="pre">avg</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#fdr-range"><code class="docutils literal notranslate"><span class="pre">fdr_range</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#fdr"><code class="docutils literal notranslate"><span class="pre">fdr_</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#recursive-mirror-index"><code class="docutils literal notranslate"><span class="pre">recursive_mirror_index</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="commands.html#cluster-validation">Cluster validation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#validate-clusters"><code class="docutils literal notranslate"><span class="pre">validate_clusters</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#summary"><code class="docutils literal notranslate"><span class="pre">summary</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="commands.html#region-wise-stats">Region-wise stats</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#rstats"><code class="docutils literal notranslate"><span class="pre">rstats</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#rstats-summary"><code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="commands.html#other">Other</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="commands.html#nii-info"><code class="docutils literal notranslate"><span class="pre">nii_info</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#example-sample-folder-structure-after-analysis">Example sample?? folder structure after analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#example-experiment-folder-structure-after-analysis">Example experiment folder structure after analysis</a></li>
 </ul>
 </li>
 </ul>

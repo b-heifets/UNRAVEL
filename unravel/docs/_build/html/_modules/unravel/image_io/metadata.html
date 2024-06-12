@@ -151,13 +151,6 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../unravel/toc.html">
     unravel package
   </a>
@@ -264,13 +257,6 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../unravel/toc.html">
     unravel package
   </a>
@@ -362,14 +348,14 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">This script loads full resolution images (.czi, .nii.gz, or TIF series) to extract metadata and save it to ./parameters/metadata.txt.</span>
+<span class="sd">This script saves x/y and z voxel sizes in microns as well as image dimensions to a metadata file in each sample directory.</span>
 
-<span class="sd">The script supports multiple experiment directories and patterns for identifying sample directories. It processes each sample directory to load images, extract metadata, and save the metadata to a specified path.</span>
+<span class="sd">Run this script from an experiment, sample?? folder, or provide -e/--exp_paths and -d/--dirs arguments to specify the experiment and sample directories.</span>
 
-<span class="sd">Run this script from an experiment or sample?? folder if using a relative input path.</span>
-
-<span class="sd">Usage:</span>
+<span class="sd">Usage for when metadata is extractable:</span>
 <span class="sd">    metadata.py -i rel_path/full_res_img (can use glob patterns)</span>
+
+<span class="sd">Usage for when metadata is not extractable:</span>
 <span class="sd">    metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable</span>
 
 <span class="sd">Inputs:</span>
@@ -377,10 +363,6 @@
 
 <span class="sd">Outputs:</span>
 <span class="sd">    - ./parameters/metadata.txt (path should be relative to ./sample??)</span>
-
-<span class="sd">Examples:</span>
-<span class="sd">    </span>
-<span class="sd">    </span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>

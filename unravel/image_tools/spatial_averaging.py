@@ -28,6 +28,9 @@ Input image types:
     - The input array must be 3D.
     - The xy and z resolutions are required for saving the output as .nii.gz.
     - The output is saved as .nii.gz, .tif series, or .zarr.
+
+Outputs: 
+    - .nii.gz, .tif series, or .zarr depending on the output path extension.
 """
 
 import argparse

@@ -12,7 +12,7 @@ ort_code letter options:
     - A/P=Anterior/Posterior
     - L/R=Left/Right
     - S/I=Superior/Interior
-    - The side of the brain at the positive direction of the x, y, and z axes determine the 3 letters (axis order xyz)
+    - The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)
 
 Prereqs: 
     prep_reg.py, [prep_brain_mask.py], & [brain_mask.py] for warping an average template to the autofluo tissue
