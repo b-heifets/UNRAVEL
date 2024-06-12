@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>unravel.register.metadata module &#8212; UNRAVEL docs</title>
+    <title>unravel.image_io.metadata module &#8212; UNRAVEL docs</title>
   
   
   
@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -46,12 +46,12 @@
     <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/register/metadata';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/image_io/metadata';</script>
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="unravel.register.prep_reg module" href="prep_reg.html" />
-    <link rel="prev" title="unravel.register package" href="toc.html" />
+    <link rel="next" title="unravel.image_io.nii_hd module" href="nii_hd.html" />
+    <link rel="prev" title="unravel.image_io.img_to_npy module" href="img_to_npy.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -317,13 +317,12 @@
      aria-label="Section Navigation">
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.register package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.register.metadata module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="prep_reg.html">unravel.register.prep_reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="check_reg.html">unravel.register.check_reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/check_reg.html">unravel.register.check_reg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../warp/toc.html">unravel.warp package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -398,18 +397,19 @@
 <li class="toctree-l2"><a class="reference internal" href="../core/utils.html">unravel.core.utils module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../image_io/toc.html">unravel.image_io package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/img_io.html">unravel.image_io.img_io module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/nii_to_tifs.html">unravel.image_io.nii_to_tifs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/nii_to_zarr.html">unravel.image_io.nii_to_zarr module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.image_io package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="img_io.html">unravel.image_io.img_io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.image_io.metadata module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nii_hd.html">unravel.image_io.nii_hd module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nii_info.html">unravel.image_io.nii_info module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nii_io.html">unravel.image_io.nii_io module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nii_to_tifs.html">unravel.image_io.nii_to_tifs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="nii_to_zarr.html">unravel.image_io.nii_to_zarr module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../image_tools/toc.html">unravel.image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -480,9 +480,9 @@
     <li class="breadcrumb-item"><a href="../toc.html" class="nav-link">unravel package</a></li>
     
     
-    <li class="breadcrumb-item"><a href="toc.html" class="nav-link">unravel.register package</a></li>
+    <li class="breadcrumb-item"><a href="toc.html" class="nav-link">unravel.image_io package</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">unravel.regi...</li>
+    <li class="breadcrumb-item active" aria-current="page">unravel.imag...</li>
   </ul>
 </nav>
 </div>
@@ -499,16 +499,17 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.register.metadata">
-<span id="unravel-register-metadata-module"></span><span id="unravel-register-metadata"></span><h1>unravel.register.metadata module<a class="headerlink" href="#module-unravel.register.metadata" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.image_io.metadata">
+<span id="unravel-image-io-metadata-module"></span><span id="unravel-image-io-metadata"></span><h1>unravel.image_io.metadata module<a class="headerlink" href="#module-unravel.image_io.metadata" title="Link to this heading">#</a></h1>
 <p>This script loads full resolution images (.czi, .nii.gz, or TIF series) to extract metadata and save it to ./parameters/metadata.txt.</p>
 <p>The script supports multiple experiment directories and patterns for identifying sample directories. It processes each sample directory to load images, extract metadata, and save the metadata to a specified path.</p>
+<p>Run this script from an experiment or sample?? folder if using a relative input path.</p>
 <dl class="simple">
 <dt>Usage:</dt><dd><p>metadata.py -i rel_path/full_res_img (can use glob patterns)
 metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable</p>
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
-<li><p>.czi, .nii.gz, or TIF series (path should be relative to ./sample??)</p></li>
+<li><p>.czi, .nii.gz, .h5, or TIF series (path should be relative to ./sample??)</p></li>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
@@ -516,78 +517,25 @@ metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable</p>
 </ul>
 </dd>
 </dl>
-<dl class="field-list simple">
-<dt class="field-odd">param -e<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of experiment directory paths with sample?? directories to process. (default: None)</p>
-</dd>
-<dt class="field-even">param –exp_paths<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of experiment directory paths with sample?? directories to process. (default: None)</p>
-</dd>
-<dt class="field-odd">param -p<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Pattern for sample?? directories. Uses the current working directory if no matches are found. (default: ‘sample??’)</p>
-</dd>
-<dt class="field-even">param –pattern<span class="colon">:</span></dt>
-<dd class="field-even"><p>Pattern for sample?? directories. Uses the current working directory if no matches are found. (default: ‘sample??’)</p>
-</dd>
-<dt class="field-odd">param -d<span class="colon">:</span></dt>
-<dd class="field-odd"><p>List of sample?? directory names or paths to directories to process. (default: None)</p>
-</dd>
-<dt class="field-even">param –dirs<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of sample?? directory names or paths to directories to process. (default: None)</p>
-</dd>
-<dt class="field-odd">param -i<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Path to the full resolution image (relative to ./sample??). (required)</p>
-</dd>
-<dt class="field-even">param –input<span class="colon">:</span></dt>
-<dd class="field-even"><p>Path to the full resolution image (relative to ./sample??). (required)</p>
-</dd>
-<dt class="field-odd">param -m<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Path to the metadata file. (default: “parameters/metadata.txt”)</p>
-</dd>
-<dt class="field-even">param –metad_path<span class="colon">:</span></dt>
-<dd class="field-even"><p>Path to the metadata file. (default: “parameters/metadata.txt”)</p>
-</dd>
-<dt class="field-odd">param -x<span class="colon">:</span></dt>
-<dd class="field-odd"><p>XY resolution in micrometers. (default: None)</p>
-</dd>
-<dt class="field-even">param –xy_res<span class="colon">:</span></dt>
-<dd class="field-even"><p>XY resolution in micrometers. (default: None)</p>
-</dd>
-<dt class="field-odd">param -z<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Z resolution in micrometers. (default: None)</p>
-</dd>
-<dt class="field-even">param –z_res<span class="colon">:</span></dt>
-<dd class="field-even"><p>Z resolution in micrometers. (default: None)</p>
-</dd>
-<dt class="field-odd">param -v<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Increase verbosity. (default: False)</p>
-</dd>
-<dt class="field-even">param –verbose<span class="colon">:</span></dt>
-<dd class="field-even"><p>Increase verbosity. (default: False)</p>
-</dd>
-</dl>
-<p class="rubric">Examples</p>
-<p>Run this script from an experiment or sample?? folder if using a relative input path.</p>
-<p>metadata.py -i rel_path/full_res_img (can use glob patterns)
-metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable</p>
+<p>Examples:</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.metadata.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.metadata.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/metadata.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.metadata.parse_args" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.image_io.metadata.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.metadata.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/metadata.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.metadata.parse_args" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.metadata.print_metadata">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.metadata.</span></span><span class="sig-name descname"><span class="pre">print_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/metadata.html#print_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.metadata.print_metadata" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.image_io.metadata.print_metadata">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.metadata.</span></span><span class="sig-name descname"><span class="pre">print_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metadata_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/metadata.html#print_metadata"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.metadata.print_metadata" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.metadata.get_dims_from_tifs">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.metadata.</span></span><span class="sig-name descname"><span class="pre">get_dims_from_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tifs_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/metadata.html#get_dims_from_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.metadata.get_dims_from_tifs" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.image_io.metadata.get_dims_from_tifs">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.metadata.</span></span><span class="sig-name descname"><span class="pre">get_dims_from_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tifs_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/metadata.html#get_dims_from_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.metadata.get_dims_from_tifs" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.metadata.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.metadata.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/metadata.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.metadata.main" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.image_io.metadata.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.metadata.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/metadata.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.metadata.main" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -603,20 +551,20 @@ metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="toc.html"
+       href="img_to_npy.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">unravel.register package</p>
+        <p class="prev-next-title">unravel.image_io.img_to_npy module</p>
       </div>
     </a>
     <a class="right-next"
-       href="prep_reg.html"
+       href="nii_hd.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.register.prep_reg module</p>
+        <p class="prev-next-title">unravel.image_io.nii_hd module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -638,17 +586,17 @@ metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.metadata.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.metadata.print_metadata"><code class="docutils literal notranslate"><span class="pre">print_metadata()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.metadata.get_dims_from_tifs"><code class="docutils literal notranslate"><span class="pre">get_dims_from_tifs()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.metadata.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.metadata.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.metadata.print_metadata"><code class="docutils literal notranslate"><span class="pre">print_metadata()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.metadata.get_dims_from_tifs"><code class="docutils literal notranslate"><span class="pre">get_dims_from_tifs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.metadata.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../_sources/unravel/register/metadata.rst.txt">
+    <a href="../../_sources/unravel/image_io/metadata.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

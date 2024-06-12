@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+"""
+Aggregates csv outputs from validate_clusters.py
+
+Usage:
+    org_data.py -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
+"""
+
 import argparse
 import shutil
 from glob import glob
@@ -14,7 +21,7 @@ from unravel.core.utils import print_cmd_and_times, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Aggregates csv outputs from validate_clusters.py', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -24,8 +31,7 @@ def parse_args():
     parser.add_argument('-td', '--target_dir', help='path/dir to copy results. If omitted, copy data to the cwd', default=None, action=SM)
     parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from fdr.py). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Usage: org_data.py -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Copy the rev_cluster_index.nii.gz to the target_dir

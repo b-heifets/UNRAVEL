@@ -1,5 +1,24 @@
 #!/usr/bin/env python3
 
+"""
+Loads immunofluo image, subtracts background, and warps to atlas space
+
+Usage:
+    prep_vstats.py -i ochann -rb 4 -x 3.5232 -z 6 -o ochann_rb4_gubra_space.nii.gz -e <list of paths to experiment directories> -v
+
+Prereqs: 
+    reg.py
+
+Input examples (path is relative to ./sample??; 1st glob match processed): 
+    <asterisk>.czi, ochann/<asterisk>.tif, ochann, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr
+
+Example output:
+    ./sample??/atlas_space/sample??_ochann_rb4_gubra_space.nii.gz
+
+Next steps: 
+    Aggregate outputs with aggregate_files_from_sample_dirs.py and run vstats.py
+"""
+
 import argparse
 import shutil
 from pathlib import Path
@@ -18,7 +37,7 @@ from unravel.warp.to_atlas import to_atlas
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads immunofluo image, subtracts background, and warps to atlas space', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -43,19 +62,7 @@ def parse_args():
     parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
     parser.add_argument('-th', '--threads', help='Number of threads for rolling ball subtraction. Default: 8', default=8, type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = """Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir
-Example usage: prep_vstats.py -i ochann -rb 4 -x 3.5232 -z 6 -o ochann_rb4_gubra_space.nii.gz -e <list of paths to experiment directories> -v
-
-Prereqs: 
-reg.py
-
-Input examples (path is relative to ./sample??; 1st glob match processed): 
-*.czi, ochann/*.tif, ochann, *.tif, *.h5, or *.zarr
-
-Example output:
-./sample??/atlas_space/sample??_ochann_rb4_gubra_space.nii.gz
-
-next steps: Aggregate outputs and run vstats.py"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

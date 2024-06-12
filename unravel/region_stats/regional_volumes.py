@@ -1,5 +1,16 @@
 #! /usr/bin/env python3
 
+"""
+Calculate regional volumes from cluster index and outputs csvs
+
+Outputs:
+    - .csv files in path/<asterisk>_cluster_index.nii.gz/regional_volumes/
+    - <asterisk>region_volumes_split.csv: volumes for each hemisphere
+    - <asterisk>region_volumes_combined.csv: combined volumes for left and right hemispheres
+    - <asterisk>sunburst.csv: volumes for each region in ABA hierarchy (for sunburst plot in Fluorish)
+    - sunburst_RGBs.csv: RGB values for each region in ABA hierarchy (for sunburst plot)
+"""
+
 from pathlib import Path
 import os
 import argparse
@@ -18,12 +29,7 @@ def parse_args():
     parser.add_argument('-i', '--index', help='path/rev_cluster_index.nii.gz (e.g., from fdr.sh)', default=None, action=SM) 
     parser.add_argument('-a', '--atlas', help='path/img.nii.gz. Default: gubra_ano_split_25um.nii.gz', default="/usr/local/unravel/atlases/gubra/gubra_ano_split_25um.nii.gz", action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Outputs: .csv files in path/*_cluster_index.nii.gz/regional_volumes/
-    - *region_volumes_split.csv: volumes for each hemisphere
-    - *region_volumes_combined.csv: combined volumes for left and right hemispheres
-    - *sunburst.csv: volumes for each region in ABA hierarchy (for sunburst plot in Fluorish)
-    - sunburst_RGBs.csv: RGB values for each region in ABA hierarchy (for sunburst plot)
-    """
+    parser.epilog = __doc__
     return parser.parse_args()
 
 print_func_name_args_times()

@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 
+"""
+Load 3D image, [get metadata], and save as the specified image type
+
+Input image types:
+    .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
+
+Output image types: 
+    .nii.gz, .tif series, .zarr
+"""
+
 import argparse
 from rich.traceback import install
 
@@ -9,7 +19,7 @@ from unravel.core.img_io import load_3D_img, save_as_h5, save_as_nii, save_as_ti
 from unravel.core.utils import print_cmd_and_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load 3D image, [get metadata], and save as the specified image type', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/image .czi, path/img.nii.gz, or path/tif_dir', required=True, action=SM)
     parser.add_argument('-x', '--xy_res', help='xy resolution in um', required=True, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='z resolution in um', required=True, type=float, action=SM)
@@ -19,9 +29,7 @@ def parse_args():
     parser.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata. Default: None', default=None, action=SM)
     parser.add_argument('-ao', '--axis_order', help='Default: xyz. (other option: zyx)', default='xyz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Input image types: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
-Output image types: .nii.gz, .tif series, .zarr
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Test if other scripts in image_io are redundant and can be removed

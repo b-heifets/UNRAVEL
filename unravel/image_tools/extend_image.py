@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+"""
+Load 3D image, extend one side, and save as tifs
+
+Usage:
+    extend_image.py -i ochann -o ochann_extended -e 100 -s back -v
+"""
+
 import argparse
 from pathlib import Path
 import numpy as np
@@ -14,7 +21,7 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, 
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load 3D image, extend one side, and save as tifs', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='path/image or path/image_dir', default=None, action=SM)
@@ -22,10 +29,7 @@ def parse_args():
     parser.add_argument('-s', '--side', help="Side to extend. Options: 'front', 'back', 'left', 'right', 'top', 'bottom'. Default: 'front'", default='front', action=SM)
     parser.add_argument('-e', '--extension', help="Number of voxels to extend", type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = """
-Run script from the experiment directory containing sample?? folders or a sample?? folder.
-Example usage: extend_image.py -i ochann -o ochann_extended -e 100 -s back -v
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

@@ -1,5 +1,25 @@
 #!/usr/bin/env python3
 
+"""
+Calculates the effect size for a comparison between two groups for each cluster [or a valid cluster list]
+
+Usage:
+    effect_sizes.py -i densities.csv -c1 saline -c2 psilocybin
+
+-c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.
+
+Outputs CSV w/ the effect size and CI for each cluster:
+    <input>_Hedges_g_<condition_1>_<condition_2>.csv
+
+If -c is used, outputs a CSV with the effect sizes and CI for valid clusters:
+    <input>_Hedges_g_<condition_1>_<condition_2>_valid_clusters.csv
+
+The effect size is calculated as the unbiased Hedge\'s g effect sizes (corrected for sample size): 
+    Hedges' g = ((c2-c1)/spooled*corr_factor)
+    CI = Hedges' g +/- t * SE
+    0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large
+"""
+
 import argparse
 import os
 import pandas as pd
@@ -9,26 +29,12 @@ from termcolor import colored
 from unravel.core.argparse_utils import SuppressMetavar, SM
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='''Calculates the effect size for a comparison between two groups for each cluster [or a valid cluster list]''', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input_csv', help='CSV with densities (Columns: Samples, Conditions, Cluster_1, Cluster_2, ...)', action=SM)
     parser.add_argument('-c1', '--condition_1', help='First condition of interest from csv (e.g., saline [data matching prefix pooled])', action=SM)
     parser.add_argument('-c2', '--condition_2', help='Second condition (e.g, psilocybin [data matching prefix pooled])', action=SM)
     parser.add_argument('-c', '--clusters', help='Space separated list of valid cluster IDs (default: process all clusters)', default=None, nargs='*', type=int, action=SM)
-    parser.epilog = """Example usage:    sex_effect_sizes_absolute.py -i densities.csv -c1 saline -c2 psilocybin
-
--c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.
-
-Outputs CSV w/ the effect size and CI for each cluster:
-<input>_Hedges_g_<condition_1>_<condition_2>.csv
-
-If -c is used, outputs a CSV with the effect sizes and CI for valid clusters:
-<input>_Hedges_g_<condition_1>_<condition_2>_valid_clusters.csv
-
-The effect size is calculated as the unbiased Hedge\'s g effect sizes (corrected for sample size): 
-
-Hedges' g = ((c2-c1)/spooled*corr_factor)
-CI = Hedges' g +/- t * SE
-0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 
@@ -55,7 +61,7 @@ def condition_selector(df, condition, unique_conditions, condition_column='Condi
     else:
         raise ValueError(colored(f"Condition {condition} not recognized!", 'red'))
     
-# Calculate the effect size for each cluster and sex
+# Calculate the effect size for each cluster
 def hedges_g(df, condition_1, condition_2): 
 
     df = pd.read_csv(df)

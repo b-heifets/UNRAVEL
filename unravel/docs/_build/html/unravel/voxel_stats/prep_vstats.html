@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -318,7 +318,6 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../register/metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -402,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -501,6 +501,19 @@
                   
   <section id="module-unravel.voxel_stats.prep_vstats">
 <span id="unravel-voxel-stats-prep-vstats-module"></span><span id="unravel-voxel-stats-prep-vstats"></span><h1>unravel.voxel_stats.prep_vstats module<a class="headerlink" href="#module-unravel.voxel_stats.prep_vstats" title="Link to this heading">#</a></h1>
+<p>Loads immunofluo image, subtracts background, and warps to atlas space</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>prep_vstats.py -i ochann -rb 4 -x 3.5232 -z 6 -o ochann_rb4_gubra_space.nii.gz -e &lt;list of paths to experiment directories&gt; -v</p>
+</dd>
+<dt>Prereqs:</dt><dd><p>reg.py</p>
+</dd>
+<dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p>&lt;asterisk&gt;.czi, ochann/&lt;asterisk&gt;.tif, ochann, &lt;asterisk&gt;.tif, &lt;asterisk&gt;.h5, or &lt;asterisk&gt;.zarr</p>
+</dd>
+<dt>Example output:</dt><dd><p>./sample??/atlas_space/sample??_ochann_rb4_gubra_space.nii.gz</p>
+</dd>
+<dt>Next steps:</dt><dd><p>Aggregate outputs with aggregate_files_from_sample_dirs.py and run vstats.py</p>
+</dd>
+</dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.voxel_stats.prep_vstats.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.prep_vstats.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/prep_vstats.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.prep_vstats.parse_args" title="Link to this definition">#</a></dt>

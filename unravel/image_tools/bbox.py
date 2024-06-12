@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+"""
+Load image (.czi, .nii.gz, or tif series) and save bounding boxes as txt files
+
+Usage:
+    bbox.py -i path/img -o path/bounding_boxes
+"""
+
 import argparse
 from pathlib import Path
 from rich.traceback import install
@@ -12,12 +19,13 @@ from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load image (.czi, .nii.gz, or tif series) and ', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='', formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/img.czi, path/img.nii.gz, or path/tif_dir', action=SM, required=True)
     parser.add_argument('-o', '--output', help='path to output dir. Default: bounding_boxes', action=SM)
     parser.add_argument('-ob', '--outer_bbox', help='path/outer_bbox.txt (bbox for voxels > 0)', action=SM)
     parser.add_argument('-c', '--cluster', help='Cluster intensity to get bbox and crop', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def main():

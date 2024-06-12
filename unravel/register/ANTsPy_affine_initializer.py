@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
 
+"""
+Run ants.affine_initializer as a seperate process to kill it after a time out
+
+This also allows for suppressing error messages. 
+
+Usage: 
+    ANTsPy_affine_initialized.py -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10
+
+Python usage: 
+    - import subprocess
+    - import os
+    - command = ['python', 'ANTsPy_affine_initialized.py', '-f', 'reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', '-m', '/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz', '-o', 'reg_outputs/ANTsPy_init_tform.nii.gz', '-t', '10' ]
+    - with open(os.devnull, 'w') as devnull:
+    -    subprocess.run(command, stderr=devnull)
+"""
+
 import argparse
 import os
 import ants
@@ -13,25 +29,12 @@ from unravel.core.argparse_utils import SM, SuppressMetavar
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Run ants.affine_initializer as a seperate process to kill it after a time out', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., autofl_50um_masked_fixed_reg_input.nii.gz)', required=True, action=SM)
     parser.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz (e.g., template)', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/init_tform_py.nii.gz', required=True, action=SM)
     parser.add_argument('-t', '--time_out', help='Duration in seconds to allow this script to run. Default: 10', default=10, type=int, action=SM)
-    parser.epilog = """This also allows for suppressing error messages. 
-
-Usage: ANTsPy_affine_initialized.py -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10
-with open(os.devnull, 'w') as devnull:
-
-    
-Python usage: 
-import subprocess
-import os
-
-command = ['python', 'ANTsPy_affine_initialized.py', '-f', 'reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', '-m', '/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz', '-o', 'reg_outputs/ANTsPy_init_tform.nii.gz', '-t', '10' ]
-with open(os.devnull, 'w') as devnull:
-    subprocess.run(command, stderr=devnull)
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def affine_initializer_wrapper(fixed_image_path, moving_image_path, reg_outputs_path, queue):

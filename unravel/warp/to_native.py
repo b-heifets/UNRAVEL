@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
 
+"""
+Warp img.nii.gz from atlas space to tissue space and scale to full resolution
+
+Prereq:
+    ./parameters/metadata.txt (metadata.py)
+
+CLI usage:
+    to_native.py -m <path/image_to_warp_from_atlas_space.nii.gz> -o <native>/native_<img>.zarr
+
+Python usage:
+    - import unravel.warp.to_native as to_native
+    - to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None)
+    - Returns native_img as np.ndarray
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -18,7 +33,7 @@ from unravel.warp.warp import warp
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Warp img.nii.gz from atlas space to tissue space and scale to full resolution', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -32,10 +47,7 @@ def parse_args():
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """
-Prereq: ./parameters/metadata.txt (prep_reg.py or metadata.py)
-
-Usage: to_native.py -m <path/image_to_warp_from_atlas_space.nii.gz> -o <native>/native_<img>.zarr"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 @print_func_name_args_times()

@@ -1,5 +1,28 @@
 #!/usr/bin/env python3
 
+"""
+Uses a trained ilastik project (pixel classification) to mask the brain (better registration)
+
+Prereqs: 
+    - Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif (from prep_reg.py)
+    - Save brain_mask.ilp in experiment directory of use -ilp
+
+Usage:
+    brain_mask.py -v 
+
+Inputs: 
+    - reg_inputs/autofl_50um.nii.gz
+    - brain_mask.ilp # in exp dir
+
+Outputs: 
+    - reg_inputs/autofl_50um_tifs_ilastik_brain_seg/slice_<asterisk>.tif series
+    - reg_inputs/autofl_50um_brain_mask.nii.gz (can be used for reg.py and z-score.py)
+    - reg_inputs/autofl_50um_masked.nii.gz
+
+Next script: 
+    - reg.py
+"""
+
 import argparse
 import numpy as np
 from pathlib import Path
@@ -15,7 +38,7 @@ from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Uses a trained ilastik project (pixel classification) to mask the brain (better registration)', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -24,24 +47,7 @@ def parse_args():
     parser.add_argument('-r', '--reg_res', help='Resolution of autofluo input image in microns. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-l', '--ilastik_log', help='Show Ilastik log', action='store_true')
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = """Prereqs: 
-1) Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_*um_tifs/*.tif (from prep_reg.py)
-2) Save brain_mask.ilp in experiment directory of use -ilp
-
-Run brain_mask.py from exp dir or a sample?? dir.
-
-Example usage:     brain_mask.py -v 
-
-Inputs: 
-reg_inputs/autofl_50um.nii.gz
-brain_mask.ilp # in exp dir
-
-Outputs: 
-reg_inputs/autofl_50um_tifs_ilastik_brain_seg/slice_????.tif series
-reg_inputs/autofl_50um_brain_mask.nii.gz (can be used for reg.py and z-score.py)
-reg_inputs/autofl_50um_masked.nii.gz
-
-Next script: reg.py"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

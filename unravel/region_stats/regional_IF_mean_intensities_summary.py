@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+"""
+Plot mean IF intensity for a given region intensity ID for 3+ groups (only works for positive data)
+
+Usage:
+    regional_IF_mean_intensities_summary.py -r 1 --order group3 group2 group1 --labels Group_3 Group_2 Group_1 -t dunnnett
+"""
+
 import argparse
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -18,7 +25,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Plot mean IF intensity for a given region intensity ID for 3+ groups (only works for positive data)', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', action=SM)
     parser.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: gubra__region_ID_side_name_abbr.csv', default="gubra__region_ID_side_name_abbr.csv", action=SM)
     parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', action=SM)
@@ -26,8 +33,7 @@ def parse_args():
     parser.add_argument('-t', '--test', help='Choose between "tukey" and "dunnett" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett'], action=SM)
     parser.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
     parser.add_argument('-s', '--show_plot', help='Show plot if flag is provided', action='store_true')
-
-    parser.epilog = "regional_IF_mean_intensities_summary.py -r 1 --order group3 group2 group1 --labels Group_3 Group_2 Group_1 -t dunnnett"
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

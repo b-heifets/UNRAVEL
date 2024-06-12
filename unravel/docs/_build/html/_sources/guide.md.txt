@@ -37,8 +37,6 @@ Select a mid-stack reference slice. Ideally, tissue will be present in each tile
 ```
 
 
-
-
 ## Create sample folders 
    * Make a folder named after each condition in the experiment folder(s)
 ```
@@ -136,7 +134,7 @@ cat .command_log.txt | tail -10
 
 * To make commands easier to run, define common variables in a shell script (e.g., env_var.sh)
 * Source the script to load variables in each terminal session
-* Copy /UNRAVEL/_other/env_var_gubra.sh to an exp dir and update each variable
+* Copy /UNRAVEL/unravel/env_var.sh to an exp dir and update each variable
 
 Add this line to your .bashrc or .zshrc terminal config file: 
 ```bash
@@ -219,24 +217,18 @@ Variables below (e.g., $XY) can be defined in a script (e.g., env_var.sh) that c
 <br>
 <br>
 
+## Set up
 
-
-## Registration
-
-### `metadata`
+### {py:mod}`unravel.image_io.metadata`
 Extract or specify metadata (outputs to ./sample??/parameters/metadata.txt). Add the resolutions to env_var.sh. 
 ```bash
 metadata -i <rel_path/full_res_img>  # Glob patterns work for -i
 metadata -i <tif_dir> -x $XY -z $Z  # Specifying x and z voxel sizes in microns
 ```
-:::{admonition} Module Documentation Test
-:class: note dropdown
-
-You can find more information about this module in the
-:py:mod:`unravel.register.metadata`.
-:::
-
 <br>
+
+
+## Registration
 
 ### `prep_reg` 
 Prepare autofluo images for registration (resample to a lower resolution)

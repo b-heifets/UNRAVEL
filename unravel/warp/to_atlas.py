@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
 
+"""
+Warps native image to atlas space
+
+Usage:
+    to_atlas.py -i ochann -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v] 
+
+Prereqs: 
+    reg.py
+
+Input examples (path is relative to ./sample??; 1st glob match processed): 
+    <asterisk>.czi, ochann/<asterisk>.tif, ochann, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr 
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -19,7 +32,7 @@ from unravel.warp.warp import warp
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Warps native image to atlas space', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -40,15 +53,7 @@ def parse_args():
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the raw image. Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = """Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir
-Example usage: to_atlas.py -i ochann -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v] 
-
-Prereqs: 
-reg.py
-
-Input examples (path is relative to ./sample??; 1st glob match processed): 
-*.czi, ochann/*.tif, ochann, *.tif, *.h5, or *.zarr 
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

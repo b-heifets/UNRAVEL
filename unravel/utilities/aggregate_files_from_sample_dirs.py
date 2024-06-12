@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 
+
+"""
+Loads immunofluo image, subtracts background, and warps to atlas space
+
+Usage:
+    aggregate_files.py -i atlas_space/sample??_FOS_rb4_gubra_space_z_LRavg.nii.gz -v -e $DIRS
+"""
+
 import argparse
 import shutil
 from pathlib import Path
@@ -13,7 +21,7 @@ from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads immunofluo image, subtracts background, and warps to atlas space', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -21,7 +29,7 @@ def parse_args():
     parser.add_argument('-i', '--input', help='relative path to the source file to copy (if sample?? )', required=True, action=SM)
     parser.add_argument('-a', '--add_prefix', help='Add "sample??_" prefix to the output files', action='store_true')
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = """Usage:    aggregate_files.py -i atlas_space/sample??_FOS_rb4_gubra_space_z_LRavg.nii.gz -v -e $DIRS"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

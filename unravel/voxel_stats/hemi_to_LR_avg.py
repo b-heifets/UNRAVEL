@@ -1,5 +1,22 @@
 #!/usr/bin/env python3
 
+"""
+Automatically average hemisphere images with their mirrored counterparts
+
+Usage:
+    hemi_to_LR_avg.py -k 0.1 -tp -v
+
+Inputs: 
+    - input_img_LH.nii.gz
+    - input_img_RH.nii.gz
+
+Outputs:
+    - input_img_LRavg.nii.gz
+    - input_img_s100_LRavg.nii.gz
+
+"""
+
+
 import argparse
 import numpy as np
 import nibabel as nib
@@ -19,17 +36,14 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Automatically average hemisphere images with their mirrored counterparts', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
     parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
     parser.add_argument('-tp', '--parallel', help='Enable parallel processing with thread pools', default=False, action='store_true')
     parser.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz', default=None, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = """Usage:    hemi_to_LR_avg.py -k 0.1 -tp -v
-
-Inputs: input_img_LH.nii.gz & input_img_RH.nii.gz
-Output: input_img_LRavg.nii.gz or input_img_s50_LRavg.nii.gz"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

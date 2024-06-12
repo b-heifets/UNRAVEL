@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -318,7 +318,6 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../register/metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -402,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -501,6 +501,31 @@
                   
   <section id="module-unravel.cluster_stats.table">
 <span id="unravel-cluster-stats-table-module"></span><span id="unravel-cluster-stats-table"></span><h1>unravel.cluster_stats.table module<a class="headerlink" href="#module-unravel.cluster_stats.table" title="Link to this heading">#</a></h1>
+<p>Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>table.py</p>
+</dd>
+<dt>Prereqs:</dt><dd><p>valid_cluster_index.sh has been run. Run this script from the valid_clusters dir. &lt;asterisk&gt;cluster_info.txt in working dir.</p>
+</dd>
+</dl>
+<section id="sorting-by-hierarchy-and-volume">
+<h2>Sorting by hierarchy and volume:<a class="headerlink" href="#sorting-by-hierarchy-and-volume" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>Group by Depth: Starting from the earliest depth column, for each depth level:</dt><dd><ul class="simple">
+<li><p>Sum the volumes of all rows sharing the same region (or combination of regions up to that depth).</p></li>
+<li><p>Sort these groups by their aggregate volume in descending order, ensuring larger groups are prioritized.</p></li>
+</ul>
+</dd>
+<dt>Sort Within Groups: Within each group created in step 1:</dt><dd><ul class="simple">
+<li><p>Sort the rows by their individual volume in descending order.</p></li>
+</ul>
+</dd>
+<dt>Maintain Grouping Order:</dt><dd><ul class="simple">
+<li><p>As we move to deeper depth levels, maintain the grouping and ordering established in previous steps (only adjusting the order within groups based on the new depth’s aggregate volumes).</p></li>
+</ul>
+</dd>
+</dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.table.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/table.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.table.parse_args" title="Link to this definition">#</a></dt>
@@ -616,6 +641,7 @@ ensuring they meet the specified percentage volume criterion.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-by-hierarchy-and-volume">Sorting by hierarchy and volume:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.fill_na_with_last_known"><code class="docutils literal notranslate"><span class="pre">fill_na_with_last_known()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.sort_sunburst_hierarchy"><code class="docutils literal notranslate"><span class="pre">sort_sunburst_hierarchy()</span></code></a></li>

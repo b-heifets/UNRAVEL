@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
 
+"""
+Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
+
+Usage:
+    legend.py
+
+Prereqs:
+    valid_cluster_table.sh has been run and the resulting .xlsx files are in the working directory.
+
+Inputs:
+    <asterisk>_valid_clusters_table.xlsx files in the working directory
+
+Outputs:
+    legend.xlsx
+"""
+
 import argparse
 from glob import glob
 from pathlib import Path
@@ -18,17 +34,10 @@ from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--path', help='Path to the directory containing the *_valid_clusters_table.xlsx files. Default: current working directory', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Example usage:    legend.py
-
-Prerequisites: valid_cluster_table.sh has been run and the resulting .xlsx files are in the working directory.
-
-Inputs: *_valid_clusters_table.xlsx files in the working directory
-
-Outputs: legend.xlsx
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

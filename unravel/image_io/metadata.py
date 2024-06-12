@@ -5,31 +5,21 @@ This script loads full resolution images (.czi, .nii.gz, or TIF series) to extra
 
 The script supports multiple experiment directories and patterns for identifying sample directories. It processes each sample directory to load images, extract metadata, and save the metadata to a specified path.
 
+Run this script from an experiment or sample?? folder if using a relative input path.
+
 Usage:
     metadata.py -i rel_path/full_res_img (can use glob patterns)
     metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable
 
 Inputs:
-    - .czi, .nii.gz, or TIF series (path should be relative to ./sample??)
+    - .czi, .nii.gz, .h5, or TIF series (path should be relative to ./sample??)
 
 Outputs:
     - ./parameters/metadata.txt (path should be relative to ./sample??)
 
-Arguments:
-    -e, --exp_paths : List of experiment directory paths with sample?? directories to process. (default: None)
-    -p, --pattern   : Pattern for sample?? directories. Uses the current working directory if no matches are found. (default: 'sample??')
-    -d, --dirs      : List of sample?? directory names or paths to directories to process. (default: None)
-    -i, --input     : Path to the full resolution image (relative to ./sample??). (required)
-    -m, --metad_path: Path to the metadata file. (default: "parameters/metadata.txt")
-    -x, --xy_res    : XY resolution in micrometers. (default: None)
-    -z, --z_res     : Z resolution in micrometers. (default: None)
-    -v, --verbose   : Increase verbosity. (default: False)
-
 Examples:
-    Run this script from an experiment or sample?? folder if using a relative input path.
     
-    metadata.py -i rel_path/full_res_img (can use glob patterns)
-    metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable
+    
 """
 
 import argparse
@@ -45,7 +35,7 @@ from unravel.core.utils import get_samples, initialize_progress_bar, print_cmd_a
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load full res image (.czi, .nii.gz, or tif series) to get metadata and save to ./parameters/metadata.txt', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -54,14 +44,7 @@ def parse_args():
     parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, default=None, action=SM)
     parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, default=None, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Run this from an experiment or sample?? folder if using a relative input path. 
-
-Usage:    metadata.py -i rel_path/full_res_img (can use glob patterns)
-          metadata.py -i tif_dir -x 3.5232 -z 6 # Use if metadata not extractable
-
-Inputs: .czi, .nii.gz, or tif series (path should be relative to ./sample??)
-Outputs: ./parameters/metadata.txt (path should be relative to ./sample??)
-"""    
+    parser.epilog = __doc__   
     return parser.parse_args()
 
 

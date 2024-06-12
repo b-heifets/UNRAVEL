@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -50,7 +50,7 @@
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="unravel.register.metadata module" href="metadata.html" />
+    <link rel="next" title="unravel.register.prep_reg module" href="prep_reg.html" />
     <link rel="prev" title="unravel package" href="../toc.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -318,7 +318,6 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">unravel.register package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -402,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -500,16 +500,8 @@
 <h1>unravel.register package<a class="headerlink" href="#unravel-register-package" title="Link to this heading">#</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="metadata.html">unravel.register.metadata module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="metadata.html#unravel.register.metadata.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="metadata.html#unravel.register.metadata.print_metadata"><code class="docutils literal notranslate"><span class="pre">print_metadata()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="metadata.html#unravel.register.metadata.get_dims_from_tifs"><code class="docutils literal notranslate"><span class="pre">get_dims_from_tifs()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="metadata.html#unravel.register.metadata.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="prep_reg.html">unravel.register.prep_reg module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="prep_reg.html#unravel.register.prep_reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="prep_reg.html#unravel.register.prep_reg.copy_specific_slices"><code class="docutils literal notranslate"><span class="pre">copy_specific_slices()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prep_reg.html#unravel.register.prep_reg.prep_reg"><code class="docutils literal notranslate"><span class="pre">prep_reg()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prep_reg.html#unravel.register.prep_reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
@@ -561,11 +553,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="metadata.html"
+       href="prep_reg.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.register.metadata module</p>
+        <p class="prev-next-title">unravel.register.prep_reg module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

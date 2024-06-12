@@ -1,5 +1,25 @@
 #!/usr/bin/env python3
 
+"""
+Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/label densities
+
+Usage:
+    validate_clusters.py -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
+
+cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
+
+Outputs:
+    - ./sample??/clusters/<cluster_index_dir>/outer_bounds.txt
+    - ./sample??/clusters/<cluster_index_dir>/<args.density>_data.csv
+
+For -s, if a dir name is provided, the script will load ./sample??/seg_dir/sample??_seg_dir.nii.gz. 
+If a relative path is provided, the script will load the image at the specified path.
+
+Next script:
+    valid_clusters_summary.py
+"""
+
+
 import argparse
 import concurrent.futures
 import cc3d
@@ -20,7 +40,7 @@ from warp.to_native import to_native
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/label densities', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -46,18 +66,7 @@ def parse_args():
     parser.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, action=SM)
 
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Run from a sample?? folder.
-
-Example usage:     validate_clusters.py -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
-
-cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
-
-Outputs: ./sample??/clusters/<cluster_index_dir>/outer_bounds.txt, ./sample??/clusters/<cluster_index_dir>/<args.density>_data.csv
-
-For -s, if a dir name is provided, the script will load ./sample??/seg_dir/sample??_seg_dir.nii.gz. 
-If a relative path is provided, the script will load the image at the specified path.
-
-Next script: cluster_cell_counts.py"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: QC. Aggregate .csv results for all samples if args.exp_dirs, script to load image subset.

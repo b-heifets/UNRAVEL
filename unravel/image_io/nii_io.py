@@ -1,5 +1,23 @@
 #!/usr/bin/env python3
 
+"""
+Usage:     
+    nii_dtype.py -i path/img.nii.gz -d float32
+
+Usage for z-score scaling (if 8 bit is needed):
+    nii_dtype.py -i path/img.nii.gz -d uint8 -z
+
+Possible numpy data types: 
+    - Unsigned Integer: uint8, uint16, uint32, uint64
+    - Signed Integer: int8, int16, int32, int64
+    - Floating Point: float32, float64
+
+With --scale, the min intensity becomes dtype min and max intensity becomes dtype max. Every other intensity is scaled accordingly.
+With --binary, the image is binarized (0 or 1).
+With --zscore, the range of z-scored data from -3 to 3 is converted to 0 to 255.
+With --fixed_scale, the data is scaled using the provided min and max values.
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -20,20 +38,7 @@ def parse_args():
     parser.add_argument('-b', '--binary', help='Convert to binary image.', action='store_true', default=False)
     parser.add_argument('-z', '--zscore', help='Convert the range of z-scored data (use uint8 data type).', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Example usage:     nii_dtype.py -i path/img.nii.gz -d float32
-Example usage for z-score scaling:     nii_dtype.py -i path/img.nii.gz -d uint8 -z
-
-Possible numpy data types supported by NIfTI images: 
-    - Unsigned Integer: uint8, uint16, uint32, uint64
-    - Signed Integer: int8, int16, int32, int64
-    - Floating Point: float32, float64
-    - Complex Numbers: complex64, complex128
-
-With --scale, the min intensity becomes dtype min and max intensity becomes dtype max. Every other intensity is scaled accordingly.
-With --binary, the image is binarized (0 or 1).
-With --zscore, the range of z-scored data from -3 to 3 is converted to 0 to 255.
-With --fixed_scale, the data is scaled using the provided min and max values.
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

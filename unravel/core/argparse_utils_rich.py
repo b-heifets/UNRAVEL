@@ -1,5 +1,46 @@
 #!/usr/bin/env python3
 
+"""
+This script defines custom classes to enhance the formatting and handling of argparse arguments
+using the Rich library for beautiful terminal output.
+
+Classes:
+    - SuppressMetavar: A custom RichHelpFormatter class that suppresses the display of metavar for
+                       arguments and customizes the epilog formatting.
+    - SM: A custom argparse.Action class that suppresses the display of metavar across all nargs 
+          configurations and manages argument values.
+
+Usage:
+    Import the classes and use them in an argparse-based script to suppress metavar and format help
+    messages with Rich's styled output.
+
+Example:
+    import argparse
+    from rich_argparse import RichHelpFormatter
+    from path.to.this.script import SuppressMetavar, SM
+
+    parser = argparse.ArgumentParser(description="A script example.", formatter_class=SuppressMetavar)
+    parser.add_argument('-e', '--example', help='Example argument', action=SM)
+    args = parser.parse_args()
+
+Classes:
+    SuppressMetavar
+        - Inherits from RichHelpFormatter to modify the formatting of action invocations and epilog text.
+        - Methods:
+            - _format_action_invocation: Customizes the formatting of argument options.
+            - _fill_text: Formats the epilog text with specified indentation and width.
+
+    SM
+        - Inherits from argparse.Action to suppress metavar display and manage argument values.
+        - Methods:
+            - __init__: Initializes the custom action and sets the metavar to an empty string or tuple.
+            - __call__: Sets the argument values in the namespace, handling both single and multiple values.
+
+Notes:
+    - This script relies on the rich and argparse libraries for enhanced help message formatting.
+    - The SuppressMetavar class is specifically designed to work with Rich's RichHelpFormatter for styled terminal output.
+"""
+
 import argparse
 from rich_argparse import RichHelpFormatter
 import textwrap

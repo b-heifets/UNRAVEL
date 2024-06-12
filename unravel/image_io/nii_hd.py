@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Load .nii.gz and print header using nibabel.
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -11,9 +15,10 @@ from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='.nii.gz and print header using nibabel.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

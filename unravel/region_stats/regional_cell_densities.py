@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
 
+"""
+Perform regional cell counting
+
+Usage:    
+    - regional_cell_densities.py -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 
+        - Use if atlas is already in native space from to_native.py
+    - regional_cell_densities.py -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36
+        - Use if native atlas is not available; it is not saved (faster)
+
+Prereqs: 
+    - prep_reg.py, reg.py and ilastik_pixel_classification.py
+"""
+
 import argparse
 import cc3d
 import numpy as np
@@ -19,7 +32,7 @@ from unravel.warp.to_native import to_native
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Perform regional cell counting', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -35,16 +48,7 @@ def parse_args():
     parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """
-Example usage:    
-    - regional_cell_densities.py -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 
-        - Use if atlas is already in native space from to_native.py
-    - regional_cell_densities.py -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36
-        - Use if native atlas is not available; it is not saved (faster)
-
-Prereqs: 
-    - prep_reg.py, reg.py and ilastik_pixel_classification.py
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Add option to get regional label densities --> rename to regional_densities.py --> update the summary script 

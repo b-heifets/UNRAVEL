@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Measure mean intensity of immunofluorescence staining in brain regions.
+"""
+
 import argparse 
 import nibabel as nib
 import numpy as np
@@ -10,11 +14,12 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 
 def parse_args():
     DEFAULT_ATLAS = '/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz'
-    parser = argparse.ArgumentParser(description='Measure mean intensity of immunofluorescence staining in brain regions.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz', default=DEFAULT_ATLAS, action=SM)
     parser.add_argument('-i', '--input', help='path/atlas_space_immunofluorescence_image.nii.gz', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/name.csv', default=None, action=SM)
     parser.add_argument('-r', '--regions', nargs='*', type=int, help='Space-separated list of region intensities to process', default=None)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def calculate_mean_intensity(atlas, image, regions=None):

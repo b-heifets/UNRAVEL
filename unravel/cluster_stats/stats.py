@@ -1,35 +1,19 @@
 #!/usr/bin/env python3
 
-import argparse
-import numpy as np
-import pandas as pd
-from glob import glob
-from pathlib import Path
-from rich import print
-from rich.traceback import install
-from rich.live import Live
-from scipy.stats import ttest_ind
-from statsmodels.stats.multicomp import pairwise_tukeyhsd
+"""
+Validate clusters based on differences in cell/object or label density w/ t-tests.    
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
-from unravel.core.config import Configuration
-from unravel.core.utils import initialize_progress_bar, print_cmd_and_times
-from unravel.cluster_stats.stats_table import valid_clusters_summary
+T-test usage:   
+    stats.py --groups <group1> <group2>
 
-def parse_args():
-    parser = argparse.ArgumentParser(description='Validate clusters based on differences in cell/object or label density w/ t-tests.', formatter_class=SuppressMetavar)
-    parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates)',  nargs='+', required=True)
-    parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group data (e.g., see info for examples)',  nargs='*', default=None, action=SM)
-    parser.add_argument('-alt', "--alternate", help="Number of tails and direction ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
-    parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from fdr.py). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """
-    
-T-test usage:   stats.py --groups <group1> <group2>
-Tukey's test usage: stats.py --groups <group1> <group2> <group3> <group4> ...
+Tukey's test usage: 
+    stats.py --groups <group1> <group2> <group3> <group4> ...
 
-Input subdirs: * 
-Input files: *_density_data.csv from validate_clusters.py (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
+Input subdirs: 
+    <asterisk> 
+
+Input files: 
+    <asterisk>_density_data.csv from validate_clusters.py (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
 
 CSV naming conventions:
     - Condition: first word before '_' in the file name
@@ -52,10 +36,36 @@ Examples:
         - Since there will then effectively be two conditions in this case, they will be compared using a t-test
 
 Columns in the .csv files:
-sample, cluster_ID, <cell_count|label_volume>, cluster_volume, <cell_density|label_density>, ...
+    sample, cluster_ID, <cell_count|label_volume>, cluster_volume, <cell_density|label_density>, ...
 
 Outputs:
-    - ./cluster_validation_summary.py and ./subdir/cluster_validation_info/"""
+    - ./cluster_validation_summary.py and ./subdir/cluster_validation_info/
+"""
+
+import argparse
+import numpy as np
+import pandas as pd
+from glob import glob
+from pathlib import Path
+from rich import print
+from rich.traceback import install
+from rich.live import Live
+from scipy.stats import ttest_ind
+from statsmodels.stats.multicomp import pairwise_tukeyhsd
+
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import initialize_progress_bar, print_cmd_and_times
+from unravel.cluster_stats.stats_table import valid_clusters_summary
+
+def parse_args():
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
+    parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates)',  nargs='+', required=True)
+    parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group data (e.g., see info for examples)',  nargs='*', default=None, action=SM)
+    parser.add_argument('-alt', "--alternate", help="Number of tails and direction ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
+    parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from fdr.py). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Test grouping of conditions. Test w/ label densities data. Could set up dunnett's tests and/or holm sidak tests.

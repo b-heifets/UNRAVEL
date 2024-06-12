@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -361,6 +361,24 @@
   <h1>Source code for unravel.image_io.nii_io</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Usage:     </span>
+<span class="sd">    nii_dtype.py -i path/img.nii.gz -d float32</span>
+
+<span class="sd">Usage for z-score scaling (if 8 bit is needed):</span>
+<span class="sd">    nii_dtype.py -i path/img.nii.gz -d uint8 -z</span>
+
+<span class="sd">Possible numpy data types: </span>
+<span class="sd">    - Unsigned Integer: uint8, uint16, uint32, uint64</span>
+<span class="sd">    - Signed Integer: int8, int16, int32, int64</span>
+<span class="sd">    - Floating Point: float32, float64</span>
+
+<span class="sd">With --scale, the min intensity becomes dtype min and max intensity becomes dtype max. Every other intensity is scaled accordingly.</span>
+<span class="sd">With --binary, the image is binarized (0 or 1).</span>
+<span class="sd">With --zscore, the range of z-scored data from -3 to 3 is converted to 0 to 255.</span>
+<span class="sd">With --fixed_scale, the data is scaled using the provided min and max values.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -383,20 +401,7 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="s1">&#39;--binary&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Convert to binary image.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-z&#39;</span><span class="p">,</span> <span class="s1">&#39;--zscore&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Convert the range of z-scored data (use uint8 data type).&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Example usage:     nii_dtype.py -i path/img.nii.gz -d float32</span>
-<span class="s2">Example usage for z-score scaling:     nii_dtype.py -i path/img.nii.gz -d uint8 -z</span>
-
-<span class="s2">Possible numpy data types supported by NIfTI images: </span>
-<span class="s2">    - Unsigned Integer: uint8, uint16, uint32, uint64</span>
-<span class="s2">    - Signed Integer: int8, int16, int32, int64</span>
-<span class="s2">    - Floating Point: float32, float64</span>
-<span class="s2">    - Complex Numbers: complex64, complex128</span>
-
-<span class="s2">With --scale, the min intensity becomes dtype min and max intensity becomes dtype max. Every other intensity is scaled accordingly.</span>
-<span class="s2">With --binary, the image is binarized (0 or 1).</span>
-<span class="s2">With --zscore, the range of z-scored data from -3 to 3 is converted to 0 to 255.</span>
-<span class="s2">With --fixed_scale, the data is scaled using the provided min and max values.</span>
-<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 

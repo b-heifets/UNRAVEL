@@ -7,6 +7,7 @@ unravel.image_io package
    h5_to_tifs
    img_io
    img_to_npy
+   metadata
    nii_hd
    nii_info
    nii_io

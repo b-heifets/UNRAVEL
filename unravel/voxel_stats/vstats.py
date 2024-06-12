@@ -1,43 +1,25 @@
 #!/usr/bin/env python3
 
-import argparse
-import shutil
-import subprocess
-from glob import glob
-import sys
-from fsl.wrappers import fslmaths, avwutils
-from pathlib import Path
-from rich import print
-from rich.traceback import install
+"""
+Run voxel-wise stats using FSL's randomise_parallel command
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
-from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description="Run voxel-wise stats using FSL's randomise_parallel command", formatter_class=SuppressMetavar)
-    parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
-    parser.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300). Default: 18000', type=int, default=18000, action=SM)
-    parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
-    parser.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--seed=1 -T"', nargs='*', default=[])
-    parser.add_argument('-on', '--output_prefix', help='Prefix of output files. Default: current working dir name.', action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = """Usage:    vstats.py -mas mask.nii.gz -v
+Usage:
+    vstats.py -mas mask.nii.gz -v
 
 Prereqs: 
     - Input images from prep_vstats.py, z-score.py, or whole_to_LR_avg.py
-    - FSL installed and the following added to .bashrc or .zshrc (or run in terminal):
+    - FSL installed and the following added to .bashrc or .zshrc
+
+Add these lines to .bashrc or .zshrc:
 export FSLDIR=/usr/local/fsl
 export PATH=${FSLDIR}/bin:${PATH}
 . ${FSLDIR}/etc/fslconf/fsl.sh
 export FSLDIR PATH
-    - Source the .bashrc or .zshrc file (e.g., source ~/.bashrc) or restart the terminal
-    
+# Source the .bashrc or .zshrc file (e.g., source ~/.bashrc) or restart the terminal
+
 Inputs: 
     - Make glm folder named succiently (e.g., glm_<EX>_rb<4>_z_<contrast> for t-test or anova_<EX>_rb<4>_z)
-    - Add *.nii.gz prepended with the condition (e.g., drug_sample01_gubra_space_z.nii.gz)
+    - Add <asterisk>.nii.gz prepended with the condition (e.g., drug_sample01_gubra_space_z.nii.gz)
         - Optional: use prepend_conditions.py to add the condition to the file names
         - The condition should be one word (e.g., drug, saline, etc.)
         - Group order is alphabetical (e.g., drug is group 1 and saline is group 2)
@@ -92,6 +74,32 @@ https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide
 
 Afterwards run fdr.py to correct for multiple comparisons.
 """
+
+import argparse
+import shutil
+import subprocess
+from glob import glob
+import sys
+from fsl.wrappers import fslmaths, avwutils
+from pathlib import Path
+from rich import print
+from rich.traceback import install
+
+from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
+    parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
+    parser.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300). Default: 18000', type=int, default=18000, action=SM)
+    parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
+    parser.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--seed=1 -T"', nargs='*', default=[])
+    parser.add_argument('-on', '--output_prefix', help='Prefix of output files. Default: current working dir name.', action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Add an email option to send a message when the processing is complete. Add progress bar. See if fragments can be generated in parallel. Could make avg and avg diff maps in this script (e.g., before merge since this is fast)

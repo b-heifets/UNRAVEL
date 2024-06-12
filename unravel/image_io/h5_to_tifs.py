@@ -1,5 +1,25 @@
 #!/usr/bin/env python3
 
+"""
+Loads h5/hdf5 image, saves as tifs. Also, saves xy and z voxel size in microns.
+
+Run this script from a sample?? folder containing the image.h5 file.
+
+Usage:
+    h5_to_tifs.py -i path/image.h5 -t 488
+
+Inputs:
+    - image.h5 either from -i path/image.h5 or largest <asterisk>.h5 in cwd
+    - This script assumes that the first dataset in the hdf5 file has the highest resolution.
+
+Outputs:
+    - ./<tif_dir_out>/slice_<asterisk>.tif series
+    - ./parameters/metadata (text file)
+
+Next script:
+    - prep_reg.sh
+"""
+
 import argparse
 import glob
 import os
@@ -12,27 +32,11 @@ from tifffile import imwrite
 from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
-
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads h5/hdf5 image, saves as tifs. Also, saves xy and z voxel size in microns', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/image.h5', action=SM)
     parser.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', action=SM)
-    parser.epilog = """
-Example usage: 
-cd <path/sample??> # change working directory to sample folder
-h5_to_tifs.py -i <path/image.h5> -t 488
-
-Inputs: 
-image.h5 # either from -i path/image.h5 or largest *.h5 in cwd
-This script assumes that the first dataset in the hdf5 file has the highest resolution.
-
-Outputs:
-./<tif_dir_out>/slice_????.tif series
-./parameters/metadata (text file)
-
-Next script: 
-prep_reg.sh
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

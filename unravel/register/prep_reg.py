@@ -1,7 +1,26 @@
 #!/usr/bin/env python3
 
+"""
+Loads full resolution autofluo image and resamples to 50 um for registration
+
+Run script from the experiment directory w/ sample?? folder(s)
+or run from a sample?? folder.
+
+Usage:
+    prep_reg.py -i <asterisk>.czi -e <list of paths to exp dirs> -td <path/brain_mask_tifs> -v
+
+Input examples (path is relative to ./sample??; 1st glob match processed): 
+    <asterisk>.czi, autofluo/<asterisk>.tif series, autofluo, <asterisk>.tif, or <asterisk>.h5 
+
+Outputs: 
+    ./sample??/reg_inputs/autofl_<asterisk>um.nii.gz
+    ./sample??/reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif series (used for training ilastik for brain_mask.py) 
+
+Next script: 
+    brain_mask.py or reg.py
+"""
+
 import argparse
-import shutil
 import numpy as np
 from pathlib import Path
 from rich import print
@@ -9,14 +28,15 @@ from rich.live import Live
 from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
-from unravel.core.config import Configuration 
+from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, resolve_path, save_as_tifs, save_as_nii
 from unravel.core.img_tools import resample, reorient_for_raw_to_nii_conv
 from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples, print_func_name_args_times
+from unravel.segment.copy_tifs import copy_specific_slices
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads full resolution autofluo image and resamples to 50 um for registration', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -31,40 +51,9 @@ def parse_args():
     parser.add_argument('-s', '--slices', help='List of slice numbers to copy, e.g., 0000 0400 0800', nargs='*', type=str, default=[])
     parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Run script from the experiment directory w/ sample?? folder(s)
-or run from a sample?? folder.
-
-Example usage:     prep_reg.py -i *.czi -e <list of paths to experiment directories> -td <path/brain_mask_tifs> -v
-
-Input examples (path is relative to ./sample??; 1st glob match processed): 
-*.czi, autofluo/*.tif series, autofluo, *.tif, or *.h5 
-
-Outputs: 
-.[/sample??]/reg_inputs/autofl_*um.nii.gz
-.[/sample??]/reg_inputs/autofl_*um_tifs/*.tif series (used for training ilastik for brain_mask.py) 
-
-Next script: brain_mask.py or reg.py"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
-
-def copy_specific_slices(sample_path, source_dir, target_dir, slice_numbers):
-    """Copy the specified slices to the target directory.
-    
-    Args:
-        - sample_path (Path): Path to the sample directory.
-        - source_dir (Path): Path to the source directory containing the .tif files.
-        - target_dir (Path): Path to the target directory where the selected slices will be copied.
-        - slice_numbers (list): List of slice numbers to copy."""
-    
-    for file_path in source_dir.glob('*.tif'):
-        if any(file_path.stem.endswith(f"{slice:04}") for slice in map(int, slice_numbers)):
-            dest_file = target_dir / f'{sample_path.name}_{file_path.name}'
-            shutil.copy(file_path, dest_file)
-            if args.verbose:
-                print(f"Copied {file_path} to {dest_file}")
-        else:
-            if args.verbose:
-                print(f"File {file_path.name} does not match specified slices and was not copied.")
 
 @print_func_name_args_times()
 def prep_reg(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
@@ -92,7 +81,6 @@ def prep_reg(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
 
 
 def main():
-    args = parse_args()
 
     if args.target_dir is not None:
         # Create the target directory for copying the selected slices for brain_mask.py
@@ -140,7 +128,7 @@ def main():
 
 
 if __name__ == '__main__':
-    args = parse_args()
     install()
+    args = parse_args()
     Configuration.verbose = args.verbose
     print_cmd_and_times(main)()

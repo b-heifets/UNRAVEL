@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 
+"""
+Converts correlation map to z-score, p value, and FDR p value maps
+
+Usage:
+    r_to_p.py -i sample01_iba1_rb20_correlation_map.nii.gz -x 25 -z 25 -v
+
+Outputs: 
+    - <image>_z_score_map.nii.gz
+    - <image>_p_value_map.nii.gz
+    - <image>_p_value_map_fdr_corrected.nii.gz
+"""
+
 import argparse
 from pathlib import Path
 import numpy as np
@@ -14,14 +26,12 @@ from unravel.core.img_io import load_3D_img, save_as_nii
 from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Converts correlation map to z-score, p value, and FDR p value maps', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='[path/]image.nii.gz', required=True, action=SM)
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
     parser.add_argument('-a', '--alpha', help='FDR alpha. Default: 0.05', default=0.05, type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Outputs: <image>_z_score_map.nii.gz, <image>_p_value_map.nii.gz, <image>_p_value_map_fdr_corrected.nii.gz
-    Example usage: r_to_p.py -i sample01_iba1_rb20_correlation_map.nii.gz -x 25 -z 25 -v"""
     return parser.parse_args()
 
 

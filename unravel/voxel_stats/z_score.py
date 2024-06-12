@@ -1,5 +1,27 @@
 #!/usr/bin/env python3
 
+"""
+Z-score an atlas space image using a tissue mask and/or an atlas mask.
+
+Usage w/ a tissue mask (warped to atlas space):
+    z_score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -v
+
+Usage w/ an atlas mask (warped to atlas space):
+    z_score.py -i path/img.nii.gz -n -amas path/atlas_mask.nii.gz -v
+
+Usage w/ both masks for side-specific z-scoring
+    z_score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v
+
+Outputs:
+    - <path/input_img>_z.nii.gz (float32)
+    - [atlas_space/autofl_50um_brain_mask.nii.gz]
+
+z-score = (img.nii.gz - mean pixel intensity in brain)/standard deviation of intensity in brain
+
+Prereqs:
+    prep_vstats.py for inputs [& brain_mask.py for tissue masks]
+"""
+
 import argparse
 import shutil
 import nibabel as nib
@@ -17,7 +39,7 @@ from unravel.warp.to_atlas import to_atlas
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Z-score an atlas space image using a tissue mask and/or an atlas mask', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -31,24 +53,7 @@ def parse_args():
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz for warping mask to atlas space (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-inp', '--interpol', help='Type of interpolation (nearestNeighbor, multiLabel [default]).', default='multiLabel', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = """
-
-Usage w/ a tissue mask (warped to atlas space):
-z_score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -v
-
-Usage w/ an atlas mask (warped to atlas space):
-z_score.py -i path/img.nii.gz -n -amas path/atlas_mask.nii.gz -v
-
-Usage w/ both masks for side-specific z-scoring
-z_score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v
-
-
-Outputs:  <path/input_img>_z.nii.gz (float32) [& atlas_space/autofl_50um_brain_mask.nii.gz]
-
-z-score = (img.nii.gz - mean pixel intensity in brain)/standard deviation of intensity in brain
-
-Prereqs: prep_vstats.py for inputs [& brain_mask.py for tissue masks]
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Set voxels outside the mask(s) to zero

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Run ndarray.transpose(axis_1, axis_2, axis_3).
+"""
+
 import argparse
 from pathlib import Path
 from rich.traceback import install
@@ -11,7 +15,7 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Run ndarray.transpose(axis_1, axis_2, axis_3)', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/img.czi, path/img.nii.gz, or path/tif_dir', action=SM)
     parser.add_argument('-xa', '-x_axis', help='Enter 0, 1, or 2. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-ya', '-y_axis', help='Default: 1', default=1, type=int, action=SM)
@@ -21,6 +25,7 @@ def parse_args():
     parser.add_argument('-ao', '--axis_order', help='Axis order for loading image. Default: xyz. (other option: zyx)', default='xyz', action=SM)
     parser.add_argument('-rr', '--return_res', help='Default: True. If false, enter a float for xy_res and z_res (in um) in prompts', action='store_true', default=True)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

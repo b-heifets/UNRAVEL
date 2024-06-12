@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
 
+"""
+Warp to/from atlas space and registration input space
+
+Forward warping atlas to tissue space:
+    warp.py -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -ro reg_outputs -o warp/atlas_in_tissue_space.nii.gz -inp multiLabel -v
+
+Inverse warping tissue to atlas space:
+    warp.py -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -ro reg_outputs -o warp/tissue_in_atlas_space.nii.gz -inv -v
+
+Prereq: 
+    reg.py
+"""
+
 import ants
 import argparse
 import numpy as np
@@ -14,7 +27,7 @@ from unravel.core.utils import print_func_name_args_times, print_cmd_and_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Warp to/from atlas space and registration input space', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-ro', '--reg_outputs', help='path/reg_outputs', required=True, action=SM)
     parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz', required=True, action=SM)
     parser.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz', required=True, action=SM)
@@ -22,15 +35,7 @@ def parse_args():
     parser.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from reg.py)', default=False, action='store_true')
     parser.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity if flag provided', default=False, action='store_true')
-    parser.epilog = """
-# Example of forward warping atlas to tissue space:
-warp.py -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -ro reg_outputs -o warp/atlas_in_tissue_space.nii.gz -inp multiLabel -v
-
-# Example of inverse warping tissue to atlas space:
-warp.py -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -ro reg_outputs -o warp/tissue_in_atlas_space.nii.gz -inv -v
-
-Prereq: reg.py
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

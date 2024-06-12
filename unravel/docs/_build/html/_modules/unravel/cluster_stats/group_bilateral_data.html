@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -361,6 +361,34 @@
   <h1>Source code for unravel.cluster_stats.group_bilateral_data</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Organize bilateral csv outputs from validate_clusters.py</span>
+
+<span class="sd">Run this script in the target_dir from org_data.py</span>
+<span class="sd">        </span>
+<span class="sd">Usage:</span>
+<span class="sd">    group_bilateral_data.py</span>
+
+<span class="sd">It consolidates CSV files into pooled directories based on hemisphere.</span>
+
+<span class="sd">Folder naming convention: </span>
+<span class="sd">    - &lt;cluster_validation_dir&gt;_LH for left hemisphere files</span>
+<span class="sd">    - &lt;cluster_validation_dir&gt;_RH for right hemisphere files</span>
+
+<span class="sd">For example, if the script is run in a directory containing the following directories:</span>
+<span class="sd">    - cluster_valid_results_1_LH</span>
+<span class="sd">    - cluster_valid_results_1_RH</span>
+<span class="sd">    - cluster_valid_results_2_LH</span>
+<span class="sd">    - cluster_valid_results_2_RH</span>
+
+<span class="sd">The script will create a new directory for each cluster and move the corresponding left and right hemisphere files into it. </span>
+<span class="sd">The original directories will be removed.</span>
+
+<span class="sd">The resulting directory structure will be:</span>
+<span class="sd">    - cluster_valid_results_1</span>
+<span class="sd">    - cluster_valid_results_2</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -373,33 +401,9 @@
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/group_bilateral_data.html#unravel.cluster_stats.group_bilateral_data.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Organize bilateral csv outputs from validate_clusters.py&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">Run this script in the target_dir from org_data.py</span>
-<span class="s2">        </span>
-<span class="s2">Usage:     group_bilateral_data.py</span>
-
-<span class="s2">It consolidates CSV files into pooled directories based on hemisphere.</span>
-
-<span class="s2">Folder naming convention: </span>
-<span class="s2">    - &lt;cluster_validation_dir&gt;_LH for left hemisphere files</span>
-<span class="s2">    - &lt;cluster_validation_dir&gt;_RH for right hemisphere files</span>
-
-<span class="s2">For example, if the script is run in a directory containing the following directories:</span>
-<span class="s2">    - cluster_valid_results_1_LH</span>
-<span class="s2">    - cluster_valid_results_1_RH</span>
-<span class="s2">    - cluster_valid_results_2_LH</span>
-<span class="s2">    - cluster_valid_results_2_RH</span>
-
-<span class="s2">The script will create a new directory for each cluster and move the corresponding left and right hemisphere files into it. </span>
-<span class="s2">The original directories will be removed.</span>
-
-<span class="s2">The resulting directory structure will be:</span>
-<span class="s2">    - cluster_valid_results_1</span>
-<span class="s2">    - cluster_valid_results_2</span>
-
-<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 

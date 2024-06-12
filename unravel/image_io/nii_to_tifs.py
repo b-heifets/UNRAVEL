@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Converts image.nii.gz to tif series in output_dir.
+"""
+
 import argparse
 import os
 import nibabel as nib
@@ -10,9 +14,10 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Converts image.nii.gz to tif series', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='image.nii.gz', action=SM)
     parser.add_argument('-o', '--output_dir', help='Name of output folder', action=SM)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def nii_to_tifs(nii_path, output_dir):

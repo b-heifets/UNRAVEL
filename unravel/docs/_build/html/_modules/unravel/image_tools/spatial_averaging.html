@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -361,6 +361,36 @@
   <h1>Source code for unravel.image_tools.spatial_averaging</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Load image and apply 3D spatial averaging</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    spatial_averaging.py -i &lt;tif_dir&gt; -o spatial_avg.zarr -d 2 -v </span>
+<span class="sd">    </span>
+<span class="sd">Input image types:</span>
+<span class="sd">    - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</span>
+
+<span class="sd">3D spatial averaging:</span>
+<span class="sd">    - Apply a 3D spatial averaging filter to a 3D numpy array.</span>
+<span class="sd">    - Default kernel size is 3x3x3, for the current voxel and its 26 neighbors.</span>
+<span class="sd">    - The output array is the same size as the input array.</span>
+<span class="sd">    - The edges of the output array are padded with zeros.</span>
+<span class="sd">    - The output array is the same data type as the input array.</span>
+<span class="sd">    - The input array must be 3D.</span>
+<span class="sd">    - The xy and z resolutions are required for saving the output as .nii.gz.</span>
+<span class="sd">    - The output is saved as .nii.gz, .tif series, or .zarr.</span>
+
+<span class="sd">2D spatial averaging:</span>
+<span class="sd">    - Apply a 2D spatial averaging filter to each slice of a 3D numpy array.</span>
+<span class="sd">    - Default kernel size is 3x3, for the current pixel and its 8 neighbors.</span>
+<span class="sd">    - The output array is the same size as the input array.</span>
+<span class="sd">    - The edges of the output array are padded with zeros.</span>
+<span class="sd">    - The output array is the same data type as the input array.</span>
+<span class="sd">    - The input array must be 3D.</span>
+<span class="sd">    - The xy and z resolutions are required for saving the output as .nii.gz.</span>
+<span class="sd">    - The output is saved as .nii.gz, .tif series, or .zarr.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">cv2</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -377,7 +407,7 @@
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Load image and apply 3D spatial averaging&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image .czi, path/img.nii.gz, or path/tif_dir&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output path. Default: None&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dimensions&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;2D or 3D spatial averaging. (2 or 3)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -389,30 +419,7 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--reference&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Reference image for .nii.gz metadata. Default: None&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ao&#39;</span><span class="p">,</span> <span class="s1">&#39;--axis_order&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Default: xyz. (other option: zyx)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;xyz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Usage:     spatial_averaging.py -i &lt;tif_dir&gt; -o spatial_avg.zarr -d 2 -v </span>
-<span class="s2">    </span>
-<span class="s2">Input image types: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</span>
-
-<span class="s2">3D spatial averaging:</span>
-<span class="s2">    - Apply a 3D spatial averaging filter to a 3D numpy array.</span>
-<span class="s2">    - Default kernel size is 3x3x3, for the current voxel and its 26 neighbors.</span>
-<span class="s2">    - The output array is the same size as the input array.</span>
-<span class="s2">    - The edges of the output array are padded with zeros.</span>
-<span class="s2">    - The output array is the same data type as the input array.</span>
-<span class="s2">    - The input array must be 3D.</span>
-<span class="s2">    - The xy and z resolutions are required for saving the output as .nii.gz.</span>
-<span class="s2">    - The output is saved as .nii.gz, .tif series, or .zarr.</span>
-
-<span class="s2">2D spatial averaging:</span>
-<span class="s2">    - Apply a 2D spatial averaging filter to each slice of a 3D numpy array.</span>
-<span class="s2">    - Default kernel size is 3x3, for the current pixel and its 8 neighbors.</span>
-<span class="s2">    - The output array is the same size as the input array.</span>
-<span class="s2">    - The edges of the output array are padded with zeros.</span>
-<span class="s2">    - The output array is the same data type as the input array.</span>
-<span class="s2">    - The input array must be 3D.</span>
-<span class="s2">    - The xy and z resolutions are required for saving the output as .nii.gz.</span>
-<span class="s2">    - The output is saved as .nii.gz, .tif series, or .zarr.</span>
-<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 

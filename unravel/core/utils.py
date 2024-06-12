@@ -1,5 +1,39 @@
 #!/usr/bin/env python3
 
+"""
+Utility functions and decorators for handling configurations, processing files and directories,
+and enhancing command-line scripts with progress bars and detailed function execution info.
+
+Classes:
+    - CustomMofNCompleteColumn: Progress bar column for completed/total items.
+    - CustomTimeElapsedColumn: Progress bar column for elapsed time in green.
+    - CustomTimeRemainingColumn: Progress bar column for remaining time in dark orange.
+    - AverageTimePerIterationColumn: Progress bar column for average time per iteration.
+
+Functions:
+    - load_config: Load settings from a config file.
+    - get_samples: Get a list of sample directories based on provided parameters.
+    - initialize_progress_bar: Initialize a Rich progress bar.
+    - print_cmd_and_times: Decorator to log and print command execution details.
+    - print_func_name_args_times: Decorator to print function execution details.
+    - load_text_from_file: Load text content from a file.
+    - copy_files: Copy specified files from source to target directory.
+
+Usage:
+    Import the functions and decorators to enhance your scripts.
+
+Examples:
+    - from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times, load_text_from_file copy_files
+    - config = load_config("path/to/config.ini")
+    - samples = get_samples(exp_dir_paths=["/path/to/exp1", "/path/to/exp2"])
+    - progress, task_id = initialize_progress_bar(len(samples), task_message="[red]Processing samples...")
+    - if __name__ == '__main__':
+        - install()
+        - args = parse_args()
+        - Configuration.verbose = args.verbose
+        - print_cmd_and_times(main)()
+"""
+
 import functools
 import shutil
 import numpy as np
@@ -15,8 +49,17 @@ from rich.console import Console
 from rich.progress import Progress, TextColumn, SpinnerColumn, BarColumn, TimeElapsedColumn, TimeRemainingColumn, MofNCompleteColumn, ProgressColumn
 from rich.text import Text
 
-from unravel.core.config import Configuration
+from unravel.core.config import Configuration, Config
 
+# Configuration loading
+def load_config(config_path):
+    """Load settings from the config file and return a Config object."""
+    if Path(config_path).exists():
+        cfg = Config(config_path)
+    else:
+        print(f'\n    [red]{config_path} does not exist\n')
+        import sys ; sys.exit()
+    return cfg
 
 # Sample list 
 def get_samples(sample_dir_list=None, sample_dir_pattern="sample??", exp_dir_paths=None):

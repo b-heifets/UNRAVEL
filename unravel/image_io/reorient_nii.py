@@ -1,24 +1,10 @@
 #!/usr/bin/env python3
 
-import argparse
-import nibabel as nib
-import numpy as np
-from nibabel.orientations import axcodes2ornt, ornt_transform, io_orientation, aff2axcodes, apply_orientation
-from rich import print
-from rich.traceback import install
+"""
+Set orientation of a .nii.gz or its affine matrix
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='Set orientation of a .nii.gz or its affine matrix', formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='path/img.nii.gz', required=True, action=SM)
-    parser.add_argument('-t', '--target_ort', help='Target orientation axis codes (e.g., RAS)', required=True, action=SM)
-    parser.add_argument('-z', '--zero_origin', help='Provide flag to zero the origin of the affine matrix.', action='store_true', default=False)
-    parser.add_argument('-a', '--apply', help='Provide flag to apply the new orientation to the ndarray data.', action='store_true', default=False)
-    parser.add_argument('-fc', '--form_code', help='Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned)', type=int, default=None)
-    parser.epilog = """Example usage:     reorient_nii.py -i image.nii.gz -t PIR -a -z
+Usage:
+    reorient_nii.py -i image.nii.gz -t PIR -a -z
 
 Output:
     - The new .nii.gz file with the new orientation (e.g., image_PIR.nii.gz or image_PIR_applied.nii.gz)
@@ -74,6 +60,26 @@ For PIR:
         -The 3rd column has a non-zero value at the 1st row, so the 3rd letter is either R or L (1st letter of the default 'RAS' orientation code).
         -Since the value is positive, the 3rd letter is R
 """
+
+import argparse
+import nibabel as nib
+import numpy as np
+from nibabel.orientations import axcodes2ornt, ornt_transform, io_orientation, aff2axcodes, apply_orientation
+from rich import print
+from rich.traceback import install
+
+from unravel.core.argparse_utils import SuppressMetavar, SM
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
+    parser.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
+    parser.add_argument('-o', '--output', help='path/img.nii.gz', required=True, action=SM)
+    parser.add_argument('-t', '--target_ort', help='Target orientation axis codes (e.g., RAS)', required=True, action=SM)
+    parser.add_argument('-z', '--zero_origin', help='Provide flag to zero the origin of the affine matrix.', action='store_true', default=False)
+    parser.add_argument('-a', '--apply', help='Provide flag to apply the new orientation to the ndarray data.', action='store_true', default=False)
+    parser.add_argument('-fc', '--form_code', help='Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned)', type=int, default=None)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

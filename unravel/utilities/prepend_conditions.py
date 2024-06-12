@@ -1,24 +1,10 @@
 #!/usr/bin/env python3
 
-import argparse
-import pandas as pd
-from glob import glob
-from pathlib import Path
-from rich.traceback import install
+"""
+Prepend conditions to filenames based on a CSV key
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
-from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='Prepend conditions to filenames based on a CSV key', formatter_class=SuppressMetavar)
-    parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions', required=True, action=SM)
-    parser.add_argument('-f', '--file', help='Rename matching files', action='store_true', default=False)
-    parser.add_argument('-d', '--dirs', help='Rename matching dirs', action='store_true', default=False)
-    parser.add_argument('-r', '--recursive', help='Recursively rename files/dirs', action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Example usage:     prepend_conditions.py -sk <path/sample_key.csv> -f -r
+Usage:
+    prepend_conditions.py -sk <path/sample_key.csv> -f -r
 
 This script renames files in the current directory based on the conditions specified in the CSV file.
 
@@ -35,7 +21,27 @@ Files will be renamed as follows:
     'sample02_file.csv' --> 'treatment_sample02_file.csv'.
 
 If needed, files and/or folders can be renamed with rename.py
-"""    
+""" 
+
+import argparse
+import pandas as pd
+from glob import glob
+from pathlib import Path
+from rich.traceback import install
+
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
+    parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions', required=True, action=SM)
+    parser.add_argument('-f', '--file', help='Rename matching files', action='store_true', default=False)
+    parser.add_argument('-d', '--dirs', help='Rename matching dirs', action='store_true', default=False)
+    parser.add_argument('-r', '--recursive', help='Recursively rename files/dirs', action='store_true', default=False)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

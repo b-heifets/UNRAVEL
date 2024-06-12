@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -51,7 +51,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="unravel.register.reg module" href="reg.html" />
-    <link rel="prev" title="unravel.register.metadata module" href="metadata.html" />
+    <link rel="prev" title="unravel.register package" href="toc.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -318,7 +318,6 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.register package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -402,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -501,26 +501,24 @@
                   
   <section id="module-unravel.register.prep_reg">
 <span id="unravel-register-prep-reg-module"></span><span id="unravel-register-prep-reg"></span><h1>unravel.register.prep_reg module<a class="headerlink" href="#module-unravel.register.prep_reg" title="Link to this heading">#</a></h1>
+<p>Loads full resolution autofluo image and resamples to 50 um for registration</p>
+<p>Run script from the experiment directory w/ sample?? folder(s)
+or run from a sample?? folder.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>prep_reg.py -i &lt;asterisk&gt;.czi -e &lt;list of paths to exp dirs&gt; -td &lt;path/brain_mask_tifs&gt; -v</p>
+</dd>
+<dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p>&lt;asterisk&gt;.czi, autofluo/&lt;asterisk&gt;.tif series, autofluo, &lt;asterisk&gt;.tif, or &lt;asterisk&gt;.h5</p>
+</dd>
+<dt>Outputs:</dt><dd><p>./sample??/reg_inputs/autofl_&lt;asterisk&gt;um.nii.gz
+./sample??/reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif series (used for training ilastik for brain_mask.py)</p>
+</dd>
+<dt>Next script:</dt><dd><p>brain_mask.py or reg.py</p>
+</dd>
+</dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.register.prep_reg.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.register.prep_reg.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/prep_reg.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.prep_reg.parse_args" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.prep_reg.copy_specific_slices">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.prep_reg.</span></span><span class="sig-name descname"><span class="pre">copy_specific_slices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_numbers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/prep_reg.html#copy_specific_slices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.prep_reg.copy_specific_slices" title="Link to this definition">#</a></dt>
-<dd><p>Copy the specified slices to the target directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sample_path</strong> (<em>-</em>) – Path to the sample directory.</p></li>
-<li><p><strong>source_dir</strong> (<em>-</em>) – Path to the source directory containing the .tif files.</p></li>
-<li><p><strong>target_dir</strong> (<em>-</em>) – Path to the target directory where the selected slices will be copied.</p></li>
-<li><p><strong>slice_numbers</strong> (<em>-</em>) – List of slice numbers to copy.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.register.prep_reg.prep_reg">
@@ -567,12 +565,12 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="metadata.html"
+       href="toc.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">unravel.register.metadata module</p>
+        <p class="prev-next-title">unravel.register package</p>
       </div>
     </a>
     <a class="right-next"
@@ -603,7 +601,6 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.prep_reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.prep_reg.copy_specific_slices"><code class="docutils literal notranslate"><span class="pre">copy_specific_slices()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.prep_reg.prep_reg"><code class="docutils literal notranslate"><span class="pre">prep_reg()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.prep_reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>

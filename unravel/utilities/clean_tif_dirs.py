@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
 
+"""
+Cleans directories w/ tif series.
+
+Run script from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
+
+Usage:
+    check_for_non_tifs.py -t autofl ochann -m -v
+
+Tif directory clean up involves:
+    - Moving subdirectories to parent dir
+    - Moving non-TIF files to parent dir
+    - Replacing spaces in TIF file names
+
+Assumes that the extension of the TIF files is .tif or .ome.tif.
+"""
+
 import argparse
 import shutil
 from glob import glob
@@ -14,25 +30,14 @@ from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Cleans directories w/ tif series', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-t', '--tif_dirs', help='List of tif series dirs to check.', nargs='*', required=True, action=SM)
     parser.add_argument('-m', '--move', help='Enable moving of subdirs and non-TIF files to parent dir.', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Run script from the experiment directory w/ sample?? folder(s)
-or run from a sample?? folder.
-
-Example usage:     check_for_non_tifs.py -t autofl ochann -m -v
-
-Tif directory clean up involves:
-    - Moving subdirectories to parent dir
-    - Moving non-TIF files to parent dir
-    - Replacing spaces in TIF file names
-
-Assumes that the extension of the TIF files is .tif or .ome.tif.
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

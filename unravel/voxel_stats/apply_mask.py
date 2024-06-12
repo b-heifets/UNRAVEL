@@ -1,5 +1,19 @@
 #!/usr/bin/env python3
 
+""" 
+Loads image and mask. Zeros out voxels in image based on mask and direction args.
+
+Usage:
+    - Zero out voxels in image where mask > 0 (e.g., to exclude voxels representing artifacts):
+        apply_mask.py -mas 6e10_seg_ilastik_2/sample??_6e10_seg_ilastik_2.nii.gz -i 6e10_rb20 -o 6e10_rb20_wo_artifacts -di greater -v
+    - Zero out voxels in image where mask < 1 (e.g., to preserve signal from segmented microglia clusters):
+        apply_mask.py -mas iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters -v 
+    - Replace voxels in image with the mean intensity in the brain where mask > 0:
+        apply_mask.py -mas FOS_seg_ilastik/FOS_seg_ilastik_2.nii.gz -i FOS -o FOS_wo_halo.zarr -di greater -m -v 
+
+This version allows for dilatation of the full res seg_mask (slow, but precise)
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -17,7 +31,7 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, 
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads image and mask. Zeros out voxels in image based on mask and direction args', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? folders', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern (sample??) for dirs to process. Else: use cwd', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -33,17 +47,7 @@ def parse_args():
     parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg.py. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = f""" 
-Example use cases:
-    - Zero out voxels in image where mask > 0 (e.g., to exclude voxels representing artifacts):
-        apply_mask.py -mas 6e10_seg_ilastik_2/sample??_6e10_seg_ilastik_2.nii.gz -i 6e10_rb20 -o 6e10_rb20_wo_artifacts -di greater -v
-    - Zero out voxels in image where mask < 1 (e.g., to preserve signal from segmented microglia clusters):
-        apply_mask.py -mas iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters -v 
-    - Replace voxels in image with the mean intensity in the brain where mask > 0:
-        apply_mask.py -mas FOS_seg_ilastik/FOS_seg_ilastik_2.nii.gz -i FOS -o FOS_wo_halo.zarr -di greater -m -v 
-
-This version dilates the full res seg_mask (slow, but precise)
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 @print_func_name_args_times()

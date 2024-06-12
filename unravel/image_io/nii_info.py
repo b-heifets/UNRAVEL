@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Load .nii.gz and print its data type, shape, voxel sizes, and affine matrix using nibabel.
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -10,8 +14,9 @@ from unravel.core.argparse_utils import SM, SuppressMetavar
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load .nii.gz and print its info', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/img.nii.gz', action=SM)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def nii_axis_codes(nii):

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-""" This module contains functions processing 3D images: 
+""" 
+This module contains functions processing 3D images: 
     - resample: Resample a 3D ndarray.
     - reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space
     - pixel_classification: Segment tif series with Ilastik.

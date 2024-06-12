@@ -1,5 +1,28 @@
 #!/usr/bin/env python3
 
+"""
+Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
+
+Usage:
+    table.py
+
+Prereqs:
+    valid_cluster_index.sh has been run. Run this script from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
+
+Sorting by hierarchy and volume:
+--------------------------------
+Group by Depth: Starting from the earliest depth column, for each depth level:
+   - Sum the volumes of all rows sharing the same region (or combination of regions up to that depth).
+   - Sort these groups by their aggregate volume in descending order, ensuring larger groups are prioritized.
+
+Sort Within Groups: Within each group created in step 1:
+   - Sort the rows by their individual volume in descending order.
+
+Maintain Grouping Order:
+   - As we move to deeper depth levels, maintain the grouping and ordering established in previous steps (only adjusting the order within groups based on the new depth's aggregate volumes).
+"""
+
+
 import argparse
 import openpyxl
 import math
@@ -19,29 +42,12 @@ from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='''Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.''',
-                                     formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from index.py (else cwd)', action=SM)
     parser.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
     parser.add_argument('-pv', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Example usage:    table.py
-
-Prerequisites: valid_cluster_index.sh has been run. Run this script from the <valid_clusters> dir. *cluster_info.txt in working dir.
-
-Sorting by heirarchy and volume: 
-1) Group by Depth: Starting from the earliest depth column, for each depth level:
-       - Sum the volumes of all rows sharing the same region (or combination of regions up to that depth).
-       - Sort these groups by their aggregate volume in descending order, ensuring larger groups are prioritized.
-
-2) Sort Within Groups: Within each group created in step 1:
-       - Sort the rows by their individual volume in descending order.
-
-3) Maintain Grouping Order: 
-       - As we move to deeper depth levels, maintain the grouping and ordering established in previous steps
-       (only adjusting the order within groups based on the new depth's aggregate volumes).  
-    
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Correct font color for the volumes column. 'fiber tracts' is filled with white rather than the color of the fiber tracts

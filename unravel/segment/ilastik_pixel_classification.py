@@ -1,39 +1,11 @@
 #!/usr/bin/env python3
 
-import argparse
-import os
-import nibabel as nib
-import numpy as np
-from glob import glob
-from pathlib import Path
-from rich import print
-from rich.live import Live
-from rich.traceback import install
+"""
+Run Ilastik's pixel classification workflow on a tif series
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
-from unravel.core.config import Configuration
-from unravel.core.img_io import load_3D_img, save_as_tifs
-from unravel.core.img_tools import pixel_classification
-from unravel.core.utils import get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times
-
-def parse_args():
-    parser = argparse.ArgumentParser(description="Run Ilastik's pixel classification workflow on a tif series", formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
-    parser.add_argument('-t', '--tifs_dir', help='path/input_dir_w_tifs', required=True, action=SM)
-    parser.add_argument('-i', '--input', help='If path/input_dir_w_tifs does not exist, provide a rel_path/image to make it', action=SM)
-    parser.add_argument('-c', '--channel', help='.czi channel number. Default: 1', default=1, type=int, metavar='')
-    parser.add_argument('-o', '--output', help='output dir name', default=None, action=SM)
-    parser.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', default=1, nargs='+', type=int, action=SM)
-    parser.add_argument('-rmi', '--rm_in_tifs', help='Delete the dir w/ the input tifs (e.g., if a *.czi was the input)', action='store_true', default=False)
-    parser.add_argument('-rmo', '--rm_out_tifs', help='Delete the dir w/ the output tifs', action='store_true', default=False)
-    parser.add_argument('-log', '--ilastik_log', help='Show Ilastik log', action='store_true')
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Usage:
-ilastik_pixel_classification.py -t cfos -o cfos_seg -ilp path/ilastik_project.ilp
-ilastik_pixel_classification.py -i *.czi -t cfos -o cfos_seg -ilp path/ilastik_project.ilp
+Usage:
+    ilastik_pixel_classification.py -t cfos -o cfos_seg -ilp path/ilastik_project.ilp
+    ilastik_pixel_classification.py -i <asterisk>.czi -t cfos -o cfos_seg -ilp path/ilastik_project.ilp
 
 This script is for running Ilastik's pixel classification workflow in headless mode for each sample. 
 
@@ -71,6 +43,39 @@ https://www.ilastik.org/documentation/pixelclassification/pixelclassification
    ChangeCurrent view to see other training slices. Check segmentation for these and refine as needed.
    Save the project in experiment summary folder and close if using this script to run ilastik in headless mode for segmenting all images. 
 """
+
+import argparse
+import os
+import nibabel as nib
+import numpy as np
+from glob import glob
+from pathlib import Path
+from rich import print
+from rich.live import Live
+from rich.traceback import install
+
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.img_io import load_3D_img, save_as_tifs
+from unravel.core.img_tools import pixel_classification
+from unravel.core.utils import get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times
+
+def parse_args():
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
+    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
+    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
+    parser.add_argument('-t', '--tifs_dir', help='path/input_dir_w_tifs', required=True, action=SM)
+    parser.add_argument('-i', '--input', help='If path/input_dir_w_tifs does not exist, provide a rel_path/image to make it', action=SM)
+    parser.add_argument('-c', '--channel', help='.czi channel number. Default: 1', default=1, type=int, metavar='')
+    parser.add_argument('-o', '--output', help='output dir name', default=None, action=SM)
+    parser.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', default=1, nargs='+', type=int, action=SM)
+    parser.add_argument('-rmi', '--rm_in_tifs', help='Delete the dir w/ the input tifs (e.g., if a *.czi was the input)', action='store_true', default=False)
+    parser.add_argument('-rmo', '--rm_out_tifs', help='Delete the dir w/ the output tifs', action='store_true', default=False)
+    parser.add_argument('-log', '--ilastik_log', help='Show Ilastik log', action='store_true')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Consolidate pixel_segmentation() in unravel_img_tools.py

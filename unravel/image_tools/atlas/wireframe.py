@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
 
+"""
+Generate a thin wireframe image from an atlas NIfTI file.
+
+wireframe.py -i path.atlas.nii.gz 
+
+Outlines are generated outside the regions and not inside smaller regions. 
+For regions at the surface of the brain, the outlines are internalized.
+
+Outputs: 
+path/atlas_imgW.nii.gz # Wireframe image
+path/atlas_imgW_IDs.nii.gz # Wireframe image with region IDs
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -15,16 +28,7 @@ def parse_args():
     parser.add_argument('-i', '--input', help='path/atlas_img.nii.gz', required=True, action=SM)
     parser.add_argument('-wo', '--wire_output', help='Wireframe image output path. Default: path/atlas_img_W.nii.gz', action=SM)
     parser.add_argument('-id', '--id_output', help='Wireframe image with atlas IDs output path. Default: path/atlas_img_W_IDs.nii.gz', action=SM)
-
-    parser.epilog = """wireframe.py -i path.atlas.nii.gz 
-
-Outlines are generated outside the regions and not inside smaller regions. 
-For regions at the surface of the brain, the outlines are internalized.
-
-Outputs: 
-path/atlas_imgW.nii.gz # Wireframe image
-path/atlas_imgW_IDs.nii.gz # Wireframe image with region IDs
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

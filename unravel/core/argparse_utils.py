@@ -1,5 +1,46 @@
 #!/usr/bin/env python3
 
+"""
+This script defines custom classes to enhance the formatting and handling of argparse arguments,
+with a focus on suppressing metavar display and improving help message readability.
+
+Classes:
+    - SuppressMetavar: A custom HelpFormatter class that suppresses the display of metavar for
+                       arguments and customizes the epilog formatting.
+    - SM: A custom argparse.Action class that suppresses the display of metavar and manages
+          argument values.
+
+Usage:
+    Import the classes and use them in an argparse-based script to suppress metavar and format help
+    messages for improved readability.
+
+Example:
+    import argparse
+    from path.to.this.script import SuppressMetavar, SM
+
+    parser = argparse.ArgumentParser(description="A script example.", formatter_class=SuppressMetavar)
+    parser.add_argument('-e', '--example', help='Example argument', action=SM)
+    args = parser.parse_args()
+
+Classes:
+    SuppressMetavar
+        - Inherits from argparse.HelpFormatter to modify the formatting of action invocations and epilog text.
+        - Methods:
+            - _format_action_invocation: Customizes the formatting of argument options.
+            - _fill_text: Formats the epilog text with specified indentation and width.
+
+    SM
+        - Inherits from argparse.Action to suppress metavar display and manage argument values.
+        - Methods:
+            - __init__: Initializes the custom action and sets the metavar to an empty string or tuple.
+            - __call__: Sets the argument values in the namespace, handling both single and multiple values.
+
+Notes:
+    - This script relies on the argparse library for command-line argument parsing.
+    - The SuppressMetavar class is designed to improve the readability of help messages by suppressing
+      metavar display and customizing the formatting of epilog text.
+"""
+
 import argparse
 import textwrap
 

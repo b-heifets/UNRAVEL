@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
 
+"""
+Create a cluster index with valid clusters from a given NIfTI image.
+
+Usage:
+    index.py -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3
+    
+Outputs:
+    - path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz
+    - path/valid_clusters/cluster_*_sunburst.csv
+"""
+
 from pathlib import Path
 import nibabel as nib
 import numpy as np
@@ -15,16 +26,14 @@ from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Create a cluster index with valid clusters from a given NIfTI image.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-ci', '--cluster_idx', help='Path to the reverse cluster index NIfTI file.', default=None, action=SM)
     parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs.', nargs='+', type=int, default=None, action=SM)
     parser.add_argument('-vcd', '--valid_clusters_dir', help='path/name_of_the_output_directory. Default: valid_clusters', default='_valid_clusters', action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Usage:    index.py -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3
-    
-Outputs: path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz and path/valid_clusters/cluster_*_sunburst.csv"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

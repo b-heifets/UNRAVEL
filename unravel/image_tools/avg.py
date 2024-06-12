@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+"""
+Averages NIfTI images in the current directory or specified by user.
+
+Usage:
+    avg.py -i "<asterisk>.nii.gz" -o avg.nii.gz
+"""
+
 import argparse
 import numpy as np
 import nibabel as nib
@@ -11,8 +18,10 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Averages NIfTI images in the current directory or specified by user.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--inputs', help='Input file(s) or pattern(s) to process. Default is "*.nii.gz".',  nargs='*', default=['*.nii.gz'], action=SM)
+    parser.add_argument('-o', '--output', help='Output file name. Default is "avg.nii.gz".', default='avg.nii.gz', action=SM)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def main():
@@ -51,7 +60,7 @@ def main():
     # Save the averaged image
     averaged_nii = nib.Nifti1Image(average_image, affine, header)
     averaged_nii.set_data_dtype(data_type)
-    nib.save(averaged_nii, "avg.nii.gz")
+    nib.save(averaged_nii, args.output)
     print("Saved averaged image to avg.nii.gz\n")
 
 

@@ -1,21 +1,12 @@
 #!/usr/bin/env python3
 
-import argparse
-import shutil
-from pathlib import Path
-from rich.traceback import install
+"""
+Organize bilateral csv outputs from validate_clusters.py
 
-from unravel.core.argparse_utils import SuppressMetavar
-from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='Organize bilateral csv outputs from validate_clusters.py', formatter_class=SuppressMetavar)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """
 Run this script in the target_dir from org_data.py
         
-Usage:     group_bilateral_data.py
+Usage:
+    group_bilateral_data.py
 
 It consolidates CSV files into pooled directories based on hemisphere.
 
@@ -35,8 +26,21 @@ The original directories will be removed.
 The resulting directory structure will be:
     - cluster_valid_results_1
     - cluster_valid_results_2
-
 """
+
+import argparse
+import shutil
+from pathlib import Path
+from rich.traceback import install
+
+from unravel.core.argparse_utils import SuppressMetavar
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+
+def parse_args():
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 @print_func_name_args_times()

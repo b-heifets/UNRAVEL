@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -318,7 +318,6 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="register/metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="register/reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -402,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -500,16 +500,8 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="register/toc.html">unravel.register package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="register/metadata.html">unravel.register.metadata module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="register/metadata.html#unravel.register.metadata.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="register/metadata.html#unravel.register.metadata.print_metadata"><code class="docutils literal notranslate"><span class="pre">print_metadata()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="register/metadata.html#unravel.register.metadata.get_dims_from_tifs"><code class="docutils literal notranslate"><span class="pre">get_dims_from_tifs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="register/metadata.html#unravel.register.metadata.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
 <li class="toctree-l2"><a class="reference internal" href="register/prep_reg.html">unravel.register.prep_reg module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="register/prep_reg.html#unravel.register.prep_reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="register/prep_reg.html#unravel.register.prep_reg.copy_specific_slices"><code class="docutils literal notranslate"><span class="pre">copy_specific_slices()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="register/prep_reg.html#unravel.register.prep_reg.prep_reg"><code class="docutils literal notranslate"><span class="pre">prep_reg()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="register/prep_reg.html#unravel.register.prep_reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
@@ -740,6 +732,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/table.html">unravel.cluster_stats.table module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/table.html#sorting-by-hierarchy-and-volume">Sorting by hierarchy and volume:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/table.html#unravel.cluster_stats.table.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/table.html#unravel.cluster_stats.table.fill_na_with_last_known"><code class="docutils literal notranslate"><span class="pre">fill_na_with_last_known()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/table.html#unravel.cluster_stats.table.sort_sunburst_hierarchy"><code class="docutils literal notranslate"><span class="pre">sort_sunburst_hierarchy()</span></code></a></li>
@@ -890,6 +883,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="core/utils.html">unravel.core.utils module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="core/utils.html#unravel.core.utils.load_config"><code class="docutils literal notranslate"><span class="pre">load_config()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="core/utils.html#unravel.core.utils.get_samples"><code class="docutils literal notranslate"><span class="pre">get_samples()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="core/utils.html#unravel.core.utils.CustomMofNCompleteColumn"><code class="docutils literal notranslate"><span class="pre">CustomMofNCompleteColumn</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="core/utils.html#unravel.core.utils.CustomTimeElapsedColumn"><code class="docutils literal notranslate"><span class="pre">CustomTimeElapsedColumn</span></code></a></li>
@@ -923,6 +917,13 @@
 <li class="toctree-l2"><a class="reference internal" href="image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="image_io/img_to_npy.html#unravel.image_io.img_to_npy.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="image_io/img_to_npy.html#unravel.image_io.img_to_npy.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="image_io/metadata.html">unravel.image_io.metadata module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="image_io/metadata.html#unravel.image_io.metadata.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_io/metadata.html#unravel.image_io.metadata.print_metadata"><code class="docutils literal notranslate"><span class="pre">print_metadata()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_io/metadata.html#unravel.image_io.metadata.get_dims_from_tifs"><code class="docutils literal notranslate"><span class="pre">get_dims_from_tifs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_io/metadata.html#unravel.image_io.metadata.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="image_io/nii_hd.html">unravel.image_io.nii_hd module</a><ul>

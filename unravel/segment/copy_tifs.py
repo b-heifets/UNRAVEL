@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 
+"""
+Copies a subset of .tif files to a new dir for training ilastik
+
+To prep for brain_mask.py (if --mask_dir <path/mask_dir> and -e <exp dir paths> were not specified in prep_reg.py): 
+    copy_tifs.py -i reg_inputs/autofl_50um_tifs -s 0010 0060 0110 -o ilastik_brain_mask
+
+To prep for ilastik_pixel_classification.py to segment full resolution immunofluorescence images: 
+    copy_tifs.py -i raw_tif_dir -s 0100 0500 1000 -o ilastik_segmentation
+"""
+
 import argparse
 import shutil
 from glob import glob
@@ -14,7 +24,7 @@ from unravel.core.img_io import resolve_path
 from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Copies a subset of .tif files to a new dir for training ilastik', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -22,13 +32,7 @@ def parse_args():
     parser.add_argument('-o', '--output', help='path/dir to copy TIF files. (e.g., ilastik_brain_mask or ilastik_segmentation)', required=True, action=SM)
     parser.add_argument('-s', '--slices', help='List of slice numbers to copy (4 digits each; space separated)', nargs='*', type=str, default=[])
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """
-To prep for brain_mask.py (if --mask_dir <path/mask_dir> and -e <exp dir paths> were not specified in prep_reg.py): 
-copy_tifs.py -i reg_inputs/autofl_50um_tifs -s 0010 0060 0110 -o ilastik_brain_mask
-
-To prep for ilastik_pixel_classification.py to segment full resolution immunofluorescence images: 
-copy_tifs.py -i raw_tif_dir -s 0100 0500 1000 -o ilastik_segmentation
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

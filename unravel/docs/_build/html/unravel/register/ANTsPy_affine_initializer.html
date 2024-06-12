@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -318,7 +318,6 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.register package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -402,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -501,6 +501,20 @@
                   
   <section id="module-unravel.register.ANTsPy_affine_initializer">
 <span id="unravel-register-antspy-affine-initializer-module"></span><span id="unravel-register-antspy-affine-initializer"></span><h1>unravel.register.ANTsPy_affine_initializer module<a class="headerlink" href="#module-unravel.register.ANTsPy_affine_initializer" title="Link to this heading">#</a></h1>
+<p>Run ants.affine_initializer as a seperate process to kill it after a time out</p>
+<p>This also allows for suppressing error messages.</p>
+<p>Usage: ANTsPy_affine_initialized.py -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10
+with open(os.devnull, ‘w’) as devnull:</p>
+<dl class="simple">
+<dt>Python usage:</dt><dd><ul class="simple">
+<li><p>import subprocess</p></li>
+<li><p>import os</p></li>
+<li><p>command = [‘python’, ‘ANTsPy_affine_initialized.py’, ‘-f’, ‘reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz’, ‘-m’, ‘/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz’, ‘-o’, ‘reg_outputs/ANTsPy_init_tform.nii.gz’, ‘-t’, ‘10’ ]</p></li>
+<li><p>with open(os.devnull, ‘w’) as devnull:</p></li>
+<li><p>subprocess.run(command, stderr=devnull)</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.register.ANTsPy_affine_initializer.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.register.ANTsPy_affine_initializer.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/ANTsPy_affine_initializer.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.ANTsPy_affine_initializer.parse_args" title="Link to this definition">#</a></dt>

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Load .nii.gz and print the max intensity
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -10,7 +14,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load .nii.gz and print the max intensity', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/image.nii.gz', default=None, action=SM)
     return parser.parse_args()
 

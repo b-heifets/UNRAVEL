@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -361,6 +361,17 @@
   <h1>Source code for unravel.region_stats.regional_volumes</h1><div class="highlight"><pre>
 <span></span><span class="ch">#! /usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Calculate regional volumes from cluster index and outputs csvs</span>
+
+<span class="sd">Outputs:</span>
+<span class="sd">    - .csv files in path/&lt;asterisk&gt;_cluster_index.nii.gz/regional_volumes/</span>
+<span class="sd">    - &lt;asterisk&gt;region_volumes_split.csv: volumes for each hemisphere</span>
+<span class="sd">    - &lt;asterisk&gt;region_volumes_combined.csv: combined volumes for left and right hemispheres</span>
+<span class="sd">    - &lt;asterisk&gt;sunburst.csv: volumes for each region in ABA hierarchy (for sunburst plot in Fluorish)</span>
+<span class="sd">    - sunburst_RGBs.csv: RGB values for each region in ABA hierarchy (for sunburst plot)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -381,12 +392,7 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--index&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/rev_cluster_index.nii.gz (e.g., from fdr.sh)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span> 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--atlas&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/img.nii.gz. Default: gubra_ano_split_25um.nii.gz&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;/usr/local/unravel/atlases/gubra/gubra_ano_split_25um.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Outputs: .csv files in path/*_cluster_index.nii.gz/regional_volumes/</span>
-<span class="s2">    - *region_volumes_split.csv: volumes for each hemisphere</span>
-<span class="s2">    - *region_volumes_combined.csv: combined volumes for left and right hemispheres</span>
-<span class="s2">    - *sunburst.csv: volumes for each region in ABA hierarchy (for sunburst plot in Fluorish)</span>
-<span class="s2">    - sunburst_RGBs.csv: RGB values for each region in ABA hierarchy (for sunburst plot)</span>
-<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 

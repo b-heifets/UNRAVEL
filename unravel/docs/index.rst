@@ -53,6 +53,17 @@ UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet
 * UNRAVEL was developed by `the Heifets lab <https://heifetslab.stanford.edu/>`_ and `TensorAnalytics <https://sites.google.com/view/tensoranalytics/home?authuser=0>`_
 * Additional support was provided by `the Shamloo lab <https://med.stanford.edu/neurosurgery/research/shamloo.html>`_
 
+.. raw:: html
+
+    <br>
+
+.. raw:: html
+
+    <div style="text-align: center;">
+        <a href="https://heifetslab.stanford.edu/" target="_blank">
+            <img id="heifets-logo" src="_static/Heifets_lab_logo.png" alt="Heifets Lab">
+        </a>
+    </div>
 
 Getting started
 ---------------
@@ -71,14 +82,14 @@ Getting started
 
 UNRAVEL visualizer
 -------------------
-* `UNRAVEL visualizer <https://cfos.dev.metacell.us/>`_ is a web-based tool for visualizing and exploring 3D maps output from UNRAVEL
+* `UNRAVEL visualizer <https://heifetslab-unravel.org/>`_ is a web-based tool for visualizing and exploring 3D maps output from UNRAVEL
 * `UNRAVEL visualizer GitHub repo <https://github.com/MetaCell/cfos-visualizer/>`_
 * Developed by `MetaCell <https://metacell.us/>`_ with support from the `Heifets lab <https://heifetslab.stanford.edu/>`_
 
 .. raw:: html
 
     <div style="text-align: center;">
-        <a href="https://cfos.dev.metacell.us/" target="_blank">
+        <a href="https://heifetslab-unravel.org/" target="_blank">
             <img id="unravel-visualizer" src="_static/UNRAVEL_visualizer.png" alt="UNRAVEL visualizer">
         </a>
     </div>
@@ -152,17 +163,7 @@ Indices
 * :ref:`modindex`
 * :ref:`search`
 
-.. raw:: html
 
-    <br>
-
-.. raw:: html
-
-    <div style="text-align: center;">
-        <a href="https://heifetslab.stanford.edu/" target="_blank">
-            <img src="_static/Heifets_lab_logo.png" width="500px" alt="Heifets Lab">
-        </a>
-    </div>
 
 .. raw:: html
 

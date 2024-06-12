@@ -1,5 +1,21 @@
 #!/usr/bin/env python3
 
+"""
+Measure mean intensity of immunofluorescence staining in brain regions for segmented voxels.
+
+Run from experiment folder containing sample?? folders.
+
+Usage:
+    regional_IF_mean_intensities_in_segmented_voxels.py -i ochann -s ochann_seg_ilastik_1
+
+Inputs:
+    - ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1.nii.gz
+    - path/fluo_image
+
+Outputs:
+    - ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_intensities_in_seg_voxels.csv
+"""
+
 import argparse
 import csv
 from pathlib import Path
@@ -15,7 +31,7 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, 
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Measure mean intensity of immunofluorescence staining in brain regions for segmented voxels.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='', formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='path/fluo_image or path/fluo_img_dir relative to sample?? folder', required=True, action=SM)
@@ -23,12 +39,7 @@ def parse_args():
     parser.add_argument('-o', '--output', help='path/name.csv relative to ./sample??/', default=None, action=SM)
     parser.add_argument('-r', '--regions', nargs='*', type=int, help='Optional: Space-separated list of region intensities to process. Default: Process all regions', default=None)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Run from experiment folder containing sample?? folders.
-    Example usage: regional_IF_mean_intensities_in_segmented_voxels.py -i ochann -s ochann_seg_ilastik_1
-
-    inputs: ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1.nii.gz & path/fluo_image
-    outputs: ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_intensities_in_seg_voxels.csv
-    """
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

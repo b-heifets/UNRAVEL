@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Load image, load bounding box, crop cluster, and save as .nii.gz
+"""
+
 import argparse
 from rich.traceback import install
 from rich import print
@@ -12,7 +16,7 @@ from unravel.core.utils import print_cmd_and_times, load_text_from_file
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load image, crop cluster, and save as .nii.gz', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/img.czi, path/img.nii.gz, or path/tif_dir', action=SM)
     parser.add_argument('-o', '--output', help='path/output_img.nii.gz', action=SM)
     parser.add_argument('-b', '--bbox', help='path/bbox.txt', action=SM)
@@ -21,6 +25,7 @@ def parse_args():
     parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def save_cropped_img(img_cropped, xy_res, z_res, args, cluster=None):

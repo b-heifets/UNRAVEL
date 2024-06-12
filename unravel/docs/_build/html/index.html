@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -379,7 +379,11 @@
 <li><p>UNRAVEL was developed by <a class="reference external" href="https://heifetslab.stanford.edu/">the Heifets lab</a> and <a class="reference external" href="https://sites.google.com/view/tensoranalytics/home?authuser=0">TensorAnalytics</a></p></li>
 <li><p>Additional support was provided by <a class="reference external" href="https://med.stanford.edu/neurosurgery/research/shamloo.html">the Shamloo lab</a></p></li>
 </ul>
-<section id="getting-started">
+<br><div style="text-align: center;">
+    <a href="https://heifetslab.stanford.edu/" target="_blank">
+        <img id="heifets-logo" src="_static/Heifets_lab_logo.png" alt="Heifets Lab">
+    </a>
+</div><section id="getting-started">
 <h2>Getting started<a class="headerlink" href="#getting-started" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><a class="reference external" href="https://docs.google.com/document/d/16yowBhiBQWz8_VX2t9Rf6Xo3Ub4YPYD6qeJP6vJo6P4/edit?usp=sharing">Guide on immunofluorescence staining, iDISCO+, &amp; lightsheet fluorescence microscopy</a></p></li>
@@ -397,12 +401,12 @@
 <section id="unravel-visualizer">
 <h2>UNRAVEL visualizer<a class="headerlink" href="#unravel-visualizer" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://cfos.dev.metacell.us/">UNRAVEL visualizer</a> is a web-based tool for visualizing and exploring 3D maps output from UNRAVEL</p></li>
+<li><p><a class="reference external" href="https://heifetslab-unravel.org/">UNRAVEL visualizer</a> is a web-based tool for visualizing and exploring 3D maps output from UNRAVEL</p></li>
 <li><p><a class="reference external" href="https://github.com/MetaCell/cfos-visualizer/">UNRAVEL visualizer GitHub repo</a></p></li>
 <li><p>Developed by <a class="reference external" href="https://metacell.us/">MetaCell</a> with support from the <a class="reference external" href="https://heifetslab.stanford.edu/">Heifets lab</a></p></li>
 </ul>
 <div style="text-align: center;">
-    <a href="https://cfos.dev.metacell.us/" target="_blank">
+    <a href="https://heifetslab-unravel.org/" target="_blank">
         <img id="unravel-visualizer" src="_static/UNRAVEL_visualizer.png" alt="UNRAVEL visualizer">
     </a>
 </div></section>
@@ -472,8 +476,11 @@
 <li class="toctree-l2"><a class="reference internal" href="guide.html#commands-scripts">Commands/scripts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#optional-clean-tifs">Optional: clean tifs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#typical-analysis-workflow">Typical analysis workflow:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="guide.html#set-up">Set up</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="guide.html#unravel-image-io-metadata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.metadata</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="guide.html#registration">Registration</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="guide.html#metadata"><code class="docutils literal notranslate"><span class="pre">metadata</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="guide.html#prep-reg"><code class="docutils literal notranslate"><span class="pre">prep_reg</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="guide.html#copy-tifs"><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="guide.html#brain-mask"><code class="docutils literal notranslate"><span class="pre">brain_mask</span></code></a></li>
@@ -571,7 +578,6 @@
 <li class="toctree-l1"><a class="reference internal" href="unravel/toc.html">unravel package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="unravel/toc.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="unravel/register/toc.html">unravel.register package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="unravel/register/metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/register/reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -646,6 +652,7 @@
 <li class="toctree-l4"><a class="reference internal" href="unravel/image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unravel/image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -695,11 +702,7 @@
 <li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
-<br><div style="text-align: center;">
-    <a href="https://heifetslab.stanford.edu/" target="_blank">
-        <img src="_static/Heifets_lab_logo.png" width="500px" alt="Heifets Lab">
-    </a>
-</div><script>
+<script>
     document.getElementById('video1').addEventListener('ended', function() {
         this.controls = false;
     });

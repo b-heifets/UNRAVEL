@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+"""
+Convert .nii.gz to .zarr
+
+Usage:
+    nii_to_zarr.py -i path/img.nii.gz -o path/img.zarr
+"""
+
 import argparse
 import dask.array as da
 import nibabel as nib
@@ -13,14 +20,11 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Convert .nii.gz to .zarr', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/image.nii.gz', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/image.zarr', default=None, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Usage: nii_to_zarr.py -i path/img.nii.gz
-
-Output: path/img.zarr
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

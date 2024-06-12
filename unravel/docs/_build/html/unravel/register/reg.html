@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -318,7 +318,6 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.register package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -402,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -501,6 +501,21 @@
                   
   <section id="module-unravel.register.reg">
 <span id="unravel-register-reg-module"></span><span id="unravel-register-reg"></span><h1>unravel.register.reg module<a class="headerlink" href="#module-unravel.register.reg" title="Link to this heading">#</a></h1>
+<p>Registers average template brain/atlas to resampled autofl brain. Check accuracy w/ ./reg_final outputs in itksnap or fsleyes</p>
+<p>Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>reg.py -m &lt;path/template.nii.gz&gt; -bc -pad -sm 0.4 -ort &lt;3 letter orientation code&gt;</p>
+</dd>
+<dt>ort_code letter options:</dt><dd><ul class="simple">
+<li><p>A/P=Anterior/Posterior</p></li>
+<li><p>L/R=Left/Right</p></li>
+<li><p>S/I=Superior/Interior</p></li>
+<li><p>The side of the brain at the positive direction of the x, y, and z axes determine the 3 letters (axis order xyz)</p></li>
+</ul>
+</dd>
+<dt>Prereqs:</dt><dd><p>prep_reg.py, [prep_brain_mask.py], &amp; [brain_mask.py] for warping an average template to the autofluo tissue</p>
+</dd>
+</dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.register.reg.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.register.reg.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg.parse_args" title="Link to this definition">#</a></dt>

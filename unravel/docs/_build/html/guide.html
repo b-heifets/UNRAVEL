@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -507,7 +507,7 @@ cat<span class="w"> </span>.command_log.txt<span class="w"> </span><span class="
 <ul class="simple">
 <li><p>To make commands easier to run, define common variables in a shell script (e.g., env_var.sh)</p></li>
 <li><p>Source the script to load variables in each terminal session</p></li>
-<li><p>Copy /UNRAVEL/_other/env_var_gubra.sh to an exp dir and update each variable</p></li>
+<li><p>Copy /UNRAVEL/unravel/env_var.sh to an exp dir and update each variable</p></li>
 </ul>
 <p>Add this line to your .bashrc or .zshrc terminal config file:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">alias</span><span class="w"> </span><span class="nv">exp</span><span class="o">=</span><span class="s2">&quot;. /path/env_var.sh&quot;</span><span class="w">  </span><span class="c1"># Update the /path/name.sh</span>
@@ -607,22 +607,20 @@ exp
 </li>
 </ul>
 </section>
-<section id="registration">
-<h2>Registration<a class="headerlink" href="#registration" title="Link to this heading">#</a></h2>
-<section id="metadata">
-<h3><code class="docutils literal notranslate"><span class="pre">metadata</span></code><a class="headerlink" href="#metadata" title="Link to this heading">#</a></h3>
+<section id="set-up">
+<h2>Set up<a class="headerlink" href="#set-up" title="Link to this heading">#</a></h2>
+<section id="unravel-image-io-metadata">
+<h3><a class="reference internal" href="unravel/image_io/metadata.html#module-unravel.image_io.metadata" title="unravel.image_io.metadata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.metadata</span></code></a><a class="headerlink" href="#unravel-image-io-metadata" title="Link to this heading">#</a></h3>
 <p>Extract or specify metadata (outputs to ./sample??/parameters/metadata.txt). Add the resolutions to env_var.sh.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>metadata<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/full_res_img&gt;<span class="w">  </span><span class="c1"># Glob patterns work for -i</span>
 metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<span class="w"> </span>-x<span class="w"> </span><span class="nv">$XY</span><span class="w"> </span>-z<span class="w"> </span><span class="nv">$Z</span><span class="w">  </span><span class="c1"># Specifying x and z voxel sizes in microns</span>
 </pre></div>
 </div>
-<div class="note dropdown admonition">
-<p class="admonition-title">Module Documentation Test</p>
-<p>You can find more information about this module in the
-:py:mod:<code class="docutils literal notranslate"><span class="pre">unravel.register.metadata</span></code>.</p>
-</div>
 <br>
 </section>
+</section>
+<section id="registration">
+<h2>Registration<a class="headerlink" href="#registration" title="Link to this heading">#</a></h2>
 <section id="prep-reg">
 <h3><code class="docutils literal notranslate"><span class="pre">prep_reg</span></code><a class="headerlink" href="#prep-reg" title="Link to this heading">#</a></h3>
 <p>Prepare autofluo images for registration (resample to a lower resolution)</p>
@@ -1023,8 +1021,11 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#commands-scripts">Commands/scripts</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-clean-tifs">Optional: clean tifs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-analysis-workflow">Typical analysis workflow:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up">Set up</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel-image-io-metadata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.metadata</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#registration">Registration</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#metadata"><code class="docutils literal notranslate"><span class="pre">metadata</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prep-reg"><code class="docutils literal notranslate"><span class="pre">prep_reg</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#copy-tifs"><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#brain-mask"><code class="docutils literal notranslate"><span class="pre">brain_mask</span></code></a></li>

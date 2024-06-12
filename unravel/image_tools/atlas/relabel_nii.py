@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Convert the intensities (e.g., atlas label IDs) based on a CSV.
+"""
+
 import argparse
 import numpy as np
 import nibabel as nib
@@ -12,12 +16,13 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='''Convert the intensities (e.g., atlas label IDs) based on a CSV.''', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/old_image.nii.gz', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/new_image.nii.gz', required=True, action=SM)
     parser.add_argument('-ic', '--csv_input', help='path/input.csv w/ old IDs in column 1 and new IDs in column 2', required=True, action=SM)
     parser.add_argument('-oc', '--csv_output', help='Optionally provide prefix to output label volume summaries (e.g., volume_summary)', default=None, action=SM)
     parser.add_argument('-odt', '--data_type', help='Output data type. Default: uint16', default="uint16", action=SM)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

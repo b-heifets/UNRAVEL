@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 
+"""
+Copies a subset of .tif files to a new dir for training ilastik
+
+Usage: 
+    check_reg.py -e <list of experiment directories> # copies to the current working directory
+    check_reg.py -e <list of experiment directories> -td <target_output_dir
+"""
+
 import argparse
 from pathlib import Path
 from rich import print
@@ -11,7 +19,7 @@ from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples, copy_files
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Copies a subset of .tif files to a new dir for training ilastik', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -20,9 +28,7 @@ def parse_args():
     parser.add_argument('-fri', '--fixed_reg_in', help='Fixed image from registration (reg.py). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     parser.add_argument('-wa', '--warped_atlas', help='Warped atlas image from reg.py. Default: gubra_ano_combined_25um_in_tissue_space.nii.gz', default="gubra_ano_combined_25um_in_tissue_space.nii.gz", action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Usage: 
-check_reg.py -e <list of experiment directories> # copies to the current working directory
-check_reg.py -e <list of experiment directories> -td <target_output_dir"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

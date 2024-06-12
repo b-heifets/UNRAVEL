@@ -1,5 +1,27 @@
 #!/usr/bin/env python3
 
+"""
+Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy.
+
+Usage:
+    sunburst.py -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v
+
+Prereqs: 
+    - validate_clusters.py generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them. 
+    - Optional: valid_cluster_index.py generates a rev_cluster_index.nii.gz w/ valid clusters.
+    
+Outputs:
+    path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]
+
+Plot region volumes (https://app.flourish.studio/)
+
+Data tab: 
+    Paste in data from csv, categories columns = Depth_<asterisk> columns, Size by = Volumes column
+    
+Preview tab:
+    Hierarchy -> Depth to 10, Colors -> paste RGB codes into Custom overrides
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -19,16 +41,7 @@ def parse_args():
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
     parser.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true')
-    parser.epilog = """Usage:    sunburst.py -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v
-
-Prereqs: 
-    - validate_clusters.py generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them. 
-    - Optional: valid_cluster_index.py generates a rev_cluster_index.nii.gz w/ valid clusters.
-    
-Outputs: path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]
-Plot region volumes (https://app.flourish.studio/)
-Data tab: Paste in data from csv, categories columns = Depth_* columns, Size by = Volumes column
-Preview tab: Hierarchy -> Depth to 10, Colors -> paste RGB codes into Custom overrides"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

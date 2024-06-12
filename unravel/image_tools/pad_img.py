@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+"""
+Adds 15 percent of padding to an image and saves it
+
+Usage:
+    pad_img.py -i reg_inputs/autofl_50um.nii.gz
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -17,10 +24,7 @@ def parse_args():
     parser.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     parser.add_argument('-r', '--ref_nii', help='Reference image for setting the orientation code', action=SM)
     parser.add_argument('-o', '--output', help='path/img.nii.gz. Default: None (saves as path/img_pad.nii.gz) ', default=None, action=SM)
-    parser.epilog = """
-
-Usage: pad_img.py -i reg_inputs/autofl_50um.nii.gz
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

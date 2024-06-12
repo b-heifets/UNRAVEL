@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -318,7 +318,6 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../register/metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -402,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -501,6 +501,22 @@
                   
   <section id="module-unravel.cluster_stats.find_incongruent_clusters">
 <span id="unravel-cluster-stats-find-incongruent-clusters-module"></span><span id="unravel-cluster-stats-find-incongruent-clusters"></span><h1>unravel.cluster_stats.find_incongruent_clusters module<a class="headerlink" href="#module-unravel.cluster_stats.find_incongruent_clusters" title="Link to this heading">#</a></h1>
+<p>If fdr.py made directional cluster indices, find clusters where the mean intensity diff between groups does not match the density diff</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>find_incongruent_clusters.py -c tukey_results.csv -l groupA -g groupB</p>
+</dd>
+</dl>
+<p>This is useful to find clusters where z-scoring introduces incongruencies between the mean intensity difference and the density difference.</p>
+<p>For example, if group A has increased IF in region A and not B, z-scoring may decrease the relative intensity of region B.
+This decrease for region B for one group, may introduce a difference in the mean intensity between groups that is not reflected in the density difference.</p>
+<dl class="simple">
+<dt>Input csv:</dt><dd><p>./_cluster_validation_info/tukey_results.csv  or ttest_results.csv from stats.py</p>
+</dd>
+<dt>Columns:</dt><dd><p>‘cluster_ID’, ‘comparison’, ‘higher_mean_group’, ‘p-value’, ‘significance’</p>
+</dd>
+<dt>Output:</dt><dd><p>Cluster IDs where the mean intensity difference does not match the density difference between groups A and B.</p>
+</dd>
+</dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.find_incongruent_clusters.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.find_incongruent_clusters.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/find_incongruent_clusters.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.find_incongruent_clusters.parse_args" title="Link to this definition">#</a></dt>

@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
 
+"""
+Plot cell densensities for each region and summarize results.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...
+
+Usage: 
+    regional_cell_densities_summary.py --groups Saline MDMA Meth -d 10000 -hemi r
+
+To do: 
+    Add module for Dunnett's tests (don't use this option for now)
+
+Outputs:
+    Plots and a summary CSV to the current directory.    
+
+Example hex code list (flank arg w/ double quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']
+"""
+
 import argparse
 import ast
 import os
@@ -21,7 +36,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.utils import initialize_progress_bar
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Plot cell densensities for each region and summarize results.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('--groups', nargs='*', help='Group prefixes (e.g., saline meth cbsMeth)', action=SM)
     parser.add_argument('-t', '--test_type', help="Type of statistical test to use: 'tukey' (default), 'dunnett', or 't-test'", choices=['tukey', 'dunnett', 't-test'], default='tukey', action=SM)
     parser.add_argument('-hemi', help="Hemisphere(s) to process (r, l or both)", choices=['r', 'l', 'both'], required=True, action=SM)
@@ -33,12 +48,7 @@ def parse_args():
     parser.add_argument('-o', '--output', help='Output directory for plots (Default: <args.test_type>_plots)', action=SM)
     parser.add_argument('-alt', "--alternate", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
     parser.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], action=SM)
-    parser.epilog = """Example usage: regional_cell_densities_summary.py --groups Saline MDMA Meth -d 10000 -hemi r
-
-# TO DO: Add module for Dunnett's tests (don't use this option for now)
-
-Outputs plots and a summary CSV to the current directory.    
-Example hex code list (flank arg w/ double quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Dunnett's test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.

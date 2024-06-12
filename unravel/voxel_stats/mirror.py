@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 
+
+"""
+Load <asterisk>.nii.gz, flip copy (and shift content), average original and copy together, save .nii.gz
+
+Usage: 
+    mirror.py -v
+"""
+
 import argparse
 import os
 import numpy as np
@@ -12,12 +20,12 @@ from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load *.nii.gz, smooth, flip copy, average, save .nii.gz', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Pattern to match files. Default: *.nii.gz', default='*.nii.gz', action=SM)
     parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = """Usage: mirror.py -v"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: adapt to work with CCFv3 images if needed 

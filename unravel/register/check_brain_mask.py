@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 
+"""
+For masking QC, copies autofluo_50um.nii.gz and autofluo_50_masked.nii.gz for each sampled to a target dir
+
+Usage: 
+    check_brain_mask.py -e <list of experiment directories> # copies to the current working directory
+    check_brain_mask.py -e <list of experiment directories> -td <target_output_dir
+"""
+
 import argparse
 from pathlib import Path
 from rich import print
@@ -11,16 +19,14 @@ from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples, copy_files
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='For masking QC, copies autofluo_50um.nii.gz and autofluo_50_masked.nii.gz for each sampled to a target dir', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-td', '--target_dir', help='path/target_output_dir name for aggregating outputs from all samples. If omitted, uses cwd', default=None, action=SM)
     parser.add_argument('-i', '--input', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Usage: 
-check_brain_mask.py -e <list of experiment directories> # copies to the current working directory
-check_brain_mask.py -e <list of experiment directories> -td <target_output_dir"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

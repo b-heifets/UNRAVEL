@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -361,6 +361,40 @@
   <h1>Source code for unravel.core.utils</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utility functions and decorators for handling configurations, processing files and directories,</span>
+<span class="sd">and enhancing command-line scripts with progress bars and detailed function execution info.</span>
+
+<span class="sd">Classes:</span>
+<span class="sd">    - CustomMofNCompleteColumn: Progress bar column for completed/total items.</span>
+<span class="sd">    - CustomTimeElapsedColumn: Progress bar column for elapsed time in green.</span>
+<span class="sd">    - CustomTimeRemainingColumn: Progress bar column for remaining time in dark orange.</span>
+<span class="sd">    - AverageTimePerIterationColumn: Progress bar column for average time per iteration.</span>
+
+<span class="sd">Functions:</span>
+<span class="sd">    - load_config: Load settings from a config file.</span>
+<span class="sd">    - get_samples: Get a list of sample directories based on provided parameters.</span>
+<span class="sd">    - initialize_progress_bar: Initialize a Rich progress bar.</span>
+<span class="sd">    - print_cmd_and_times: Decorator to log and print command execution details.</span>
+<span class="sd">    - print_func_name_args_times: Decorator to print function execution details.</span>
+<span class="sd">    - load_text_from_file: Load text content from a file.</span>
+<span class="sd">    - copy_files: Copy specified files from source to target directory.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    Import the functions and decorators to enhance your scripts.</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">    - from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times, load_text_from_file copy_files</span>
+<span class="sd">    - config = load_config(&quot;path/to/config.ini&quot;)</span>
+<span class="sd">    - samples = get_samples(exp_dir_paths=[&quot;/path/to/exp1&quot;, &quot;/path/to/exp2&quot;])</span>
+<span class="sd">    - progress, task_id = initialize_progress_bar(len(samples), task_message=&quot;[red]Processing samples...&quot;)</span>
+<span class="sd">    - if __name__ == &#39;__main__&#39;:</span>
+<span class="sd">        - install()</span>
+<span class="sd">        - args = parse_args()</span>
+<span class="sd">        - Configuration.verbose = args.verbose</span>
+<span class="sd">        - print_cmd_and_times(main)()</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">functools</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -376,7 +410,19 @@
 <span class="kn">from</span> <span class="nn">rich.progress</span> <span class="kn">import</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">TextColumn</span><span class="p">,</span> <span class="n">SpinnerColumn</span><span class="p">,</span> <span class="n">BarColumn</span><span class="p">,</span> <span class="n">TimeElapsedColumn</span><span class="p">,</span> <span class="n">TimeRemainingColumn</span><span class="p">,</span> <span class="n">MofNCompleteColumn</span><span class="p">,</span> <span class="n">ProgressColumn</span>
 <span class="kn">from</span> <span class="nn">rich.text</span> <span class="kn">import</span> <span class="n">Text</span>
 
-<span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">Config</span>
+
+<span class="c1"># Configuration loading</span>
+<div class="viewcode-block" id="load_config">
+<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.load_config">[docs]</a>
+<span class="k">def</span> <span class="nf">load_config</span><span class="p">(</span><span class="n">config_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load settings from the config file and return a Config object.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="n">config_path</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    [red]</span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s1"> does not exist</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">cfg</span></div>
 
 
 <span class="c1"># Sample list </span>

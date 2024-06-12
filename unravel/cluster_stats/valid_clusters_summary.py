@@ -1,38 +1,10 @@
 #!/usr/bin/env python3
 
-import argparse
-import nibabel as nib
-import numpy as np
-import subprocess
-from pathlib import Path
-from rich import print
-from rich.traceback import install
+""" 
+Aggregates and analyzes cluster validation data from validate_clusters.py
 
-from unravel.core.config import Config
-from unravel.core.argparse_utils import SuppressMetavar, SM
-from unravel.core.config import Configuration 
-from unravel.core.utils import print_cmd_and_times
-from utilities.aggregate_files_w_recursive_search import find_and_copy_files
-from unravel.cluster_stats.org_data import cp
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='Aggregates and analyzes cluster validation data from validate_clusters.py', formatter_class=SuppressMetavar)
-    parser.add_argument('-c', '--config', help='Path to the config.ini file. Default: valid_clusters_summary.ini', default=Path(__file__).parent / 'valid_clusters_summary.ini', action=SM)
-
-    # org_data.py -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process. (needed for *org_data.py)', nargs='*', action=SM)
-    parser.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for *org_data.py', action=SM) 
-    parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir ( dir vstats.py was run from) to copy p val, info, and index files (for *org_data.py)', action=SM)
-
-    # prepend_conditions.py -c <path/sample_key.csv> -f -r
-    parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions (for prepend_conditions.py)', action=SM)
-
-    # stats.py --groups <group1> <group2>
-    parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for *stats.py)',  nargs='+')
-    parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for *stats.py)',  nargs='*', default=None, action=SM)
-
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """ Usage: valid_clusters_summary.py -c <path/config.ini> -e <exp dir paths> -cvd '*' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -v
+Usage:
+    valid_clusters_summary.py -c <path/config.ini> -e <exp dir paths> -cvd '*' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -v
 
 The current working directory should not have other directories when running this script for the first time. Directories from org_data.py are ok though.
 
@@ -51,8 +23,40 @@ The sample_key.csv file should have the following format:
     dir_name,condition
     sample01,control
     sample02,treatment
-
 """
+
+import argparse
+import nibabel as nib
+import numpy as np
+import subprocess
+from pathlib import Path
+from rich import print
+from rich.traceback import install
+
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Config, Configuration 
+from unravel.core.utils import print_cmd_and_times, load_config
+from utilities.aggregate_files_w_recursive_search import find_and_copy_files
+from unravel.cluster_stats.org_data import cp
+
+def parse_args():
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
+    parser.add_argument('-c', '--config', help='Path to the config.ini file. Default: valid_clusters_summary.ini', default=Path(__file__).parent / 'valid_clusters_summary.ini', action=SM)
+
+    # org_data.py -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
+    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process. (needed for *org_data.py)', nargs='*', action=SM)
+    parser.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for *org_data.py', action=SM) 
+    parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir ( dir vstats.py was run from) to copy p val, info, and index files (for *org_data.py)', action=SM)
+
+    # prepend_conditions.py -c <path/sample_key.csv> -f -r
+    parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions (for prepend_conditions.py)', action=SM)
+
+    # stats.py --groups <group1> <group2>
+    parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for *stats.py)',  nargs='+')
+    parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for *stats.py)',  nargs='*', default=None, action=SM)
+
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. Could make cells vs. labels are arg. Could add a raw data output organized for the SI table. # The valid cluster sunburst could have the val dir name and be copied to a central location
@@ -68,13 +72,8 @@ def run_script(script_name, script_args):
 def main():
     args = parse_args()
 
-    # Load settings from the config file
-    if Path(args.config).exists():
-        cfg = Config(args.config)
-    else:
-        print(f'\n    [red]{args.config} does not exist\n')
-        import sys ; sys.exit()
-
+    cfg = load_config(args.config)
+    
     # Run org_data.py
     if args.exp_paths and args.cluster_val_dirs and args.vstats_path:
         org_data_args = [

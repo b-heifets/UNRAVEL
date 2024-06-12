@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+"""
+Recursively rename files and/or directories by replacing text in filenames.
+
+Usage:
+    rename.py -o old_text -n new_text -r -t files'
+"""
+
 import argparse
 from pathlib import Path
 from rich.traceback import install
@@ -7,13 +14,13 @@ from rich.traceback import install
 from unravel.core.argparse_utils import SuppressMetavar, SM
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Recursively rename files and/or directories by replacing text in filenames.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-o', '--old_text', type=str, help='Text to be replaced in the filenames', action=SM)
     parser.add_argument('-n', '--new_text', type=str, help='Text to replace with in the filenames', action=SM)
     parser.add_argument('-t', '--type', help='Specify what to rename: "files", "dirs", or "both" (default: both)', choices=['files', 'dirs', 'both'], default='both', action=SM)
     parser.add_argument('-r', '--recursive', help='Perform the renaming recursively', action='store_true', default=False)
     parser.add_argument('-d', '--dry_run', help='Print old and new names without performing the renaming', action='store_true', default=False)
-    parser.epilog = 'Usage: rename.py -o old_text -n new_text -r -t files'
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

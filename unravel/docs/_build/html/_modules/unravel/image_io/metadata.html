@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unravel.register.metadata &#8212; UNRAVEL docs</title>
+    <title>unravel.image_io.metadata &#8212; UNRAVEL docs</title>
   
   
   
@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -45,7 +45,7 @@
     <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/register/metadata';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/image_io/metadata';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -341,7 +341,7 @@
     
     <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">unravel.regi...</li>
+    <li class="breadcrumb-item active" aria-current="page">unravel.imag...</li>
   </ul>
 </nav>
 </div>
@@ -358,7 +358,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for unravel.register.metadata</h1><div class="highlight"><pre>
+  <h1>Source code for unravel.image_io.metadata</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
@@ -366,31 +366,21 @@
 
 <span class="sd">The script supports multiple experiment directories and patterns for identifying sample directories. It processes each sample directory to load images, extract metadata, and save the metadata to a specified path.</span>
 
+<span class="sd">Run this script from an experiment or sample?? folder if using a relative input path.</span>
+
 <span class="sd">Usage:</span>
 <span class="sd">    metadata.py -i rel_path/full_res_img (can use glob patterns)</span>
 <span class="sd">    metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable</span>
 
 <span class="sd">Inputs:</span>
-<span class="sd">    - .czi, .nii.gz, or TIF series (path should be relative to ./sample??)</span>
+<span class="sd">    - .czi, .nii.gz, .h5, or TIF series (path should be relative to ./sample??)</span>
 
 <span class="sd">Outputs:</span>
 <span class="sd">    - ./parameters/metadata.txt (path should be relative to ./sample??)</span>
 
-<span class="sd">Arguments:</span>
-<span class="sd">    -e, --exp_paths : List of experiment directory paths with sample?? directories to process. (default: None)</span>
-<span class="sd">    -p, --pattern   : Pattern for sample?? directories. Uses the current working directory if no matches are found. (default: &#39;sample??&#39;)</span>
-<span class="sd">    -d, --dirs      : List of sample?? directory names or paths to directories to process. (default: None)</span>
-<span class="sd">    -i, --input     : Path to the full resolution image (relative to ./sample??). (required)</span>
-<span class="sd">    -m, --metad_path: Path to the metadata file. (default: &quot;parameters/metadata.txt&quot;)</span>
-<span class="sd">    -x, --xy_res    : XY resolution in micrometers. (default: None)</span>
-<span class="sd">    -z, --z_res     : Z resolution in micrometers. (default: None)</span>
-<span class="sd">    -v, --verbose   : Increase verbosity. (default: False)</span>
-
 <span class="sd">Examples:</span>
-<span class="sd">    Run this script from an experiment or sample?? folder if using a relative input path.</span>
 <span class="sd">    </span>
-<span class="sd">    metadata.py -i rel_path/full_res_img (can use glob patterns)</span>
-<span class="sd">    metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable</span>
+<span class="sd">    </span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -406,9 +396,9 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel/register/metadata.html#unravel.register.metadata.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/metadata.html#unravel.image_io.metadata.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Load full res image (.czi, .nii.gz, or tif series) to get metadata and save to ./parameters/metadata.txt&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process.&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pattern for sample?? dirs. Use cwd if no matches.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sample??&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of sample?? dir names or paths to dirs to process&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -417,20 +407,13 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="s1">&#39;--xy_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;xy resolution in um&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-z&#39;</span><span class="p">,</span> <span class="s1">&#39;--z_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;z resolution in um&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Run this from an experiment or sample?? folder if using a relative input path. </span>
-
-<span class="s2">Usage:    metadata.py -i rel_path/full_res_img (can use glob patterns)</span>
-<span class="s2">          metadata.py -i tif_dir -x 3.5232 -z 6 # Use if metadata not extractable</span>
-
-<span class="s2">Inputs: .czi, .nii.gz, or tif series (path should be relative to ./sample??)</span>
-<span class="s2">Outputs: ./parameters/metadata.txt (path should be relative to ./sample??)</span>
-<span class="s2">&quot;&quot;&quot;</span>    
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>   
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="print_metadata">
-<a class="viewcode-back" href="../../../unravel/register/metadata.html#unravel.register.metadata.print_metadata">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/metadata.html#unravel.image_io.metadata.print_metadata">[docs]</a>
 <span class="k">def</span> <span class="nf">print_metadata</span><span class="p">(</span><span class="n">metadata_path</span><span class="p">):</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metadata_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">contents</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -438,7 +421,7 @@
 
 
 <div class="viewcode-block" id="get_dims_from_tifs">
-<a class="viewcode-back" href="../../../unravel/register/metadata.html#unravel.register.metadata.get_dims_from_tifs">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/metadata.html#unravel.image_io.metadata.get_dims_from_tifs">[docs]</a>
 <span class="k">def</span> <span class="nf">get_dims_from_tifs</span><span class="p">(</span><span class="n">tifs_path</span><span class="p">):</span>
     <span class="c1"># Get dims quickly from full res tifs (Using a generator without converting to a list to be memory efficient)</span>
     <span class="n">tifs</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tifs_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.tif&quot;</span><span class="p">)</span> <span class="c1"># Generator</span>
@@ -450,7 +433,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel/register/metadata.html#unravel.register.metadata.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/metadata.html#unravel.image_io.metadata.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

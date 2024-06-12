@@ -1,5 +1,16 @@
 #!/usr/bin/env python3
 
+"""
+Convert .zarr to .nii.gz.
+
+Usage:
+    zarr_to_nii.py -i path/img.zarr -o path/img.nii.gz
+
+Output:
+    - RAS orientation
+    - Scaling not preserved
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -12,14 +23,11 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Convert .zarr to .nii.gz', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/image.zarr', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/image.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Usage: zarr_to_nii.py -i path/img.zarr
-
-Output: path/img.nii.gz (RAS orientation; scaling not preserved)
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

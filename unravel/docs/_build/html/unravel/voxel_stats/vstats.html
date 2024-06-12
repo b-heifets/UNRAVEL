@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -318,7 +318,6 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../register/metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -402,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -501,6 +501,123 @@
                   
   <section id="module-unravel.voxel_stats.vstats">
 <span id="unravel-voxel-stats-vstats-module"></span><span id="unravel-voxel-stats-vstats"></span><h1>unravel.voxel_stats.vstats module<a class="headerlink" href="#module-unravel.voxel_stats.vstats" title="Link to this heading">#</a></h1>
+<p>Run voxel-wise stats using FSL’s randomise_parallel command</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>vstats.py -mas mask.nii.gz -v</p>
+</dd>
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p>Input images from prep_vstats.py, z-score.py, or whole_to_LR_avg.py</p></li>
+<li><p>FSL installed and the following added to .bashrc or .zshrc</p></li>
+</ul>
+</dd>
+</dl>
+<p>Add these lines to .bashrc or .zshrc:
+export FSLDIR=/usr/local/fsl
+export PATH=${FSLDIR}/bin:${PATH}
+. ${FSLDIR}/etc/fslconf/fsl.sh
+export FSLDIR PATH
+# Source the .bashrc or .zshrc file (e.g., source ~/.bashrc) or restart the terminal</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>Make glm folder named succiently (e.g., glm_&lt;EX&gt;_rb&lt;4&gt;_z_&lt;contrast&gt; for t-test or anova_&lt;EX&gt;_rb&lt;4&gt;_z)</p></li>
+<li><dl class="simple">
+<dt>Add &lt;asterisk&gt;.nii.gz prepended with the condition (e.g., drug_sample01_gubra_space_z.nii.gz)</dt><dd><ul>
+<li><p>Optional: use prepend_conditions.py to add the condition to the file names</p></li>
+<li><p>The condition should be one word (e.g., drug, saline, etc.)</p></li>
+<li><p>Group order is alphabetical (e.g., drug is group 1 and saline is group 2)</p></li>
+<li><p>The input images should be in the working directory</p></li>
+<li><p>View the images in fsleyes to ensure they are aligned and the sides are correct</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>With whole brains, left and right sides can be averaged with whole_to_LR_avg.py, then use a unilateral hemisphere mask.</p></li>
+</ul>
+</dd>
+</dl>
+<p>If glm_folder/stats/design.fts exists, run ANOVA, else run t-test.</p>
+<p>Outputs are in glm_folder/stats.</p>
+<dl class="simple">
+<dt>T-test outputs:</dt><dd><ul class="simple">
+<li><p>vox_p_tstat1.nii.gz: uncorrected p values for tstat1 (group 1 &gt; group 2)</p></li>
+<li><p>vox_p_tstat2.nii.gz: uncorrected p values for tstat2 (group 1 &lt; group 2)</p></li>
+</ul>
+</dd>
+<dt>ANOVA outputs:</dt><dd><ul class="simple">
+<li><p>vox_p_fstat1.nii.gz: uncorrected p values for fstat1 (1st contrast, e.g., drug vs saline)</p></li>
+<li><p>vox_p_fstat2.nii.gz: uncorrected p values for fstat2 (2nd contrast, e.g., context1 vs context2)</p></li>
+<li><p>vox_p_fstat3.nii.gz: uncorrected p values for fstat3 (3rd contrast, e.g., interaction)</p></li>
+</ul>
+</dd>
+<dt>Example of preparing for a ANOVA:</dt><dd><ul class="simple">
+<li><p>For a 2x2 ANOVA, before running this script make ./anova_&lt;EX&gt;_rb&lt;4&gt;_z/stats/design/</p></li>
+<li><p>Open terminal from ./stats and run: fsl</p></li>
+<li><p>Misc -&gt; GLM Setup</p></li>
+<li><dl class="simple">
+<dt>GLM Setup window:</dt><dd><ul>
+<li><p>Higher-level / non-timeseries design</p></li>
+<li><p># inputs: &lt;total # of samples&gt;</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>EVs tab in GLM window:</dt><dd><ul>
+<li><p># of main EVs: 4</p></li>
+<li><p>Name EVs (e.g., EV1 = group 1)</p></li>
+<li><p>Group should be 1 for all</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Make design matrix:</dt><dd><ul>
+<li><p>Under EV1 enter 1 for each subject in group 1 (1 row/subject). EV2-4 are 0 for these rows</p></li>
+<li><p>Under EV2 enter 1 for each subject in group 2, starting w/ row after the last row for group 1</p></li>
+<li><p>Follow this pattern for EV3 and EV4</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Contrasts &amp; F-tests tab in GLM window:</dt><dd><ul>
+<li><dl class="simple">
+<dt>Contrasts: 3</dt><dd><ul>
+<li><p>C1: Main_effect_&lt;e.g.,drug&gt; 1 1 -1 -1 (e.g., EV1/2 are drug groups and EV3/4 are saline groups)</p></li>
+<li><p>C2: Main_effect_&lt;e.g., context&gt; 1 -1 1 -1 (e.g., EV1/3 were in context1 and EV2/4 were in context2 )</p></li>
+<li><p>C3: Interaction 1 -1 -1 1</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>F-tests: 3</dt><dd><ul>
+<li><p>F1: click upper left box</p></li>
+<li><p>F2: click middle box</p></li>
+<li><p>F3: click lower right box</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>GLM Setup window:</dt><dd><ul>
+<li><p>Save -&gt; click design -&gt; OK</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Run: vstats.py from anova folder</p></li>
+</ul>
+</dd>
+</dl>
+<p>Background:
+<a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/GLM">https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/GLM</a>
+<a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide">https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide</a></p>
+<p>Afterwards run fdr.py to correct for multiple comparisons.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.voxel_stats.vstats.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.parse_args" title="Link to this definition">#</a></dt>

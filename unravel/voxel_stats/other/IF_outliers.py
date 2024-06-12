@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 
+"""
+Load .nii.gz images matching pattern, get mean intensity of voxels in mask, and check for outliers (>3*SD +/- the mean)
+
+From dir w/ input images run: 
+    IF_outliers.py
+    
+Prints and plots results
+"""
+
 import argparse
 import glob
 import os
@@ -15,12 +24,12 @@ from unravel.core.utils import print_cmd_and_times, initialize_progress_bar
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load .nii.gz images matching pattern, get mean intensity of voxels in mask, and check for outliers (>3*SD +/- the mean)', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Regex pattern in quotes for matching .nii.gz images', default=None, action=SM)
     parser.add_argument('-m', '--mask', help='path/mask.nii.gz', default=None, action=SM)
     parser.add_argument('-o', '--output', help='path/name.[pdf/png]. Default: means_in_mask.pdf ', default='means_in_mask.pdf', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = "From dir w/ input images run: IF_outliers.py; Prints and plots results"
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -318,7 +318,6 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../register/metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -402,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -501,6 +501,17 @@
                   
   <section id="module-unravel.region_stats.regional_cell_densities_summary">
 <span id="unravel-region-stats-regional-cell-densities-summary-module"></span><span id="unravel-region-stats-regional-cell-densities-summary"></span><h1>unravel.region_stats.regional_cell_densities_summary module<a class="headerlink" href="#module-unravel.region_stats.regional_cell_densities_summary" title="Link to this heading">#</a></h1>
+<dl class="simple">
+<dt>Plot cell densensities for each region and summarize results.</dt><dd><p>CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,…,MDMA_sample01,…,Meth_sample23,…</p>
+</dd>
+<dt>Usage:</dt><dd><p>regional_cell_densities_summary.py –groups Saline MDMA Meth -d 10000 -hemi r</p>
+</dd>
+<dt>To do:</dt><dd><p>Add module for Dunnett’s tests (don’t use this option for now)</p>
+</dd>
+<dt>Outputs:</dt><dd><p>Plots and a summary CSV to the current directory.</p>
+</dd>
+</dl>
+<p>Example hex code list (flank arg w/ double quotes): [‘#2D67C8’, ‘#27AF2E’, ‘#D32525’, ‘#7F25D3’]</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.region_stats.regional_cell_densities_summary.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_cell_densities_summary.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_cell_densities_summary.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_cell_densities_summary.parse_args" title="Link to this definition">#</a></dt>

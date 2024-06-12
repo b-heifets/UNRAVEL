@@ -1,5 +1,35 @@
 #!/usr/bin/env python3
 
+"""
+Organize cell_count|label_volume, cluster_volume, and <cell|label>_density data from cluster and sample and save as csv
+
+Usage: 
+    prism.py -ids 1 2 3
+        
+Inputs:
+    <asterisk>.csv from org_data.py (in working dir)
+
+CSV naming conventions:
+    - Condition: first word before '_' in the file name
+    - Sample: second word in file name
+
+Example unilateral inputs:
+    - condition1_sample01_<cell|label>_density_data.csv
+    - condition1_sample02_<cell|label>_density_data.csv
+    - condition2_sample03_<cell|label>_density_data.csv
+    - condition2_sample04_<cell|label>_density_data.csv
+
+Example bilateral inputs (if any file has _LH.csv or _RH.csv, the script will attempt to pool data):
+    - condition1_sample01_<cell|label>_density_data_LH.csv
+    - condition1_sample01_<cell|label>_density_data_RH.csv
+    - ...
+
+Columns in the .csv files:
+    sample, cluster_ID, <cell_count|label_volume>, cluster_volume, <cell_density|label_density>, ...
+
+Outputs saved in ./cluster_validation_summary/
+"""
+
 import argparse
 import pandas as pd
 from glob import glob
@@ -13,35 +43,12 @@ from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Organize cell_count|label_volume, cluster_volume, and <cell|label>_density data from cluster and sample and save as csv', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs to include in the summary.', nargs='+', type=int, required=True, action=SM)
     parser.add_argument('-sa', '--save_all', help='Also save CSVs w/ cell_count|label_volume and cluster_volume data', action='store_true', default=False)
     parser.add_argument('-p', '--path', help='Path to the directory containing the CSV files from validate_clusters.py. Default: current directory', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """
-Usage: prism.py -ids 1 2 3
-        
-Inputs: *.csv from org_data.py (in working dir)
-
-CSV naming conventions:
-- Condition: first word before '_' in the file name
-- Sample: second word in file name
-
-Example unilateral inputs:
-- condition1_sample01_<cell|label>_density_data.csv
-- condition1_sample02_<cell|label>_density_data.csv
-- condition2_sample03_<cell|label>_density_data.csv
-- condition2_sample04_<cell|label>_density_data.csv
-
-Example bilateral inputs (if any file has _LH.csv or _RH.csv, the script will attempt to pool data):
-- condition1_sample01_<cell|label>_density_data_LH.csv
-- condition1_sample01_<cell|label>_density_data_RH.csv
-...
-
-Columns in the .csv files:
-sample, cluster_ID, <cell_count|label_volume>, cluster_volume, <cell_density|label_density>, ...
-
-Outputs saved in ./cluster_validation_summary/"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def sort_samples(sample_names):

@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 
+"""
+Perform rolling ball background subtraction on a TIFF file.
+
+Usage:
+    background_subtract_tif.py -i input.tif -rb 4 
+
+Rolling ball subtraction:
+    - Radius should be ~ 1.0 to 2.0 times the size of the features of interest
+    - Larger radii will remove more background, but may also remove some of the features of interest
+    - Smaller radii will remove less background, but may leave some background noise
+"""
+
 import argparse
 import cv2
 import numpy as np
@@ -10,19 +22,11 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Perform rolling ball background subtraction on a TIFF file.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='Path to the input TIFF file.', required=True, action=SM)
     parser.add_argument('-o', '--output', help='Path to save the output TIFF file.', default=None, action=SM)
     parser.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels.', default=None, type=int, action=SM)
-    parser.epilog = """Usage:
-background_subtract_tif.py -i input.tif -rb 4 
-
-Rolling ball subtraction:
-    - Radius should be ~ 1.0 to 2.0 times the size of the features of interest
-    - Larger radii will remove more background, but may also remove some of the features of interest
-    - Smaller radii will remove less background, but may leave some background noise
-"""
-
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

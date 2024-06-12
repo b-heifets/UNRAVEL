@@ -1,5 +1,22 @@
 #!/usr/bin/env python3
 
+"""
+Loads 3D .tif image, saves as tifs. Also, saves xy and z voxel size in microns
+
+Usage: 
+    tif_to_tifs.py -i <path/image.tif> -t 488
+
+Inputs: 
+    - image.tif # either from -i path/image.tif or largest <asterisk>.tif in cwd
+
+Outputs:
+    - ./<tif_dir_out>/slice_<asterisk>.tif series
+    - ./parameters/metadata (text file)
+
+Next script: 
+    prep_reg.sh
+"""
+
 import argparse
 import glob
 import os
@@ -16,21 +33,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Loads 3D .tif image, saves as tifs. Also, saves xy and z voxel size in microns', formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/image.tif', action=SM)
     parser.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', action=SM)
-    parser.epilog = """
-Example usage: 
-cd <path/sample??> # change working directory to sample folder
-tif_to_tifs.py -i <path/image.tif> -t 488
-
-Inputs: 
-image.tif # either from -i path/image.tif or largest *.tif in cwd
-
-Outputs:
-./<tif_dir_out>/slice_????.tif series
-./parameters/metadata (text file)
-
-Next script: 
-prep_reg.sh
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

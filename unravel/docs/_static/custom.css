@@ -12,3 +12,10 @@ img {
     margin-bottom: 30px; /* Adjust the value to create the desired spacing */
     background-color: transparent !important;
 }
+
+#heifets-logo {
+    background-color: transparent !important;
+    width: 500px;
+    display: block;
+    margin: 0 auto; /* Center the image */
+}

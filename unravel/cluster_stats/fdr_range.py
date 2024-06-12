@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 
+"""
+Outputs a list of FDR q values that yeild clusters
+
+Usage: 
+    fdr_range.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 0.01 0.001
+
+Inputs: 
+    - p value map (e.g., *vox_p_*stat*.nii.gz from vstats.py)    
+"""
+
 import argparse
 import concurrent.futures
 import subprocess
@@ -11,19 +21,13 @@ from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Outputs a list of FDR q values that yeild clusters', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     q_values_default = [0.00001, 0.00005, 0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99, 0.999, 0.9999]
     parser.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
     parser.add_argument('-q', '--q_values', help='Space-separated list of q values. If omitted, a default list is used.', nargs='*', default=q_values_default, type=float, action=SM)
     parser.add_argument('-th', '--threads', help='Number of threads. Default: 22', default=22, type=int, action=SM)
-    parser.epilog = """
-Usage: fdr_range.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 0.01 0.001
-
-Inputs: 
-    - p value map (e.g., *vox_p_*stat*.nii.gz from vstats.py)    
-
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def smart_float_format(value, max_decimals=9):

@@ -1,5 +1,23 @@
 #!/usr/bin/env python3
 
+"""
+Registers average template brain/atlas to resampled autofl brain. Check accuracy w/ ./reg_final outputs in itksnap or fsleyes
+
+Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir
+
+Usage: 
+    reg.py -m <path/template.nii.gz> -bc -pad -sm 0.4 -ort <3 letter orientation code>
+
+ort_code letter options: 
+    - A/P=Anterior/Posterior
+    - L/R=Left/Right
+    - S/I=Superior/Interior
+    - The side of the brain at the positive direction of the x, y, and z axes determine the 3 letters (axis order xyz)
+
+Prereqs: 
+    prep_reg.py, [prep_brain_mask.py], & [brain_mask.py] for warping an average template to the autofluo tissue
+"""
+
 import argparse
 import os
 import subprocess
@@ -23,7 +41,7 @@ from unravel.warp.warp import warp
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Registers average template brain/atlas to resampled autofl brain. Check accuracy w/ ./reg_final outputs in itksnap or fsleyes', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -45,15 +63,7 @@ def parse_args():
     parser.add_argument('-it', '--init_time', help='Time in seconds allowed for ANTsPy_affine_initializer.py to run. Default: 30' , default='30', type=str, action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir
-Example usage: reg.py -m <path/template.nii.gz> -bc -pad -sm 0.4 -ort <3 letter orientation code>
-
-ort_code letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Interior
-The side of the brain at the positive direction of the x, y, and z axes determine the 3 letters (axis order xyz)
-
-Prereqs: 
-prep_reg.py, [prep_brain_mask.py], & [brain_mask.py] for warping an average template to the autofluo tissue
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

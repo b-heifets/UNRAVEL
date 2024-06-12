@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -318,7 +318,6 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../register/metadata.html">unravel.register.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
@@ -402,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_io.html">unravel.image_io.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_io.html">unravel.image_io.nii_io module</a></li>
@@ -501,6 +501,70 @@
                   
   <section id="module-unravel.core.config">
 <span id="unravel-core-config-module"></span><span id="unravel-core-config"></span><h1>unravel.core.config module<a class="headerlink" href="#module-unravel.core.config" title="Link to this heading">#</a></h1>
+<p>This script defines classes for reading configuration settings from a file and accessing them
+using attribute-style access. It uses the ConfigParser module to parse configuration files
+and provides convenient access to configuration sections and values.</p>
+<dl class="simple">
+<dt>Classes:</dt><dd><ul class="simple">
+<li><p>AttrDict: A dictionary subclass that allows attribute access to its keys.</p></li>
+<li><p>Config: A class to read configuration from a file and allow attribute access using RawConfigParser.</p></li>
+<li><p>Configuration: A class to hold global configuration settings.</p></li>
+</ul>
+</dd>
+<dt>Usage:</dt><dd><p>Import the classes and use them to read and access configuration settings from a file.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<p>from path.to.this.script import Config, Configuration</p>
+<p>config = Config(“path/to/config_file.ini”)
+database_config = config.database
+print(database_config.username)  # Access a configuration value using attribute access</p>
+<dl class="simple">
+<dt>Classes:</dt><dd><dl class="simple">
+<dt>AttrDict</dt><dd><ul class="simple">
+<li><p>A dictionary that allows attribute access to its keys.</p></li>
+<li><dl class="simple">
+<dt>Methods:</dt><dd><ul>
+<li><p>__getattr__: Returns the value associated with the given key.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>Config</dt><dd><ul class="simple">
+<li><p>Reads configuration from a file and allows attribute access using RawConfigParser.</p></li>
+<li><dl class="simple">
+<dt>Methods:</dt><dd><ul>
+<li><p>__init__: Initializes the Config object and reads the configuration file.</p></li>
+<li><p>__getattr__: Returns a dictionary-like object for the specified section, with comments stripped from values.</p></li>
+<li><p>_strip_comments: Static method that strips inline comments from configuration values.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>Configuration</dt><dd><ul class="simple">
+<li><p>Holds global configuration settings.</p></li>
+<li><dl class="simple">
+<dt>Attributes:</dt><dd><ul>
+<li><p>verbose: A boolean flag to control verbosity of the application.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The Config class uses the RawConfigParser from the configparser module to parse the configuration file.</p></li>
+<li><p>The AttrDict class allows for convenient attribute access to dictionary keys.</p></li>
+<li><p>The Configuration class can be extended to hold additional global settings as needed.</p></li>
+</ul>
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.config.AttrDict">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.config.</span></span><span class="sig-name descname"><span class="pre">AttrDict</span></span><a class="reference internal" href="../../_modules/unravel/core/config.html#AttrDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.config.AttrDict" title="Link to this definition">#</a></dt>

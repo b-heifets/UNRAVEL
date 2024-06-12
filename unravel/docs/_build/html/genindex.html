@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -449,12 +449,8 @@
 </li>
       <li><a href="unravel/warp/to_atlas.html#unravel.warp.to_atlas.copy_nii_header">copy_nii_header() (in module unravel.warp.to_atlas)</a>
 </li>
-      <li><a href="unravel/register/prep_reg.html#unravel.register.prep_reg.copy_specific_slices">copy_specific_slices() (in module unravel.register.prep_reg)</a>
-
-      <ul>
-        <li><a href="unravel/segment/copy_tifs.html#unravel.segment.copy_tifs.copy_specific_slices">(in module unravel.segment.copy_tifs)</a>
+      <li><a href="unravel/segment/copy_tifs.html#unravel.segment.copy_tifs.copy_specific_slices">copy_specific_slices() (in module unravel.segment.copy_tifs)</a>
 </li>
-      </ul></li>
       <li><a href="unravel/cluster_stats/org_data.html#unravel.cluster_stats.org_data.copy_stats_files">copy_stats_files() (in module unravel.cluster_stats.org_data)</a>
 </li>
       <li><a href="unravel/cluster_stats/validate_clusters.html#unravel.cluster_stats.validate_clusters.count_cells">count_cells() (in module unravel.cluster_stats.validate_clusters)</a>
@@ -571,7 +567,7 @@
         <li><a href="unravel/region_stats/regional_counts.html#unravel.region_stats.regional_counts.get_atlas_region_at_coords">(in module unravel.region_stats.regional_counts)</a>
 </li>
       </ul></li>
-      <li><a href="unravel/register/metadata.html#unravel.register.metadata.get_dims_from_tifs">get_dims_from_tifs() (in module unravel.register.metadata)</a>
+      <li><a href="unravel/image_io/metadata.html#unravel.image_io.metadata.get_dims_from_tifs">get_dims_from_tifs() (in module unravel.image_io.metadata)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -627,6 +623,8 @@
 </li>
       <li><a href="unravel/image_io/tif_to_tifs.html#unravel.image_io.tif_to_tifs.load_3D_tif">load_3D_tif() (in module unravel.image_io.tif_to_tifs)</a>
 </li>
+      <li><a href="unravel/core/utils.html#unravel.core.utils.load_config">load_config() (in module unravel.core.utils)</a>
+</li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_czi">load_czi() (in module unravel.core.img_io)</a>
 </li>
       <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.load_data">load_data() (in module unravel.region_stats.regional_IF_mean_intensities_summary)</a>
@@ -639,10 +637,10 @@
       </ul></li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_image_metadata_from_txt">load_image_metadata_from_txt() (in module unravel.core.img_io)</a>
 </li>
-      <li><a href="unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.load_mask">load_mask() (in module unravel.voxel_stats.apply_mask)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.load_mask">load_mask() (in module unravel.voxel_stats.apply_mask)</a>
+</li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_nii">load_nii() (in module unravel.core.img_io)</a>
 </li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_nii_orientation">load_nii_orientation() (in module unravel.core.img_io)</a>
@@ -714,6 +712,8 @@
 </li>
         <li><a href="unravel/image_io/img_to_npy.html#unravel.image_io.img_to_npy.main">(in module unravel.image_io.img_to_npy)</a>
 </li>
+        <li><a href="unravel/image_io/metadata.html#unravel.image_io.metadata.main">(in module unravel.image_io.metadata)</a>
+</li>
         <li><a href="unravel/image_io/nii_hd.html#unravel.image_io.nii_hd.main">(in module unravel.image_io.nii_hd)</a>
 </li>
         <li><a href="unravel/image_io/nii_info.html#unravel.image_io.nii_info.main">(in module unravel.image_io.nii_info)</a>
@@ -773,8 +773,6 @@
         <li><a href="unravel/register/check_brain_mask.html#unravel.register.check_brain_mask.main">(in module unravel.register.check_brain_mask)</a>
 </li>
         <li><a href="unravel/register/check_reg.html#unravel.register.check_reg.main">(in module unravel.register.check_reg)</a>
-</li>
-        <li><a href="unravel/register/metadata.html#unravel.register.metadata.main">(in module unravel.register.metadata)</a>
 </li>
         <li><a href="unravel/register/prep_reg.html#unravel.register.prep_reg.main">(in module unravel.register.prep_reg)</a>
 </li>
@@ -901,6 +899,8 @@
 </li>
         <li><a href="unravel/image_io/img_to_npy.html#module-unravel.image_io.img_to_npy">unravel.image_io.img_to_npy</a>
 </li>
+        <li><a href="unravel/image_io/metadata.html#module-unravel.image_io.metadata">unravel.image_io.metadata</a>
+</li>
         <li><a href="unravel/image_io/nii_hd.html#module-unravel.image_io.nii_hd">unravel.image_io.nii_hd</a>
 </li>
         <li><a href="unravel/image_io/nii_info.html#module-unravel.image_io.nii_info">unravel.image_io.nii_info</a>
@@ -960,8 +960,6 @@
         <li><a href="unravel/register/check_brain_mask.html#module-unravel.register.check_brain_mask">unravel.register.check_brain_mask</a>
 </li>
         <li><a href="unravel/register/check_reg.html#module-unravel.register.check_reg">unravel.register.check_reg</a>
-</li>
-        <li><a href="unravel/register/metadata.html#module-unravel.register.metadata">unravel.register.metadata</a>
 </li>
         <li><a href="unravel/register/prep_reg.html#module-unravel.register.prep_reg">unravel.register.prep_reg</a>
 </li>
@@ -1087,6 +1085,8 @@
 </li>
         <li><a href="unravel/image_io/img_to_npy.html#unravel.image_io.img_to_npy.parse_args">(in module unravel.image_io.img_to_npy)</a>
 </li>
+        <li><a href="unravel/image_io/metadata.html#unravel.image_io.metadata.parse_args">(in module unravel.image_io.metadata)</a>
+</li>
         <li><a href="unravel/image_io/nii_hd.html#unravel.image_io.nii_hd.parse_args">(in module unravel.image_io.nii_hd)</a>
 </li>
         <li><a href="unravel/image_io/nii_info.html#unravel.image_io.nii_info.parse_args">(in module unravel.image_io.nii_info)</a>
@@ -1146,8 +1146,6 @@
         <li><a href="unravel/register/check_brain_mask.html#unravel.register.check_brain_mask.parse_args">(in module unravel.register.check_brain_mask)</a>
 </li>
         <li><a href="unravel/register/check_reg.html#unravel.register.check_reg.parse_args">(in module unravel.register.check_reg)</a>
-</li>
-        <li><a href="unravel/register/metadata.html#unravel.register.metadata.parse_args">(in module unravel.register.metadata)</a>
 </li>
         <li><a href="unravel/register/prep_reg.html#unravel.register.prep_reg.parse_args">(in module unravel.register.prep_reg)</a>
 </li>
@@ -1214,7 +1212,7 @@
 </li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.print_func_name_args_times">print_func_name_args_times() (in module unravel.core.utils)</a>
 </li>
-      <li><a href="unravel/register/metadata.html#unravel.register.metadata.print_metadata">print_metadata() (in module unravel.register.metadata)</a>
+      <li><a href="unravel/image_io/metadata.html#unravel.image_io.metadata.print_metadata">print_metadata() (in module unravel.image_io.metadata)</a>
 </li>
       <li><a href="unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.process_and_plot_data">process_and_plot_data() (in module unravel.region_stats.regional_cell_densities_summary)</a>
 </li>
@@ -1584,6 +1582,13 @@
 </li>
       </ul></li>
       <li>
+    unravel.image_io.metadata
+
+      <ul>
+        <li><a href="unravel/image_io/metadata.html#module-unravel.image_io.metadata">module</a>
+</li>
+      </ul></li>
+      <li>
     unravel.image_io.nii_hd
 
       <ul>
@@ -1660,6 +1665,8 @@
         <li><a href="unravel/image_tools/avg.html#module-unravel.image_tools.avg">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     unravel.image_tools.bbox
 
@@ -1667,8 +1674,6 @@
         <li><a href="unravel/image_tools/bbox.html#module-unravel.image_tools.bbox">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     unravel.image_tools.extend_image
 
@@ -1793,13 +1798,6 @@
 
       <ul>
         <li><a href="unravel/register/check_reg.html#module-unravel.register.check_reg">module</a>
-</li>
-      </ul></li>
-      <li>
-    unravel.register.metadata
-
-      <ul>
-        <li><a href="unravel/register/metadata.html#module-unravel.register.metadata">module</a>
 </li>
       </ul></li>
       <li>

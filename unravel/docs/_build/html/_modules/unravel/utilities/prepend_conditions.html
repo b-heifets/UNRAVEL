@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -361,6 +361,29 @@
   <h1>Source code for unravel.utilities.prepend_conditions</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Prepend conditions to filenames based on a CSV key</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    prepend_conditions.py -sk &lt;path/sample_key.csv&gt; -f -r</span>
+
+<span class="sd">This script renames files in the current directory based on the conditions specified in the CSV file.</span>
+
+<span class="sd">The sample_key.csv should have two columns: &#39;dir_name&#39; and &#39;condition&#39;.</span>
+<span class="sd">The script will prepend the &#39;condition&#39; to the filenames matching the &#39;dir_name&#39; prefix.</span>
+
+<span class="sd">For example, if the CSV contains the following rows:</span>
+<span class="sd">    dir_name,condition</span>
+<span class="sd">    sample01,control</span>
+<span class="sd">    sample02,treatment</span>
+
+<span class="sd">Files will be renamed as follows:</span>
+<span class="sd">    &#39;sample01_file.csv&#39; --&gt; &#39;control_sample01_file.csv&#39;</span>
+<span class="sd">    &#39;sample02_file.csv&#39; --&gt; &#39;treatment_sample02_file.csv&#39;.</span>
+
+<span class="sd">If needed, files and/or folders can be renamed with rename.py</span>
+<span class="sd">&quot;&quot;&quot;</span> 
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
@@ -375,30 +398,13 @@
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/utilities/prepend_conditions.html#unravel.utilities.prepend_conditions.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Prepend conditions to filenames based on a CSV key&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sk&#39;</span><span class="p">,</span> <span class="s1">&#39;--sample_key&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/sample_key.csv w/ directory names and conditions&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--file&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Rename matching files&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Rename matching dirs&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--recursive&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Recursively rename files/dirs&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Example usage:     prepend_conditions.py -sk &lt;path/sample_key.csv&gt; -f -r</span>
-
-<span class="s2">This script renames files in the current directory based on the conditions specified in the CSV file.</span>
-
-<span class="s2">The sample_key.csv should have two columns: &#39;dir_name&#39; and &#39;condition&#39;.</span>
-<span class="s2">The script will prepend the &#39;condition&#39; to the filenames matching the &#39;dir_name&#39; prefix.</span>
-
-<span class="s2">For example, if the CSV contains the following rows:</span>
-<span class="s2">    dir_name,condition</span>
-<span class="s2">    sample01,control</span>
-<span class="s2">    sample02,treatment</span>
-
-<span class="s2">Files will be renamed as follows:</span>
-<span class="s2">    &#39;sample01_file.csv&#39; --&gt; &#39;control_sample01_file.csv&#39;</span>
-<span class="s2">    &#39;sample02_file.csv&#39; --&gt; &#39;treatment_sample02_file.csv&#39;.</span>
-
-<span class="s2">If needed, files and/or folders can be renamed with rename.py</span>
-<span class="s2">&quot;&quot;&quot;</span>    
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 

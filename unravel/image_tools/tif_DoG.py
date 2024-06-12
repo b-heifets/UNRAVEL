@@ -1,21 +1,10 @@
 #!/usr/bin/env python3
 
-import argparse
-import cv2
-import numpy as np
-from rich import print
-from rich.traceback import install
+"""
+Perform image background subtraction on a TIFF file.
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
-
-
-def parse_args():
-    parser = argparse.ArgumentParser(description='Perform image background subtraction on a TIFF file.', formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='Path to the input TIFF file.', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='Path to save the output TIFF file.', default=None, action=SM)
-    parser.add_argument('-g1', '--sigma1', help='Sigma for the first Gaussian blur in DoG (targets noise)', default=None, required=True, type=float)
-    parser.add_argument('-g2', '--sigma2', help='Sigma for the second Gaussian blur in DoG (targets signal).', default=None, required=True, type=float)
-    parser.epilog = """Usage: background_subtract_tif.py -i input.tif -g1 1.0 -g2 2.0
+Usage: 
+    background_subtract_tif.py -i input.tif -g1 1.0 -g2 2.0
 
 Difference of Gaussians:
     - Sigma1 and sigma2 are the standard deviations for the first and second Gaussian blurs
@@ -26,6 +15,22 @@ Difference of Gaussians:
     - The ratio of simga2 to sigma1 should ideally be at least 1.5 to 2. This helps ensure that the blurring difference is significant enough to highlight the features of interest.
 """
 
+import argparse
+import cv2
+import numpy as np
+from rich import print
+from rich.traceback import install
+
+from unravel.core.argparse_utils import SuppressMetavar, SM
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
+    parser.add_argument('-i', '--input', help='Path to the input TIFF file.', required=True, action=SM)
+    parser.add_argument('-o', '--output', help='Path to save the output TIFF file.', default=None, action=SM)
+    parser.add_argument('-g1', '--sigma1', help='Sigma for the first Gaussian blur in DoG (targets noise)', default=None, required=True, type=float)
+    parser.add_argument('-g2', '--sigma2', help='Sigma for the second Gaussian blur in DoG (targets signal).', default=None, required=True, type=float)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

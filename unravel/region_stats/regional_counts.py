@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 
+"""
+Perform regional cell counting
+
+Run from experiment folder containing sample?? folders. 
+
+Seg image: 
+    ./sample??/ochann_seg_ilastik_1/sample??_ochann_seg_ilastik_1.nii.gz
+"""
+
 import argparse
 import cc3d
 import numpy as np
@@ -16,7 +25,7 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, 
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Perform regional cell counting', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
     parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-s', '--seg_dir', help='Dir name for segmentation image. Default: ochann_seg_ilastik_1.', default='ochann_seg_ilastik_1', action=SM)
@@ -25,7 +34,7 @@ def parse_args():
     parser.add_argument('-c', '--condition', help='Short name for experimental groud for front of sample ID. Default: None', default=None, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, action=SM)
-    parser.epilog = "Run from experiment folder containing sample?? folders. Seg image: ./sample??/ochann_seg_ilastik_1/sample??_ochann_seg_ilastik_1.nii.gz"
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

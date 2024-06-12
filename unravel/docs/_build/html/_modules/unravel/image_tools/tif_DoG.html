@@ -29,7 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -361,6 +361,21 @@
   <h1>Source code for unravel.image_tools.tif_DoG</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Perform image background subtraction on a TIFF file.</span>
+
+<span class="sd">Usage: </span>
+<span class="sd">    background_subtract_tif.py -i input.tif -g1 1.0 -g2 2.0</span>
+
+<span class="sd">Difference of Gaussians:</span>
+<span class="sd">    - Sigma1 and sigma2 are the standard deviations for the first and second Gaussian blurs</span>
+<span class="sd">    - Simga2 (the larger blur) should be ~ 1.0 to 1.5 times the radius of these features of interest</span>
+<span class="sd">        - E.g., if nuclei have a radius of ~1.5 to 2.5 pixels, sigma2 might be 1.5 to 3.0</span>
+<span class="sd">    - Sigma1 (the smaller blur) should be smaller than the size of the features you want to keep, ideally around the size of the noise</span>
+<span class="sd">        - E.g., if noise is ~1 pixel in size, sigma1 might be 0.5 to 1</span>
+<span class="sd">    - The ratio of simga2 to sigma1 should ideally be at least 1.5 to 2. This helps ensure that the blurring difference is significant enough to highlight the features of interest.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">cv2</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -373,22 +388,12 @@
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/image_tools/tif_DoG.html#unravel.image_tools.tif_DoG.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Perform image background subtraction on a TIFF file.&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the input TIFF file.&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to save the output TIFF file.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-g1&#39;</span><span class="p">,</span> <span class="s1">&#39;--sigma1&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sigma for the first Gaussian blur in DoG (targets noise)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-g2&#39;</span><span class="p">,</span> <span class="s1">&#39;--sigma2&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Sigma for the second Gaussian blur in DoG (targets signal).&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Usage: background_subtract_tif.py -i input.tif -g1 1.0 -g2 2.0</span>
-
-<span class="s2">Difference of Gaussians:</span>
-<span class="s2">    - Sigma1 and sigma2 are the standard deviations for the first and second Gaussian blurs</span>
-<span class="s2">    - Simga2 (the larger blur) should be ~ 1.0 to 1.5 times the radius of these features of interest</span>
-<span class="s2">        - E.g., if nuclei have a radius of ~1.5 to 2.5 pixels, sigma2 might be 1.5 to 3.0</span>
-<span class="s2">    - Sigma1 (the smaller blur) should be smaller than the size of the features you want to keep, ideally around the size of the noise</span>
-<span class="s2">        - E.g., if noise is ~1 pixel in size, sigma1 might be 0.5 to 1</span>
-<span class="s2">    - The ratio of simga2 to sigma1 should ideally be at least 1.5 to 2. This helps ensure that the blurring difference is significant enough to highlight the features of interest.</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 

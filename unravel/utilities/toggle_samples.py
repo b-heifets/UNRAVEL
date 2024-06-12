@@ -1,5 +1,23 @@
 #!/usr/bin/env python3
 
+"""
+Inactivate/activate sample?? dirs (i.e., prepend/remove "_" from dir name)
+
+Usage for toggling all sample?? dirs to active:
+    toggle_samples.py -t -e <list_of_exp_dir_paths>
+    
+Usage for activating sample?? dirs for certain conditions:
+    toggle_samples.py -c <path/sample_key.csv> -a <Saline MDMA> -v -e <list_of_exp_dir_paths>
+
+For conditions in the activate list, the script will remove the "_" from the sample?? dir name.
+For conditions not in the activate list, the script will prepend "_" to the sample?? dir name.    
+
+The sample_key.csv file should have the following format:
+    dir_name,condition
+    sample01,control
+    sample02,treatment
+"""    
+
 import argparse
 import pandas as pd
 from glob import glob
@@ -13,7 +31,7 @@ from unravel.core.utils import print_cmd_and_times, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Inactivate/activate sample?? dirs (i.e., prepend/remove "_" from dir name)', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -21,21 +39,7 @@ def parse_args():
     parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions', default=None, action=SM)
     parser.add_argument('-a', '--activate', help='Space separated list of conditions to enable processing for (must match sample_key.csv)', default=None, nargs='*', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = """
-Usage for toggling all sample?? dirs to active:
-toggle_samples.py -t -e <list_of_exp_dir_paths>
-    
-Usage for activating sample?? dirs for certain conditions:
-toggle_samples.py -c <path/sample_key.csv> -a <Saline MDMA> -v -e <list_of_exp_dir_paths>
-
-For conditions in the activate list, the script will remove the "_" from the sample?? dir name.
-For conditions not in the activate list, the script will prepend "_" to the sample?? dir name.    
-
-The sample_key.csv file should have the following format:
-    dir_name,condition
-    sample01,control
-    sample02,treatment
-"""    
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

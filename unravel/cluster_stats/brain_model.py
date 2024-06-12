@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
 
+"""
+Prep .nii.gz and RGBA .txt for vizualization in dsi_studio.
+
+Usage:
+    brain_model.py -i input.csv -m -sa path/gubra_ano_split_25um.nii.gz -v
+
+The input image will be binarized and multiplied by the split atlas to apply region IDs.
+
+Outputs: 
+    img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
+"""
+
 import argparse
 import nibabel as nib
 import numpy as np
@@ -15,22 +27,14 @@ from unravel.voxel_stats.mirror import mirror
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Prep .nii.gz and RGBA .txt for vizualization in dsi_studio', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help="path/img.nii.gz (e.g., valid cluster index)", required=True, action=SM)
     parser.add_argument('-m', '--mirror', help='Mirror the image in the x-axis for a bilateral representation. Default: False', action='store_true', default=False)
     parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
     parser.add_argument('-sa', '--split_atlas', help='path/gubra_ano_split_25um.nii.gz. Default: gubra_ano_split_25um.nii.gz', default='gubra_ano_split_25um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Example usage: brain_model.py -i input.csv -m -sa path/gubra_ano_split_25um.nii.gz -v
-
-The input image will be binarized and multiplied by the split atlas to apply region IDs.
-
-Outputs: 
-img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
-
-"""
-    
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

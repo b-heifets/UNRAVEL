@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Recusively copy files matching a glob pattern.
+"""
+
 import argparse
 from pathlib import Path
 import shutil
@@ -8,10 +12,11 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Recusively copy files matching a pattern.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(description='', formatter_class=SuppressMetavar)
     parser.add_argument("-p", "--pattern", help="The pattern to match files, e.g., '*.txt'", required=True, action=SM)
     parser.add_argument("-s", "--source", help="The source directory to search files in. Default: current working dir", default=".", action=SM)
     parser.add_argument("-d", "--destination", help="The destination directory to copy files to. Default: current working dir", default=".", action=SM)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 
