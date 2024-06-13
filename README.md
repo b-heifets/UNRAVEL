@@ -1,4 +1,4 @@
-[![UNRAVEL Logo](https://b-heifets.github.io/UNRAVEL/_static/UNRAVEL_logo.png)](https://b-heifets.github.io/UNRAVEL/)
+[![UNRAVEL Logo](https://github.com/b-heifets/UNRAVEL/blob/dev/unravel/docs/_static/UNRAVEL_logo.png)](https://b-heifets.github.io/UNRAVEL/)
 
 
 <style>
@@ -12,7 +12,7 @@
     <div style="flex: 1; margin-right: 10px;">
         <a href="https://www.nature.com/articles/s41386-023-01613-4" target="_blank">
             <video width="100%" autoplay muted playsinline>
-                <source src="https://b-heifets.github.io/UNRAVEL/_static/psilocybin_up_valid_clusters.mp4" type="video/mp4">
+                <source src="https://github.com/b-heifets/UNRAVEL/blob/dev/unravel/docs/_static/psilocybin_up_valid_clusters.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </a>
@@ -20,7 +20,7 @@
     <div style="flex: 1; margin-left: 10px;">
         <a href="https://www.nature.com/articles/s41386-023-01613-4" target="_blank">
             <video width="100%" autoplay muted playsinline>
-                <source src="https://b-heifets.github.io/UNRAVEL/_static/psilocybin_up_sunburst.mp4" type="video/mp4">
+                <source src="https://github.com/b-heifets/UNRAVEL/blob/dev/unravel/docs/_static/psilocybin_up_sunburst.mp4" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         </a>
@@ -39,7 +39,7 @@
 * Additional support was provided by [the Shamloo lab](https://med.stanford.edu/neurosurgery/research/shamloo.html)
 
 
-![Heifets Lab](https://b-heifets.github.io/UNRAVEL/_static/Heifets_lab_logo.png)
+![Heifets Lab](https://github.com/b-heifets/UNRAVEL/blob/dev/unravel/docs/_static/Heifets_lab_logo.png)
 
 ---
 
@@ -52,7 +52,7 @@
 * [UNRAVEL visualizer GitHub repo](https://github.com/MetaCell/cfos-visualizer/)
 * Developed by [MetaCell](https://metacell.us/) with support from the [Heifets lab](https://heifetslab.stanford.edu/)
 
-![UNRAVEL visualizer](https://b-heifets.github.io/UNRAVEL/_static/UNRAVEL_visualizer.png)
+![UNRAVEL visualizer](https://github.com/b-heifets/UNRAVEL/blob/dev/unravel/docs/_static/UNRAVEL_visualizer.png)
 
 ### Contact us
 If you have any questions, suggestions, or are interested in collaborations and contributions, please reach out to us. 
