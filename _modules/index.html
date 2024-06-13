@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../_static/documentation_options.js?v=8d563738"></script>
     <script src="../_static/doctools.js?v=9a2dae69"></script>
     <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/index';</script>
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -378,6 +371,7 @@
 <li><a href="unravel/image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs</a></li>
 <li><a href="unravel/image_io/img_io.html">unravel.image_io.img_io</a></li>
 <li><a href="unravel/image_io/img_to_npy.html">unravel.image_io.img_to_npy</a></li>
+<li><a href="unravel/image_io/metadata.html">unravel.image_io.metadata</a></li>
 <li><a href="unravel/image_io/nii_hd.html">unravel.image_io.nii_hd</a></li>
 <li><a href="unravel/image_io/nii_info.html">unravel.image_io.nii_info</a></li>
 <li><a href="unravel/image_io/nii_io.html">unravel.image_io.nii_io</a></li>
@@ -408,7 +402,6 @@
 <li><a href="unravel/register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer</a></li>
 <li><a href="unravel/register/check_brain_mask.html">unravel.register.check_brain_mask</a></li>
 <li><a href="unravel/register/check_reg.html">unravel.register.check_reg</a></li>
-<li><a href="unravel/register/metadata.html">unravel.register.metadata</a></li>
 <li><a href="unravel/register/prep_reg.html">unravel.register.prep_reg</a></li>
 <li><a href="unravel/register/reg.html">unravel.register.reg</a></li>
 <li><a href="unravel/segment/brain_mask.html">unravel.segment.brain_mask</a></li>
@@ -423,6 +416,8 @@
 <li><a href="unravel/voxel_stats/apply_mask.html">unravel.voxel_stats.apply_mask</a></li>
 <li><a href="unravel/voxel_stats/hemi_to_LR_avg.html">unravel.voxel_stats.hemi_to_LR_avg</a></li>
 <li><a href="unravel/voxel_stats/mirror.html">unravel.voxel_stats.mirror</a></li>
+<li><a href="unravel/voxel_stats/other/IF_outliers.html">unravel.voxel_stats.other.IF_outliers</a></li>
+<li><a href="unravel/voxel_stats/other/r_to_p.html">unravel.voxel_stats.other.r_to_p</a></li>
 <li><a href="unravel/voxel_stats/prep_vstats.html">unravel.voxel_stats.prep_vstats</a></li>
 <li><a href="unravel/voxel_stats/vstats.html">unravel.voxel_stats.vstats</a></li>
 <li><a href="unravel/voxel_stats/whole_to_LR_avg.html">unravel.voxel_stats.whole_to_LR_avg</a></li>

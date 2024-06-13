@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/core/img_tools';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -354,7 +347,8 @@
   <h1>Source code for unravel.core.img_tools</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
-<span class="sd">&quot;&quot;&quot; This module contains functions processing 3D images: </span>
+<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">This module contains functions processing 3D images: </span>
 <span class="sd">    - resample: Resample a 3D ndarray.</span>
 <span class="sd">    - reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space</span>
 <span class="sd">    - pixel_classification: Segment tif series with Ilastik.</span>
@@ -381,7 +375,7 @@
 
 
 <div class="viewcode-block" id="resample">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.resample">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.resample">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">resample</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample a 3D ndarray</span>
@@ -399,7 +393,7 @@
 
 
 <div class="viewcode-block" id="reorient_for_raw_to_nii_conv">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.reorient_for_raw_to_nii_conv">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reorient_for_raw_to_nii_conv">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">reorient_for_raw_to_nii_conv</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reorient resampled ndarray for registration or warping to atlas space </span>
@@ -409,7 +403,7 @@
 
 
 <div class="viewcode-block" id="reverse_reorient_for_raw_to_nii_conv">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">reverse_reorient_for_raw_to_nii_conv</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;After warping to native space, reorients image to match tissue&quot;&quot;&quot;</span>
@@ -440,7 +434,7 @@
 <span class="c1">#             subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)</span>
 
 <div class="viewcode-block" id="pixel_classification">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.pixel_classification">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.pixel_classification">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">pixel_classification</span><span class="p">(</span><span class="n">tif_dir</span><span class="p">,</span> <span class="n">ilastik_project</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">ilastik_log</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Segment tif series with Ilastik using pixel classification.&quot;&quot;&quot;</span>
@@ -467,7 +461,7 @@
 
 
 <div class="viewcode-block" id="pad_img">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.pad_img">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.pad_img">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">pad_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mf">0.15</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Pads ndarray by 15% of voxels on all sides&quot;&quot;&quot;</span>
@@ -479,7 +473,7 @@
 
 
 <div class="viewcode-block" id="reorient_ndarray">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.reorient_ndarray">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reorient_ndarray">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">reorient_ndarray</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">orientation_string</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention).&quot;&quot;&quot;</span>
@@ -505,7 +499,7 @@
 
 
 <div class="viewcode-block" id="reorient_ndarray2">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.reorient_ndarray2">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reorient_ndarray2">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">reorient_ndarray2</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">orientation_string</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention).&quot;&quot;&quot;</span>
@@ -551,7 +545,7 @@
 <span class="c1">####### Rolling ball background subraction #######</span>
 
 <div class="viewcode-block" id="process_slice">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.process_slice">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.process_slice">[docs]</a>
 <span class="k">def</span> <span class="nf">process_slice</span><span class="p">(</span><span class="nb">slice</span><span class="p">,</span> <span class="n">struct_element</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Subtract background from &lt;slice&gt; using OpenCV.&quot;&quot;&quot;</span>
     <span class="n">smoothed_slice</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">morphologyEx</span><span class="p">(</span><span class="nb">slice</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">MORPH_OPEN</span><span class="p">,</span> <span class="n">struct_element</span><span class="p">)</span>
@@ -559,7 +553,7 @@
 
 
 <div class="viewcode-block" id="rolling_ball_subtraction_opencv_parallel">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">rolling_ball_subtraction_opencv_parallel</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">threads</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Subtract background from &lt;ndarray&gt; using OpenCV. </span>
@@ -582,7 +576,7 @@
 
 <span class="n">print_func_name_args_times</span><span class="p">()</span>
 <div class="viewcode-block" id="cluster_IDs">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.cluster_IDs">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.cluster_IDs">[docs]</a>
 <span class="k">def</span> <span class="nf">cluster_IDs</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">min_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">print_IDs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_sizes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Prints cluster IDs [and sizes] for clusters &gt; minextent voxels&quot;&quot;&quot;</span>
 
@@ -608,7 +602,7 @@
 
 <span class="n">print_func_name_args_times</span><span class="p">()</span>
 <div class="viewcode-block" id="find_bounding_box">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.find_bounding_box">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.find_bounding_box">[docs]</a>
 <span class="k">def</span> <span class="nf">find_bounding_box</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">cluster_ID</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">output_file_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.</span>
@@ -661,7 +655,7 @@
 
 <span class="n">print_func_name_args_times</span><span class="p">()</span>
 <div class="viewcode-block" id="crop">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_tools.crop">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.crop">[docs]</a>
 <span class="k">def</span> <span class="nf">crop</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">bbox</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Crop an ndarray to the specified bounding box (xmin:xmax, ymin:ymax, zmin:zmax)&quot;&quot;&quot;</span>
     <span class="c1"># Split the bounding box string into coordinates</span>

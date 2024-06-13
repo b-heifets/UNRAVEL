@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/utilities/toggle_samples';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -354,6 +347,24 @@
   <h1>Source code for unravel.utilities.toggle_samples</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Inactivate/activate sample?? dirs (i.e., prepend/remove &quot;_&quot; from dir name)</span>
+
+<span class="sd">Usage for toggling all sample?? dirs to active:</span>
+<span class="sd">    toggle_samples.py -t -e &lt;list_of_exp_dir_paths&gt;</span>
+<span class="sd">    </span>
+<span class="sd">Usage for activating sample?? dirs for certain conditions:</span>
+<span class="sd">    toggle_samples.py -c &lt;path/sample_key.csv&gt; -a &lt;Saline MDMA&gt; -v -e &lt;list_of_exp_dir_paths&gt;</span>
+
+<span class="sd">For conditions in the activate list, the script will remove the &quot;_&quot; from the sample?? dir name.</span>
+<span class="sd">For conditions not in the activate list, the script will prepend &quot;_&quot; to the sample?? dir name.    </span>
+
+<span class="sd">The sample_key.csv file should have the following format:</span>
+<span class="sd">    dir_name,condition</span>
+<span class="sd">    sample01,control</span>
+<span class="sd">    sample02,treatment</span>
+<span class="sd">&quot;&quot;&quot;</span>    
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
@@ -367,9 +378,9 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.utilities.html#unravel.utilities.toggle_samples.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/utilities/toggle_samples.html#unravel.utilities.toggle_samples.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Inactivate/activate sample?? dirs (i.e., prepend/remove &quot;_&quot; from dir name)&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process.&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pattern for sample?? dirs. Use cwd if no matches.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sample??&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of sample?? dir names or paths to dirs to process&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -377,27 +388,13 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sk&#39;</span><span class="p">,</span> <span class="s1">&#39;--sample_key&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/sample_key.csv w/ directory names and conditions&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--activate&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Space separated list of conditions to enable processing for (must match sample_key.csv)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">Usage for toggling all sample?? dirs to active:</span>
-<span class="s2">toggle_samples.py -t -e &lt;list_of_exp_dir_paths&gt;</span>
-<span class="s2">    </span>
-<span class="s2">Usage for activating sample?? dirs for certain conditions:</span>
-<span class="s2">toggle_samples.py -c &lt;path/sample_key.csv&gt; -a &lt;Saline MDMA&gt; -v -e &lt;list_of_exp_dir_paths&gt;</span>
-
-<span class="s2">For conditions in the activate list, the script will remove the &quot;_&quot; from the sample?? dir name.</span>
-<span class="s2">For conditions not in the activate list, the script will prepend &quot;_&quot; to the sample?? dir name.    </span>
-
-<span class="s2">The sample_key.csv file should have the following format:</span>
-<span class="s2">    dir_name,condition</span>
-<span class="s2">    sample01,control</span>
-<span class="s2">    sample02,treatment</span>
-<span class="s2">&quot;&quot;&quot;</span>    
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.utilities.html#unravel.utilities.toggle_samples.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/utilities/toggle_samples.html#unravel.utilities.toggle_samples.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

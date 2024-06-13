@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/regional_counts';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -354,6 +347,15 @@
   <h1>Source code for unravel.region_stats.regional_counts</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Perform regional cell counting</span>
+
+<span class="sd">Run from experiment folder containing sample?? folders. </span>
+
+<span class="sd">Seg image: </span>
+<span class="sd">    ./sample??/ochann_seg_ilastik_1/sample??_ochann_seg_ilastik_1.nii.gz</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">cc3d</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -370,9 +372,9 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_counts.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_counts.html#unravel.region_stats.regional_counts.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Perform regional cell counting&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pattern for folders to process. If no matches, use current dir. Default: sample??&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sample??&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of folders to process.&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--seg_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Dir name for segmentation image. Default: ochann_seg_ilastik_1.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ochann_seg_ilastik_1&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -381,20 +383,20 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Short name for experimental groud for front of sample ID. Default: None&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cc&#39;</span><span class="p">,</span> <span class="s1">&#39;--connect&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Connected component connectivity (6, 18, or 26). Default: 6&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;Run from experiment folder containing sample?? folders. Seg image: ./sample??/ochann_seg_ilastik_1/sample??_ochann_seg_ilastik_1.nii.gz&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="get_atlas_region_at_coords">
-<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_counts.get_atlas_region_at_coords">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_counts.html#unravel.region_stats.regional_counts.get_atlas_region_at_coords">[docs]</a>
 <span class="k">def</span> <span class="nf">get_atlas_region_at_coords</span><span class="p">(</span><span class="n">atlas</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot;Get the ndarray atlas region intensity at the given coordinates&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">atlas</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="count_cells_in_regions">
-<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_counts.count_cells_in_regions">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_counts.html#unravel.region_stats.regional_counts.count_cells_in_regions">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">count_cells_in_regions</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">seg_img_path</span><span class="p">,</span> <span class="n">atlas_path</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Count the number of cells in each region based on atlas region intensities&quot;&quot;&quot;</span>
@@ -465,7 +467,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.region_stats.html#unravel.region_stats.regional_counts.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_counts.html#unravel.region_stats.regional_counts.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
 
     <span class="n">samples</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dirs</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">pattern</span><span class="p">)</span>

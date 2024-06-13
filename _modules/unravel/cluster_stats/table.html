@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/table';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -354,6 +347,29 @@
   <h1>Source code for unravel.cluster_stats.table</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    table.py</span>
+
+<span class="sd">Prereqs:</span>
+<span class="sd">    valid_cluster_index.sh has been run. Run this script from the valid_clusters dir. &lt;asterisk&gt;cluster_info.txt in working dir.</span>
+
+<span class="sd">Sorting by hierarchy and volume:</span>
+<span class="sd">--------------------------------</span>
+<span class="sd">Group by Depth: Starting from the earliest depth column, for each depth level:</span>
+<span class="sd">   - Sum the volumes of all rows sharing the same region (or combination of regions up to that depth).</span>
+<span class="sd">   - Sort these groups by their aggregate volume in descending order, ensuring larger groups are prioritized.</span>
+
+<span class="sd">Sort Within Groups: Within each group created in step 1:</span>
+<span class="sd">   - Sort the rows by their individual volume in descending order.</span>
+
+<span class="sd">Maintain Grouping Order:</span>
+<span class="sd">   - As we move to deeper depth levels, maintain the grouping and ordering established in previous steps (only adjusting the order within groups based on the new depth&#39;s aggregate volumes).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">openpyxl</span>
 <span class="kn">import</span> <span class="nn">math</span>
@@ -373,31 +389,14 @@
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span>
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.&#39;&#39;&#39;</span><span class="p">,</span>
-                                     <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-vcd&#39;</span><span class="p">,</span> <span class="s1">&#39;--val_clusters_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the valid_clusters dir output from index.py (else cwd)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--top_regions&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of top regions to output. Default: 4&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pv&#39;</span><span class="p">,</span> <span class="s1">&#39;--percent_vol&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Example usage:    table.py</span>
-
-<span class="s2">Prerequisites: valid_cluster_index.sh has been run. Run this script from the &lt;valid_clusters&gt; dir. *cluster_info.txt in working dir.</span>
-
-<span class="s2">Sorting by heirarchy and volume: </span>
-<span class="s2">1) Group by Depth: Starting from the earliest depth column, for each depth level:</span>
-<span class="s2">       - Sum the volumes of all rows sharing the same region (or combination of regions up to that depth).</span>
-<span class="s2">       - Sort these groups by their aggregate volume in descending order, ensuring larger groups are prioritized.</span>
-
-<span class="s2">2) Sort Within Groups: Within each group created in step 1:</span>
-<span class="s2">       - Sort the rows by their individual volume in descending order.</span>
-
-<span class="s2">3) Maintain Grouping Order: </span>
-<span class="s2">       - As we move to deeper depth levels, maintain the grouping and ordering established in previous steps</span>
-<span class="s2">       (only adjusting the order within groups based on the new depth&#39;s aggregate volumes).  </span>
-<span class="s2">    </span>
-<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
@@ -405,7 +404,7 @@
 
 
 <div class="viewcode-block" id="fill_na_with_last_known">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.fill_na_with_last_known">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.fill_na_with_last_known">[docs]</a>
 <span class="k">def</span> <span class="nf">fill_na_with_last_known</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
     <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
 
@@ -417,7 +416,7 @@
 
 
 <div class="viewcode-block" id="sort_sunburst_hierarchy">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.sort_sunburst_hierarchy">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.sort_sunburst_hierarchy">[docs]</a>
 <span class="k">def</span> <span class="nf">sort_sunburst_hierarchy</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort the DataFrame by hierarchy and volume.&quot;&quot;&quot;</span>
 
@@ -453,7 +452,7 @@
 
 
 <div class="viewcode-block" id="undo_fill_with_original">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.undo_fill_with_original">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.undo_fill_with_original">[docs]</a>
 <span class="k">def</span> <span class="nf">undo_fill_with_original</span><span class="p">(</span><span class="n">df_sorted</span><span class="p">,</span> <span class="n">df_original</span><span class="p">):</span>
     <span class="c1"># Ensure the original DataFrame has not been altered; otherwise, use a saved copy before any modifications</span>
     <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_original</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
@@ -466,7 +465,7 @@
 
 
 <div class="viewcode-block" id="can_collapse">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.can_collapse">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.can_collapse">[docs]</a>
 <span class="k">def</span> <span class="nf">can_collapse</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">depth_col</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Determine if regions in the specified depth column can be collapsed.</span>
@@ -485,7 +484,7 @@
 
 
 <div class="viewcode-block" id="collapse_hierarchy">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.collapse_hierarchy">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.collapse_hierarchy">[docs]</a>
 <span class="k">def</span> <span class="nf">collapse_hierarchy</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">volume_column</span> <span class="o">=</span> <span class="s1">&#39;Volume_(mm^3)&#39;</span>
     <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
@@ -525,7 +524,7 @@
 
 
 <div class="viewcode-block" id="calculate_top_regions">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.calculate_top_regions">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.calculate_top_regions">[docs]</a>
 <span class="k">def</span> <span class="nf">calculate_top_regions</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">top_n</span><span class="p">,</span> <span class="n">percent_vol_threshold</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Identify the top regions based on the dynamically collapsed hierarchy,</span>
@@ -557,7 +556,7 @@
 
     
 <div class="viewcode-block" id="get_top_regions_and_percent_vols">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.get_top_regions_and_percent_vols">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.get_top_regions_and_percent_vols">[docs]</a>
 <span class="k">def</span> <span class="nf">get_top_regions_and_percent_vols</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="p">,</span> <span class="n">top_regions</span><span class="p">,</span> <span class="n">percent_vol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="p">)</span>
 
@@ -626,7 +625,7 @@
 
 <span class="c1"># Function to create fill color based on the volume</span>
 <div class="viewcode-block" id="get_fill_color">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.get_fill_color">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.get_fill_color">[docs]</a>
 <span class="k">def</span> <span class="nf">get_fill_color</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">):</span>
     <span class="c1"># Apply a log transform to the volume to enhance visibility of smaller values</span>
     <span class="c1"># Adding 1 to the value to avoid log(0), and another 1 to max_value to ensure the max_value maps to 1 after log transform</span>
@@ -647,7 +646,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.table.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

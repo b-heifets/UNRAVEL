@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/image_io/h5_to_tifs';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -354,6 +347,26 @@
   <h1>Source code for unravel.image_io.h5_to_tifs</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Loads h5/hdf5 image, saves as tifs. Also, saves xy and z voxel size in microns.</span>
+
+<span class="sd">Run this script from a sample?? folder containing the image.h5 file.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    h5_to_tifs.py -i path/image.h5 -t 488</span>
+
+<span class="sd">Inputs:</span>
+<span class="sd">    - image.h5 either from -i path/image.h5 or largest &lt;asterisk&gt;.h5 in cwd</span>
+<span class="sd">    - This script assumes that the first dataset in the hdf5 file has the highest resolution.</span>
+
+<span class="sd">Outputs:</span>
+<span class="sd">    - ./&lt;tif_dir_out&gt;/slice_&lt;asterisk&gt;.tif series</span>
+<span class="sd">    - ./parameters/metadata (text file)</span>
+
+<span class="sd">Next script:</span>
+<span class="sd">    - prep_reg.sh</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">os</span>
@@ -366,35 +379,19 @@
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 
 
-
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.h5_to_tifs.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Loads h5/hdf5 image, saves as tifs. Also, saves xy and z voxel size in microns&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image.h5&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--tif_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of output folder for outputting tifs&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">Example usage: </span>
-<span class="s2">cd &lt;path/sample??&gt; # change working directory to sample folder</span>
-<span class="s2">h5_to_tifs.py -i &lt;path/image.h5&gt; -t 488</span>
-
-<span class="s2">Inputs: </span>
-<span class="s2">image.h5 # either from -i path/image.h5 or largest *.h5 in cwd</span>
-<span class="s2">This script assumes that the first dataset in the hdf5 file has the highest resolution.</span>
-
-<span class="s2">Outputs:</span>
-<span class="s2">./&lt;tif_dir_out&gt;/slice_????.tif series</span>
-<span class="s2">./parameters/metadata (text file)</span>
-
-<span class="s2">Next script: </span>
-<span class="s2">prep_reg.sh</span>
-<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="find_largest_h5_file">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.h5_to_tifs.find_largest_h5_file">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.find_largest_h5_file">[docs]</a>
 <span class="k">def</span> <span class="nf">find_largest_h5_file</span><span class="p">():</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; Find and return the path to the largest .h5 file in the current directory &quot;&quot;&quot;</span>
     <span class="n">largest_file</span> <span class="o">=</span> <span class="kc">None</span>
@@ -410,7 +407,7 @@
 
 
 <div class="viewcode-block" id="load_h5">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.h5_to_tifs.load_h5">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.load_h5">[docs]</a>
 <span class="k">def</span> <span class="nf">load_h5</span><span class="p">(</span><span class="n">hdf5_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Load full res image from an HDF5 file (.h5) and return ndarray</span>
 <span class="sd">    Default: axis_order=xyz (other option: axis_order=&quot;zyx&quot;)</span>
@@ -432,7 +429,7 @@
 
     
 <div class="viewcode-block" id="metadata_from_h5">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.h5_to_tifs.metadata_from_h5">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.metadata_from_h5">[docs]</a>
 <span class="k">def</span> <span class="nf">metadata_from_h5</span><span class="p">(</span><span class="n">hdf5_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns tuple with xy_voxel_size and z_voxel_size in microns from full res HDF5 image&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">hdf5_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
@@ -451,7 +448,7 @@
 
 
 <div class="viewcode-block" id="save_as_tifs">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.h5_to_tifs.save_as_tifs">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.save_as_tifs">[docs]</a>
 <span class="k">def</span> <span class="nf">save_as_tifs</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">tif_dir_out</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Save &lt;ndarray&gt; as tifs in &lt;Path(tif_dir_out)&gt;&quot;&quot;&quot;</span>
     <span class="n">tif_dir_out</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tif_dir_out</span><span class="p">)</span>
@@ -467,7 +464,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.h5_to_tifs.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

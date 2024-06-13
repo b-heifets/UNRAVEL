@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative';</script>
     <link rel="icon" href="../../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -354,6 +347,28 @@
   <h1>Source code for unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Calculates the relative effect size for (comparing sexes) for a comparison between two groups for each cluster [or a valid cluster list]</span>
+
+<span class="sd">Enter M or F in the Sex column.</span>
+<span class="sd">    </span>
+<span class="sd">Usage:</span>
+<span class="sd">    effect_sizes_by_sex__relative.py -i densities.csv -c1 saline -c2 psilocybin</span>
+
+<span class="sd">-c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.</span>
+
+<span class="sd">Outputs CSV w/ the relative effect size (F&gt;M) and CI for each cluster:</span>
+<span class="sd">    &lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;_F_gt_M.csv</span>
+
+<span class="sd">If -c is used, outputs a CSV with the effect sizes and CI for valid clusters:</span>
+<span class="sd">    &lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;_F_gt_M_valid_clusters.csv</span>
+
+<span class="sd">The effect size is calculated as the unbiased Hedge\&#39;s g effect sizes (corrected for sample size): </span>
+<span class="sd">    Hedges&#39; g = ((c2-c1)/spooled*corr_factor)</span>
+<span class="sd">    CI = Hedges&#39; g +/- t * SE</span>
+<span class="sd">    0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -363,36 +378,20 @@
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../../unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;Calculates the relative effect size for (comparing sexes) for a comparison between two groups for each cluster [or a valid cluster list]&#39;&#39;&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input_csv&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, ...)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c1&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_1&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;First condition of interest from csv (e.g., saline [data matching prefix pooled])&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c2&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_2&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Second condition (e.g, psilocybin [data matching prefix pooled])&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--clusters&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Space separated list of valid cluster IDs (default: process all clusters)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Enter M or F in the Sex column.</span>
-<span class="s2">    </span>
-<span class="s2">Example usage:    effect_sizes_by_sex__relative.py -i densities.csv -c1 saline -c2 psilocybin</span>
-
-<span class="s2">-c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.</span>
-
-<span class="s2">Outputs CSV w/ the relative effect size (F&gt;M) and CI for each cluster:</span>
-<span class="s2">&lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;_F_gt_M.csv</span>
-
-<span class="s2">If -c is used, outputs a CSV with the effect sizes and CI for valid clusters:</span>
-<span class="s2">&lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;_F_gt_M_valid_clusters.csv</span>
-
-<span class="s2">The effect size is calculated as the unbiased Hedge</span><span class="se">\&#39;</span><span class="s2">s g effect sizes (corrected for sample size): </span>
-
-<span class="s2">Hedges&#39; g = ((c2-c1)/spooled*corr_factor)</span>
-<span class="s2">CI = Hedges&#39; g +/- t * SE</span>
-<span class="s2">0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="condition_selector">
-<a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.condition_selector">[docs]</a>
+<a class="viewcode-back" href="../../../../unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.condition_selector">[docs]</a>
 <span class="k">def</span> <span class="nf">condition_selector</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">unique_conditions</span><span class="p">,</span> <span class="n">condition_column</span><span class="o">=</span><span class="s1">&#39;Conditions&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.</span>
 <span class="sd">    This function checks if the &#39;condition&#39; is exactly present in the &#39;Conditions&#39; column or is a prefix of any condition in this column. </span>
@@ -417,7 +416,7 @@
 
 
 <div class="viewcode-block" id="filter_dataframe">
-<a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.filter_dataframe">[docs]</a>
+<a class="viewcode-back" href="../../../../unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.filter_dataframe">[docs]</a>
 <span class="k">def</span> <span class="nf">filter_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">cluster_list</span><span class="p">):</span>
     <span class="c1"># If no clusters provided, return the original DataFrame</span>
     <span class="k">if</span> <span class="n">cluster_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -429,7 +428,7 @@
 
 <span class="c1"># Create a series with the mean, std, and count for each cluster</span>
 <div class="viewcode-block" id="mean_std_count">
-<a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.mean_std_count">[docs]</a>
+<a class="viewcode-back" href="../../../../unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.mean_std_count">[docs]</a>
 <span class="k">def</span> <span class="nf">mean_std_count</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">sex</span><span class="p">,</span> <span class="n">selector</span><span class="p">,</span> <span class="n">cluster_columns</span><span class="p">):</span>
     <span class="n">mean</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Sex&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">sex</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">selector</span><span class="p">][</span><span class="n">cluster_columns</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
     <span class="n">std</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Sex&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">sex</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">selector</span><span class="p">][</span><span class="n">cluster_columns</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
@@ -439,7 +438,7 @@
 
 <span class="c1"># Calculate the relative effect size between sexes for each cluster</span>
 <div class="viewcode-block" id="relative_hedges_g">
-<a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g">[docs]</a>
+<a class="viewcode-back" href="../../../../unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g">[docs]</a>
 <span class="k">def</span> <span class="nf">relative_hedges_g</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition_1</span><span class="p">,</span> <span class="n">condition_2</span><span class="p">):</span> 
 
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
@@ -517,7 +516,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../../unravel.cluster_stats.effect_sizes.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.main">[docs]</a>
+<a class="viewcode-back" href="../../../../unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

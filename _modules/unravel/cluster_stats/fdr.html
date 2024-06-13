@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/fdr';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -354,6 +347,37 @@
   <h1>Source code for unravel.cluster_stats.fdr</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Perform FDR correction on a p value map to define clusters</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    fdr.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05</span>
+
+<span class="sd">Inputs: </span>
+<span class="sd">    - p value map (e.g., *vox_p_*stat*.nii.gz from vstats.py)    </span>
+
+<span class="sd">Outputs saved in the output directory:</span>
+<span class="sd">    - FDR-adjusted p value map</span>
+<span class="sd">    - Cluster information CSV</span>
+<span class="sd">    - Reversed cluster index image (output_dir/input_name_rev_cluster_index.nii.gz)</span>
+<span class="sd">    - min_cluster_size_in_voxels.txt</span>
+<span class="sd">    - p_value_threshold.txt</span>
+<span class="sd">    - 1-p_value_threshold.txt</span>
+
+<span class="sd">Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.</span>
+
+<span class="sd">Making directional cluster indices from non-directional p value maps output from ANOVAs: </span>
+<span class="sd">    - Provide the average immunostaining intensity images for each group being contrasted (avg.py)</span>
+<span class="sd">    - The --output needs to have &lt;group1&gt;_v_&lt;group2&gt; in the name</span>
+<span class="sd">    - _v_ will be replaced with _gt_ or _lt_ based on the effect direction </span>
+<span class="sd">    - The cluster index will be split accoding to the effect directions</span>
+<span class="sd">    - fdr.py -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v</span>
+
+<span class="sd">For bilateral data processed with a hemispheric mask, next run recursively_mirror_rev_cluster_indices.py to mirror the cluster indices to the other hemisphere.</span>
+
+<span class="sd">For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with validate_clusters.py.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">concurrent.futures</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
@@ -370,9 +394,9 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Perform FDR correction on a p value map to define clusters&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/p_value_map.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mas&#39;</span><span class="p">,</span> <span class="s1">&#39;--mask&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/mask.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-q&#39;</span><span class="p">,</span> <span class="s1">&#39;--q_value&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Space-separated list of FDR q values&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -382,39 +406,14 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a2&#39;</span><span class="p">,</span> <span class="s1">&#39;--avg_img2&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/averaged_immunofluo_group2.nii.gz for spliting the cluster index based on effect direction&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-th&#39;</span><span class="p">,</span> <span class="s1">&#39;--threads&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of threads. Default: 10&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Usage:    fdr.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05</span>
-
-<span class="s2">Inputs: </span>
-<span class="s2">    - p value map (e.g., *vox_p_*stat*.nii.gz from vstats.py)    </span>
-
-<span class="s2">Outputs saved in the output directory:</span>
-<span class="s2">    - FDR-adjusted p value map</span>
-<span class="s2">    - Cluster information CSV</span>
-<span class="s2">    - Reversed cluster index image (output_dir/input_name_rev_cluster_index.nii.gz)</span>
-<span class="s2">    - min_cluster_size_in_voxels.txt</span>
-<span class="s2">    - p_value_threshold.txt</span>
-<span class="s2">    - 1-p_value_threshold.txt</span>
-
-<span class="s2">Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.</span>
-
-<span class="s2">Making directional cluster indices from non-directional p value maps output from ANOVAs: </span>
-<span class="s2">    - Provide the average immunostaining intensity images for each group being contrasted (avg.py)</span>
-<span class="s2">    - The --output needs to have &lt;group1&gt;_v_&lt;group2&gt; in the name</span>
-<span class="s2">    - _v_ will be replaced with _gt_ or _lt_ based on the effect direction </span>
-<span class="s2">    - The cluster index will be split accoding to the effect directions</span>
-<span class="s2">    - fdr.py -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v</span>
-
-<span class="s2">For bilateral data processed with a hemispheric mask, next run recursively_mirror_rev_cluster_indices.py to mirror the cluster indices to the other hemisphere.</span>
-
-<span class="s2">For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with validate_clusters.py.</span>
-<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
 <span class="c1"># TODO: could add optional args like in vstats.py for running the fdr command. </span>
 
 <div class="viewcode-block" id="fdr">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.fdr">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.fdr">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">fdr</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">fdr_path</span><span class="p">,</span> <span class="n">mask_path</span><span class="p">,</span> <span class="n">q_value</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform FDR correction on the input p value map using a mask.</span>
@@ -456,7 +455,7 @@
 
 
 <div class="viewcode-block" id="cluster_index">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.cluster_index">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.cluster_index">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">cluster_index</span><span class="p">(</span><span class="n">adj_p_val_img_path</span><span class="p">,</span> <span class="n">min_size</span><span class="p">,</span> <span class="n">q_value</span><span class="p">,</span> <span class="n">output_index</span><span class="p">):</span>
 
@@ -480,7 +479,7 @@
 
 
 <div class="viewcode-block" id="reverse_clusters">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.reverse_clusters">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.reverse_clusters">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">reverse_clusters</span><span class="p">(</span><span class="n">cluster_index_img</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">cluster_index_nii</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reverse the cluster IDs in a cluster index image (ndarray). Return the reversed cluster index ndarray.&quot;&quot;&quot;</span>
@@ -500,7 +499,7 @@
 
 
 <div class="viewcode-block" id="split_clusters_based_on_effect">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.split_clusters_based_on_effect">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.split_clusters_based_on_effect">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">split_clusters_based_on_effect</span><span class="p">(</span><span class="n">rev_cluster_index_img</span><span class="p">,</span> <span class="n">avg_img1</span><span class="p">,</span> <span class="n">avg_img2</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">max_cluster_id</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">cluster_index_nii</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">avg_img1</span> <span class="ow">and</span> <span class="n">avg_img2</span><span class="p">:</span> 
@@ -543,7 +542,7 @@
 
 
 <div class="viewcode-block" id="process_fdr_and_clusters">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.process_fdr_and_clusters">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.process_fdr_and_clusters">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">process_fdr_and_clusters</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">min_size</span><span class="p">,</span> <span class="n">avg_img1</span><span class="p">,</span> <span class="n">avg_img2</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Process FDR correction and cluster index generation for a given q value.&quot;&quot;&quot;</span>
@@ -599,7 +598,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.cluster_stats.html#unravel.cluster_stats.fdr.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

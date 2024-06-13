@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/image_tools/tif_rb';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -354,6 +347,18 @@
   <h1>Source code for unravel.image_tools.tif_rb</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Perform rolling ball background subtraction on a TIFF file.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    background_subtract_tif.py -i input.tif -rb 4 </span>
+
+<span class="sd">Rolling ball subtraction:</span>
+<span class="sd">    - Radius should be ~ 1.0 to 2.0 times the size of the features of interest</span>
+<span class="sd">    - Larger radii will remove more background, but may also remove some of the features of interest</span>
+<span class="sd">    - Smaller radii will remove less background, but may leave some background noise</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">cv2</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -364,27 +369,19 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.tif_rb.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_tools/tif_rb.html#unravel.image_tools.tif_rb.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Perform rolling ball background subtraction on a TIFF file.&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the input TIFF file.&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to save the output TIFF file.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-rb&#39;</span><span class="p">,</span> <span class="s1">&#39;--rb_radius&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Radius of rolling ball in pixels.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Usage:</span>
-<span class="s2">background_subtract_tif.py -i input.tif -rb 4 </span>
-
-<span class="s2">Rolling ball subtraction:</span>
-<span class="s2">    - Radius should be ~ 1.0 to 2.0 times the size of the features of interest</span>
-<span class="s2">    - Larger radii will remove more background, but may also remove some of the features of interest</span>
-<span class="s2">    - Smaller radii will remove less background, but may leave some background noise</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="load_tif">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.tif_rb.load_tif">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_tools/tif_rb.html#unravel.image_tools.tif_rb.load_tif">[docs]</a>
 <span class="k">def</span> <span class="nf">load_tif</span><span class="p">(</span><span class="n">tif_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Load a single tif file using OpenCV and return ndarray.&#39;&#39;&#39;</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">tif_path</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_UNCHANGED</span><span class="p">)</span>
@@ -394,7 +391,7 @@
 
 
 <div class="viewcode-block" id="rolling_ball_subtraction">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.tif_rb.rolling_ball_subtraction">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_tools/tif_rb.html#unravel.image_tools.tif_rb.rolling_ball_subtraction">[docs]</a>
 <span class="k">def</span> <span class="nf">rolling_ball_subtraction</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Subtract background from image using a rolling ball algorithm.&#39;&#39;&#39;</span>
     <span class="n">kernel_size</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">+</span> <span class="mi">1</span>
@@ -405,7 +402,7 @@
 
 
 <div class="viewcode-block" id="save_tif">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.tif_rb.save_tif">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_tools/tif_rb.html#unravel.image_tools.tif_rb.save_tif">[docs]</a>
 <span class="k">def</span> <span class="nf">save_tif</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&#39;&#39;&#39;Save an image as a tif file.&#39;&#39;&#39;</span>
     <span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span></div>
@@ -413,7 +410,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.image_tools.html#unravel.image_tools.tif_rb.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_tools/tif_rb.html#unravel.image_tools.tif_rb.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

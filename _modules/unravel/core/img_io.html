@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/core/img_io';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -394,7 +387,7 @@
 <span class="c1"># Load 3D image (load_3D_img()), get/save metadata, and return ndarray [with metadata]</span>
 
 <div class="viewcode-block" id="return_3D_img">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.return_3D_img">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.return_3D_img">[docs]</a>
 <span class="k">def</span> <span class="nf">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim).</span>
@@ -435,7 +428,7 @@
 
 
 <div class="viewcode-block" id="metadata">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.metadata">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.metadata">[docs]</a>
 <span class="k">def</span> <span class="nf">metadata</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract and handle metadata, including saving to a file if requested.</span>
@@ -473,7 +466,7 @@
 
 
 <div class="viewcode-block" id="extract_resolution">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.extract_resolution">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.extract_resolution">[docs]</a>
 <span class="k">def</span> <span class="nf">extract_resolution</span><span class="p">(</span><span class="n">img_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Extract resolution from image metadata.</span>
@@ -521,7 +514,7 @@
 
 
 <div class="viewcode-block" id="load_czi">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_czi">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_czi">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_czi</span><span class="p">(</span><span class="n">czi_path</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -563,7 +556,7 @@
 
     
 <div class="viewcode-block" id="load_tifs">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_tifs">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_tifs">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_tifs</span><span class="p">(</span><span class="n">tif_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parallel_loading</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -616,7 +609,7 @@
 
 
 <div class="viewcode-block" id="load_nii">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_nii">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_nii">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_nii</span><span class="p">(</span><span class="n">nii_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -658,7 +651,7 @@
 
 
 <div class="viewcode-block" id="load_nii_subset">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_nii_subset">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_nii_subset">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_nii_subset</span><span class="p">(</span><span class="n">nii_path</span><span class="p">,</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -682,7 +675,7 @@
 
 
 <div class="viewcode-block" id="load_h5">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_h5">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_h5">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span> 
 <span class="k">def</span> <span class="nf">load_h5</span><span class="p">(</span><span class="n">hdf5_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -725,7 +718,7 @@
 
 
 <div class="viewcode-block" id="load_zarr">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_zarr">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_zarr">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_zarr</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -750,7 +743,7 @@
 
 
 <div class="viewcode-block" id="resolve_path">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.resolve_path">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.resolve_path">[docs]</a>
 <span class="k">def</span> <span class="nf">resolve_path</span><span class="p">(</span><span class="n">upstream_path</span><span class="p">,</span> <span class="n">path_or_pattern</span><span class="p">,</span> <span class="n">make_parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">is_file</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Returns full path or Path(upstream_path, path_or_pattern) and optionally creates parent directories.</span>
@@ -798,7 +791,7 @@
 
 
 <div class="viewcode-block" id="save_metadata_to_file">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_metadata_to_file">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.save_metadata_to_file">[docs]</a>
 <span class="k">def</span> <span class="nf">save_metadata_to_file</span><span class="p">(</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="s1">&#39;parameters/metadata.txt&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save metadata to a text file.</span>
@@ -829,7 +822,7 @@
 
 
 <div class="viewcode-block" id="load_image_metadata_from_txt">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_image_metadata_from_txt">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_image_metadata_from_txt">[docs]</a>
 <span class="k">def</span> <span class="nf">load_image_metadata_from_txt</span><span class="p">(</span><span class="n">metadata</span><span class="o">=</span><span class="s2">&quot;./parameters/metadata*&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load metadata from a text file.</span>
@@ -869,7 +862,7 @@
 
 
 <div class="viewcode-block" id="load_3D_img">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_3D_img">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_3D_img">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">load_3D_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span> 
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -942,7 +935,7 @@
 
 <span class="c1"># Save images</span>
 <div class="viewcode-block" id="load_nii_orientation">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.load_nii_orientation">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_nii_orientation">[docs]</a>
 <span class="k">def</span> <span class="nf">load_nii_orientation</span><span class="p">(</span><span class="n">input_nii_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load a .nii.gz file and return its orientation (affine matrix).</span>
@@ -962,7 +955,7 @@
 
 
 <div class="viewcode-block" id="save_as_nii">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_nii">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.save_as_nii">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">save_as_nii</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1010,7 +1003,7 @@
 
 
 <div class="viewcode-block" id="save_as_tifs">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_tifs">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.save_as_tifs">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">save_as_tifs</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">tif_dir_out</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1043,7 +1036,7 @@
 
 
 <div class="viewcode-block" id="save_as_zarr">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_zarr">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.save_as_zarr">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">save_as_zarr</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1071,7 +1064,7 @@
 
 
 <div class="viewcode-block" id="save_as_h5">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.img_io.save_as_h5">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.save_as_h5">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">save_as_h5</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>

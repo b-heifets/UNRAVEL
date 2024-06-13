@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/core/config';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -354,11 +347,55 @@
   <h1>Source code for unravel.core.config</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This script defines classes for reading configuration settings from a file and accessing them</span>
+<span class="sd">using attribute-style access. It uses the ConfigParser module to parse configuration files</span>
+<span class="sd">and provides convenient access to configuration sections and values.</span>
+
+<span class="sd">Classes:</span>
+<span class="sd">    - AttrDict: A dictionary subclass that allows attribute access to its keys.</span>
+<span class="sd">    - Config: A class to read configuration from a file and allow attribute access using RawConfigParser.</span>
+<span class="sd">    - Configuration: A class to hold global configuration settings.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    Import the classes and use them to read and access configuration settings from a file.</span>
+
+<span class="sd">Example:</span>
+<span class="sd">    from path.to.this.script import Config, Configuration</span>
+
+<span class="sd">    config = Config(&quot;path/to/config_file.ini&quot;)</span>
+<span class="sd">    database_config = config.database</span>
+<span class="sd">    print(database_config.username)  # Access a configuration value using attribute access</span>
+
+<span class="sd">Classes:</span>
+<span class="sd">    AttrDict</span>
+<span class="sd">        - A dictionary that allows attribute access to its keys.</span>
+<span class="sd">        - Methods:</span>
+<span class="sd">            - __getattr__: Returns the value associated with the given key.</span>
+
+<span class="sd">    Config</span>
+<span class="sd">        - Reads configuration from a file and allows attribute access using RawConfigParser.</span>
+<span class="sd">        - Methods:</span>
+<span class="sd">            - __init__: Initializes the Config object and reads the configuration file.</span>
+<span class="sd">            - __getattr__: Returns a dictionary-like object for the specified section, with comments stripped from values.</span>
+<span class="sd">            - _strip_comments: Static method that strips inline comments from configuration values.</span>
+
+<span class="sd">    Configuration</span>
+<span class="sd">        - Holds global configuration settings.</span>
+<span class="sd">        - Attributes:</span>
+<span class="sd">            - verbose: A boolean flag to control verbosity of the application.</span>
+
+<span class="sd">Notes:</span>
+<span class="sd">    - The Config class uses the RawConfigParser from the configparser module to parse the configuration file.</span>
+<span class="sd">    - The AttrDict class allows for convenient attribute access to dictionary keys.</span>
+<span class="sd">    - The Configuration class can be extended to hold additional global settings as needed.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">configparser</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
 <div class="viewcode-block" id="AttrDict">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.AttrDict">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/config.html#unravel.core.config.AttrDict">[docs]</a>
 <span class="k">class</span> <span class="nc">AttrDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A dictionary that allows attribute access.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
@@ -366,7 +403,7 @@
 
 
 <div class="viewcode-block" id="Config">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.Config">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/config.html#unravel.core.config.Config">[docs]</a>
 <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to read configuration from a file and allow attribute access using RawConfigParser.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file</span><span class="p">):</span>
@@ -387,7 +424,7 @@
 
     
 <div class="viewcode-block" id="Configuration">
-<a class="viewcode-back" href="../../../unravel.core.html#unravel.core.config.Configuration">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/core/config.html#unravel.core.config.Configuration">[docs]</a>
 <span class="k">class</span> <span class="nc">Configuration</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to hold configuration settings.&quot;&quot;&quot;</span>
     <span class="n">verbose</span> <span class="o">=</span> <span class="kc">False</span></div>

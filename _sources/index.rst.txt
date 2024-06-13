@@ -53,6 +53,17 @@ UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet
 * UNRAVEL was developed by `the Heifets lab <https://heifetslab.stanford.edu/>`_ and `TensorAnalytics <https://sites.google.com/view/tensoranalytics/home?authuser=0>`_
 * Additional support was provided by `the Shamloo lab <https://med.stanford.edu/neurosurgery/research/shamloo.html>`_
 
+.. raw:: html
+
+    <br>
+
+.. raw:: html
+
+    <div style="text-align: center;">
+        <a href="https://heifetslab.stanford.edu/" target="_blank">
+            <img id="heifets-logo" src="_static/Heifets_lab_logo.png" alt="Heifets Lab">
+        </a>
+    </div>
 
 Getting started
 ---------------
@@ -65,20 +76,19 @@ Getting started
     pip install unravel
 
 * :doc:`guide`
-* :doc:`commands`
-* Documentation on modules and functions in the :doc:`unravel`
+* :doc:`unravel/toc`
 
 
 UNRAVEL visualizer
 -------------------
-* `UNRAVEL visualizer <https://cfos.dev.metacell.us/>`_ is a web-based tool for visualizing and exploring 3D maps output from UNRAVEL
+* `UNRAVEL visualizer <https://heifetslab-unravel.org/>`_ is a web-based tool for visualizing and exploring 3D maps output from UNRAVEL
 * `UNRAVEL visualizer GitHub repo <https://github.com/MetaCell/cfos-visualizer/>`_
 * Developed by `MetaCell <https://metacell.us/>`_ with support from the `Heifets lab <https://heifetslab.stanford.edu/>`_
 
 .. raw:: html
 
     <div style="text-align: center;">
-        <a href="https://cfos.dev.metacell.us/" target="_blank">
+        <a href="https://heifetslab-unravel.org/" target="_blank">
             <img id="unravel-visualizer" src="_static/UNRAVEL_visualizer.png" alt="UNRAVEL visualizer">
         </a>
     </div>
@@ -97,16 +107,16 @@ Developers
 * **Boris Heifets** (PI) - `bheifets@stanford.edu <mailto:bheifets@stanford.edu>`_
 
 
-Additional contributions from:
-------------------------------
+Additional contributions from
+-----------------------------
 * **Mehrdad Shamloo** (PI) - `shamloo@stanford.edu <mailto:shamloo@stanford.edu>`_
 * **Daniel Barbosa** (early contributer and guidance) - `Dbarbosa@pennmedicine.upenn.edu <mailto:Dbarbosa@pennmedicine.upenn.edu>`_
 * **Wesley Zhao** (guidance) - `weszhao@stanford.edu <mailto:weszhao@stanford.edu>`_
 * **Nick Gregory** (guidance) - `ngregory@stanford.edu <mailto:ngregory@stanford.edu>`_
 
 
-Main dependencies:
-------------------------------------------------
+Main dependencies
+-----------------
 * `Allen Institute for Brain Science <https://portal.brain-map.org/>`_
 * `FSL <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki>`_
 * `fslpy <https://git.fmrib.ox.ac.uk/fsl/fslpy>`_
@@ -118,10 +128,10 @@ Main dependencies:
 * `pandas <https://pandas.pydata.org/>`_
 * `cc3d <https://pypi.org/project/connected-components-3d/>`_
 * Registration and warping workflows were inspired by `MIRACL <https://miracl.readthedocs.io/en/latest/>`_
+* We adapted `LSFM/iDISCO+ atlases <https://pubmed.ncbi.nlm.nih.gov/33063286/>`_ from `Gubra <https://www.gubra.dk/cro-services/3d-imaging/>`_
 
-
-Support is welcome for:
------------------------
+Support is welcome for
+----------------------
 * Analysis of new datasets
 * Development of new features
 * Maintenance of the codebase
@@ -132,13 +142,12 @@ Support is welcome for:
     <br>
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
 
    installation
    guide
-   commands
-   modules
+   unravel/toc
 
 .. raw:: html
 
@@ -152,17 +161,7 @@ Indices
 * :ref:`modindex`
 * :ref:`search`
 
-.. raw:: html
 
-    <br>
-
-.. raw:: html
-
-    <div style="text-align: center;">
-        <a href="https://heifetslab.stanford.edu/" target="_blank">
-            <img src="_static/Heifets_lab_logo.png" width="500px" alt="Heifets Lab">
-        </a>
-    </div>
 
 .. raw:: html
 

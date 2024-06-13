@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/register/ANTsPy_affine_initializer';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -354,6 +347,22 @@
   <h1>Source code for unravel.register.ANTsPy_affine_initializer</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Run ants.affine_initializer as a seperate process to kill it after a time out</span>
+
+<span class="sd">This also allows for suppressing error messages. </span>
+
+<span class="sd">Usage: </span>
+<span class="sd">    ANTsPy_affine_initialized.py -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10</span>
+
+<span class="sd">Python usage: </span>
+<span class="sd">    - import subprocess</span>
+<span class="sd">    - import os</span>
+<span class="sd">    - command = [&#39;python&#39;, &#39;ANTsPy_affine_initialized.py&#39;, &#39;-f&#39;, &#39;reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz&#39;, &#39;-m&#39;, &#39;/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz&#39;, &#39;-o&#39;, &#39;reg_outputs/ANTsPy_init_tform.nii.gz&#39;, &#39;-t&#39;, &#39;10&#39; ]</span>
+<span class="sd">    - with open(os.devnull, &#39;w&#39;) as devnull:</span>
+<span class="sd">    -    subprocess.run(command, stderr=devnull)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">ants</span>
@@ -367,32 +376,19 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Run ants.affine_initializer as a seperate process to kill it after a time out&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--fixed_img&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/fixed_image.nii.gz (e.g., autofl_50um_masked_fixed_reg_input.nii.gz)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--moving_img&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/moving_image.nii.gz (e.g., template)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/init_tform_py.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--time_out&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Duration in seconds to allow this script to run. Default: 10&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;This also allows for suppressing error messages. </span>
-
-<span class="s2">Usage: ANTsPy_affine_initialized.py -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10</span>
-<span class="s2">with open(os.devnull, &#39;w&#39;) as devnull:</span>
-
-<span class="s2">    </span>
-<span class="s2">Python usage: </span>
-<span class="s2">import subprocess</span>
-<span class="s2">import os</span>
-
-<span class="s2">command = [&#39;python&#39;, &#39;ANTsPy_affine_initialized.py&#39;, &#39;-f&#39;, &#39;reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz&#39;, &#39;-m&#39;, &#39;/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz&#39;, &#39;-o&#39;, &#39;reg_outputs/ANTsPy_init_tform.nii.gz&#39;, &#39;-t&#39;, &#39;10&#39; ]</span>
-<span class="s2">with open(os.devnull, &#39;w&#39;) as devnull:</span>
-<span class="s2">    subprocess.run(command, stderr=devnull)</span>
-<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="affine_initializer_wrapper">
-<a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.affine_initializer_wrapper">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.affine_initializer_wrapper">[docs]</a>
 <span class="k">def</span> <span class="nf">affine_initializer_wrapper</span><span class="p">(</span><span class="n">fixed_image_path</span><span class="p">,</span> <span class="n">moving_image_path</span><span class="p">,</span> <span class="n">reg_outputs_path</span><span class="p">,</span> <span class="n">queue</span><span class="p">):</span>
 
     <span class="c1"># Load the fixed and moving images</span>
@@ -416,7 +412,7 @@
 
 
 <div class="viewcode-block" id="run_with_timeout">
-<a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.run_with_timeout">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.run_with_timeout">[docs]</a>
 <span class="k">def</span> <span class="nf">run_with_timeout</span><span class="p">(</span><span class="n">fixed_image</span><span class="p">,</span> <span class="n">moving_image</span><span class="p">,</span> <span class="n">reg_outputs_path</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
 
     <span class="c1"># Queue for inter-process communication</span>
@@ -442,7 +438,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.register.html#unravel.register.ANTsPy_affine_initializer.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span> 
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     

@@ -28,7 +28,8 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=165b5da3" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
@@ -38,6 +39,12 @@
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
     <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/image_io/reorient_nii';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -144,15 +151,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -257,15 +257,8 @@
 
 
 <li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../commands.html">
-    Commands
-  </a>
-</li>
-
-
-<li class="nav-item pst-header-nav-item">
-  <a class="nav-link nav-internal" href="../../../modules.html">
-    unravel
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
   </a>
 </li>
 
@@ -354,6 +347,67 @@
   <h1>Source code for unravel.image_io.reorient_nii</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Set orientation of a .nii.gz or its affine matrix</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">    reorient_nii.py -i image.nii.gz -t PIR -a -z</span>
+
+<span class="sd">Output:</span>
+<span class="sd">    - The new .nii.gz file with the new orientation (e.g., image_PIR.nii.gz or image_PIR_applied.nii.gz)</span>
+
+<span class="sd">The axis codes are:</span>
+<span class="sd">    R: Right / L: Left </span>
+<span class="sd">    A: Anterior / P: Posterior</span>
+<span class="sd">    S: Superior / I: Inferior</span>
+
+<span class="sd">The orientation code is a 3-letter code that indicates the direction of the axes in the image.</span>
+
+<span class="sd">For the RAS+ orientation (default for NIfTI): </span>
+<span class="sd">    - The right side is at the positive direction of the x-axis</span>
+<span class="sd">    - The anterior side is at the positive direction of the y-axis</span>
+<span class="sd">    - The superior side is at the positive direction of the z-axis</span>
+
+<span class="sd">The orientation code also indicates the orientation of the axes in the affine matrix.</span>
+
+<span class="sd">Example affine for RAS+ orientation:</span>
+<span class="sd">    [[1  0  0  0]</span>
+<span class="sd">    [ 0  1  0  0]</span>
+<span class="sd">    [ 0  0  1  0]</span>
+<span class="sd">    [ 0  0  0  1]]</span>
+
+<span class="sd">    - The 1st letter is R since the 1st diagonal value is positive (the right side is at the positive direction of the x-axis)</span>
+<span class="sd">    - The 2nd letter is A since the 2nd diagonal value is positive (the anterior side is at the positive direction of the y-axis)</span>
+<span class="sd">    - The 3rd letter is S since the 3rd diagonal value is positive (the superior side is at the positive direction of the z-axis)</span>
+
+<span class="sd">Example affine for LPS+ orientation:</span>
+<span class="sd">    [[-1  0  0  0]</span>
+<span class="sd">    [  0 -1  0  0]</span>
+<span class="sd">    [  0  0  1  0]</span>
+<span class="sd">    [  0  0  0  1]]</span>
+
+<span class="sd">        -For LPS, the 1st letter is L since the 1st diagonal value is negative.</span>
+<span class="sd">        -The 2nd letter is P since the 2nd diagonal value is negative.</span>
+<span class="sd">        -The 3rd letter is S since the 3rd diagonal value is positive.</span>
+
+<span class="sd">Example affine for PIR+ orientation (default for CCFv3):</span>
+<span class="sd">    [[ 0  0  1  0]</span>
+<span class="sd">    [ -1  0  0  0]</span>
+<span class="sd">    [  0 -1  0  0]</span>
+<span class="sd">    [  0  0  0  1]]</span>
+
+<span class="sd">For PIR:</span>
+<span class="sd">    First letter determination: </span>
+<span class="sd">        -The 1st column has a non-zero value at the 2nd row, so the 1st letter is either A or P (2nd letter of the default &#39;RAS&#39; orientation code).</span>
+<span class="sd">        -Since the valud is negative, the 1st letter is P</span>
+<span class="sd">    Second letter determination:</span>
+<span class="sd">        -The 2nd column has a non-zero value at the 3rd row, so the 2nd letter is either S or I (3rd letter of the default &#39;RAS&#39; orientation code).</span>
+<span class="sd">        -Since the value is negative, the 2nd letter is I</span>
+<span class="sd">    Third letter determination:</span>
+<span class="sd">        -The 3rd column has a non-zero value at the 1st row, so the 3rd letter is either R or L (1st letter of the default &#39;RAS&#39; orientation code).</span>
+<span class="sd">        -Since the value is positive, the 3rd letter is R</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -365,77 +419,22 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.reorient_nii.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/reorient_nii.html#unravel.image_io.reorient_nii.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Set orientation of a .nii.gz or its affine matrix&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/img.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/img.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_ort&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Target orientation axis codes (e.g., RAS)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-z&#39;</span><span class="p">,</span> <span class="s1">&#39;--zero_origin&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provide flag to zero the origin of the affine matrix.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--apply&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provide flag to apply the new orientation to the ndarray data.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-fc&#39;</span><span class="p">,</span> <span class="s1">&#39;--form_code&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned)&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;Example usage:     reorient_nii.py -i image.nii.gz -t PIR -a -z</span>
-
-<span class="s2">Output:</span>
-<span class="s2">    - The new .nii.gz file with the new orientation (e.g., image_PIR.nii.gz or image_PIR_applied.nii.gz)</span>
-
-<span class="s2">The axis codes are:</span>
-<span class="s2">    R: Right / L: Left </span>
-<span class="s2">    A: Anterior / P: Posterior</span>
-<span class="s2">    S: Superior / I: Inferior</span>
-
-<span class="s2">The orientation code is a 3-letter code that indicates the direction of the axes in the image.</span>
-
-<span class="s2">For the RAS+ orientation (default for NIfTI): </span>
-<span class="s2">    - The right side is at the positive direction of the x-axis</span>
-<span class="s2">    - The anterior side is at the positive direction of the y-axis</span>
-<span class="s2">    - The superior side is at the positive direction of the z-axis</span>
-
-<span class="s2">The orientation code also indicates the orientation of the axes in the affine matrix.</span>
-
-<span class="s2">Example affine for RAS+ orientation:</span>
-<span class="s2">    [[1  0  0  0]</span>
-<span class="s2">    [ 0  1  0  0]</span>
-<span class="s2">    [ 0  0  1  0]</span>
-<span class="s2">    [ 0  0  0  1]]</span>
-
-<span class="s2">    - The 1st letter is R since the 1st diagonal value is positive (the right side is at the positive direction of the x-axis)</span>
-<span class="s2">    - The 2nd letter is A since the 2nd diagonal value is positive (the anterior side is at the positive direction of the y-axis)</span>
-<span class="s2">    - The 3rd letter is S since the 3rd diagonal value is positive (the superior side is at the positive direction of the z-axis)</span>
-
-<span class="s2">Example affine for LPS+ orientation:</span>
-<span class="s2">    [[-1  0  0  0]</span>
-<span class="s2">    [  0 -1  0  0]</span>
-<span class="s2">    [  0  0  1  0]</span>
-<span class="s2">    [  0  0  0  1]]</span>
-
-<span class="s2">        -For LPS, the 1st letter is L since the 1st diagonal value is negative.</span>
-<span class="s2">        -The 2nd letter is P since the 2nd diagonal value is negative.</span>
-<span class="s2">        -The 3rd letter is S since the 3rd diagonal value is positive.</span>
-
-<span class="s2">Example affine for PIR+ orientation (default for CCFv3):</span>
-<span class="s2">    [[ 0  0  1  0]</span>
-<span class="s2">    [ -1  0  0  0]</span>
-<span class="s2">    [  0 -1  0  0]</span>
-<span class="s2">    [  0  0  0  1]]</span>
-
-<span class="s2">For PIR:</span>
-<span class="s2">    First letter determination: </span>
-<span class="s2">        -The 1st column has a non-zero value at the 2nd row, so the 1st letter is either A or P (2nd letter of the default &#39;RAS&#39; orientation code).</span>
-<span class="s2">        -Since the valud is negative, the 1st letter is P</span>
-<span class="s2">    Second letter determination:</span>
-<span class="s2">        -The 2nd column has a non-zero value at the 3rd row, so the 2nd letter is either S or I (3rd letter of the default &#39;RAS&#39; orientation code).</span>
-<span class="s2">        -Since the value is negative, the 2nd letter is I</span>
-<span class="s2">    Third letter determination:</span>
-<span class="s2">        -The 3rd column has a non-zero value at the 1st row, so the 3rd letter is either R or L (1st letter of the default &#39;RAS&#39; orientation code).</span>
-<span class="s2">        -Since the value is positive, the 3rd letter is R</span>
-<span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
 
 <div class="viewcode-block" id="transform_nii_affine">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.reorient_nii.transform_nii_affine">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/reorient_nii.html#unravel.image_io.reorient_nii.transform_nii_affine">[docs]</a>
 <span class="k">def</span> <span class="nf">transform_nii_affine</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_ort</span><span class="p">,</span> <span class="n">zero_origin</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform the affine matrix of a NIfTI image to a target orientation and return the new affine matrix</span>
 <span class="sd">    </span>
@@ -498,7 +497,7 @@
 
 
 <div class="viewcode-block" id="reorient_nii">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.reorient_nii.reorient_nii">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/reorient_nii.html#unravel.image_io.reorient_nii.reorient_nii">[docs]</a>
 <span class="k">def</span> <span class="nf">reorient_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_ort</span><span class="p">,</span> <span class="n">zero_origin</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">apply</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">form_code</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reorient a NIfTI image or its affine matrix to a target orientation.</span>
 
@@ -556,7 +555,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel.image_io.html#unravel.image_io.reorient_nii.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/image_io/reorient_nii.html#unravel.image_io.reorient_nii.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
