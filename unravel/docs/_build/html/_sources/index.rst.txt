@@ -107,16 +107,16 @@ Developers
 * **Boris Heifets** (PI) - `bheifets@stanford.edu <mailto:bheifets@stanford.edu>`_
 
 
-Additional contributions from:
-------------------------------
+Additional contributions from
+-----------------------------
 * **Mehrdad Shamloo** (PI) - `shamloo@stanford.edu <mailto:shamloo@stanford.edu>`_
 * **Daniel Barbosa** (early contributer and guidance) - `Dbarbosa@pennmedicine.upenn.edu <mailto:Dbarbosa@pennmedicine.upenn.edu>`_
 * **Wesley Zhao** (guidance) - `weszhao@stanford.edu <mailto:weszhao@stanford.edu>`_
 * **Nick Gregory** (guidance) - `ngregory@stanford.edu <mailto:ngregory@stanford.edu>`_
 
 
-Main dependencies:
-------------------------------------------------
+Main dependencies
+-----------------
 * `Allen Institute for Brain Science <https://portal.brain-map.org/>`_
 * `FSL <https://fsl.fmrib.ox.ac.uk/fsl/fslwiki>`_
 * `fslpy <https://git.fmrib.ox.ac.uk/fsl/fslpy>`_
@@ -128,10 +128,10 @@ Main dependencies:
 * `pandas <https://pandas.pydata.org/>`_
 * `cc3d <https://pypi.org/project/connected-components-3d/>`_
 * Registration and warping workflows were inspired by `MIRACL <https://miracl.readthedocs.io/en/latest/>`_
+* We adapted `LSFM/iDISCO+ atlases <https://pubmed.ncbi.nlm.nih.gov/33063286/>`_ from `Gubra <https://www.gubra.dk/cro-services/3d-imaging/>`_
 
-
-Support is welcome for:
------------------------
+Support is welcome for
+----------------------
 * Analysis of new datasets
 * Development of new features
 * Maintenance of the codebase
