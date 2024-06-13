@@ -1,5 +1,12 @@
 # UNRAVEL
 #### UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images 
+
+---
+
+### *Please see [UNRAVEL 1.0.0-beta](https://github.com/b-heifets/UNRAVEL/tree/dev) for the latest code and [UNRAVEL documentation](https://b-heifets.github.io/UNRAVEL/) for guides on [installation](https://b-heifets.github.io/UNRAVEL/installation.html) and [anaysis](https://b-heifets.github.io/UNRAVEL/guide.html)*
+
+---
+
 \
 UNRAVEL is a command line tool for:
 * Voxel-wise analysis of fluorescent signals (e.g., c-Fos immunofluorescence) across the mouse brains in atlas space
