@@ -48,7 +48,8 @@ dev = [
     "python-cfonts",
     "pydata_sphinx_theme",
     "sphinx",
-    "sphinx-autobuild"
+    "sphinx-autobuild", 
+    "sphinx-togglebutton"
 ]
 
 [project.urls]

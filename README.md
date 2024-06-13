@@ -6,7 +6,6 @@
     * Quantification of cell/label densities across the brain
     * Voxel-wise analysis of fluorescent signals and cluster correction
     * Validation of hot/cold spots via cell/label density quantification at cellular resolution
-* [UNRAVEL GitHub repository](https://github.com/b-heifets/UNRAVEL/tree/dev)
 * [Initial UNRAVEL publication](https://www.nature.com/articles/s41386-023-01613-4)
 * UNRAVEL was developed by [the Heifets lab](https://heifetslab.stanford.edu/) and [TensorAnalytics](https://sites.google.com/view/tensoranalytics/home?authuser=0)
 * Additional support was provided by [the Shamloo lab](https://med.stanford.edu/neurosurgery/research/shamloo.html)
