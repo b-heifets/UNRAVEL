@@ -82,6 +82,11 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
     ```
 
 ```{todo}
+Add unravel to PyPI so that users can install it by running something like: 
+    ```bash
+    pip install unravel
+    ```
+
 Add support for conda
 ```
 
