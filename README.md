@@ -1,32 +1,5 @@
 [![UNRAVEL Logo](https://github.com/b-heifets/UNRAVEL/blob/dev/unravel/docs/_static/UNRAVEL_logo.png)](https://b-heifets.github.io/UNRAVEL/)
 
-
-<style>
-    video {
-        border: none;
-        outline: none;
-    }
-</style>
-
-<div style="display: flex; justify-content: space-between;">
-    <div style="flex: 1; margin-right: 10px;">
-        <a href="https://www.nature.com/articles/s41386-023-01613-4" target="_blank">
-            <video width="100%" autoplay muted playsinline>
-                <source src="https://github.com/b-heifets/UNRAVEL/blob/dev/unravel/docs/_static/psilocybin_up_valid_clusters.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </a>
-    </div>
-    <div style="flex: 1; margin-left: 10px;">
-        <a href="https://www.nature.com/articles/s41386-023-01613-4" target="_blank">
-            <video width="100%" autoplay muted playsinline>
-                <source src="https://github.com/b-heifets/UNRAVEL/blob/dev/unravel/docs/_static/psilocybin_up_sunburst.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-        </a>
-    </div>
-</div>
-
 ### UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images
 * UNRAVEL is a [Python](https://www.python.org/) package & command line tool for the analysis of brain-wide imaging data, automating: 
     * Registration of brain-wide images to a common atlas space
@@ -38,14 +11,15 @@
 * UNRAVEL was developed by [the Heifets lab](https://heifetslab.stanford.edu/) and [TensorAnalytics](https://sites.google.com/view/tensoranalytics/home?authuser=0)
 * Additional support was provided by [the Shamloo lab](https://med.stanford.edu/neurosurgery/research/shamloo.html)
 
-
-![Heifets Lab](https://github.com/b-heifets/UNRAVEL/blob/dev/unravel/docs/_static/Heifets_lab_logo.png)
-
 ---
 
 ### *Please see [UNRAVEL documentation](https://b-heifets.github.io/UNRAVEL/) for guides on [installation](https://b-heifets.github.io/UNRAVEL/installation.html) and [anaysis](https://b-heifets.github.io/UNRAVEL/guide.html)*
 
 ---
+
+<img src="https://github.com/b-heifets/UNRAVEL/blob/dev/unravel/docs/_static/Heifets_lab_logo.png" alt="Heifets Lab" width="500">
+
+
 
 ### UNRAVEL visualizer
 * [UNRAVEL visualizer](https://heifetslab-unravel.org/) is a web-based tool for visualizing and exploring 3D maps output from UNRAVEL
