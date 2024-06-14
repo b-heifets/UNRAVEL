@@ -1,5 +1,32 @@
 # Guide
 
+## Help on commands
+For help/info on a command, run
+```bash
+<command> -h
+```
+
+## Listing commands
+```bash
+# List all commands and their descriptions
+unravel_commands -d 
+
+# List common commands and their descriptions
+unravel_commands -c -d
+
+# List the modules run by each command
+unravel_commands -m
+```
+
+```{admonition} Info on commands
+:class: note dropdown
+{py:mod}`unravel.command_list` 
+
+unravel_commands runs ./repo_root_dir/unravel/command_list.py
+
+Commands are defined in the `[project.scripts]` section of the `pyproject.toml` in the root directory of the [UNRAVEL repository](https://github.com/b-heifets/UNRAVEL/blob/dev/pyproject.toml).
+```
+
 ## Set up
 
 ### Back up raw data
@@ -55,7 +82,7 @@ This makes batch processing easy.
 
 Use a csv, Google sheet, or whatever else for linking sample IDs to IDs w/ this convention.
 
-Other patterns (e.g., sample???) may be used (commands/scripts have a -p option for that).
+Other patterns (e.g., sample???) may be used (commands have a -p option for that).
 ```
 
 ```
@@ -108,7 +135,7 @@ touch exp_notes.txt  # Make the .txt file
 ```
 :::
 
-:::{admonition} Automatic logging of commands
+:::{admonition} Automatic logging of scripts
 :class: tip dropdown
 Most scripts log the command used to run them, appending to ./.command_log.txt.
 
@@ -121,6 +148,10 @@ cat .command_log.txt
 cat .command_log.txt | tail -10  
 ```
 :::
+
+```{todo}
+Log commands instead of scripts
+```
 
 
 ### Make a sample_key.csv: 
@@ -153,24 +184,12 @@ exp
 :::
 
 
-### Help on commands/scripts
-For help/info on a command/script, run
-```bash
-<command> -h
-```
-
-or 
-```bash
-<script>.py -h 
-```
-
-
 ### Optional: clean tifs
    * If raw data is in the form of a tif series, consider running: 
 ```bash
-clean_tifs -t <dir_name> -v -m -e $DIRS
+utils_clean_tifs -t <dir_name> -v -m -e $DIRS
 ```
-```{admonition} clean_tifs
+```{admonition} utils_clean_tifs
 :class: tip dropdown
 This will remove spaces from files names and move files other than *.tif to the parent directory
 ```
@@ -181,74 +200,67 @@ Extract or specify metadata (outputs to ./sample??/parameters/metadata.txt). Add
 {py:mod}`unravel.image_io.metadata`
 
 ```bash
-metadata -i <rel_path/full_res_img>  # Glob patterns work for -i
-metadata -i <tif_dir> -x $XY -z $Z  # Specifying x and z voxel sizes in microns
+io_metadata -i <rel_path/full_res_img>  # Glob patterns work for -i
+io_metadata -i <tif_dir> -x $XY -z $Z  # Specifying x and z voxel sizes in microns
 ```
 <br>
 
 
 
-## Analysis steps: 
+## Analysis steps
 
 This section provides an overview of common commands available in UNRAVEL, ~organized by their respective steps. 
 
 ```{admonition} Common commands
 :class: note dropdown
 - [Registration](#registration)
-    - prep_reg
-    - copy_tifs
-    - brain_mask
+    - reg_prep
+    - seg_copy_tifs
+    - seg_brain_mask
     - reg
-    - check_reg
+    - reg_check
 - [Segmentation](#segmentation)
-    - copy_tifs
-    - seg
+    - seg_copy_tifs
+    - seg_ilastik
 - [Voxel-wise stats](#voxel-wise-stats)
-    - prep_vstats
-    - z_score
-    - agg_files_from_dirs
-    - whole_to_avg
-    - avg
+    - vstats_prep
+    - vstats_z_score
+    - utils_agg_files
+    - vstats_whole_to_avg
+    - tools_avg
     - vstats
 - [Cluster correction](#cluster-correction)
-    - fdr_range
-    - fdr
-    - recursive_mirror_index
+    - cluster_fdr_range
+    - cluster_fdr
+    - cluster_mirror_indices
 - [Cluster validation](#cluster-validation)
-    - validate_clusters
-    - summary
+    - cluster_validation
+    - cluster_summary
 - [Region-wise stats](#region-wise-stats)
-    - rstats
-    - rstats_summary
-- [Other](#other)
-    - nii_info
-```
-
-```{admonition} All commands
-:class: tip dropdown
-For a complete list of commands, please view the `[project.scripts]` section of the `pyproject.toml` in the root directory of the [UNRAVEL repository](https://github.com/b-heifets/UNRAVEL/blob/dev/pyproject.toml). Also, look there for the name of scripts associated with each command.
+    - region_stats
+    - region_summary
 ```
 
 ### Registration
-#### `prep_reg`
+#### `reg_prep`
 {py:mod}`unravel.register.prep_reg` 
 * Prepare autofluo images for registration (resample to a lower resolution)
 ```bash
-prep_reg -i *.czi -x $XY -z $Z -v  # -i options: tif_dir, .h5, .zarr, .tif
+reg_prep -i *.czi -x $XY -z $Z -v  # -i options: tif_dir, .h5, .zarr, .tif
 ```
 
-#### `copy_tifs`
+#### `seg_copy_tifs`
 {py:mod}`unravel.segment.copy_tifs`
 * Copy resampled autofluo .tif files for segmenting the brain with ilastik
 ```bash
-copy_tifs -i reg_inputs/autofl_??um_tifs -s 0000 0005 0050 -o $(dirname $BRAIN_MASK_ILP) -e $DIRS
+seg_copy_tifs -i reg_inputs/autofl_??um_tifs -s 0000 0005 0050 -o $(dirname $BRAIN_MASK_ILP) -e $DIRS
 ```  
 
-#### `brain_mask`
+#### `seg_brain_mask`
 {py:mod}`unravel.segment.brain_mask`
 * Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz
 ```bash
-brain_mask -ilp $BRAIN_MASK_ILP -v -e $DIRS
+seg_brain_mask -ilp $BRAIN_MASK_ILP -v -e $DIRS
 ```
 
 #### `reg`
@@ -281,17 +293,17 @@ for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m $TEMPLATE -bc -pad -sm
 :::
 
 :::{note}
-* `iDISCO/LSFM-specific atlas <https://pubmed.ncbi.nlm.nih.gov/33063286/>`_
+* We use an adapted version of a `iDISCO/LSFM-specific atlas <https://pubmed.ncbi.nlm.nih.gov/33063286/>`_ 
 :::
 
 
-#### `check_reg`
+#### `reg_check`
 {py:mod}`unravel.register.check_reg`
 * Check registration by copying these images to a target directory: 
     * sample??/reg_outputs/autofl_??um_masked_fixed_reg_input.nii.gz
     * sample??/reg_outputs/atlas_in_tissue_space.nii.gz
 ```bash
-check_reg -e $DIRS -td $BASE/reg_results
+reg_check -e $DIRS -td $BASE/reg_results
 ```
 * View these images with [FSLeyes](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes)
 
@@ -305,32 +317,31 @@ check_reg -e $DIRS -td $BASE/reg_results
 
 ### Segmentation
 
-#### `copy_tifs`
+#### `seg_copy_tifs`
 {py:mod}`unravel.segment.copy_tifs`
 * Copy full res tif files to a target dir for training Ilastik to segment labels of interest 
 :::{tip} 
 Copy 3 tifs from each sample or 3 tifs from 3 samples / condition
 :::
 ```bash
-copy_tifs -i <raw_tif_dir> -s 0100 0500 1000 -o ilastik_segmentation -e $DIRS -v
+seg_copy_tifs -i <raw_tif_dir> -s 0100 0500 1000 -o ilastik_segmentation -e $DIRS -v
 ```
 
-#### `seg`
+#### `seg_ilastik`
 {py:mod}`unravel.segment.ilastik_pixel_classification`
 * Perform pixel classification using a trained Ilastik project
 ```bash
-seg -i <*.czi, *.h5, or dir w/ tifs> -o seg_dir -ilp $BASE/ilastik_segmentation/trained_ilastik_project.ilp -l 1 -v -e $DIRS 
+seg_ilastik -i <*.czi, *.h5, or dir w/ tifs> -o seg_dir -ilp $BASE/ilastik_segmentation/trained_ilastik_project.ilp -l 1 -v -e $DIRS 
 ```
-
 
 
 ### Voxel-wise stats
 
-#### `prep_vstats`
+#### `vstats_prep`
 {py:mod}`unravel.voxel_stats.prep_vstats`
 * Preprocess immunofluo images and warp them to atlas space for voxel-wise statistics.
 ```bash
-prep_vstats -i cFos -rb 4 -x $XY -z $Z -o cFos_rb4_atlas_space.nii.gz -v -e $DIRS
+vstats_prep -i cFos -rb 4 -x $XY -z $Z -o cFos_rb4_atlas_space.nii.gz -v -e $DIRS
 ```
 :::{admonition} Background subtraction
 :class: tip dropdown
@@ -351,44 +362,44 @@ You can test parameters for background subtraction with:
     * Use {py:mod}`unravel.image_io.img_io` to create a tif series
 :::
 
-#### `z_score`
+#### `vstats_z_score`
 {py:mod}`unravel.voxel_stats.z_score`
 * Z-score atlas space images using tissue masks (from brain_mask) and/or an atlas mask.
 
 ```bash
-z-score -i atlas_space/sample??_cFos_rb4_atlas_space.nii.gz -v -e $DIRS
+vstats_z_score -i atlas_space/sample??_cFos_rb4_atlas_space.nii.gz -v -e $DIRS
 ```
 :::{hint}
-* atlas_space is a folder in ./sample??/ with outputs from prep_vstats.py
+* atlas_space is a folder in ./sample??/ with outputs from vstats_prep
 :::
 
-#### `agg_files_from_dirs`
+#### `utils_agg_files`
 {py:mod}`unravel.utilities.aggregate_files_from_sample_dirs`
 Aggregate pre-processed immunofluorescence (IF) images for voxel-wise stats
 ```bash
-agg_files_from_dirs -i atlas_space/sample??_cFos_rb4_atlas_space_z.nii.gz -e $DIRS -v
+utils_agg_files -i atlas_space/sample??_cFos_rb4_atlas_space_z.nii.gz -e $DIRS -v
 ```
 
-#### `whole_to_avg`
+#### `vstats_whole_to_avg`
 {py:mod}`unravel.voxel_stats.whole_to_LR_avg`
 * Smooth and average left and right hemispheres together
 ```bash
 # Run this in the folder with the .nii.gz images to process
-whole_to_LR_avg -k 0.1 -tp -v  # A 0.05 mm - 0.1 mm kernel radius is recommended for smoothing
+vstats_whole_to_avg -k 0.1 -tp -v  # A 0.05 mm - 0.1 mm kernel radius is recommended for smoothing
 ```
 
 :::{seealso} 
 {py:mod}`unravel.voxel_stats.hemi_to_LR_avg`
 :::
 
-#### `prepend_conditions`
+#### `utils_prepend`
 {py:mod}`unravel.utilities.prepend_conditions`
 * Prepend conditions to filenames based on a CSV w/ this organization
     * dir_name,condition
     * sample01,control
     * sample02,treatment
 ```bash
-prepend_conditions -sk $SAMPLE_KEY -f
+utils_prepend -sk $SAMPLE_KEY -f
 ```
 
 
@@ -413,66 +424,66 @@ vstats -mas mask.nii.gz -v
 ### Cluster correction
 These commands are useful for multiple comparison correction of 1 - p value maps to define clusters of significant voxels. 
 
-#### `avg`
+#### `tools_avg`
 {py:mod}`unravel.image_tools.avg`
 
 * Average *.nii.gz images 
 * Visualize absolute and relative differences in intensity
-* Use averages from each group to convert non-directioanl 1 - p value maps into directional cluster indices
+* Use averages from each group to convert non-directioanl 1 - p value maps into directional cluster indices with cluster_fdr
 ```bash
-avg -i *.nii.gz # outputs avg.nii.gz (process one group at a time or separate into folders)
+tools_avg -i Control_*.nii.gz -o Control_avg.nii.gz
 ```
 
-#### `fdr_range`
+#### `cluster_fdr_range`
 {py:mod}`unravel.cluster_correction.fdr_range`
 Outputs a list of FDR q values that yeild clusters.
 ```bash
 # Basic usage
-fdr_range -i vox_p_tstat1.nii.gz -mas mask.nii.gz
+cluster_fdr_range -i vox_p_tstat1.nii.gz -mas mask.nii.gz
 
 # Perform FDR correction on multiple directional 1 - p value maps
-for j in *_vox_p_*.nii.gz ; do q_values=$(fdr_range -mas $MASK -i $j) ; fdr_ -mas $MASK -i $j -q $q_values ; done
+for j in *_vox_p_*.nii.gz ; do q_values=$(cluster_fdr_range -mas $MASK -i $j) ; cluster_fdr -mas $MASK -i $j -q $q_values ; done
 
 # Convert a non-directioanl 1 - p value map into a directional cluster index
-q_values=$(fdr_range -i vox_p_fstat1.nii.gz -mas $MASK) ; fdr_ -i vox_p_fstat1.nii.gz -mas $MASK -o fstat1 -v -a1 Control_avg.nii.gz -a2 Deep_avg.nii.gz -q $q_values
+q_values=$(cluster_fdr_range -i vox_p_fstat1.nii.gz -mas $MASK) ; cluster_fdr -i vox_p_fstat1.nii.gz -mas $MASK -o fstat1 -v -a1 Control_avg.nii.gz -a2 Deep_avg.nii.gz -q $q_values
 ```
 
-#### `fdr_`
+#### `cluster_fdr`
 {py:mod}`unravel.cluster_correction.fdr_`
 * Perform FDR correction on a 1 - p value map to define clusters
 ```bash
-fdr_ -i vox_p_tstat1.nii.gz -mas mask.nii.gz -q 0.05
+cluster_fdr -i vox_p_tstat1.nii.gz -mas mask.nii.gz -q 0.05
 ```
 
-#### `recursive_mirror_index`
+#### `cluster_mirror_indices`
 {py:mod}`unravel.cluster_correction.recursive_mirror_index`
 * Recursively flip the content of rev_cluster_index.nii.gz images
 * Run this in the ./stats/ folder to process all subdirs with reverse cluster maps (cluster IDs go from large to small)
 ```bash
 # Use -m RH if a right hemisphere mask was used (otherwise use -m LH)
-recursive_mirror_index -m RH -v
+cluster_mirror_indices -m RH -v
 ```
 
 
 ### Cluster validation
 
-#### `validate_clusters`
+#### `cluster_validation`
 {py:mod}`unravel.cluster_stats.validate_clusters`
 * Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/label densities
 ```bash
 # Basic usage:
-validate_clusters -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s seg_dir -v
+cluster_validation -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s seg_dir -v
 
 # Processing multiple FDR q value thresholds and both hemispheres:
-for q in 0.005 0.01 0.05 0.1 ; do for side in LH RH ; do validate_clusters -e $DIRS -m path/vstats/contrast/stats/contrast_vox_p_tstat1_q${q}/contrast_vox_p_tstat1_q${q}_rev_cluster_index_${side}.nii.gz -s seg_dir/sample??_seg_dir_1.nii.gz -v ; done ; done
+for q in 0.005 0.01 0.05 0.1 ; do for side in LH RH ; do cluster_validation -e $DIRS -m path/vstats/contrast/stats/contrast_vox_p_tstat1_q${q}/contrast_vox_p_tstat1_q${q}_rev_cluster_index_${side}.nii.gz -s seg_dir/sample??_seg_dir_1.nii.gz -v ; done ; done
 ```
 
-#### `summary`
+#### `cluster_summary`
 {py:mod}`unravel.cluster_stats.valid_clusters_summary`
 * Aggregates and analyzes cluster validation data from validate_clusters
 * Update parameters in /UNRAVEL/unravel/cluster_stats/valid_clusters_summary.ini and save it with the experiment
 ```bash
-summary -c path/valid_clusters_summary.ini -e $DIRS -cvd '*' -vd path/vstats_dir -sk $SAMPLE_KEY --groups group1 group2 -v
+cluster_summary -c path/valid_clusters_summary.ini -e $DIRS -cvd '*' -vd path/vstats_dir -sk $SAMPLE_KEY --groups group1 group2 -v
 ```
 group1 and group2 must match conditions in the sample_key.csv
 
@@ -484,7 +495,7 @@ group1 and group2 must match conditions in the sample_key.csv
 {py:mod}`unravel.region_stats.regional_cell_densities`
 * Perform regional cell counting (label density measurements needs to be added)
 ```bash
-# Use if atlas is already in native space from to_native.py
+# Use if atlas is already in native space from warp_to_native
 rstats -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36
 
 # Use if native atlas is not available; it is not saved (faster)
@@ -501,30 +512,22 @@ rstats_summary --groups Saline MDMA Meth -d 10000 -hemi r
 ```
 
 
-### Other
-
-#### `nii_info`
-{py:mod}`unravel.image_io.nii_info`
-
-Display information about a NIfTI image.
-```bash
-nii_info -i image.nii.gz
-```
-
-
 ### Example sample?? folder structure after analysis
 ```bash
 .
 ├── atlas_space  # Dir with images warped to atlas space
 ├── cfos_seg_ilastik_1  # Example dir with segmentations from ilastik
-├── clusters  # Dir with cell/label density CSVs from validate_clusters.py
+├── clusters  # Dir with cell/label density CSVs from cluster_validation
+│   ├── Control_v_Treatment_vox_p_tstat1_q0.005
+│   │   └── cell_density_data.csv
+│   └── Control_v_Treatment_vox_p_tstat2_q0.05
+│       └── cell_density_data.csv
 ├── parameters  # Optional dir for things like metadata.txt
-├── reg_inputs  # prep_reg.py (autofl image resampled for reg) and brain_mask.py (mask, masked autofl)
+├── reg_inputs  # From reg_prep (autofl image resampled for reg) and seg_brain_mask (mask, masked autofl)
 ├── regional_cell_densities  # CSVs with regional cell densities data
-├── reg_outputs  # Outputs from reg.py. These images are typically padded w/ empty voxels. 
+├── reg_outputs  # Outputs from reg. These images are typically padded w/ empty voxels. 
 └── image.czi # Or other raw/stitched image type
 ```
-
 
 ### Example experiment folder structure after analysis
 ```bash
@@ -539,24 +542,44 @@ nii_info -i image.nii.gz
 │   ├── sample03
 │   └── sample04
 ├── atlas
-│   ├── gubra_ano_25um_bin.nii.gz
-│   ├── gubra_ano_combined_25um.nii.gz
-│   ├── gubra_ano_split_25um.nii.gz
-│   ├── gubra_mask_25um_wo_ventricles_root_fibers_LH.nii.gz
+│   ├── gubra_ano_25um_bin.nii.gz  # bin indicates that this has been binarized (background = 0; foreground = 1)
+│   ├── gubra_ano_combined_25um.nii.gz  # Each atlas region has a unique intensity/ID
+│   ├── gubra_ano_split_25um.nii.gz  # Intensities in the left hemisphere are increased by 20,000
+│   ├── gubra_mask_25um_wo_ventricles_root_fibers_LH.nii.gz  # Left hemisphere mask that excludes ventricles, undefined regions (root), and fiber tracts
 │   ├── gubra_mask_25um_wo_ventricles_root_fibers_RH.nii.gz
-│   └── gubra_template_25um.nii.gz
+│   └── gubra_template_25um.nii.gz  # Average template brain that is aligned with the atlas
 ├── reg_results
 ├── ilastik_brain_mask
-│   ├── brain_mask.ilp
+│   ├── brain_mask.ilp  # Ilastik project trained with the pixel classification workflow to segment the brain in resampled autofluo images
 │   ├── sample01_slice_0000.tif
 │   ├── sample01_slice_0005.tif
 │   ├── sample01_slice_0050.tif
 │   ├── ...
 │   └── sample04_slice_0050.tif
 ├── vstats
-│   └── Control_v_Treatment
+│   └── Control_v_Treatment 
+│       ├── Control_sample01_rb4_atlas_space_z.tif
+│       ├── Control_sample02_rb4_atlas_space_z.tif
+│       ├── Treatment_sample03_rb4_atlas_space_z.tif
+│       ├── Treatment_sample04_rb4_atlas_space_z.tif
+│       └── stats 
+│           ├── Control_v_Treatment_vox_p_tstat1.nii.gz  # 1 minus p value map showing where Control (group 1) > Treatment (group2)
+│           ├── Control_v_Treatment_vox_p_tstat2.nii.gz  # 1 - p value map showing where Treatment (group 2) > Control (group 1)
+│           ├── Control_v_Treatment_vox_p_tstat1_q0.005  # cluster correction folder
+│           │   ├── 1-p_value_threshold.txt  # FDR adjusted 1 - p value threshold for the uncorrected 1 - p value map
+│           │   ├── p_value_threshold.txt  # FDR adjusted p value threshold
+│           │   ├── min_cluster_size_in_voxels.txt  # Often 100 voxels for c-Fos. For sparser signals like amyloid beta plaques, consider 400 or more
+│           │   └── ..._rev_cluster_index.nii.gz # cluster map (index) with cluster IDs going from large to small (input for cluster_validation)
+│           ├── ...
+│           └── Control_v_Treatment_vox_p_tstat2_q0.05
 ├── cluster_validation
-│   └── Control_v_Treatment
+│   ├── Control_v_Treatment_vox_p_tstat1_q0.005
+│   │   ├── Control_sample01_cell_density_data.csv
+│   │   ├── Control_sample02_cell_density_data.csv
+│   │   ├── Treatment_sample03_cell_density_data.csv
+│   │   └── Treatment_sample04_cell_density_data.csv
+│   ├── ...
+│   └── Control_v_Treatment_vox_p_tstat2_q0.05
 └── regional_cell_densities
     ├── Control_sample01_regional_cell_densities.csv
     ├── ...
@@ -564,5 +587,7 @@ nii_info -i image.nii.gz
 ```
 
 ```{todo}
+Also show the structure of data from cluster_validation and rstats_summary
+
 Add support for CCFv3 2020
 ```
