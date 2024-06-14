@@ -81,14 +81,14 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
     pip install -e .
     ```
 
-```{todo}
+:::{todo}
 Add unravel to PyPI so that users can install it by running something like: 
-    ```bash
-    pip install unravel
-    ```
 
-Add support for conda
+```bash
+pip install unravel
 ```
+:::
+
 
 8. **Download atlas/template files and locate them in `./atlas/`:**
     [Google Drive Link](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)

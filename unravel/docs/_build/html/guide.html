@@ -357,6 +357,32 @@
                   
   <section id="guide">
 <h1>Guide<a class="headerlink" href="#guide" title="Link to this heading">#</a></h1>
+<section id="help-on-commands">
+<h2>Help on commands<a class="headerlink" href="#help-on-commands" title="Link to this heading">#</a></h2>
+<p>For help/info on a command, run</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;command&gt;<span class="w"> </span>-h
+</pre></div>
+</div>
+</section>
+<section id="listing-commands">
+<h2>Listing commands<a class="headerlink" href="#listing-commands" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># List all commands and their descriptions</span>
+unravel_commands<span class="w"> </span>-d<span class="w"> </span>
+
+<span class="c1"># List common commands and their descriptions</span>
+unravel_commands<span class="w"> </span>-c<span class="w"> </span>-d
+
+<span class="c1"># List the modules run by each command</span>
+unravel_commands<span class="w"> </span>-m
+</pre></div>
+</div>
+<div class="note dropdown admonition">
+<p class="admonition-title">Info on commands</p>
+<p><a class="reference internal" href="unravel/command_list.html#module-unravel.command_list" title="unravel.command_list"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.command_list</span></code></a></p>
+<p>unravel_commands runs ./repo_root_dir/unravel/command_list.py</p>
+<p>Commands are defined in the <code class="docutils literal notranslate"><span class="pre">[project.scripts]</span></code> section of the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> in the root directory of the <a class="reference external" href="https://github.com/b-heifets/UNRAVEL/blob/dev/pyproject.toml">UNRAVEL repository</a>.</p>
+</div>
+</section>
 <section id="set-up">
 <h2>Set up<a class="headerlink" href="#set-up" title="Link to this heading">#</a></h2>
 <section id="back-up-raw-data">
@@ -372,11 +398,11 @@
 </ul>
 <div class="note dropdown admonition">
 <p class="admonition-title">Batch stitching settings</p>
-<figure class="align-center" id="id3">
+<figure class="align-center" id="id5">
 <a class="reference internal image-reference" href="_images/batch_stitching_1.JPG"><img alt="Batch stitching settings" src="_images/batch_stitching_1.JPG" style="height: 500px;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Select a mid-stack reference slice. Ideally, tissue will be present in each tile of the reference slice.</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
+<p><span class="caption-text">Select a mid-stack reference slice. Ideally, tissue will be present in each tile of the reference slice.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </div>
@@ -418,7 +444,7 @@
 <p class="admonition-title">Name sample folders like sample01, sample02, …</p>
 <p>This makes batch processing easy.</p>
 <p>Use a csv, Google sheet, or whatever else for linking sample IDs to IDs w/ this convention.</p>
-<p>Other patterns (e.g., sample???) may be used (commands/scripts have a -p option for that).</p>
+<p>Other patterns (e.g., sample???) may be used (commands have a -p option for that).</p>
 </div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>.
 ├── Control
@@ -467,7 +493,7 @@ touch<span class="w"> </span>exp_notes.txt<span class="w">  </span><span class="
 </div>
 </div>
 <div class="tip dropdown admonition">
-<p class="admonition-title">Automatic logging of commands</p>
+<p class="admonition-title">Automatic logging of scripts</p>
 <p>Most scripts log the command used to run them, appending to ./.command_log.txt.</p>
 <p>This is a hidden file. Use control+h to view it on Linux or command+shift+. to view it on MacOS.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># View command history for the current working directory</span>
@@ -477,6 +503,10 @@ cat<span class="w"> </span>.command_log.txt<span class="w">  </span>
 cat<span class="w"> </span>.command_log.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10<span class="w">  </span>
 </pre></div>
 </div>
+</div>
+<div class="admonition-todo admonition" id="id1">
+<p class="admonition-title">Todo</p>
+<p>Log commands instead of scripts</p>
 </div>
 </section>
 <section id="make-a-sample-key-csv">
@@ -511,27 +541,16 @@ exp
 </div>
 </div>
 </section>
-<section id="help-on-commands-scripts">
-<h3>Help on commands/scripts<a class="headerlink" href="#help-on-commands-scripts" title="Link to this heading">#</a></h3>
-<p>For help/info on a command/script, run</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;command&gt;<span class="w"> </span>-h
-</pre></div>
-</div>
-<p>or</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;script&gt;.py<span class="w"> </span>-h<span class="w"> </span>
-</pre></div>
-</div>
-</section>
 <section id="optional-clean-tifs">
 <h3>Optional: clean tifs<a class="headerlink" href="#optional-clean-tifs" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>If raw data is in the form of a tif series, consider running:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>clean_tifs<span class="w"> </span>-t<span class="w"> </span>&lt;dir_name&gt;<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utils_clean_tifs<span class="w"> </span>-t<span class="w"> </span>&lt;dir_name&gt;<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
 </pre></div>
 </div>
 <div class="tip dropdown admonition">
-<p class="admonition-title">clean_tifs</p>
+<p class="admonition-title">utils_clean_tifs</p>
 <p>This will remove spaces from files names and move files other than *.tif to the parent directory</p>
 </div>
 </section>
@@ -539,103 +558,94 @@ exp
 <h3>Note x/y and z voxel sizes<a class="headerlink" href="#note-x-y-and-z-voxel-sizes" title="Link to this heading">#</a></h3>
 <p>Extract or specify metadata (outputs to ./sample??/parameters/metadata.txt). Add the resolutions to env_var.sh.</p>
 <p><a class="reference internal" href="unravel/image_io/metadata.html#module-unravel.image_io.metadata" title="unravel.image_io.metadata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.metadata</span></code></a></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>metadata<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/full_res_img&gt;<span class="w">  </span><span class="c1"># Glob patterns work for -i</span>
-metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<span class="w"> </span>-x<span class="w"> </span><span class="nv">$XY</span><span class="w"> </span>-z<span class="w"> </span><span class="nv">$Z</span><span class="w">  </span><span class="c1"># Specifying x and z voxel sizes in microns</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/full_res_img&gt;<span class="w">  </span><span class="c1"># Glob patterns work for -i</span>
+io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<span class="w"> </span>-x<span class="w"> </span><span class="nv">$XY</span><span class="w"> </span>-z<span class="w"> </span><span class="nv">$Z</span><span class="w">  </span><span class="c1"># Specifying x and z voxel sizes in microns</span>
 </pre></div>
 </div>
 <br>
 </section>
 </section>
 <section id="analysis-steps">
-<h2>Analysis steps:<a class="headerlink" href="#analysis-steps" title="Link to this heading">#</a></h2>
+<h2>Analysis steps<a class="headerlink" href="#analysis-steps" title="Link to this heading">#</a></h2>
 <p>This section provides an overview of common commands available in UNRAVEL, ~organized by their respective steps.</p>
 <div class="note dropdown admonition">
 <p class="admonition-title">Common commands</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#registration">Registration</a></p>
 <ul>
-<li><p>prep_reg</p></li>
-<li><p>copy_tifs</p></li>
-<li><p>brain_mask</p></li>
+<li><p>reg_prep</p></li>
+<li><p>seg_copy_tifs</p></li>
+<li><p>seg_brain_mask</p></li>
 <li><p>reg</p></li>
-<li><p>check_reg</p></li>
+<li><p>reg_check</p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#segmentation">Segmentation</a></p>
 <ul>
-<li><p>copy_tifs</p></li>
-<li><p>seg</p></li>
+<li><p>seg_copy_tifs</p></li>
+<li><p>seg_ilastik</p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#voxel-wise-stats">Voxel-wise stats</a></p>
 <ul>
-<li><p>prep_vstats</p></li>
-<li><p>z_score</p></li>
-<li><p>agg_files_from_dirs</p></li>
-<li><p>whole_to_avg</p></li>
-<li><p>avg</p></li>
+<li><p>vstats_prep</p></li>
+<li><p>vstats_z_score</p></li>
+<li><p>utils_agg_files</p></li>
+<li><p>vstats_whole_to_avg</p></li>
+<li><p>tools_avg</p></li>
 <li><p>vstats</p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#cluster-correction">Cluster correction</a></p>
 <ul>
-<li><p>fdr_range</p></li>
-<li><p>fdr</p></li>
-<li><p>recursive_mirror_index</p></li>
+<li><p>cluster_fdr_range</p></li>
+<li><p>cluster_fdr</p></li>
+<li><p>cluster_mirror_indices</p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#cluster-validation">Cluster validation</a></p>
 <ul>
-<li><p>validate_clusters</p></li>
-<li><p>summary</p></li>
+<li><p>cluster_validation</p></li>
+<li><p>cluster_summary</p></li>
 </ul>
 </li>
 <li><p><a class="reference internal" href="#region-wise-stats">Region-wise stats</a></p>
 <ul>
-<li><p>rstats</p></li>
-<li><p>rstats_summary</p></li>
-</ul>
-</li>
-<li><p><a class="reference internal" href="#other">Other</a></p>
-<ul>
-<li><p>nii_info</p></li>
+<li><p>region_stats</p></li>
+<li><p>region_summary</p></li>
 </ul>
 </li>
 </ul>
-</div>
-<div class="tip dropdown admonition">
-<p class="admonition-title">All commands</p>
-<p>For a complete list of commands, please view the <code class="docutils literal notranslate"><span class="pre">[project.scripts]</span></code> section of the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> in the root directory of the <a class="reference external" href="https://github.com/b-heifets/UNRAVEL/blob/dev/pyproject.toml">UNRAVEL repository</a>. Also, look there for the name of scripts associated with each command.</p>
 </div>
 <section id="registration">
 <h3>Registration<a class="headerlink" href="#registration" title="Link to this heading">#</a></h3>
-<section id="prep-reg">
-<h4><code class="docutils literal notranslate"><span class="pre">prep_reg</span></code><a class="headerlink" href="#prep-reg" title="Link to this heading">#</a></h4>
+<section id="reg-prep">
+<h4><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code><a class="headerlink" href="#reg-prep" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/register/prep_reg.html#module-unravel.register.prep_reg" title="unravel.register.prep_reg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.prep_reg</span></code></a></p>
 <ul class="simple">
 <li><p>Prepare autofluo images for registration (resample to a lower resolution)</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>prep_reg<span class="w"> </span>-i<span class="w"> </span>*.czi<span class="w"> </span>-x<span class="w"> </span><span class="nv">$XY</span><span class="w"> </span>-z<span class="w"> </span><span class="nv">$Z</span><span class="w"> </span>-v<span class="w">  </span><span class="c1"># -i options: tif_dir, .h5, .zarr, .tif</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg_prep<span class="w"> </span>-i<span class="w"> </span>*.czi<span class="w"> </span>-x<span class="w"> </span><span class="nv">$XY</span><span class="w"> </span>-z<span class="w"> </span><span class="nv">$Z</span><span class="w"> </span>-v<span class="w">  </span><span class="c1"># -i options: tif_dir, .h5, .zarr, .tif</span>
 </pre></div>
 </div>
 </section>
-<section id="copy-tifs">
-<h4><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code><a class="headerlink" href="#copy-tifs" title="Link to this heading">#</a></h4>
+<section id="seg-copy-tifs">
+<h4><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code><a class="headerlink" href="#seg-copy-tifs" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/segment/copy_tifs.html#module-unravel.segment.copy_tifs" title="unravel.segment.copy_tifs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.copy_tifs</span></code></a></p>
 <ul class="simple">
 <li><p>Copy resampled autofluo .tif files for segmenting the brain with ilastik</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>copy_tifs<span class="w"> </span>-i<span class="w"> </span>reg_inputs/autofl_??um_tifs<span class="w"> </span>-s<span class="w"> </span><span class="m">0000</span><span class="w"> </span><span class="m">0005</span><span class="w"> </span><span class="m">0050</span><span class="w"> </span>-o<span class="w"> </span><span class="k">$(</span>dirname<span class="w"> </span><span class="nv">$BRAIN_MASK_ILP</span><span class="k">)</span><span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_copy_tifs<span class="w"> </span>-i<span class="w"> </span>reg_inputs/autofl_??um_tifs<span class="w"> </span>-s<span class="w"> </span><span class="m">0000</span><span class="w"> </span><span class="m">0005</span><span class="w"> </span><span class="m">0050</span><span class="w"> </span>-o<span class="w"> </span><span class="k">$(</span>dirname<span class="w"> </span><span class="nv">$BRAIN_MASK_ILP</span><span class="k">)</span><span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
 </pre></div>
 </div>
 </section>
-<section id="brain-mask">
-<h4><code class="docutils literal notranslate"><span class="pre">brain_mask</span></code><a class="headerlink" href="#brain-mask" title="Link to this heading">#</a></h4>
+<section id="seg-brain-mask">
+<h4><code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code><a class="headerlink" href="#seg-brain-mask" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/segment/brain_mask.html#module-unravel.segment.brain_mask" title="unravel.segment.brain_mask"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.brain_mask</span></code></a></p>
 <ul class="simple">
 <li><p>Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brain_mask<span class="w"> </span>-ilp<span class="w"> </span><span class="nv">$BRAIN_MASK_ILP</span><span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_brain_mask<span class="w"> </span>-ilp<span class="w"> </span><span class="nv">$BRAIN_MASK_ILP</span><span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
 </pre></div>
 </div>
 </section>
@@ -678,12 +688,12 @@ metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<span c
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">iDISCO/LSFM-specific</span> <span class="pre">atlas</span> <span class="pre">&lt;https://pubmed.ncbi.nlm.nih.gov/33063286/&gt;</span></code>_</p></li>
+<li><p>We use an adapted version of a <code class="docutils literal notranslate"><span class="pre">iDISCO/LSFM-specific</span> <span class="pre">atlas</span> <span class="pre">&lt;https://pubmed.ncbi.nlm.nih.gov/33063286/&gt;</span></code>_</p></li>
 </ul>
 </div>
 </section>
-<section id="check-reg">
-<h4><code class="docutils literal notranslate"><span class="pre">check_reg</span></code><a class="headerlink" href="#check-reg" title="Link to this heading">#</a></h4>
+<section id="reg-check">
+<h4><code class="docutils literal notranslate"><span class="pre">reg_check</span></code><a class="headerlink" href="#reg-check" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/register/check_reg.html#module-unravel.register.check_reg" title="unravel.register.check_reg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.check_reg</span></code></a></p>
 <ul class="simple">
 <li><p>Check registration by copying these images to a target directory:</p>
@@ -693,7 +703,7 @@ metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<span c
 </ul>
 </li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>check_reg<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-td<span class="w"> </span><span class="nv">$BASE</span>/reg_results
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg_check<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-td<span class="w"> </span><span class="nv">$BASE</span>/reg_results
 </pre></div>
 </div>
 <ul class="simple">
@@ -710,8 +720,8 @@ metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<span c
 </section>
 <section id="segmentation">
 <h3>Segmentation<a class="headerlink" href="#segmentation" title="Link to this heading">#</a></h3>
-<section id="id1">
-<h4><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code><a class="headerlink" href="#id1" title="Link to this heading">#</a></h4>
+<section id="id2">
+<h4><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code><a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/segment/copy_tifs.html#module-unravel.segment.copy_tifs" title="unravel.segment.copy_tifs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.copy_tifs</span></code></a></p>
 <ul class="simple">
 <li><p>Copy full res tif files to a target dir for training Ilastik to segment labels of interest</p></li>
@@ -720,30 +730,30 @@ metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<span c
 <p class="admonition-title">Tip</p>
 <p>Copy 3 tifs from each sample or 3 tifs from 3 samples / condition</p>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>copy_tifs<span class="w"> </span>-i<span class="w"> </span>&lt;raw_tif_dir&gt;<span class="w"> </span>-s<span class="w"> </span><span class="m">0100</span><span class="w"> </span><span class="m">0500</span><span class="w"> </span><span class="m">1000</span><span class="w"> </span>-o<span class="w"> </span>ilastik_segmentation<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-v
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_copy_tifs<span class="w"> </span>-i<span class="w"> </span>&lt;raw_tif_dir&gt;<span class="w"> </span>-s<span class="w"> </span><span class="m">0100</span><span class="w"> </span><span class="m">0500</span><span class="w"> </span><span class="m">1000</span><span class="w"> </span>-o<span class="w"> </span>ilastik_segmentation<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-v
 </pre></div>
 </div>
 </section>
-<section id="seg">
-<h4><code class="docutils literal notranslate"><span class="pre">seg</span></code><a class="headerlink" href="#seg" title="Link to this heading">#</a></h4>
+<section id="seg-ilastik">
+<h4><code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code><a class="headerlink" href="#seg-ilastik" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/segment/ilastik_pixel_classification.html#module-unravel.segment.ilastik_pixel_classification" title="unravel.segment.ilastik_pixel_classification"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.ilastik_pixel_classification</span></code></a></p>
 <ul class="simple">
 <li><p>Perform pixel classification using a trained Ilastik project</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg<span class="w"> </span>-i<span class="w"> </span>&lt;*.czi,<span class="w"> </span>*.h5,<span class="w"> </span>or<span class="w"> </span>dir<span class="w"> </span>w/<span class="w"> </span>tifs&gt;<span class="w"> </span>-o<span class="w"> </span>seg_dir<span class="w"> </span>-ilp<span class="w"> </span><span class="nv">$BASE</span>/ilastik_segmentation/trained_ilastik_project.ilp<span class="w"> </span>-l<span class="w"> </span><span class="m">1</span><span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_ilastik<span class="w"> </span>-i<span class="w"> </span>&lt;*.czi,<span class="w"> </span>*.h5,<span class="w"> </span>or<span class="w"> </span>dir<span class="w"> </span>w/<span class="w"> </span>tifs&gt;<span class="w"> </span>-o<span class="w"> </span>seg_dir<span class="w"> </span>-ilp<span class="w"> </span><span class="nv">$BASE</span>/ilastik_segmentation/trained_ilastik_project.ilp<span class="w"> </span>-l<span class="w"> </span><span class="m">1</span><span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>
 </pre></div>
 </div>
 </section>
 </section>
 <section id="voxel-wise-stats">
 <h3>Voxel-wise stats<a class="headerlink" href="#voxel-wise-stats" title="Link to this heading">#</a></h3>
-<section id="prep-vstats">
-<h4><code class="docutils literal notranslate"><span class="pre">prep_vstats</span></code><a class="headerlink" href="#prep-vstats" title="Link to this heading">#</a></h4>
+<section id="vstats-prep">
+<h4><code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code><a class="headerlink" href="#vstats-prep" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/voxel_stats/prep_vstats.html#module-unravel.voxel_stats.prep_vstats" title="unravel.voxel_stats.prep_vstats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.prep_vstats</span></code></a></p>
 <ul class="simple">
 <li><p>Preprocess immunofluo images and warp them to atlas space for voxel-wise statistics.</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>prep_vstats<span class="w"> </span>-i<span class="w"> </span>cFos<span class="w"> </span>-rb<span class="w"> </span><span class="m">4</span><span class="w"> </span>-x<span class="w"> </span><span class="nv">$XY</span><span class="w"> </span>-z<span class="w"> </span><span class="nv">$Z</span><span class="w"> </span>-o<span class="w"> </span>cFos_rb4_atlas_space.nii.gz<span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vstats_prep<span class="w"> </span>-i<span class="w"> </span>cFos<span class="w"> </span>-rb<span class="w"> </span><span class="m">4</span><span class="w"> </span>-x<span class="w"> </span><span class="nv">$XY</span><span class="w"> </span>-z<span class="w"> </span><span class="nv">$Z</span><span class="w"> </span>-o<span class="w"> </span>cFos_rb4_atlas_space.nii.gz<span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
 </pre></div>
 </div>
 <div class="tip dropdown admonition">
@@ -765,38 +775,38 @@ metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<span c
 </ul>
 </div>
 </section>
-<section id="z-score">
-<h4><code class="docutils literal notranslate"><span class="pre">z_score</span></code><a class="headerlink" href="#z-score" title="Link to this heading">#</a></h4>
+<section id="vstats-z-score">
+<h4><code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code><a class="headerlink" href="#vstats-z-score" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/voxel_stats/z_score.html#module-unravel.voxel_stats.z_score" title="unravel.voxel_stats.z_score"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.z_score</span></code></a></p>
 <ul class="simple">
 <li><p>Z-score atlas space images using tissue masks (from brain_mask) and/or an atlas mask.</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>z-score<span class="w"> </span>-i<span class="w"> </span>atlas_space/sample??_cFos_rb4_atlas_space.nii.gz<span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vstats_z_score<span class="w"> </span>-i<span class="w"> </span>atlas_space/sample??_cFos_rb4_atlas_space.nii.gz<span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
 </pre></div>
 </div>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <ul class="simple">
-<li><p>atlas_space is a folder in ./sample??/ with outputs from prep_vstats.py</p></li>
+<li><p>atlas_space is a folder in ./sample??/ with outputs from vstats_prep</p></li>
 </ul>
 </div>
 </section>
-<section id="agg-files-from-dirs">
-<h4><code class="docutils literal notranslate"><span class="pre">agg_files_from_dirs</span></code><a class="headerlink" href="#agg-files-from-dirs" title="Link to this heading">#</a></h4>
+<section id="utils-agg-files">
+<h4><code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code><a class="headerlink" href="#utils-agg-files" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/utilities/aggregate_files_from_sample_dirs.html#module-unravel.utilities.aggregate_files_from_sample_dirs" title="unravel.utilities.aggregate_files_from_sample_dirs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.utilities.aggregate_files_from_sample_dirs</span></code></a>
 Aggregate pre-processed immunofluorescence (IF) images for voxel-wise stats</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>agg_files_from_dirs<span class="w"> </span>-i<span class="w"> </span>atlas_space/sample??_cFos_rb4_atlas_space_z.nii.gz<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-v
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utils_agg_files<span class="w"> </span>-i<span class="w"> </span>atlas_space/sample??_cFos_rb4_atlas_space_z.nii.gz<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-v
 </pre></div>
 </div>
 </section>
-<section id="whole-to-avg">
-<h4><code class="docutils literal notranslate"><span class="pre">whole_to_avg</span></code><a class="headerlink" href="#whole-to-avg" title="Link to this heading">#</a></h4>
+<section id="vstats-whole-to-avg">
+<h4><code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code><a class="headerlink" href="#vstats-whole-to-avg" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/voxel_stats/whole_to_LR_avg.html#module-unravel.voxel_stats.whole_to_LR_avg" title="unravel.voxel_stats.whole_to_LR_avg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.whole_to_LR_avg</span></code></a></p>
 <ul class="simple">
 <li><p>Smooth and average left and right hemispheres together</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Run this in the folder with the .nii.gz images to process</span>
-whole_to_LR_avg<span class="w"> </span>-k<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span>-tp<span class="w"> </span>-v<span class="w">  </span><span class="c1"># A 0.05 mm - 0.1 mm kernel radius is recommended for smoothing</span>
+vstats_whole_to_avg<span class="w"> </span>-k<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span>-tp<span class="w"> </span>-v<span class="w">  </span><span class="c1"># A 0.05 mm - 0.1 mm kernel radius is recommended for smoothing</span>
 </pre></div>
 </div>
 <div class="admonition seealso">
@@ -804,8 +814,8 @@ whole_to_LR_avg<span class="w"> </span>-k<span class="w"> </span><span class="m"
 <p><a class="reference internal" href="unravel/voxel_stats/hemi_to_LR_avg.html#module-unravel.voxel_stats.hemi_to_LR_avg" title="unravel.voxel_stats.hemi_to_LR_avg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.hemi_to_LR_avg</span></code></a></p>
 </div>
 </section>
-<section id="prepend-conditions">
-<h4><code class="docutils literal notranslate"><span class="pre">prepend_conditions</span></code><a class="headerlink" href="#prepend-conditions" title="Link to this heading">#</a></h4>
+<section id="utils-prepend">
+<h4><code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code><a class="headerlink" href="#utils-prepend" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/utilities/prepend_conditions.html#module-unravel.utilities.prepend_conditions" title="unravel.utilities.prepend_conditions"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.utilities.prepend_conditions</span></code></a></p>
 <ul class="simple">
 <li><p>Prepend conditions to filenames based on a CSV w/ this organization</p>
@@ -816,7 +826,7 @@ whole_to_LR_avg<span class="w"> </span>-k<span class="w"> </span><span class="m"
 </ul>
 </li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>prepend_conditions<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$SAMPLE_KEY</span><span class="w"> </span>-f
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utils_prepend<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$SAMPLE_KEY</span><span class="w"> </span>-f
 </pre></div>
 </div>
 </section>
@@ -847,80 +857,80 @@ whole_to_LR_avg<span class="w"> </span>-k<span class="w"> </span><span class="m"
 <section id="cluster-correction">
 <h3>Cluster correction<a class="headerlink" href="#cluster-correction" title="Link to this heading">#</a></h3>
 <p>These commands are useful for multiple comparison correction of 1 - p value maps to define clusters of significant voxels.</p>
-<section id="avg">
-<h4><code class="docutils literal notranslate"><span class="pre">avg</span></code><a class="headerlink" href="#avg" title="Link to this heading">#</a></h4>
+<section id="tools-avg">
+<h4><code class="docutils literal notranslate"><span class="pre">tools_avg</span></code><a class="headerlink" href="#tools-avg" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/image_tools/avg.html#module-unravel.image_tools.avg" title="unravel.image_tools.avg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_tools.avg</span></code></a></p>
 <ul class="simple">
 <li><p>Average *.nii.gz images</p></li>
 <li><p>Visualize absolute and relative differences in intensity</p></li>
-<li><p>Use averages from each group to convert non-directioanl 1 - p value maps into directional cluster indices</p></li>
+<li><p>Use averages from each group to convert non-directioanl 1 - p value maps into directional cluster indices with cluster_fdr</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>avg<span class="w"> </span>-i<span class="w"> </span>*.nii.gz<span class="w"> </span><span class="c1"># outputs avg.nii.gz (process one group at a time or separate into folders)</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tools_avg<span class="w"> </span>-i<span class="w"> </span>Control_*.nii.gz<span class="w"> </span>-o<span class="w"> </span>Control_avg.nii.gz
 </pre></div>
 </div>
 </section>
-<section id="fdr-range">
-<h4><code class="docutils literal notranslate"><span class="pre">fdr_range</span></code><a class="headerlink" href="#fdr-range" title="Link to this heading">#</a></h4>
+<section id="cluster-fdr-range">
+<h4><code class="docutils literal notranslate"><span class="pre">cluster_fdr_range</span></code><a class="headerlink" href="#cluster-fdr-range" title="Link to this heading">#</a></h4>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_correction.fdr_range</span></code>
 Outputs a list of FDR q values that yeild clusters.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic usage</span>
-fdr_range<span class="w"> </span>-i<span class="w"> </span>vox_p_tstat1.nii.gz<span class="w"> </span>-mas<span class="w"> </span>mask.nii.gz
+cluster_fdr_range<span class="w"> </span>-i<span class="w"> </span>vox_p_tstat1.nii.gz<span class="w"> </span>-mas<span class="w"> </span>mask.nii.gz
 
 <span class="c1"># Perform FDR correction on multiple directional 1 - p value maps</span>
-<span class="k">for</span><span class="w"> </span>j<span class="w"> </span><span class="k">in</span><span class="w"> </span>*_vox_p_*.nii.gz<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nv">q_values</span><span class="o">=</span><span class="k">$(</span>fdr_range<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span>-i<span class="w"> </span><span class="nv">$j</span><span class="k">)</span><span class="w"> </span><span class="p">;</span><span class="w"> </span>fdr_<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span>-i<span class="w"> </span><span class="nv">$j</span><span class="w"> </span>-q<span class="w"> </span><span class="nv">$q_values</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<span class="k">for</span><span class="w"> </span>j<span class="w"> </span><span class="k">in</span><span class="w"> </span>*_vox_p_*.nii.gz<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nv">q_values</span><span class="o">=</span><span class="k">$(</span>cluster_fdr_range<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span>-i<span class="w"> </span><span class="nv">$j</span><span class="k">)</span><span class="w"> </span><span class="p">;</span><span class="w"> </span>cluster_fdr<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span>-i<span class="w"> </span><span class="nv">$j</span><span class="w"> </span>-q<span class="w"> </span><span class="nv">$q_values</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
 
 <span class="c1"># Convert a non-directioanl 1 - p value map into a directional cluster index</span>
-<span class="nv">q_values</span><span class="o">=</span><span class="k">$(</span>fdr_range<span class="w"> </span>-i<span class="w"> </span>vox_p_fstat1.nii.gz<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK</span><span class="k">)</span><span class="w"> </span><span class="p">;</span><span class="w"> </span>fdr_<span class="w"> </span>-i<span class="w"> </span>vox_p_fstat1.nii.gz<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span>-o<span class="w"> </span>fstat1<span class="w"> </span>-v<span class="w"> </span>-a1<span class="w"> </span>Control_avg.nii.gz<span class="w"> </span>-a2<span class="w"> </span>Deep_avg.nii.gz<span class="w"> </span>-q<span class="w"> </span><span class="nv">$q_values</span>
+<span class="nv">q_values</span><span class="o">=</span><span class="k">$(</span>cluster_fdr_range<span class="w"> </span>-i<span class="w"> </span>vox_p_fstat1.nii.gz<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK</span><span class="k">)</span><span class="w"> </span><span class="p">;</span><span class="w"> </span>cluster_fdr<span class="w"> </span>-i<span class="w"> </span>vox_p_fstat1.nii.gz<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span>-o<span class="w"> </span>fstat1<span class="w"> </span>-v<span class="w"> </span>-a1<span class="w"> </span>Control_avg.nii.gz<span class="w"> </span>-a2<span class="w"> </span>Deep_avg.nii.gz<span class="w"> </span>-q<span class="w"> </span><span class="nv">$q_values</span>
 </pre></div>
 </div>
 </section>
-<section id="fdr">
-<h4><code class="docutils literal notranslate"><span class="pre">fdr_</span></code><a class="headerlink" href="#fdr" title="Link to this heading">#</a></h4>
+<section id="cluster-fdr">
+<h4><code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code><a class="headerlink" href="#cluster-fdr" title="Link to this heading">#</a></h4>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_correction.fdr_</span></code></p>
 <ul class="simple">
 <li><p>Perform FDR correction on a 1 - p value map to define clusters</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>fdr_<span class="w"> </span>-i<span class="w"> </span>vox_p_tstat1.nii.gz<span class="w"> </span>-mas<span class="w"> </span>mask.nii.gz<span class="w"> </span>-q<span class="w"> </span><span class="m">0</span>.05
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cluster_fdr<span class="w"> </span>-i<span class="w"> </span>vox_p_tstat1.nii.gz<span class="w"> </span>-mas<span class="w"> </span>mask.nii.gz<span class="w"> </span>-q<span class="w"> </span><span class="m">0</span>.05
 </pre></div>
 </div>
 </section>
-<section id="recursive-mirror-index">
-<h4><code class="docutils literal notranslate"><span class="pre">recursive_mirror_index</span></code><a class="headerlink" href="#recursive-mirror-index" title="Link to this heading">#</a></h4>
+<section id="cluster-mirror-indices">
+<h4><code class="docutils literal notranslate"><span class="pre">cluster_mirror_indices</span></code><a class="headerlink" href="#cluster-mirror-indices" title="Link to this heading">#</a></h4>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_correction.recursive_mirror_index</span></code></p>
 <ul class="simple">
 <li><p>Recursively flip the content of rev_cluster_index.nii.gz images</p></li>
 <li><p>Run this in the ./stats/ folder to process all subdirs with reverse cluster maps (cluster IDs go from large to small)</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use -m RH if a right hemisphere mask was used (otherwise use -m LH)</span>
-recursive_mirror_index<span class="w"> </span>-m<span class="w"> </span>RH<span class="w"> </span>-v
+cluster_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span class="w"> </span>-v
 </pre></div>
 </div>
 </section>
 </section>
 <section id="cluster-validation">
 <h3>Cluster validation<a class="headerlink" href="#cluster-validation" title="Link to this heading">#</a></h3>
-<section id="validate-clusters">
-<h4><code class="docutils literal notranslate"><span class="pre">validate_clusters</span></code><a class="headerlink" href="#validate-clusters" title="Link to this heading">#</a></h4>
+<section id="id3">
+<h4><code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code><a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/cluster_stats/validate_clusters.html#module-unravel.cluster_stats.validate_clusters" title="unravel.cluster_stats.validate_clusters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.validate_clusters</span></code></a></p>
 <ul class="simple">
 <li><p>Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/label densities</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic usage:</span>
-validate_clusters<span class="w"> </span>-e<span class="w"> </span>&lt;experiment<span class="w"> </span>paths&gt;<span class="w"> </span>-m<span class="w"> </span>&lt;path/rev_cluster_index_to_warp_from_atlas_space.nii.gz&gt;<span class="w"> </span>-s<span class="w"> </span>seg_dir<span class="w"> </span>-v
+cluster_validation<span class="w"> </span>-e<span class="w"> </span>&lt;experiment<span class="w"> </span>paths&gt;<span class="w"> </span>-m<span class="w"> </span>&lt;path/rev_cluster_index_to_warp_from_atlas_space.nii.gz&gt;<span class="w"> </span>-s<span class="w"> </span>seg_dir<span class="w"> </span>-v
 
 <span class="c1"># Processing multiple FDR q value thresholds and both hemispheres:</span>
-<span class="k">for</span><span class="w"> </span>q<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.005<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.05<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>side<span class="w"> </span><span class="k">in</span><span class="w"> </span>LH<span class="w"> </span>RH<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>validate_clusters<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-m<span class="w"> </span>path/vstats/contrast/stats/contrast_vox_p_tstat1_q<span class="si">${</span><span class="nv">q</span><span class="si">}</span>/contrast_vox_p_tstat1_q<span class="si">${</span><span class="nv">q</span><span class="si">}</span>_rev_cluster_index_<span class="si">${</span><span class="nv">side</span><span class="si">}</span>.nii.gz<span class="w"> </span>-s<span class="w"> </span>seg_dir/sample??_seg_dir_1.nii.gz<span class="w"> </span>-v<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<span class="k">for</span><span class="w"> </span>q<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.005<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.05<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>side<span class="w"> </span><span class="k">in</span><span class="w"> </span>LH<span class="w"> </span>RH<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>cluster_validation<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-m<span class="w"> </span>path/vstats/contrast/stats/contrast_vox_p_tstat1_q<span class="si">${</span><span class="nv">q</span><span class="si">}</span>/contrast_vox_p_tstat1_q<span class="si">${</span><span class="nv">q</span><span class="si">}</span>_rev_cluster_index_<span class="si">${</span><span class="nv">side</span><span class="si">}</span>.nii.gz<span class="w"> </span>-s<span class="w"> </span>seg_dir/sample??_seg_dir_1.nii.gz<span class="w"> </span>-v<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
 </pre></div>
 </div>
 </section>
-<section id="summary">
-<h4><code class="docutils literal notranslate"><span class="pre">summary</span></code><a class="headerlink" href="#summary" title="Link to this heading">#</a></h4>
+<section id="cluster-summary">
+<h4><code class="docutils literal notranslate"><span class="pre">cluster_summary</span></code><a class="headerlink" href="#cluster-summary" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/cluster_stats/valid_clusters_summary.html#module-unravel.cluster_stats.valid_clusters_summary" title="unravel.cluster_stats.valid_clusters_summary"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.valid_clusters_summary</span></code></a></p>
 <ul class="simple">
 <li><p>Aggregates and analyzes cluster validation data from validate_clusters</p></li>
 <li><p>Update parameters in /UNRAVEL/unravel/cluster_stats/valid_clusters_summary.ini and save it with the experiment</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>summary<span class="w"> </span>-c<span class="w"> </span>path/valid_clusters_summary.ini<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-cvd<span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="w"> </span>-vd<span class="w"> </span>path/vstats_dir<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$SAMPLE_KEY</span><span class="w"> </span>--groups<span class="w"> </span>group1<span class="w"> </span>group2<span class="w"> </span>-v
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cluster_summary<span class="w"> </span>-c<span class="w"> </span>path/valid_clusters_summary.ini<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-cvd<span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="w"> </span>-vd<span class="w"> </span>path/vstats_dir<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$SAMPLE_KEY</span><span class="w"> </span>--groups<span class="w"> </span>group1<span class="w"> </span>group2<span class="w"> </span>-v
 </pre></div>
 </div>
 <p>group1 and group2 must match conditions in the sample_key.csv</p>
@@ -934,7 +944,7 @@ validate_clusters<span class="w"> </span>-e<span class="w"> </span>&lt;experimen
 <ul class="simple">
 <li><p>Perform regional cell counting (label density measurements needs to be added)</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use if atlas is already in native space from to_native.py</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use if atlas is already in native space from warp_to_native</span>
 rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_image.nii.gz<span class="w"> </span>-a<span class="w"> </span>rel_path/native_atlas_split.nii.gz<span class="w"> </span>-c<span class="w"> </span>Saline<span class="w"> </span>--dirs<span class="w"> </span>sample14<span class="w"> </span>sample36
 
 <span class="c1"># Use if native atlas is not available; it is not saved (faster)</span>
@@ -958,27 +968,20 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 </div>
 </section>
 </section>
-<section id="other">
-<h3>Other<a class="headerlink" href="#other" title="Link to this heading">#</a></h3>
-<section id="nii-info">
-<h4><code class="docutils literal notranslate"><span class="pre">nii_info</span></code><a class="headerlink" href="#nii-info" title="Link to this heading">#</a></h4>
-<p><a class="reference internal" href="unravel/image_io/nii_info.html#module-unravel.image_io.nii_info" title="unravel.image_io.nii_info"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.nii_info</span></code></a></p>
-<p>Display information about a NIfTI image.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nii_info<span class="w"> </span>-i<span class="w"> </span>image.nii.gz
-</pre></div>
-</div>
-</section>
-</section>
 <section id="example-sample-folder-structure-after-analysis">
 <h3>Example sample?? folder structure after analysis<a class="headerlink" href="#example-sample-folder-structure-after-analysis" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.
 ├──<span class="w"> </span>atlas_space<span class="w">  </span><span class="c1"># Dir with images warped to atlas space</span>
 ├──<span class="w"> </span>cfos_seg_ilastik_1<span class="w">  </span><span class="c1"># Example dir with segmentations from ilastik</span>
-├──<span class="w"> </span>clusters<span class="w">  </span><span class="c1"># Dir with cell/label density CSVs from validate_clusters.py</span>
+├──<span class="w"> </span>clusters<span class="w">  </span><span class="c1"># Dir with cell/label density CSVs from cluster_validation</span>
+│<span class="w">   </span>├──<span class="w"> </span>Control_v_Treatment_vox_p_tstat1_q0.005
+│<span class="w">   </span>│<span class="w">   </span>└──<span class="w"> </span>cell_density_data.csv
+│<span class="w">   </span>└──<span class="w"> </span>Control_v_Treatment_vox_p_tstat2_q0.05
+│<span class="w">       </span>└──<span class="w"> </span>cell_density_data.csv
 ├──<span class="w"> </span>parameters<span class="w">  </span><span class="c1"># Optional dir for things like metadata.txt</span>
-├──<span class="w"> </span>reg_inputs<span class="w">  </span><span class="c1"># prep_reg.py (autofl image resampled for reg) and brain_mask.py (mask, masked autofl)</span>
+├──<span class="w"> </span>reg_inputs<span class="w">  </span><span class="c1"># From reg_prep (autofl image resampled for reg) and seg_brain_mask (mask, masked autofl)</span>
 ├──<span class="w"> </span>regional_cell_densities<span class="w">  </span><span class="c1"># CSVs with regional cell densities data</span>
-├──<span class="w"> </span>reg_outputs<span class="w">  </span><span class="c1"># Outputs from reg.py. These images are typically padded w/ empty voxels. </span>
+├──<span class="w"> </span>reg_outputs<span class="w">  </span><span class="c1"># Outputs from reg. These images are typically padded w/ empty voxels. </span>
 └──<span class="w"> </span>image.czi<span class="w"> </span><span class="c1"># Or other raw/stitched image type</span>
 </pre></div>
 </div>
@@ -996,32 +999,53 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 │<span class="w">   </span>├──<span class="w"> </span>sample03
 │<span class="w">   </span>└──<span class="w"> </span>sample04
 ├──<span class="w"> </span>atlas
-│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_25um_bin.nii.gz
-│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_combined_25um.nii.gz
-│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_split_25um.nii.gz
-│<span class="w">   </span>├──<span class="w"> </span>gubra_mask_25um_wo_ventricles_root_fibers_LH.nii.gz
+│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_25um_bin.nii.gz<span class="w">  </span><span class="c1"># bin indicates that this has been binarized (background = 0; foreground = 1)</span>
+│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_combined_25um.nii.gz<span class="w">  </span><span class="c1"># Each atlas region has a unique intensity/ID</span>
+│<span class="w">   </span>├──<span class="w"> </span>gubra_ano_split_25um.nii.gz<span class="w">  </span><span class="c1"># Intensities in the left hemisphere are increased by 20,000</span>
+│<span class="w">   </span>├──<span class="w"> </span>gubra_mask_25um_wo_ventricles_root_fibers_LH.nii.gz<span class="w">  </span><span class="c1"># Left hemisphere mask that excludes ventricles, undefined regions (root), and fiber tracts</span>
 │<span class="w">   </span>├──<span class="w"> </span>gubra_mask_25um_wo_ventricles_root_fibers_RH.nii.gz
-│<span class="w">   </span>└──<span class="w"> </span>gubra_template_25um.nii.gz
+│<span class="w">   </span>└──<span class="w"> </span>gubra_template_25um.nii.gz<span class="w">  </span><span class="c1"># Average template brain that is aligned with the atlas</span>
 ├──<span class="w"> </span>reg_results
 ├──<span class="w"> </span>ilastik_brain_mask
-│<span class="w">   </span>├──<span class="w"> </span>brain_mask.ilp
+│<span class="w">   </span>├──<span class="w"> </span>brain_mask.ilp<span class="w">  </span><span class="c1"># Ilastik project trained with the pixel classification workflow to segment the brain in resampled autofluo images</span>
 │<span class="w">   </span>├──<span class="w"> </span>sample01_slice_0000.tif
 │<span class="w">   </span>├──<span class="w"> </span>sample01_slice_0005.tif
 │<span class="w">   </span>├──<span class="w"> </span>sample01_slice_0050.tif
 │<span class="w">   </span>├──<span class="w"> </span>...
 │<span class="w">   </span>└──<span class="w"> </span>sample04_slice_0050.tif
 ├──<span class="w"> </span>vstats
-│<span class="w">   </span>└──<span class="w"> </span>Control_v_Treatment
+│<span class="w">   </span>└──<span class="w"> </span>Control_v_Treatment<span class="w"> </span>
+│<span class="w">       </span>├──<span class="w"> </span>Control_sample01_rb4_atlas_space_z.tif
+│<span class="w">       </span>├──<span class="w"> </span>Control_sample02_rb4_atlas_space_z.tif
+│<span class="w">       </span>├──<span class="w"> </span>Treatment_sample03_rb4_atlas_space_z.tif
+│<span class="w">       </span>├──<span class="w"> </span>Treatment_sample04_rb4_atlas_space_z.tif
+│<span class="w">       </span>└──<span class="w"> </span>stats<span class="w"> </span>
+│<span class="w">           </span>├──<span class="w"> </span>Control_v_Treatment_vox_p_tstat1.nii.gz<span class="w">  </span><span class="c1"># 1 minus p value map showing where Control (group 1) &gt; Treatment (group2)</span>
+│<span class="w">           </span>├──<span class="w"> </span>Control_v_Treatment_vox_p_tstat2.nii.gz<span class="w">  </span><span class="c1"># 1 - p value map showing where Treatment (group 2) &gt; Control (group 1)</span>
+│<span class="w">           </span>├──<span class="w"> </span>Control_v_Treatment_vox_p_tstat1_q0.005<span class="w">  </span><span class="c1"># cluster correction folder</span>
+│<span class="w">           </span>│<span class="w">   </span>├──<span class="w"> </span><span class="m">1</span>-p_value_threshold.txt<span class="w">  </span><span class="c1"># FDR adjusted 1 - p value threshold for the uncorrected 1 - p value map</span>
+│<span class="w">           </span>│<span class="w">   </span>├──<span class="w"> </span>p_value_threshold.txt<span class="w">  </span><span class="c1"># FDR adjusted p value threshold</span>
+│<span class="w">           </span>│<span class="w">   </span>├──<span class="w"> </span>min_cluster_size_in_voxels.txt<span class="w">  </span><span class="c1"># Often 100 voxels for c-Fos. For sparser signals like amyloid beta plaques, consider 400 or more</span>
+│<span class="w">           </span>│<span class="w">   </span>└──<span class="w"> </span>..._rev_cluster_index.nii.gz<span class="w"> </span><span class="c1"># cluster map (index) with cluster IDs going from large to small (input for cluster_validation)</span>
+│<span class="w">           </span>├──<span class="w"> </span>...
+│<span class="w">           </span>└──<span class="w"> </span>Control_v_Treatment_vox_p_tstat2_q0.05
 ├──<span class="w"> </span>cluster_validation
-│<span class="w">   </span>└──<span class="w"> </span>Control_v_Treatment
+│<span class="w">   </span>├──<span class="w"> </span>Control_v_Treatment_vox_p_tstat1_q0.005
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>Control_sample01_cell_density_data.csv
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>Control_sample02_cell_density_data.csv
+│<span class="w">   </span>│<span class="w">   </span>├──<span class="w"> </span>Treatment_sample03_cell_density_data.csv
+│<span class="w">   </span>│<span class="w">   </span>└──<span class="w"> </span>Treatment_sample04_cell_density_data.csv
+│<span class="w">   </span>├──<span class="w"> </span>...
+│<span class="w">   </span>└──<span class="w"> </span>Control_v_Treatment_vox_p_tstat2_q0.05
 └──<span class="w"> </span>regional_cell_densities
 <span class="w">    </span>├──<span class="w"> </span>Control_sample01_regional_cell_densities.csv
 <span class="w">    </span>├──<span class="w"> </span>...
 <span class="w">    </span>└──<span class="w"> </span>Treatment_sample04_regional_cell_densities.csv
 </pre></div>
 </div>
-<div class="admonition-todo admonition" id="id2">
+<div class="admonition-todo admonition" id="id4">
 <p class="admonition-title">Todo</p>
+<p>Also show the structure of data from cluster_validation and rstats_summary</p>
 <p>Add support for CCFv3 2020</p>
 </div>
 </section>
@@ -1074,6 +1098,8 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#help-on-commands">Help on commands</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#listing-commands">Listing commands</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up">Set up</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#back-up-raw-data">Back up raw data</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stitch-z-stacks">Stitch z-stacks</a></li>
@@ -1082,53 +1108,48 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#log-exp-paths-commands-etc">Log exp paths, commands, etc.</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-a-sample-key-csv">Make a sample_key.csv:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-common-variables-in-a-shell-script">Define common variables in a shell script</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#help-on-commands-scripts">Help on commands/scripts</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-clean-tifs">Optional: clean tifs</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#note-x-y-and-z-voxel-sizes">Note x/y and z voxel sizes</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis-steps">Analysis steps:</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analysis-steps">Analysis steps</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#registration">Registration</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#prep-reg"><code class="docutils literal notranslate"><span class="pre">prep_reg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#copy-tifs"><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#brain-mask"><code class="docutils literal notranslate"><span class="pre">brain_mask</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reg-prep"><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#seg-copy-tifs"><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#seg-brain-mask"><code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reg"><code class="docutils literal notranslate"><span class="pre">reg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#check-reg"><code class="docutils literal notranslate"><span class="pre">check_reg</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reg-check"><code class="docutils literal notranslate"><span class="pre">reg_check</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#segmentation">Segmentation</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">copy_tifs</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#seg"><code class="docutils literal notranslate"><span class="pre">seg</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#seg-ilastik"><code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#voxel-wise-stats">Voxel-wise stats</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#prep-vstats"><code class="docutils literal notranslate"><span class="pre">prep_vstats</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#z-score"><code class="docutils literal notranslate"><span class="pre">z_score</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#agg-files-from-dirs"><code class="docutils literal notranslate"><span class="pre">agg_files_from_dirs</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#whole-to-avg"><code class="docutils literal notranslate"><span class="pre">whole_to_avg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#prepend-conditions"><code class="docutils literal notranslate"><span class="pre">prepend_conditions</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#vstats-prep"><code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#vstats-z-score"><code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#utils-agg-files"><code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#vstats-whole-to-avg"><code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#utils-prepend"><code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#vstats"><code class="docutils literal notranslate"><span class="pre">vstats</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-correction">Cluster correction</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#avg"><code class="docutils literal notranslate"><span class="pre">avg</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fdr-range"><code class="docutils literal notranslate"><span class="pre">fdr_range</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#fdr"><code class="docutils literal notranslate"><span class="pre">fdr_</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#recursive-mirror-index"><code class="docutils literal notranslate"><span class="pre">recursive_mirror_index</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tools-avg"><code class="docutils literal notranslate"><span class="pre">tools_avg</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-fdr-range"><code class="docutils literal notranslate"><span class="pre">cluster_fdr_range</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-fdr"><code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-mirror-indices"><code class="docutils literal notranslate"><span class="pre">cluster_mirror_indices</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-validation">Cluster validation</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-clusters"><code class="docutils literal notranslate"><span class="pre">validate_clusters</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#summary"><code class="docutils literal notranslate"><span class="pre">summary</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"><code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-summary"><code class="docutils literal notranslate"><span class="pre">cluster_summary</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#region-wise-stats">Region-wise stats</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rstats"><code class="docutils literal notranslate"><span class="pre">rstats</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#rstats-summary"><code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#other">Other</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#nii-info"><code class="docutils literal notranslate"><span class="pre">nii_info</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#example-sample-folder-structure-after-analysis">Example sample?? folder structure after analysis</a></li>

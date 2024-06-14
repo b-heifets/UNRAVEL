@@ -8,6 +8,7 @@ Subpackages
 .. toctree::
    :maxdepth: 3
 
+   command_list
    register/toc
    warp/toc
    segment/toc
