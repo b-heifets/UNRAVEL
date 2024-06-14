@@ -488,10 +488,13 @@
                   
   <section id="module-unravel.image_tools.uniq_intensities">
 <span id="unravel-image-tools-uniq-intensities-module"></span><span id="unravel-image-tools-uniq-intensities"></span><h1>unravel.image_tools.uniq_intensities module<a class="headerlink" href="#module-unravel.image_tools.uniq_intensities" title="Link to this heading">#</a></h1>
-<p>Print list of IDs for clusters &gt; X voxels</p>
+<p>Print list of unique intensities greater than 0</p>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>uniq_intensities.py -i path/input_img.nii.gz -m 100 -id -s
-uniq_intensities.py -i path/input_img.nii.gz -m 100 -id</p>
+<dt>Usage for printing all non-zero intensities:</dt><dd><p>uniq_intensities.py -i path/input_img.nii.gz</p>
+</dd>
+<dt>Usage for printing the number of voxels for each intensity that is present:</dt><dd><p>uniq_intensities.py -i path/input_img.nii.gz</p>
+</dd>
+<dt>Usage for checking which clusters are present if the min cluster size was 100 voxels:</dt><dd><p>uniq_intensities.py -i path/input_img.nii.gz -m 100</p>
 </dd>
 </dl>
 <dl class="py function">
