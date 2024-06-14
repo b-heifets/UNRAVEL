@@ -30,6 +30,8 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
+# TODO: Sometimes different q values yield the same p value threshold. In this case, not this in the dir name (don't process it). Case: ET z s50 tstat2
+
 def smart_float_format(value, max_decimals=9):
 
     """Format float with up to `max_decimals` places, but strip unnecessary trailing zeros."""
