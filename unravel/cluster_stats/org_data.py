@@ -8,6 +8,7 @@ Usage:
 """
 
 import argparse
+import re
 import shutil
 from glob import glob
 from pathlib import Path
@@ -67,20 +68,34 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
         - p_val_txt (str): the name of the file with the corrected p value threshold"""
 
     vstats_path = Path(vstats_path)
+
     if vstats_path.exists():
         validation_dir_name = str(validation_dir.name)
+
         validation_dir_name = validation_dir_name.replace('_gt_', '_v_').replace('_lt_', '_v_')
+
         if validation_dir_name.endswith('_LH') or validation_dir_name.endswith('_RH'):
             cluster_correction_dir = validation_dir_name[:-3]  # Remove last 3 characters (_LH or _RH)
         else:
             cluster_correction_dir = validation_dir_name
+
+        # Regular expression to match the part before and after 'q*' to remove any suffix added to the rev_cluster_index<suffix>.nii.gz
+        pattern = r'(.*q\d+\.\d+)(_.*)'
+        match = re.match(pattern, cluster_correction_dir)
+        if match:
+            cluster_correction_dir = match.group(1)
+            suffix = match.group(2)[1:]  # Remove the leading underscore
+        else:
+            print("\n    [red1]No match found in cluster_org_data\n")
+
         cluster_correction_path = vstats_path / 'stats' / cluster_correction_dir
+
         if not cluster_correction_path.exists():
             cluster_correction_dir = find_matching_directory(vstats_path / 'stats', cluster_correction_dir)
             cluster_correction_path = vstats_path / 'stats' / cluster_correction_dir
+
         if not cluster_correction_path.exists():
             print(f'\n    [red]Path for copying the rev_cluster_index.nii.gz and p value threshold does not exist: {cluster_correction_path}\n')
-
         cluster_info = cluster_correction_path / f'{cluster_correction_dir}_cluster_info.txt'
         if cluster_info.exists():
             dest_stats = dest_path / cluster_info.name
@@ -103,6 +118,7 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)[:-3]}_rev_cluster_index_RH.nii.gz'
         else:
             rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)}_rev_cluster_index.nii.gz'
+
         if not rev_cluster_index_path.exists(): 
             suffix = str(validation_dir_name).replace(str(cluster_correction_path.name), '')
             rev_cluster_index_path =  cluster_correction_path / f"{cluster_correction_path.name}_rev_cluster_index{suffix}.nii.gz"

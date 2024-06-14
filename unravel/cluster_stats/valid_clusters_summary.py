@@ -64,6 +64,7 @@ def parse_args():
 
 # TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. Could make cells vs. labels are arg. Could add a raw data output organized for the SI table. # The valid cluster sunburst could have the val dir name and be copied to a central location
 # TODO: Consider moving find_and_copy_files() to unravel/unravel/utils.py
+# TODO: Move cell vs. label arg from config back to argparse and make it a required arg to prevent accidentally using the wrong metric
 
 def run_script(script_name, script_args):
     """Run a script using subprocess that respects the system's PATH and captures output."""
@@ -211,32 +212,18 @@ def main():
                 valid_cluster_ids_sorted = f.read().split()
         else: 
             valid_cluster_ids_sorted = valid_cluster_ids
-        prism_args = [
-            '-ids', *valid_cluster_ids_sorted,
-            '-p', subdir,
-        ]
-        if cfg.prism.save_all:
-            prism_args.append('-sa')
-        if args.verbose:
-            prism_args.append('-v')
-        run_script('cluster_prism', prism_args)
-
-        # Run cluster_prism
-        valid_cluster_ids_sorted_txt = valid_clusters_index_dir / 'valid_cluster_IDs_sorted_by_anatomy.txt'
-        if valid_cluster_ids_sorted_txt.exists():
-            with open(valid_cluster_ids_sorted_txt, 'r') as f:
-                valid_cluster_ids_sorted = f.read().split()
-        else: 
-            valid_cluster_ids_sorted = valid_cluster_ids
-        prism_args = [
-            '-ids', *valid_cluster_ids_sorted,
-            '-p', subdir,
-        ]
-        if cfg.prism.save_all:
-            prism_args.append('-sa')
-        if args.verbose:
-            prism_args.append('-v')
-        run_script('cluster_prism', prism_args)
+        if len(valid_cluster_ids_sorted) > 0:
+            prism_args = [
+                '-ids', *valid_cluster_ids_sorted,
+                '-p', subdir,
+            ]
+            if cfg.prism.save_all:
+                prism_args.append('-sa')
+            if args.verbose:
+                prism_args.append('-v')
+            run_script('cluster_prism', prism_args)
+        else:
+            print(f"\n    No valid cluster IDs found for {subdir}. Skipping cluster_prism...\n")
 
     # Copy the atlas and binarize it for visualization in DSI studio
     dest_atlas = dsi_dir / Path(cfg.index.atlas).name
@@ -251,11 +238,11 @@ def main():
         nib.save(atlas_nii_bin, str(dest_atlas).replace('.nii.gz', '_bin.nii.gz'))
 
         # Run cluster_legend
-    
-        legend_args = [
-            '-p', 'valid_clusters_tables_and_legend'
-        ]
-        run_script('cluster_legend', legend_args)
+        if Path('valid_clusters_tables_and_legend').exists():
+            legend_args = [
+                '-p', 'valid_clusters_tables_and_legend'
+            ]
+            run_script('cluster_legend', legend_args)
 
 
 if __name__ == '__main__':

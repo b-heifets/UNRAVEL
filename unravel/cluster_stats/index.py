@@ -19,7 +19,7 @@ from concurrent.futures import ThreadPoolExecutor
 from rich import print
 from rich.traceback import install
 
-from sunburst import sunburst
+from unravel.cluster_stats.sunburst import sunburst
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times
