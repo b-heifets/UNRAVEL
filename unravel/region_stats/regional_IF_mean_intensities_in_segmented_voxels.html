@@ -491,7 +491,7 @@
 <p>Measure mean intensity of immunofluorescence staining in brain regions for segmented voxels.</p>
 <p>Run from experiment folder containing sample?? folders.</p>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>regional_IF_mean_intensities_in_segmented_voxels.py -i ochann -s ochann_seg_ilastik_1</p>
+<dt>Usage:</dt><dd><p>rstats_IF_mean_in_seg -i ochann -s ochann_seg_ilastik_1</p>
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
 <li><p>./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1.nii.gz</p></li>
@@ -499,8 +499,11 @@
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_intensities_in_seg_voxels.csv</p></li>
+<li><p>./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_IF_in_seg.csv</p></li>
 </ul>
+</dd>
+<dt>Next steps:</dt><dd><p>utils_agg_files -i ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_IF_in_seg.csv
+rstats_IF_mean_summary</p>
 </dd>
 </dl>
 <dl class="py function">

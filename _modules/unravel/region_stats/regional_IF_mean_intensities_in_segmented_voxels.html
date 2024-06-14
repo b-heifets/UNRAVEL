@@ -353,14 +353,18 @@
 <span class="sd">Run from experiment folder containing sample?? folders.</span>
 
 <span class="sd">Usage:</span>
-<span class="sd">    regional_IF_mean_intensities_in_segmented_voxels.py -i ochann -s ochann_seg_ilastik_1</span>
+<span class="sd">    rstats_IF_mean_in_seg -i ochann -s ochann_seg_ilastik_1</span>
 
 <span class="sd">Inputs:</span>
 <span class="sd">    - ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1.nii.gz</span>
 <span class="sd">    - path/fluo_image</span>
 
 <span class="sd">Outputs:</span>
-<span class="sd">    - ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_intensities_in_seg_voxels.csv</span>
+<span class="sd">    - ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_IF_in_seg.csv</span>
+
+<span class="sd">Next steps:</span>
+<span class="sd">    utils_agg_files -i ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_IF_in_seg.csv</span>
+<span class="sd">    rstats_IF_mean_summary</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -480,7 +484,7 @@
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
                 <span class="n">write_to_csv</span><span class="p">(</span><span class="n">mean_intensities</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span> 
-                <span class="n">output_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ABA_seg_image_path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;_regional_mean_intensities_in_seg_voxels.csv&#39;</span><span class="p">)</span>
+                <span class="n">output_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">ABA_seg_image_path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;_regional_mean_IF_in_seg.csv&#39;</span><span class="p">)</span>
                 <span class="n">write_to_csv</span><span class="p">(</span><span class="n">mean_intensities</span><span class="p">,</span> <span class="n">output_str</span><span class="p">)</span>
 
             <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
