@@ -1,23 +1,26 @@
 #!/usr/bin/env python3
 
 """ 
-Aggregates and analyzes cluster validation data from validate_clusters.py
+Aggregates and analyzes cluster validation data from cluster_validation
 
-Usage:
-    valid_clusters_summary.py -c <path/config.ini> -e <exp dir paths> -cvd '*' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -v
+Usage if running directly after cluster_validation:
+    cluster_summary -c <path/config.ini> -e <exp dir paths> -cvd '*' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -v
 
-The current working directory should not have other directories when running this script for the first time. Directories from org_data.py are ok though.
+Usage if running after cluster_validation and cluster_org_data:
+    cluster_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -v
 
-Runs scripts in this order:
-    - org_data.py
-    - group_bilateral_data.py
-    - prepend_conditions.py
-    - stats.py
-    - index.py
-    - 3D_brain.py
-    - table.py
-    - prism.py
-    - legend.py
+The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.
+
+Runs commands in this order:
+    - cluster_org_data
+    - cluster_group_data
+    - utils_prepend
+    - cluster_stats
+    - cluster_index
+    - cluster_brain_model
+    - cluster_table
+    - cluster_prism
+    - cluster_legend
 
 The sample_key.csv file should have the following format:
     dir_name,condition
@@ -33,27 +36,27 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
-from unravel.core.config import Config, Configuration 
-from unravel.core.utils import print_cmd_and_times, load_config
-from utilities.aggregate_files_w_recursive_search import find_and_copy_files
 from unravel.cluster_stats.org_data import cp
+from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration 
+from unravel.core.utils import print_cmd_and_times, load_config
+from unravel.utilities.aggregate_files_w_recursive_search import find_and_copy_files
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-c', '--config', help='Path to the config.ini file. Default: valid_clusters_summary.ini', default=Path(__file__).parent / 'valid_clusters_summary.ini', action=SM)
+    parser.add_argument('-c', '--config', help='Path to the config.ini file. Default: unravel/cluster_stats/valid_clusters_summary.ini', default=Path(__file__).parent / 'valid_clusters_summary.ini', action=SM)
 
-    # org_data.py -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process. (needed for *org_data.py)', nargs='*', action=SM)
-    parser.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for *org_data.py', action=SM) 
-    parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir ( dir vstats.py was run from) to copy p val, info, and index files (for *org_data.py)', action=SM)
+    # cluster_org_data -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
+    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process. (needed for cluster_org_data)', nargs='*', action=SM)
+    parser.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for cluster_org_data', action=SM) 
+    parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cluster_org_data)', action=SM)
 
-    # prepend_conditions.py -c <path/sample_key.csv> -f -r
-    parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions (for prepend_conditions.py)', action=SM)
+    # utils_prepend -c <path/sample_key.csv> -f -r
+    parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions (for utils_prepend)', action=SM)
 
-    # stats.py --groups <group1> <group2>
-    parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for *stats.py)',  nargs='+')
-    parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for *stats.py)',  nargs='*', default=None, action=SM)
+    # cluster_stats --groups <group1> <group2>
+    parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cluster_stats)',  nargs='+')
+    parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for cluster_stats)',  nargs='*', default=None, action=SM)
 
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
@@ -74,7 +77,7 @@ def main():
 
     cfg = load_config(args.config)
     
-    # Run org_data.py
+    # Run cluster_org_data
     if args.exp_paths and args.cluster_val_dirs and args.vstats_path:
         org_data_args = [
             '-e', *args.exp_paths,
@@ -86,15 +89,15 @@ def main():
         ]
         if args.verbose:
             org_data_args.append('-v')
-        run_script('org_data.py', org_data_args)
+        run_script('cluster_org_data', org_data_args)
 
-    # Run group_bilateral_data.py
+    # Run cluster_group_data
     if args.verbose:
-        run_script('group_bilateral_data.py', ['-v'])
+        run_script('cluster_group_data', ['-v'])
     else:
-        run_script('group_bilateral_data.py', [])
+        run_script('cluster_group_data', [])
 
-    # Run prepend_conditions.py
+    # Run utils_prepend
     if args.sample_key:
         prepend_conditions_args = [
             '-sk', args.sample_key,
@@ -103,9 +106,9 @@ def main():
         ]
         if args.verbose:
             prepend_conditions_args.append('-v')
-        run_script('prepend_conditions.py', prepend_conditions_args)
+        run_script('utils_prepend', prepend_conditions_args)
 
-    # Run stats.py
+    # Run cluster_stats
     if args.groups:
         stats_args = [
             '--groups', *args.groups,
@@ -116,7 +119,7 @@ def main():
             stats_args.append(['-cp', *args.condition_prefixes])
         if args.verbose:
             stats_args.append('-v')
-        run_script('stats.py', stats_args)
+        run_script('cluster_stats', stats_args)
 
     dsi_dir = Path().cwd() / '3D_brains'
     dsi_dir.mkdir(parents=True, exist_ok=True) 
@@ -154,7 +157,7 @@ def main():
             print(f"    No clusters were valid for {subdir}. Skipping...")
             continue
 
-        # Run index.py
+        # Run cluster_index
         index_args = [
             '-ci', rev_cluster_index_path,
             '-ids', *valid_cluster_ids,
@@ -165,9 +168,9 @@ def main():
             index_args.append('-rgb')
         if args.verbose:
             index_args.append('-v')
-        run_script('index.py', index_args)
+        run_script('cluster_index', index_args)
 
-        # Run 3D_brain.py
+        # Run cluster_brain_model
         valid_cluster_index_path = valid_clusters_index_dir / str(rev_cluster_index_path.name).replace('.nii.gz', f'_{cfg.index.valid_clusters_dir}.nii.gz')
         brain_args = [
             '-i', valid_cluster_index_path,
@@ -179,16 +182,16 @@ def main():
             brain_args.append('-m')
         if args.verbose:
             brain_args.append('-v')
-        run_script('3D_brain.py', brain_args)
+        run_script('cluster_brain_model', brain_args)
 
-        # Aggregate files from 3D_brains.py
+        # Aggregate files from cluster_brain_model
         if cfg.brain.mirror: 
             find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA_WB.nii.gz', subdir, dsi_dir)
         else:
             find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA.nii.gz', subdir, dsi_dir)
         find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_rgba.txt', subdir, dsi_dir)
 
-        # Run table.py
+        # Run cluster_table
         table_args = [
             '-vcd', valid_clusters_index_dir,
             '-t', cfg.table.top_regions,
@@ -196,12 +199,12 @@ def main():
         ]
         if args.verbose:
             table_args.append('-v')
-        run_script('table.py', table_args)
+        run_script('cluster_table', table_args)
         find_and_copy_files('*_valid_clusters_table.xlsx', subdir, Path().cwd() / 'valid_clusters_tables_and_legend')
     
     if Path('valid_clusters_tables_and_legend').exists():
 
-        # Run prism.py
+        # Run cluster_prism
         valid_cluster_ids_sorted_txt = valid_clusters_index_dir / 'valid_cluster_IDs_sorted_by_anatomy.txt'
         if valid_cluster_ids_sorted_txt.exists():
             with open(valid_cluster_ids_sorted_txt, 'r') as f:
@@ -216,9 +219,9 @@ def main():
             prism_args.append('-sa')
         if args.verbose:
             prism_args.append('-v')
-        run_script('prism.py', prism_args)
+        run_script('cluster_prism', prism_args)
 
-        # Run prism.py
+        # Run cluster_prism
         valid_cluster_ids_sorted_txt = valid_clusters_index_dir / 'valid_cluster_IDs_sorted_by_anatomy.txt'
         if valid_cluster_ids_sorted_txt.exists():
             with open(valid_cluster_ids_sorted_txt, 'r') as f:
@@ -233,7 +236,7 @@ def main():
             prism_args.append('-sa')
         if args.verbose:
             prism_args.append('-v')
-        run_script('prism.py', prism_args)
+        run_script('cluster_prism', prism_args)
 
     # Copy the atlas and binarize it for visualization in DSI studio
     dest_atlas = dsi_dir / Path(cfg.index.atlas).name
@@ -247,12 +250,12 @@ def main():
         atlas_nii_bin.header.set_data_dtype(np.uint8)
         nib.save(atlas_nii_bin, str(dest_atlas).replace('.nii.gz', '_bin.nii.gz'))
 
-        # Run legend.py
+        # Run cluster_legend
     
         legend_args = [
             '-p', 'valid_clusters_tables_and_legend'
         ]
-        run_script('legend.py', legend_args)
+        run_script('cluster_legend', legend_args)
 
 
 if __name__ == '__main__':
