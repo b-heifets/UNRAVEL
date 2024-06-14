@@ -6,14 +6,18 @@ Measure mean intensity of immunofluorescence staining in brain regions for segme
 Run from experiment folder containing sample?? folders.
 
 Usage:
-    regional_IF_mean_intensities_in_segmented_voxels.py -i ochann -s ochann_seg_ilastik_1
+    rstats_IF_mean_in_seg -i ochann -s ochann_seg_ilastik_1
 
 Inputs:
     - ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1.nii.gz
     - path/fluo_image
 
 Outputs:
-    - ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_intensities_in_seg_voxels.csv
+    - ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_IF_in_seg.csv
+
+Next steps:
+    utils_agg_files -i ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_IF_in_seg.csv
+    rstats_IF_mean_summary
 """
 
 import argparse
@@ -122,7 +126,7 @@ def main():
             if args.output:
                 write_to_csv(mean_intensities, args.output)
             else: 
-                output_str = str(ABA_seg_image_path).replace('.nii.gz', '_regional_mean_intensities_in_seg_voxels.csv')
+                output_str = str(ABA_seg_image_path).replace('.nii.gz', '_regional_mean_IF_in_seg.csv')
                 write_to_csv(mean_intensities, output_str)
 
             progress.update(task_id, advance=1)
