@@ -227,7 +227,7 @@ This section provides an overview of common commands available in UNRAVEL, ~orga
     - vstats_z_score
     - utils_agg_files
     - vstats_whole_to_avg
-    - tools_avg
+    - img_avg
     - vstats
 - [Cluster correction](#cluster-correction)
     - cluster_fdr_range
@@ -424,14 +424,14 @@ vstats -mas mask.nii.gz -v
 ### Cluster correction
 These commands are useful for multiple comparison correction of 1 - p value maps to define clusters of significant voxels. 
 
-#### `tools_avg`
+#### `img_avg`
 {py:mod}`unravel.image_tools.avg`
 
 * Average *.nii.gz images 
 * Visualize absolute and relative differences in intensity
 * Use averages from each group to convert non-directioanl 1 - p value maps into directional cluster indices with cluster_fdr
 ```bash
-tools_avg -i Control_*.nii.gz -o Control_avg.nii.gz
+img_avg -i Control_*.nii.gz -o Control_avg.nii.gz
 ```
 
 #### `cluster_fdr_range`

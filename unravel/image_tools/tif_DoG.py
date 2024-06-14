@@ -13,6 +13,12 @@ Difference of Gaussians:
     - Sigma1 (the smaller blur) should be smaller than the size of the features you want to keep, ideally around the size of the noise
         - E.g., if noise is ~1 pixel in size, sigma1 might be 0.5 to 1
     - The ratio of simga2 to sigma1 should ideally be at least 1.5 to 2. This helps ensure that the blurring difference is significant enough to highlight the features of interest.
+
+Note: 
+    - This script is intended to test the DoG method on a single image.
+    - 2D DoG is not implemented in vstats_prep. 
+    - DoG could be added to vstats_prep in the future if needed. 
+    - 3D spatial averaging and 2D rolling ball background subtraction are used in vstats_prep instead.
 """
 
 import argparse
@@ -33,6 +39,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
+# TODO: Add support for other image types and 3D images. 
 
 def load_tif(tif_path):
     '''Load a single tif file using OpenCV and return ndarray.'''

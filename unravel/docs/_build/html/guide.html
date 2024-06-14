@@ -592,7 +592,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<spa
 <li><p>vstats_z_score</p></li>
 <li><p>utils_agg_files</p></li>
 <li><p>vstats_whole_to_avg</p></li>
-<li><p>tools_avg</p></li>
+<li><p>img_avg</p></li>
 <li><p>vstats</p></li>
 </ul>
 </li>
@@ -857,15 +857,15 @@ vstats_whole_to_avg<span class="w"> </span>-k<span class="w"> </span><span class
 <section id="cluster-correction">
 <h3>Cluster correction<a class="headerlink" href="#cluster-correction" title="Link to this heading">#</a></h3>
 <p>These commands are useful for multiple comparison correction of 1 - p value maps to define clusters of significant voxels.</p>
-<section id="tools-avg">
-<h4><code class="docutils literal notranslate"><span class="pre">tools_avg</span></code><a class="headerlink" href="#tools-avg" title="Link to this heading">#</a></h4>
+<section id="img-avg">
+<h4><code class="docutils literal notranslate"><span class="pre">img_avg</span></code><a class="headerlink" href="#img-avg" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/image_tools/avg.html#module-unravel.image_tools.avg" title="unravel.image_tools.avg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_tools.avg</span></code></a></p>
 <ul class="simple">
 <li><p>Average *.nii.gz images</p></li>
 <li><p>Visualize absolute and relative differences in intensity</p></li>
 <li><p>Use averages from each group to convert non-directioanl 1 - p value maps into directional cluster indices with cluster_fdr</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tools_avg<span class="w"> </span>-i<span class="w"> </span>Control_*.nii.gz<span class="w"> </span>-o<span class="w"> </span>Control_avg.nii.gz
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>img_avg<span class="w"> </span>-i<span class="w"> </span>Control_*.nii.gz<span class="w"> </span>-o<span class="w"> </span>Control_avg.nii.gz
 </pre></div>
 </div>
 </section>
@@ -1136,7 +1136,7 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-correction">Cluster correction</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#tools-avg"><code class="docutils literal notranslate"><span class="pre">tools_avg</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#img-avg"><code class="docutils literal notranslate"><span class="pre">img_avg</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-fdr-range"><code class="docutils literal notranslate"><span class="pre">cluster_fdr_range</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-fdr"><code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-mirror-indices"><code class="docutils literal notranslate"><span class="pre">cluster_mirror_indices</span></code></a></li>

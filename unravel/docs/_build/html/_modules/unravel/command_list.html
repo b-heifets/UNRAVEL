@@ -651,7 +651,7 @@
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Handle image metadata.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
-            <span class="s2">&quot;io_img_io&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;io_img&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.img_io&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Image I/O operations.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
@@ -708,52 +708,52 @@
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Image tools&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;tools_avg&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;img_avg&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.avg&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Average NIfTI images.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
-            <span class="s2">&quot;tools_unique&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;img_unique&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.uniq_intensities&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Find unique intensities in images.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
-            <span class="s2">&quot;tools_max&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;img_max&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.max&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Print the max intensity value in an image.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
-            <span class="s2">&quot;tools_bbox&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;img_bbox&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.bbox&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Compute bounding box of non-zero voxels in an image.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;tools_spatial_avg&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;img_spatial_avg&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.spatial_averaging&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Perform spatial averaging on images.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
-            <span class="s2">&quot;tools_tif_rb&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;img_rb&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.tif_rb&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Apply rolling ball filter to TIF images.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
-            <span class="s2">&quot;tools_tif_DoG&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;img_DoG&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.tif_DoG&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Apply Difference of Gaussian filter to TIF images.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;tools_pad&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;img_pad&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.pad_img&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Pad images.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;tools_extend&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;img_extend&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.extend_image&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Extend images (add padding to one side).&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;tools_transpose_axes&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;img_transpose&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.transpose_axes&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Transpose image axes.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>

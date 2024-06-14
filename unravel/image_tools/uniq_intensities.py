@@ -22,7 +22,7 @@ from unravel.core.utils import print_cmd_and_times
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/input_img.nii.gz', required=True, action=SM)
-    parser.add_argument('-m', '--minextent', help='Min cluster size in voxels (Default: 100)', default=100, action=SM, type=int)
+    parser.add_argument('-m', '--minextent', help='Min cluster size in voxels (Default: 1)', default=1, action=SM, type=int)
     parser.add_argument('-id', '--print_IDs', help='Print cluster IDs. Default: True', default=True, action='store_true')
     parser.add_argument('-s', '--print_sizes', help='Print cluster IDs and sizes. Default: False', default=False, action='store_true')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)

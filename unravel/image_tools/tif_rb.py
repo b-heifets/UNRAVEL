@@ -10,6 +10,9 @@ Rolling ball subtraction:
     - Radius should be ~ 1.0 to 2.0 times the size of the features of interest
     - Larger radii will remove more background, but may also remove some of the features of interest
     - Smaller radii will remove less background, but may leave some background noise
+
+To do: 
+    - Add support for other image types and 3D images
 """
 
 import argparse
@@ -29,6 +32,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
+# TODO: Add support for other image types and 3D images. 
 
 def load_tif(tif_path):
     '''Load a single tif file using OpenCV and return ndarray.'''

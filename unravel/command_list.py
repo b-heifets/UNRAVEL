@@ -299,7 +299,7 @@ def main():
                 "description": "Handle image metadata.",
                 "common": True
             },
-            "io_img_io": {
+            "io_img": {
                 "module": "unravel.image_io.img_io",
                 "description": "Image I/O operations.",
                 "common": False
@@ -356,52 +356,52 @@ def main():
             }
         },
         "Image tools": {
-            "tools_avg": {
+            "img_avg": {
                 "module": "unravel.image_tools.avg",
                 "description": "Average NIfTI images.",
                 "common": True
             },
-            "tools_unique": {
+            "img_unique": {
                 "module": "unravel.image_tools.uniq_intensities",
                 "description": "Find unique intensities in images.",
                 "common": True
             },
-            "tools_max": {
+            "img_max": {
                 "module": "unravel.image_tools.max",
                 "description": "Print the max intensity value in an image.",
                 "common": True
             },
-            "tools_bbox": {
+            "img_bbox": {
                 "module": "unravel.image_tools.bbox",
                 "description": "Compute bounding box of non-zero voxels in an image.",
                 "common": False
             },
-            "tools_spatial_avg": {
+            "img_spatial_avg": {
                 "module": "unravel.image_tools.spatial_averaging",
                 "description": "Perform spatial averaging on images.",
                 "common": True
             },
-            "tools_tif_rb": {
+            "img_rb": {
                 "module": "unravel.image_tools.tif_rb",
                 "description": "Apply rolling ball filter to TIF images.",
                 "common": True
             },
-            "tools_tif_DoG": {
+            "img_DoG": {
                 "module": "unravel.image_tools.tif_DoG",
                 "description": "Apply Difference of Gaussian filter to TIF images.",
                 "common": False
             },
-            "tools_pad": {
+            "img_pad": {
                 "module": "unravel.image_tools.pad_img",
                 "description": "Pad images.",
                 "common": False
             },
-            "tools_extend": {
+            "img_extend": {
                 "module": "unravel.image_tools.extend_image",
                 "description": "Extend images (add padding to one side).",
                 "common": False
             },
-            "tools_transpose_axes": {
+            "img_transpose": {
                 "module": "unravel.image_tools.transpose_axes",
                 "description": "Transpose image axes.",
                 "common": False
