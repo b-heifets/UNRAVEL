@@ -6,32 +6,30 @@ Measure mean intensity of immunofluorescence staining in brain regions for segme
 Run from experiment folder containing sample?? folders.
 
 Usage:
-    rstats_IF_mean_in_seg -i ochann -s ochann_seg_ilastik_1
-
-Inputs:
-    - ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1.nii.gz
-    - path/fluo_image
+    rstats_IF_mean_in_seg -i <asterisk>.czi -s iba1_seg_ilastik_1/sample??_iba1_seg_ilastik_1.nii.gz
 
 Outputs:
-    - ./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_IF_in_seg.csv
+    - ./sample??/iba1_seg_ilastik_1/sample??_iba1_seg_ilastik_1_regional_mean_IF_in_seg.csv
 
 Next steps:
-    utils_agg_files -i ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_IF_in_seg.csv
+    utils_agg_files -i iba1_seg_ilastik_1/sample??_iba1_seg_ilastik_1_regional_mean_IF_in_seg.csv
     rstats_IF_mean_summary
 """
 
 import argparse
 import csv
+import nibabel as nib
+import numpy as np
 from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
-import numpy as np
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
+from unravel.warp.to_native import to_native
 
 
 def parse_args():
@@ -39,34 +37,51 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='path/fluo_image or path/fluo_img_dir relative to sample?? folder', required=True, action=SM)
-    parser.add_argument('-s', '--seg_dir', help='Name of folder with segmentation outputs (e.g., ochann_seg_ilasik_1)', required=True, action=SM)
+    parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
+    parser.add_argument('-s', '--seg', help='rel_path/seg_img.nii.gz. 1st glob match processed', required=True, action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/name.csv relative to ./sample??/', default=None, action=SM)
     parser.add_argument('-r', '--regions', nargs='*', type=int, help='Optional: Space-separated list of region intensities to process. Default: Process all regions', default=None)
+
+   # Optional to_native() args
+    parser.add_argument('-n', '--native_atlas', help='Load/save native atlasfrom/to rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
+    parser.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (reg.py). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)    
+    parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel [slow])', default="nearestNeighbor", action=SM)
+    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
+    parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
+    parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
+    parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
+    parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
+
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     parser.epilog = __doc__
     return parser.parse_args()
 
 
 @print_func_name_args_times()
-def calculate_mean_intensity(fluo_image_path, ABA_seg_image_path, args):
-    """Calculates mean intensity for each region in the atlas."""
+def calculate_mean_intensity(IF_img, ABA_seg, args):
+    """Calculates mean intensity for each region in the atlas.
+    
+    Parameters:
+        IF_img (np.ndarray): 3D image of immunofluorescence staining.
+        ABA_seg (np.ndarray): 3D image of segmented brain regions.
+        args (argparse.Namespace): Command line arguments.
+
+    """
 
     print("\n  Calculating mean immunofluorescence intensity for each region in the atlas...\n")
 
-    # Load the images
-    fluo_img = load_3D_img(fluo_image_path, return_res=False)
-    ABA_seg = load_3D_img(ABA_seg_image_path, return_res=False)
-
     # Ensure both images have the same dimensions
-    if fluo_img.shape != ABA_seg.shape:
-        raise ValueError("The dimensions of fluo_img and ABA_seg do not match.")
+    if IF_img.shape != ABA_seg.shape:
+        raise ValueError("The dimensions of IF_img and ABA_seg do not match.")
     
     # Flatten the images to 1D arrays for bincount
-    fluo_img_flat = fluo_img.flatten()
+    IF_img_flat = IF_img.flatten()
     ABA_seg_flat = ABA_seg.flatten()
 
     # Use bincount to get fluo intensity sums for each region
-    sums = np.bincount(ABA_seg_flat, weights=fluo_img_flat) # Sum of intensities in each region (excluding background)
+    sums = np.bincount(ABA_seg_flat, weights=IF_img_flat) # Sum of intensities in each region (excluding background)
     counts = np.bincount(ABA_seg_flat) # Number of voxels in each region (excluding background)
 
     # Suppress the runtime warning and handle potential division by zero
@@ -115,18 +130,42 @@ def main():
 
             sample_path = Path(sample).resolve() if sample != cwd.name else Path().resolve()
 
-            # Resolve paths
-            fluo_image_path = Path(sample_path, args.input)
-            ABA_seg_image_path = Path(sample_path, args.seg_dir, f"{sample}_ABA_{args.seg_dir}.nii.gz")
+            # Load or make the native atlas image
+            native_atlas_path = next(sample_path.glob(str(args.native_atlas)), None)
+            if args.native_atlas and native_atlas_path.exists():
+                native_atlas = load_3D_img(native_atlas_path)
+            else:
+                fixed_reg_input = Path(sample_path, args.reg_outputs, args.fixed_reg_in) 
+                if not fixed_reg_input.exists():
+                    fixed_reg_input = sample_path / args.reg_outputs / "autofl_50um_fixed_reg_input.nii.gz"
+                native_atlas = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_atlas_path)
+
+            # Load the segmentation image
+            seg_path = next(sample_path.glob(str(args.seg)), None)
+            if seg_path is None:
+                print(f"\n    [red bold]No files match the pattern {args.seg} in {sample_path}\n")
+                continue
+            seg_nii = nib.load(seg_path)
+            seg_img = np.asanyarray(seg_nii.dataobj, dtype=np.bool_).squeeze()
+
+            # Multiply the images to convert the seg image to atlas intenties
+            ABA_seg = native_atlas * seg_img
+
+            # Load the IF image
+            IF_img_path = next(sample_path.glob(str(args.input)), None)
+            if IF_img_path is None:
+                print(f"No files match the pattern {args.input} in {sample_path}")
+                continue
+            IF_img = load_3D_img(IF_img_path, args.chann_idx, "xyz")
 
             # Calculate mean intensity
-            mean_intensities = calculate_mean_intensity(fluo_image_path, ABA_seg_image_path, args)
+            mean_intensities = calculate_mean_intensity(IF_img, ABA_seg, args)
 
             # Write to CSV
             if args.output:
                 write_to_csv(mean_intensities, args.output)
             else: 
-                output_str = str(ABA_seg_image_path).replace('.nii.gz', '_regional_mean_IF_in_seg.csv')
+                output_str = str(seg_path).replace('.nii.gz', '_regional_mean_IF_in_seg.csv')
                 write_to_csv(mean_intensities, output_str)
 
             progress.update(task_id, advance=1)
