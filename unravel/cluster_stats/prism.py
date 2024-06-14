@@ -3,11 +3,11 @@
 """
 Organize cell_count|label_volume, cluster_volume, and <cell|label>_density data from cluster and sample and save as csv
 
-Usage: 
+Usage:
     prism.py -ids 1 2 3
         
 Inputs:
-    <asterisk>.csv from org_data.py (in working dir)
+    <asterisk>.csv from cluster_org_data (in working dir)
 
 CSV naming conventions:
     - Condition: first word before '_' in the file name
