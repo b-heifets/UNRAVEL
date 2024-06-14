@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
 """
-Plot mean IF intensity for a given region intensity ID for 3+ groups (only works for positive data)
+Plot mean IF intensities and comparisons for each region intensity ID (only works for positive data).
 
-Usage:
-    regional_IF_mean_intensities_summary.py -r 1 --order group3 group2 group1 --labels Group_3 Group_2 Group_1 -t dunnnett
+Usage for Tukey's tests:
+    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary -r $(img_unique -i $atlas) --order group3 group2 group1 --labels Group_3 Group_2 Group_1
+
+Usage for t-test:
+    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest
 """
 
 import argparse
@@ -18,10 +21,11 @@ import textwrap
 from rich import print
 from rich.traceback import install
 from pathlib import Path
-from scipy.stats import dunnett
+from scipy.stats import ttest_ind, dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+
 
 
 def parse_args():
@@ -30,7 +34,7 @@ def parse_args():
     parser.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: gubra__region_ID_side_name_abbr.csv', default="gubra__region_ID_side_name_abbr.csv", action=SM)
     parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', action=SM)
     parser.add_argument('--labels', nargs='*', help='Group Labels in same order', action=SM)
-    parser.add_argument('-t', '--test', help='Choose between "tukey" and "dunnett" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett'], action=SM)
+    parser.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
     parser.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
     parser.add_argument('-s', '--show_plot', help='Show plot if flag is provided', action='store_true')
     parser.epilog = __doc__
@@ -69,6 +73,22 @@ def get_all_region_ids(csv_path):
     """Retrieve all region IDs from the provided CSV."""
     region_df = pd.read_csv(csv_path)
     return region_df["Region_ID"].tolist()
+
+def perform_t_tests(df, order):
+    """Perform t-tests between groups in the DataFrame."""
+    comparisons = []
+    for i in range(len(order)):
+        for j in range(i + 1, len(order)):
+            group1, group2 = order[i], order[j]
+            data1 = df[df['group'] == group1]['mean_intensity']
+            data2 = df[df['group'] == group2]['mean_intensity']
+            t_stat, p_value = ttest_ind(data1, data2)
+            comparisons.append({
+                'group1': group1,
+                'group2': group2,
+                'p-adj': p_value
+            })
+    return pd.DataFrame(comparisons)
 
 def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tukey', show_plot=False, alt='two-sided'):
     df = load_data(region_id)
@@ -109,6 +129,7 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
 
     # Formatting
     ax.set_ylabel('Mean IF Intensity', weight='bold')
+    ax.set_xticks(np.arange(len(df['group_label'].unique())))
     ax.set_xticklabels(ax.get_xticklabels(), weight='bold')
     ax.tick_params(axis='both', which='major', width=2)
     ax.spines['top'].set_visible(False)
@@ -120,7 +141,8 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
     sns.swarmplot(x='group_label', y='mean_intensity', hue='group', data=df, palette=group_colors, size=8, linewidth=1, edgecolor='black')
     
     # Remove the legend created by hue
-    ax.legend_.remove()
+    if ax.legend_:
+        ax.legend_.remove()
 
     # Perform the chosen post-hoc test
     if test_type == 'tukey':
@@ -138,8 +160,11 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
             'p-adj': test_stats.pvalue
         })
         test_df['reject'] = test_df['p-adj'] < 0.05
-    significant_comparisons = test_df[test_df['reject'] == True]
+    elif test_type == 'ttest':
+        test_df = perform_t_tests(df, order)
+        test_df['reject'] = test_df['p-adj'] < 0.05
 
+    significant_comparisons = test_df[test_df['reject'] == True]
     y_max = df['mean_intensity'].max()
     y_min = df['mean_intensity'].min()
     height_diff = (y_max - y_min) * 0.1
@@ -166,16 +191,37 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
         plt.text((x1+x2)*.5, y_pos + 0.8*height_diff, sig, horizontalalignment='center', size='xx-large', color='black', weight='bold')
         y_pos += 3 * height_diff
 
-    plt.ylim(0, y_pos + 2*height_diff)
+
+
+    # Calculate y-axis limits
+    y_max = df['mean_intensity'].max()
+    y_min = df['mean_intensity'].min()
+    height_diff = (y_max - y_min) * 0.1
+    y_pos = y_max + 0.5 * height_diff
+
+    # Ensure the y-axis starts from the minimum value, allowing for negative values
+    plt.ylim(y_min - 2 * height_diff, y_pos + 2 * height_diff)
+
+
+
+    # plt.ylim(0, y_pos + 2*height_diff)
     ax.set_xlabel(None)
 
     # Save the plot
+    output_folder = Path('regional_IF_mean_summary')  # Replace 'output_folder_name' with your desired folder name
+    output_folder.mkdir(parents=True, exist_ok=True)
+
     title = f"{region_name} ({region_abbr})"
     wrapped_title = textwrap.fill(title, 42)  # wraps at x characters. Adjust as needed.
     plt.title(wrapped_title)
     plt.tight_layout()
     region_abbr = region_abbr.replace("/", "-") # Replace problematic characters for file paths
-    plt.savefig(f'region_{region_id}_{region_abbr}.pdf')
+
+    is_significant = not significant_comparisons.empty
+    file_prefix = '_' if is_significant else ''
+    file_name = f"{file_prefix}region_{region_id}_{region_abbr}.pdf"
+    plt.savefig(output_folder / file_name)
+
     plt.close()
 
     if show_plot:
@@ -197,7 +243,6 @@ def main():
 
     # Process each region ID
     for region_id in region_ids_to_process:
-        csv_path = Path(__file__).parent.parent / 'csvs' / args.lut
 
         plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=args.test, show_plot=args.show_plot, alt=args.alternate)
 

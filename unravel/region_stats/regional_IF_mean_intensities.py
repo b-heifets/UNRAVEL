@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Measure mean intensity of immunofluorescence staining in brain regions.
+Measure mean intensity of immunofluorescence staining in brain regions in atlas space.
+
+Usage: 
+    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; regions=$(img_unique -i $atlas) ; for i in <asterisk>.nii.gz ; do rstats_IF_mean -i $i -a $atlas -r $regions ; done
+    mkdir regional_mean_intensities
+    mv *_regional_mean_intensities.csv regional_mean_intensities/
+    cd regional_mean_intensities
+    rstats_IF_mean_summary 
+
 """
 
 import argparse 
@@ -13,12 +21,11 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
-    DEFAULT_ATLAS = '/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz'
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz', default=DEFAULT_ATLAS, action=SM)
     parser.add_argument('-i', '--input', help='path/atlas_space_immunofluorescence_image.nii.gz', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='path/name.csv', default=None, action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz', required=True, action=SM)
     parser.add_argument('-r', '--regions', nargs='*', type=int, help='Space-separated list of region intensities to process', default=None)
+    parser.add_argument('-o', '--output', help='path/name.csv', default=None, action=SM)
     parser.epilog = __doc__
     return parser.parse_args()
 
