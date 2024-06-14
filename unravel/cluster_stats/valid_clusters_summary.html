@@ -488,23 +488,25 @@
                   
   <section id="module-unravel.cluster_stats.valid_clusters_summary">
 <span id="unravel-cluster-stats-valid-clusters-summary-module"></span><span id="unravel-cluster-stats-valid-clusters-summary"></span><h1>unravel.cluster_stats.valid_clusters_summary module<a class="headerlink" href="#module-unravel.cluster_stats.valid_clusters_summary" title="Link to this heading">#</a></h1>
-<p>Aggregates and analyzes cluster validation data from validate_clusters.py</p>
+<p>Aggregates and analyzes cluster validation data from cluster_validation</p>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>valid_clusters_summary.py -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd ‘*’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -v</p>
+<dt>Usage if running directly after cluster_validation:</dt><dd><p>cluster_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd ‘*’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -v</p>
+</dd>
+<dt>Usage if running after cluster_validation and cluster_org_data:</dt><dd><p>cluster_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -v</p>
 </dd>
 </dl>
-<p>The current working directory should not have other directories when running this script for the first time. Directories from org_data.py are ok though.</p>
+<p>The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</p>
 <dl class="simple">
-<dt>Runs scripts in this order:</dt><dd><ul class="simple">
-<li><p>org_data.py</p></li>
-<li><p>group_bilateral_data.py</p></li>
-<li><p>prepend_conditions.py</p></li>
-<li><p>stats.py</p></li>
-<li><p>index.py</p></li>
-<li><p>3D_brain.py</p></li>
-<li><p>table.py</p></li>
-<li><p>prism.py</p></li>
-<li><p>legend.py</p></li>
+<dt>Runs commands in this order:</dt><dd><ul class="simple">
+<li><p>cluster_org_data</p></li>
+<li><p>cluster_group_data</p></li>
+<li><p>utils_prepend</p></li>
+<li><p>cluster_stats</p></li>
+<li><p>cluster_index</p></li>
+<li><p>cluster_brain_model</p></li>
+<li><p>cluster_table</p></li>
+<li><p>cluster_prism</p></li>
+<li><p>cluster_legend</p></li>
 </ul>
 </dd>
 <dt>The sample_key.csv file should have the following format:</dt><dd><p>dir_name,condition
