@@ -29,6 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -44,6 +45,7 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/valid_clusters_summary';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
@@ -348,23 +350,26 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot; </span>
-<span class="sd">Aggregates and analyzes cluster validation data from validate_clusters.py</span>
+<span class="sd">Aggregates and analyzes cluster validation data from cluster_validation</span>
 
-<span class="sd">Usage:</span>
-<span class="sd">    valid_clusters_summary.py -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd &#39;*&#39; -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -v</span>
+<span class="sd">Usage if running directly after cluster_validation:</span>
+<span class="sd">    cluster_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd &#39;*&#39; -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -v</span>
 
-<span class="sd">The current working directory should not have other directories when running this script for the first time. Directories from org_data.py are ok though.</span>
+<span class="sd">Usage if running after cluster_validation and cluster_org_data:</span>
+<span class="sd">    cluster_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -v</span>
 
-<span class="sd">Runs scripts in this order:</span>
-<span class="sd">    - org_data.py</span>
-<span class="sd">    - group_bilateral_data.py</span>
-<span class="sd">    - prepend_conditions.py</span>
-<span class="sd">    - stats.py</span>
-<span class="sd">    - index.py</span>
-<span class="sd">    - 3D_brain.py</span>
-<span class="sd">    - table.py</span>
-<span class="sd">    - prism.py</span>
-<span class="sd">    - legend.py</span>
+<span class="sd">The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</span>
+
+<span class="sd">Runs commands in this order:</span>
+<span class="sd">    - cluster_org_data</span>
+<span class="sd">    - cluster_group_data</span>
+<span class="sd">    - utils_prepend</span>
+<span class="sd">    - cluster_stats</span>
+<span class="sd">    - cluster_index</span>
+<span class="sd">    - cluster_brain_model</span>
+<span class="sd">    - cluster_table</span>
+<span class="sd">    - cluster_prism</span>
+<span class="sd">    - cluster_legend</span>
 
 <span class="sd">The sample_key.csv file should have the following format:</span>
 <span class="sd">    dir_name,condition</span>
@@ -380,29 +385,29 @@
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 
-<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
-<span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Config</span><span class="p">,</span> <span class="n">Configuration</span> 
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span><span class="p">,</span> <span class="n">load_config</span>
-<span class="kn">from</span> <span class="nn">utilities.aggregate_files_w_recursive_search</span> <span class="kn">import</span> <span class="n">find_and_copy_files</span>
 <span class="kn">from</span> <span class="nn">unravel.cluster_stats.org_data</span> <span class="kn">import</span> <span class="n">cp</span>
+<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span> 
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span><span class="p">,</span> <span class="n">load_config</span>
+<span class="kn">from</span> <span class="nn">unravel.utilities.aggregate_files_w_recursive_search</span> <span class="kn">import</span> <span class="n">find_and_copy_files</span>
 
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/valid_clusters_summary.html#unravel.cluster_stats.valid_clusters_summary.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the config.ini file. Default: valid_clusters_summary.ini&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;valid_clusters_summary.ini&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the config.ini file. Default: unravel/cluster_stats/valid_clusters_summary.ini&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;valid_clusters_summary.ini&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
-    <span class="c1"># org_data.py -e &lt;list of experiment directories&gt; -cvd &#39;*&#39; -td &lt;target_dir&gt; -vd &lt;path/vstats_dir&gt; -v</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process. (needed for *org_data.py)&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cvd&#39;</span><span class="p">,</span> <span class="s1">&#39;--cluster_val_dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for *org_data.py&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span> 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-vd&#39;</span><span class="p">,</span> <span class="s1">&#39;--vstats_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/vstats_dir ( dir vstats.py was run from) to copy p val, info, and index files (for *org_data.py)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="c1"># cluster_org_data -e &lt;list of experiment directories&gt; -cvd &#39;*&#39; -td &lt;target_dir&gt; -vd &lt;path/vstats_dir&gt; -v</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process. (needed for cluster_org_data)&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cvd&#39;</span><span class="p">,</span> <span class="s1">&#39;--cluster_val_dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for cluster_org_data&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span> 
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-vd&#39;</span><span class="p">,</span> <span class="s1">&#39;--vstats_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cluster_org_data)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
-    <span class="c1"># prepend_conditions.py -c &lt;path/sample_key.csv&gt; -f -r</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sk&#39;</span><span class="p">,</span> <span class="s1">&#39;--sample_key&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/sample_key.csv w/ directory names and conditions (for prepend_conditions.py)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="c1"># utils_prepend -c &lt;path/sample_key.csv&gt; -f -r</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sk&#39;</span><span class="p">,</span> <span class="s1">&#39;--sample_key&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/sample_key.csv w/ directory names and conditions (for utils_prepend)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
-    <span class="c1"># stats.py --groups &lt;group1&gt; &lt;group2&gt;</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of group prefixes. 2 groups --&gt; t-test. &gt;2 --&gt; Tukey</span><span class="se">\&#39;</span><span class="s1">s tests (The first 2 groups reflect the main comparison for validation rates; for *stats.py)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_prefixes&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Condition prefixes to group related data (optional for *stats.py)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="c1"># cluster_stats --groups &lt;group1&gt; &lt;group2&gt;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of group prefixes. 2 groups --&gt; t-test. &gt;2 --&gt; Tukey</span><span class="se">\&#39;</span><span class="s1">s tests (The first 2 groups reflect the main comparison for validation rates; for cluster_stats)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_prefixes&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Condition prefixes to group related data (optional for cluster_stats)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
@@ -411,6 +416,7 @@
 
 <span class="c1"># TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. Could make cells vs. labels are arg. Could add a raw data output organized for the SI table. # The valid cluster sunburst could have the val dir name and be copied to a central location</span>
 <span class="c1"># TODO: Consider moving find_and_copy_files() to unravel/unravel/utils.py</span>
+<span class="c1"># TODO: Move cell vs. label arg from config back to argparse and make it a required arg to prevent accidentally using the wrong metric</span>
 
 <div class="viewcode-block" id="run_script">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/valid_clusters_summary.html#unravel.cluster_stats.valid_clusters_summary.run_script">[docs]</a>
@@ -429,7 +435,7 @@
 
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
     
-    <span class="c1"># Run org_data.py</span>
+    <span class="c1"># Run cluster_org_data</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">exp_paths</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_val_dirs</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">vstats_path</span><span class="p">:</span>
         <span class="n">org_data_args</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">exp_paths</span><span class="p">,</span>
@@ -441,15 +447,15 @@
         <span class="p">]</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
             <span class="n">org_data_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;org_data.py&#39;</span><span class="p">,</span> <span class="n">org_data_args</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_org_data&#39;</span><span class="p">,</span> <span class="n">org_data_args</span><span class="p">)</span>
 
-    <span class="c1"># Run group_bilateral_data.py</span>
+    <span class="c1"># Run cluster_group_data</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;group_bilateral_data.py&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;-v&#39;</span><span class="p">])</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_group_data&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;-v&#39;</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;group_bilateral_data.py&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_group_data&#39;</span><span class="p">,</span> <span class="p">[])</span>
 
-    <span class="c1"># Run prepend_conditions.py</span>
+    <span class="c1"># Run utils_prepend</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">sample_key</span><span class="p">:</span>
         <span class="n">prepend_conditions_args</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;-sk&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">sample_key</span><span class="p">,</span>
@@ -458,9 +464,9 @@
         <span class="p">]</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
             <span class="n">prepend_conditions_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;prepend_conditions.py&#39;</span><span class="p">,</span> <span class="n">prepend_conditions_args</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;utils_prepend&#39;</span><span class="p">,</span> <span class="n">prepend_conditions_args</span><span class="p">)</span>
 
-    <span class="c1"># Run stats.py</span>
+    <span class="c1"># Run cluster_stats</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
         <span class="n">stats_args</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span>
@@ -471,7 +477,7 @@
             <span class="n">stats_args</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">condition_prefixes</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
             <span class="n">stats_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;stats.py&#39;</span><span class="p">,</span> <span class="n">stats_args</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_stats&#39;</span><span class="p">,</span> <span class="n">stats_args</span><span class="p">)</span>
 
     <span class="n">dsi_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;3D_brains&#39;</span>
     <span class="n">dsi_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
@@ -509,7 +515,7 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    No clusters were valid for </span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s2">. Skipping...&quot;</span><span class="p">)</span>
             <span class="k">continue</span>
 
-        <span class="c1"># Run index.py</span>
+        <span class="c1"># Run cluster_index</span>
         <span class="n">index_args</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;-ci&#39;</span><span class="p">,</span> <span class="n">rev_cluster_index_path</span><span class="p">,</span>
             <span class="s1">&#39;-ids&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">valid_cluster_ids</span><span class="p">,</span>
@@ -520,9 +526,9 @@
             <span class="n">index_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-rgb&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
             <span class="n">index_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;index.py&#39;</span><span class="p">,</span> <span class="n">index_args</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_index&#39;</span><span class="p">,</span> <span class="n">index_args</span><span class="p">)</span>
 
-        <span class="c1"># Run 3D_brain.py</span>
+        <span class="c1"># Run cluster_brain_model</span>
         <span class="n">valid_cluster_index_path</span> <span class="o">=</span> <span class="n">valid_clusters_index_dir</span> <span class="o">/</span> <span class="nb">str</span><span class="p">(</span><span class="n">rev_cluster_index_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;_</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">valid_clusters_dir</span><span class="si">}</span><span class="s1">.nii.gz&#39;</span><span class="p">)</span>
         <span class="n">brain_args</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">valid_cluster_index_path</span><span class="p">,</span>
@@ -534,16 +540,16 @@
             <span class="n">brain_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
             <span class="n">brain_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;3D_brain.py&#39;</span><span class="p">,</span> <span class="n">brain_args</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_brain_model&#39;</span><span class="p">,</span> <span class="n">brain_args</span><span class="p">)</span>
 
-        <span class="c1"># Aggregate files from 3D_brains.py</span>
+        <span class="c1"># Aggregate files from cluster_brain_model</span>
         <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">mirror</span><span class="p">:</span> 
             <span class="n">find_and_copy_files</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;*</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">valid_clusters_dir</span><span class="si">}</span><span class="s1">_ABA_WB.nii.gz&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">dsi_dir</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">find_and_copy_files</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;*</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">valid_clusters_dir</span><span class="si">}</span><span class="s1">_ABA.nii.gz&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">dsi_dir</span><span class="p">)</span>
         <span class="n">find_and_copy_files</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;*</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">valid_clusters_dir</span><span class="si">}</span><span class="s1">_rgba.txt&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">dsi_dir</span><span class="p">)</span>
 
-        <span class="c1"># Run table.py</span>
+        <span class="c1"># Run cluster_table</span>
         <span class="n">table_args</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;-vcd&#39;</span><span class="p">,</span> <span class="n">valid_clusters_index_dir</span><span class="p">,</span>
             <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">top_regions</span><span class="p">,</span>
@@ -551,44 +557,30 @@
         <span class="p">]</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
             <span class="n">table_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;table.py&#39;</span><span class="p">,</span> <span class="n">table_args</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_table&#39;</span><span class="p">,</span> <span class="n">table_args</span><span class="p">)</span>
         <span class="n">find_and_copy_files</span><span class="p">(</span><span class="s1">&#39;*_valid_clusters_table.xlsx&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 
-        <span class="c1"># Run prism.py</span>
+        <span class="c1"># Run cluster_prism</span>
         <span class="n">valid_cluster_ids_sorted_txt</span> <span class="o">=</span> <span class="n">valid_clusters_index_dir</span> <span class="o">/</span> <span class="s1">&#39;valid_cluster_IDs_sorted_by_anatomy.txt&#39;</span>
         <span class="k">if</span> <span class="n">valid_cluster_ids_sorted_txt</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">valid_cluster_ids_sorted_txt</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
                 <span class="n">valid_cluster_ids_sorted</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span> 
             <span class="n">valid_cluster_ids_sorted</span> <span class="o">=</span> <span class="n">valid_cluster_ids</span>
-        <span class="n">prism_args</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s1">&#39;-ids&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">valid_cluster_ids_sorted</span><span class="p">,</span>
-            <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span>
-        <span class="p">]</span>
-        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prism</span><span class="o">.</span><span class="n">save_all</span><span class="p">:</span>
-            <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-sa&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-            <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;prism.py&#39;</span><span class="p">,</span> <span class="n">prism_args</span><span class="p">)</span>
-
-        <span class="c1"># Run prism.py</span>
-        <span class="n">valid_cluster_ids_sorted_txt</span> <span class="o">=</span> <span class="n">valid_clusters_index_dir</span> <span class="o">/</span> <span class="s1">&#39;valid_cluster_IDs_sorted_by_anatomy.txt&#39;</span>
-        <span class="k">if</span> <span class="n">valid_cluster_ids_sorted_txt</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">valid_cluster_ids_sorted_txt</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">valid_cluster_ids_sorted</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span> 
-            <span class="n">valid_cluster_ids_sorted</span> <span class="o">=</span> <span class="n">valid_cluster_ids</span>
-        <span class="n">prism_args</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s1">&#39;-ids&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">valid_cluster_ids_sorted</span><span class="p">,</span>
-            <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span>
-        <span class="p">]</span>
-        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prism</span><span class="o">.</span><span class="n">save_all</span><span class="p">:</span>
-            <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-sa&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-            <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;prism.py&#39;</span><span class="p">,</span> <span class="n">prism_args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_cluster_ids_sorted</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">prism_args</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s1">&#39;-ids&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">valid_cluster_ids_sorted</span><span class="p">,</span>
+                <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span>
+            <span class="p">]</span>
+            <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prism</span><span class="o">.</span><span class="n">save_all</span><span class="p">:</span>
+                <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-sa&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
+            <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_prism&#39;</span><span class="p">,</span> <span class="n">prism_args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    No valid cluster IDs found for </span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s2">. Skipping cluster_prism...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Copy the atlas and binarize it for visualization in DSI studio</span>
     <span class="n">dest_atlas</span> <span class="o">=</span> <span class="n">dsi_dir</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">atlas</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
@@ -602,12 +594,12 @@
         <span class="n">atlas_nii_bin</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
         <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">atlas_nii_bin</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">dest_atlas</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;_bin.nii.gz&#39;</span><span class="p">))</span>
 
-        <span class="c1"># Run legend.py</span>
-    
-        <span class="n">legend_args</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span>
-        <span class="p">]</span>
-        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;legend.py&#39;</span><span class="p">,</span> <span class="n">legend_args</span><span class="p">)</span></div>
+        <span class="c1"># Run cluster_legend</span>
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">legend_args</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span>
+            <span class="p">]</span>
+            <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_legend&#39;</span><span class="p">,</span> <span class="n">legend_args</span><span class="p">)</span></div>
 
 
 
