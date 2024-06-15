@@ -6,13 +6,13 @@ Measure mean intensity of immunofluorescence staining in brain regions for segme
 Run from experiment folder containing sample?? folders.
 
 Usage:
-    rstats_IF_mean_in_seg -i <asterisk>.czi -s iba1_seg_ilastik_1/sample??_iba1_seg_ilastik_1.nii.gz
+    rstats_IF_mean_in_seg -i <asterisk>.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz
 
-Outputs:
-    - ./sample??/iba1_seg_ilastik_1/sample??_iba1_seg_ilastik_1_regional_mean_IF_in_seg.csv
+Default output:
+    - ./sample??/seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv
 
 Next steps:
-    utils_agg_files -i iba1_seg_ilastik_1/sample??_iba1_seg_ilastik_1_regional_mean_IF_in_seg.csv
+    utils_agg_files -i seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv
     rstats_IF_mean_summary
 """
 
@@ -34,19 +34,20 @@ from unravel.warp.to_native import to_native
 
 def parse_args():
     parser = argparse.ArgumentParser(description='', formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
+    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
+    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='path/fluo_image or path/fluo_img_dir relative to sample?? folder', required=True, action=SM)
     parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-s', '--seg', help='rel_path/seg_img.nii.gz. 1st glob match processed', required=True, action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz', required=True, action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz to warp to native space', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/name.csv relative to ./sample??/', default=None, action=SM)
-    parser.add_argument('-r', '--regions', nargs='*', type=int, help='Optional: Space-separated list of region intensities to process. Default: Process all regions', default=None)
+    parser.add_argument('--region_ids', help='Optional: Space-separated list of region intensities to process. Default: Process all regions', default=None, nargs='*', type=int)
 
    # Optional to_native() args
     parser.add_argument('-n', '--native_atlas', help='Load/save native atlasfrom/to rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
     parser.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (reg.py). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)    
-    parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel [slow])', default="nearestNeighbor", action=SM)
+    parser.add_argument('-inp', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel [slow])', default="nearestNeighbor", action=SM)
     parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
@@ -68,6 +69,8 @@ def calculate_mean_intensity(IF_img, ABA_seg, args):
         ABA_seg (np.ndarray): 3D image of segmented brain regions.
         args (argparse.Namespace): Command line arguments.
 
+    Returns:
+        mean_intensities_dict: {region_id: mean_IF_in_seg}
     """
 
     print("\n  Calculating mean immunofluorescence intensity for each region in the atlas...\n")
@@ -94,8 +97,8 @@ def calculate_mean_intensity(IF_img, ABA_seg, args):
     mean_intensities_dict = {i: mean_intensities[i] for i in range(1, len(mean_intensities))}
 
     # Filter the dictionary if regions are provided
-    if args.regions:
-        mean_intensities_dict = {region: mean_intensities_dict[region] for region in args.regions if region in mean_intensities_dict}
+    if args.region_ids:
+        mean_intensities_dict = {region: mean_intensities_dict[region] for region in args.region_ids if region in mean_intensities_dict}
 
     # Print results
     for region, mean_intensity in mean_intensities_dict.items():
@@ -117,18 +120,13 @@ def write_to_csv(data, output_path):
 def main():
     args = parse_args()
 
-    samples = get_samples(args.dirs, args.pattern)
-
-    if samples == ['.']:
-        samples[0] = Path.cwd().name
+    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
 
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
 
-            cwd = Path(".").resolve()
-
-            sample_path = Path(sample).resolve() if sample != cwd.name else Path().resolve()
+            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
             # Load or make the native atlas image
             native_atlas_path = next(sample_path.glob(str(args.native_atlas)), None)
@@ -138,7 +136,7 @@ def main():
                 fixed_reg_input = Path(sample_path, args.reg_outputs, args.fixed_reg_in) 
                 if not fixed_reg_input.exists():
                     fixed_reg_input = sample_path / args.reg_outputs / "autofl_50um_fixed_reg_input.nii.gz"
-                native_atlas = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_atlas_path)
+                native_atlas = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.atlas, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_atlas_path)
 
             # Load the segmentation image
             seg_path = next(sample_path.glob(str(args.seg)), None)
