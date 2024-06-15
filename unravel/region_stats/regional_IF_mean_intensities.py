@@ -6,7 +6,7 @@ Measure mean intensity of immunofluorescence staining in brain regions in atlas 
 Usage: 
     atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; regions=$(img_unique -i $atlas) ; for i in <asterisk>.nii.gz ; do rstats_IF_mean -i $i -a $atlas -r $regions ; done
     mkdir regional_mean_intensities
-    mv *_regional_mean_intensities.csv regional_mean_intensities/
+    mv <asterisk>_regional_mean_intensities.csv regional_mean_intensities/
     cd regional_mean_intensities
     rstats_IF_mean_summary 
 

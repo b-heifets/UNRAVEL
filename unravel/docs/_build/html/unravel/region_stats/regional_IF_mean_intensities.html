@@ -30,6 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -45,6 +46,7 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/region_stats/regional_IF_mean_intensities';</script>
     <link rel="icon" href="../../_static/favicon.png"/>
@@ -488,7 +490,15 @@
                   
   <section id="module-unravel.region_stats.regional_IF_mean_intensities">
 <span id="unravel-region-stats-regional-if-mean-intensities-module"></span><span id="unravel-region-stats-regional-if-mean-intensities"></span><h1>unravel.region_stats.regional_IF_mean_intensities module<a class="headerlink" href="#module-unravel.region_stats.regional_IF_mean_intensities" title="Link to this heading">#</a></h1>
-<p>Measure mean intensity of immunofluorescence staining in brain regions.</p>
+<p>Measure mean intensity of immunofluorescence staining in brain regions in atlas space.</p>
+<dl class="simple">
+<dt>Usage:</dt><dd><p>atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; regions=$(img_unique -i $atlas) ; for i in &lt;asterisk&gt;.nii.gz ; do rstats_IF_mean -i $i -a $atlas -r $regions ; done
+mkdir regional_mean_intensities
+mv &lt;asterisk&gt;_regional_mean_intensities.csv regional_mean_intensities/
+cd regional_mean_intensities
+rstats_IF_mean_summary</p>
+</dd>
+</dl>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.region_stats.regional_IF_mean_intensities.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_IF_mean_intensities.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_IF_mean_intensities.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_IF_mean_intensities.parse_args" title="Link to this definition">#</a></dt>

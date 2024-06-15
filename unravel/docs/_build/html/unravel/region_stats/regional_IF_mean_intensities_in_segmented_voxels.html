@@ -30,6 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -45,6 +46,7 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels';</script>
     <link rel="icon" href="../../_static/favicon.png"/>
@@ -491,16 +493,14 @@
 <p>Measure mean intensity of immunofluorescence staining in brain regions for segmented voxels.</p>
 <p>Run from experiment folder containing sample?? folders.</p>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>regional_IF_mean_intensities_in_segmented_voxels.py -i ochann -s ochann_seg_ilastik_1</p>
+<dt>Usage:</dt><dd><p>rstats_IF_mean_in_seg -i &lt;asterisk&gt;.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz</p>
 </dd>
-<dt>Inputs:</dt><dd><ul class="simple">
-<li><p>./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1.nii.gz</p></li>
-<li><p>path/fluo_image</p></li>
+<dt>Default output:</dt><dd><ul class="simple">
+<li><p>./sample??/seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv</p></li>
 </ul>
 </dd>
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>./sample??/ochann_seg_ilastik_1/sample??_ABA_ochann_seg_ilastik_1_regional_mean_intensities_in_seg_voxels.csv</p></li>
-</ul>
+<dt>Next steps:</dt><dd><p>utils_agg_files -i seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv
+rstats_IF_mean_summary</p>
 </dd>
 </dl>
 <dl class="py function">
@@ -510,8 +510,23 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.calculate_mean_intensity">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.</span></span><span class="sig-name descname"><span class="pre">calculate_mean_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluo_image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ABA_seg_image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#calculate_mean_intensity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.calculate_mean_intensity" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.</span></span><span class="sig-name descname"><span class="pre">calculate_mean_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">IF_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ABA_seg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#calculate_mean_intensity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.calculate_mean_intensity" title="Link to this definition">#</a></dt>
 <dd><p>Calculates mean intensity for each region in the atlas.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>IF_img</strong> (<em>np.ndarray</em>) – 3D image of immunofluorescence staining.</p></li>
+<li><p><strong>ABA_seg</strong> (<em>np.ndarray</em>) – 3D image of segmented brain regions.</p></li>
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Namespace" title="(in Python v3.12)"><em>argparse.Namespace</em></a>) – Command line arguments.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>{region_id: mean_IF_in_seg}</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>mean_intensities_dict</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

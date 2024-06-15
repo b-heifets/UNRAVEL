@@ -1,31 +1,227 @@
 # Guide
 
+* If you are unfamiliar with the terminal, please review these [command line tutorials](https://andysbrainbook.readthedocs.io/en/latest/index.html)
+
 ## Help on commands
-For help/info on a command, run
+For help/info on a command, run this in the terminal:
 ```bash
 <command> -h
 ```
 
+:::{hint}
+* The symbols < and > indicate placeholders. Replace \<command\> with the actual command name you want to learn more about.
+
+* Square brackets [ ] in command syntax signify optional elements. 
+:::
+
 ## Listing commands
 ```bash
-# List all commands and their descriptions
-unravel_commands -d 
-
 # List common commands and their descriptions
 unravel_commands -c -d
+
+# List all commands and their descriptions
+unravel_commands -d 
 
 # List the modules run by each command
 unravel_commands -m
 ```
 
-```{admonition} Info on commands
+:::{hint}
+* **Prefixes** group together related commands. Use **tab completion** in the terminal to quickly view and access sets of commands within each group.
+:::
+
+## Common commands
+
+::::{tab-set}
+
+::: {tab-item} Registration
+- [**reg_prep**](unravel.register.prep_reg): Prepare registration (resample the autofluo image).
+- [**reg**](unravel.register.reg): Perform registration (register the autofluo image to an average template).
+- [**reg_check**](unravel.register.check_reg): Check registration (aggregate the autofluo and warped atlas images).
+:::
+
+::: {tab-item} Warping
+- [**warp_to_atlas**](unravel.warp.to_atlas): Warp images to atlas space.
+- [**warp_to_native**](unravel.warp.to_native): Warp images to native space.
+:::
+
+::: {tab-item} Segmentation
+- [**seg_copy_tifs**](unravel.segment.copy_tifs): Copy TIF images (copy select tifs to target dir for training ilastik).
+- [**seg_brain_mask**](unravel.segment.brain_mask): Create brain mask (segment resampled autofluo tifs).
+- [**seg_ilastik**](unravel.segment.ilastik_pixel_classification): Perform pixel classification w/ Ilastik to segment features of interest.
+:::
+
+::: {tab-item} Voxel-wise stats
+- [**vstats_prep**](unravel.voxel_stats.prep_vstats): Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).
+- [**vstats_z_score**](unravel.voxel_stats.z_score): Z-score images.
+- [**vstats_whole_to_avg**](unravel.voxel_stats.whole_to_LR_avg): Average left and right hemispheres together.
+- [**vstats**](unravel.voxel_stats.vstats): Compute voxel statistics.
+:::
+
+::: {tab-item} Cluster-wise stats
+- [**cluster_fdr_range**](unravel.cluster_stats.fdr_range): Get FDR q value range yielding clusters.
+- [**cluster_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
+- [**cluster_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
+- [**cluster_validation**](unravel.cluster_stats.validate_clusters): Validate clusters w/ cell/label density measurements.
+- [**cluster_summary**](unravel.cluster_stats.valid_clusters_summary): Summarize info on valid clusters (run after cluster_validation).
+:::
+
+::: {tab-item} Region-wise stats
+- [**rstats**](unravel.region_stats.regional_cell_densities): Compute regional cell densities.
+- [**rstats_summary**](unravel.region_stats.regional_cell_densities_summary): Summarize regional cell densities.
+:::
+
+::: {tab-item} Image I/O
+- [**io_metadata**](unravel.image_io.metadata): Handle image metadata.
+- [**io_nii_info**](unravel.image_io.nii_info): Print info about NIfTI files.
+:::
+
+::: {tab-item} Image tools
+- [**img_avg**](unravel.image_tools.avg): Average NIfTI images.
+- [**img_unique**](unravel.image_tools.uniq_intensities): Find unique intensities in images.
+- [**img_max**](unravel.image_tools.max): Print the max intensity value in an image.
+- [**img_spatial_avg**](unravel.image_tools.spatial_averaging): Perform spatial averaging on images.
+- [**img_rb**](unravel.image_tools.tif_rb): Apply rolling ball filter to TIF images.
+:::
+
+::: {tab-item} Utilities
+- [**utils_agg_files**](unravel.utilities.aggregate_files_from_sample_dirs): Aggregate files from sample directories.
+- [**utils_prepend**](unravel.utilities.prepend_conditions): Prepend conditions to files using sample_key.csv.
+- [**utils_rename**](unravel.utilities.rename): Rename files.
+:::
+
+::::
+
+:::::{admonition} All commands
 :class: note dropdown
-{py:mod}`unravel.command_list` 
 
-unravel_commands runs ./repo_root_dir/unravel/command_list.py
+::::{tab-set}
 
-Commands are defined in the `[project.scripts]` section of the `pyproject.toml` in the root directory of the [UNRAVEL repository](https://github.com/b-heifets/UNRAVEL/blob/dev/pyproject.toml).
+:::{tab-item} Registration
+- [**reg_prep**](unravel.register.prep_reg): Prepare registration (resample the autofluo image).
+- [**reg**](unravel.register.reg): Perform registration (register the autofluo image to an average template).
+- [**reg_check**](unravel.register.check_reg): Check registration (aggregate the autofluo and warped atlas images).
+- [**reg_check_mask**](unravel.register.check_brain_mask): Check brain mask for over/under segmentation.
+:::
+
+:::{tab-item} Warping
+- [**warp_to_atlas**](unravel.warp.to_atlas): Warp images to atlas space.
+- [**warp_to_native**](unravel.warp.to_native): Warp images to native space.
+- [**warp**](unravel.warp.warp): Warp between moving and fixed images.
+:::
+
+:::{tab-item} Segmentation
+- [**seg_copy_tifs**](unravel.segment.copy_tifs): Copy TIF images (copy select tifs to target dir for training ilastik).
+- [**seg_brain_mask**](unravel.segment.brain_mask): Create brain mask (segment resampled autofluo tifs).
+- [**seg_ilastik**](unravel.segment.ilastik_pixel_classification): Perform pixel classification w/ Ilastik to segment features of interest.
+:::
+
+:::{tab-item} Voxel-wise stats
+- [**vstats_apply_mask**](unravel.voxel_stats.apply_mask): Apply mask to image (e.g., nullify artifacts or isolate signals).
+- [**vstats_prep**](unravel.voxel_stats.prep_vstats): Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).
+- [**vstats_z_score**](unravel.voxel_stats.z_score): Z-score images.
+- [**vstats_whole_to_avg**](unravel.voxel_stats.whole_to_LR_avg): Average left and right hemispheres together.
+- [**vstats_hemi_to_avg**](unravel.voxel_stats.hemi_to_LR_avg): If left and right hemispheres were processed separately (less common), average them together.
+- [**vstats**](unravel.voxel_stats.vstats): Compute voxel statistics.
+- [**vstats_mirror**](unravel.voxel_stats.mirror): Flip and optionally shift content of images in atlas space.
+:::
+
+:::{tab-item} Cluster-wise stats
+- [**cluster_fdr_range**](unravel.cluster_stats.fdr_range): Get FDR q value range yielding clusters.
+- [**cluster_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
+- [**cluster_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
+- [**cluster_validation**](unravel.cluster_stats.validate_clusters): Validate clusters w/ cell/label density measurements.
+- [**cluster_summary**](unravel.cluster_stats.valid_clusters_summary): Summarize info on valid clusters (run after cluster_validation).
+- [**cluster_org_data**](unravel.cluster_stats.org_data): Organize CSVs from cluster_validation.
+- [**cluster_group_data**](unravel.cluster_stats.group_bilateral_data): Group bilateral cluster data.
+- [**cluster_stats**](unravel.cluster_stats.stats): Compute cluster validation statistics.
+- [**cluster_index**](unravel.cluster_stats.index): Make a valid cluster map and sunburst plots.
+- [**cluster_brain_model**](unravel.cluster_stats.brain_model): Make a 3D brain model from a cluster map (for DSI studio).
+- [**cluster_table**](unravel.cluster_stats.table): Create a table of cluster validation data.
+- [**cluster_prism**](unravel.cluster_stats.prism): Generate CSVs for bar charts in Prism.
+- [**cluster_legend**](unravel.cluster_stats.legend): Make a legend of regions in cluster maps.
+- [**cluster_sunburst**](unravel.cluster_stats.sunburst): Create a sunburst plot of regional volumes.
+- [**cluster_find_incongruent_clusters**](unravel.cluster_stats.find_incongruent_clusters): Find clusters where the effect direction does not match the prediction of cluster_fdr (for validation of non-directional p value maps).
+- [**cluster_crop**](unravel.cluster_stats.crop_clusters): Crop clusters to a bounding box.
+- [**effect_sizes**](unravel.cluster_stats.effect_sizes.effect_sizes): Calculate effect sizes for clusters.
+- [**effect_sizes_sex_abs**](unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute): Calculate absolute effect sizes by sex.
+- [**effect_sizes_sex_rel**](unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative): Calculate relative effect sizes by sex.
+:::
+
+:::{tab-item} Region-wise stats
+- [**rstats**](unravel.region_stats.regional_cell_densities): Compute regional cell densities.
+- [**rstats_summary**](unravel.region_stats.regional_cell_densities_summary): Summarize regional cell densities.
+- [**rstats_counts**](unravel.region_stats.regional_counts): Count cells in regions.
+- [**rstats_volumes**](unravel.region_stats.regional_volumes): Compute volumes of regions.
+- [**rstats_IF_mean**](unravel.region_stats.regional_IF_mean_intensities): Compute mean immunofluo intensities for regions.
+- [**rstats_IF_mean_in_seg**](unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels): Compute mean immunofluo intensities in segmented voxels.
+- [**rstats_IF_mean_summary**](unravel.region_stats.regional_IF_mean_intensities_summary): Summarize mean immunofluo intensities for regions.
+:::
+
+:::{tab-item} Image I/O
+- [**io_metadata**](unravel.image_io.metadata): Handle image metadata.
+- [**io_img**](unravel.image_io.img_io): Image I/O operations.
+- [**io_nii_info**](unravel.image_io.nii_info): Print info about NIfTI files.
+- [**io_nii_hd**](unravel.image_io.nii_hd): Print NIfTI headers.
+- [**io_nii**](unravel.image_io.nii_io): NIfTI I/O operations (binarize, convert data type, scale, etc).
+- [**io_reorient_nii**](unravel.image_io.reorient_nii): Reorient NIfTI files.
+- [**io_nii_to_tifs**](unravel.image_io.nii_to_tifs): Convert NIfTI files to TIFFs.
+- [**io_nii_to_zarr**](unravel.image_io.nii_to_zarr): Convert NIfTI files to Zarr.
+- [**io_zarr_to_nii**](unravel.image_io.zarr_to_nii): Convert Zarr format to NIfTI.
+- [**io_h5_to_tifs**](unravel.image_io.h5_to_tifs): Convert H5 files to TIFFs.
+- [**io_tif_to_tifs**](unravel.image_io.tif_to_tifs): Convert TIF to TIFF series.
+- [**io_img_to_npy**](unravel.image_io.img_to_npy): Convert images to Numpy arrays.
+:::
+
+:::{tab-item} Image tools
+- [**img_avg**](unravel.image_tools.avg): Average NIfTI images.
+- [**img_unique**](unravel.image_tools.uniq_intensities): Find unique intensities in images.
+- [**img_max**](unravel.image_tools.max): Print the max intensity value in an image.
+- [**img_bbox**](unravel.image_tools.bbox): Compute bounding box of non-zero voxels in an image.
+- [**img_spatial_avg**](unravel.image_tools.spatial_averaging): Perform spatial averaging on images.
+- [**img_rb**](unravel.image_tools.tif_rb): Apply rolling ball filter to TIF images.
+- [**img_DoG**](unravel.image_tools.tif_DoG): Apply Difference of Gaussian filter to TIF images.
+- [**img_pad**](unravel.image_tools.pad_img): Pad images.
+- [**img_extend**](unravel.image_tools.extend_image): Extend images (add padding to one side).
+- [**img_transpose**](unravel.image_tools.transpose_axes): Transpose image axes.
+:::
+
+:::{tab-item} Atlas tools
+- [**atlas_relabel**](unravel.image_tools.atlas.relabel_nii): Relabel atlas IDs.
+- [**atlas_wireframe**](unravel.image_tools.atlas.wireframe): Make an atlas wireframe.
+:::
+
+:::{tab-item} Utilities
+- [**utils_agg_files**](unravel.utilities.aggregate_files_from_sample_dirs): Aggregate files from sample directories.
+- [**utils_agg_files_rec**](unravel.utilities.aggregate_files_w_recursive_search): Recursively aggregate files.
+- [**utils_prepend**](unravel.utilities.prepend_conditions): Prepend conditions to files using sample_key.csv.
+- [**utils_rename**](unravel.utilities.rename): Rename files.
+- [**utils_toggle**](unravel.utilities.toggle_samples): Toggle sample?? folders for select batch processing.
+- [**utils_clean_tifs**](unravel.utilities.clean_tif_dirs): Clean TIF directories (no spaces, move non-tifs).
+:::
+
+::::
+
+:::::
+
+
+:::{admonition} More info on commands
+:class: note dropdown
+unravel_commands runs ./\<repo_root_dir\>/unravel/command_list.py
+
+Its help guide is here: {py:mod}`unravel.command_list` 
+
+Commands are defined in the `[project.scripts]` section of the [pyproject.toml](https://github.com/b-heifets/UNRAVEL/blob/dev/pyproject.toml) in the root directory of the UNRAVEL repository (repo).
+
+If new commands are added to run new scripts (a.k.a. modules), reinstall the unravel package with pip. 
+
+```bash
+cd <path to the root directory of the UNRAVEL repo>
+pip install -e .
 ```
+:::
+
+
 
 ## Set up
 
@@ -211,36 +407,6 @@ io_metadata -i <tif_dir> -x $XY -z $Z  # Specifying x and z voxel sizes in micro
 
 This section provides an overview of common commands available in UNRAVEL, ~organized by their respective steps. 
 
-```{admonition} Common commands
-:class: note dropdown
-- [Registration](#registration)
-    - reg_prep
-    - seg_copy_tifs
-    - seg_brain_mask
-    - reg
-    - reg_check
-- [Segmentation](#segmentation)
-    - seg_copy_tifs
-    - seg_ilastik
-- [Voxel-wise stats](#voxel-wise-stats)
-    - vstats_prep
-    - vstats_z_score
-    - utils_agg_files
-    - vstats_whole_to_avg
-    - img_avg
-    - vstats
-- [Cluster correction](#cluster-correction)
-    - cluster_fdr_range
-    - cluster_fdr
-    - cluster_mirror_indices
-- [Cluster validation](#cluster-validation)
-    - cluster_validation
-    - cluster_summary
-- [Region-wise stats](#region-wise-stats)
-    - region_stats
-    - region_summary
-```
-
 ### Registration
 #### `reg_prep`
 {py:mod}`unravel.register.prep_reg` 
@@ -251,17 +417,29 @@ reg_prep -i *.czi -x $XY -z $Z -v  # -i options: tif_dir, .h5, .zarr, .tif
 
 #### `seg_copy_tifs`
 {py:mod}`unravel.segment.copy_tifs`
-* Copy resampled autofluo .tif files for segmenting the brain with ilastik
+* Copy resampled autofluo .tif files for making a brain mask with ilastik
 ```bash
 seg_copy_tifs -i reg_inputs/autofl_??um_tifs -s 0000 0005 0050 -o $(dirname $BRAIN_MASK_ILP) -e $DIRS
 ```  
 
 #### `seg_brain_mask`
 {py:mod}`unravel.segment.brain_mask`
-* Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz
+* Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz for reg
 ```bash
 seg_brain_mask -ilp $BRAIN_MASK_ILP -v -e $DIRS
 ```
+
+:::{hint} 
+seg_brain_mask zeros out voxels outside of the brain. This prevents the average template (moving image) from being pulled outward during registration (reg). 
+
+If non-zero voxles outside the brain remain and are affecting reg quality, use 3D slicer to zero them out by painting in 3D (segmentation module). 
+
+If there is missing tissue, use 3D slicer to fill in gaps. 
+:::
+
+:::{todo}
+Add tutorial for 3D slicer
+:::
 
 #### `reg`
 {py:mod}`unravel.register.reg`

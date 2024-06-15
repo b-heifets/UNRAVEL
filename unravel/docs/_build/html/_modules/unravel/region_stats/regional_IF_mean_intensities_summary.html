@@ -29,6 +29,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -44,6 +45,7 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/regional_IF_mean_intensities_summary';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
@@ -348,10 +350,13 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Plot mean IF intensity for a given region intensity ID for 3+ groups (only works for positive data)</span>
+<span class="sd">Plot mean IF intensities and comparisons for each region intensity ID (only works for positive data).</span>
 
-<span class="sd">Usage:</span>
-<span class="sd">    regional_IF_mean_intensities_summary.py -r 1 --order group3 group2 group1 --labels Group_3 Group_2 Group_1 -t dunnnett</span>
+<span class="sd">Usage for Tukey&#39;s tests:</span>
+<span class="sd">    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary -r $(img_unique -i $atlas) --order group3 group2 group1 --labels Group_3 Group_2 Group_1</span>
+
+<span class="sd">Usage for t-test:</span>
+<span class="sd">    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -365,10 +370,11 @@
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">dunnett</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span><span class="p">,</span> <span class="n">dunnett</span>
 <span class="kn">from</span> <span class="nn">statsmodels.stats.multicomp</span> <span class="kn">import</span> <span class="n">pairwise_tukeyhsd</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+
 
 
 <div class="viewcode-block" id="parse_args">
@@ -379,7 +385,7 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;--lut&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;LUT csv name (in unravel/core/csvs/). Default: gubra__region_ID_side_name_abbr.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;gubra__region_ID_side_name_abbr.csv&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--order&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Group Order for plotting (must match 1st word of CSVs)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--labels&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Group Labels in same order&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--test&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Choose between &quot;tukey&quot; and &quot;dunnett&quot; post-hoc tests. (Default: tukey)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;tukey&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tukey&#39;</span><span class="p">,</span> <span class="s1">&#39;dunnett&#39;</span><span class="p">],</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--test&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Choose between &quot;tukey&quot;, &quot;dunnett&quot;, and &quot;ttest&quot; post-hoc tests. (Default: tukey)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;tukey&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;tukey&#39;</span><span class="p">,</span> <span class="s1">&#39;dunnett&#39;</span><span class="p">,</span> <span class="s1">&#39;ttest&#39;</span><span class="p">],</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-alt&#39;</span><span class="p">,</span> <span class="s2">&quot;--alternate&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of tails and direction for Dunnett&#39;s test {&#39;two-sided&#39;, &#39;less&#39; (means &lt; ctrl), &#39;greater&#39;}. Default: two-sided&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;two-sided&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--show_plot&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show plot if flag is provided&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
@@ -429,6 +435,25 @@
     <span class="k">return</span> <span class="n">region_df</span><span class="p">[</span><span class="s2">&quot;Region_ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="perform_t_tests">
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.perform_t_tests">[docs]</a>
+<span class="k">def</span> <span class="nf">perform_t_tests</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform t-tests between groups in the DataFrame.&quot;&quot;&quot;</span>
+    <span class="n">comparisons</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">order</span><span class="p">)):</span>
+            <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span> <span class="o">=</span> <span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">order</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">data1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group1</span><span class="p">][</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span>
+            <span class="n">data2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;group&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group2</span><span class="p">][</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span>
+            <span class="n">t_stat</span><span class="p">,</span> <span class="n">p_value</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="n">data2</span><span class="p">)</span>
+            <span class="n">comparisons</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s1">&#39;group1&#39;</span><span class="p">:</span> <span class="n">group1</span><span class="p">,</span>
+                <span class="s1">&#39;group2&#39;</span><span class="p">:</span> <span class="n">group2</span><span class="p">,</span>
+                <span class="s1">&#39;p-adj&#39;</span><span class="p">:</span> <span class="n">p_value</span>
+            <span class="p">})</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">comparisons</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="plot_data">
 <a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.plot_data">[docs]</a>
 <span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">csv_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test_type</span><span class="o">=</span><span class="s1">&#39;tukey&#39;</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s1">&#39;two-sided&#39;</span><span class="p">):</span>
@@ -470,6 +495,7 @@
 
     <span class="c1"># Formatting</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Mean IF Intensity&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;group_label&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())))</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">(),</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;both&#39;</span><span class="p">,</span> <span class="n">which</span><span class="o">=</span><span class="s1">&#39;major&#39;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s1">&#39;top&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
@@ -481,7 +507,8 @@
     <span class="n">sns</span><span class="o">.</span><span class="n">swarmplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s1">&#39;group_label&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">,</span> <span class="n">hue</span><span class="o">=</span><span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="n">group_colors</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
     
     <span class="c1"># Remove the legend created by hue</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend_</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend_</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">legend_</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
 
     <span class="c1"># Perform the chosen post-hoc test</span>
     <span class="k">if</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s1">&#39;tukey&#39;</span><span class="p">:</span>
@@ -499,8 +526,11 @@
             <span class="s1">&#39;p-adj&#39;</span><span class="p">:</span> <span class="n">test_stats</span><span class="o">.</span><span class="n">pvalue</span>
         <span class="p">})</span>
         <span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;reject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;p-adj&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span>
-    <span class="n">significant_comparisons</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;reject&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s1">&#39;ttest&#39;</span><span class="p">:</span>
+        <span class="n">test_df</span> <span class="o">=</span> <span class="n">perform_t_tests</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">order</span><span class="p">)</span>
+        <span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;reject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;p-adj&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span>
 
+    <span class="n">significant_comparisons</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;reject&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
     <span class="n">y_max</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
     <span class="n">y_min</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
     <span class="n">height_diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
@@ -527,16 +557,37 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">((</span><span class="n">x1</span><span class="o">+</span><span class="n">x2</span><span class="p">)</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">+</span> <span class="mf">0.8</span><span class="o">*</span><span class="n">height_diff</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;xx-large&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
         <span class="n">y_pos</span> <span class="o">+=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">height_diff</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">height_diff</span><span class="p">)</span>
+
+
+    <span class="c1"># Calculate y-axis limits</span>
+    <span class="n">y_max</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">y_min</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
+    <span class="n">height_diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
+    <span class="n">y_pos</span> <span class="o">=</span> <span class="n">y_max</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">height_diff</span>
+
+    <span class="c1"># Ensure the y-axis starts from the minimum value, allowing for negative values</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">y_min</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">height_diff</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">height_diff</span><span class="p">)</span>
+
+
+
+    <span class="c1"># plt.ylim(0, y_pos + 2*height_diff)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
     <span class="c1"># Save the plot</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;regional_IF_mean_summary&#39;</span><span class="p">)</span>  <span class="c1"># Replace &#39;output_folder_name&#39; with your desired folder name</span>
+    <span class="n">output_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
     <span class="n">title</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">region_abbr</span><span class="si">}</span><span class="s2">)&quot;</span>
     <span class="n">wrapped_title</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="mi">42</span><span class="p">)</span>  <span class="c1"># wraps at x characters. Adjust as needed.</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">wrapped_title</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
     <span class="n">region_abbr</span> <span class="o">=</span> <span class="n">region_abbr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span> <span class="c1"># Replace problematic characters for file paths</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;region_</span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">region_abbr</span><span class="si">}</span><span class="s1">.pdf&#39;</span><span class="p">)</span>
+
+    <span class="n">is_significant</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">significant_comparisons</span><span class="o">.</span><span class="n">empty</span>
+    <span class="n">file_prefix</span> <span class="o">=</span> <span class="s1">&#39;_&#39;</span> <span class="k">if</span> <span class="n">is_significant</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_prefix</span><span class="si">}</span><span class="s2">region_</span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">region_abbr</span><span class="si">}</span><span class="s2">.pdf&quot;</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_folder</span> <span class="o">/</span> <span class="n">file_name</span><span class="p">)</span>
+
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">show_plot</span><span class="p">:</span>
@@ -561,7 +612,6 @@
 
     <span class="c1"># Process each region ID</span>
     <span class="k">for</span> <span class="n">region_id</span> <span class="ow">in</span> <span class="n">region_ids_to_process</span><span class="p">:</span>
-        <span class="n">csv_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">lut</span>
 
         <span class="n">plot_data</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">order</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">csv_path</span><span class="o">=</span><span class="n">lut</span><span class="p">,</span> <span class="n">test_type</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">show_plot</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">alternate</span><span class="p">)</span></div>
 

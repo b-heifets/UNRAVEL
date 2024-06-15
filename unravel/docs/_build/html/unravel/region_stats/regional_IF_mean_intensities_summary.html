@@ -30,6 +30,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=872d93e8" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -45,6 +46,7 @@
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/region_stats/regional_IF_mean_intensities_summary';</script>
     <link rel="icon" href="../../_static/favicon.png"/>
@@ -488,9 +490,11 @@
                   
   <section id="module-unravel.region_stats.regional_IF_mean_intensities_summary">
 <span id="unravel-region-stats-regional-if-mean-intensities-summary-module"></span><span id="unravel-region-stats-regional-if-mean-intensities-summary"></span><h1>unravel.region_stats.regional_IF_mean_intensities_summary module<a class="headerlink" href="#module-unravel.region_stats.regional_IF_mean_intensities_summary" title="Link to this heading">#</a></h1>
-<p>Plot mean IF intensity for a given region intensity ID for 3+ groups (only works for positive data)</p>
+<p>Plot mean IF intensities and comparisons for each region intensity ID (only works for positive data).</p>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>regional_IF_mean_intensities_summary.py -r 1 –order group3 group2 group1 –labels Group_3 Group_2 Group_1 -t dunnnett</p>
+<dt>Usage for Tukey’s tests:</dt><dd><p>atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary -r $(img_unique -i $atlas) –order group3 group2 group1 –labels Group_3 Group_2 Group_1</p>
+</dd>
+<dt>Usage for t-test:</dt><dd><p>atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary –region_ids $(img_unique -i $atlas) –order group2 group1 –labels Group_2 Group_1 -t ttest</p>
 </dd>
 </dl>
 <dl class="py function">
@@ -512,6 +516,12 @@
 <dt class="sig sig-object py" id="unravel.region_stats.regional_IF_mean_intensities_summary.get_all_region_ids">
 <span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_IF_mean_intensities_summary.</span></span><span class="sig-name descname"><span class="pre">get_all_region_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_IF_mean_intensities_summary.html#get_all_region_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_IF_mean_intensities_summary.get_all_region_ids" title="Link to this definition">#</a></dt>
 <dd><p>Retrieve all region IDs from the provided CSV.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.region_stats.regional_IF_mean_intensities_summary.perform_t_tests">
+<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_IF_mean_intensities_summary.</span></span><span class="sig-name descname"><span class="pre">perform_t_tests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_IF_mean_intensities_summary.html#perform_t_tests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_IF_mean_intensities_summary.perform_t_tests" title="Link to this definition">#</a></dt>
+<dd><p>Perform t-tests between groups in the DataFrame.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -576,6 +586,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.get_region_details"><code class="docutils literal notranslate"><span class="pre">get_region_details()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.get_all_region_ids"><code class="docutils literal notranslate"><span class="pre">get_all_region_ids()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.perform_t_tests"><code class="docutils literal notranslate"><span class="pre">perform_t_tests()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.plot_data"><code class="docutils literal notranslate"><span class="pre">plot_data()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>

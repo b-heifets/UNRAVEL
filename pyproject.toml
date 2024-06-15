@@ -49,7 +49,9 @@ dev = [
     "pydata_sphinx_theme",
     "sphinx",
     "sphinx-autobuild", 
-    "sphinx-togglebutton"
+    "sphinx-togglebutton", 
+    "sphinx-design"
+
 ]
 
 [project.urls]

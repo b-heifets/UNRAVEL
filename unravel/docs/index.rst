@@ -68,7 +68,6 @@ UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet
 Getting started
 ---------------
 * `Guide on immunofluorescence staining, iDISCO+, & lightsheet fluorescence microscopy <https://docs.google.com/document/d/16yowBhiBQWz8_VX2t9Rf6Xo3Ub4YPYD6qeJP6vJo6P4/edit?usp=sharing>`_
-* `Command line tutorials <https://andysbrainbook.readthedocs.io/en/latest/index.html>`_
 * :doc:`installation`
 * :doc:`guide`
 * :doc:`unravel/toc`

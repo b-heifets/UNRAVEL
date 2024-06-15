@@ -43,7 +43,8 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.todo',
     'sphinx_togglebutton',
-    'sphinx.ext.intersphinx'
+    'sphinx.ext.intersphinx', 
+    'sphinx_design'
 ]
 
 intersphinx_mapping = {
@@ -62,6 +63,10 @@ autodoc_typehints = 'description'
 
 myst_enable_extensions = [
     "colon_fence"
+]
+
+suppress_warnings = [
+    'myst.xref_ambiguous',  # Suppresses ambiguous reference warnings from MyST-parser
 ]
 
 templates_path = ['_templates']
