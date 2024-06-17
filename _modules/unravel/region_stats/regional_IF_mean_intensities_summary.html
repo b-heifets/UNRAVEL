@@ -350,13 +350,27 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Plot mean IF intensities and comparisons for each region intensity ID (only works for positive data).</span>
+<span class="sd">Output plots of mean IF intensities for each region intensity ID.</span>
 
-<span class="sd">Usage for Tukey&#39;s tests:</span>
-<span class="sd">    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary -r $(img_unique -i $atlas) --order group3 group2 group1 --labels Group_3 Group_2 Group_1</span>
+<span class="sd">Prereqs:</span>
+<span class="sd">    - Generate CSV inputs withs rstats_IF_mean or rstats_IF_mean_in_seg</span>
+<span class="sd">    - Aggregate CSV inputs: utils_agg_files -i seg_dir/regional_mean_IF_in_seg.csv -e $DIRS -v -a</span>
+<span class="sd">    - Add coditions to input CSV file names: utils_prepend -sk $SAMPLE_KEY -f</span>
 
-<span class="sd">Usage for t-test:</span>
-<span class="sd">    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest</span>
+<span class="sd">Inputs: </span>
+<span class="sd">    - &lt;asterisk&gt;.csv in the working dir with these columns: &#39;Region_Intensity&#39;, &#39;Mean_IF_Intensity&#39;</span>
+
+<span class="sd">Usage for t-tests:</span>
+<span class="sd">    rstats_IF_mean_summary --order Control Treatment --labels Control Treatment -t ttest</span>
+
+<span class="sd">Usage for Tukey&#39;s tests w/ reordering and renaming of conditions:</span>
+<span class="sd">    rstats_IF_mean_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1</span>
+
+<span class="sd">Usage with a custom atlas:</span>
+<span class="sd">    atlas=path/custom_atlas.nii.gz ; rstats_IF_mean_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest</span>
+
+<span class="sd">The look up table (LUT) csv has these columns: </span>
+<span class="sd">    &#39;Region_ID&#39;, &#39;Side&#39;, &#39;Name&#39;, &#39;Abbr&#39;</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -392,6 +406,8 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
+<span class="c1"># TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in cluster_stats/stats.py. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. </span>
+
 
 <span class="c1"># Set Arial as the font</span>
 <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Arial&#39;</span>
@@ -416,7 +432,24 @@
                     <span class="s1">&#39;mean_intensity&#39;</span><span class="p">:</span> <span class="n">mean_intensity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="p">})</span>
     
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    [red1]No data found for region ID </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_max_region_id_from_csvs">
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.get_max_region_id_from_csvs">[docs]</a>
+<span class="k">def</span> <span class="nf">get_max_region_id_from_csvs</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve the maximum Region_Intensity from all input CSVs.&quot;&quot;&quot;</span>
+    <span class="n">max_region_id</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">):</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">max_id_in_file</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;Region_Intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">max_id_in_file</span> <span class="o">&gt;</span> <span class="n">max_region_id</span><span class="p">:</span>
+                <span class="n">max_region_id</span> <span class="o">=</span> <span class="n">max_id_in_file</span>
+    <span class="k">return</span> <span class="n">max_region_id</span></div>
 
 
 <div class="viewcode-block" id="get_region_details">
@@ -433,6 +466,32 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Retrieve all region IDs from the provided CSV.&quot;&quot;&quot;</span>
     <span class="n">region_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_path</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">region_df</span><span class="p">[</span><span class="s2">&quot;Region_ID&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="filter_region_ids">
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.filter_region_ids">[docs]</a>
+<span class="k">def</span> <span class="nf">filter_region_ids</span><span class="p">(</span><span class="n">region_ids</span><span class="p">,</span> <span class="n">max_region_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Filter region IDs to be within the maximum region ID from the CSVs.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">region_id</span> <span class="k">for</span> <span class="n">region_id</span> <span class="ow">in</span> <span class="n">region_ids</span> <span class="k">if</span> <span class="n">region_id</span> <span class="o">&lt;=</span> <span class="n">max_region_id</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="remove_zero_intensity_regions">
+<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.remove_zero_intensity_regions">[docs]</a>
+<span class="k">def</span> <span class="nf">remove_zero_intensity_regions</span><span class="p">(</span><span class="n">region_ids</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Remove regions with Mean_IF_Intensity of 0 across all input CSVs.&quot;&quot;&quot;</span>
+    <span class="n">valid_region_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">region_id</span> <span class="ow">in</span> <span class="n">region_ids</span><span class="p">:</span>
+        <span class="n">all_zero</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">filename</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">):</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+                <span class="n">mean_intensity</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Region_Intensity&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region_id</span><span class="p">][</span><span class="s2">&quot;Mean_IF_Intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mean_intensity</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">mean_intensity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">all_zero</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">break</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">all_zero</span><span class="p">:</span>
+            <span class="n">valid_region_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">region_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">valid_region_ids</span></div>
 
 
 <div class="viewcode-block" id="perform_t_tests">
@@ -458,6 +517,10 @@
 <a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.plot_data">[docs]</a>
 <span class="k">def</span> <span class="nf">plot_data</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">csv_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">test_type</span><span class="o">=</span><span class="s1">&#39;tukey&#39;</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="s1">&#39;two-sided&#39;</span><span class="p">):</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="n">region_id</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;group&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    [red1]&#39;group&#39; column not found in the DataFrame for </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2">. Ensure the CSV files contain the correct data.&quot;</span><span class="p">)</span>
+
     <span class="n">region_name</span><span class="p">,</span> <span class="n">region_abbr</span> <span class="o">=</span> <span class="n">get_region_details</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">)</span>
     
     <span class="c1"># Define a list of potential colors</span>
@@ -610,9 +673,15 @@
     <span class="n">lut</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">lut</span>
     <span class="n">region_ids_to_process</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">region_ids</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">region_ids</span> <span class="k">else</span> <span class="n">get_all_region_ids</span><span class="p">(</span><span class="n">lut</span><span class="p">)</span>
 
+    <span class="c1"># Filter region IDs based on max Region_Intensity in input CSVs</span>
+    <span class="n">max_region_id</span> <span class="o">=</span> <span class="n">get_max_region_id_from_csvs</span><span class="p">()</span>
+    <span class="n">region_ids_to_process</span> <span class="o">=</span> <span class="n">filter_region_ids</span><span class="p">(</span><span class="n">region_ids_to_process</span><span class="p">,</span> <span class="n">max_region_id</span><span class="p">)</span>
+
+    <span class="c1"># Remove regions with Mean_IF_Intensity of 0 across all input CSVs</span>
+    <span class="n">region_ids_to_process</span> <span class="o">=</span> <span class="n">remove_zero_intensity_regions</span><span class="p">(</span><span class="n">region_ids_to_process</span><span class="p">)</span>
+
     <span class="c1"># Process each region ID</span>
     <span class="k">for</span> <span class="n">region_id</span> <span class="ow">in</span> <span class="n">region_ids_to_process</span><span class="p">:</span>
-
         <span class="n">plot_data</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">order</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">csv_path</span><span class="o">=</span><span class="n">lut</span><span class="p">,</span> <span class="n">test_type</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">show_plot</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">show_plot</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">alternate</span><span class="p">)</span></div>
 
 

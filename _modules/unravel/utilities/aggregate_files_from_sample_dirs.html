@@ -353,8 +353,13 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Loads immunofluo image, subtracts background, and warps to atlas space</span>
 
-<span class="sd">Usage:</span>
-<span class="sd">    aggregate_files.py -i atlas_space/sample??_FOS_rb4_gubra_space_z_LRavg.nii.gz -v -e $DIRS</span>
+<span class="sd">Usage for when sample?? is already in the name of files being copied:</span>
+<span class="sd">    aggregate_files.py -i atlas_space/sample??_FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v</span>
+
+<span class="sd">Usage to prepend sample?? to the name of files being copied:</span>
+<span class="sd">    aggregate_files.py -i atlas_space/FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v -a</span>
+
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>

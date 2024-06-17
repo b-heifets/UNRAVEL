@@ -490,11 +490,25 @@
                   
   <section id="module-unravel.region_stats.regional_IF_mean_intensities_summary">
 <span id="unravel-region-stats-regional-if-mean-intensities-summary-module"></span><span id="unravel-region-stats-regional-if-mean-intensities-summary"></span><h1>unravel.region_stats.regional_IF_mean_intensities_summary module<a class="headerlink" href="#module-unravel.region_stats.regional_IF_mean_intensities_summary" title="Link to this heading">#</a></h1>
-<p>Plot mean IF intensities and comparisons for each region intensity ID (only works for positive data).</p>
+<p>Output plots of mean IF intensities for each region intensity ID.</p>
 <dl class="simple">
-<dt>Usage for Tukey’s tests:</dt><dd><p>atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary -r $(img_unique -i $atlas) –order group3 group2 group1 –labels Group_3 Group_2 Group_1</p>
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p>Generate CSV inputs withs rstats_IF_mean or rstats_IF_mean_in_seg</p></li>
+<li><p>Aggregate CSV inputs: utils_agg_files -i seg_dir/regional_mean_IF_in_seg.csv -e $DIRS -v -a</p></li>
+<li><p>Add coditions to input CSV file names: utils_prepend -sk $SAMPLE_KEY -f</p></li>
+</ul>
 </dd>
-<dt>Usage for t-test:</dt><dd><p>atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary –region_ids $(img_unique -i $atlas) –order group2 group1 –labels Group_2 Group_1 -t ttest</p>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>&lt;asterisk&gt;.csv in the working dir with these columns: ‘Region_Intensity’, ‘Mean_IF_Intensity’</p></li>
+</ul>
+</dd>
+<dt>Usage for t-tests:</dt><dd><p>rstats_IF_mean_summary –order Control Treatment –labels Control Treatment -t ttest</p>
+</dd>
+<dt>Usage for Tukey’s tests w/ reordering and renaming of conditions:</dt><dd><p>rstats_IF_mean_summary –order group3 group2 group1 –labels Group_3 Group_2 Group_1</p>
+</dd>
+<dt>Usage with a custom atlas:</dt><dd><p>atlas=path/custom_atlas.nii.gz ; rstats_IF_mean_summary –region_ids $(img_unique -i $atlas) –order group2 group1 –labels Group_2 Group_1 -t ttest</p>
+</dd>
+<dt>The look up table (LUT) csv has these columns:</dt><dd><p>‘Region_ID’, ‘Side’, ‘Name’, ‘Abbr’</p>
 </dd>
 </dl>
 <dl class="py function">
@@ -508,6 +522,12 @@
 <dd></dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="unravel.region_stats.regional_IF_mean_intensities_summary.get_max_region_id_from_csvs">
+<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_IF_mean_intensities_summary.</span></span><span class="sig-name descname"><span class="pre">get_max_region_id_from_csvs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_IF_mean_intensities_summary.html#get_max_region_id_from_csvs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_IF_mean_intensities_summary.get_max_region_id_from_csvs" title="Link to this definition">#</a></dt>
+<dd><p>Retrieve the maximum Region_Intensity from all input CSVs.</p>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="unravel.region_stats.regional_IF_mean_intensities_summary.get_region_details">
 <span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_IF_mean_intensities_summary.</span></span><span class="sig-name descname"><span class="pre">get_region_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_IF_mean_intensities_summary.html#get_region_details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_IF_mean_intensities_summary.get_region_details" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
@@ -516,6 +536,18 @@
 <dt class="sig sig-object py" id="unravel.region_stats.regional_IF_mean_intensities_summary.get_all_region_ids">
 <span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_IF_mean_intensities_summary.</span></span><span class="sig-name descname"><span class="pre">get_all_region_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csv_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_IF_mean_intensities_summary.html#get_all_region_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_IF_mean_intensities_summary.get_all_region_ids" title="Link to this definition">#</a></dt>
 <dd><p>Retrieve all region IDs from the provided CSV.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.region_stats.regional_IF_mean_intensities_summary.filter_region_ids">
+<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_IF_mean_intensities_summary.</span></span><span class="sig-name descname"><span class="pre">filter_region_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_region_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_IF_mean_intensities_summary.html#filter_region_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_IF_mean_intensities_summary.filter_region_ids" title="Link to this definition">#</a></dt>
+<dd><p>Filter region IDs to be within the maximum region ID from the CSVs.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.region_stats.regional_IF_mean_intensities_summary.remove_zero_intensity_regions">
+<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_IF_mean_intensities_summary.</span></span><span class="sig-name descname"><span class="pre">remove_zero_intensity_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region_ids</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_IF_mean_intensities_summary.html#remove_zero_intensity_regions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_IF_mean_intensities_summary.remove_zero_intensity_regions" title="Link to this definition">#</a></dt>
+<dd><p>Remove regions with Mean_IF_Intensity of 0 across all input CSVs.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -584,8 +616,11 @@
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.get_max_region_id_from_csvs"><code class="docutils literal notranslate"><span class="pre">get_max_region_id_from_csvs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.get_region_details"><code class="docutils literal notranslate"><span class="pre">get_region_details()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.get_all_region_ids"><code class="docutils literal notranslate"><span class="pre">get_all_region_ids()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.filter_region_ids"><code class="docutils literal notranslate"><span class="pre">filter_region_ids()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.remove_zero_intensity_regions"><code class="docutils literal notranslate"><span class="pre">remove_zero_intensity_regions()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.perform_t_tests"><code class="docutils literal notranslate"><span class="pre">perform_t_tests()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.plot_data"><code class="docutils literal notranslate"><span class="pre">plot_data()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_IF_mean_intensities_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
