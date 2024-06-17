@@ -3,11 +3,14 @@
 """
 Plot mean IF intensities and comparisons for each region intensity ID (only works for positive data).
 
-Usage for Tukey's tests:
-    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary -r $(img_unique -i $atlas) --order group3 group2 group1 --labels Group_3 Group_2 Group_1
+Usage for t-tests:
+    rstats_IF_mean_summary --order Control Treatment --labels Control Treatment -t ttest
 
-Usage for t-test:
-    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; rstats_IF_mean_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest
+Usage for Tukey's tests w/ reordering and renaming of conditions:
+    rstats_IF_mean_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1
+
+Usage with a custom atlas:
+    atlas=path/custom_atlas.nii.gz ; rstats_IF_mean_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest
 """
 
 import argparse
