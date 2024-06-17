@@ -162,7 +162,7 @@ def main():
             # Write to CSV
             if args.output:
                 output_path = sample_path / args.output
-                output_path.mkdir(parents=True, exist_ok=True)
+                output_path.parent.mkdir(parents=True, exist_ok=True)
                 write_to_csv(mean_intensities, output_path)
             else: 
                 output_str = str(seg_path).replace('.nii.gz', '_regional_mean_IF_in_seg.csv')
