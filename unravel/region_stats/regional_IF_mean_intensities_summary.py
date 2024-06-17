@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Plot mean IF intensities and comparisons for each region intensity ID (only works for positive data).
+Output plots of mean IF intensities for each region intensity ID.
+
+Prereqs:
+    - Generate CSV inputs withs rstats_IF_mean or rstats_IF_mean_in_seg
+    - Aggregate CSV inputs: utils_agg_files -i seg_dir/regional_mean_IF_in_seg.csv -e $DIRS -v -a
+    - Add coditions to input CSV file names: utils_prepend -sk $SAMPLE_KEY -f
+
+Inputs: 
+    - <asterisk>.csv in the working dir with these columns: 'Region_Intensity', 'Mean_IF_Intensity'
 
 Usage for t-tests:
     rstats_IF_mean_summary --order Control Treatment --labels Control Treatment -t ttest
@@ -11,6 +19,9 @@ Usage for Tukey's tests w/ reordering and renaming of conditions:
 
 Usage with a custom atlas:
     atlas=path/custom_atlas.nii.gz ; rstats_IF_mean_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest
+
+The look up table (LUT) csv has these columns: 
+    'Region_ID', 'Side', 'Name', 'Abbr'
 """
 
 import argparse
@@ -42,6 +53,8 @@ def parse_args():
     parser.add_argument('-s', '--show_plot', help='Show plot if flag is provided', action='store_true')
     parser.epilog = __doc__
     return parser.parse_args()
+
+# TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in cluster_stats/stats.py. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 
 
 # Set Arial as the font
