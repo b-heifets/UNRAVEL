@@ -78,7 +78,21 @@ def load_data(region_id):
                     'mean_intensity': mean_intensity[0]
                 })
     
-    return pd.DataFrame(data)
+    if data:
+        return pd.DataFrame(data)
+    else:
+        raise ValueError(f"    [red1]No data found for region ID {region_id}")
+
+def get_max_region_id_from_csvs():
+    """Retrieve the maximum Region_Intensity from all input CSVs."""
+    max_region_id = -1
+    for filename in os.listdir():
+        if filename.endswith('.csv'):
+            df = pd.read_csv(filename)
+            max_id_in_file = df["Region_Intensity"].max()
+            if max_id_in_file > max_region_id:
+                max_region_id = max_id_in_file
+    return max_region_id
 
 def get_region_details(region_id, csv_path):
     region_df = pd.read_csv(csv_path)
@@ -89,6 +103,26 @@ def get_all_region_ids(csv_path):
     """Retrieve all region IDs from the provided CSV."""
     region_df = pd.read_csv(csv_path)
     return region_df["Region_ID"].tolist()
+
+def filter_region_ids(region_ids, max_region_id):
+    """Filter region IDs to be within the maximum region ID from the CSVs."""
+    return [region_id for region_id in region_ids if region_id <= max_region_id]
+
+def remove_zero_intensity_regions(region_ids):
+    """Remove regions with Mean_IF_Intensity of 0 across all input CSVs."""
+    valid_region_ids = []
+    for region_id in region_ids:
+        all_zero = True
+        for filename in os.listdir():
+            if filename.endswith('.csv'):
+                df = pd.read_csv(filename)
+                mean_intensity = df[df["Region_Intensity"] == region_id]["Mean_IF_Intensity"].values
+                if len(mean_intensity) > 0 and mean_intensity[0] != 0:
+                    all_zero = False
+                    break
+        if not all_zero:
+            valid_region_ids.append(region_id)
+    return valid_region_ids
 
 def perform_t_tests(df, order):
     """Perform t-tests between groups in the DataFrame."""
@@ -108,6 +142,10 @@ def perform_t_tests(df, order):
 
 def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tukey', show_plot=False, alt='two-sided'):
     df = load_data(region_id)
+
+    if 'group' not in df.columns:
+        raise KeyError(f"    [red1]'group' column not found in the DataFrame for {region_id}. Ensure the CSV files contain the correct data.")
+
     region_name, region_abbr = get_region_details(region_id, csv_path)
     
     # Define a list of potential colors
@@ -257,9 +295,15 @@ def main():
     lut = Path(__file__).parent.parent / 'core' / 'csvs' / args.lut
     region_ids_to_process = args.region_ids if args.region_ids else get_all_region_ids(lut)
 
+    # Filter region IDs based on max Region_Intensity in input CSVs
+    max_region_id = get_max_region_id_from_csvs()
+    region_ids_to_process = filter_region_ids(region_ids_to_process, max_region_id)
+
+    # Remove regions with Mean_IF_Intensity of 0 across all input CSVs
+    region_ids_to_process = remove_zero_intensity_regions(region_ids_to_process)
+
     # Process each region ID
     for region_id in region_ids_to_process:
-
         plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=args.test, show_plot=args.show_plot, alt=args.alternate)
 
 
