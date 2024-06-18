@@ -49,21 +49,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/voxel_stats/z_score';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -367,25 +352,33 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Z-score an atlas space image using a tissue mask and/or an atlas mask.</span>
+<span class="sd">Use ``vstats_z_score`` from UNRAVEL to z-score an atlas space image using a tissue mask and/or an atlas mask.</span>
 
 <span class="sd">Usage w/ a tissue mask (warped to atlas space):</span>
-<span class="sd">    z_score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -v</span>
+<span class="sd">-----------------------------------------------</span>
+<span class="sd">    z_score.py -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -v</span>
 
 <span class="sd">Usage w/ an atlas mask (warped to atlas space):</span>
+<span class="sd">-----------------------------------------------</span>
 <span class="sd">    z_score.py -i path/img.nii.gz -n -amas path/atlas_mask.nii.gz -v</span>
 
-<span class="sd">Usage w/ both masks for side-specific z-scoring</span>
-<span class="sd">    z_score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v</span>
+<span class="sd">Usage w/ both masks for side-specific z-scoring:</span>
+<span class="sd">------------------------------------------------</span>
+<span class="sd">    z_score.py -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v</span>
+
+<span class="sd">Next steps: </span>
+<span class="sd">    - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average hemispheres together.</span>
+<span class="sd">    - If using side-specific z-scoring, next use ``vstats_hemi_to_avg`` to average the images.</span>
+<span class="sd">    - Run ``vstats`` to perform voxel-wise stats.</span>
 
 <span class="sd">Outputs:</span>
 <span class="sd">    - &lt;path/input_img&gt;_z.nii.gz (float32)</span>
-<span class="sd">    - [atlas_space/autofl_50um_brain_mask.nii.gz]</span>
+<span class="sd">    - [sample??/atlas_space/autofl_50um_brain_mask.nii.gz]</span>
 
 <span class="sd">z-score = (img.nii.gz - mean pixel intensity in brain)/standard deviation of intensity in brain</span>
 
 <span class="sd">Prereqs:</span>
-<span class="sd">    prep_vstats.py for inputs [&amp; brain_mask.py for tissue masks]</span>
+<span class="sd">    ``vstats_prep`` for inputs [&amp; ``seg_brain_mask`` for tissue masks]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>

@@ -51,7 +51,10 @@ UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet
 * `UNRAVEL GitHub repository <https://github.com/b-heifets/UNRAVEL/tree/dev>`_
 * `Initial UNRAVEL publication <https://www.nature.com/articles/s41386-023-01613-4>`_
 * UNRAVEL was developed by `the Heifets lab <https://heifetslab.stanford.edu/>`_ and `TensorAnalytics <https://sites.google.com/view/tensoranalytics/home?authuser=0>`_
-* Additional support was provided by `the Shamloo lab <https://med.stanford.edu/neurosurgery/research/shamloo.html>`_
+* Additional support/guidance was provided by:
+    * `The Shamloo lab <https://med.stanford.edu/neurosurgery/research/shamloo.html>`_
+    * `The Malenka lab <https://profiles.stanford.edu/robert-malenka>`_
+    * `The Stanford-based P50 center funded by NIDA <https://med.stanford.edu/nidap50.html>`_
 
 .. raw:: html
 

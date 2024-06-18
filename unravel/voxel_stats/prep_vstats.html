@@ -309,7 +309,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -368,13 +368,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../region_stats/toc.html">unravel.region_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -490,17 +488,17 @@
                   
   <section id="module-unravel.voxel_stats.prep_vstats">
 <span id="unravel-voxel-stats-prep-vstats-module"></span><span id="unravel-voxel-stats-prep-vstats"></span><h1>unravel.voxel_stats.prep_vstats module<a class="headerlink" href="#module-unravel.voxel_stats.prep_vstats" title="Link to this heading">#</a></h1>
-<p>Loads immunofluo image, subtracts background, and warps to atlas space</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> from UNRAVEL to load an immunofluo image, subtract its background, and warp it to atlas space.</p>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>prep_vstats.py -i ochann -rb 4 -x 3.5232 -z 6 -o ochann_rb4_gubra_space.nii.gz -e &lt;list of paths to experiment directories&gt; -v</p>
+<dt>Usage:</dt><dd><p>vstats_prep -i ochann -rb 4 -x 3.5232 -z 6 -o ochann_rb4_gubra_space.nii.gz -e &lt;list of paths to experiment directories&gt; -v</p>
 </dd>
-<dt>Prereqs:</dt><dd><p>reg.py</p>
+<dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
 </dd>
 <dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p>&lt;asterisk&gt;.czi, ochann/&lt;asterisk&gt;.tif, ochann, &lt;asterisk&gt;.tif, &lt;asterisk&gt;.h5, or &lt;asterisk&gt;.zarr</p>
 </dd>
 <dt>Example output:</dt><dd><p>./sample??/atlas_space/sample??_ochann_rb4_gubra_space.nii.gz</p>
 </dd>
-<dt>Next steps:</dt><dd><p>Aggregate outputs with aggregate_files_from_sample_dirs.py and run vstats.py</p>
+<dt>Next steps:</dt><dd><p>Aggregate outputs with <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code> and run <code class="docutils literal notranslate"><span class="pre">vstats</span></code>.</p>
 </dd>
 </dl>
 <dl class="py function">

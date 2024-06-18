@@ -134,3 +134,13 @@ PATH=${FSLDIR}/bin:${PATH}
 . ${FSLDIR}/etc/fslconf/fsl.sh
 export FSLDIR PATH
 export PATH=/usr/local/ilastik-1.3.3post3-Linux:$PATH
+
+# Add these to open ilastik via the terminal by running: ilastik
+export PATH=/usr/local/ilastik-1.3.3post3-Linux:$PATH 
+alias ilastik=run_ilastik.sh
+```
+
+Apply the changes by restarting the terminal or source your shell configuration file: 
+```bash
+. ~/.zshrc
+```

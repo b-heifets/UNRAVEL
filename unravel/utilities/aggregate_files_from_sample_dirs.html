@@ -309,7 +309,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -368,13 +368,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../region_stats/toc.html">unravel.region_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -490,13 +488,19 @@
                   
   <section id="module-unravel.utilities.aggregate_files_from_sample_dirs">
 <span id="unravel-utilities-aggregate-files-from-sample-dirs-module"></span><span id="unravel-utilities-aggregate-files-from-sample-dirs"></span><h1>unravel.utilities.aggregate_files_from_sample_dirs module<a class="headerlink" href="#module-unravel.utilities.aggregate_files_from_sample_dirs" title="Link to this heading">#</a></h1>
-<p>Loads immunofluo image, subtracts background, and warps to atlas space</p>
-<dl class="simple">
-<dt>Usage for when sample?? is already in the name of files being copied:</dt><dd><p>aggregate_files.py -i atlas_space/sample??_FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v</p>
-</dd>
-<dt>Usage to prepend sample?? to the name of files being copied:</dt><dd><p>aggregate_files.py -i atlas_space/FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v -a</p>
-</dd>
-</dl>
+<p>Use <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code> from UNRAVEL to aggregate files from sample?? directories to a target directory.</p>
+<section id="usage-for-when-sample-is-already-in-the-name-of-files-being-copied">
+<h2>Usage for when sample?? is already in the name of files being copied:<a class="headerlink" href="#usage-for-when-sample-is-already-in-the-name-of-files-being-copied" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>utils_agg_files -i atlas_space/sample??_FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v</p>
+</div></blockquote>
+</section>
+<section id="usage-to-prepend-sample-to-the-name-of-files-being-copied">
+<h2>Usage to prepend sample?? to the name of files being copied:<a class="headerlink" href="#usage-to-prepend-sample-to-the-name-of-files-being-copied" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>utils_agg_files -i atlas_space/FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v -a</p>
+</div></blockquote>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.utilities.aggregate_files_from_sample_dirs.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.utilities.aggregate_files_from_sample_dirs.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/aggregate_files_from_sample_dirs.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.aggregate_files_from_sample_dirs.parse_args" title="Link to this definition">#</a></dt>
@@ -560,6 +564,8 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-when-sample-is-already-in-the-name-of-files-being-copied">Usage for when sample?? is already in the name of files being copied:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prepend-sample-to-the-name-of-files-being-copied">Usage to prepend sample?? to the name of files being copied:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_from_sample_dirs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_from_sample_dirs.aggregate_files_from_sample_dirs"><code class="docutils literal notranslate"><span class="pre">aggregate_files_from_sample_dirs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_from_sample_dirs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

@@ -308,7 +308,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -367,13 +367,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../region_stats/toc.html">unravel.region_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -489,13 +487,18 @@
                   
   <section id="module-unravel.utilities.toggle_samples">
 <span id="unravel-utilities-toggle-samples-module"></span><span id="unravel-utilities-toggle-samples"></span><h1>unravel.utilities.toggle_samples module<a class="headerlink" href="#module-unravel.utilities.toggle_samples" title="Link to this heading">#</a></h1>
-<p>Inactivate/activate sample?? dirs (i.e., prepend/remove “_” from dir name)</p>
-<dl class="simple">
-<dt>Usage for toggling all sample?? dirs to active:</dt><dd><p>toggle_samples.py -t -e &lt;list_of_exp_dir_paths&gt;</p>
-</dd>
-<dt>Usage for activating sample?? dirs for certain conditions:</dt><dd><p>toggle_samples.py -c &lt;path/sample_key.csv&gt; -a &lt;Saline MDMA&gt; -v -e &lt;list_of_exp_dir_paths&gt;</p>
-</dd>
-</dl>
+<p>Use <code class="docutils literal notranslate"><span class="pre">utils_toggle</span></code> from UNRAVEL to inactivate/activate sample?? dirs (i.e., prepend/remove “_” from dir name).</p>
+<section id="usage-for-toggling-all-sample-dirs-to-active">
+<h2>Usage for toggling all sample?? dirs to active:<a class="headerlink" href="#usage-for-toggling-all-sample-dirs-to-active" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>utils_toggle -t -e &lt;list_of_exp_dir_paths&gt;</p>
+</div></blockquote>
+</section>
+<section id="usage-for-activating-sample-dirs-for-certain-conditions">
+<h2>Usage for activating sample?? dirs for certain conditions:<a class="headerlink" href="#usage-for-activating-sample-dirs-for-certain-conditions" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>utils_toggle -c &lt;path/sample_key.csv&gt; -a &lt;Saline MDMA&gt; -v -e &lt;list_of_exp_dir_paths&gt;</p>
+</div></blockquote>
 <p>For conditions in the activate list, the script will remove the “_” from the sample?? dir name.
 For conditions not in the activate list, the script will prepend “_” to the sample?? dir name.</p>
 <dl class="simple">
@@ -504,6 +507,7 @@ sample01,control
 sample02,treatment</p>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.utilities.toggle_samples.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.utilities.toggle_samples.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/toggle_samples.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.toggle_samples.parse_args" title="Link to this definition">#</a></dt>
@@ -553,6 +557,8 @@ sample02,treatment</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-toggling-all-sample-dirs-to-active">Usage for toggling all sample?? dirs to active:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-activating-sample-dirs-for-certain-conditions">Usage for activating sample?? dirs for certain conditions:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.toggle_samples.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.toggle_samples.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>

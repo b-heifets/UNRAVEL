@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels &#8212; UNRAVEL docs</title>
+    <title>unravel.region_stats.rstats_mean_IF_in_segmented_voxels &#8212; UNRAVEL docs</title>
   
   
   
@@ -49,22 +49,7 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/rstats_mean_IF_in_segmented_voxels';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -363,23 +348,24 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels</h1><div class="highlight"><pre>
+  <h1>Source code for unravel.region_stats.rstats_mean_IF_in_segmented_voxels</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Measure mean intensity of immunofluorescence staining in brain regions for segmented voxels.</span>
+<span class="sd">Use ``rstats_mean_IF_in_seg`` from UNRAVEL to measure mean intensity of immunofluorescence (IF) staining in brain regions in segmented voxels.</span>
 
 <span class="sd">Run from experiment folder containing sample?? folders.</span>
 
-<span class="sd">Usage:</span>
-<span class="sd">    rstats_IF_mean_in_seg -i &lt;asterisk&gt;.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz</span>
+<span class="sd">Usage</span>
+<span class="sd">-----</span>
+<span class="sd">    rstats_mean_IF_in_seg -i &lt;asterisk&gt;.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz</span>
 
 <span class="sd">Default output:</span>
 <span class="sd">    - ./sample??/seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv</span>
 
 <span class="sd">Next steps:</span>
-<span class="sd">    utils_agg_files -i seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv</span>
-<span class="sd">    rstats_IF_mean_summary</span>
+<span class="sd">    ``utils_agg_files`` -i seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv</span>
+<span class="sd">    ``rstats_mean_IF_summary``</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -399,7 +385,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process.&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -430,7 +416,7 @@
 
 
 <div class="viewcode-block" id="calculate_mean_intensity">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.calculate_mean_intensity">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.calculate_mean_intensity">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">calculate_mean_intensity</span><span class="p">(</span><span class="n">IF_img</span><span class="p">,</span> <span class="n">ABA_seg</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates mean intensity for each region in the atlas.</span>
@@ -481,7 +467,7 @@
 
 
 <div class="viewcode-block" id="write_to_csv">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.write_to_csv">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.write_to_csv">[docs]</a>
 <span class="k">def</span> <span class="nf">write_to_csv</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Writes the data to a CSV file.&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
@@ -493,7 +479,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

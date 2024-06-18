@@ -49,21 +49,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/warp/warp';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -367,16 +352,18 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Warp to/from atlas space and registration input space</span>
+<span class="sd">Use ``warp`` from UNRAVEL to warp to/from atlas space and registration input space</span>
 
-<span class="sd">Forward warping atlas to tissue space:</span>
+<span class="sd">Usage for forward warping atlas to tissue space:</span>
+<span class="sd">------------------------------------------------</span>
 <span class="sd">    warp.py -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -ro reg_outputs -o warp/atlas_in_tissue_space.nii.gz -inp multiLabel -v</span>
 
-<span class="sd">Inverse warping tissue to atlas space:</span>
+<span class="sd">Usage for inverse warping tissue to atlas space:</span>
+<span class="sd">------------------------------------------------</span>
 <span class="sd">    warp.py -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -ro reg_outputs -o warp/tissue_in_atlas_space.nii.gz -inv -v</span>
 
 <span class="sd">Prereq: </span>
-<span class="sd">    reg.py</span>
+<span class="sd">    ``reg``</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">ants</span>

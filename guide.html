@@ -50,21 +50,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'guide';</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -379,6 +364,7 @@
 <ul class="simple">
 <li><p>If you are unfamiliar with the terminal, please review these <a class="reference external" href="https://andysbrainbook.readthedocs.io/en/latest/index.html">command line tutorials</a>.</p></li>
 </ul>
+<hr class="docutils" />
 <section id="typical-workflow">
 <h2>Typical workflow<a class="headerlink" href="#typical-workflow" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -401,6 +387,7 @@
     D --&gt; M(Segment features of interest: seg_copy_tifs, seg_ilastik)
     M --&gt; L
         </div></section>
+<hr class="docutils" />
 <section id="help-on-commands">
 <h2>Help on commands<a class="headerlink" href="#help-on-commands" title="Link to this heading">#</a></h2>
 <p>For help/info on a command, run this in the terminal:</p>
@@ -416,6 +403,7 @@
 </ul>
 </div>
 </section>
+<hr class="docutils" />
 <section id="listing-commands">
 <h2>Listing commands<a class="headerlink" href="#listing-commands" title="Link to this heading">#</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># List common commands and their descriptions</span>
@@ -435,6 +423,7 @@ unravel_commands<span class="w"> </span>-m
 </ul>
 </div>
 </section>
+<hr class="docutils" />
 <section id="common-commands">
 <h2>Common commands<a class="headerlink" href="#common-commands" title="Link to this heading">#</a></h2>
 <div class="sd-tab-set docutils">
@@ -489,8 +478,8 @@ Cluster-wise stats</label><div class="sd-tab-content docutils">
 <label class="sd-tab-label" for="sd-tab-item-5">
 Region-wise stats</label><div class="sd-tab-content docutils">
 <ul class="simple">
-<li><p><a class="reference internal" href="unravel/region_stats/regional_cell_densities.html#unravel-region-stats-regional-cell-densities"><span class="std std-ref"><strong>rstats</strong></span></a>: Compute regional cell densities.</p></li>
-<li><p><a class="reference internal" href="unravel/region_stats/regional_cell_densities_summary.html#unravel-region-stats-regional-cell-densities-summary"><span class="std std-ref"><strong>rstats_summary</strong></span></a>: Summarize regional cell densities.</p></li>
+<li><p><a class="reference internal" href="unravel/region_stats/rstats.html#unravel-region-stats-rstats"><span class="std std-ref"><strong>rstats</strong></span></a>: Compute regional cell counts, regional volumes, or regional cell densities.</p></li>
+<li><p><a class="reference internal" href="unravel/region_stats/rstats_summary.html#unravel-region-stats-rstats-summary"><span class="std std-ref"><strong>rstats_summary</strong></span></a>: Summarize regional cell densities.</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-6" name="sd-tab-set-0" type="radio">
@@ -531,6 +520,7 @@ Registration</label><div class="sd-tab-content docutils">
 <ul class="simple">
 <li><p><a class="reference internal" href="unravel/register/prep_reg.html#unravel-register-prep-reg"><span class="std std-ref"><strong>reg_prep</strong></span></a>: Prepare registration (resample the autofluo image).</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg.html#unravel-register-reg"><span class="std std-ref"><strong>reg</strong></span></a>: Perform registration (register the autofluo image to an average template).</p></li>
+<li><p><a class="reference internal" href="unravel/register/affine_initializer.html#unravel-register-affine-initializer"><span class="std std-ref"><strong>reg_affine_initializer</strong></span></a>: Part of reg. Roughly aligns the template to the autofl image.</p></li>
 <li><p><a class="reference internal" href="unravel/register/check_reg.html#unravel-register-check-reg"><span class="std std-ref"><strong>reg_check</strong></span></a>: Check registration (aggregate the autofluo and warped atlas images).</p></li>
 <li><p><a class="reference internal" href="unravel/register/check_brain_mask.html#unravel-register-check-brain-mask"><span class="std std-ref"><strong>reg_check_mask</strong></span></a>: Check brain mask for over/under segmentation.</p></li>
 </ul>
@@ -595,13 +585,11 @@ Cluster-wise stats</label><div class="sd-tab-content docutils">
 <label class="sd-tab-label" for="sd-tab-item-14">
 Region-wise stats</label><div class="sd-tab-content docutils">
 <ul class="simple">
-<li><p><a class="reference internal" href="unravel/region_stats/regional_cell_densities.html#unravel-region-stats-regional-cell-densities"><span class="std std-ref"><strong>rstats</strong></span></a>: Compute regional cell densities.</p></li>
-<li><p><a class="reference internal" href="unravel/region_stats/regional_cell_densities_summary.html#unravel-region-stats-regional-cell-densities-summary"><span class="std std-ref"><strong>rstats_summary</strong></span></a>: Summarize regional cell densities.</p></li>
-<li><p><a class="reference internal" href="unravel/region_stats/regional_counts.html#unravel-region-stats-regional-counts"><span class="std std-ref"><strong>rstats_counts</strong></span></a>: Count cells in regions.</p></li>
-<li><p><a class="reference internal" href="unravel/region_stats/regional_volumes.html#unravel-region-stats-regional-volumes"><span class="std std-ref"><strong>rstats_volumes</strong></span></a>: Compute volumes of regions.</p></li>
-<li><p><a class="reference internal" href="unravel/region_stats/regional_IF_mean_intensities.html#unravel-region-stats-regional-if-mean-intensities"><span class="std std-ref"><strong>rstats_IF_mean</strong></span></a>: Compute mean immunofluo intensities for regions.</p></li>
-<li><p><a class="reference internal" href="unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#unravel-region-stats-regional-if-mean-intensities-in-segmented-voxels"><span class="std std-ref"><strong>rstats_IF_mean_in_seg</strong></span></a>: Compute mean immunofluo intensities in segmented voxels.</p></li>
-<li><p><a class="reference internal" href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel-region-stats-regional-if-mean-intensities-summary"><span class="std std-ref"><strong>rstats_IF_mean_summary</strong></span></a>: Summarize mean immunofluo intensities for regions.</p></li>
+<li><p><a class="reference internal" href="unravel/region_stats/rstats.html#unravel-region-stats-rstats"><span class="std std-ref"><strong>rstats</strong></span></a>: Compute regional cell counts, regional volumes, or regional cell densities.</p></li>
+<li><p><a class="reference internal" href="unravel/region_stats/rstats_summary.html#unravel-region-stats-rstats-summary"><span class="std std-ref"><strong>rstats_summary</strong></span></a>: Summarize regional cell densities.</p></li>
+<li><p><a class="reference internal" href="unravel/region_stats/rstats_mean_IF.html#unravel-region-stats-rstats-mean-if"><span class="std std-ref"><strong>rstats_mean_IF</strong></span></a>: Compute mean immunofluo intensities for regions.</p></li>
+<li><p><a class="reference internal" href="unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel-region-stats-rstats-mean-if-in-segmented-voxels"><span class="std std-ref"><strong>rstats_mean_IF_in_seg</strong></span></a>: Compute mean immunofluo intensities in segmented voxels.</p></li>
+<li><p><a class="reference internal" href="unravel/region_stats/rstats_mean_IF_summary.html#unravel-region-stats-rstats-mean-if-summary"><span class="std std-ref"><strong>rstats_mean_IF_summary</strong></span></a>: Summarize mean immunofluo intensities for regions.</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-15" name="sd-tab-set-1" type="radio">
@@ -672,8 +660,10 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </div>
 </div>
 </section>
+<hr class="docutils" />
 <section id="set-up">
 <h2>Set up<a class="headerlink" href="#set-up" title="Link to this heading">#</a></h2>
+<p>Recommended steps to set up for analysis:</p>
 <section id="back-up-raw-data">
 <h3>Back up raw data<a class="headerlink" href="#back-up-raw-data" title="Link to this heading">#</a></h3>
 <ul class="simple">
@@ -854,6 +844,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<spa
 <br>
 </section>
 </section>
+<hr class="docutils" />
 <section id="analysis-steps">
 <h2>Analysis steps<a class="headerlink" href="#analysis-steps" title="Link to this heading">#</a></h2>
 <p>This section provides an overview of common commands available in UNRAVEL, ~organized by their respective steps.</p>
@@ -877,6 +868,43 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<spa
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_copy_tifs<span class="w"> </span>-i<span class="w"> </span>reg_inputs/autofl_??um_tifs<span class="w"> </span>-s<span class="w"> </span><span class="m">0000</span><span class="w"> </span><span class="m">0005</span><span class="w"> </span><span class="m">0050</span><span class="w"> </span>-o<span class="w"> </span><span class="k">$(</span>dirname<span class="w"> </span><span class="nv">$BRAIN_MASK_ILP</span><span class="k">)</span><span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
 </pre></div>
+</div>
+</section>
+<section id="train-an-ilastik-project">
+<h4>Train an Ilastik project<a class="headerlink" href="#train-an-ilastik-project" title="Link to this heading">#</a></h4>
+<div class="note dropdown admonition">
+<p class="admonition-title">Train an Ilastik project</p>
+<p>Launch ilastik (e.g., by running: <code class="docutils literal notranslate"><span class="pre">ilastik</span></code> if an alias was added to the shell profile) and follow these steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Input Data</strong><br />
+Drag training slices into the ilastik GUI<br />
+<code class="docutils literal notranslate"><span class="pre">ctrl+A</span></code> -&gt; right-click -&gt; Edit shared properties -&gt; Storage: Copy into project file -&gt; Ok</p></li>
+<li><p><strong>Feature Selection</strong><br />
+Select Features… -&gt; select all features (<code class="docutils literal notranslate"><span class="pre">control+a</span></code>) or an optimized subset (faster but less accurate)<br />
+(To choose a subset of features, initially select all (<code class="docutils literal notranslate"><span class="pre">control+a</span></code>), train, turn off Live Updates, click Suggest Features, select a subset, and train again)</p></li>
+<li><p><strong>Training</strong></p>
+<ul class="simple">
+<li><p>Double click yellow square -&gt; click yellow rectangle (Color for drawing) -&gt; click in triangle and drag to the right to change color to red -&gt; ok</p></li>
+<li><p>Adjust brightness and contrast as needed (select gradient button and click and drag slowly in the image as needed; faster if zoomed in)</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">control</span></code> + mouse wheel scroll to zoom, press mouse wheel and drag image to pan</p></li>
+<li><p>With label 1 selected, paint on cells</p></li>
+<li><p>With label 2 selected, paint on the background</p></li>
+<li><p>Turn on Live Update to preview pixel classification (faster if zoomed in) and refine training.</p>
+<ul>
+<li><p>If label 1 fuses neighboring cells, draw a thin line in between them with label 2.</p></li>
+<li><p>Toggle eyes to show/hide layers and/or adjust transparency of layers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code> will toggle segmentation on and off.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code> will toggle prediction on and off.</p></li>
+<li><p>If you accidentally press <code class="docutils literal notranslate"><span class="pre">a</span></code> and add an extra label, turn off Live Updates and press X next to the extra label to delete it.</p></li>
+<li><p>If you want to go back to steps 1 &amp; 2, turn off Live Updates off</p></li>
+</ul>
+</li>
+<li><p>Change Current view to see other training slices. Check segmentation for these and refine as needed.</p></li>
+<li><p>Save the project in the experiment summary folder and close if using this script to run ilastik in headless mode for segmenting all images.</p></li>
+</ul>
+</li>
+</ol>
+<p><a class="reference external" href="https://www.ilastik.org/documentation/pixelclassification/pixelclassification">Pixel Classification Video</a></p>
 </div>
 </section>
 <section id="seg-brain-mask">
@@ -957,7 +985,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<spa
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>View these images with <a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes">FSLeyes</a></p></li>
+<li><p>View these images with <a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes">FSLeyes</a> <a class="reference external" href="https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html">docs</a></p></li>
 </ul>
 <div class="note dropdown admonition">
 <p class="admonition-title">Allen brain atlas coloring</p>
@@ -970,6 +998,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<spa
 </section>
 <section id="segmentation">
 <h3>Segmentation<a class="headerlink" href="#segmentation" title="Link to this heading">#</a></h3>
+<p>For detailed instructions on training Ilastik, see <strong>Train an Ilastik project</strong> in the <a class="reference internal" href="#registration"><strong>Registration</strong></a> section.</p>
 <section id="id3">
 <h4><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code><a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/segment/copy_tifs.html#module-unravel.segment.copy_tifs" title="unravel.segment.copy_tifs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.copy_tifs</span></code></a></p>
@@ -997,6 +1026,124 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<spa
 </section>
 <section id="voxel-wise-stats">
 <h3>Voxel-wise stats<a class="headerlink" href="#voxel-wise-stats" title="Link to this heading">#</a></h3>
+<div class="note dropdown admonition">
+<p class="admonition-title">Overview and steps for voxel-wise stats</p>
+<ol class="arabic simple">
+<li><p><strong>Create a vstats folder and subfolders for each analysis</strong>:</p>
+<ul class="simple">
+<li><p>Name subfolders succinctly (this name is added to other folder and file names).</p></li>
+</ul>
+</li>
+<li><p><strong>Generate and add .nii.gz files to vstats subfolders</strong>:</p>
+<ul class="simple">
+<li><p>Input images are from <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> and may have been z-scored with <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code> (we z-score c-Fos labeling as intensities are not extreme)</p>
+<ul>
+<li><p>Alternatively, <code class="docutils literal notranslate"><span class="pre">warp_to_atlas</span></code> may be used is preprocessing is not desired.</p></li>
+</ul>
+</li>
+<li><p>For bilateral data, left and right sides can be averaged with <code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code> (then use a unilateral hemisphere mask for <code class="docutils literal notranslate"><span class="pre">vstats</span></code> and <code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code>).</p></li>
+<li><p>We smooth data (e.g., with a 100 µm kernel) to account for innacuracies in registration</p>
+<ul>
+<li><p>This can be performed with <code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code> or <code class="docutils literal notranslate"><span class="pre">vstats</span></code></p></li>
+</ul>
+</li>
+<li><p>Prepend filenames with a one word condition (e.g., <code class="docutils literal notranslate"><span class="pre">drug_sample01_atlas_space_z.nii.gz</span></code>).</p>
+<ul>
+<li><p>Camel case is ok for the condition.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code> can add conditions to filenames.</p></li>
+<li><p>Group order is alphabetical (e.g., drug is group 1 and saline is group 2).</p></li>
+</ul>
+</li>
+<li><p>View the images in <a class="reference external" href="https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html">FSLeyes</a> to ensure they are aligned and the sides are correct.</p></li>
+</ul>
+</li>
+<li><p><strong>Determine Analysis Type</strong>:</p>
+<ul class="simple">
+<li><p>If there are 2 groups, <code class="docutils literal notranslate"><span class="pre">vstats</span></code> may be used after pre-processing.</p></li>
+<li><p>If there are more than 2 groups, prepare for an ANOVA as described below</p></li>
+</ul>
+</li>
+</ol>
+<h4 class="rubric" id="vstats-outputs">Vstats outputs</h4>
+<ul class="simple">
+<li><p><strong>T-test outputs</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">vox_p_tstat1.nii.gz</span></code>: Uncorrected p-values for tstat1 (group 1 &gt; group 2).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vox_p_tstat2.nii.gz</span></code>: Uncorrected p-values for tstat2 (group 1 &lt; group 2).</p></li>
+</ul>
+</li>
+<li><p><strong>ANOVA outputs</strong>:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">vox_p_fstat1.nii.gz</span></code>: Uncorrected p-values for fstat1 (1st contrast, e.g., drug vs. saline).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vox_p_fstat2.nii.gz</span></code>: Uncorrected p-values for fstat2 (2nd contrast, e.g., context1 vs. context2).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vox_p_fstat3.nii.gz</span></code>: Uncorrected p-values for fstat3 (3rd contrast, e.g., interaction).</p></li>
+</ul>
+</li>
+</ul>
+<h4 class="rubric" id="example-preparing-for-an-anova">Example: Preparing for an ANOVA</h4>
+<ol class="arabic simple">
+<li><p><strong>Setup Design Matrix</strong>:</p>
+<ul class="simple">
+<li><p>For an ANOVA, create <code class="docutils literal notranslate"><span class="pre">./vstats/vstats_dir/stats/design/</span></code>.</p></li>
+<li><p>Open terminal from <code class="docutils literal notranslate"><span class="pre">./stats</span></code> and run: <code class="docutils literal notranslate"><span class="pre">fsl</span></code>.</p></li>
+<li><p>Navigate to <code class="docutils literal notranslate"><span class="pre">Misc</span> <span class="pre">-&gt;</span> <span class="pre">GLM</span> <span class="pre">Setup</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>GLM Setup Window</strong>:</p>
+<ul class="simple">
+<li><p>Select <code class="docutils literal notranslate"><span class="pre">Higher-level</span> <span class="pre">/</span> <span class="pre">non-timeseries</span> <span class="pre">design</span></code>.</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">inputs</span></code> to the total number of samples.</p></li>
+</ul>
+</li>
+<li><p><strong>EVs Tab in GLM Window</strong>:</p>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">of</span> <span class="pre">main</span> <span class="pre">EVs</span></code> to 4.</p></li>
+<li><p>Name EVs (e.g., <code class="docutils literal notranslate"><span class="pre">EV1</span> <span class="pre">=</span> <span class="pre">group</span> <span class="pre">1</span></code>).</p></li>
+<li><p>Set Group to 1 for all.</p></li>
+</ul>
+</li>
+<li><p><strong>Design Matrix</strong>:</p>
+<ul class="simple">
+<li><p>Under <code class="docutils literal notranslate"><span class="pre">EV1</span></code>, enter 1 for each subject in group 1 (1 row/subject). EV2-4 are 0 for these rows.</p></li>
+<li><p>Under <code class="docutils literal notranslate"><span class="pre">EV2</span></code>, enter 1 for each subject in group 2, starting with the row after the last row for group 1.</p></li>
+<li><p>Follow this pattern for EV3 and EV4.</p></li>
+</ul>
+</li>
+<li><p><strong>Contrasts &amp; F-tests Tab in GLM Window</strong>:</p>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">of</span> <span class="pre">Contrasts</span></code> to 3 for a 2x2 ANOVA:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">C1</span></code>: <code class="docutils literal notranslate"><span class="pre">Main_effect_&lt;e.g.,drug&gt;</span></code> 1 1 -1 -1 (e.g., EV1/2 are drug groups and EV3/4 are saline groups).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">C2</span></code>: <code class="docutils literal notranslate"><span class="pre">Main_effect_&lt;e.g.,</span> <span class="pre">context&gt;</span></code> 1 -1 1 -1 (e.g., EV1/3 were in context1 and EV2/4 were in context2).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">C3</span></code>: <code class="docutils literal notranslate"><span class="pre">Interaction</span></code> 1 -1 -1 1.</p></li>
+</ul>
+</li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">of</span> <span class="pre">F-tests</span></code> to 3:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">F1</span></code>: Click upper left box.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">F2</span></code>: Click middle box.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">F3</span></code>: Click lower right box.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Finalize GLM Setup</strong>:</p>
+<ul class="simple">
+<li><p>In the GLM Setup window, click <code class="docutils literal notranslate"><span class="pre">Save</span></code>, then click <code class="docutils literal notranslate"><span class="pre">design</span></code>, and click <code class="docutils literal notranslate"><span class="pre">OK</span></code>.</p></li>
+</ul>
+</li>
+<li><p><strong>Run Voxel-wise Stats</strong>:</p>
+<ul class="simple">
+<li><p>From the vstats_dir, run: <code class="docutils literal notranslate"><span class="pre">vstats</span></code>.</p></li>
+</ul>
+</li>
+</ol>
+<h4 class="rubric" id="background">Background</h4>
+<ul class="simple">
+<li><p><a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/GLM">FSL GLM Guide</a></p></li>
+<li><p><a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide">FSL Randomise User Guide</a></p></li>
+</ul>
+</div>
 <section id="vstats-prep">
 <h4><code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code><a class="headerlink" href="#vstats-prep" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/voxel_stats/prep_vstats.html#module-unravel.voxel_stats.prep_vstats" title="unravel.voxel_stats.prep_vstats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.prep_vstats</span></code></a></p>
@@ -1167,7 +1314,7 @@ cluster_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span 
 <h4><code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code><a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/cluster_stats/validate_clusters.html#module-unravel.cluster_stats.validate_clusters" title="unravel.cluster_stats.validate_clusters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.validate_clusters</span></code></a></p>
 <ul class="simple">
-<li><p>Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or label densities</p></li>
+<li><p>Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or    label densities</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic usage:</span>
 cluster_validation<span class="w"> </span>-e<span class="w"> </span>&lt;experiment<span class="w"> </span>paths&gt;<span class="w"> </span>-m<span class="w"> </span>&lt;path/rev_cluster_index_to_warp_from_atlas_space.nii.gz&gt;<span class="w"> </span>-s<span class="w"> </span>seg_dir<span class="w"> </span>-v
@@ -1194,7 +1341,7 @@ cluster_validation<span class="w"> </span>-e<span class="w"> </span>&lt;experime
 <h3>Region-wise stats<a class="headerlink" href="#region-wise-stats" title="Link to this heading">#</a></h3>
 <section id="rstats">
 <h4><code class="docutils literal notranslate"><span class="pre">rstats</span></code><a class="headerlink" href="#rstats" title="Link to this heading">#</a></h4>
-<p><a class="reference internal" href="unravel/region_stats/regional_cell_densities.html#module-unravel.region_stats.regional_cell_densities" title="unravel.region_stats.regional_cell_densities"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.region_stats.regional_cell_densities</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.region_stats.regional_cell_densities</span></code></p>
 <ul class="simple">
 <li><p>Perform regional cell counting (label density measurements needs to be added)</p></li>
 </ul>
@@ -1208,7 +1355,7 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 </section>
 <section id="rstats-summary">
 <h4><code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code><a class="headerlink" href="#rstats-summary" title="Link to this heading">#</a></h4>
-<p><a class="reference internal" href="unravel/region_stats/regional_cell_densities_summary.html#module-unravel.region_stats.regional_cell_densities_summary" title="unravel.region_stats.regional_cell_densities_summary"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.region_stats.regional_cell_densities_summary</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.region_stats.regional_cell_densities_summary</span></code></p>
 <ul class="simple">
 <li><p>Plot cell densities for each region and summarize results.</p></li>
 <li><p>CSV columns:</p>
@@ -1372,6 +1519,7 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#registration">Registration</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reg-prep"><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#seg-copy-tifs"><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#train-an-ilastik-project">Train an Ilastik project</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#seg-brain-mask"><code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reg"><code class="docutils literal notranslate"><span class="pre">reg</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reg-check"><code class="docutils literal notranslate"><span class="pre">reg_check</span></code></a></li>

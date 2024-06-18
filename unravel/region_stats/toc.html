@@ -52,7 +52,7 @@
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="unravel.region_stats.regional_IF_mean_intensities module" href="regional_IF_mean_intensities.html" />
+    <link rel="next" title="unravel.region_stats.rstats module" href="rstats.html" />
     <link rel="prev" title="unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative module" href="../cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -309,7 +309,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -368,13 +368,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">unravel.region_stats package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -489,62 +487,57 @@
 <h1>unravel.region_stats package<a class="headerlink" href="#unravel-region-stats-package" title="Link to this heading">#</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.calculate_mean_intensity"><code class="docutils literal notranslate"><span class="pre">calculate_mean_intensity()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.write_to_csv"><code class="docutils literal notranslate"><span class="pre">write_to_csv()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="rstats.html">unravel.region_stats.rstats module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstats.html#usage-if-the-atlas-is-already-in-native-space-from-warp-to-native">Usage if the atlas is already in native space from <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code>:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats.html#usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster">Usage if the native atlas is not available; it is not saved (faster):</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats.html#unravel.region_stats.rstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats.html#unravel.region_stats.rstats.get_atlas_region_at_coords"><code class="docutils literal notranslate"><span class="pre">get_atlas_region_at_coords()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats.html#unravel.region_stats.rstats.count_cells_in_regions"><code class="docutils literal notranslate"><span class="pre">count_cells_in_regions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats.html#unravel.region_stats.rstats.calculate_regional_volumes"><code class="docutils literal notranslate"><span class="pre">calculate_regional_volumes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats.html#unravel.region_stats.rstats.calculate_regional_cell_densities"><code class="docutils literal notranslate"><span class="pre">calculate_regional_cell_densities()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats.html#unravel.region_stats.rstats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.calculate_mean_intensity"><code class="docutils literal notranslate"><span class="pre">calculate_mean_intensity()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.write_to_csv"><code class="docutils literal notranslate"><span class="pre">write_to_csv()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="rstats_summary.html">unravel.region_stats.rstats_summary module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstats_summary.html#usage">Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_summary.html#unravel.region_stats.rstats_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_summary.html#unravel.region_stats.rstats_summary.get_region_details"><code class="docutils literal notranslate"><span class="pre">get_region_details()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_summary.html#unravel.region_stats.rstats_summary.parse_color_argument"><code class="docutils literal notranslate"><span class="pre">parse_color_argument()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_summary.html#unravel.region_stats.rstats_summary.summarize_significance"><code class="docutils literal notranslate"><span class="pre">summarize_significance()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_summary.html#unravel.region_stats.rstats_summary.process_and_plot_data"><code class="docutils literal notranslate"><span class="pre">process_and_plot_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_summary.html#unravel.region_stats.rstats_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.get_max_region_id_from_csvs"><code class="docutils literal notranslate"><span class="pre">get_max_region_id_from_csvs()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.get_region_details"><code class="docutils literal notranslate"><span class="pre">get_region_details()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.get_all_region_ids"><code class="docutils literal notranslate"><span class="pre">get_all_region_ids()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.filter_region_ids"><code class="docutils literal notranslate"><span class="pre">filter_region_ids()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.remove_zero_intensity_regions"><code class="docutils literal notranslate"><span class="pre">remove_zero_intensity_regions()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.perform_t_tests"><code class="docutils literal notranslate"><span class="pre">perform_t_tests()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.plot_data"><code class="docutils literal notranslate"><span class="pre">plot_data()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF.html#usage">Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.calculate_mean_intensity"><code class="docutils literal notranslate"><span class="pre">calculate_mean_intensity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.write_to_csv"><code class="docutils literal notranslate"><span class="pre">write_to_csv()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities.html#unravel.region_stats.regional_cell_densities.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities.html#unravel.region_stats.regional_cell_densities.get_atlas_region_at_coords"><code class="docutils literal notranslate"><span class="pre">get_atlas_region_at_coords()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities.html#unravel.region_stats.regional_cell_densities.count_cells_in_regions"><code class="docutils literal notranslate"><span class="pre">count_cells_in_regions()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities.html#unravel.region_stats.regional_cell_densities.calculate_regional_volumes"><code class="docutils literal notranslate"><span class="pre">calculate_regional_volumes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities.html#unravel.region_stats.regional_cell_densities.calculate_regional_cell_densities"><code class="docutils literal notranslate"><span class="pre">calculate_regional_cell_densities()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities.html#unravel.region_stats.regional_cell_densities.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_in_segmented_voxels.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.calculate_mean_intensity"><code class="docutils literal notranslate"><span class="pre">calculate_mean_intensity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.write_to_csv"><code class="docutils literal notranslate"><span class="pre">write_to_csv()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.get_region_details"><code class="docutils literal notranslate"><span class="pre">get_region_details()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.parse_color_argument"><code class="docutils literal notranslate"><span class="pre">parse_color_argument()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.summarize_significance"><code class="docutils literal notranslate"><span class="pre">summarize_significance()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.process_and_plot_data"><code class="docutils literal notranslate"><span class="pre">process_and_plot_data()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="regional_counts.html">unravel.region_stats.regional_counts module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="regional_counts.html#unravel.region_stats.regional_counts.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_counts.html#unravel.region_stats.regional_counts.get_atlas_region_at_coords"><code class="docutils literal notranslate"><span class="pre">get_atlas_region_at_coords()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_counts.html#unravel.region_stats.regional_counts.count_cells_in_regions"><code class="docutils literal notranslate"><span class="pre">count_cells_in_regions()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_counts.html#unravel.region_stats.regional_counts.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="regional_volumes.html">unravel.region_stats.regional_volumes module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="regional_volumes.html#unravel.region_stats.regional_volumes.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_volumes.html#unravel.region_stats.regional_volumes.region_volumes"><code class="docutils literal notranslate"><span class="pre">region_volumes()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_volumes.html#unravel.region_stats.regional_volumes.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#usage-for-t-tests">Usage for t-tests:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#usage-for-tukey-s-tests-w-reordering-and-renaming-of-conditions">Usage for Tukey’s tests w/ reordering and renaming of conditions:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#usage-with-a-custom-atlas">Usage with a custom atlas:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_max_region_id_from_csvs"><code class="docutils literal notranslate"><span class="pre">get_max_region_id_from_csvs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_region_details"><code class="docutils literal notranslate"><span class="pre">get_region_details()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_all_region_ids"><code class="docutils literal notranslate"><span class="pre">get_all_region_ids()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.filter_region_ids"><code class="docutils literal notranslate"><span class="pre">filter_region_ids()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.remove_zero_intensity_regions"><code class="docutils literal notranslate"><span class="pre">remove_zero_intensity_regions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.perform_t_tests"><code class="docutils literal notranslate"><span class="pre">perform_t_tests()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.plot_data"><code class="docutils literal notranslate"><span class="pre">plot_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -571,11 +564,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="regional_IF_mean_intensities.html"
+       href="rstats.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.region_stats.regional_IF_mean_intensities module</p>
+        <p class="prev-next-title">unravel.region_stats.rstats module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

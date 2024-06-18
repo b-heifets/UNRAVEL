@@ -309,7 +309,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -368,13 +368,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../region_stats/toc.html">unravel.region_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -490,6 +488,9 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="apply_mask.html">unravel.voxel_stats.apply_mask module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apply_mask.html#usage-to-zero-out-voxels-in-image-where-mask-0-e-g-to-exclude-voxels-representing-artifacts">Usage to zero out voxels in image where mask &gt; 0 (e.g., to exclude voxels representing artifacts):</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apply_mask.html#usage-to-zero-out-voxels-in-image-where-mask-1-e-g-to-preserve-signal-from-segmented-microglia-clusters">Usage to zero out voxels in image where mask &lt; 1 (e.g., to preserve signal from segmented microglia clusters):</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apply_mask.html#usage-to-replace-voxels-in-image-with-the-mean-intensity-in-the-brain-where-mask-0">Usage to replace voxels in image with the mean intensity in the brain where mask &gt; 0:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="apply_mask.html#unravel.voxel_stats.apply_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="apply_mask.html#unravel.voxel_stats.apply_mask.load_mask"><code class="docutils literal notranslate"><span class="pre">load_mask()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="apply_mask.html#unravel.voxel_stats.apply_mask.mean_intensity_in_brain"><code class="docutils literal notranslate"><span class="pre">mean_intensity_in_brain()</span></code></a></li>
@@ -505,24 +506,30 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="z_score.html">unravel.voxel_stats.z_score module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="z_score.html#usage-w-a-tissue-mask-warped-to-atlas-space">Usage w/ a tissue mask (warped to atlas space):</a></li>
+<li class="toctree-l2"><a class="reference internal" href="z_score.html#usage-w-an-atlas-mask-warped-to-atlas-space">Usage w/ an atlas mask (warped to atlas space):</a></li>
+<li class="toctree-l2"><a class="reference internal" href="z_score.html#usage-w-both-masks-for-side-specific-z-scoring">Usage w/ both masks for side-specific z-scoring:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="z_score.html#unravel.voxel_stats.z_score.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="z_score.html#unravel.voxel_stats.z_score.z_score"><code class="docutils literal notranslate"><span class="pre">z_score()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="z_score.html#unravel.voxel_stats.z_score.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="whole_to_LR_avg.html">unravel.voxel_stats.whole_to_LR_avg module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="whole_to_LR_avg.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="whole_to_LR_avg.html#unravel.voxel_stats.whole_to_LR_avg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="whole_to_LR_avg.html#unravel.voxel_stats.whole_to_LR_avg.whole_to_LR_avg"><code class="docutils literal notranslate"><span class="pre">whole_to_LR_avg()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="whole_to_LR_avg.html#unravel.voxel_stats.whole_to_LR_avg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="hemi_to_LR_avg.html">unravel.voxel_stats.hemi_to_LR_avg module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="hemi_to_LR_avg.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hemi_to_LR_avg.html#unravel.voxel_stats.hemi_to_LR_avg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="hemi_to_LR_avg.html#unravel.voxel_stats.hemi_to_LR_avg.hemi_to_LR_avg"><code class="docutils literal notranslate"><span class="pre">hemi_to_LR_avg()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="hemi_to_LR_avg.html#unravel.voxel_stats.hemi_to_LR_avg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="vstats.html">unravel.voxel_stats.vstats module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vstats.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vstats.html#unravel.voxel_stats.vstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="vstats.html#unravel.voxel_stats.vstats.check_fdr_command"><code class="docutils literal notranslate"><span class="pre">check_fdr_command()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="vstats.html#unravel.voxel_stats.vstats.create_design_ttest2"><code class="docutils literal notranslate"><span class="pre">create_design_ttest2()</span></code></a></li>
@@ -533,6 +540,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="mirror.html">unravel.voxel_stats.mirror module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mirror.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mirror.html#unravel.voxel_stats.mirror.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="mirror.html#unravel.voxel_stats.mirror.mirror"><code class="docutils literal notranslate"><span class="pre">mirror()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="mirror.html#unravel.voxel_stats.mirror.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

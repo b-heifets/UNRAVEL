@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unravel.region_stats.regional_cell_densities_summary &#8212; UNRAVEL docs</title>
+    <title>unravel.region_stats.rstats_summary &#8212; UNRAVEL docs</title>
   
   
   
@@ -49,22 +49,7 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/regional_cell_densities_summary';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/rstats_summary';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -363,14 +348,15 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for unravel.region_stats.regional_cell_densities_summary</h1><div class="highlight"><pre>
+  <h1>Source code for unravel.region_stats.rstats_summary</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Plot cell densensities for each region and summarize results.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...</span>
+<span class="sd">Use ``rstats_summary`` from UNRAVEL to plot cell densensities for each region and summarize results.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...</span>
 
-<span class="sd">Usage: </span>
-<span class="sd">    regional_cell_densities_summary.py --groups Saline MDMA Meth -d 10000 -hemi r</span>
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    rstats_summary --groups Saline MDMA Meth -d 10000 -hemi r</span>
 
 <span class="sd">To do: </span>
 <span class="sd">    Add module for Dunnett&#39;s tests (don&#39;t use this option for now)</span>
@@ -402,7 +388,7 @@
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">initialize_progress_bar</span>
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Group prefixes (e.g., saline meth cbsMeth)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -423,7 +409,7 @@
 <span class="c1"># TODO: Dunnett&#39;s test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.</span>
 
 <div class="viewcode-block" id="get_region_details">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.get_region_details">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.get_region_details">[docs]</a>
 <span class="k">def</span> <span class="nf">get_region_details</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
     <span class="c1"># Adjust to account for the unique region IDs.</span>
     <span class="n">region_row</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Region_ID&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region_id</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Region_ID&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region_id</span> <span class="o">+</span> <span class="mi">20000</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -431,7 +417,7 @@
 
 
 <div class="viewcode-block" id="parse_color_argument">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.parse_color_argument">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.parse_color_argument">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_color_argument</span><span class="p">(</span><span class="n">color_arg</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">,</span> <span class="n">region_id</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">color_arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">color_arg</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">color_arg</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">):</span>
@@ -461,7 +447,7 @@
 
 
 <div class="viewcode-block" id="summarize_significance">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.summarize_significance">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.summarize_significance">[docs]</a>
 <span class="k">def</span> <span class="nf">summarize_significance</span><span class="p">(</span><span class="n">test_df</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Summarize the results of the statistical tests.</span>
 <span class="sd">    </span>
@@ -499,7 +485,7 @@
 
 
 <div class="viewcode-block" id="process_and_plot_data">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.process_and_plot_data">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.process_and_plot_data">[docs]</a>
 <span class="k">def</span> <span class="nf">process_and_plot_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">region_abbr</span><span class="p">,</span> <span class="n">side</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">group_columns</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
 
     <span class="c1"># Reshaping the data for plotting</span>
@@ -657,7 +643,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     

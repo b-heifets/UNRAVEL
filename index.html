@@ -365,7 +365,15 @@
 <li><p><a class="reference external" href="https://github.com/b-heifets/UNRAVEL/tree/dev">UNRAVEL GitHub repository</a></p></li>
 <li><p><a class="reference external" href="https://www.nature.com/articles/s41386-023-01613-4">Initial UNRAVEL publication</a></p></li>
 <li><p>UNRAVEL was developed by <a class="reference external" href="https://heifetslab.stanford.edu/">the Heifets lab</a> and <a class="reference external" href="https://sites.google.com/view/tensoranalytics/home?authuser=0">TensorAnalytics</a></p></li>
-<li><p>Additional support was provided by <a class="reference external" href="https://med.stanford.edu/neurosurgery/research/shamloo.html">the Shamloo lab</a></p></li>
+<li><dl class="simple">
+<dt>Additional support/guidance was provided by:</dt><dd><ul>
+<li><p><a class="reference external" href="https://med.stanford.edu/neurosurgery/research/shamloo.html">The Shamloo lab</a></p></li>
+<li><p><a class="reference external" href="https://profiles.stanford.edu/robert-malenka">The Malenka lab</a></p></li>
+<li><p><a class="reference external" href="https://med.stanford.edu/nidap50.html">The Stanford-based P50 center funded by NIDA</a></p></li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 <br><div style="text-align: center;">
     <a href="https://heifetslab.stanford.edu/" target="_blank">
@@ -469,6 +477,7 @@
 <li class="toctree-l3"><a class="reference internal" href="guide.html#registration">Registration</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="guide.html#reg-prep"><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide.html#seg-copy-tifs"><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#train-an-ilastik-project">Train an Ilastik project</a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide.html#seg-brain-mask"><code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide.html#reg"><code class="docutils literal notranslate"><span class="pre">reg</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="guide.html#reg-check"><code class="docutils literal notranslate"><span class="pre">reg_check</span></code></a></li>
@@ -521,7 +530,7 @@
 <li class="toctree-l3"><a class="reference internal" href="unravel/register/toc.html">unravel.register package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="unravel/register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="unravel/register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unravel/register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/register/check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -571,13 +580,11 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="unravel/region_stats/toc.html">unravel.region_stats package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unravel/region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="unravel/core/toc.html">unravel.core package</a><ul>

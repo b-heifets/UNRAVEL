@@ -2,6 +2,8 @@
 
 * If you are unfamiliar with the terminal, please review these [command line tutorials](https://andysbrainbook.readthedocs.io/en/latest/index.html).
 
+---
+
 ## Typical workflow
 
 * Each nodes shows a description of the step and related commands.
@@ -24,6 +26,8 @@ flowchart TD
     M --> L
 :::
 
+---
+
 ## Help on commands
 For help/info on a command, run this in the terminal:
 ```bash
@@ -37,6 +41,8 @@ For help/info on a command, run this in the terminal:
 
 * Square brackets [ ] in command syntax signify optional elements. 
 :::
+
+---
 
 ## Listing commands
 ```bash
@@ -53,6 +59,8 @@ unravel_commands -m
 :::{hint}
 * **Prefixes** group together related commands. Use **tab completion** in the terminal to quickly view and access sets of commands within each group.
 :::
+
+---
 
 ## Common commands
 
@@ -91,8 +99,8 @@ unravel_commands -m
 :::
 
 ::: {tab-item} Region-wise stats
-- [**rstats**](unravel.region_stats.regional_cell_densities): Compute regional cell densities.
-- [**rstats_summary**](unravel.region_stats.regional_cell_densities_summary): Summarize regional cell densities.
+- [**rstats**](unravel.region_stats.rstats): Compute regional cell counts, regional volumes, or regional cell densities.
+- [**rstats_summary**](unravel.region_stats.rstats_summary): Summarize regional cell densities.
 :::
 
 ::: {tab-item} Image I/O
@@ -124,6 +132,7 @@ unravel_commands -m
 :::{tab-item} Registration
 - [**reg_prep**](unravel.register.prep_reg): Prepare registration (resample the autofluo image).
 - [**reg**](unravel.register.reg): Perform registration (register the autofluo image to an average template).
+- [**reg_affine_initializer**](unravel.register.affine_initializer): Part of reg. Roughly aligns the template to the autofl image.
 - [**reg_check**](unravel.register.check_reg): Check registration (aggregate the autofluo and warped atlas images).
 - [**reg_check_mask**](unravel.register.check_brain_mask): Check brain mask for over/under segmentation.
 :::
@@ -173,13 +182,11 @@ unravel_commands -m
 :::
 
 :::{tab-item} Region-wise stats
-- [**rstats**](unravel.region_stats.regional_cell_densities): Compute regional cell densities.
-- [**rstats_summary**](unravel.region_stats.regional_cell_densities_summary): Summarize regional cell densities.
-- [**rstats_counts**](unravel.region_stats.regional_counts): Count cells in regions.
-- [**rstats_volumes**](unravel.region_stats.regional_volumes): Compute volumes of regions.
-- [**rstats_IF_mean**](unravel.region_stats.regional_IF_mean_intensities): Compute mean immunofluo intensities for regions.
-- [**rstats_IF_mean_in_seg**](unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels): Compute mean immunofluo intensities in segmented voxels.
-- [**rstats_IF_mean_summary**](unravel.region_stats.regional_IF_mean_intensities_summary): Summarize mean immunofluo intensities for regions.
+- [**rstats**](unravel.region_stats.rstats): Compute regional cell counts, regional volumes, or regional cell densities.
+- [**rstats_summary**](unravel.region_stats.rstats_summary): Summarize regional cell densities.
+- [**rstats_mean_IF**](unravel.region_stats.rstats_mean_IF): Compute mean immunofluo intensities for regions.
+- [**rstats_mean_IF_in_seg**](unravel.region_stats.rstats_mean_IF_in_segmented_voxels): Compute mean immunofluo intensities in segmented voxels.
+- [**rstats_mean_IF_summary**](unravel.region_stats.rstats_mean_IF_summary): Summarize mean immunofluo intensities for regions.
 :::
 
 :::{tab-item} Image I/O
@@ -245,9 +252,12 @@ pip install -e .
 ```
 :::
 
-
+---
 
 ## Set up
+
+Recommended steps to set up for analysis:
+
 
 ### Back up raw data
    * For Heifets lab members, we keep one copy of raw data on an external drive and another on a remote server (Dan and Austen have access)
@@ -425,6 +435,7 @@ io_metadata -i <tif_dir> -x $XY -z $Z  # Specifying x and z voxel sizes in micro
 ```
 <br>
 
+---
 
 
 ## Analysis steps
@@ -445,6 +456,39 @@ reg_prep -i *.czi -x $XY -z $Z -v  # -i options: tif_dir, .h5, .zarr, .tif
 ```bash
 seg_copy_tifs -i reg_inputs/autofl_??um_tifs -s 0000 0005 0050 -o $(dirname $BRAIN_MASK_ILP) -e $DIRS
 ```  
+
+#### Train an Ilastik project
+:::{admonition} Train an Ilastik project
+:class: note dropdown
+Launch ilastik (e.g., by running: `ilastik` if an alias was added to the shell profile) and follow these steps:
+
+1. **Input Data**  
+   Drag training slices into the ilastik GUI  
+   `ctrl+A` -> right-click -> Edit shared properties -> Storage: Copy into project file -> Ok  
+
+2. **Feature Selection**  
+   Select Features... -> select all features (`control+a`) or an optimized subset (faster but less accurate)  
+   (To choose a subset of features, initially select all (`control+a`), train, turn off Live Updates, click Suggest Features, select a subset, and train again)  
+
+3. **Training**  
+   - Double click yellow square -> click yellow rectangle (Color for drawing) -> click in triangle and drag to the right to change color to red -> ok
+   - Adjust brightness and contrast as needed (select gradient button and click and drag slowly in the image as needed; faster if zoomed in)
+   - Use `control` + mouse wheel scroll to zoom, press mouse wheel and drag image to pan
+   - With label 1 selected, paint on cells
+   - With label 2 selected, paint on the background
+   - Turn on Live Update to preview pixel classification (faster if zoomed in) and refine training. 
+     - If label 1 fuses neighboring cells, draw a thin line in between them with label 2. 
+     - Toggle eyes to show/hide layers and/or adjust transparency of layers. 
+     - `s` will toggle segmentation on and off.
+     - `p` will toggle prediction on and off.
+     - If you accidentally press `a` and add an extra label, turn off Live Updates and press X next to the extra label to delete it.
+     - If you want to go back to steps 1 & 2, turn off Live Updates off
+   - Change Current view to see other training slices. Check segmentation for these and refine as needed.
+   - Save the project in the experiment summary folder and close if using this script to run ilastik in headless mode for segmenting all images.
+
+[Pixel Classification Video](https://www.ilastik.org/documentation/pixelclassification/pixelclassification)
+
+:::
 
 #### `seg_brain_mask`
 {py:mod}`unravel.segment.brain_mask`
@@ -507,7 +551,7 @@ for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m $TEMPLATE -bc -pad -sm
 ```bash
 reg_check -e $DIRS -td $BASE/reg_results
 ```
-* View these images with [FSLeyes](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes)
+* View these images with [FSLeyes](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes) [docs](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html)
 
 :::{admonition} Allen brain atlas coloring
 :class: note dropdown
@@ -518,6 +562,8 @@ reg_check -e $DIRS -td $BASE/reg_results
 
 
 ### Segmentation
+
+For detailed instructions on training Ilastik, see **Train an Ilastik project** in the [**Registration**](#registration) section.
 
 #### `seg_copy_tifs`
 {py:mod}`unravel.segment.copy_tifs`
@@ -538,6 +584,79 @@ seg_ilastik -i <*.czi, *.h5, or dir w/ tifs> -o seg_dir -ilp $BASE/ilastik_segme
 
 
 ### Voxel-wise stats
+:::{admonition} Overview and steps for voxel-wise stats
+:class: note dropdown
+
+1. **Create a vstats folder and subfolders for each analysis**:  
+   - Name subfolders succinctly (this name is added to other folder and file names).
+
+2. **Generate and add .nii.gz files to vstats subfolders**:
+   - Input images are from ``vstats_prep`` and may have been z-scored with ``vstats_z_score`` (we z-score c-Fos labeling as intensities are not extreme)
+      - Alternatively, ``warp_to_atlas`` may be used is preprocessing is not desired.
+   - For bilateral data, left and right sides can be averaged with ``vstats_whole_to_avg`` (then use a unilateral hemisphere mask for ``vstats`` and ``cluster_fdr``).
+   - We smooth data (e.g., with a 100 µm kernel) to account for innacuracies in registration
+      - This can be performed with ``vstats_whole_to_avg`` or ``vstats``
+   - Prepend filenames with a one word condition (e.g., `drug_sample01_atlas_space_z.nii.gz`).
+      - Camel case is ok for the condition.
+      - ``utils_prepend`` can add conditions to filenames.
+      - Group order is alphabetical (e.g., drug is group 1 and saline is group 2).
+   - View the images in [FSLeyes](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html) to ensure they are aligned and the sides are correct.
+
+3. **Determine Analysis Type**:  
+   - If there are 2 groups, ``vstats`` may be used after pre-processing. 
+   - If there are more than 2 groups, prepare for an ANOVA as described below
+
+#### Vstats outputs
+- **T-test outputs**:  
+    - `vox_p_tstat1.nii.gz`: Uncorrected p-values for tstat1 (group 1 > group 2).
+    - `vox_p_tstat2.nii.gz`: Uncorrected p-values for tstat2 (group 1 < group 2).
+
+- **ANOVA outputs**:  
+    - `vox_p_fstat1.nii.gz`: Uncorrected p-values for fstat1 (1st contrast, e.g., drug vs. saline).
+    - `vox_p_fstat2.nii.gz`: Uncorrected p-values for fstat2 (2nd contrast, e.g., context1 vs. context2).
+    - `vox_p_fstat3.nii.gz`: Uncorrected p-values for fstat3 (3rd contrast, e.g., interaction).
+
+#### Example: Preparing for an ANOVA
+1. **Setup Design Matrix**:
+   - For an ANOVA, create `./vstats/vstats_dir/stats/design/`.
+   - Open terminal from `./stats` and run: `fsl`.
+   - Navigate to `Misc -> GLM Setup`.
+
+2. **GLM Setup Window**:
+   - Select `Higher-level / non-timeseries design`.
+   - Set `# inputs` to the total number of samples.
+
+3. **EVs Tab in GLM Window**:
+   - Set `# of main EVs` to 4.
+   - Name EVs (e.g., `EV1 = group 1`).
+   - Set Group to 1 for all.
+
+4. **Design Matrix**:
+   - Under `EV1`, enter 1 for each subject in group 1 (1 row/subject). EV2-4 are 0 for these rows.
+   - Under `EV2`, enter 1 for each subject in group 2, starting with the row after the last row for group 1.
+   - Follow this pattern for EV3 and EV4.
+
+5. **Contrasts & F-tests Tab in GLM Window**:
+   - Set `# of Contrasts` to 3 for a 2x2 ANOVA: 
+     - `C1`: `Main_effect_<e.g.,drug>` 1 1 -1 -1 (e.g., EV1/2 are drug groups and EV3/4 are saline groups).
+     - `C2`: `Main_effect_<e.g., context>` 1 -1 1 -1 (e.g., EV1/3 were in context1 and EV2/4 were in context2).
+     - `C3`: `Interaction` 1 -1 -1 1.
+   - Set `# of F-tests` to 3:
+     - `F1`: Click upper left box.
+     - `F2`: Click middle box.
+     - `F3`: Click lower right box.
+
+6. **Finalize GLM Setup**:
+   - In the GLM Setup window, click `Save`, then click `design`, and click `OK`.
+
+7. **Run Voxel-wise Stats**:
+   - From the vstats_dir, run: ``vstats``.
+
+#### Background
+- [FSL GLM Guide](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/GLM)
+- [FSL Randomise User Guide](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide)
+
+:::
 
 #### `vstats_prep`
 {py:mod}`unravel.voxel_stats.prep_vstats`
@@ -603,7 +722,6 @@ vstats_whole_to_avg -k 0.1 -tp -v  # A 0.05 mm - 0.1 mm kernel radius is recomme
 ```bash
 utils_prepend -sk $SAMPLE_KEY -f
 ```
-
 
 #### `vstats`
 {py:mod}`unravel.voxel_stats.vstats`
@@ -671,7 +789,7 @@ cluster_mirror_indices -m RH -v
 
 #### `cluster_validation`
 {py:mod}`unravel.cluster_stats.validate_clusters`
-* Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or label densities
+* Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or    label densities
 ```bash
 # Basic usage:
 cluster_validation -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s seg_dir -v

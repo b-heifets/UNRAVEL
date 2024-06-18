@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>unravel.region_stats.regional_cell_densities module &#8212; UNRAVEL docs</title>
+    <title>unravel.region_stats.rstats_mean_IF module &#8212; UNRAVEL docs</title>
   
   
   
@@ -48,12 +48,12 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/region_stats/regional_cell_densities';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/region_stats/rstats_mean_IF';</script>
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="unravel.region_stats.regional_cell_densities_summary module" href="regional_cell_densities_summary.html" />
-    <link rel="prev" title="unravel.region_stats.regional_IF_mean_intensities_summary module" href="regional_IF_mean_intensities_summary.html" />
+    <link rel="next" title="unravel.region_stats.rstats_mean_IF_in_segmented_voxels module" href="rstats_mean_IF_in_segmented_voxels.html" />
+    <link rel="prev" title="unravel.region_stats.rstats_summary module" href="rstats_summary.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -309,7 +309,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -368,13 +368,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.region_stats package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -488,64 +486,39 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.region_stats.regional_cell_densities">
-<span id="unravel-region-stats-regional-cell-densities-module"></span><span id="unravel-region-stats-regional-cell-densities"></span><h1>unravel.region_stats.regional_cell_densities module<a class="headerlink" href="#module-unravel.region_stats.regional_cell_densities" title="Link to this heading">#</a></h1>
-<p>Perform regional cell counting</p>
-<dl class="simple">
-<dt>Usage:</dt><dd><ul class="simple">
-<li><dl class="simple">
-<dt>regional_cell_densities.py -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline –dirs sample14 sample36</dt><dd><ul>
-<li><p>Use if atlas is already in native space from to_native.py</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>regional_cell_densities.py -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline –dirs sample14 sample36</dt><dd><ul>
-<li><p>Use if native atlas is not available; it is not saved (faster)</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-<dt>Prereqs:</dt><dd><ul class="simple">
-<li><p>prep_reg.py, reg.py and ilastik_pixel_classification.py</p></li>
-</ul>
-</dd>
-</dl>
+  <section id="module-unravel.region_stats.rstats_mean_IF">
+<span id="unravel-region-stats-rstats-mean-if-module"></span><span id="unravel-region-stats-rstats-mean-if"></span><h1>unravel.region_stats.rstats_mean_IF module<a class="headerlink" href="#module-unravel.region_stats.rstats_mean_IF" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">rstats_mean_IF</span></code> from UNRAVEL to measure mean intensity of immunofluorescence staining in brain regions in atlas space.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; regions=$(img_unique -i $atlas) ; for i in &lt;asterisk&gt;.nii.gz ; do rstats_mean_IF -i $i -a $atlas -r $regions ; done
+mkdir regional_mean_intensities
+mv &lt;asterisk&gt;_regional_mean_intensities.csv regional_mean_intensities/
+cd regional_mean_intensities
+rstats_mean_IF_summary</p>
+</div></blockquote>
+</section>
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.regional_cell_densities.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_cell_densities.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_cell_densities.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_cell_densities.parse_args" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.region_stats.rstats_mean_IF.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_mean_IF.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_mean_IF.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_mean_IF.parse_args" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.regional_cell_densities.get_atlas_region_at_coords">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_cell_densities.</span></span><span class="sig-name descname"><span class="pre">get_atlas_region_at_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_cell_densities.html#get_atlas_region_at_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_cell_densities.get_atlas_region_at_coords" title="Link to this definition">#</a></dt>
-<dd><p>“Get the ndarray atlas region intensity at the given coordinates</p>
+<dt class="sig sig-object py" id="unravel.region_stats.rstats_mean_IF.calculate_mean_intensity">
+<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_mean_IF.</span></span><span class="sig-name descname"><span class="pre">calculate_mean_intensity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_mean_IF.html#calculate_mean_intensity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_mean_IF.calculate_mean_intensity" title="Link to this definition">#</a></dt>
+<dd><p>Calculates mean intensity for each region in the atlas.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.regional_cell_densities.count_cells_in_regions">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_cell_densities.</span></span><span class="sig-name descname"><span class="pre">count_cells_in_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_cell_densities.html#count_cells_in_regions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_cell_densities.count_cells_in_regions" title="Link to this definition">#</a></dt>
-<dd><p>Count the number of cells in each region based on atlas region intensities</p>
+<dt class="sig sig-object py" id="unravel.region_stats.rstats_mean_IF.write_to_csv">
+<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_mean_IF.</span></span><span class="sig-name descname"><span class="pre">write_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_mean_IF.html#write_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_mean_IF.write_to_csv" title="Link to this definition">#</a></dt>
+<dd><p>Writes the data to a CSV file.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.regional_cell_densities.calculate_regional_volumes">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_cell_densities.</span></span><span class="sig-name descname"><span class="pre">calculate_regional_volumes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_cell_densities.html#calculate_regional_volumes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_cell_densities.calculate_regional_volumes" title="Link to this definition">#</a></dt>
-<dd><p>Calculate volumes for given regions in an atlas image.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.regional_cell_densities.calculate_regional_cell_densities">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_cell_densities.</span></span><span class="sig-name descname"><span class="pre">calculate_regional_cell_densities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regional_counts_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regional_volumes_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_cell_densities.html#calculate_regional_cell_densities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_cell_densities.calculate_regional_cell_densities" title="Link to this definition">#</a></dt>
-<dd><p>Calculate cell densities for each region in the atlas.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.regional_cell_densities.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.regional_cell_densities.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/regional_cell_densities.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.regional_cell_densities.main" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.region_stats.rstats_mean_IF.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_mean_IF.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_mean_IF.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_mean_IF.main" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -561,20 +534,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="regional_IF_mean_intensities_summary.html"
+       href="rstats_summary.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">unravel.region_stats.regional_IF_mean_intensities_summary module</p>
+        <p class="prev-next-title">unravel.region_stats.rstats_summary module</p>
       </div>
     </a>
     <a class="right-next"
-       href="regional_cell_densities_summary.html"
+       href="rstats_mean_IF_in_segmented_voxels.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.region_stats.regional_cell_densities_summary module</p>
+        <p class="prev-next-title">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -596,19 +569,18 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_cell_densities.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_cell_densities.get_atlas_region_at_coords"><code class="docutils literal notranslate"><span class="pre">get_atlas_region_at_coords()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_cell_densities.count_cells_in_regions"><code class="docutils literal notranslate"><span class="pre">count_cells_in_regions()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_cell_densities.calculate_regional_volumes"><code class="docutils literal notranslate"><span class="pre">calculate_regional_volumes()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_cell_densities.calculate_regional_cell_densities"><code class="docutils literal notranslate"><span class="pre">calculate_regional_cell_densities()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.regional_cell_densities.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_mean_IF.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_mean_IF.calculate_mean_intensity"><code class="docutils literal notranslate"><span class="pre">calculate_mean_intensity()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_mean_IF.write_to_csv"><code class="docutils literal notranslate"><span class="pre">write_to_csv()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_mean_IF.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../_sources/unravel/region_stats/regional_cell_densities.rst.txt">
+    <a href="../../_sources/unravel/region_stats/rstats_mean_IF.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

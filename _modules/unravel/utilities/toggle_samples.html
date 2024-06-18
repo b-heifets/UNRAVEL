@@ -49,21 +49,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/utilities/toggle_samples';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -367,13 +352,15 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Inactivate/activate sample?? dirs (i.e., prepend/remove &quot;_&quot; from dir name)</span>
+<span class="sd">Use ``utils_toggle`` from UNRAVEL to inactivate/activate sample?? dirs (i.e., prepend/remove &quot;_&quot; from dir name).</span>
 
 <span class="sd">Usage for toggling all sample?? dirs to active:</span>
-<span class="sd">    toggle_samples.py -t -e &lt;list_of_exp_dir_paths&gt;</span>
+<span class="sd">-----------------------------------------------</span>
+<span class="sd">    utils_toggle -t -e &lt;list_of_exp_dir_paths&gt;</span>
 <span class="sd">    </span>
 <span class="sd">Usage for activating sample?? dirs for certain conditions:</span>
-<span class="sd">    toggle_samples.py -c &lt;path/sample_key.csv&gt; -a &lt;Saline MDMA&gt; -v -e &lt;list_of_exp_dir_paths&gt;</span>
+<span class="sd">----------------------------------------------------------</span>
+<span class="sd">    utils_toggle -c &lt;path/sample_key.csv&gt; -a &lt;Saline MDMA&gt; -v -e &lt;list_of_exp_dir_paths&gt;</span>
 
 <span class="sd">For conditions in the activate list, the script will remove the &quot;_&quot; from the sample?? dir name.</span>
 <span class="sd">For conditions not in the activate list, the script will prepend &quot;_&quot; to the sample?? dir name.    </span>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unravel.region_stats.regional_cell_densities &#8212; UNRAVEL docs</title>
+    <title>unravel.region_stats.rstats &#8212; UNRAVEL docs</title>
   
   
   
@@ -49,22 +49,7 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/regional_cell_densities';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/rstats';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -363,20 +348,31 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for unravel.region_stats.regional_cell_densities</h1><div class="highlight"><pre>
+  <h1>Source code for unravel.region_stats.rstats</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Perform regional cell counting</span>
+<span class="sd">Use ``rstats`` from UNRAVEL to quantify cell densities for all regions in an atlas.</span>
 
-<span class="sd">Usage:    </span>
-<span class="sd">    - regional_cell_densities.py -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 </span>
-<span class="sd">        - Use if atlas is already in native space from to_native.py</span>
-<span class="sd">    - regional_cell_densities.py -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36</span>
-<span class="sd">        - Use if native atlas is not available; it is not saved (faster)</span>
+<span class="sd">Usage if the atlas is already in native space from ``warp_to_native``:</span>
+<span class="sd">----------------------------------------------------------------------</span>
+<span class="sd">    rstats -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline --dirs sample14 sample36 </span>
+
+<span class="sd">Usage if the native atlas is not available; it is not saved (faster):</span>
+<span class="sd">---------------------------------------------------------------------</span>
+<span class="sd">    rstats -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36</span>
+
+<span class="sd">Outputs:</span>
+<span class="sd">    - CSV file with cell counts, region volumes, or cell densities for each region</span>
+
+<span class="sd">Notes </span>
+<span class="sd">    - Regarding --type, also use &#39;counts&#39; or &#39;cell_desities&#39; for object counts or object densities</span>
 
 <span class="sd">Prereqs: </span>
-<span class="sd">    - prep_reg.py, reg.py and ilastik_pixel_classification.py</span>
+<span class="sd">    - ``reg_prep``, ``reg``, and ``seg_ilastik``</span>
+
+<span class="sd">Next steps:</span>
+<span class="sd">    - Use ``rstats_summary`` to summarize the results</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -398,21 +394,21 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats.html#unravel.region_stats.rstats.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process.&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pattern for sample?? dirs. Use cwd if no matches.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sample??&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of sample?? dir names or paths to dirs to process&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;One word name for group (prepended to sample ID for regional_cell_densities_summary.py)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--type&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Type of measurement (options: counts, volumes, cell_densities [default])&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;cell_densities&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;One word name for group (prepended to sample ID for rstats_summary)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--seg_img_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;rel_path/segmentation_image.nii.gz (can be glob pattern)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--atlas_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;rel_path/native_atlas_split.nii.gz (only use this option if this file exists; left label IDs increased by 20,000)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--moving_img&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/atlas_image.nii.gz to warp from atlas space&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/name.csv. Default: region_cell_counts.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;region_cell_counts.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-md&#39;</span><span class="p">,</span> <span class="s1">&#39;--metadata&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/metadata.txt. Default: ./parameters/metadata.txt&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;./parameters/metadata.txt&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cc&#39;</span><span class="p">,</span> <span class="s1">&#39;--connect&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Connected component connectivity (6, 18, or 26). Default: 6&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ro&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_outputs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Name of folder w/ outputs from registration. Default: reg_outputs&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_outputs&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-fri&#39;</span><span class="p">,</span> <span class="s1">&#39;--fixed_reg_in&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Fixed input for registration (reg.py). Default: autofl_50um_masked_fixed_reg_input.nii.gz&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;autofl_50um_masked_fixed_reg_input.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-fri&#39;</span><span class="p">,</span> <span class="s1">&#39;--fixed_reg_in&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Fixed input for registration (reg). Default: autofl_50um_masked_fixed_reg_input.nii.gz&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;autofl_50um_masked_fixed_reg_input.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Resolution of registration inputs in microns. Default: 50&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;50&#39;</span><span class="p">,</span><span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mi&#39;</span><span class="p">,</span> <span class="s1">&#39;--miracl&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Mode for compatibility (accounts for tif to nii reorienting)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -420,18 +416,17 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-<span class="c1"># TODO: Add option to get regional label densities --&gt; rename to regional_densities.py --&gt; update the summary script </span>
-
+<span class="c1"># TODO: Add option to get regional label densities --&gt; rename to rstats.py --&gt; update the summary script </span>
 
 <div class="viewcode-block" id="get_atlas_region_at_coords">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.get_atlas_region_at_coords">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats.html#unravel.region_stats.rstats.get_atlas_region_at_coords">[docs]</a>
 <span class="k">def</span> <span class="nf">get_atlas_region_at_coords</span><span class="p">(</span><span class="n">atlas</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot;Get the ndarray atlas region intensity at the given coordinates&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">atlas</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">z</span><span class="p">)]</span></div>
 
 
 <div class="viewcode-block" id="count_cells_in_regions">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.count_cells_in_regions">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats.html#unravel.region_stats.rstats.count_cells_in_regions">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">count_cells_in_regions</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">seg_img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">connectivity</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Count the number of cells in each region based on atlas region intensities&quot;&quot;&quot;</span>
@@ -487,9 +482,9 @@
     <span class="n">region_counts_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">sample_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">region_counts_df</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">sample_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
 
     <span class="c1"># Save the region counts as a CSV file</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">sample_path</span> <span class="o">/</span> <span class="s2">&quot;regional_cell_densities&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">sample_path</span> <span class="o">/</span> <span class="s2">&quot;regional_stats&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">output_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sample_name</span><span class="si">}</span><span class="s2">_regional_cell_counts.csv&quot;</span> <span class="k">if</span> <span class="n">condition</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sample_name</span><span class="si">}</span><span class="s2">_regional_cell_counts.csv&quot;</span>
-    <span class="n">output_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="s2">&quot;regional_cell_densities&quot;</span> <span class="o">/</span> <span class="n">output_filename</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="s2">&quot;regional_stats&quot;</span> <span class="o">/</span> <span class="n">output_filename</span>
     <span class="n">region_counts_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="c1"># Sort the dataframe by counts and print the top 10 with count &gt; 0</span>
@@ -504,7 +499,7 @@
 
 
 <div class="viewcode-block" id="calculate_regional_volumes">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.calculate_regional_volumes">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats.html#unravel.region_stats.rstats.calculate_regional_volumes">[docs]</a>
 <span class="k">def</span> <span class="nf">calculate_regional_volumes</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">region_ids</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate volumes for given regions in an atlas image.&quot;&quot;&quot;</span>
 
@@ -530,7 +525,7 @@
 
     <span class="c1"># Save regional volumes as a CSV file</span>
     <span class="n">output_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sample_name</span><span class="si">}</span><span class="s2">_regional_volumes.csv&quot;</span> <span class="k">if</span> <span class="n">condition</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sample_name</span><span class="si">}</span><span class="s2">_regional_volumes.csv&quot;</span>
-    <span class="n">output_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="s2">&quot;regional_cell_densities&quot;</span> <span class="o">/</span> <span class="n">output_filename</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="s2">&quot;regional_stats&quot;</span> <span class="o">/</span> <span class="n">output_filename</span>
     <span class="n">regional_volumes_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Saving regional volumes to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
@@ -539,7 +534,7 @@
 
 <span class="c1"># Function to calculate regional cell densities</span>
 <div class="viewcode-block" id="calculate_regional_cell_densities">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.calculate_regional_cell_densities">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats.html#unravel.region_stats.rstats.calculate_regional_cell_densities">[docs]</a>
 <span class="k">def</span> <span class="nf">calculate_regional_cell_densities</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">regional_counts_df</span><span class="p">,</span> <span class="n">regional_volumes_df</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate cell densities for each region in the atlas.&quot;&quot;&quot;</span>
 
@@ -552,7 +547,7 @@
 
     <span class="c1"># Save regional cell densities as a CSV file</span>
     <span class="n">output_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sample_name</span><span class="si">}</span><span class="s2">_regional_cell_densities.csv&quot;</span> <span class="k">if</span> <span class="n">condition</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sample_name</span><span class="si">}</span><span class="s2">_regional_cell_densities.csv&quot;</span>
-    <span class="n">output_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="s2">&quot;regional_cell_densities&quot;</span> <span class="o">/</span> <span class="n">output_filename</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="s2">&quot;regional_stats&quot;</span> <span class="o">/</span> <span class="n">output_filename</span>
     <span class="n">regional_densities_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Region_ID&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Drop the count column</span>
@@ -567,8 +562,9 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats.html#unravel.region_stats.rstats.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
     <span class="n">samples</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dirs</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">exp_paths</span><span class="p">)</span>
 
@@ -579,19 +575,21 @@
             <span class="n">sample_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">if</span> <span class="n">sample</span> <span class="o">!=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
 
             <span class="c1"># Define output</span>
-            <span class="n">output_dir</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="s2">&quot;regional_cell_densities&quot;</span>
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="s2">&quot;regional_stats&quot;</span>
             <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">output</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span>
+            <span class="n">output_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">sample_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_regional_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">.csv&quot;</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sample_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_regional_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">.csv&quot;</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">output_filename</span>
             <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">    </span><span class="si">{</span><span class="n">output</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> already exists for </span><span class="si">{</span><span class="n">sample_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">. Skipping.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">continue</span>
 
             <span class="c1"># Load the segmentation image</span>
-            <span class="n">seg_img_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">sample_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">seg_img_path</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">seg_img_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No files match the pattern </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">seg_img_path</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">sample_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-                <span class="k">continue</span>
-            <span class="n">seg_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">seg_img_path</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;counts&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;cell_densities&#39;</span><span class="p">:</span>
+                <span class="n">seg_img_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">sample_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">seg_img_path</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">seg_img_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No files match the pattern </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">seg_img_path</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">sample_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="n">seg_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">seg_img_path</span><span class="p">)</span>
 
             <span class="c1"># Load or generate the native atlas image</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">atlas_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">atlas_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -607,20 +605,26 @@
                 <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
             <span class="c1"># Count cells in regions</span>
-            <span class="n">regional_counts_df</span><span class="p">,</span> <span class="n">region_ids</span><span class="p">,</span> <span class="n">atlas</span> <span class="o">=</span> <span class="n">count_cells_in_regions</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">seg_img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
-
-            <span class="c1"># Load resolutions and dimensions of full res image for scaling </span>
-            <span class="n">metadata_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">metadata</span>
-            <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">load_image_metadata_from_txt</span><span class="p">(</span><span class="n">metadata_path</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ metadata.py&quot;</span><span class="p">)</span>
-                <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;counts&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;cell_densities&#39;</span><span class="p">:</span>
+                <span class="n">regional_counts_df</span><span class="p">,</span> <span class="n">region_ids</span><span class="p">,</span> <span class="n">atlas</span> <span class="o">=</span> <span class="n">count_cells_in_regions</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">seg_img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">connect</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
 
             <span class="c1"># Calculate regional volumes</span>
-            <span class="n">regional_volumes_df</span> <span class="o">=</span> <span class="n">calculate_regional_volumes</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">region_ids</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;volumes&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;cell_densities&#39;</span><span class="p">:</span>
+                <span class="c1"># Load resolutions and dimensions of full res image for scaling </span>
+                <span class="n">metadata_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">metadata</span>
+                <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">load_image_metadata_from_txt</span><span class="p">(</span><span class="n">metadata_path</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ io_metadata&quot;</span><span class="p">)</span>
+                    <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+                <span class="c1"># Calculate regional volumes</span>
+                <span class="n">region_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="s1">&#39;gubra__regionID_side_IDpath_region_abbr.csv&#39;</span><span class="p">)</span>
+                <span class="n">region_ids</span> <span class="o">=</span> <span class="n">region_info_df</span><span class="p">[</span><span class="s1">&#39;Region_ID&#39;</span><span class="p">]</span>
+                <span class="n">regional_volumes_df</span> <span class="o">=</span> <span class="n">calculate_regional_volumes</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">region_ids</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
 
             <span class="c1"># Calculate regional cell densities</span>
-            <span class="n">calculate_regional_cell_densities</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">regional_counts_df</span><span class="p">,</span> <span class="n">regional_volumes_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s1">&#39;cell_densities&#39;</span><span class="p">:</span>
+                <span class="n">calculate_regional_cell_densities</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">regional_counts_df</span><span class="p">,</span> <span class="n">regional_volumes_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition</span><span class="p">)</span>
 
             <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
 

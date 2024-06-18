@@ -49,21 +49,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/utilities/aggregate_files_from_sample_dirs';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -368,15 +353,15 @@
 
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Loads immunofluo image, subtracts background, and warps to atlas space</span>
+<span class="sd">Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directories to a target directory.</span>
 
 <span class="sd">Usage for when sample?? is already in the name of files being copied:</span>
-<span class="sd">    aggregate_files.py -i atlas_space/sample??_FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v</span>
+<span class="sd">---------------------------------------------------------------------</span>
+<span class="sd">    utils_agg_files -i atlas_space/sample??_FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v</span>
 
 <span class="sd">Usage to prepend sample?? to the name of files being copied:</span>
-<span class="sd">    aggregate_files.py -i atlas_space/FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v -a</span>
-
-
+<span class="sd">------------------------------------------------------------</span>
+<span class="sd">    utils_agg_files -i atlas_space/FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v -a</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>

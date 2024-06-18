@@ -309,7 +309,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -368,13 +368,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../region_stats/toc.html">unravel.region_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -490,6 +488,7 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="to_atlas.html">unravel.warp.to_atlas module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="to_atlas.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="to_atlas.html#unravel.warp.to_atlas.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="to_atlas.html#unravel.warp.to_atlas.copy_nii_header"><code class="docutils literal notranslate"><span class="pre">copy_nii_header()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="to_atlas.html#unravel.warp.to_atlas.to_atlas"><code class="docutils literal notranslate"><span class="pre">to_atlas()</span></code></a></li>
@@ -497,6 +496,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="to_native.html">unravel.warp.to_native module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="to_native.html#cli-usage">CLI usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="to_native.html#python-usage">Python usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="to_native.html#unravel.warp.to_native.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="to_native.html#unravel.warp.to_native.calculate_resampled_padded_dimensions"><code class="docutils literal notranslate"><span class="pre">calculate_resampled_padded_dimensions()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="to_native.html#unravel.warp.to_native.scale_to_full_res"><code class="docutils literal notranslate"><span class="pre">scale_to_full_res()</span></code></a></li>
@@ -505,6 +506,8 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="warp.html">unravel.warp.warp module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="warp.html#usage-for-forward-warping-atlas-to-tissue-space">Usage for forward warping atlas to tissue space:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="warp.html#usage-for-inverse-warping-tissue-to-atlas-space">Usage for inverse warping tissue to atlas space:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="warp.html#unravel.warp.warp.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="warp.html#unravel.warp.warp.warp"><code class="docutils literal notranslate"><span class="pre">warp()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="warp.html#unravel.warp.warp.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

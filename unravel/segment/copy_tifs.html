@@ -309,7 +309,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -368,13 +368,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../region_stats/toc.html">unravel.region_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -490,13 +488,19 @@
                   
   <section id="module-unravel.segment.copy_tifs">
 <span id="unravel-segment-copy-tifs-module"></span><span id="unravel-segment-copy-tifs"></span><h1>unravel.segment.copy_tifs module<a class="headerlink" href="#module-unravel.segment.copy_tifs" title="Link to this heading">#</a></h1>
-<p>Copies a subset of .tif files to a new dir for training ilastik</p>
-<dl class="simple">
-<dt>To prep for brain_mask.py (if –mask_dir &lt;path/mask_dir&gt; and -e &lt;exp dir paths&gt; were not specified in prep_reg.py):</dt><dd><p>copy_tifs.py -i reg_inputs/autofl_50um_tifs -s 0010 0060 0110 -o ilastik_brain_mask</p>
-</dd>
-<dt>To prep for ilastik_pixel_classification.py to segment full resolution immunofluorescence images:</dt><dd><p>copy_tifs.py -i raw_tif_dir -s 0100 0500 1000 -o ilastik_segmentation</p>
-</dd>
-</dl>
+<p>Use <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> from UNRAVEL to copy a subset of .tif files to a target dir for training ilastik.</p>
+<section id="usage-to-prep-for-seg-brain-mask-if-mask-dir-path-mask-dir-and-e-exp-dir-paths-were-not-specified-in-reg-prep">
+<h2>Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> (if –mask_dir &lt;path/mask_dir&gt; and -e &lt;exp dir paths&gt; were not specified in <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>):<a class="headerlink" href="#usage-to-prep-for-seg-brain-mask-if-mask-dir-path-mask-dir-and-e-exp-dir-paths-were-not-specified-in-reg-prep" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0010 0060 0110 -o ilastik_brain_mask</p>
+</div></blockquote>
+</section>
+<section id="usage-to-prep-for-seg-ilastik-to-segment-full-resolution-immunofluorescence-images">
+<h2>Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code> to segment full resolution immunofluorescence images:<a class="headerlink" href="#usage-to-prep-for-seg-ilastik-to-segment-full-resolution-immunofluorescence-images" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>seg_copy_tifs -i raw_tif_dir -s 0100 0500 1000 -o ilastik_segmentation</p>
+</div></blockquote>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.segment.copy_tifs.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.segment.copy_tifs.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/copy_tifs.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.copy_tifs.parse_args" title="Link to this definition">#</a></dt>
@@ -571,6 +575,8 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-brain-mask-if-mask-dir-path-mask-dir-and-e-exp-dir-paths-were-not-specified-in-reg-prep">Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> (if –mask_dir &lt;path/mask_dir&gt; and -e &lt;exp dir paths&gt; were not specified in <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-ilastik-to-segment-full-resolution-immunofluorescence-images">Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code> to segment full resolution immunofluorescence images:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.copy_specific_slices"><code class="docutils literal notranslate"><span class="pre">copy_specific_slices()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unravel.register.ANTsPy_affine_initializer &#8212; UNRAVEL docs</title>
+    <title>unravel.register.affine_initializer &#8212; UNRAVEL docs</title>
   
   
   
@@ -49,22 +49,7 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/register/ANTsPy_affine_initializer';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/register/affine_initializer';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -363,23 +348,23 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for unravel.register.ANTsPy_affine_initializer</h1><div class="highlight"><pre>
+  <h1>Source code for unravel.register.affine_initializer</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Run ants.affine_initializer as a seperate process to kill it after a time out</span>
+<span class="sd">Run ``reg_affine_initializer`` from UNRAVEL as a seperate process to kill it after a time out. This also allows for suppressing error messages.</span>
 
-<span class="sd">This also allows for suppressing error messages. </span>
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    reg_affine_initializer -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10</span>
 
-<span class="sd">Usage: </span>
-<span class="sd">    ANTsPy_affine_initialized.py -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10</span>
-
-<span class="sd">Python usage: </span>
-<span class="sd">    - import subprocess</span>
-<span class="sd">    - import os</span>
-<span class="sd">    - command = [&#39;python&#39;, &#39;ANTsPy_affine_initialized.py&#39;, &#39;-f&#39;, &#39;reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz&#39;, &#39;-m&#39;, &#39;/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz&#39;, &#39;-o&#39;, &#39;reg_outputs/ANTsPy_init_tform.nii.gz&#39;, &#39;-t&#39;, &#39;10&#39; ]</span>
-<span class="sd">    - with open(os.devnull, &#39;w&#39;) as devnull:</span>
-<span class="sd">    -    subprocess.run(command, stderr=devnull)</span>
+<span class="sd">Python usage:</span>
+<span class="sd">-------------</span>
+<span class="sd">&gt;&gt;&gt; import subprocess</span>
+<span class="sd">&gt;&gt;&gt; import os</span>
+<span class="sd">&gt;&gt;&gt; command = [&#39;python&#39;, &#39;reg_affine_initializer&#39;, &#39;-f&#39;, &#39;reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz&#39;, &#39;-m&#39;, &#39;/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz&#39;, &#39;-o&#39;, &#39;reg_outputs/ANTsPy_init_tform.nii.gz&#39;, &#39;-t&#39;, &#39;10&#39; ]</span>
+<span class="sd">&gt;&gt;&gt; with open(os.devnull, &#39;w&#39;) as devnull:</span>
+<span class="sd">&gt;&gt;&gt;    subprocess.run(command, stderr=devnull)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -395,7 +380,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/register/affine_initializer.html#unravel.register.affine_initializer.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--fixed_img&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/fixed_image.nii.gz (e.g., autofl_50um_masked_fixed_reg_input.nii.gz)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -407,7 +392,7 @@
 
 
 <div class="viewcode-block" id="affine_initializer_wrapper">
-<a class="viewcode-back" href="../../../unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.affine_initializer_wrapper">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/register/affine_initializer.html#unravel.register.affine_initializer.affine_initializer_wrapper">[docs]</a>
 <span class="k">def</span> <span class="nf">affine_initializer_wrapper</span><span class="p">(</span><span class="n">fixed_image_path</span><span class="p">,</span> <span class="n">moving_image_path</span><span class="p">,</span> <span class="n">reg_outputs_path</span><span class="p">,</span> <span class="n">queue</span><span class="p">):</span>
 
     <span class="c1"># Load the fixed and moving images</span>
@@ -431,7 +416,7 @@
 
 
 <div class="viewcode-block" id="run_with_timeout">
-<a class="viewcode-back" href="../../../unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.run_with_timeout">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/register/affine_initializer.html#unravel.register.affine_initializer.run_with_timeout">[docs]</a>
 <span class="k">def</span> <span class="nf">run_with_timeout</span><span class="p">(</span><span class="n">fixed_image</span><span class="p">,</span> <span class="n">moving_image</span><span class="p">,</span> <span class="n">reg_outputs_path</span><span class="p">,</span> <span class="n">timeout</span><span class="p">):</span>
 
     <span class="c1"># Queue for inter-process communication</span>
@@ -457,14 +442,14 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/register/affine_initializer.html#unravel.register.affine_initializer.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span> 
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     
     <span class="c1"># Run the affine initializer with a specified timeout (in seconds)</span>
     <span class="n">run_with_timeout</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">fixed_img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">moving_img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">time_out</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The affine initializer did not complete successfully w/ 10 second timeout. Lengthen the timeout period of ANTsPy_affine_initializer.py (.e.g, 180 seconds)&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;The affine initializer did not complete successfully w/ 10 second timeout. Lengthen the timeout period of ``reg_affine_initializer`` (.e.g, 180 seconds)&quot;</span><span class="p">)</span></div>
 
 
 

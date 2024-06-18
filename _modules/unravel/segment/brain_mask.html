@@ -49,21 +49,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/segment/brain_mask';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -367,26 +352,27 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Uses a trained ilastik project (pixel classification) to mask the brain (better registration)</span>
-
-<span class="sd">Prereqs: </span>
-<span class="sd">    - Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif (from prep_reg.py)</span>
-<span class="sd">    - Save brain_mask.ilp in experiment directory of use -ilp</span>
+<span class="sd">Use ``seg_brain_mask`` from UNRAVEL to run a trained ilastik project (pixel classification) to mask the brain (often better registration).</span>
 
 <span class="sd">Usage:</span>
-<span class="sd">    brain_mask.py -v </span>
+<span class="sd">------</span>
+<span class="sd">    seg_brain_mask -v </span>
+
+<span class="sd">Prereqs: </span>
+<span class="sd">    - Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif (from ``reg_prep``)</span>
+<span class="sd">    - Save brain_mask.ilp in experiment directory of use -ilp</span>
 
 <span class="sd">Inputs: </span>
-<span class="sd">    - reg_inputs/autofl_50um.nii.gz</span>
+<span class="sd">    - reg_inputs/autofl_&lt;asterisk&gt;um.nii.gz</span>
 <span class="sd">    - brain_mask.ilp # in exp dir</span>
 
 <span class="sd">Outputs: </span>
-<span class="sd">    - reg_inputs/autofl_50um_tifs_ilastik_brain_seg/slice_&lt;asterisk&gt;.tif series</span>
-<span class="sd">    - reg_inputs/autofl_50um_brain_mask.nii.gz (can be used for reg.py and z-score.py)</span>
-<span class="sd">    - reg_inputs/autofl_50um_masked.nii.gz</span>
+<span class="sd">    - reg_inputs/autofl_&lt;asterisk&gt;um_tifs_ilastik_brain_seg/slice_&lt;asterisk&gt;.tif series</span>
+<span class="sd">    - reg_inputs/autofl_&lt;asterisk&gt;um_brain_mask.nii.gz (can be used for ``reg`` and ``vstats_z_score``)</span>
+<span class="sd">    - reg_inputs/autofl_&lt;asterisk&gt;um_masked.nii.gz</span>
 
 <span class="sd">Next script: </span>
-<span class="sd">    - reg.py</span>
+<span class="sd">    - ``reg``</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -410,7 +396,7 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process.&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pattern for sample?? dirs. Use cwd if no matches.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sample??&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of sample?? dir names or paths to dirs to process&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;reg_inputs/autofl_50um.nii.gz (from prep_reg.py)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_inputs/autofl_50um.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_inputs/autofl_50um.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ilp&#39;</span><span class="p">,</span> <span class="s1">&#39;--ilastik_prj&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/brain_mask.ilp. Default: brain_mask.ilp&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;brain_mask.ilp&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Resolution of autofluo input image in microns. Default: 50&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;--ilastik_log&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Show Ilastik log&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>

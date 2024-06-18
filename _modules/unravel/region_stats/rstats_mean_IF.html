@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unravel.region_stats.regional_IF_mean_intensities &#8212; UNRAVEL docs</title>
+    <title>unravel.region_stats.rstats_mean_IF &#8212; UNRAVEL docs</title>
   
   
   
@@ -49,22 +49,7 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/regional_IF_mean_intensities';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/rstats_mean_IF';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -363,18 +348,19 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for unravel.region_stats.regional_IF_mean_intensities</h1><div class="highlight"><pre>
+  <h1>Source code for unravel.region_stats.rstats_mean_IF</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Measure mean intensity of immunofluorescence staining in brain regions in atlas space.</span>
+<span class="sd">Use ``rstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in brain regions in atlas space.</span>
 
-<span class="sd">Usage: </span>
-<span class="sd">    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; regions=$(img_unique -i $atlas) ; for i in &lt;asterisk&gt;.nii.gz ; do rstats_IF_mean -i $i -a $atlas -r $regions ; done</span>
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; regions=$(img_unique -i $atlas) ; for i in &lt;asterisk&gt;.nii.gz ; do rstats_mean_IF -i $i -a $atlas -r $regions ; done</span>
 <span class="sd">    mkdir regional_mean_intensities</span>
 <span class="sd">    mv &lt;asterisk&gt;_regional_mean_intensities.csv regional_mean_intensities/</span>
 <span class="sd">    cd regional_mean_intensities</span>
-<span class="sd">    rstats_IF_mean_summary </span>
+<span class="sd">    rstats_mean_IF_summary </span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -387,7 +373,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/atlas_space_immunofluorescence_image.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -398,8 +384,9 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
+
 <div class="viewcode-block" id="calculate_mean_intensity">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.calculate_mean_intensity">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.calculate_mean_intensity">[docs]</a>
 <span class="k">def</span> <span class="nf">calculate_mean_intensity</span><span class="p">(</span><span class="n">atlas</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">regions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates mean intensity for each region in the atlas.&quot;&quot;&quot;</span>
 
@@ -435,7 +422,7 @@
 
 
 <div class="viewcode-block" id="write_to_csv">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.write_to_csv">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.write_to_csv">[docs]</a>
 <span class="k">def</span> <span class="nf">write_to_csv</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">output_file</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Writes the data to a CSV file.&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
@@ -446,7 +433,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.main">[docs]</a>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 

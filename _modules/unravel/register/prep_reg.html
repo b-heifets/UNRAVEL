@@ -49,21 +49,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/register/prep_reg';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -367,23 +352,23 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Loads full resolution autofluo image and resamples to 50 um for registration</span>
-
-<span class="sd">Run script from the experiment directory w/ sample?? folder(s)</span>
-<span class="sd">or run from a sample?? folder.</span>
+<span class="sd">Use ``reg_prep`` from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.</span>
 
 <span class="sd">Usage:</span>
-<span class="sd">    prep_reg.py -i &lt;asterisk&gt;.czi -e &lt;list of paths to exp dirs&gt; -td &lt;path/brain_mask_tifs&gt; -v</span>
+<span class="sd">------</span>
+<span class="sd">    reg_prep -i &lt;asterisk&gt;.czi -td &lt;path/brain_mask_tifs&gt; -e &lt;list of paths to exp dirs&gt; -v</span>
+
+<span class="sd">Run script from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.</span>
 
 <span class="sd">Input examples (path is relative to ./sample??; 1st glob match processed): </span>
 <span class="sd">    &lt;asterisk&gt;.czi, autofluo/&lt;asterisk&gt;.tif series, autofluo, &lt;asterisk&gt;.tif, or &lt;asterisk&gt;.h5 </span>
 
 <span class="sd">Outputs: </span>
 <span class="sd">    ./sample??/reg_inputs/autofl_&lt;asterisk&gt;um.nii.gz</span>
-<span class="sd">    ./sample??/reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif series (used for training ilastik for brain_mask.py) </span>
+<span class="sd">    ./sample??/reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif series (used for training ilastik for ``seg_brain_mask``) </span>
 
 <span class="sd">Next script: </span>
-<span class="sd">    brain_mask.py or reg.py</span>
+<span class="sd">    ``seg_copy_tifs`` for ``seg_brain_mask`` or ``reg``</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -413,9 +398,9 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output path. Default: reg_inputs/autofl_50um.nii.gz&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;reg_inputs/autofl_50um.nii.gz&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="s1">&#39;--xy_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;x/y voxel size in microns of the input image. Default: get via metadata&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-z&#39;</span><span class="p">,</span> <span class="s1">&#39;--z_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;z voxel size in microns of the input image. Default: get via metadata&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Resample input to this res in um for reg.py. Default: 50&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-r&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Resample input to this res in um for reg. Default: 50&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-zo&#39;</span><span class="p">,</span> <span class="s1">&#39;--zoom_order&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Order for resampling (scipy.ndimage.zoom). Default: 1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-td&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/target_dir name to copy specific slices for brain_mask.py (see usage)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-td&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/target_dir name to copy specific slices for seg_brain_mask (see usage)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--slices&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of slice numbers to copy, e.g., 0000 0400 0800&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-mi&#39;</span><span class="p">,</span> <span class="s1">&#39;--miracl&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Include reorientation step to mimic MIRACL&#39;s tif to .nii.gz conversion&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -428,13 +413,13 @@
 <a class="viewcode-back" href="../../../unravel/register/prep_reg.html#unravel.register.prep_reg.prep_reg">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">prep_reg</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">reg_res</span><span class="p">,</span> <span class="n">zoom_order</span><span class="p">,</span> <span class="n">miracl</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare the autofluo image for reg.py or mimic preprocessing  for prep_vstats.py.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare the autofluo image for ``reg`` or mimic preprocessing  for ``vstats_prep``.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">        - ndarray (np.ndarray): full res 3D autofluo image.</span>
 <span class="sd">        - xy_res (float): x/y resolution in microns of ndarray.</span>
 <span class="sd">        - z_res (float): z resolution in microns of ndarray.</span>
-<span class="sd">        - reg_res (int): Resample input to this resolution in microns for reg.py.</span>
+<span class="sd">        - reg_res (int): Resample input to this resolution in microns for ``reg``.</span>
 <span class="sd">        - zoom_order (int): Order for resampling (scipy.ndimage.zoom).</span>
 <span class="sd">        - miracl (bool): Include reorientation step to mimic MIRACL&#39;s tif to .nii.gz conversion.</span>
 <span class="sd">        </span>
@@ -458,7 +443,7 @@
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">target_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="c1"># Create the target directory for copying the selected slices for brain_mask.py</span>
+        <span class="c1"># Create the target directory for copying the selected slices for ``seg_brain_mask``</span>
         <span class="n">target_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">target_dir</span><span class="p">)</span>
         <span class="n">target_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
@@ -486,12 +471,12 @@
             <span class="c1"># Prepare the autofluo image for registration</span>
             <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">prep_reg</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">miracl</span><span class="p">)</span>
 
-            <span class="c1"># Save the prepped autofluo image as tif series (for brain_mask.py)</span>
+            <span class="c1"># Save the prepped autofluo image as tif series (for ``seg_brain_mask``)</span>
             <span class="n">tif_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;_tifs&#39;</span><span class="p">))</span>
             <span class="n">tif_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img_resampled</span><span class="p">,</span> <span class="n">tif_dir</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">)</span>
 
-            <span class="c1"># Save the prepped autofl image (for reg.py if skipping brain_mask.py and for applying the brain mask)</span>
+            <span class="c1"># Save the prepped autofl image (for ``reg`` if skipping ``seg_brain_mask`` and for applying the brain mask)</span>
             <span class="n">save_as_nii</span><span class="p">(</span><span class="n">img_resampled</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_res</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
 
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">target_dir</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
