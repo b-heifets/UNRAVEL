@@ -29,18 +29,20 @@ flowchart TD
 ---
 
 ## Help on commands
+
 For help/info on a command, run this in the terminal:
 ```bash
 <command> -h
 ```
 
-:::{hint}
-* To view help on arguments for each script (a.k.a. module) in the online documentation, go to the page for that module, scroll to the parse_args() function, and click the link for viewing the source code.
-
+:::{admonition} Syntax
+:class: hint dropdown
 * The symbols < and > indicate placeholders. Replace \<command\> with the actual command name you want to learn more about.
-
 * Square brackets [ ] in command syntax signify optional elements. 
+* Double backticks are used in help guides to indicate a command. (e.g., \`\`command\`\`)
 :::
+
+To view help on arguments for each script (a.k.a. module) in the online documentation, go to the page for that module, scroll to the parse_args() function, and click the link for viewing the source code.
 
 ---
 

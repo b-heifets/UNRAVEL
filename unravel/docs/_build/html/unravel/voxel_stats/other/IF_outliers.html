@@ -493,12 +493,13 @@
                   
   <section id="module-unravel.voxel_stats.other.IF_outliers">
 <span id="unravel-voxel-stats-other-if-outliers-module"></span><span id="unravel-voxel-stats-other-if-outliers"></span><h1>unravel.voxel_stats.other.IF_outliers module<a class="headerlink" href="#module-unravel.voxel_stats.other.IF_outliers" title="Link to this heading">#</a></h1>
-<p>Load .nii.gz images matching pattern, get mean intensity of voxels in mask, and check for outliers (&gt;3*SD +/- the mean)</p>
-<dl class="simple">
-<dt>From dir w/ input images run:</dt><dd><p>IF_outliers.py</p>
-</dd>
-</dl>
-<p>Prints and plots results</p>
+<p>Loads .nii.gz images matching pattern, gets the mean intensity of voxels using the mask, checks for outliers (&gt;3*SD +/- the mean), and plots results</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>path/IF_outliers.py -p ‘&lt;asterisk&gt;.nii.gz’ -m path/mask.nii.gz -o means_in_mask_plot.pdf -v</p>
+</div></blockquote>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.voxel_stats.other.IF_outliers.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.other.IF_outliers.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/unravel/voxel_stats/other/IF_outliers.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.other.IF_outliers.parse_args" title="Link to this definition">#</a></dt>
@@ -567,6 +568,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.other.IF_outliers.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.other.IF_outliers.mean_intensity_within_mask"><code class="docutils literal notranslate"><span class="pre">mean_intensity_within_mask()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.other.IF_outliers.detect_outliers"><code class="docutils literal notranslate"><span class="pre">detect_outliers()</span></code></a></li>

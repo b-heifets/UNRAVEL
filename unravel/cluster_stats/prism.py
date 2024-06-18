@@ -47,7 +47,7 @@ def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs to include in the summary.', nargs='+', type=int, required=True, action=SM)
     parser.add_argument('-sa', '--save_all', help='Also save CSVs w/ cell_count|label_volume and cluster_volume data', action='store_true', default=False)
-    parser.add_argument('-p', '--path', help='Path to the directory containing the CSV files from validate_clusters.py. Default: current directory', action=SM)
+    parser.add_argument('-p', '--path', help='Path to the directory containing the CSV files from ``cluster_validation``. Default: current directory', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()

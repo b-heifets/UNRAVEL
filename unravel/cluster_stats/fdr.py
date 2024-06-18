@@ -61,7 +61,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: could add optional args like in vstats.py for running the fdr command. 
+# TODO: could add optional args like in ``vstats`` for running the ``cluster_fdr`` command. 
 
 @print_func_name_args_times()
 def fdr(input_path, fdr_path, mask_path, q_value):

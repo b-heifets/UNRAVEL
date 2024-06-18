@@ -62,7 +62,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: Add option to get regional label densities --> rename to rstats.py --> update the summary script 
+# TODO: Add option to get regional label densities
 
 def get_atlas_region_at_coords(atlas, x, y, z):
     """"Get the ndarray atlas region intensity at the given coordinates"""

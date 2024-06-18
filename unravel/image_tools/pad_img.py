@@ -44,7 +44,7 @@ def main():
     fixed_img_padded_nii = nib.Nifti1Image(img, nii.affine, nii.header)
     fixed_img_padded_nii.set_data_dtype(data_type)
 
-    # Set the orientation of the image (use if not already set correctly in the header; check with nii_orientation.py)
+    # Set the orientation of the image (use if not already set correctly in the header; check with ``io_reorient_nii``)
     if args.ort_code: 
         fixed_img_padded_nii = reorient_nii(fixed_img_padded_nii, args.ort_code, zero_origin=True, apply=False, form_code=1)
     else:

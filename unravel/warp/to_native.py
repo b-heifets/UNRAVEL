@@ -40,7 +40,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from atlas space', required=True, action=SM)
-    parser.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (reg.py). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
+    parser.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor, multiLabel [default], linear, bSpline)', default="multiLabel", action=SM)
     parser.add_argument('-o', '--output', help='Save as rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
@@ -111,7 +111,7 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
     metadata_path = sample_path / metadata_rel_path
     xy_res, z_res, x_dim, y_dim, z_dim = load_image_metadata_from_txt(metadata_path)
     if xy_res is None:
-        print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ metadata.py")
+        print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ ``io_metadata``")
         import sys ; sys.exit()
     original_dimensions = np.array([x_dim, y_dim, z_dim])
 

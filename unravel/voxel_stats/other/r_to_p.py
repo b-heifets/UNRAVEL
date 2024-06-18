@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Converts correlation map to z-score, p value, and FDR p value maps
+Converts correlation map to z-score, p value, and FDR p value maps.
 
 Usage:
-    r_to_p.py -i sample01_iba1_rb20_correlation_map.nii.gz -x 25 -z 25 -v
+------
+    path/r_to_p.py -i sample01_cfos_correlation_map.nii.gz -x 25 -z 25 -v
 
 Outputs: 
     - <image>_z_score_map.nii.gz

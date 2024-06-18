@@ -5,7 +5,7 @@ Use ``vstats_whole_to_avg`` from UNRAVEL to average an image with its mirrored v
 
 Usage:
 ------
-    whole_to_LR_avg.py -k 0.1 -v -tp
+    vstats_whole_to_avg -k 0.1 -v -tp
     
 Output:
     input_img_LRavg.nii.gz

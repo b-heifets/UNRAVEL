@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Load .nii.gz images matching pattern, get mean intensity of voxels in mask, and check for outliers (>3*SD +/- the mean)
+Loads .nii.gz images matching pattern, gets the mean intensity of voxels using the mask, checks for outliers (>3*SD +/- the mean), and plots results
 
-From dir w/ input images run: 
-    IF_outliers.py
-    
-Prints and plots results
+Usage:
+------ 
+    path/IF_outliers.py -p '<asterisk>.nii.gz' -m path/mask.nii.gz -o means_in_mask_plot.pdf -v
 """
 
 import argparse

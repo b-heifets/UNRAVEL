@@ -5,7 +5,7 @@ Use ``cluster_legend`` from UNRAVEL to summarize regional abbreviations from <as
 
 Usage:
 ------
-    legend.py
+    cluster_legend
 
 Inputs:
     <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cluster_table``

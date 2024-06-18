@@ -5,7 +5,7 @@ Use stats_table.py from UNRAVEL to recursively find and concatenate matching CSV
 
 Usage:
 ------
-    stats_table -cp cluster_validation_info.csv -o cluster_validation_summary.csv
+    path/stats_table.py -cp cluster_validation_info.csv -o cluster_validation_summary.csv
 """
 
 import argparse

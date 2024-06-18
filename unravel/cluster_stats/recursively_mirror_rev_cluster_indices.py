@@ -25,7 +25,7 @@ from voxel_stats.mirror import mirror
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-m', '--mas_side', help='Side of the brain corresponding to the mask used for vstats.py and fdr.py (RH or LH)', choices=['RH', 'LH'], required=True, action=SM)
+    parser.add_argument('-m', '--mas_side', help='Side of the brain corresponding to the mask used for ``vstats`` and ``cluster_fdr`` (RH or LH)', choices=['RH', 'LH'], required=True, action=SM)
     parser.add_argument('-p', '--pattern', help='Glob pattern to match files. Default: **/*rev_cluster_index.nii.gz', default='**/*rev_cluster_index.nii.gz', action=SM)
     parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)

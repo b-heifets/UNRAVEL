@@ -44,7 +44,6 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
-
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', action=SM)
@@ -57,7 +56,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in cluster_stats/stats.py. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
+# TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cluster_stats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 
 
 # Set Arial as the font

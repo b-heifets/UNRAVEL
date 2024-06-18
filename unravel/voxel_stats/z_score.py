@@ -5,15 +5,15 @@ Use ``vstats_z_score`` from UNRAVEL to z-score an atlas space image using a tiss
 
 Usage w/ a tissue mask (warped to atlas space):
 -----------------------------------------------
-    z_score.py -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -v
+    vstats_z_score -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -v
 
 Usage w/ an atlas mask (warped to atlas space):
 -----------------------------------------------
-    z_score.py -i path/img.nii.gz -n -amas path/atlas_mask.nii.gz -v
+    vstats_z_score -i path/img.nii.gz -n -amas path/atlas_mask.nii.gz -v
 
 Usage w/ both masks for side-specific z-scoring:
 ------------------------------------------------
-    z_score.py -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v
+    vstats_z_score -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v
 
 Next steps: 
     - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average hemispheres together.
@@ -57,7 +57,7 @@ def parse_args():
     parser.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
     parser.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
     parser.add_argument('-n', '--no_tmask', help='Provide flag to avoid use of tmas', action='store_true')
-    parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from reg.py. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
+    parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz for warping mask to atlas space (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-inp', '--interpol', help='Type of interpolation (nearestNeighbor, multiLabel [default]).', default='multiLabel', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
@@ -97,7 +97,7 @@ def main():
         print("\n    [red]Please provide a path for --atlas_mask if --tissue_mask is not used\n")
 
     if args.target_dir is not None:
-        # Create the target directory for copying outputs for vstats.py
+        # Create the target directory for copying outputs for ``vstats``
         target_dir = Path(args.target_dir)
         target_dir.mkdir(exist_ok=True, parents=True)
 
