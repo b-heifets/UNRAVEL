@@ -495,12 +495,22 @@
                   
   <section id="module-unravel.cluster_stats.effect_sizes.effect_sizes">
 <span id="unravel-cluster-stats-effect-sizes-effect-sizes-module"></span><span id="unravel-cluster-stats-effect-sizes-effect-sizes"></span><h1>unravel.cluster_stats.effect_sizes.effect_sizes module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes" title="Link to this heading">#</a></h1>
-<p>Calculates the effect size for a comparison between two groups for each cluster [or a valid cluster list]</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">effect_sizes</span></code> from UNRAVEL to calculate the effect size for a comparison between two groups for each cluster [or a valid cluster list].</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>effect_sizes -i densities.csv -c1 saline -c2 psilocybin</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>effect_sizes.py -i densities.csv -c1 saline -c2 psilocybin</p>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>CSV with densities (Columns: Samples, Conditions, Cluster_1, Cluster_2, …)</p></li>
+</ul>
 </dd>
 </dl>
-<p>-c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">param - -c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
 <dl class="simple">
 <dt>Outputs CSV w/ the effect size and CI for each cluster:</dt><dd><p>&lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;.csv</p>
 </dd>
@@ -511,6 +521,7 @@ CI = Hedges’ g +/- t * SE
 0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large</p>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.effect_sizes.effect_sizes.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.effect_sizes.effect_sizes.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/unravel/cluster_stats/effect_sizes/effect_sizes.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.effect_sizes.effect_sizes.parse_args" title="Link to this definition">#</a></dt>
@@ -604,6 +615,7 @@ An error is raised if the condition is neither found as an exact match nor as a 
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.effect_sizes.effect_sizes.hedges_g"><code class="docutils literal notranslate"><span class="pre">hedges_g()</span></code></a></li>

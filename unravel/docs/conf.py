@@ -44,7 +44,8 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx_togglebutton',
     'sphinx.ext.intersphinx', 
-    'sphinx_design'
+    'sphinx_design', 
+    'sphinxcontrib.mermaid'
 ]
 
 intersphinx_mapping = {
@@ -64,6 +65,8 @@ autodoc_typehints = 'description'
 myst_enable_extensions = [
     "colon_fence"
 ]
+
+mermaid_d3_zoom = True
 
 suppress_warnings = [
     'myst.xref_ambiguous',  # Suppresses ambiguous reference warnings from MyST-parser

@@ -48,6 +48,8 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'guide';</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -360,8 +362,30 @@
   <section id="guide">
 <h1>Guide<a class="headerlink" href="#guide" title="Link to this heading">#</a></h1>
 <ul class="simple">
-<li><p>If you are unfamiliar with the terminal, please review these <a class="reference external" href="https://andysbrainbook.readthedocs.io/en/latest/index.html">command line tutorials</a></p></li>
+<li><p>If you are unfamiliar with the terminal, please review these <a class="reference external" href="https://andysbrainbook.readthedocs.io/en/latest/index.html">command line tutorials</a>.</p></li>
 </ul>
+<section id="typical-workflow">
+<h2>Typical workflow<a class="headerlink" href="#typical-workflow" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Each nodes shows a description of the step and related commands.</p></li>
+</ul>
+<div class="mermaid">
+            flowchart TD
+    A(((LSFM))) --&gt; B[3D autofluo image]
+    B --&gt; C(Registration: reg_prep, seg_copy_tifs, seg_brain_mask, reg, reg_check) 
+    A --&gt; D[3D immunofluo image]
+    D --&gt; F(Remove autofluo + warp IF image to atlas space: vstats_prep)
+    C --&gt; F
+    F --&gt; G(Z-score: vstats_z_score)
+    G --&gt; N(Aggregate images: utils_agg_files)
+    N --&gt; H(Smoothing + average left and right sides: vstats_whole_to_avg)
+    H --&gt; J(Voxel-wise stats: vstats)
+    J --&gt; K(FDR correction of p value maps: cluster_fdr_range, cluster_fdr, cluster_mirror_indices)
+    K --&gt; L(Warp clusters of significant voxels to tissue space + validate clusters with cell/label density measurements: cluster_validation, cluster_summary)
+    C --&gt; L
+    D --&gt; M(Segment features of interest: seg_copy_tifs, seg_ilastik)
+    M --&gt; L
+        </div></section>
 <section id="help-on-commands">
 <h2>Help on commands<a class="headerlink" href="#help-on-commands" title="Link to this heading">#</a></h2>
 <p>For help/info on a command, run this in the terminal:</p>
@@ -371,6 +395,7 @@
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
 <ul class="simple">
+<li><p>To view help on arguments for each script (a.k.a. module) in the online documentation, go to the page for that module, scroll to the parse_args() function, and click the link for viewing the source code.</p></li>
 <li><p>The symbols &lt; and &gt; indicate placeholders. Replace &lt;command&gt; with the actual command name you want to learn more about.</p></li>
 <li><p>Square brackets [ ] in command syntax signify optional elements.</p></li>
 </ul>
@@ -1003,8 +1028,10 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<spa
 </section>
 <section id="utils-agg-files">
 <h4><code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code><a class="headerlink" href="#utils-agg-files" title="Link to this heading">#</a></h4>
-<p><a class="reference internal" href="unravel/utilities/aggregate_files_from_sample_dirs.html#module-unravel.utilities.aggregate_files_from_sample_dirs" title="unravel.utilities.aggregate_files_from_sample_dirs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.utilities.aggregate_files_from_sample_dirs</span></code></a>
-Aggregate pre-processed immunofluorescence (IF) images for voxel-wise stats</p>
+<p><a class="reference internal" href="unravel/utilities/aggregate_files_from_sample_dirs.html#module-unravel.utilities.aggregate_files_from_sample_dirs" title="unravel.utilities.aggregate_files_from_sample_dirs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.utilities.aggregate_files_from_sample_dirs</span></code></a></p>
+<ul class="simple">
+<li><p>Aggregate pre-processed immunofluorescence (IF) images for voxel-wise stats</p></li>
+</ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utils_agg_files<span class="w"> </span>-i<span class="w"> </span>atlas_space/sample??_cFos_rb4_atlas_space_z.nii.gz<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-v
 </pre></div>
 </div>
@@ -1081,8 +1108,10 @@ vstats_whole_to_avg<span class="w"> </span>-k<span class="w"> </span><span class
 </section>
 <section id="cluster-fdr-range">
 <h4><code class="docutils literal notranslate"><span class="pre">cluster_fdr_range</span></code><a class="headerlink" href="#cluster-fdr-range" title="Link to this heading">#</a></h4>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_correction.fdr_range</span></code>
-Outputs a list of FDR q values that yeild clusters.</p>
+<p><a class="reference internal" href="unravel/cluster_stats/fdr_range.html#module-unravel.cluster_stats.fdr_range" title="unravel.cluster_stats.fdr_range"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.fdr_range</span></code></a></p>
+<ul class="simple">
+<li><p>Outputs a list of FDR q values that yeild clusters.</p></li>
+</ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic usage</span>
 cluster_fdr_range<span class="w"> </span>-i<span class="w"> </span>vox_p_tstat1.nii.gz<span class="w"> </span>-mas<span class="w"> </span>mask.nii.gz
 
@@ -1096,7 +1125,7 @@ cluster_fdr_range<span class="w"> </span>-i<span class="w"> </span>vox_p_tstat1.
 </section>
 <section id="cluster-fdr">
 <h4><code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code><a class="headerlink" href="#cluster-fdr" title="Link to this heading">#</a></h4>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_correction.fdr_</span></code></p>
+<p><a class="reference internal" href="unravel/cluster_stats/fdr.html#module-unravel.cluster_stats.fdr" title="unravel.cluster_stats.fdr"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.fdr</span></code></a></p>
 <ul class="simple">
 <li><p>Perform FDR correction on a 1 - p value map to define clusters</p></li>
 </ul>
@@ -1106,7 +1135,7 @@ cluster_fdr_range<span class="w"> </span>-i<span class="w"> </span>vox_p_tstat1.
 </section>
 <section id="cluster-mirror-indices">
 <h4><code class="docutils literal notranslate"><span class="pre">cluster_mirror_indices</span></code><a class="headerlink" href="#cluster-mirror-indices" title="Link to this heading">#</a></h4>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_correction.recursive_mirror_index</span></code></p>
+<p><a class="reference internal" href="unravel/cluster_stats/recursively_mirror_rev_cluster_indices.html#module-unravel.cluster_stats.recursively_mirror_rev_cluster_indices" title="unravel.cluster_stats.recursively_mirror_rev_cluster_indices"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.recursively_mirror_rev_cluster_indices</span></code></a></p>
 <ul class="simple">
 <li><p>Recursively flip the content of rev_cluster_index.nii.gz images</p></li>
 <li><p>Run this in the ./stats/ folder to process all subdirs with reverse cluster maps (cluster IDs go from large to small)</p></li>
@@ -1164,7 +1193,7 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 </section>
 <section id="rstats-summary">
 <h4><code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code><a class="headerlink" href="#rstats-summary" title="Link to this heading">#</a></h4>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.region_stats.rstats_summary</span></code></p>
+<p><a class="reference internal" href="unravel/region_stats/regional_cell_densities_summary.html#module-unravel.region_stats.regional_cell_densities_summary" title="unravel.region_stats.regional_cell_densities_summary"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.region_stats.regional_cell_densities_summary</span></code></a></p>
 <ul class="simple">
 <li><p>Plot cell densities for each region and summarize results.</p></li>
 <li><p>CSV columns:</p>
@@ -1308,6 +1337,7 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#typical-workflow">Typical workflow</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#help-on-commands">Help on commands</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#listing-commands">Listing commands</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#common-commands">Common commands</a></li>

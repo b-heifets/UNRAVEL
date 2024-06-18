@@ -47,6 +47,8 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/brain_model';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -350,10 +352,11 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Prep .nii.gz and RGBA .txt for vizualization in dsi_studio.</span>
+<span class="sd">Use ``cluster_brain_model`` from UNRAVEL to prep .nii.gz and RGBA .txt for vizualization in dsi_studio.</span>
 
-<span class="sd">Usage:</span>
-<span class="sd">    brain_model.py -i input.csv -m -sa path/gubra_ano_split_25um.nii.gz -v</span>
+<span class="sd">Usage</span>
+<span class="sd">-----</span>
+<span class="sd">    cluster_brain_model -i input.csv -m -sa path/gubra_ano_split_25um.nii.gz -v</span>
 
 <span class="sd">The input image will be binarized and multiplied by the split atlas to apply region IDs.</span>
 

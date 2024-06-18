@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
 """
-Calculates the effect size for a comparison between two groups for each cluster [or a valid cluster list]
-
-Enter M or F in the Sex column.
+Use ``effect_sizes_sex_abs`` from UNRAVEL to calculate the effect size for a comparison between two groups for each cluster [or a valid cluster list].
     
 Usage:
-    effect_sizes_by_sex__absolution.py -i densities.csv -c1 saline -c2 psilocybin
+    effect_sizes_sex_abs -i densities.csv -c1 saline -c2 psilocybin
 
--c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.
+Inputs:
+    - CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, ...)
+    - Enter M or F in the Sex column.
+
+Arguments:
+    - -c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.
 
 Outputs CSV w/ the effect size and CI for each cluster:
     <input>_Hedges_g_<condition_1>_<condition_2>.csv

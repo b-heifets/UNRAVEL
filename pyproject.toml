@@ -50,8 +50,8 @@ dev = [
     "sphinx",
     "sphinx-autobuild", 
     "sphinx-togglebutton", 
-    "sphinx-design"
-
+    "sphinx-design",
+    "sphinxcontrib-mermaid"
 ]
 
 [project.urls]

@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Perform FDR correction on a p value map to define clusters
+Use ``cluster_fdr`` from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.
 
-Usage:
-    fdr.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05
+Usage
+-----
+    cluster_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05
 
 Inputs: 
-    - p value map (e.g., *vox_p_*stat*.nii.gz from vstats.py)    
+    - p value map (e.g., <asterisk>vox_p_<asterisk>stat<asterisk>.nii.gz from vstats)    
 
 Outputs saved in the output directory:
     - FDR-adjusted p value map
@@ -20,15 +21,15 @@ Outputs saved in the output directory:
 Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.
 
 Making directional cluster indices from non-directional p value maps output from ANOVAs: 
-    - Provide the average immunostaining intensity images for each group being contrasted (avg.py)
+    - Provide the average immunostaining intensity images for each group being contrasted (``img_avg``)
     - The --output needs to have <group1>_v_<group2> in the name
     - _v_ will be replaced with _gt_ or _lt_ based on the effect direction 
     - The cluster index will be split accoding to the effect directions
-    - fdr.py -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v
+    - ``cluster_fdr`` -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v
 
-For bilateral data processed with a hemispheric mask, next run recursively_mirror_rev_cluster_indices.py to mirror the cluster indices to the other hemisphere.
+For bilateral data processed with a hemispheric mask, next run ``cluster_mirror_indices`` to mirror the cluster indices to the other hemisphere.
 
-For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with validate_clusters.py.
+For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cluster_validation``.
 """
 
 import argparse

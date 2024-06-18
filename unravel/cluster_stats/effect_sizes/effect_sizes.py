@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 
 """
-Calculates the effect size for a comparison between two groups for each cluster [or a valid cluster list]
+Use ``effect_sizes`` from UNRAVEL to calculate the effect size for a comparison between two groups for each cluster [or a valid cluster list].
 
-Usage:
-    effect_sizes.py -i densities.csv -c1 saline -c2 psilocybin
+Usage
+-----
+    effect_sizes -i densities.csv -c1 saline -c2 psilocybin
 
--c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.
+Inputs:
+    - CSV with densities (Columns: Samples, Conditions, Cluster_1, Cluster_2, ...)
+
+Arguments:
+    - -c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.
 
 Outputs CSV w/ the effect size and CI for each cluster:
     <input>_Hedges_g_<condition_1>_<condition_2>.csv

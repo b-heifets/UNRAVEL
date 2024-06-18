@@ -495,13 +495,20 @@
                   
   <section id="module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute">
 <span id="unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-absolute-module"></span><span id="unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-absolute"></span><h1>unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute" title="Link to this heading">#</a></h1>
-<p>Calculates the effect size for a comparison between two groups for each cluster [or a valid cluster list]</p>
-<p>Enter M or F in the Sex column.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">effect_sizes_sex_abs</span></code> from UNRAVEL to calculate the effect size for a comparison between two groups for each cluster [or a valid cluster list].</p>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>effect_sizes_by_sex__absolution.py -i densities.csv -c1 saline -c2 psilocybin</p>
+<dt>Usage:</dt><dd><p>effect_sizes_sex_abs -i densities.csv -c1 saline -c2 psilocybin</p>
+</dd>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, …)</p></li>
+<li><p>Enter M or F in the Sex column.</p></li>
+</ul>
 </dd>
 </dl>
-<p>-c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">param - -c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
 <dl class="simple">
 <dt>Outputs CSV w/ the effect size and CI for each cluster:</dt><dd><p>&lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;.csv</p>
 </dd>

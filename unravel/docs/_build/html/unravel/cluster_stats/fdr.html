@@ -490,12 +490,15 @@
                   
   <section id="module-unravel.cluster_stats.fdr">
 <span id="unravel-cluster-stats-fdr-module"></span><span id="unravel-cluster-stats-fdr"></span><h1>unravel.cluster_stats.fdr module<a class="headerlink" href="#module-unravel.cluster_stats.fdr" title="Link to this heading">#</a></h1>
-<p>Perform FDR correction on a p value map to define clusters</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code> from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>fdr.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05</p>
-</dd>
 <dt>Inputs:</dt><dd><ul class="simple">
-<li><p>p value map (e.g., <em>vox_p_*stat</em>.nii.gz from vstats.py)</p></li>
+<li><p>p value map (e.g., &lt;asterisk&gt;vox_p_&lt;asterisk&gt;stat&lt;asterisk&gt;.nii.gz from vstats)</p></li>
 </ul>
 </dd>
 <dt>Outputs saved in the output directory:</dt><dd><ul class="simple">
@@ -511,16 +514,17 @@
 <p>Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.</p>
 <dl class="simple">
 <dt>Making directional cluster indices from non-directional p value maps output from ANOVAs:</dt><dd><ul class="simple">
-<li><p>Provide the average immunostaining intensity images for each group being contrasted (avg.py)</p></li>
+<li><p>Provide the average immunostaining intensity images for each group being contrasted (<code class="docutils literal notranslate"><span class="pre">img_avg</span></code>)</p></li>
 <li><p>The –output needs to have &lt;group1&gt;_v_&lt;group2&gt; in the name</p></li>
 <li><p>_v_ will be replaced with _gt_ or _lt_ based on the effect direction</p></li>
 <li><p>The cluster index will be split accoding to the effect directions</p></li>
-<li><p>fdr.py -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code> -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v</p></li>
 </ul>
 </dd>
 </dl>
-<p>For bilateral data processed with a hemispheric mask, next run recursively_mirror_rev_cluster_indices.py to mirror the cluster indices to the other hemisphere.</p>
-<p>For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with validate_clusters.py.</p>
+<p>For bilateral data processed with a hemispheric mask, next run <code class="docutils literal notranslate"><span class="pre">cluster_mirror_indices</span></code> to mirror the cluster indices to the other hemisphere.</p>
+<p>For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code>.</p>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.fdr.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr.parse_args" title="Link to this definition">#</a></dt>
@@ -635,6 +639,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr.fdr"><code class="docutils literal notranslate"><span class="pre">fdr()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr.cluster_index"><code class="docutils literal notranslate"><span class="pre">cluster_index()</span></code></a></li>

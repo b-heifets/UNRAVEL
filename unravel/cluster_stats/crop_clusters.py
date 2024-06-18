@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Load image, load bounding box, crop cluster, and save as .nii.gz
+Use ``cluster_crop`` from UNRAVEL to load image, load bounding box, crop cluster, and save as .nii.gz.
+
+Usage
+-----
+    cluster_crop -i path/img.nii.gz -b path/bbox.txt -o path/output_img.nii.gz -a -x $XY -z $Z -v
 """
 
 import argparse
@@ -22,8 +26,8 @@ def parse_args():
     parser.add_argument('-b', '--bbox', help='path/bbox.txt', action=SM)
     parser.add_argument('-c', '--cluster', help='Cluster intensity to get bbox and crop', action=SM)
     parser.add_argument('-a', '--all_clusters', help='Crop each cluster. Default: False', action='store_true', default=False)
-    parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, action=SM)
-    parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)
+    parser.add_argument('-x', '--xy_res', help='xy voxel size in microns for the raw data', type=float, action=SM)
+    parser.add_argument('-z', '--z_res', help='z voxel size in microns for the raw data', type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Prep .nii.gz and RGBA .txt for vizualization in dsi_studio.
+Use ``cluster_brain_model`` from UNRAVEL to prep .nii.gz and RGBA .txt for vizualization in dsi_studio.
 
-Usage:
-    brain_model.py -i input.csv -m -sa path/gubra_ano_split_25um.nii.gz -v
+Usage
+-----
+    cluster_brain_model -i input.csv -m -sa path/gubra_ano_split_25um.nii.gz -v
 
 The input image will be binarized and multiplied by the split atlas to apply region IDs.
 
