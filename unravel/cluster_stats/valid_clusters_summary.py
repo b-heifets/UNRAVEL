@@ -1,26 +1,28 @@
 #!/usr/bin/env python3
 
 """ 
-Aggregates and analyzes cluster validation data from cluster_validation
+Use ``cluster_summary`` from UNRAVEL to aggregate and analyze cluster validation data from ``cluster_validation``.
 
-Usage if running directly after cluster_validation:
+Usage if running directly after ``cluster_validation``:
+-------------------------------------------------------
     cluster_summary -c <path/config.ini> -e <exp dir paths> -cvd '*' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -v
 
-Usage if running after cluster_validation and cluster_org_data:
+Usage if running after ``cluster_validation`` and ``cluster_org_data``:
+-----------------------------------------------------------------------
     cluster_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -v
 
 The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.
 
 Runs commands in this order:
-    - cluster_org_data
-    - cluster_group_data
-    - utils_prepend
-    - cluster_stats
-    - cluster_index
-    - cluster_brain_model
-    - cluster_table
-    - cluster_prism
-    - cluster_legend
+    - ``cluster_org_data``
+    - ``cluster_group_data``
+    - ``utils_prepend``
+    - ``cluster_stats``
+    - ``cluster_index``
+    - ``cluster_brain_model``
+    - ``cluster_table``
+    - ``cluster_prism``
+    - ``cluster_legend``
 
 The sample_key.csv file should have the following format:
     dir_name,condition

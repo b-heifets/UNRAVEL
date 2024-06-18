@@ -49,6 +49,21 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
+    <script>
+            window.addEventListener("load", function () {
+              var svgs = d3.selectAll(".mermaid svg");
+              svgs.each(function() {
+                var svg = d3.select(this);
+                svg.html("<g>" + svg.html() + "</g>");
+                var inner = svg.select("g");
+                var zoom = d3.zoom().on("zoom", function(event) {
+                  inner.attr("transform", event.transform);
+                });
+                svg.call(zoom);
+              });
+            });
+            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/valid_clusters_summary';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -352,26 +367,28 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot; </span>
-<span class="sd">Aggregates and analyzes cluster validation data from cluster_validation</span>
+<span class="sd">Use ``cluster_summary`` from UNRAVEL to aggregate and analyze cluster validation data from ``cluster_validation``.</span>
 
-<span class="sd">Usage if running directly after cluster_validation:</span>
+<span class="sd">Usage if running directly after ``cluster_validation``:</span>
+<span class="sd">-------------------------------------------------------</span>
 <span class="sd">    cluster_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd &#39;*&#39; -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -v</span>
 
-<span class="sd">Usage if running after cluster_validation and cluster_org_data:</span>
+<span class="sd">Usage if running after ``cluster_validation`` and ``cluster_org_data``:</span>
+<span class="sd">-----------------------------------------------------------------------</span>
 <span class="sd">    cluster_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -v</span>
 
 <span class="sd">The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</span>
 
 <span class="sd">Runs commands in this order:</span>
-<span class="sd">    - cluster_org_data</span>
-<span class="sd">    - cluster_group_data</span>
-<span class="sd">    - utils_prepend</span>
-<span class="sd">    - cluster_stats</span>
-<span class="sd">    - cluster_index</span>
-<span class="sd">    - cluster_brain_model</span>
-<span class="sd">    - cluster_table</span>
-<span class="sd">    - cluster_prism</span>
-<span class="sd">    - cluster_legend</span>
+<span class="sd">    - ``cluster_org_data``</span>
+<span class="sd">    - ``cluster_group_data``</span>
+<span class="sd">    - ``utils_prepend``</span>
+<span class="sd">    - ``cluster_stats``</span>
+<span class="sd">    - ``cluster_index``</span>
+<span class="sd">    - ``cluster_brain_model``</span>
+<span class="sd">    - ``cluster_table``</span>
+<span class="sd">    - ``cluster_prism``</span>
+<span class="sd">    - ``cluster_legend``</span>
 
 <span class="sd">The sample_key.csv file should have the following format:</span>
 <span class="sd">    dir_name,condition</span>

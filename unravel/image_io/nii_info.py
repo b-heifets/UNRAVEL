@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Load .nii.gz and print its data type, shape, voxel sizes, and affine matrix using nibabel.
+Use ``io_nii_info`` from UNRAVEL to load an .nii.gz image and print its data type, shape, voxel sizes, and affine matrix using nibabel.
+
+Usage:
+------
+    io_nii_info -i path/img.nii.gz
 """
 
 import argparse

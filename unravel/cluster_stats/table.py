@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
+Use ``cluster_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
 
 Usage:
-    table.py
+------
+    cluster_table
 
 Prereqs:
-    valid_cluster_index.sh has been run. Run this script from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
+    ``cluster_index`` has been run. Run this script from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
 
 Sorting by hierarchy and volume:
 --------------------------------
@@ -43,7 +44,7 @@ from unravel.core.utils import print_cmd_and_times
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from index.py (else cwd)', action=SM)
+    parser.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from unravel.cluster_stats.index (else cwd)', action=SM)
     parser.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
     parser.add_argument('-pv', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)

@@ -49,6 +49,21 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
+    <script>
+            window.addEventListener("load", function () {
+              var svgs = d3.selectAll(".mermaid svg");
+              svgs.each(function() {
+                var svg = d3.select(this);
+                svg.html("<g>" + svg.html() + "</g>");
+                var inner = svg.select("g");
+                var zoom = d3.zoom().on("zoom", function(event) {
+                  inner.attr("transform", event.transform);
+                });
+                svg.call(zoom);
+              });
+            });
+            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/org_data';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -352,10 +367,11 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Aggregates csv outputs from validate_clusters.py</span>
+<span class="sd">Use ``cluster_org_data`` from UNRAVEL to aggregate and organize csv outputs from ``cluster_validation``.</span>
 
-<span class="sd">Usage:</span>
-<span class="sd">    org_data.py -e &lt;list of experiment directories&gt; -cvd &#39;*&#39; -td &lt;target_dir&gt; -vd &lt;path/vstats_dir&gt; -v</span>
+<span class="sd">Usage</span>
+<span class="sd">-----</span>
+<span class="sd">    cluster_org_data -e &lt;list of experiment directories&gt; -cvd &#39;&lt;asterisk&gt;&#39; -td &lt;target_dir&gt; -vd &lt;path/vstats_dir&gt; -v</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>

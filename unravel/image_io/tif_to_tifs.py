@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Loads 3D .tif image, saves as tifs. Also, saves xy and z voxel size in microns
+Use ``io_tif_to_tifs`` from UNRAVEL to load a 3D .tif image and save it as tifs.
 
-Usage: 
-    tif_to_tifs.py -i <path/image.tif> -t 488
+Usage:
+------
+    io_tif_to_tifs -i <path/image.tif> -t 488
 
 Inputs: 
     - image.tif # either from -i path/image.tif or largest <asterisk>.tif in cwd

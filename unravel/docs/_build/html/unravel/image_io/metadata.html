@@ -490,13 +490,20 @@
                   
   <section id="module-unravel.image_io.metadata">
 <span id="unravel-image-io-metadata-module"></span><span id="unravel-image-io-metadata"></span><h1>unravel.image_io.metadata module<a class="headerlink" href="#module-unravel.image_io.metadata" title="Link to this heading">#</a></h1>
-<p>This script saves x/y and z voxel sizes in microns as well as image dimensions to a metadata file in each sample directory.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">io_metadata</span></code> from UNRAVEL to save x/y and z voxel sizes in microns as well as image dimensions to a metadata file in each sample directory.</p>
 <p>Run this script from an experiment, sample?? folder, or provide -e/–exp_paths and -d/–dirs arguments to specify the experiment and sample directories.</p>
+<section id="usage-for-when-metadata-is-extractable">
+<h2>Usage for when metadata is extractable:<a class="headerlink" href="#usage-for-when-metadata-is-extractable" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_metadata -i rel_path/full_res_img (can use glob patterns)</p>
+</div></blockquote>
+</section>
+<section id="usage-for-when-metadata-is-not-extractable">
+<h2>Usage for when metadata is not extractable:<a class="headerlink" href="#usage-for-when-metadata-is-not-extractable" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_metadata -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage for when metadata is extractable:</dt><dd><p>metadata.py -i rel_path/full_res_img (can use glob patterns)</p>
-</dd>
-<dt>Usage for when metadata is not extractable:</dt><dd><p>metadata.py -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable</p>
-</dd>
 <dt>Inputs:</dt><dd><ul class="simple">
 <li><p>.czi, .nii.gz, .h5, or TIF series (path should be relative to ./sample??)</p></li>
 </ul>
@@ -506,6 +513,7 @@
 </ul>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_io.metadata.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.image_io.metadata.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/metadata.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.metadata.parse_args" title="Link to this definition">#</a></dt>
@@ -574,6 +582,8 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-when-metadata-is-extractable">Usage for when metadata is extractable:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-when-metadata-is-not-extractable">Usage for when metadata is not extractable:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.metadata.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.metadata.print_metadata"><code class="docutils literal notranslate"><span class="pre">print_metadata()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.metadata.get_dims_from_tifs"><code class="docutils literal notranslate"><span class="pre">get_dims_from_tifs()</span></code></a></li>

@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 
 """
-Generate a thin wireframe image from an atlas NIfTI file.
+Use ``atlas_wireframe`` from UNRAVEL to generate a thin wireframe image from an atlas NIfTI file.
 
-wireframe.py -i path.atlas.nii.gz 
+Usage: 
+------
+    atlas_wireframe -i path.atlas.nii.gz 
 
 Outlines are generated outside the regions and not inside smaller regions. 
 For regions at the surface of the brain, the outlines are internalized.
 
 Outputs: 
-path/atlas_imgW.nii.gz # Wireframe image
-path/atlas_imgW_IDs.nii.gz # Wireframe image with region IDs
+    - path/atlas_img_W.nii.gz # Wireframe image
+    - path/atlas_img_W_IDs.nii.gz # Wireframe image with region IDs
 """
 
 import argparse

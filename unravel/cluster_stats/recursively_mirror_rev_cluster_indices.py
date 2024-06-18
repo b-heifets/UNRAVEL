@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 """
-Recursively process img.nii.gz files, apply mirroring, and save new files.
+Use ``cluster_mirror_indices`` from UNRAVEL to recursively process img.nii.gz files, apply mirroring, and save new files.
 
-Usage:
-    recursively_mirror_rev_cluster_indices.py -m RH -v
+Usage
+-----
+    cluster_mirror_indices -m RH -v
     
-Use this script after fdr.py to mirror the cluster indices for the other side of the brain before running validate_clusters.py    
+Use this script after ``cluster_fdr`` to mirror the cluster indices for the other side of the brain before running ``cluster_validation``.  
 """
 
 import argparse

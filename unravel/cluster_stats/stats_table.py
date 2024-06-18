@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Recursively find and concatenate matching csvs (e.g., to summarize cluster validation info).
+Use stats_table.py from UNRAVEL to recursively find and concatenate matching CSVs (e.g., to summarize cluster validation info).
+
+Usage:
+------
+    stats_table -cp cluster_validation_info.csv -o cluster_validation_summary.csv
 """
 
 import argparse

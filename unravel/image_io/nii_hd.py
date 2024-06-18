@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Load .nii.gz and print header using nibabel.
+Use ``io_nii_hd`` from UNRAVEL to load a .nii.gz and print its header using nibabel.
+
+Usage:
+------
+    io_nii_hd -i path/img.nii.gz
 """
 
 import argparse

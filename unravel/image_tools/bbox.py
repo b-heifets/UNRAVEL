@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Load image (.czi, .nii.gz, or tif series) and save bounding boxes as txt files
+Use ``img_bbox`` from UNRAVEL to load an image (.czi, .nii.gz, or tif series) and save bounding boxes as txt files.
 
 Usage:
-    bbox.py -i path/img -o path/bounding_boxes
+------
+    img_bbox -i path/img -o path/bounding_boxes
 """
 
 import argparse

@@ -490,10 +490,13 @@
                   
   <section id="module-unravel.image_io.tif_to_tifs">
 <span id="unravel-image-io-tif-to-tifs-module"></span><span id="unravel-image-io-tif-to-tifs"></span><h1>unravel.image_io.tif_to_tifs module<a class="headerlink" href="#module-unravel.image_io.tif_to_tifs" title="Link to this heading">#</a></h1>
-<p>Loads 3D .tif image, saves as tifs. Also, saves xy and z voxel size in microns</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">io_tif_to_tifs</span></code> from UNRAVEL to load a 3D .tif image and save it as tifs.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_tif_to_tifs -i &lt;path/image.tif&gt; -t 488</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>tif_to_tifs.py -i &lt;path/image.tif&gt; -t 488</p>
-</dd>
 <dt>Inputs:</dt><dd><ul class="simple">
 <li><p>image.tif # either from -i path/image.tif or largest &lt;asterisk&gt;.tif in cwd</p></li>
 </ul>
@@ -506,6 +509,7 @@
 <dt>Next script:</dt><dd><p>prep_reg.sh</p>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_io.tif_to_tifs.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.image_io.tif_to_tifs.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/tif_to_tifs.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.tif_to_tifs.parse_args" title="Link to this definition">#</a></dt>
@@ -591,6 +595,7 @@ If return_res=True returns: ndarray, xy_res, z_res (resolution in um)</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.tif_to_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.tif_to_tifs.find_largest_tif_file"><code class="docutils literal notranslate"><span class="pre">find_largest_tif_file()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.tif_to_tifs.load_3D_tif"><code class="docutils literal notranslate"><span class="pre">load_3D_tif()</span></code></a></li>

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Adds 15 percent of padding to an image and saves it
+Use ``img_pad`` from UNRAVEL to add 15 percent of padding to an image.nii.gz and save it.
 
 Usage:
-    pad_img.py -i reg_inputs/autofl_50um.nii.gz
+------
+    img_pad -i reg_inputs/autofl_50um.nii.gz
 """
 
 import argparse

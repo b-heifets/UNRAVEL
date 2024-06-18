@@ -490,15 +490,25 @@
                   
   <section id="module-unravel.image_tools.uniq_intensities">
 <span id="unravel-image-tools-uniq-intensities-module"></span><span id="unravel-image-tools-uniq-intensities"></span><h1>unravel.image_tools.uniq_intensities module<a class="headerlink" href="#module-unravel.image_tools.uniq_intensities" title="Link to this heading">#</a></h1>
-<p>Print list of unique intensities greater than 0</p>
-<dl class="simple">
-<dt>Usage for printing all non-zero intensities:</dt><dd><p>uniq_intensities.py -i path/input_img.nii.gz</p>
-</dd>
-<dt>Usage for printing the number of voxels for each intensity that is present:</dt><dd><p>uniq_intensities.py -i path/input_img.nii.gz</p>
-</dd>
-<dt>Usage for checking which clusters are present if the min cluster size was 100 voxels:</dt><dd><p>uniq_intensities.py -i path/input_img.nii.gz -m 100</p>
-</dd>
-</dl>
+<p>Use <code class="docutils literal notranslate"><span class="pre">img_unique</span></code> from UNRAVEL to print a list of unique intensities greater than 0.</p>
+<section id="usage-for-printing-all-non-zero-intensities">
+<h2>Usage for printing all non-zero intensities:<a class="headerlink" href="#usage-for-printing-all-non-zero-intensities" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>img_unique -i path/input_img.nii.gz</p>
+</div></blockquote>
+</section>
+<section id="usage-for-printing-the-number-of-voxels-for-each-intensity-that-is-present">
+<h2>Usage for printing the number of voxels for each intensity that is present:<a class="headerlink" href="#usage-for-printing-the-number-of-voxels-for-each-intensity-that-is-present" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>img_unique -i path/input_img.nii.gz</p>
+</div></blockquote>
+</section>
+<section id="usage-for-checking-which-clusters-are-present-if-the-min-cluster-size-was-100-voxels">
+<h2>Usage for checking which clusters are present if the min cluster size was 100 voxels:<a class="headerlink" href="#usage-for-checking-which-clusters-are-present-if-the-min-cluster-size-was-100-voxels" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>img_unique -i path/input_img.nii.gz -m 100</p>
+</div></blockquote>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_tools.uniq_intensities.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.image_tools.uniq_intensities.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/uniq_intensities.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.uniq_intensities.parse_args" title="Link to this definition">#</a></dt>
@@ -557,6 +567,9 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-printing-all-non-zero-intensities">Usage for printing all non-zero intensities:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-printing-the-number-of-voxels-for-each-intensity-that-is-present">Usage for printing the number of voxels for each intensity that is present:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-checking-which-clusters-are-present-if-the-min-cluster-size-was-100-voxels">Usage for checking which clusters are present if the min cluster size was 100 voxels:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.uniq_intensities.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.uniq_intensities.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>

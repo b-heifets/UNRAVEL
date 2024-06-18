@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 
 """
-Converts image.nii.gz to tif series in output_dir.
+Use ``io_nii_to_tifs`` from UNRAVEL to convert an image.nii.gz to tif series in an output_dir.
+
+Usage:
+------
+    io_nii_to_tifs -i path/image.nii.gz -o path/output_dir
+
 """
 
 import argparse

@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
+Use ``cluster_legend`` from UNRAVEL to summarize regional abbreviations from <asterisk>_valid_clusters_table.xlsx files.
 
 Usage:
+------
     legend.py
 
-Prereqs:
-    valid_cluster_table.sh has been run and the resulting .xlsx files are in the working directory.
-
 Inputs:
-    <asterisk>_valid_clusters_table.xlsx files in the working directory
+    <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cluster_table``
 
 Outputs:
     legend.xlsx

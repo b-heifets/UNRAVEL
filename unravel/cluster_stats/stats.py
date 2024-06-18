@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
 
 """
-Validate clusters based on differences in cell/object or label density w/ t-tests.    
+Use ``cluster_stats`` from UNRAVEL to validate clusters based on differences in cell/object or label density w/ t-tests.    
 
-T-test usage:   
-    stats.py --groups <group1> <group2>
+T-test usage:  
+------------- 
+    cluster_stats --groups <group1> <group2>
 
 Tukey's test usage: 
-    stats.py --groups <group1> <group2> <group3> <group4> ...
+-------------------
+    cluster_stats --groups <group1> <group2> <group3> <group4> ...
 
 Input subdirs: 
     <asterisk> 
 
 Input files: 
-    <asterisk>_density_data.csv from validate_clusters.py (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
+    <asterisk>_density_data.csv from ``cluster_validation`` (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
 
 CSV naming conventions:
     - Condition: first word before '_' in the file name
@@ -31,7 +33,7 @@ Example bilateral inputs (if any file has _LH.csv or _RH.csv, the script will at
 
 Examples:
     - Grouping data by condition prefixes: 
-        stats.py --groups psilocybin saline --condition_prefixes saline psilocybin
+        ``cluster_stats`` --groups psilocybin saline --condition_prefixes saline psilocybin
         - This will treat all 'psilocybin*' conditions as one group and all 'saline*' conditions as another
         - Since there will then effectively be two conditions in this case, they will be compared using a t-test
 
@@ -39,7 +41,7 @@ Columns in the .csv files:
     sample, cluster_ID, <cell_count|label_volume>, cluster_volume, <cell_density|label_density>, ...
 
 Outputs:
-    - ./cluster_validation_summary.py and ./subdir/cluster_validation_info/
+    - ./_valid_clusters_stats/
 """
 
 import argparse
@@ -63,7 +65,7 @@ def parse_args():
     parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates)',  nargs='+', required=True)
     parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group data (e.g., see info for examples)',  nargs='*', default=None, action=SM)
     parser.add_argument('-alt', "--alternate", help="Number of tails and direction ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
-    parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from fdr.py). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
+    parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from cluster_fdr). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
@@ -385,7 +387,7 @@ def main():
         with open(valid_cluster_IDs, 'w') as f:
             f.write(significant_cluster_ids_str)
         
-        # Save cluster validation info for valid_clusters_summary.py
+        # Save cluster validation info for ``cluster_summary`` 
         data_df = pd.DataFrame({
             'Direction': [f"{args.groups[0]} {effect_direction} {args.groups[1]}"],
             'FDR q': [fdr_q],

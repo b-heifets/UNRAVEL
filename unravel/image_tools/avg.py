@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Averages NIfTI images in the current directory or specified by user.
+Use ``img_avg`` from UNRAVEL to average NIfTI images.
 
 Usage:
-    avg.py -i "<asterisk>.nii.gz" -o avg.nii.gz
+------
+    img_avg -i "<asterisk>.nii.gz" -o avg.nii.gz
 """
 
 import argparse

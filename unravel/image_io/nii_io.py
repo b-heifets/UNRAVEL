@@ -1,11 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Usage:     
-    nii_dtype.py -i path/img.nii.gz -d float32
+Use ``io_nii`` from UNRAVEL to convert the data type of a .nii.gz image and optionally scale the data.
+
+Usage:
+------
+    io_nii -i path/img.nii.gz -d float32
 
 Usage for z-score scaling (if 8 bit is needed):
-    nii_dtype.py -i path/img.nii.gz -d uint8 -z
+-----------------------------------------------
+    io_nii -i path/img.nii.gz -d uint8 -z
 
 Possible numpy data types: 
     - Unsigned Integer: uint8, uint16, uint32, uint64

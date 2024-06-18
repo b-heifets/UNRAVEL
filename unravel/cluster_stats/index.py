@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Create a cluster index with valid clusters from a given NIfTI image.
+Use ``cluster_index`` from UNRAVEL to create a cluster index with valid clusters from a given NIfTI image.
 
-Usage:
-    index.py -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3
+Usage
+-----
+    cluster_index -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3
     
 Outputs:
     - path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz
-    - path/valid_clusters/cluster_*_sunburst.csv
+    - path/valid_clusters/cluster_<asterisk>_sunburst.csv
 """
 
 from pathlib import Path

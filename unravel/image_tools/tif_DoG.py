@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Perform image background subtraction on a TIFF file.
+Use ``img_DoG`` from UNRAVEL to apply Difference of Gaussians to a single image.
 
 Usage: 
-    background_subtract_tif.py -i input.tif -g1 1.0 -g2 2.0
+------
+    img_DoG -i input.tif -g1 1.0 -g2 2.0
 
 Difference of Gaussians:
     - Sigma1 and sigma2 are the standard deviations for the first and second Gaussian blurs

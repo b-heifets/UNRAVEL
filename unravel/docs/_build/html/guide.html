@@ -50,6 +50,21 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
+    <script>
+            window.addEventListener("load", function () {
+              var svgs = d3.selectAll(".mermaid svg");
+              svgs.each(function() {
+                var svg = d3.select(this);
+                svg.html("<g>" + svg.html() + "</g>");
+                var inner = svg.select("g");
+                var zoom = d3.zoom().on("zoom", function(event) {
+                  inner.attr("transform", event.transform);
+                });
+                svg.call(zoom);
+              });
+            });
+            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'guide';</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -1152,7 +1167,7 @@ cluster_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span 
 <h4><code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code><a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/cluster_stats/validate_clusters.html#module-unravel.cluster_stats.validate_clusters" title="unravel.cluster_stats.validate_clusters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.validate_clusters</span></code></a></p>
 <ul class="simple">
-<li><p>Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/label densities</p></li>
+<li><p>Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or label densities</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic usage:</span>
 cluster_validation<span class="w"> </span>-e<span class="w"> </span>&lt;experiment<span class="w"> </span>paths&gt;<span class="w"> </span>-m<span class="w"> </span>&lt;path/rev_cluster_index_to_warp_from_atlas_space.nii.gz&gt;<span class="w"> </span>-s<span class="w"> </span>seg_dir<span class="w"> </span>-v

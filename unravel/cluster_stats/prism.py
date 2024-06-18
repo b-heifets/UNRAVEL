@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Organize cell_count|label_volume, cluster_volume, and <cell|label>_density data from cluster and sample and save as csv
+Use ``cluster_prism`` from UNRAVEL to organize cell_count|label_volume, cluster_volume, and <cell|label>_density data from cluster and sample and save as csv for plotting in Prism.
 
-Usage:
-    prism.py -ids 1 2 3
+Usage
+-----
+    cluster_prism -ids 1 2 3
         
 Inputs:
     <asterisk>.csv from cluster_org_data (in working dir)

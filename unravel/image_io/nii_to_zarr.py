@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Convert .nii.gz to .zarr
+Use ``io_nii_to_zarr`` from UNRAVEL to convert an image.nii.gz to an image.zarr
 
 Usage:
-    nii_to_zarr.py -i path/img.nii.gz -o path/img.zarr
+------
+    io_nii_to_zarr -i path/img.nii.gz -o path/img.zarr
 """
 
 import argparse

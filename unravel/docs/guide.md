@@ -671,7 +671,7 @@ cluster_mirror_indices -m RH -v
 
 #### `cluster_validation`
 {py:mod}`unravel.cluster_stats.validate_clusters`
-* Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/label densities
+* Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or label densities
 ```bash
 # Basic usage:
 cluster_validation -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s seg_dir -v

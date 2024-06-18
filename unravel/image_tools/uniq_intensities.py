@@ -1,16 +1,19 @@
 #!/usr/bin/env python3
 
 """
-Print list of unique intensities greater than 0
+Use ``img_unique`` from UNRAVEL to print a list of unique intensities greater than 0.
 
-Usage for printing all non-zero intensities: 
-    uniq_intensities.py -i path/input_img.nii.gz
+Usage for printing all non-zero intensities:
+--------------------------------------------
+    img_unique -i path/input_img.nii.gz
 
-Usage for printing the number of voxels for each intensity that is present: 
-    uniq_intensities.py -i path/input_img.nii.gz
+Usage for printing the number of voxels for each intensity that is present:
+---------------------------------------------------------------------------
+    img_unique -i path/input_img.nii.gz
 
-Usage for checking which clusters are present if the min cluster size was 100 voxels: 
-    uniq_intensities.py -i path/input_img.nii.gz -m 100
+Usage for checking which clusters are present if the min cluster size was 100 voxels:
+-------------------------------------------------------------------------------------
+    img_unique -i path/input_img.nii.gz -m 100
 """
 
 import argparse

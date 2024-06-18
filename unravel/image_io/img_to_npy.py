@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Convert a 3D image to an ndarray and save as .npy
+Use ``io_img_to_npy`` from UNRAVEL to convert a 3D image to an ndarray and save it as a .npy file.
+
+Usage: 
+------
+    io_img_to_npy -i path/to/image.czi -o path/to/image.npy
 """
 
 import argparse

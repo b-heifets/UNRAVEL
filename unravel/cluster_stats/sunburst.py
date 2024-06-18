@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy.
+Use ``cluster_sunburst`` from UNRAVEL to generate a sunburst plot of regional volumes across all levels of the ABA hierarchy.
 
 Usage:
-    sunburst.py -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v
+------ 
+    cluster_sunburst -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v
 
 Prereqs: 
-    - validate_clusters.py generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them. 
-    - Optional: valid_cluster_index.py generates a rev_cluster_index.nii.gz w/ valid clusters.
+    - ``cluster_validation`` generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them. 
+    - Optional: ``cluster_index`` generates a rev_cluster_index.nii.gz w/ valid clusters.
     
 Outputs:
     path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]

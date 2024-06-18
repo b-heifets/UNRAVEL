@@ -490,11 +490,12 @@
                   
   <section id="module-unravel.cluster_stats.validate_clusters">
 <span id="unravel-cluster-stats-validate-clusters-module"></span><span id="unravel-cluster-stats-validate-clusters"></span><h1>unravel.cluster_stats.validate_clusters module<a class="headerlink" href="#module-unravel.cluster_stats.validate_clusters" title="Link to this heading">#</a></h1>
-<p>Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/label densities</p>
-<dl class="simple">
-<dt>Usage:</dt><dd><p>validate_clusters.py -e &lt;experiment paths&gt; -m &lt;path/rev_cluster_index_to_warp_from_atlas_space.nii.gz&gt; -s cfos_seg_ilastik_1 -v</p>
-</dd>
-</dl>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code> from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify cell/label densities.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_validation -e &lt;experiment paths&gt; -m &lt;path/rev_cluster_index_to_warp_from_atlas_space.nii.gz&gt; -s cfos_seg_ilastik_1 -v</p>
+</div></blockquote>
 <p>cluster_index_dir = Path(args.moving_img).name w/o “_rev_cluster_index” and “.nii.gz”</p>
 <dl class="simple">
 <dt>Outputs:</dt><dd><ul class="simple">
@@ -506,9 +507,10 @@
 <p>For -s, if a dir name is provided, the script will load ./sample??/seg_dir/sample??_seg_dir.nii.gz.
 If a relative path is provided, the script will load the image at the specified path.</p>
 <dl class="simple">
-<dt>Next script:</dt><dd><p>valid_clusters_summary.py</p>
+<dt>Next command:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">cluster_summary</span></code></p>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.validate_clusters.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.validate_clusters.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/validate_clusters.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.validate_clusters.parse_args" title="Link to this definition">#</a></dt>
@@ -607,6 +609,7 @@ For label densities, return: cluster_ID, seg_volume_in_cubic_mm, cluster_volume_
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.validate_clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.validate_clusters.crop_outer_space"><code class="docutils literal notranslate"><span class="pre">crop_outer_space()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.validate_clusters.cluster_bbox"><code class="docutils literal notranslate"><span class="pre">cluster_bbox()</span></code></a></li>

@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 """
-Organize bilateral csv outputs from validate_clusters.py
+Use ``cluster_group_data`` from UNRAVEL to organize bilateral csv outputs from ``cluster_validation``
 
-Run this script in the target_dir from org_data.py
+Run this script in the target_dir from ``cluster_org_data``
         
-Usage:
-    group_bilateral_data.py
+Usage
+-----
+    cluster_group_data
 
 It consolidates CSV files into pooled directories based on hemisphere.
 

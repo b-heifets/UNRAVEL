@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 """
-Loads h5/hdf5 image, saves as tifs. Also, saves xy and z voxel size in microns.
+Use ``io_h5_to_tifs`` from UNRAVEL to load a h5/hdf5 image and save it as tifs.
 
 Run this script from a sample?? folder containing the image.h5 file.
 
 Usage:
-    h5_to_tifs.py -i path/image.h5 -t 488
+------
+    io_h5_to_tifs -i path/image.h5 -t autofl
 
 Inputs:
     - image.h5 either from -i path/image.h5 or largest <asterisk>.h5 in cwd

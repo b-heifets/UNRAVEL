@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/label densities
+Use ``cluster_validation`` from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify cell/label densities.
 
 Usage:
-    validate_clusters.py -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
+------
+    cluster_validation -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
 
 cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
 
@@ -15,8 +16,8 @@ Outputs:
 For -s, if a dir name is provided, the script will load ./sample??/seg_dir/sample??_seg_dir.nii.gz. 
 If a relative path is provided, the script will load the image at the specified path.
 
-Next script:
-    valid_clusters_summary.py
+Next command:
+    ``cluster_summary``
 """
 
 
@@ -54,9 +55,9 @@ def parse_args():
 
     # Optional to_native() args
     parser.add_argument('-n', '--native_idx', help='Load/save native cluster index from/to rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
-    parser.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (reg.py). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)    
+    parser.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (unravel.register.reg). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)    
     parser.add_argument('-inp', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel [slow])', default="nearestNeighbor", action=SM)
-    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
+    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from unravel.register.reg (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
@@ -71,6 +72,7 @@ def parse_args():
 
 # TODO: QC. Aggregate .csv results for all samples if args.exp_dirs, script to load image subset.
 # TODO: Make config file for defaults or a command_generator.py script
+# TODO: Consider adding an option to quantify mean IF intensity in each cluster in segmented voxels. Also make a script for mean IF intensity in clusters in atlas space. 
 
 @print_func_name_args_times()
 def crop_outer_space(native_cluster_index, output_path):
@@ -243,7 +245,7 @@ def main():
             metadata_path = resolve_path(sample_path, args.metadata)
             xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
             if xy_res is None or z_res is None: 
-                print("    [red bold]./sample??/parameters/metadata.txt missing. cd to sample?? dir and run: metadata.py")
+                print("    [red bold]./sample??/parameters/metadata.txt missing. cd to sample?? dir and run: io_metadata")
 
             # Get bounding boxes for each cluster in parallel
             cluster_bbox_data = cluster_bbox_parallel(native_cluster_index_cropped, clusters)

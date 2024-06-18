@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Aggregates csv outputs from validate_clusters.py
+Use ``cluster_org_data`` from UNRAVEL to aggregate and organize csv outputs from ``cluster_validation``.
 
-Usage:
-    org_data.py -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
+Usage
+-----
+    cluster_org_data -e <list of experiment directories> -cvd '<asterisk>' -td <target_dir> -vd <path/vstats_dir> -v
 """
 
 import argparse

@@ -490,16 +490,18 @@
                   
   <section id="module-unravel.image_io.zarr_to_nii">
 <span id="unravel-image-io-zarr-to-nii-module"></span><span id="unravel-image-io-zarr-to-nii"></span><h1>unravel.image_io.zarr_to_nii module<a class="headerlink" href="#module-unravel.image_io.zarr_to_nii" title="Link to this heading">#</a></h1>
-<p>Convert .zarr to .nii.gz.</p>
-<dl class="simple">
-<dt>Usage:</dt><dd><p>zarr_to_nii.py -i path/img.zarr -o path/img.nii.gz</p>
-</dd>
-<dt>Output:</dt><dd><ul class="simple">
-<li><p>RAS orientation</p></li>
+<p>Use <code class="docutils literal notranslate"><span class="pre">io_zarr_to_nii</span></code> from UNRAVEL to convert an image.zarr to an image.nii.gz.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_zarr_to_nii -i path/img.zarr -o path/img.nii.gz</p>
+</div></blockquote>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Outputs RAS orientation</p></li>
 <li><p>Scaling not preserved</p></li>
 </ul>
-</dd>
-</dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_io.zarr_to_nii.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.image_io.zarr_to_nii.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/zarr_to_nii.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.zarr_to_nii.parse_args" title="Link to this definition">#</a></dt>
@@ -573,6 +575,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.zarr_to_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.zarr_to_nii.zarr_to_ndarray"><code class="docutils literal notranslate"><span class="pre">zarr_to_ndarray()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.zarr_to_nii.define_zarr_to_nii_output"><code class="docutils literal notranslate"><span class="pre">define_zarr_to_nii_output()</span></code></a></li>

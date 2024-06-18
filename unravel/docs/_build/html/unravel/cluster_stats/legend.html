@@ -490,17 +490,19 @@
                   
   <section id="module-unravel.cluster_stats.legend">
 <span id="unravel-cluster-stats-legend-module"></span><span id="unravel-cluster-stats-legend"></span><h1>unravel.cluster_stats.legend module<a class="headerlink" href="#module-unravel.cluster_stats.legend" title="Link to this heading">#</a></h1>
-<p>Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_legend</span></code> from UNRAVEL to summarize regional abbreviations from &lt;asterisk&gt;_valid_clusters_table.xlsx files.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>legend.py</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>legend.py</p>
-</dd>
-<dt>Prereqs:</dt><dd><p>valid_cluster_table.sh has been run and the resulting .xlsx files are in the working directory.</p>
-</dd>
-<dt>Inputs:</dt><dd><p>&lt;asterisk&gt;_valid_clusters_table.xlsx files in the working directory</p>
+<dt>Inputs:</dt><dd><p>&lt;asterisk&gt;_valid_clusters_table.xlsx files in the working directory output from <code class="docutils literal notranslate"><span class="pre">cluster_table</span></code></p>
 </dd>
 <dt>Outputs:</dt><dd><p>legend.xlsx</p>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.legend.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.legend.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/legend.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.legend.parse_args" title="Link to this definition">#</a></dt>
@@ -571,6 +573,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.legend.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.legend.extract_unique_regions_from_file"><code class="docutils literal notranslate"><span class="pre">extract_unique_regions_from_file()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.legend.apply_rgb_to_cell"><code class="docutils literal notranslate"><span class="pre">apply_rgb_to_cell()</span></code></a></li>
