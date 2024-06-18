@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
 """
-Cleans directories w/ tif series.
+Use ``utils_clean_tifs`` from UNRAVEL to clean directories w/ tif series.
 
 Run script from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
 
 Usage:
-    check_for_non_tifs.py -t autofl ochann -m -v
+------
+    utils_clean_tifs -t <tif_folder_name> -m -v
 
 Tif directory clean up involves:
     - Moving subdirectories to parent dir

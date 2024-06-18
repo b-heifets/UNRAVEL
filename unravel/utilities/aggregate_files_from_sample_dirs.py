@@ -2,15 +2,15 @@
 
 
 """
-Loads immunofluo image, subtracts background, and warps to atlas space
+Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directories to a target directory.
 
 Usage for when sample?? is already in the name of files being copied:
-    aggregate_files.py -i atlas_space/sample??_FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v
+---------------------------------------------------------------------
+    utils_agg_files -i atlas_space/sample??_FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v
 
 Usage to prepend sample?? to the name of files being copied:
-    aggregate_files.py -i atlas_space/FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v -a
-
-
+------------------------------------------------------------
+    utils_agg_files -i atlas_space/FOS_rb4_gubra_space_z_LRavg.nii.gz -e $DIRS -v -a
 """
 
 import argparse

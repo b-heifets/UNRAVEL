@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Recursively rename files and/or directories by replacing text in filenames.
+Use ``utils_rename`` from UNRAVEL to recursively rename files and/or directories by replacing text in filenames.
 
-Usage:
-    rename.py -o old_text -n new_text -r -t files'
+Usage for renaming files: 
+-------------------------
+    utils_rename -o old_text -n new_text -r -t files
+
+Usage for renaming directories:
+-------------------------------
+    utils_rename -o old_text -n new_text -r -t dirs
 """
 
 import argparse

@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 
 """
-Loads full resolution autofluo image and resamples to 50 um for registration
-
-Run script from the experiment directory w/ sample?? folder(s)
-or run from a sample?? folder.
+Use ``reg_prep`` from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.
 
 Usage:
-    prep_reg.py -i <asterisk>.czi -e <list of paths to exp dirs> -td <path/brain_mask_tifs> -v
+------
+    reg_prep -i <asterisk>.czi -td <path/brain_mask_tifs> -e <list of paths to exp dirs> -v
+
+Run script from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
     <asterisk>.czi, autofluo/<asterisk>.tif series, autofluo, <asterisk>.tif, or <asterisk>.h5 
 
 Outputs: 
     ./sample??/reg_inputs/autofl_<asterisk>um.nii.gz
-    ./sample??/reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif series (used for training ilastik for brain_mask.py) 
+    ./sample??/reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif series (used for training ilastik for ``seg_brain_mask``) 
 
 Next script: 
-    brain_mask.py or reg.py
+    ``seg_copy_tifs`` for ``seg_brain_mask`` or ``reg``
 """
 
 import argparse
@@ -45,9 +45,9 @@ def parse_args():
     parser.add_argument('-o', '--output', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns of the input image. Default: get via metadata', default=None, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='z voxel size in microns of the input image. Default: get via metadata', default=None, type=float, action=SM)
-    parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg.py. Default: 50', default=50, type=int, action=SM)
+    parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)
-    parser.add_argument('-td', '--target_dir', help='path/target_dir name to copy specific slices for brain_mask.py (see usage)', default=None, action=SM)
+    parser.add_argument('-td', '--target_dir', help='path/target_dir name to copy specific slices for seg_brain_mask (see usage)', default=None, action=SM)
     parser.add_argument('-s', '--slices', help='List of slice numbers to copy, e.g., 0000 0400 0800', nargs='*', type=str, default=[])
     parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
@@ -57,13 +57,13 @@ def parse_args():
 
 @print_func_name_args_times()
 def prep_reg(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
-    """Prepare the autofluo image for reg.py or mimic preprocessing  for prep_vstats.py.
+    """Prepare the autofluo image for ``reg`` or mimic preprocessing  for ``vstats_prep``.
     
     Args:
         - ndarray (np.ndarray): full res 3D autofluo image.
         - xy_res (float): x/y resolution in microns of ndarray.
         - z_res (float): z resolution in microns of ndarray.
-        - reg_res (int): Resample input to this resolution in microns for reg.py.
+        - reg_res (int): Resample input to this resolution in microns for ``reg``.
         - zoom_order (int): Order for resampling (scipy.ndimage.zoom).
         - miracl (bool): Include reorientation step to mimic MIRACL's tif to .nii.gz conversion.
         
@@ -84,7 +84,7 @@ def main():
     args = parse_args()
 
     if args.target_dir is not None:
-        # Create the target directory for copying the selected slices for brain_mask.py
+        # Create the target directory for copying the selected slices for ``seg_brain_mask``
         target_dir = Path(args.target_dir)
         target_dir.mkdir(exist_ok=True, parents=True)
 
@@ -112,12 +112,12 @@ def main():
             # Prepare the autofluo image for registration
             img_resampled = prep_reg(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
 
-            # Save the prepped autofluo image as tif series (for brain_mask.py)
+            # Save the prepped autofluo image as tif series (for ``seg_brain_mask``)
             tif_dir = Path(str(output).replace('.nii.gz', '_tifs'))
             tif_dir.mkdir(parents=True, exist_ok=True)
             save_as_tifs(img_resampled, tif_dir, "xyz")
 
-            # Save the prepped autofl image (for reg.py if skipping brain_mask.py and for applying the brain mask)
+            # Save the prepped autofl image (for ``reg`` if skipping ``seg_brain_mask`` and for applying the brain mask)
             save_as_nii(img_resampled, output, args.reg_res, args.reg_res, np.uint16)
 
             if args.target_dir is not None:

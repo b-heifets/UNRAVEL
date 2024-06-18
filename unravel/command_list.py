@@ -258,37 +258,27 @@ def main():
         },
         "Region-wise stats": {
             "rstats": {
-                "module": "unravel.region_stats.regional_cell_densities",
-                "description": "Compute regional cell densities.",
+                "module": "unravel.region_stats.rstats",
+                "description": "Compute regional cell counts, regional volumes, or regional cell densities.",
                 "common": True
             },
             "rstats_summary": {
-                "module": "unravel.region_stats.regional_cell_densities_summary",
+                "module": "unravel.region_stats.rstats_summary",
                 "description": "Summarize regional cell densities.",
                 "common": True
             },
-            "rstats_counts": {
-                "module": "unravel.region_stats.regional_counts",
-                "description": "Count cells in regions.",
-                "common": False
-            },
-            "rstats_volumes": {
-                "module": "unravel.region_stats.regional_volumes",
-                "description": "Compute volumes of regions.",
-                "common": False
-            },
-            "rstats_IF_mean": {
-                "module": "unravel.region_stats.regional_IF_mean_intensities",
+            "rstats_mean_IF": {
+                "module": "unravel.region_stats.rstats_mean_IF",
                 "description": "Compute mean immunofluo intensities for regions.",
                 "common": False
             },
-            "rstats_IF_mean_in_seg": {
-                "module": "unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels",
+            "rstats_mean_IF_in_seg": {
+                "module": "unravel.region_stats.rstats_mean_IF_in_segmented_voxels",
                 "description": "Compute mean immunofluo intensities in segmented voxels.",
                 "common": False
             },
-            "rstats_IF_mean_summary": {
-                "module": "unravel.region_stats.regional_IF_mean_intensities_summary",
+            "rstats_mean_IF_summary": {
+                "module": "unravel.region_stats.rstats_mean_IF_summary",
                 "description": "Summarize mean immunofluo intensities for regions.",
                 "common": False
             }

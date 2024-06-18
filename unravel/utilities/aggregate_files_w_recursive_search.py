@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Recusively copy files matching a glob pattern.
+Use ``utils_agg_files_rec`` from UNRAVEL to recusively copy files matching a glob pattern.
+
+Usage:
+------
+    utils_agg_files_rec -p '<asterisk>.txt' -s /path/to/source -d /path/to/destination
 """
 
 import argparse

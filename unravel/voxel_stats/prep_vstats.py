@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 """
-Loads immunofluo image, subtracts background, and warps to atlas space
+Use ``vstats_prep`` from UNRAVEL to load an immunofluo image, subtract its background, and warp it to atlas space.
 
 Usage:
-    prep_vstats.py -i ochann -rb 4 -x 3.5232 -z 6 -o ochann_rb4_gubra_space.nii.gz -e <list of paths to experiment directories> -v
+    vstats_prep -i ochann -rb 4 -x 3.5232 -z 6 -o ochann_rb4_gubra_space.nii.gz -e <list of paths to experiment directories> -v
 
 Prereqs: 
-    reg.py
+    ``reg``
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
     <asterisk>.czi, ochann/<asterisk>.tif, ochann, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr
@@ -16,7 +16,7 @@ Example output:
     ./sample??/atlas_space/sample??_ochann_rb4_gubra_space.nii.gz
 
 Next steps: 
-    Aggregate outputs with aggregate_files_from_sample_dirs.py and run vstats.py
+    Aggregate outputs with ``utils_agg_files`` and run ``vstats``.
 """
 
 import argparse

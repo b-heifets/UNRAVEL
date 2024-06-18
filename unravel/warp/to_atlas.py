@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Warps native image to atlas space
+Use ``warp_to_atlas`` from UNRAVEL to warp a native image to atlas space.
 
 Usage:
-    to_atlas.py -i ochann -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v] 
+------
+    warp_to_atlas -i ochann -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v] 
 
 Prereqs: 
-    reg.py
+    ``reg``
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
     <asterisk>.czi, ochann/<asterisk>.tif, ochann, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr 

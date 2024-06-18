@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
 """
-Copies a subset of .tif files to a new dir for training ilastik
+Use ``reg_check`` from UNRAVEL to check registration QC, copies autofl_<asterisk>um_masked_fixed_reg_input.nii.gz and atlas_in_tissue_space.nii.gz for each sample to a target dir.
 
-Usage: 
-    check_reg.py -e <list of experiment directories> # copies to the current working directory
-    check_reg.py -e <list of experiment directories> -td <target_output_dir
+Usage:
+------
+    reg_check -e <list of experiment directories> # copies to the current working directory
+    reg_check -e <list of experiment directories> -td <target_output_dir
 """
 
 import argparse

@@ -309,7 +309,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -368,13 +368,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../region_stats/toc.html">unravel.region_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -490,25 +488,43 @@
                   
   <section id="module-unravel.voxel_stats.z_score">
 <span id="unravel-voxel-stats-z-score-module"></span><span id="unravel-voxel-stats-z-score"></span><h1>unravel.voxel_stats.z_score module<a class="headerlink" href="#module-unravel.voxel_stats.z_score" title="Link to this heading">#</a></h1>
-<p>Z-score an atlas space image using a tissue mask and/or an atlas mask.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code> from UNRAVEL to z-score an atlas space image using a tissue mask and/or an atlas mask.</p>
+<section id="usage-w-a-tissue-mask-warped-to-atlas-space">
+<h2>Usage w/ a tissue mask (warped to atlas space):<a class="headerlink" href="#usage-w-a-tissue-mask-warped-to-atlas-space" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>z_score.py -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -v</p>
+</div></blockquote>
+</section>
+<section id="usage-w-an-atlas-mask-warped-to-atlas-space">
+<h2>Usage w/ an atlas mask (warped to atlas space):<a class="headerlink" href="#usage-w-an-atlas-mask-warped-to-atlas-space" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>z_score.py -i path/img.nii.gz -n -amas path/atlas_mask.nii.gz -v</p>
+</div></blockquote>
+</section>
+<section id="usage-w-both-masks-for-side-specific-z-scoring">
+<h2>Usage w/ both masks for side-specific z-scoring:<a class="headerlink" href="#usage-w-both-masks-for-side-specific-z-scoring" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>z_score.py -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage w/ a tissue mask (warped to atlas space):</dt><dd><p>z_score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -v</p>
-</dd>
-<dt>Usage w/ an atlas mask (warped to atlas space):</dt><dd><p>z_score.py -i path/img.nii.gz -n -amas path/atlas_mask.nii.gz -v</p>
-</dd>
-<dt>Usage w/ both masks for side-specific z-scoring</dt><dd><p>z_score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v</p>
+<dt>Next steps:</dt><dd><ul class="simple">
+<li><p>If analyzing whole brains, consider using <code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code> to average hemispheres together.</p></li>
+<li><p>If using side-specific z-scoring, next use <code class="docutils literal notranslate"><span class="pre">vstats_hemi_to_avg</span></code> to average the images.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">vstats</span></code> to perform voxel-wise stats.</p></li>
+</ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
 <li><p>&lt;path/input_img&gt;_z.nii.gz (float32)</p></li>
-<li><p>[atlas_space/autofl_50um_brain_mask.nii.gz]</p></li>
+<li><p>[sample??/atlas_space/autofl_50um_brain_mask.nii.gz]</p></li>
 </ul>
 </dd>
 </dl>
 <p>z-score = (img.nii.gz - mean pixel intensity in brain)/standard deviation of intensity in brain</p>
 <dl class="simple">
-<dt>Prereqs:</dt><dd><p>prep_vstats.py for inputs [&amp; brain_mask.py for tissue masks]</p>
+<dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> for inputs [&amp; <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> for tissue masks]</p>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.voxel_stats.z_score.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.z_score.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/z_score.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.z_score.parse_args" title="Link to this definition">#</a></dt>
@@ -581,6 +597,9 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-w-a-tissue-mask-warped-to-atlas-space">Usage w/ a tissue mask (warped to atlas space):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-w-an-atlas-mask-warped-to-atlas-space">Usage w/ an atlas mask (warped to atlas space):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-w-both-masks-for-side-specific-z-scoring">Usage w/ both masks for side-specific z-scoring:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.z_score.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.z_score.z_score"><code class="docutils literal notranslate"><span class="pre">z_score()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.z_score.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

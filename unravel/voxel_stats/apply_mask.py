@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 
 """ 
-Loads image and mask. Zeros out voxels in image based on mask and direction args.
+Use ``vstats_apply_mask`` from UNRAVEL to zeros out voxels in image based on a mask and direction args.
 
-Usage:
-    - Zero out voxels in image where mask > 0 (e.g., to exclude voxels representing artifacts):
-        apply_mask.py -mas 6e10_seg_ilastik_2/sample??_6e10_seg_ilastik_2.nii.gz -i 6e10_rb20 -o 6e10_rb20_wo_artifacts -di greater -v
-    - Zero out voxels in image where mask < 1 (e.g., to preserve signal from segmented microglia clusters):
-        apply_mask.py -mas iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters -v 
-    - Replace voxels in image with the mean intensity in the brain where mask > 0:
-        apply_mask.py -mas FOS_seg_ilastik/FOS_seg_ilastik_2.nii.gz -i FOS -o FOS_wo_halo.zarr -di greater -m -v 
+Usage to zero out voxels in image where mask > 0 (e.g., to exclude voxels representing artifacts):
+--------------------------------------------------------------------------------------------------
+    vstats_apply_mask -mas 6e10_seg_ilastik_2/sample??_6e10_seg_ilastik_2.nii.gz -i 6e10_rb20 -o 6e10_rb20_wo_artifacts -di greater -v
+
+Usage to zero out voxels in image where mask < 1 (e.g., to preserve signal from segmented microglia clusters):
+--------------------------------------------------------------------------------------------------------------
+    vstats_apply_mask -mas iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters -v 
+
+Usage to replace voxels in image with the mean intensity in the brain where mask > 0:
+-------------------------------------------------------------------------------------
+    vstats_apply_mask -mas FOS_seg_ilastik/FOS_seg_ilastik_2.nii.gz -i FOS -o FOS_wo_halo.zarr -di greater -m -v 
 
 This version allows for dilatation of the full res seg_mask (slow, but precise)
 """
@@ -23,7 +27,7 @@ from rich.live import Live
 from rich.traceback import install
 from scipy.ndimage import binary_dilation, zoom
 
-from register.prep_reg import prep_reg
+from unravel.register.prep_reg import prep_reg
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii, save_as_zarr
@@ -40,11 +44,11 @@ def parse_args():
     parser.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on seg_mask. Default: 0", default=0, type=int, action=SM)
     parser.add_argument('-m', '--mean', help='If provided, conditionally replace values w/ the mean intensity in the brain', action='store_true', default=False)
     parser.add_argument('-tmas', '--tissue_mask', help='For the mean itensity. rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
-    parser.add_argument('-omas', '--other_mask', help='For restricting application of -mas. E.g., reg_inputs/autofl_50um_brain_mask_outline.nii.gz (from brain_mask_outline.py)', default=None, action=SM)
+    parser.add_argument('-omas', '--other_mask', help='For restricting application of -mas. E.g., reg_inputs/autofl_50um_brain_mask_outline.nii.gz (from ./UNRAVEL/_other/uncommon_scripts/brain_mask_outline.py)', default=None, action=SM)
     parser.add_argument('-di', '--direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 1', default='less', choices=['greater', 'less'], action=SM)
     parser.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
-    parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg.py. Default: 50', default=50, type=int, action=SM)
+    parser.add_argument('-r', '--reg_res', help='Resample input to this res in microns for ``reg``. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
@@ -131,7 +135,7 @@ def main():
             metadata_path = sample_path / args.metadata
             xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
             if xy_res is None:
-                print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ metadata.py")
+                print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ io_metadata")
                 import sys ; sys.exit()
 
             # Resample to registration resolution to get the mean intensity in the brain

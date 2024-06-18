@@ -8,7 +8,10 @@
     * Validation of hot/cold spots via cell/label density quantification at cellular resolution
 * [Initial UNRAVEL publication](https://www.nature.com/articles/s41386-023-01613-4)
 * UNRAVEL was developed by [the Heifets lab](https://heifetslab.stanford.edu/) and [TensorAnalytics](https://sites.google.com/view/tensoranalytics/home?authuser=0)
-* Additional support was provided by [the Shamloo lab](https://med.stanford.edu/neurosurgery/research/shamloo.html)
+* Additional support/guidance was provided by: 
+    * [The Shamloo lab](https://med.stanford.edu/neurosurgery/research/shamloo.html)
+    * [The Malenka lab](https://profiles.stanford.edu/robert-malenka)
+    * [The Stanford-based P50 center funded by NIDA](https://med.stanford.edu/nidap50.html)
 
 ---
 

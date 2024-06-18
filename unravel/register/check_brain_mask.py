@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 
 """
-For masking QC, copies autofluo_50um.nii.gz and autofluo_50_masked.nii.gz for each sampled to a target dir
+Use ``reg_check_mask`` from UNRAVEL for masking QC, copies autofluo_50um.nii.gz and autofluo_50_masked.nii.gz for each sampled to a target dir
 
-Usage: 
-    check_brain_mask.py -e <list of experiment directories> # copies to the current working directory
-    check_brain_mask.py -e <list of experiment directories> -td <target_output_dir
+Usage:
+------
+    reg_check_mask -e <list of experiment directories> # copies to the current working directory
+    reg_check_mask -e <list of experiment directories> -td <target_output_dir
 """
 
 import argparse

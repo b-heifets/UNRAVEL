@@ -49,21 +49,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'py-modindex';</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -612,42 +597,32 @@
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="unravel/region_stats/regional_cell_densities.html#module-unravel.region_stats.regional_cell_densities"><code class="xref">unravel.region_stats.regional_cell_densities</code></a></td><td>
+       <a href="unravel/region_stats/rstats.html#module-unravel.region_stats.rstats"><code class="xref">unravel.region_stats.rstats</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="unravel/region_stats/regional_cell_densities_summary.html#module-unravel.region_stats.regional_cell_densities_summary"><code class="xref">unravel.region_stats.regional_cell_densities_summary</code></a></td><td>
+       <a href="unravel/region_stats/rstats_mean_IF.html#module-unravel.region_stats.rstats_mean_IF"><code class="xref">unravel.region_stats.rstats_mean_IF</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="unravel/region_stats/regional_counts.html#module-unravel.region_stats.regional_counts"><code class="xref">unravel.region_stats.regional_counts</code></a></td><td>
+       <a href="unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#module-unravel.region_stats.rstats_mean_IF_in_segmented_voxels"><code class="xref">unravel.region_stats.rstats_mean_IF_in_segmented_voxels</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="unravel/region_stats/regional_IF_mean_intensities.html#module-unravel.region_stats.regional_IF_mean_intensities"><code class="xref">unravel.region_stats.regional_IF_mean_intensities</code></a></td><td>
+       <a href="unravel/region_stats/rstats_mean_IF_summary.html#module-unravel.region_stats.rstats_mean_IF_summary"><code class="xref">unravel.region_stats.rstats_mean_IF_summary</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#module-unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels"><code class="xref">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels</code></a></td><td>
+       <a href="unravel/region_stats/rstats_summary.html#module-unravel.region_stats.rstats_summary"><code class="xref">unravel.region_stats.rstats_summary</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>
        <td>&#160;&#160;&#160;
-       <a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#module-unravel.region_stats.regional_IF_mean_intensities_summary"><code class="xref">unravel.region_stats.regional_IF_mean_intensities_summary</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="unravel/region_stats/regional_volumes.html#module-unravel.region_stats.regional_volumes"><code class="xref">unravel.region_stats.regional_volumes</code></a></td><td>
-       <em></em></td></tr>
-     <tr class="cg-1">
-       <td></td>
-       <td>&#160;&#160;&#160;
-       <a href="unravel/register/ANTsPy_affine_initializer.html#module-unravel.register.ANTsPy_affine_initializer"><code class="xref">unravel.register.ANTsPy_affine_initializer</code></a></td><td>
+       <a href="unravel/register/affine_initializer.html#module-unravel.register.affine_initializer"><code class="xref">unravel.register.affine_initializer</code></a></td><td>
        <em></em></td></tr>
      <tr class="cg-1">
        <td></td>

@@ -49,21 +49,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/voxel_stats/hemi_to_LR_avg';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -367,10 +352,11 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Automatically average hemisphere images with their mirrored counterparts</span>
+<span class="sd">Use ``vstats_hemi_to_avg`` from UNRAVEL to automatically average hemisphere images with their mirrored counterparts. This can also smooth the images with a kernel and apply a mask.</span>
 
 <span class="sd">Usage:</span>
-<span class="sd">    hemi_to_LR_avg.py -k 0.1 -tp -v</span>
+<span class="sd">------</span>
+<span class="sd">    vstats_hemi_to_avg -k 0.1 -tp -v</span>
 
 <span class="sd">Inputs: </span>
 <span class="sd">    - input_img_LH.nii.gz</span>
@@ -393,12 +379,12 @@
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
 
 <span class="kn">from</span> <span class="nn">fsl.wrappers</span> <span class="kn">import</span> <span class="n">fslmaths</span>
-<span class="kn">from</span> <span class="nn">apply_mask</span> <span class="kn">import</span> <span class="n">load_mask</span>
-<span class="kn">from</span> <span class="nn">mirror</span> <span class="kn">import</span> <span class="n">mirror</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SM</span><span class="p">,</span> <span class="n">SuppressMetavar</span>
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
+<span class="kn">from</span> <span class="nn">unravel.voxel_stats.apply_mask</span> <span class="kn">import</span> <span class="n">load_mask</span>
+<span class="kn">from</span> <span class="nn">unravel.voxel_stats.mirror</span> <span class="kn">import</span> <span class="n">mirror</span>
 
 
 <div class="viewcode-block" id="parse_args">

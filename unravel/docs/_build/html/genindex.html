@@ -49,21 +49,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="#" />
@@ -364,7 +349,7 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.affine_initializer_wrapper">affine_initializer_wrapper() (in module unravel.register.ANTsPy_affine_initializer)</a>
+      <li><a href="unravel/register/affine_initializer.html#unravel.register.affine_initializer.affine_initializer_wrapper">affine_initializer_wrapper() (in module unravel.register.affine_initializer)</a>
 </li>
       <li><a href="unravel/utilities/aggregate_files_from_sample_dirs.html#unravel.utilities.aggregate_files_from_sample_dirs.aggregate_files_from_sample_dirs">aggregate_files_from_sample_dirs() (in module unravel.utilities.aggregate_files_from_sample_dirs)</a>
 </li>
@@ -396,18 +381,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.calculate_fragments">calculate_fragments() (in module unravel.voxel_stats.vstats)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.calculate_mean_intensity">calculate_mean_intensity() (in module unravel.region_stats.regional_IF_mean_intensities)</a>
+      <li><a href="unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.calculate_mean_intensity">calculate_mean_intensity() (in module unravel.region_stats.rstats_mean_IF)</a>
 
       <ul>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.calculate_mean_intensity">(in module unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels)</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.calculate_mean_intensity">(in module unravel.region_stats.rstats_mean_IF_in_segmented_voxels)</a>
 </li>
       </ul></li>
-      <li><a href="unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.calculate_regional_cell_densities">calculate_regional_cell_densities() (in module unravel.region_stats.regional_cell_densities)</a>
+      <li><a href="unravel/region_stats/rstats.html#unravel.region_stats.rstats.calculate_regional_cell_densities">calculate_regional_cell_densities() (in module unravel.region_stats.rstats)</a>
 </li>
       <li><a href="unravel/cluster_stats/sunburst.html#unravel.cluster_stats.sunburst.calculate_regional_volumes">calculate_regional_volumes() (in module unravel.cluster_stats.sunburst)</a>
 
       <ul>
-        <li><a href="unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.calculate_regional_volumes">(in module unravel.region_stats.regional_cell_densities)</a>
+        <li><a href="unravel/region_stats/rstats.html#unravel.region_stats.rstats.calculate_regional_volumes">(in module unravel.region_stats.rstats)</a>
 </li>
       </ul></li>
       <li><a href="unravel/warp/to_native.html#unravel.warp.to_native.calculate_resampled_padded_dimensions">calculate_resampled_padded_dimensions() (in module unravel.warp.to_native)</a>
@@ -460,12 +445,8 @@
 </li>
       <li><a href="unravel/cluster_stats/validate_clusters.html#unravel.cluster_stats.validate_clusters.count_cells">count_cells() (in module unravel.cluster_stats.validate_clusters)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.count_cells_in_regions">count_cells_in_regions() (in module unravel.region_stats.regional_cell_densities)</a>
-
-      <ul>
-        <li><a href="unravel/region_stats/regional_counts.html#unravel.region_stats.regional_counts.count_cells_in_regions">(in module unravel.region_stats.regional_counts)</a>
+      <li><a href="unravel/region_stats/rstats.html#unravel.region_stats.rstats.count_cells_in_regions">count_cells_in_regions() (in module unravel.region_stats.rstats)</a>
 </li>
-      </ul></li>
       <li><a href="unravel/segment/ilastik_pixel_classification.html#unravel.segment.ilastik_pixel_classification.count_files">count_files() (in module unravel.segment.ilastik_pixel_classification)</a>
 </li>
       <li><a href="unravel/cluster_stats/org_data.html#unravel.cluster_stats.org_data.cp">cp() (in module unravel.cluster_stats.org_data)</a>
@@ -536,7 +517,7 @@
         <li><a href="unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.filter_dataframe">(in module unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative)</a>
 </li>
       </ul></li>
-      <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.filter_region_ids">filter_region_ids() (in module unravel.region_stats.regional_IF_mean_intensities_summary)</a>
+      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.filter_region_ids">filter_region_ids() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -566,14 +547,10 @@
 </li>
       <li><a href="unravel/image_tools/atlas/wireframe.html#unravel.image_tools.atlas.wireframe.generate_wireframe">generate_wireframe() (in module unravel.image_tools.atlas.wireframe)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.get_all_region_ids">get_all_region_ids() (in module unravel.region_stats.regional_IF_mean_intensities_summary)</a>
+      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_all_region_ids">get_all_region_ids() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.get_atlas_region_at_coords">get_atlas_region_at_coords() (in module unravel.region_stats.regional_cell_densities)</a>
-
-      <ul>
-        <li><a href="unravel/region_stats/regional_counts.html#unravel.region_stats.regional_counts.get_atlas_region_at_coords">(in module unravel.region_stats.regional_counts)</a>
+      <li><a href="unravel/region_stats/rstats.html#unravel.region_stats.rstats.get_atlas_region_at_coords">get_atlas_region_at_coords() (in module unravel.region_stats.rstats)</a>
 </li>
-      </ul></li>
       <li><a href="unravel/image_io/metadata.html#unravel.image_io.metadata.get_dims_from_tifs">get_dims_from_tifs() (in module unravel.image_io.metadata)</a>
 </li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.get_dir_name_from_args">get_dir_name_from_args() (in module unravel.core.utils)</a>
@@ -584,12 +561,12 @@
 </li>
       <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.get_groups_info">get_groups_info() (in module unravel.voxel_stats.vstats)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.get_max_region_id_from_csvs">get_max_region_id_from_csvs() (in module unravel.region_stats.regional_IF_mean_intensities_summary)</a>
+      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_max_region_id_from_csvs">get_max_region_id_from_csvs() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.get_region_details">get_region_details() (in module unravel.region_stats.regional_cell_densities_summary)</a>
+      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_region_details">get_region_details() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 
       <ul>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.get_region_details">(in module unravel.region_stats.regional_IF_mean_intensities_summary)</a>
+        <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.get_region_details">(in module unravel.region_stats.rstats_summary)</a>
 </li>
       </ul></li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.get_samples">get_samples() (in module unravel.core.utils)</a>
@@ -636,7 +613,7 @@
 </li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_czi">load_czi() (in module unravel.core.img_io)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.load_data">load_data() (in module unravel.region_stats.regional_IF_mean_intensities_summary)</a>
+      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.load_data">load_data() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_h5">load_h5() (in module unravel.core.img_io)</a>
 
@@ -765,21 +742,17 @@
 </li>
         <li><a href="unravel/image_tools/uniq_intensities.html#unravel.image_tools.uniq_intensities.main">(in module unravel.image_tools.uniq_intensities)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.main">(in module unravel.region_stats.regional_cell_densities)</a>
+        <li><a href="unravel/region_stats/rstats.html#unravel.region_stats.rstats.main">(in module unravel.region_stats.rstats)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.main">(in module unravel.region_stats.regional_cell_densities_summary)</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.main">(in module unravel.region_stats.rstats_mean_IF)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_counts.html#unravel.region_stats.regional_counts.main">(in module unravel.region_stats.regional_counts)</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.main">(in module unravel.region_stats.rstats_mean_IF_in_segmented_voxels)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.main">(in module unravel.region_stats.regional_IF_mean_intensities)</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.main">(in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.main">(in module unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels)</a>
+        <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.main">(in module unravel.region_stats.rstats_summary)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.main">(in module unravel.region_stats.regional_IF_mean_intensities_summary)</a>
-</li>
-        <li><a href="unravel/region_stats/regional_volumes.html#unravel.region_stats.regional_volumes.main">(in module unravel.region_stats.regional_volumes)</a>
-</li>
-        <li><a href="unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.main">(in module unravel.register.ANTsPy_affine_initializer)</a>
+        <li><a href="unravel/register/affine_initializer.html#unravel.register.affine_initializer.main">(in module unravel.register.affine_initializer)</a>
 </li>
         <li><a href="unravel/register/check_brain_mask.html#unravel.register.check_brain_mask.main">(in module unravel.register.check_brain_mask)</a>
 </li>
@@ -954,21 +927,17 @@
 </li>
         <li><a href="unravel/image_tools/uniq_intensities.html#module-unravel.image_tools.uniq_intensities">unravel.image_tools.uniq_intensities</a>
 </li>
-        <li><a href="unravel/region_stats/regional_cell_densities.html#module-unravel.region_stats.regional_cell_densities">unravel.region_stats.regional_cell_densities</a>
+        <li><a href="unravel/region_stats/rstats.html#module-unravel.region_stats.rstats">unravel.region_stats.rstats</a>
 </li>
-        <li><a href="unravel/region_stats/regional_cell_densities_summary.html#module-unravel.region_stats.regional_cell_densities_summary">unravel.region_stats.regional_cell_densities_summary</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF.html#module-unravel.region_stats.rstats_mean_IF">unravel.region_stats.rstats_mean_IF</a>
 </li>
-        <li><a href="unravel/region_stats/regional_counts.html#module-unravel.region_stats.regional_counts">unravel.region_stats.regional_counts</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#module-unravel.region_stats.rstats_mean_IF_in_segmented_voxels">unravel.region_stats.rstats_mean_IF_in_segmented_voxels</a>
 </li>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities.html#module-unravel.region_stats.regional_IF_mean_intensities">unravel.region_stats.regional_IF_mean_intensities</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#module-unravel.region_stats.rstats_mean_IF_summary">unravel.region_stats.rstats_mean_IF_summary</a>
 </li>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#module-unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels</a>
+        <li><a href="unravel/region_stats/rstats_summary.html#module-unravel.region_stats.rstats_summary">unravel.region_stats.rstats_summary</a>
 </li>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#module-unravel.region_stats.regional_IF_mean_intensities_summary">unravel.region_stats.regional_IF_mean_intensities_summary</a>
-</li>
-        <li><a href="unravel/region_stats/regional_volumes.html#module-unravel.region_stats.regional_volumes">unravel.region_stats.regional_volumes</a>
-</li>
-        <li><a href="unravel/register/ANTsPy_affine_initializer.html#module-unravel.register.ANTsPy_affine_initializer">unravel.register.ANTsPy_affine_initializer</a>
+        <li><a href="unravel/register/affine_initializer.html#module-unravel.register.affine_initializer">unravel.register.affine_initializer</a>
 </li>
         <li><a href="unravel/register/check_brain_mask.html#module-unravel.register.check_brain_mask">unravel.register.check_brain_mask</a>
 </li>
@@ -1142,21 +1111,17 @@
 </li>
         <li><a href="unravel/image_tools/uniq_intensities.html#unravel.image_tools.uniq_intensities.parse_args">(in module unravel.image_tools.uniq_intensities)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_cell_densities.html#unravel.region_stats.regional_cell_densities.parse_args">(in module unravel.region_stats.regional_cell_densities)</a>
+        <li><a href="unravel/region_stats/rstats.html#unravel.region_stats.rstats.parse_args">(in module unravel.region_stats.rstats)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.parse_args">(in module unravel.region_stats.regional_cell_densities_summary)</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.parse_args">(in module unravel.region_stats.rstats_mean_IF)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_counts.html#unravel.region_stats.regional_counts.parse_args">(in module unravel.region_stats.regional_counts)</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.parse_args">(in module unravel.region_stats.rstats_mean_IF_in_segmented_voxels)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.parse_args">(in module unravel.region_stats.regional_IF_mean_intensities)</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.parse_args">(in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.parse_args">(in module unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels)</a>
+        <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.parse_args">(in module unravel.region_stats.rstats_summary)</a>
 </li>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.parse_args">(in module unravel.region_stats.regional_IF_mean_intensities_summary)</a>
-</li>
-        <li><a href="unravel/region_stats/regional_volumes.html#unravel.region_stats.regional_volumes.parse_args">(in module unravel.region_stats.regional_volumes)</a>
-</li>
-        <li><a href="unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.parse_args">(in module unravel.register.ANTsPy_affine_initializer)</a>
+        <li><a href="unravel/register/affine_initializer.html#unravel.register.affine_initializer.parse_args">(in module unravel.register.affine_initializer)</a>
 </li>
         <li><a href="unravel/register/check_brain_mask.html#unravel.register.check_brain_mask.parse_args">(in module unravel.register.check_brain_mask)</a>
 </li>
@@ -1211,15 +1176,15 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.parse_color_argument">parse_color_argument() (in module unravel.region_stats.regional_cell_densities_summary)</a>
+      <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.parse_color_argument">parse_color_argument() (in module unravel.region_stats.rstats_summary)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.perform_t_tests">perform_t_tests() (in module unravel.region_stats.regional_IF_mean_intensities_summary)</a>
+      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.perform_t_tests">perform_t_tests() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
       <li><a href="unravel/cluster_stats/stats.html#unravel.cluster_stats.stats.perform_tukey_test">perform_tukey_test() (in module unravel.cluster_stats.stats)</a>
 </li>
       <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.pixel_classification">pixel_classification() (in module unravel.core.img_tools)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.plot_data">plot_data() (in module unravel.region_stats.regional_IF_mean_intensities_summary)</a>
+      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.plot_data">plot_data() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
       <li><a href="unravel/register/prep_reg.html#unravel.register.prep_reg.prep_reg">prep_reg() (in module unravel.register.prep_reg)</a>
 </li>
@@ -1231,7 +1196,7 @@
 </li>
       <li><a href="unravel/image_io/metadata.html#unravel.image_io.metadata.print_metadata">print_metadata() (in module unravel.image_io.metadata)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.process_and_plot_data">process_and_plot_data() (in module unravel.region_stats.regional_cell_densities_summary)</a>
+      <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.process_and_plot_data">process_and_plot_data() (in module unravel.region_stats.rstats_summary)</a>
 </li>
       <li><a href="unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.process_fdr_and_clusters">process_fdr_and_clusters() (in module unravel.cluster_stats.fdr)</a>
 </li>
@@ -1249,11 +1214,9 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/voxel_stats/other/r_to_p.html#unravel.voxel_stats.other.r_to_p.r_to_z">r_to_z() (in module unravel.voxel_stats.other.r_to_p)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_volumes.html#unravel.region_stats.regional_volumes.region_volumes">region_volumes() (in module unravel.region_stats.regional_volumes)</a>
-</li>
       <li><a href="unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g">relative_hedges_g() (in module unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#unravel.region_stats.regional_IF_mean_intensities_summary.remove_zero_intensity_regions">remove_zero_intensity_regions() (in module unravel.region_stats.regional_IF_mean_intensities_summary)</a>
+      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.remove_zero_intensity_regions">remove_zero_intensity_regions() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
       <li><a href="unravel/utilities/rename.html#unravel.utilities.rename.rename_files">rename_files() (in module unravel.utilities.rename)</a>
 </li>
@@ -1297,7 +1260,7 @@
 </li>
       <li><a href="unravel/cluster_stats/valid_clusters_summary.html#unravel.cluster_stats.valid_clusters_summary.run_script">run_script() (in module unravel.cluster_stats.valid_clusters_summary)</a>
 </li>
-      <li><a href="unravel/register/ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.run_with_timeout">run_with_timeout() (in module unravel.register.ANTsPy_affine_initializer)</a>
+      <li><a href="unravel/register/affine_initializer.html#unravel.register.affine_initializer.run_with_timeout">run_with_timeout() (in module unravel.register.affine_initializer)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1363,7 +1326,7 @@
 </li>
       <li><a href="unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.split_clusters_based_on_effect">split_clusters_based_on_effect() (in module unravel.cluster_stats.fdr)</a>
 </li>
-      <li><a href="unravel/region_stats/regional_cell_densities_summary.html#unravel.region_stats.regional_cell_densities_summary.summarize_significance">summarize_significance() (in module unravel.region_stats.regional_cell_densities_summary)</a>
+      <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.summarize_significance">summarize_significance() (in module unravel.region_stats.rstats_summary)</a>
 </li>
       <li><a href="unravel/cluster_stats/sunburst.html#unravel.cluster_stats.sunburst.sunburst">sunburst() (in module unravel.cluster_stats.sunburst)</a>
 </li>
@@ -1684,6 +1647,8 @@
         <li><a href="unravel/image_tools/atlas/wireframe.html#module-unravel.image_tools.atlas.wireframe">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     unravel.image_tools.avg
 
@@ -1691,8 +1656,6 @@
         <li><a href="unravel/image_tools/avg.html#module-unravel.image_tools.avg">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     unravel.image_tools.bbox
 
@@ -1757,59 +1720,45 @@
 </li>
       </ul></li>
       <li>
-    unravel.region_stats.regional_cell_densities
+    unravel.region_stats.rstats
 
       <ul>
-        <li><a href="unravel/region_stats/regional_cell_densities.html#module-unravel.region_stats.regional_cell_densities">module</a>
+        <li><a href="unravel/region_stats/rstats.html#module-unravel.region_stats.rstats">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.region_stats.regional_cell_densities_summary
+    unravel.region_stats.rstats_mean_IF
 
       <ul>
-        <li><a href="unravel/region_stats/regional_cell_densities_summary.html#module-unravel.region_stats.regional_cell_densities_summary">module</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF.html#module-unravel.region_stats.rstats_mean_IF">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.region_stats.regional_counts
+    unravel.region_stats.rstats_mean_IF_in_segmented_voxels
 
       <ul>
-        <li><a href="unravel/region_stats/regional_counts.html#module-unravel.region_stats.regional_counts">module</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#module-unravel.region_stats.rstats_mean_IF_in_segmented_voxels">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.region_stats.regional_IF_mean_intensities
+    unravel.region_stats.rstats_mean_IF_summary
 
       <ul>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities.html#module-unravel.region_stats.regional_IF_mean_intensities">module</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#module-unravel.region_stats.rstats_mean_IF_summary">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels
+    unravel.region_stats.rstats_summary
 
       <ul>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#module-unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels">module</a>
+        <li><a href="unravel/region_stats/rstats_summary.html#module-unravel.region_stats.rstats_summary">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.region_stats.regional_IF_mean_intensities_summary
+    unravel.register.affine_initializer
 
       <ul>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities_summary.html#module-unravel.region_stats.regional_IF_mean_intensities_summary">module</a>
-</li>
-      </ul></li>
-      <li>
-    unravel.region_stats.regional_volumes
-
-      <ul>
-        <li><a href="unravel/region_stats/regional_volumes.html#module-unravel.region_stats.regional_volumes">module</a>
-</li>
-      </ul></li>
-      <li>
-    unravel.register.ANTsPy_affine_initializer
-
-      <ul>
-        <li><a href="unravel/register/ANTsPy_affine_initializer.html#module-unravel.register.ANTsPy_affine_initializer">module</a>
+        <li><a href="unravel/register/affine_initializer.html#module-unravel.register.affine_initializer">module</a>
 </li>
       </ul></li>
       <li>
@@ -2013,10 +1962,10 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/region_stats/regional_IF_mean_intensities.html#unravel.region_stats.regional_IF_mean_intensities.write_to_csv">write_to_csv() (in module unravel.region_stats.regional_IF_mean_intensities)</a>
+      <li><a href="unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.write_to_csv">write_to_csv() (in module unravel.region_stats.rstats_mean_IF)</a>
 
       <ul>
-        <li><a href="unravel/region_stats/regional_IF_mean_intensities_in_segmented_voxels.html#unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels.write_to_csv">(in module unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels)</a>
+        <li><a href="unravel/region_stats/rstats_mean_IF_in_segmented_voxels.html#unravel.region_stats.rstats_mean_IF_in_segmented_voxels.write_to_csv">(in module unravel.region_stats.rstats_mean_IF_in_segmented_voxels)</a>
 </li>
       </ul></li>
   </ul></td>

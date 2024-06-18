@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Automatically average hemisphere images with their mirrored counterparts
+Use ``vstats_hemi_to_avg`` from UNRAVEL to automatically average hemisphere images with their mirrored counterparts. This can also smooth the images with a kernel and apply a mask.
 
 Usage:
-    hemi_to_LR_avg.py -k 0.1 -tp -v
+------
+    vstats_hemi_to_avg -k 0.1 -tp -v
 
 Inputs: 
     - input_img_LH.nii.gz
@@ -27,12 +28,12 @@ from rich.traceback import install
 from concurrent.futures import ThreadPoolExecutor
 
 from fsl.wrappers import fslmaths
-from apply_mask import load_mask
-from mirror import mirror
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.voxel_stats.apply_mask import load_mask
+from unravel.voxel_stats.mirror import mirror
 
 
 def parse_args():

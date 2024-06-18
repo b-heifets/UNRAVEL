@@ -309,7 +309,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../register/toc.html">unravel.register package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../register/prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../register/ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -368,13 +368,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../region_stats/toc.html">unravel.region_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -490,19 +488,25 @@
                   
   <section id="module-unravel.warp.to_native">
 <span id="unravel-warp-to-native-module"></span><span id="unravel-warp-to-native"></span><h1>unravel.warp.to_native module<a class="headerlink" href="#module-unravel.warp.to_native" title="Link to this heading">#</a></h1>
-<p>Warp img.nii.gz from atlas space to tissue space and scale to full resolution</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code> from UNRAVEL to warp an atlas space image to tissue space and scale to full resolution.</p>
+<section id="cli-usage">
+<h2>CLI usage:<a class="headerlink" href="#cli-usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>warp_to_native -m &lt;path/image_to_warp_from_atlas_space.nii.gz&gt; -o &lt;native&gt;/native_&lt;img&gt;.zarr</p>
+</div></blockquote>
+</section>
+<section id="python-usage">
+<h2>Python usage:<a class="headerlink" href="#python-usage" title="Link to this heading">#</a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">unravel.warp.to_native</span> <span class="k">as</span> <span class="nn">to_native</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">native_img</span> <span class="o">=</span> <span class="n">to_native</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">reg_outputs</span><span class="p">,</span> <span class="n">fixed_reg_in</span><span class="p">,</span> <span class="n">moving_img_path</span><span class="p">,</span> <span class="n">metadata_rel_path</span><span class="p">,</span> <span class="n">reg_res</span><span class="p">,</span> <span class="n">miracl</span><span class="p">,</span> <span class="n">zoom_order</span><span class="p">,</span> <span class="n">interpol</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># native_img is an np.ndarray</span>
+</pre></div>
+</div>
 <dl class="simple">
-<dt>Prereq:</dt><dd><p>./parameters/metadata.txt (metadata.py)</p>
-</dd>
-<dt>CLI usage:</dt><dd><p>to_native.py -m &lt;path/image_to_warp_from_atlas_space.nii.gz&gt; -o &lt;native&gt;/native_&lt;img&gt;.zarr</p>
-</dd>
-<dt>Python usage:</dt><dd><ul class="simple">
-<li><p>import unravel.warp.to_native as to_native</p></li>
-<li><p>to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None)</p></li>
-<li><p>Returns native_img as np.ndarray</p></li>
-</ul>
+<dt>Prereq:</dt><dd><p>./parameters/metadata.txt (from io_metadata)</p>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.warp.to_native.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.warp.to_native.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_native.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_native.parse_args" title="Link to this definition">#</a></dt>
@@ -578,6 +582,8 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-usage">CLI usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-usage">Python usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.calculate_resampled_padded_dimensions"><code class="docutils literal notranslate"><span class="pre">calculate_resampled_padded_dimensions()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.scale_to_full_res"><code class="docutils literal notranslate"><span class="pre">scale_to_full_res()</span></code></a></li>

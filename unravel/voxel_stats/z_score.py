@@ -1,25 +1,33 @@
 #!/usr/bin/env python3
 
 """
-Z-score an atlas space image using a tissue mask and/or an atlas mask.
+Use ``vstats_z_score`` from UNRAVEL to z-score an atlas space image using a tissue mask and/or an atlas mask.
 
 Usage w/ a tissue mask (warped to atlas space):
-    z_score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -v
+-----------------------------------------------
+    z_score.py -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -v
 
 Usage w/ an atlas mask (warped to atlas space):
+-----------------------------------------------
     z_score.py -i path/img.nii.gz -n -amas path/atlas_mask.nii.gz -v
 
-Usage w/ both masks for side-specific z-scoring
-    z_score.py -i atlas_space/sample??_ochann_rb4_gubra_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v
+Usage w/ both masks for side-specific z-scoring:
+------------------------------------------------
+    z_score.py -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v
+
+Next steps: 
+    - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average hemispheres together.
+    - If using side-specific z-scoring, next use ``vstats_hemi_to_avg`` to average the images.
+    - Run ``vstats`` to perform voxel-wise stats.
 
 Outputs:
     - <path/input_img>_z.nii.gz (float32)
-    - [atlas_space/autofl_50um_brain_mask.nii.gz]
+    - [sample??/atlas_space/autofl_50um_brain_mask.nii.gz]
 
 z-score = (img.nii.gz - mean pixel intensity in brain)/standard deviation of intensity in brain
 
 Prereqs:
-    prep_vstats.py for inputs [& brain_mask.py for tissue masks]
+    ``vstats_prep`` for inputs [& ``seg_brain_mask`` for tissue masks]
 """
 
 import argparse

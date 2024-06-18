@@ -1,13 +1,21 @@
 #!/usr/bin/env python3
 
 """
-Average an image with its mirrored version for voxel-wise stats
+Use ``vstats_whole_to_avg`` from UNRAVEL to average an image with its mirrored version for voxel-wise stats. This can also smooth the image with a kernel and apply a mask.
 
 Usage:
+------
     whole_to_LR_avg.py -k 0.1 -v -tp
     
 Output:
     input_img_LRavg.nii.gz
+
+Prereqs:
+    - Input images from ``vstats_prep``.
+        - These may be z-scored with ``vstats_z_score``.
+
+Next steps:
+    - Run ``vstats`` to perform voxel-wise stats.
 """
 
 import argparse
@@ -20,11 +28,11 @@ from rich import print
 from rich.traceback import install
 from concurrent.futures import ThreadPoolExecutor
 
-from apply_mask import load_mask
-from mirror import mirror
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.voxel_stats.apply_mask import load_mask
+from unravel.voxel_stats.mirror import mirror
         
 
 def parse_args():

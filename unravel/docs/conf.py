@@ -66,8 +66,6 @@ myst_enable_extensions = [
     "colon_fence"
 ]
 
-mermaid_d3_zoom = True
-
 suppress_warnings = [
     'myst.xref_ambiguous',  # Suppresses ambiguous reference warnings from MyST-parser
 ]

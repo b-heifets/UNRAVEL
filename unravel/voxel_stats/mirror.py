@@ -2,10 +2,14 @@
 
 
 """
-Load <asterisk>.nii.gz, flip copy (and shift content), average original and copy together, save .nii.gz
+Use ``vstats_mirror`` from UNRAVEL to load a <asterisk>.nii.gz, flip a copy [and shift content], average original and copy together, and save as .nii.gz.
 
-Usage: 
-    mirror.py -v
+Usage:
+------
+    vstats_mirror -v
+
+Note: 
+    The current defaults are specific to our version of the Gubra atlas and may need to be adjusted for other atlases.
 """
 
 import argparse

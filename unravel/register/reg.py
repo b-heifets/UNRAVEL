@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Registers average template brain/atlas to resampled autofl brain. Check accuracy w/ ./reg_final outputs in itksnap or fsleyes
+Use ``reg`` from UNRAVEL to register an average template brain/atlas to a resampled autofl brain. 
 
-Run script from the experiment directory w/ sample?? dir(s) or a sample?? dir
-
-Usage: 
-    reg.py -m <path/template.nii.gz> -bc -pad -sm 0.4 -ort <3 letter orientation code>
+Usage:
+------
+    reg -m <path/template.nii.gz> -bc -pad -sm 0.4 -ort <3 letter orientation code>
 
 ort_code letter options: 
     - A/P=Anterior/Posterior
@@ -15,7 +14,10 @@ ort_code letter options:
     - The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)
 
 Prereqs: 
-    prep_reg.py, [prep_brain_mask.py], & [brain_mask.py] for warping an average template to the autofluo tissue
+    ``reg_prep``, [``seg_copy_tifs``], & [``seg_brain_mask``]
+
+Next steps: 
+    ``reg_check``
 """
 
 import argparse
@@ -50,17 +52,17 @@ def parse_args():
     parser.add_argument('-m', '--moving_img', help='path/moving_img.nii.gz (e.g., average template optimally matching tissue)', required=True, action=SM)
 
     # Optional arguments:
-    parser.add_argument('-f', '--fixed_img', help='reg_inputs/autofl_50um_masked.nii.gz (from prep_reg.py)', default="reg_inputs/autofl_50um_masked.nii.gz", action=SM)
+    parser.add_argument('-f', '--fixed_img', help='reg_inputs/autofl_50um_masked.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um_masked.nii.gz", action=SM)
     parser.add_argument('-o', '--output', help='Warped moving image aligned with the fixed image. Default: <moving_img>__warped_moving_img.nii.gz', default=None, action=SM)
     parser.add_argument('-mas', '--mask', help="Brain mask for bias correction. Default: reg_inputs/autofl_50um_brain_mask.nii.gz. or pass in None", default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
-    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from reg.py (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
+    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from ``reg`` (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
     parser.add_argument('-tp', '--tform_prefix', help='Prefix of transforms output from ants.registration. Default: ANTsPy_', default="ANTsPy_", action=SM)
     parser.add_argument('-bc', '--bias_correct', help='Perform N4 bias field correction. Default: False', action='store_true', default=False)
     parser.add_argument('-pad', '--pad_img', help='If True, add 15 percent padding to image. Default: False', action='store_true', default=False)
     parser.add_argument('-sm', '--smooth', help='Sigma value for smoothing the fixed image. Default: 0 for no smoothing. Use 0.4 for autofl', default=0, type=float, action=SM)
     parser.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     parser.add_argument('-ia', '--init_align', help='Name of initially aligned image (moving reg input). Default: <moving_img>__initial_alignment_to_fixed_img.nii.gz' , default=None, action=SM)
-    parser.add_argument('-it', '--init_time', help='Time in seconds allowed for ANTsPy_affine_initializer.py to run. Default: 30' , default='30', type=str, action=SM)
+    parser.add_argument('-it', '--init_time', help='Time in seconds allowed for ``reg_affine_initializer`` to run. Default: 30' , default='30', type=str, action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
@@ -142,7 +144,7 @@ def main():
                 reg_inputs_fixed_img_nii = nib.Nifti1Image(fixed_img, fixed_img_nii.affine.copy(), fixed_img_nii.header)
                 reg_inputs_fixed_img_nii.set_data_dtype(np.float32)
 
-                # Set the orientation of the image (use if not already set correctly in the header; check with nii_orientation.py)
+                # Set the orientation of the image (use if not already set correctly in the header; check with ``io_nii``)
                 if args.ort_code: 
                     reg_inputs_fixed_img_nii = reorient_nii(reg_inputs_fixed_img_nii, args.ort_code, zero_origin=True, apply=False, form_code=1)
 
@@ -161,10 +163,9 @@ def main():
                     import sys ; sys.exit()
 
                 print(f'\n\n    Generating the initial transform matrix for aligning the moving image (e.g., template) to the fixed image (e.g., tissue) \n')
-                script_path = Path(Path(os.path.abspath(__file__)).parent, 'ANTsPy_affine_initializer.py')
                 command = [
                     'python', 
-                    script_path, 
+                    'reg_affine_initializer', 
                     '-f', fixed_img_for_reg_path, 
                     '-m', args.moving_img, 
                     '-o', str(Path(reg_outputs_path, f"{args.tform_prefix}init_tform.mat")), 

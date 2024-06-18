@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
 
 """
-Warp to/from atlas space and registration input space
+Use ``warp`` from UNRAVEL to warp to/from atlas space and registration input space
 
-Forward warping atlas to tissue space:
+Usage for forward warping atlas to tissue space:
+------------------------------------------------
     warp.py -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -ro reg_outputs -o warp/atlas_in_tissue_space.nii.gz -inp multiLabel -v
 
-Inverse warping tissue to atlas space:
+Usage for inverse warping tissue to atlas space:
+------------------------------------------------
     warp.py -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -ro reg_outputs -o warp/tissue_in_atlas_space.nii.gz -inv -v
 
 Prereq: 
-    reg.py
+    ``reg``
 """
 
 import ants

@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 
 """
-Warp img.nii.gz from atlas space to tissue space and scale to full resolution
-
-Prereq:
-    ./parameters/metadata.txt (metadata.py)
+Use ``warp_to_native`` from UNRAVEL to warp an atlas space image to tissue space and scale to full resolution.
 
 CLI usage:
-    to_native.py -m <path/image_to_warp_from_atlas_space.nii.gz> -o <native>/native_<img>.zarr
+----------
+    warp_to_native -m <path/image_to_warp_from_atlas_space.nii.gz> -o <native>/native_<img>.zarr
 
 Python usage:
-    - import unravel.warp.to_native as to_native
-    - to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None)
-    - Returns native_img as np.ndarray
+-------------
+    >>> import unravel.warp.to_native as to_native
+    >>> native_img = to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None)
+    >>> # native_img is an np.ndarray
+
+Prereq:
+    ./parameters/metadata.txt (from io_metadata)
 """
 
 import argparse

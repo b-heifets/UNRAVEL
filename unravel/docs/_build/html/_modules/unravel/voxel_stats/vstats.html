@@ -49,21 +49,6 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
-    <script>
-            window.addEventListener("load", function () {
-              var svgs = d3.selectAll(".mermaid svg");
-              svgs.each(function() {
-                var svg = d3.select(this);
-                svg.html("<g>" + svg.html() + "</g>");
-                var inner = svg.select("g");
-                var zoom = d3.zoom().on("zoom", function(event) {
-                  inner.attr("transform", event.transform);
-                });
-                svg.call(zoom);
-              });
-            });
-            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/voxel_stats/vstats';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -367,78 +352,19 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Run voxel-wise stats using FSL&#39;s randomise_parallel command</span>
+<span class="sd">Use ``vstats`` from UNRAVEL to run voxel-wise stats using FSL&#39;s randomise_parallel command.</span>
 
 <span class="sd">Usage:</span>
-<span class="sd">    vstats.py -mas mask.nii.gz -v</span>
+<span class="sd">------</span>
+<span class="sd">    vstats -mas mask.nii.gz -v</span>
 
 <span class="sd">Prereqs: </span>
-<span class="sd">    - Input images from prep_vstats.py, z-score.py, or whole_to_LR_avg.py</span>
-<span class="sd">    - FSL installed and the following added to .bashrc or .zshrc</span>
+<span class="sd">    - Input images from ``vstats_prep``, ``vstats_z_score``, or ``vstats_whole_to_avg``.</span>
 
-<span class="sd">Add these lines to .bashrc or .zshrc:</span>
-<span class="sd">export FSLDIR=/usr/local/fsl</span>
-<span class="sd">export PATH=${FSLDIR}/bin:${PATH}</span>
-<span class="sd">. ${FSLDIR}/etc/fslconf/fsl.sh</span>
-<span class="sd">export FSLDIR PATH</span>
-<span class="sd"># Source the .bashrc or .zshrc file (e.g., source ~/.bashrc) or restart the terminal</span>
+<span class="sd">Next steps:</span>
+<span class="sd">    - Run ``cluster_fdr_range`` and ``cluster_fdr`` to correct for multiple comparisons.</span>
 
-<span class="sd">Inputs: </span>
-<span class="sd">    - Make glm folder named succiently (e.g., glm_&lt;EX&gt;_rb&lt;4&gt;_z_&lt;contrast&gt; for t-test or anova_&lt;EX&gt;_rb&lt;4&gt;_z)</span>
-<span class="sd">    - Add &lt;asterisk&gt;.nii.gz prepended with the condition (e.g., drug_sample01_gubra_space_z.nii.gz)</span>
-<span class="sd">        - Optional: use prepend_conditions.py to add the condition to the file names</span>
-<span class="sd">        - The condition should be one word (e.g., drug, saline, etc.)</span>
-<span class="sd">        - Group order is alphabetical (e.g., drug is group 1 and saline is group 2)</span>
-<span class="sd">        - The input images should be in the working directory</span>
-<span class="sd">        - View the images in fsleyes to ensure they are aligned and the sides are correct</span>
-<span class="sd">    - With whole brains, left and right sides can be averaged with whole_to_LR_avg.py, then use a unilateral hemisphere mask.</span>
-
-<span class="sd">If glm_folder/stats/design.fts exists, run ANOVA, else run t-test.</span>
-
-<span class="sd">Outputs are in glm_folder/stats.</span>
-
-<span class="sd">T-test outputs:</span>
-<span class="sd">    - vox_p_tstat1.nii.gz: uncorrected p values for tstat1 (group 1 &gt; group 2)</span>
-<span class="sd">    - vox_p_tstat2.nii.gz: uncorrected p values for tstat2 (group 1 &lt; group 2)</span>
-
-<span class="sd">ANOVA outputs:</span>
-<span class="sd">    - vox_p_fstat1.nii.gz: uncorrected p values for fstat1 (1st contrast, e.g., drug vs saline)</span>
-<span class="sd">    - vox_p_fstat2.nii.gz: uncorrected p values for fstat2 (2nd contrast, e.g., context1 vs context2)</span>
-<span class="sd">    - vox_p_fstat3.nii.gz: uncorrected p values for fstat3 (3rd contrast, e.g., interaction)</span>
-
-<span class="sd">Example of preparing for a ANOVA: </span>
-<span class="sd">    - For a 2x2 ANOVA, before running this script make ./anova_&lt;EX&gt;_rb&lt;4&gt;_z/stats/design/</span>
-<span class="sd">    - Open terminal from ./stats and run: fsl</span>
-<span class="sd">    - Misc -&gt; GLM Setup</span>
-<span class="sd">    - GLM Setup window: </span>
-<span class="sd">        - Higher-level / non-timeseries design </span>
-<span class="sd">        - # inputs: &lt;total # of samples&gt; </span>
-<span class="sd">    - EVs tab in GLM window: </span>
-<span class="sd">        - # of main EVs: 4 </span>
-<span class="sd">        - Name EVs (e.g., EV1 = group 1) </span>
-<span class="sd">        - Group should be 1 for all </span>
-<span class="sd">    - Make design matrix: </span>
-<span class="sd">        - Under EV1 enter 1 for each subject in group 1 (1 row/subject). EV2-4 are 0 for these rows </span>
-<span class="sd">        - Under EV2 enter 1 for each subject in group 2, starting w/ row after the last row for group 1  </span>
-<span class="sd">        - Follow this pattern for EV3 and EV4 </span>
-<span class="sd">    - Contrasts &amp; F-tests tab in GLM window: </span>
-<span class="sd">        - Contrasts: 3 </span>
-<span class="sd">            - C1: Main_effect_&lt;e.g.,drug&gt; 1 1 -1 -1 (e.g., EV1/2 are drug groups and EV3/4 are saline groups) </span>
-<span class="sd">            - C2: Main_effect_&lt;e.g., context&gt; 1 -1 1 -1 (e.g., EV1/3 were in context1 and EV2/4 were in context2 )</span>
-<span class="sd">            - C3: Interaction 1 -1 -1 1 </span>
-<span class="sd">        - F-tests: 3</span>
-<span class="sd">            - F1: click upper left box </span>
-<span class="sd">            - F2: click middle box</span>
-<span class="sd">            - F3: click lower right box</span>
-<span class="sd">    - GLM Setup window: </span>
-<span class="sd">        - Save -&gt; click design -&gt; OK </span>
-<span class="sd">    - Run: vstats.py from anova folder </span>
-
-<span class="sd">Background: </span>
-<span class="sd">https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/GLM </span>
-<span class="sd">https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide</span>
-
-<span class="sd">Afterwards run fdr.py to correct for multiple comparisons.</span>
+<span class="sd">For info on how to set up and run voxel-wise analyses, see: https://b-heifets.github.io/UNRAVEL/guide.html#voxel-wise-stats</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>

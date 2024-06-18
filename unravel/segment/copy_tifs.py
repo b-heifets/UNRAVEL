@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Copies a subset of .tif files to a new dir for training ilastik
+Use ``seg_copy_tifs`` from UNRAVEL to copy a subset of .tif files to a target dir for training ilastik.
 
-To prep for brain_mask.py (if --mask_dir <path/mask_dir> and -e <exp dir paths> were not specified in prep_reg.py): 
-    copy_tifs.py -i reg_inputs/autofl_50um_tifs -s 0010 0060 0110 -o ilastik_brain_mask
+Usage to prep for ``seg_brain_mask`` (if --mask_dir <path/mask_dir> and -e <exp dir paths> were not specified in ``reg_prep``):
+-------------------------------------------------------------------------------------------------------------------------------
+    seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0010 0060 0110 -o ilastik_brain_mask
 
-To prep for ilastik_pixel_classification.py to segment full resolution immunofluorescence images: 
-    copy_tifs.py -i raw_tif_dir -s 0100 0500 1000 -o ilastik_segmentation
+Usage to prep for ``seg_ilastik`` to segment full resolution immunofluorescence images:
+---------------------------------------------------------------------------------------
+    seg_copy_tifs -i raw_tif_dir -s 0100 0500 1000 -o ilastik_segmentation
 """
 
 import argparse
@@ -28,7 +30,7 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um_tifs (from prep_reg.py) or name of directory with raw tifs', default=None, action=SM)
+    parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um_tifs (from ``reg_prep``) or name of directory with raw tifs', default=None, action=SM)
     parser.add_argument('-o', '--output', help='path/dir to copy TIF files. (e.g., ilastik_brain_mask or ilastik_segmentation)', required=True, action=SM)
     parser.add_argument('-s', '--slices', help='List of slice numbers to copy (4 digits each; space separated)', nargs='*', type=str, default=[])
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)

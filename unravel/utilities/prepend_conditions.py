@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Prepend conditions to filenames based on a CSV key
+Use ``utils_prepend`` from UNRAVEL to prepend conditions to filenames based on a CSV key.
 
 Usage:
-    prepend_conditions.py -sk <path/sample_key.csv> -f -r
+------
+    utils_prepend -sk <path/sample_key.csv> -f -r
 
 This script renames files in the current directory based on the conditions specified in the CSV file.
 
@@ -20,7 +21,7 @@ Files will be renamed as follows:
     'sample01_file.csv' --> 'control_sample01_file.csv'
     'sample02_file.csv' --> 'treatment_sample02_file.csv'.
 
-If needed, files and/or folders can be renamed with rename.py
+If needed, files and/or folders can be renamed with ``utils_rename``.
 """ 
 
 import argparse

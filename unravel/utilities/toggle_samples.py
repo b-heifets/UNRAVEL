@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Inactivate/activate sample?? dirs (i.e., prepend/remove "_" from dir name)
+Use ``utils_toggle`` from UNRAVEL to inactivate/activate sample?? dirs (i.e., prepend/remove "_" from dir name).
 
 Usage for toggling all sample?? dirs to active:
-    toggle_samples.py -t -e <list_of_exp_dir_paths>
+-----------------------------------------------
+    utils_toggle -t -e <list_of_exp_dir_paths>
     
 Usage for activating sample?? dirs for certain conditions:
-    toggle_samples.py -c <path/sample_key.csv> -a <Saline MDMA> -v -e <list_of_exp_dir_paths>
+----------------------------------------------------------
+    utils_toggle -c <path/sample_key.csv> -a <Saline MDMA> -v -e <list_of_exp_dir_paths>
 
 For conditions in the activate list, the script will remove the "_" from the sample?? dir name.
 For conditions not in the activate list, the script will prepend "_" to the sample?? dir name.    

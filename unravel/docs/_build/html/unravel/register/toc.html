@@ -309,7 +309,7 @@
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">unravel.register package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="prep_reg.html">unravel.register.prep_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg.html">unravel.register.reg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="check_reg.html">unravel.register.check_reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="check_brain_mask.html">unravel.register.check_brain_mask module</a></li>
 </ul>
@@ -368,13 +368,11 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../region_stats/toc.html">unravel.region_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities.html">unravel.region_stats.regional_IF_mean_intensities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_in_segmented_voxels.html">unravel.region_stats.regional_IF_mean_intensities_in_segmented_voxels module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_IF_mean_intensities_summary.html">unravel.region_stats.regional_IF_mean_intensities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities.html">unravel.region_stats.regional_cell_densities module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_cell_densities_summary.html">unravel.region_stats.regional_cell_densities_summary module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_counts.html">unravel.region_stats.regional_counts module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../region_stats/regional_volumes.html">unravel.region_stats.regional_volumes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats.html">unravel.region_stats.rstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_summary.html">unravel.region_stats.rstats_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF.html">unravel.region_stats.rstats_mean_IF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_in_segmented_voxels.html">unravel.region_stats.rstats_mean_IF_in_segmented_voxels module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../region_stats/rstats_mean_IF_summary.html">unravel.region_stats.rstats_mean_IF_summary module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -490,30 +488,36 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="prep_reg.html">unravel.register.prep_reg module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prep_reg.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prep_reg.html#unravel.register.prep_reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prep_reg.html#unravel.register.prep_reg.prep_reg"><code class="docutils literal notranslate"><span class="pre">prep_reg()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="prep_reg.html#unravel.register.prep_reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reg.html">unravel.register.reg module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="reg.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg.html#unravel.register.reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg.html#unravel.register.reg.bias_correction"><code class="docutils literal notranslate"><span class="pre">bias_correction()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg.html#unravel.register.reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ANTsPy_affine_initializer.html">unravel.register.ANTsPy_affine_initializer module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.affine_initializer_wrapper"><code class="docutils literal notranslate"><span class="pre">affine_initializer_wrapper()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.run_with_timeout"><code class="docutils literal notranslate"><span class="pre">run_with_timeout()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="ANTsPy_affine_initializer.html#unravel.register.ANTsPy_affine_initializer.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="affine_initializer.html">unravel.register.affine_initializer module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="affine_initializer.html#usage">Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="affine_initializer.html#python-usage">Python usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="affine_initializer.html#unravel.register.affine_initializer.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="affine_initializer.html#unravel.register.affine_initializer.affine_initializer_wrapper"><code class="docutils literal notranslate"><span class="pre">affine_initializer_wrapper()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="affine_initializer.html#unravel.register.affine_initializer.run_with_timeout"><code class="docutils literal notranslate"><span class="pre">run_with_timeout()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="affine_initializer.html#unravel.register.affine_initializer.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="check_reg.html">unravel.register.check_reg module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="check_reg.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="check_reg.html#unravel.register.check_reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="check_reg.html#unravel.register.check_reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="check_brain_mask.html">unravel.register.check_brain_mask module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="check_brain_mask.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="check_brain_mask.html#unravel.register.check_brain_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="check_brain_mask.html#unravel.register.check_brain_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>

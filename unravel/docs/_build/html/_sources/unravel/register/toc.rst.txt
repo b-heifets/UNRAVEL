@@ -6,7 +6,7 @@ unravel.register package
 
    prep_reg
    reg
-   ANTsPy_affine_initializer
+   affine_initializer
    check_reg
    check_brain_mask
 
