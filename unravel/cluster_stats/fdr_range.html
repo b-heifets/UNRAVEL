@@ -490,15 +490,19 @@
                   
   <section id="module-unravel.cluster_stats.fdr_range">
 <span id="unravel-cluster-stats-fdr-range-module"></span><span id="unravel-cluster-stats-fdr-range"></span><h1>unravel.cluster_stats.fdr_range module<a class="headerlink" href="#module-unravel.cluster_stats.fdr_range" title="Link to this heading">#</a></h1>
-<p>Outputs a list of FDR q values that yeild clusters</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_fdr_range</span></code> from UNRAVEL to output a list of FDR q values that yeild clusters.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_fdr_range -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>fdr_range.py -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 0.01 0.001</p>
-</dd>
 <dt>Inputs:</dt><dd><ul class="simple">
-<li><p>p value map (e.g., <em>vox_p_*stat</em>.nii.gz from vstats.py)</p></li>
+<li><p>p value map (e.g., <em>vox_p_*stat</em>.nii.gz from vstats)</p></li>
 </ul>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.fdr_range.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr_range.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr_range.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr_range.parse_args" title="Link to this definition">#</a></dt>
@@ -578,6 +582,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr_range.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr_range.smart_float_format"><code class="docutils literal notranslate"><span class="pre">smart_float_format()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr_range.fdr_range"><code class="docutils literal notranslate"><span class="pre">fdr_range()</span></code></a></li>

@@ -47,6 +47,23 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
+    <script>
+            window.addEventListener("load", function () {
+              var svgs = d3.selectAll(".mermaid svg");
+              svgs.each(function() {
+                var svg = d3.select(this);
+                svg.html("<g>" + svg.html() + "</g>");
+                var inner = svg.select("g");
+                var zoom = d3.zoom().on("zoom", function(event) {
+                  inner.attr("transform", event.transform);
+                });
+                svg.call(zoom);
+              });
+            });
+            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/image_io/tif_to_tifs';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -350,10 +367,11 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Loads 3D .tif image, saves as tifs. Also, saves xy and z voxel size in microns</span>
+<span class="sd">Use ``io_tif_to_tifs`` from UNRAVEL to load a 3D .tif image and save it as tifs.</span>
 
-<span class="sd">Usage: </span>
-<span class="sd">    tif_to_tifs.py -i &lt;path/image.tif&gt; -t 488</span>
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    io_tif_to_tifs -i &lt;path/image.tif&gt; -t 488</span>
 
 <span class="sd">Inputs: </span>
 <span class="sd">    - image.tif # either from -i path/image.tif or largest &lt;asterisk&gt;.tif in cwd</span>

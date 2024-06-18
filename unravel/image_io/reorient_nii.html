@@ -490,10 +490,13 @@
                   
   <section id="module-unravel.image_io.reorient_nii">
 <span id="unravel-image-io-reorient-nii-module"></span><span id="unravel-image-io-reorient-nii"></span><h1>unravel.image_io.reorient_nii module<a class="headerlink" href="#module-unravel.image_io.reorient_nii" title="Link to this heading">#</a></h1>
-<p>Set orientation of a .nii.gz or its affine matrix</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">io_reorient_nii</span></code> from UNRAVEL to set the orientation of a .nii.gz or its affine matrix.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_reorient_nii -i image.nii.gz -t PIR -a -z</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>reorient_nii.py -i image.nii.gz -t PIR -a -z</p>
-</dd>
 <dt>Output:</dt><dd><ul class="simple">
 <li><p>The new .nii.gz file with the new orientation (e.g., image_PIR.nii.gz or image_PIR_applied.nii.gz)</p></li>
 </ul>
@@ -552,6 +555,7 @@ S: Superior / I: Inferior</p>
 </dl>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_io.reorient_nii.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.image_io.reorient_nii.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/reorient_nii.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.reorient_nii.parse_args" title="Link to this definition">#</a></dt>
@@ -649,6 +653,7 @@ If apply False: new_affine (np.ndarray): New affine matrix</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.reorient_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.reorient_nii.transform_nii_affine"><code class="docutils literal notranslate"><span class="pre">transform_nii_affine()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.reorient_nii.reorient_nii"><code class="docutils literal notranslate"><span class="pre">reorient_nii()</span></code></a></li>

@@ -1,6 +1,28 @@
 # Guide
 
-* If you are unfamiliar with the terminal, please review these [command line tutorials](https://andysbrainbook.readthedocs.io/en/latest/index.html)
+* If you are unfamiliar with the terminal, please review these [command line tutorials](https://andysbrainbook.readthedocs.io/en/latest/index.html).
+
+## Typical workflow
+
+* Each nodes shows a description of the step and related commands.
+
+:::{mermaid}
+flowchart TD
+    A(((LSFM))) --> B[3D autofluo image]
+    B --> C(Registration: reg_prep, seg_copy_tifs, seg_brain_mask, reg, reg_check) 
+    A --> D[3D immunofluo image]
+    D --> F(Remove autofluo + warp IF image to atlas space: vstats_prep)
+    C --> F
+    F --> G(Z-score: vstats_z_score)
+    G --> N(Aggregate images: utils_agg_files)
+    N --> H(Smoothing + average left and right sides: vstats_whole_to_avg)
+    H --> J(Voxel-wise stats: vstats)
+    J --> K(FDR correction of p value maps: cluster_fdr_range, cluster_fdr, cluster_mirror_indices)
+    K --> L(Warp clusters of significant voxels to tissue space + validate clusters with cell/label density measurements: cluster_validation, cluster_summary)
+    C --> L
+    D --> M(Segment features of interest: seg_copy_tifs, seg_ilastik)
+    M --> L
+:::
 
 ## Help on commands
 For help/info on a command, run this in the terminal:
@@ -9,6 +31,8 @@ For help/info on a command, run this in the terminal:
 ```
 
 :::{hint}
+* To view help on arguments for each script (a.k.a. module) in the online documentation, go to the page for that module, scroll to the parse_args() function, and click the link for viewing the source code.
+
 * The symbols < and > indicate placeholders. Replace \<command\> with the actual command name you want to learn more about.
 
 * Square brackets [ ] in command syntax signify optional elements. 
@@ -553,7 +577,7 @@ vstats_z_score -i atlas_space/sample??_cFos_rb4_atlas_space.nii.gz -v -e $DIRS
 
 #### `utils_agg_files`
 {py:mod}`unravel.utilities.aggregate_files_from_sample_dirs`
-Aggregate pre-processed immunofluorescence (IF) images for voxel-wise stats
+* Aggregate pre-processed immunofluorescence (IF) images for voxel-wise stats
 ```bash
 utils_agg_files -i atlas_space/sample??_cFos_rb4_atlas_space_z.nii.gz -e $DIRS -v
 ```
@@ -613,8 +637,8 @@ img_avg -i Control_*.nii.gz -o Control_avg.nii.gz
 ```
 
 #### `cluster_fdr_range`
-{py:mod}`unravel.cluster_correction.fdr_range`
-Outputs a list of FDR q values that yeild clusters.
+{py:mod}`unravel.cluster_stats.fdr_range`
+* Outputs a list of FDR q values that yeild clusters.
 ```bash
 # Basic usage
 cluster_fdr_range -i vox_p_tstat1.nii.gz -mas mask.nii.gz
@@ -627,14 +651,14 @@ q_values=$(cluster_fdr_range -i vox_p_fstat1.nii.gz -mas $MASK) ; cluster_fdr -i
 ```
 
 #### `cluster_fdr`
-{py:mod}`unravel.cluster_correction.fdr_`
+{py:mod}`unravel.cluster_stats.fdr`
 * Perform FDR correction on a 1 - p value map to define clusters
 ```bash
 cluster_fdr -i vox_p_tstat1.nii.gz -mas mask.nii.gz -q 0.05
 ```
 
 #### `cluster_mirror_indices`
-{py:mod}`unravel.cluster_correction.recursive_mirror_index`
+{py:mod}`unravel.cluster_stats.recursively_mirror_rev_cluster_indices`
 * Recursively flip the content of rev_cluster_index.nii.gz images
 * Run this in the ./stats/ folder to process all subdirs with reverse cluster maps (cluster IDs go from large to small)
 ```bash
@@ -647,7 +671,7 @@ cluster_mirror_indices -m RH -v
 
 #### `cluster_validation`
 {py:mod}`unravel.cluster_stats.validate_clusters`
-* Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/label densities
+* Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or label densities
 ```bash
 # Basic usage:
 cluster_validation -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s seg_dir -v
@@ -681,7 +705,7 @@ rstats -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Salin
 ```
 
 #### `rstats_summary`
-{py:mod}`unravel.region_stats.rstats_summary`
+{py:mod}`unravel.region_stats.regional_cell_densities_summary`
 * Plot cell densities for each region and summarize results.
 * CSV columns: 
     * Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...

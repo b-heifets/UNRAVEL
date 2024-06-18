@@ -490,10 +490,13 @@
                   
   <section id="module-unravel.image_tools.tif_DoG">
 <span id="unravel-image-tools-tif-dog-module"></span><span id="unravel-image-tools-tif-dog"></span><h1>unravel.image_tools.tif_DoG module<a class="headerlink" href="#module-unravel.image_tools.tif_DoG" title="Link to this heading">#</a></h1>
-<p>Perform image background subtraction on a TIFF file.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">img_DoG</span></code> from UNRAVEL to apply Difference of Gaussians to a single image.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>img_DoG -i input.tif -g1 1.0 -g2 2.0</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>background_subtract_tif.py -i input.tif -g1 1.0 -g2 2.0</p>
-</dd>
 <dt>Difference of Gaussians:</dt><dd><ul class="simple">
 <li><p>Sigma1 and sigma2 are the standard deviations for the first and second Gaussian blurs</p></li>
 <li><dl class="simple">
@@ -523,6 +526,7 @@
 <li><p>3D spatial averaging and 2D rolling ball background subtraction are used in vstats_prep instead.</p></li>
 </ul>
 </div>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_tools.tif_DoG.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.image_tools.tif_DoG.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/tif_DoG.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.tif_DoG.parse_args" title="Link to this definition">#</a></dt>
@@ -599,6 +603,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.tif_DoG.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.tif_DoG.load_tif"><code class="docutils literal notranslate"><span class="pre">load_tif()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.tif_DoG.difference_of_gaussians"><code class="docutils literal notranslate"><span class="pre">difference_of_gaussians()</span></code></a></li>

@@ -490,16 +490,20 @@
                   
   <section id="module-unravel.cluster_stats.index">
 <span id="unravel-cluster-stats-index-module"></span><span id="unravel-cluster-stats-index"></span><h1>unravel.cluster_stats.index module<a class="headerlink" href="#module-unravel.cluster_stats.index" title="Link to this heading">#</a></h1>
-<p>Create a cluster index with valid clusters from a given NIfTI image.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_index</span></code> from UNRAVEL to create a cluster index with valid clusters from a given NIfTI image.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_index -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>index.py -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3</p>
-</dd>
 <dt>Outputs:</dt><dd><ul class="simple">
 <li><p>path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz</p></li>
-<li><p>path/valid_clusters/cluster_*_sunburst.csv</p></li>
+<li><p>path/valid_clusters/cluster_&lt;asterisk&gt;_sunburst.csv</p></li>
 </ul>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.index.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.index.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/index.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.index.parse_args" title="Link to this definition">#</a></dt>
@@ -576,6 +580,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.index.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.index.generate_sunburst"><code class="docutils literal notranslate"><span class="pre">generate_sunburst()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.index.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

@@ -495,13 +495,22 @@
                   
   <section id="module-unravel.image_tools.atlas.wireframe">
 <span id="unravel-image-tools-atlas-wireframe-module"></span><span id="unravel-image-tools-atlas-wireframe"></span><h1>unravel.image_tools.atlas.wireframe module<a class="headerlink" href="#module-unravel.image_tools.atlas.wireframe" title="Link to this heading">#</a></h1>
-<p>Generate a thin wireframe image from an atlas NIfTI file.</p>
-<p>wireframe.py -i path.atlas.nii.gz</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">atlas_wireframe</span></code> from UNRAVEL to generate a thin wireframe image from an atlas NIfTI file.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>atlas_wireframe -i path.atlas.nii.gz</p>
+</div></blockquote>
 <p>Outlines are generated outside the regions and not inside smaller regions.
 For regions at the surface of the brain, the outlines are internalized.</p>
-<p>Outputs:
-path/atlas_imgW.nii.gz # Wireframe image
-path/atlas_imgW_IDs.nii.gz # Wireframe image with region IDs</p>
+<dl class="simple">
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>path/atlas_img_W.nii.gz # Wireframe image</p></li>
+<li><p>path/atlas_img_W_IDs.nii.gz # Wireframe image with region IDs</p></li>
+</ul>
+</dd>
+</dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_tools.atlas.wireframe.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.image_tools.atlas.wireframe.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/unravel/image_tools/atlas/wireframe.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.atlas.wireframe.parse_args" title="Link to this definition">#</a></dt>
@@ -597,6 +606,7 @@ wireframe_image_IDs (np.ndarray): A wireframe image with region IDs (uint16)</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.atlas.wireframe.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.atlas.wireframe.process_intensity"><code class="docutils literal notranslate"><span class="pre">process_intensity()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.atlas.wireframe.generate_wireframe"><code class="docutils literal notranslate"><span class="pre">generate_wireframe()</span></code></a></li>

@@ -490,11 +490,19 @@
                   
   <section id="module-unravel.image_io.nii_io">
 <span id="unravel-image-io-nii-io-module"></span><span id="unravel-image-io-nii-io"></span><h1>unravel.image_io.nii_io module<a class="headerlink" href="#module-unravel.image_io.nii_io" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">io_nii</span></code> from UNRAVEL to convert the data type of a .nii.gz image and optionally scale the data.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_nii -i path/img.nii.gz -d float32</p>
+</div></blockquote>
+</section>
+<section id="usage-for-z-score-scaling-if-8-bit-is-needed">
+<h2>Usage for z-score scaling (if 8 bit is needed):<a class="headerlink" href="#usage-for-z-score-scaling-if-8-bit-is-needed" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_nii -i path/img.nii.gz -d uint8 -z</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>nii_dtype.py -i path/img.nii.gz -d float32</p>
-</dd>
-<dt>Usage for z-score scaling (if 8 bit is needed):</dt><dd><p>nii_dtype.py -i path/img.nii.gz -d uint8 -z</p>
-</dd>
 <dt>Possible numpy data types:</dt><dd><ul class="simple">
 <li><p>Unsigned Integer: uint8, uint16, uint32, uint64</p></li>
 <li><p>Signed Integer: int8, int16, int32, int64</p></li>
@@ -506,6 +514,7 @@
 With –binary, the image is binarized (0 or 1).
 With –zscore, the range of z-scored data from -3 to 3 is converted to 0 to 255.
 With –fixed_scale, the data is scaled using the provided min and max values.</p>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_io.nii_io.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.image_io.nii_io.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/nii_io.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.nii_io.parse_args" title="Link to this definition">#</a></dt>
@@ -579,6 +588,8 @@ With –fixed_scale, the data is scaled using the provided min and max values.</
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-z-score-scaling-if-8-bit-is-needed">Usage for z-score scaling (if 8 bit is needed):</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_io.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_io.convert_dtype"><code class="docutils literal notranslate"><span class="pre">convert_dtype()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.nii_io.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

@@ -47,6 +47,23 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
+    <script>
+            window.addEventListener("load", function () {
+              var svgs = d3.selectAll(".mermaid svg");
+              svgs.each(function() {
+                var svg = d3.select(this);
+                svg.html("<g>" + svg.html() + "</g>");
+                var inner = svg.select("g");
+                var zoom = d3.zoom().on("zoom", function(event) {
+                  inner.attr("transform", event.transform);
+                });
+                svg.call(zoom);
+              });
+            });
+            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/legend';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -350,16 +367,14 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</span>
+<span class="sd">Use ``cluster_legend`` from UNRAVEL to summarize regional abbreviations from &lt;asterisk&gt;_valid_clusters_table.xlsx files.</span>
 
 <span class="sd">Usage:</span>
+<span class="sd">------</span>
 <span class="sd">    legend.py</span>
 
-<span class="sd">Prereqs:</span>
-<span class="sd">    valid_cluster_table.sh has been run and the resulting .xlsx files are in the working directory.</span>
-
 <span class="sd">Inputs:</span>
-<span class="sd">    &lt;asterisk&gt;_valid_clusters_table.xlsx files in the working directory</span>
+<span class="sd">    &lt;asterisk&gt;_valid_clusters_table.xlsx files in the working directory output from ``cluster_table``</span>
 
 <span class="sd">Outputs:</span>
 <span class="sd">    legend.xlsx</span>

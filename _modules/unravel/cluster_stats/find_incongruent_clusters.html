@@ -47,6 +47,23 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
+    <script>
+            window.addEventListener("load", function () {
+              var svgs = d3.selectAll(".mermaid svg");
+              svgs.each(function() {
+                var svg = d3.select(this);
+                svg.html("<g>" + svg.html() + "</g>");
+                var inner = svg.select("g");
+                var zoom = d3.zoom().on("zoom", function(event) {
+                  inner.attr("transform", event.transform);
+                });
+                svg.call(zoom);
+              });
+            });
+            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/find_incongruent_clusters';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
@@ -350,10 +367,11 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">If fdr.py made directional cluster indices, find clusters where the mean intensity diff between groups does not match the density diff</span>
+<span class="sd">Use ``cluster_find_incongruent`` from UNRAVEL if ``cluster_fdr`` was used to convert non-directional p value maps into directional cluster indices. This helps to find clusters where the direction of the mean intensity difference between groups does not match direction of the difference in cell/label density between groups.</span>
 
-<span class="sd">Usage:</span>
-<span class="sd">    find_incongruent_clusters.py -c tukey_results.csv -l groupA -g groupB</span>
+<span class="sd">Usage</span>
+<span class="sd">-----</span>
+<span class="sd">    cluster_find_incongruent -c tukey_results.csv -l groupA -g groupB</span>
 <span class="sd">    </span>
 <span class="sd">This is useful to find clusters where z-scoring introduces incongruencies between the mean intensity difference and the density difference.</span>
 <span class="sd">    </span>
@@ -361,7 +379,7 @@
 <span class="sd">This decrease for region B for one group, may introduce a difference in the mean intensity between groups that is not reflected in the density difference.</span>
 
 <span class="sd">Input csv: </span>
-<span class="sd">    ./_cluster_validation_info/tukey_results.csv  or ttest_results.csv from stats.py</span>
+<span class="sd">    ./_cluster_validation_info/tukey_results.csv  or ttest_results.csv from ``cluster_stats``</span>
 
 <span class="sd">Columns: </span>
 <span class="sd">    &#39;cluster_ID&#39;, &#39;comparison&#39;, &#39;higher_mean_group&#39;, &#39;p-value&#39;, &#39;significance&#39;</span>

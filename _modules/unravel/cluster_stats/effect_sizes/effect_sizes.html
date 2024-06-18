@@ -47,6 +47,23 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script src="https://unpkg.com/d3/dist/d3.min.js"></script>
+    <script>
+            window.addEventListener("load", function () {
+              var svgs = d3.selectAll(".mermaid svg");
+              svgs.each(function() {
+                var svg = d3.select(this);
+                svg.html("<g>" + svg.html() + "</g>");
+                var inner = svg.select("g");
+                var zoom = d3.zoom().on("zoom", function(event) {
+                  inner.attr("transform", event.transform);
+                });
+                svg.call(zoom);
+              });
+            });
+            </script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/effect_sizes/effect_sizes';</script>
     <link rel="icon" href="../../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
@@ -350,12 +367,17 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Calculates the effect size for a comparison between two groups for each cluster [or a valid cluster list]</span>
+<span class="sd">Use ``effect_sizes`` from UNRAVEL to calculate the effect size for a comparison between two groups for each cluster [or a valid cluster list].</span>
 
-<span class="sd">Usage:</span>
-<span class="sd">    effect_sizes.py -i densities.csv -c1 saline -c2 psilocybin</span>
+<span class="sd">Usage</span>
+<span class="sd">-----</span>
+<span class="sd">    effect_sizes -i densities.csv -c1 saline -c2 psilocybin</span>
 
-<span class="sd">-c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.</span>
+<span class="sd">Inputs:</span>
+<span class="sd">    - CSV with densities (Columns: Samples, Conditions, Cluster_1, Cluster_2, ...)</span>
+
+<span class="sd">Arguments:</span>
+<span class="sd">    - -c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.</span>
 
 <span class="sd">Outputs CSV w/ the effect size and CI for each cluster:</span>
 <span class="sd">    &lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;.csv</span>

@@ -490,10 +490,13 @@
                   
   <section id="module-unravel.cluster_stats.prism">
 <span id="unravel-cluster-stats-prism-module"></span><span id="unravel-cluster-stats-prism"></span><h1>unravel.cluster_stats.prism module<a class="headerlink" href="#module-unravel.cluster_stats.prism" title="Link to this heading">#</a></h1>
-<p>Organize cell_count|label_volume, cluster_volume, and &lt;cell|label&gt;_density data from cluster and sample and save as csv</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_prism</span></code> from UNRAVEL to organize cell_count|label_volume, cluster_volume, and &lt;cell|label&gt;_density data from cluster and sample and save as csv for plotting in Prism.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_prism -ids 1 2 3</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>prism.py -ids 1 2 3</p>
-</dd>
 <dt>Inputs:</dt><dd><p>&lt;asterisk&gt;.csv from cluster_org_data (in working dir)</p>
 </dd>
 <dt>CSV naming conventions:</dt><dd><ul class="simple">
@@ -518,6 +521,7 @@
 </dd>
 </dl>
 <p>Outputs saved in ./cluster_validation_summary/</p>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.prism.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.prism.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/prism.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.prism.parse_args" title="Link to this definition">#</a></dt>
@@ -586,6 +590,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.prism.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.prism.sort_samples"><code class="docutils literal notranslate"><span class="pre">sort_samples()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.prism.generate_summary_table"><code class="docutils literal notranslate"><span class="pre">generate_summary_table()</span></code></a></li>

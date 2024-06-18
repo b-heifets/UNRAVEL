@@ -490,25 +490,30 @@
                   
   <section id="module-unravel.cluster_stats.valid_clusters_summary">
 <span id="unravel-cluster-stats-valid-clusters-summary-module"></span><span id="unravel-cluster-stats-valid-clusters-summary"></span><h1>unravel.cluster_stats.valid_clusters_summary module<a class="headerlink" href="#module-unravel.cluster_stats.valid_clusters_summary" title="Link to this heading">#</a></h1>
-<p>Aggregates and analyzes cluster validation data from cluster_validation</p>
-<dl class="simple">
-<dt>Usage if running directly after cluster_validation:</dt><dd><p>cluster_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd ‘*’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -v</p>
-</dd>
-<dt>Usage if running after cluster_validation and cluster_org_data:</dt><dd><p>cluster_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -v</p>
-</dd>
-</dl>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_summary</span></code> from UNRAVEL to aggregate and analyze cluster validation data from <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code>.</p>
+<section id="usage-if-running-directly-after-cluster-validation">
+<h2>Usage if running directly after <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code>:<a class="headerlink" href="#usage-if-running-directly-after-cluster-validation" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd ‘*’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -v</p>
+</div></blockquote>
+</section>
+<section id="usage-if-running-after-cluster-validation-and-cluster-org-data">
+<h2>Usage if running after <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code> and <code class="docutils literal notranslate"><span class="pre">cluster_org_data</span></code>:<a class="headerlink" href="#usage-if-running-after-cluster-validation-and-cluster-org-data" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -v</p>
+</div></blockquote>
 <p>The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</p>
 <dl class="simple">
 <dt>Runs commands in this order:</dt><dd><ul class="simple">
-<li><p>cluster_org_data</p></li>
-<li><p>cluster_group_data</p></li>
-<li><p>utils_prepend</p></li>
-<li><p>cluster_stats</p></li>
-<li><p>cluster_index</p></li>
-<li><p>cluster_brain_model</p></li>
-<li><p>cluster_table</p></li>
-<li><p>cluster_prism</p></li>
-<li><p>cluster_legend</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_org_data</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_group_data</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_stats</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_index</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_brain_model</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_table</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_prism</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_legend</span></code></p></li>
 </ul>
 </dd>
 <dt>The sample_key.csv file should have the following format:</dt><dd><p>dir_name,condition
@@ -516,6 +521,7 @@ sample01,control
 sample02,treatment</p>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.valid_clusters_summary.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.valid_clusters_summary.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/valid_clusters_summary.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.valid_clusters_summary.parse_args" title="Link to this definition">#</a></dt>
@@ -580,6 +586,8 @@ sample02,treatment</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-if-running-directly-after-cluster-validation">Usage if running directly after <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code>:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-if-running-after-cluster-validation-and-cluster-org-data">Usage if running after <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code> and <code class="docutils literal notranslate"><span class="pre">cluster_org_data</span></code>:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.valid_clusters_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.valid_clusters_summary.run_script"><code class="docutils literal notranslate"><span class="pre">run_script()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.valid_clusters_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
