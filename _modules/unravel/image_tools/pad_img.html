@@ -400,7 +400,7 @@
     <span class="n">fixed_img_padded_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">nii</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
     <span class="n">fixed_img_padded_nii</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>
 
-    <span class="c1"># Set the orientation of the image (use if not already set correctly in the header; check with nii_orientation.py)</span>
+    <span class="c1"># Set the orientation of the image (use if not already set correctly in the header; check with ``io_reorient_nii``)</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">ort_code</span><span class="p">:</span> 
         <span class="n">fixed_img_padded_nii</span> <span class="o">=</span> <span class="n">reorient_nii</span><span class="p">(</span><span class="n">fixed_img_padded_nii</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">ort_code</span><span class="p">,</span> <span class="n">zero_origin</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">apply</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">form_code</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>

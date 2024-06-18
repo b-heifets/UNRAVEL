@@ -352,12 +352,11 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Load .nii.gz images matching pattern, get mean intensity of voxels in mask, and check for outliers (&gt;3*SD +/- the mean)</span>
+<span class="sd">Loads .nii.gz images matching pattern, gets the mean intensity of voxels using the mask, checks for outliers (&gt;3*SD +/- the mean), and plots results</span>
 
-<span class="sd">From dir w/ input images run: </span>
-<span class="sd">    IF_outliers.py</span>
-<span class="sd">    </span>
-<span class="sd">Prints and plots results</span>
+<span class="sd">Usage:</span>
+<span class="sd">------ </span>
+<span class="sd">    path/IF_outliers.py -p &#39;&lt;asterisk&gt;.nii.gz&#39; -m path/mask.nii.gz -o means_in_mask_plot.pdf -v</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
