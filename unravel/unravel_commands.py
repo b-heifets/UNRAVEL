@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 
 """
-Print list of commands available in the unravel package.
+Use ``unravel_commands`` to print a list of commands available in the unravel package. 
 
-Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.
+Usage to print common commands and descriptions:
+------------------------------------------------
+    unravel_commands -c -d
 
-Usage:
-    unravel_commands -c -d  # Print common commands with descriptions.
-    unravel_commands -c -m  # Print common commands with module names.
-    unravel_commands -d  # Print all commands with descriptions.
+Usage to print all commands and module names:
+---------------------------------------------
+    unravel_commands -m
 
 For help on a command, run: 
     <command> -h
+
+Note: 
+    Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.
 
 GitHub repo: 
     https://github.com/b-heifets/UNRAVEL/tree/dev
@@ -31,8 +35,8 @@ If you encounter a situation where a command from the UNRAVEL package has the sa
 
 3. Resolve the conflict:
     - Rename the UNRAVEL command: One way to resolve the conflict is to rename the conflicting command in the `pyproject.toml` file of your UNRAVEL package by adding a unique prefix or suffix.
-    - For instance, rename `reg` to `unravel_reg` in the `[project.scripts]` section (i.e., unravel_reg = "unravel.image_io.reg:main)"
-    - After making this change, reinstall the package (pip install -e .)
+    - For instance, rename `reg` to `unravel_reg` in the `[project.scripts]` section (i.e., reg = "unravel.register.unravel_reg:main")
+    - After making this change, reinstall the package (cd <path/to/clone/of/repo> ; pip install -e .)
 
 4. Re-run the renamed command:
     - Use the new command name to avoid the conflict: unravel_reg -h
@@ -43,8 +47,6 @@ If you encounter a situation where a command from the UNRAVEL package has the sa
 
 6. Verify the fix:
     - Use the `which` command again to verify that the correct command is being invoked: which unravel_reg  # or which reg if using an alias
-
-By following these steps, you can effectively diagnose and fix command conflicts, ensuring that you are using the correct command from the UNRAVEL package.
 """
 
 import argparse
