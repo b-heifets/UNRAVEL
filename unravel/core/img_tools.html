@@ -574,7 +574,23 @@ Returns ndarray with background subtracted.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.cluster_IDs">
 <span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">cluster_IDs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_extent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_IDs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_sizes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#cluster_IDs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.cluster_IDs" title="Link to this definition">#</a></dt>
-<dd><p>Prints cluster IDs [and sizes] for clusters &gt; minextent voxels</p>
+<dd><p>Gets unique intensities [and sizes] for regions/clusters &gt; minextent voxels and prints them in a string-separated list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ndarray</strong></p></li>
+<li><p><strong>min_extent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – _description_. Defaults to 1.</p></li>
+<li><p><strong>print_IDs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – _description_. Defaults to False.</p></li>
+<li><p><strong>print_sizes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – _description_. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>list of unique intensities</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a> of ints</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

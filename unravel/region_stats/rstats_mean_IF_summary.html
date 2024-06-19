@@ -506,6 +506,12 @@
 <blockquote>
 <div><p>atlas=path/custom_atlas.nii.gz ; rstats_mean_IF_summary –region_ids $(img_unique -i $atlas) –order group2 group1 –labels Group_2 Group_1 -t ttest</p>
 </div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The first word of the csv inputs is used for the the group names (e.g. Control from Control_sample01_cFos_rb4_atlas_space_z.csv)</p></li>
+</ul>
+</div>
 <dl class="simple">
 <dt>Inputs:</dt><dd><ul class="simple">
 <li><p>&lt;asterisk&gt;.csv in the working dir with these columns: ‘Region_Intensity’, ‘Mean_IF_Intensity’</p></li>
@@ -513,8 +519,8 @@
 </dd>
 <dt>Prereqs:</dt><dd><ul class="simple">
 <li><p>Generate CSV inputs withs <code class="docutils literal notranslate"><span class="pre">rstats_IF_mean</span></code> or <code class="docutils literal notranslate"><span class="pre">rstats_IF_mean_in_seg</span></code></p></li>
-<li><p>Aggregate CSV inputs: utils_agg_files -i seg_dir/regional_mean_IF_in_seg.csv -e $DIRS -v -a</p></li>
-<li><p>Add coditions to input CSV file names: utils_prepend -sk $SAMPLE_KEY -f</p></li>
+<li><p>After <code class="docutils literal notranslate"><span class="pre">rstats_IF_mean_in_seg</span></code>, aggregate CSV inputs with <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code></p></li>
+<li><p>If needed, add conditions to input CSV file names: utils_prepend -sk $SAMPLE_KEY -f</p></li>
 </ul>
 </dd>
 <dt>The look up table (LUT) csv has these columns:</dt><dd><p>‘Region_ID’, ‘Side’, ‘Name’, ‘Abbr’</p>
