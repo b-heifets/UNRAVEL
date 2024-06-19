@@ -492,12 +492,19 @@
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; regions=$(img_unique -i $atlas) ; for i in &lt;asterisk&gt;.nii.gz ; do rstats_mean_IF -i $i -a $atlas -r $regions ; done
-mkdir regional_mean_intensities
-mv &lt;asterisk&gt;_regional_mean_intensities.csv regional_mean_intensities/
-cd regional_mean_intensities
-rstats_mean_IF_summary</p>
+<div><p>rstats_mean_IF -i ‘&lt;asterisk&gt;.nii.gz’ -a path/atlas</p>
 </div></blockquote>
+<dl class="simple">
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>./rstats_mean_IF/image_name.csv for each image</p></li>
+</ul>
+</dd>
+<dt>Next:</dt><dd><ul class="simple">
+<li><p>cd rstats_mean_IF</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rstats_mean_IF_summary</span></code></p></li>
+</ul>
+</dd>
+</dl>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.region_stats.rstats_mean_IF.parse_args">
