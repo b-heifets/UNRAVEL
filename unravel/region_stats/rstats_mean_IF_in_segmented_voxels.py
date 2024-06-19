@@ -9,6 +9,9 @@ Usage
 -----
     rstats_mean_IF_in_seg -i <asterisk>.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz
 
+Note:
+    This uses full resolution images (i.e., the raw IF image and a segmentation from ``seg_ilastik``)
+
 Default output:
     - ./sample??/seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv
 

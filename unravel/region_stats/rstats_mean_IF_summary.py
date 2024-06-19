@@ -15,13 +15,16 @@ Usage with a custom atlas:
 --------------------------
     atlas=path/custom_atlas.nii.gz ; rstats_mean_IF_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest
 
+Note:
+    - The first word of the csv inputs is used for the the group names (e.g. Control from Control_sample01_cFos_rb4_atlas_space_z.csv)
+
 Inputs: 
     - <asterisk>.csv in the working dir with these columns: 'Region_Intensity', 'Mean_IF_Intensity'
 
 Prereqs:
     - Generate CSV inputs withs ``rstats_IF_mean`` or ``rstats_IF_mean_in_seg``
-    - Aggregate CSV inputs: utils_agg_files -i seg_dir/regional_mean_IF_in_seg.csv -e $DIRS -v -a
-    - Add coditions to input CSV file names: utils_prepend -sk $SAMPLE_KEY -f
+    - After ``rstats_IF_mean_in_seg``, aggregate CSV inputs with ``utils_agg_files``
+    - If needed, add conditions to input CSV file names: utils_prepend -sk $SAMPLE_KEY -f
 
 The look up table (LUT) csv has these columns: 
     'Region_ID', 'Side', 'Name', 'Abbr'
@@ -57,7 +60,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cluster_stats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
-
+# TODO: CSVs are loaded for each region. It would be more efficient to load them once for processing all regions. 
 
 # Set Arial as the font
 mpl.rcParams['font.family'] = 'Arial'
@@ -194,9 +197,8 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
     ax.spines['left'].set_linewidth(2)
 
     # Swarm plot
-    ### sns.swarmplot(x='group_label', y='mean_intensity', hue='group', data=df, palette=group_colors, size=8, linewidth=1, edgecolor='black')
-    sns.swarmplot(x='group_label', y='mean_intensity', data=df, palette=group_colors, size=8, linewidth=1, edgecolor='black') # Fix for the palette warning
-
+    sns.swarmplot(x='group_label', y='mean_intensity', hue='group', data=df, palette=group_colors, size=8, linewidth=1, edgecolor='black')
+    
     # Remove the legend created by hue
     if ax.legend_:
         ax.legend_.remove()
@@ -220,8 +222,6 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
     elif test_type == 'ttest':
         test_df = perform_t_tests(df, order)
         test_df['reject'] = test_df['p-adj'] < 0.05
-
-    
 
     significant_comparisons = test_df[test_df['reject'] == True]
     y_max = df['mean_intensity'].max()
@@ -250,27 +250,20 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
         plt.text((x1+x2)*.5, y_pos + 0.8*height_diff, sig, horizontalalignment='center', size='xx-large', color='black', weight='bold')
         y_pos += 3 * height_diff
 
-    # Fix for the ylims warning
+    # Calculate y-axis limits
     y_max = df['mean_intensity'].max()
     y_min = df['mean_intensity'].min()
-    if y_max == y_min:
-        y_max += 1
-    plt.ylim(y_min - 2 * height_diff, y_max + 2 * height_diff)
+    height_diff = (y_max - y_min) * 0.1
+    y_pos = y_max + 0.5 * height_diff
 
-    # # Calculate y-axis limits
-    # y_max = df['mean_intensity'].max()
-    # y_min = df['mean_intensity'].min()
-    # height_diff = (y_max - y_min) * 0.1
-    # y_pos = y_max + 0.5 * height_diff
-
-    # # Ensure the y-axis starts from the minimum value, allowing for negative values
-    # plt.ylim(y_min - 2 * height_diff, y_pos + 2 * height_diff)
+    # Ensure the y-axis starts from the minimum value, allowing for negative values
+    plt.ylim(y_min - 2 * height_diff, y_pos + 2 * height_diff)
 
     # plt.ylim(0, y_pos + 2*height_diff)
     ax.set_xlabel(None)
 
     # Save the plot
-    output_folder = Path('regional_mean_IF_summary')  # Replace 'output_folder_name' with your desired folder name
+    output_folder = Path('regional_mean_IF_summary')
     output_folder.mkdir(parents=True, exist_ok=True)
 
     title = f"{region_name} ({region_abbr})"
@@ -298,6 +291,13 @@ def main():
 
     if args.order and args.labels and len(args.order) != len(args.labels):
         raise ValueError("The number of entries in --order and --labels must match.")
+    
+    # Print CSVs in the working dir
+    print(f'\n[bold]CSVs in the working dir to process (the first word defines the groups): \n')
+    for filename in os.listdir():
+        if filename.endswith('.csv'):
+            print(f'    {filename}')
+    print()
 
     # If region IDs are provided using -r, use them; otherwise, get all region IDs from the CSV
     lut = Path(__file__).parent.parent / 'core' / 'csvs' / args.lut

@@ -202,7 +202,17 @@ def rolling_ball_subtraction_opencv_parallel(ndarray, radius, threads=8):
 
 print_func_name_args_times()
 def cluster_IDs(ndarray, min_extent=1, print_IDs=False, print_sizes=False):
-    """Prints cluster IDs [and sizes] for clusters > minextent voxels"""
+    """Gets unique intensities [and sizes] for regions/clusters > minextent voxels and prints them in a string-separated list. 
+
+    Args:
+        ndarray
+        min_extent (int, optional): _description_. Defaults to 1.
+        print_IDs (bool, optional): _description_. Defaults to False.
+        print_sizes (bool, optional): _description_. Defaults to False.
+
+    Returns:
+        list of ints: list of unique intensities
+    """
 
     # Get unique intensities and their counts
     unique_intensities, counts = np.unique(ndarray[ndarray > 0], return_counts=True)
