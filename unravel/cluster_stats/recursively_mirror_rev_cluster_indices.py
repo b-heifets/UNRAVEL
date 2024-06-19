@@ -21,7 +21,7 @@ from concurrent.futures import ThreadPoolExecutor
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times
-from voxel_stats.mirror import mirror
+from unravel.voxel_stats.mirror import mirror
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)

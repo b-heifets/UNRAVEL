@@ -36,7 +36,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: Test if other scripts in image_io are redundant and can be removed
+# TODO: Test if other scripts in image_io are redundant and can be removed. If not, consolidate them into this script.
 
 
 def main():

@@ -37,7 +37,7 @@ from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, load_nii_subset, resolve_path
 from unravel.core.img_tools import cluster_IDs
 from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples, print_func_name_args_times
-from warp.to_native import to_native
+from unravel.warp.to_native import to_native
 
 
 def parse_args():
