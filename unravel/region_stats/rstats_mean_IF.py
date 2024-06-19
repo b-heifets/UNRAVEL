@@ -5,28 +5,32 @@ Use ``rstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluoresce
 
 Usage:
 ------
-    atlas=/SSD4/ET/atlas/gubra_ano_split_25um_w_A13_RH.nii.gz ; regions=$(img_unique -i $atlas) ; for i in <asterisk>.nii.gz ; do rstats_mean_IF -i $i -a $atlas -r $regions ; done
-    mkdir regional_mean_intensities
-    mv <asterisk>_regional_mean_intensities.csv regional_mean_intensities/
-    cd regional_mean_intensities
-    rstats_mean_IF_summary 
+    rstats_mean_IF -i '<asterisk>.nii.gz' -a path/atlas
 
+Outputs: 
+    - ./rstats_mean_IF/image_name.csv for each image
+
+Next: 
+    - cd rstats_mean_IF
+    - ``rstats_mean_IF_summary``
 """
 
-import argparse 
+import argparse
+import os
+from pathlib import Path 
 import nibabel as nib
 import numpy as np
 import csv
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.image_tools.unique_intensities import uniq_intensities
 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/atlas_space_immunofluorescence_image.nii.gz', required=True, action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz', required=True, action=SM)
-    parser.add_argument('-r', '--regions', nargs='*', type=int, help='Space-separated list of region intensities to process', default=None)
-    parser.add_argument('-o', '--output', help='path/name.csv', default=None, action=SM)
+    parser.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", required=True, action=SM)
+    parser.add_argument('-a', '--atlas', help='Path/atlas.nii.gz', required=True, action=SM)
+    parser.add_argument('-r', '--regions', nargs='*', type=int, help='Space-separated list of region intensities to process')
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -75,25 +79,37 @@ def write_to_csv(data, output_file):
 def main():
     args = parse_args()
 
-    # Load the images using nibabel
+
+    # Either use the provided list of region IDs or create it using unique intensities
+    if args.regions:
+        region_intensities = args.regions
+    else:
+        print(f'\nProcessing these region IDs from {args.atlas}')
+        region_intensities = uniq_intensities(args.atlas)
+        print()
+
     atlas_nii = nib.load(args.atlas)
-    nii = nib.load(args.input)
-
-    # Get the data as numpy arrays
     atlas = atlas_nii.get_fdata(dtype=np.float32)
-    img = nii.get_fdata(dtype=np.float32)
 
-    # Use the provided list of regional intensities (if any)
-    region_intensities = args.regions
+    output_folder = Path('rstats_mean_IF')
+    output_folder.mkdir(parents=True, exist_ok=True)
 
-    # Calculate mean intensity
-    mean_intensities = calculate_mean_intensity(atlas, img, region_intensities)
+    files = Path().cwd().glob(args.input)
+    for file in files:
+        if str(file).endswith('.nii.gz'):
+            
+            nii = nib.load(file)
+            img = nii.get_fdata(dtype=np.float32)
 
-    if args.output is None:
-        args.output = args.input.replace('.nii.gz', '_regional_mean_intensities.csv')
+            # Calculate mean intensity
+            mean_intensities = calculate_mean_intensity(atlas, img, region_intensities)
 
-    # Write to CSV
-    write_to_csv(mean_intensities, args.output)
+            output_filename = str(file.name).replace('.nii.gz', '.csv')
+            output = output_folder / output_filename
+
+            write_to_csv(mean_intensities, output)
+
+    print('CSVs with regional mean IF intensities output to ./rstats_mean_IF/')
 
 if __name__ == "__main__":
     main()
