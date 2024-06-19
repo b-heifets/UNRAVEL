@@ -8,7 +8,7 @@ Subpackages
 .. toctree::
    :maxdepth: 3
 
-   command_list
+   unravel_commands
    register/toc
    warp/toc
    segment/toc

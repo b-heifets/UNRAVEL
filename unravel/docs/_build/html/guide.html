@@ -432,9 +432,9 @@ unravel_commands<span class="w"> </span>-m
 <label class="sd-tab-label" for="sd-tab-item-0">
 Registration</label><div class="sd-tab-content docutils">
 <ul class="simple">
-<li><p><a class="reference internal" href="unravel/register/prep_reg.html#unravel-register-prep-reg"><span class="std std-ref"><strong>reg_prep</strong></span></a>: Prepare registration (resample the autofluo image).</p></li>
+<li><p><a class="reference internal" href="unravel/register/reg_prep.html#unravel-register-reg-prep"><span class="std std-ref"><strong>reg_prep</strong></span></a>: Prepare registration (resample the autofluo image).</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg.html#unravel-register-reg"><span class="std std-ref"><strong>reg</strong></span></a>: Perform registration (register the autofluo image to an average template).</p></li>
-<li><p><a class="reference internal" href="unravel/register/check_reg.html#unravel-register-check-reg"><span class="std std-ref"><strong>reg_check</strong></span></a>: Check registration (aggregate the autofluo and warped atlas images).</p></li>
+<li><p><a class="reference internal" href="unravel/register/reg_check.html#unravel-register-reg-check"><span class="std std-ref"><strong>reg_check</strong></span></a>: Check registration (aggregate the autofluo and warped atlas images).</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
@@ -458,7 +458,7 @@ Segmentation</label><div class="sd-tab-content docutils">
 <label class="sd-tab-label" for="sd-tab-item-3">
 Voxel-wise stats</label><div class="sd-tab-content docutils">
 <ul class="simple">
-<li><p><a class="reference internal" href="unravel/voxel_stats/prep_vstats.html#unravel-voxel-stats-prep-vstats"><span class="std std-ref"><strong>vstats_prep</strong></span></a>: Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).</p></li>
+<li><p><a class="reference internal" href="unravel/voxel_stats/vstats_prep.html#unravel-voxel-stats-vstats-prep"><span class="std std-ref"><strong>vstats_prep</strong></span></a>: Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/z_score.html#unravel-voxel-stats-z-score"><span class="std std-ref"><strong>vstats_z_score</strong></span></a>: Z-score images.</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/whole_to_LR_avg.html#unravel-voxel-stats-whole-to-lr-avg"><span class="std std-ref"><strong>vstats_whole_to_avg</strong></span></a>: Average left and right hemispheres together.</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/vstats.html#unravel-voxel-stats-vstats"><span class="std std-ref"><strong>vstats</strong></span></a>: Compute voxel statistics.</p></li>
@@ -471,8 +471,8 @@ Cluster-wise stats</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/cluster_stats/fdr_range.html#unravel-cluster-stats-fdr-range"><span class="std std-ref"><strong>cluster_fdr_range</strong></span></a>: Get FDR q value range yielding clusters.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/fdr.html#unravel-cluster-stats-fdr"><span class="std std-ref"><strong>cluster_fdr</strong></span></a>: FDR-correct 1-p value map → cluster map.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/recursively_mirror_rev_cluster_indices.html#unravel-cluster-stats-recursively-mirror-rev-cluster-indices"><span class="std std-ref"><strong>cluster_mirror_indices</strong></span></a>: Recursively mirror cluster maps for validating clusters in left and right hemispheres.</p></li>
-<li><p><a class="reference internal" href="unravel/cluster_stats/validate_clusters.html#unravel-cluster-stats-validate-clusters"><span class="std std-ref"><strong>cluster_validation</strong></span></a>: Validate clusters w/ cell/label density measurements.</p></li>
-<li><p><a class="reference internal" href="unravel/cluster_stats/valid_clusters_summary.html#unravel-cluster-stats-valid-clusters-summary"><span class="std std-ref"><strong>cluster_summary</strong></span></a>: Summarize info on valid clusters (run after cluster_validation).</p></li>
+<li><p><a class="reference internal" href="unravel/cluster_stats/cluster_validation.html#unravel-cluster-stats-cluster-validation"><span class="std std-ref"><strong>cluster_validation</strong></span></a>: Validate clusters w/ cell/label density measurements.</p></li>
+<li><p><a class="reference internal" href="unravel/cluster_stats/cluster_summary.html#unravel-cluster-stats-cluster-summary"><span class="std std-ref"><strong>cluster_summary</strong></span></a>: Summarize info on valid clusters (run after cluster_validation).</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-5" name="sd-tab-set-0" type="radio">
@@ -496,10 +496,10 @@ Image I/O</label><div class="sd-tab-content docutils">
 Image tools</label><div class="sd-tab-content docutils">
 <ul class="simple">
 <li><p><a class="reference internal" href="unravel/image_tools/avg.html#unravel-image-tools-avg"><span class="std std-ref"><strong>img_avg</strong></span></a>: Average NIfTI images.</p></li>
-<li><p><a class="reference internal" href="unravel/image_tools/uniq_intensities.html#unravel-image-tools-uniq-intensities"><span class="std std-ref"><strong>img_unique</strong></span></a>: Find unique intensities in images.</p></li>
+<li><p><a class="reference internal" href="unravel/image_tools/unique_intensities.html#unravel-image-tools-unique-intensities"><span class="std std-ref"><strong>img_unique</strong></span></a>: Find unique intensities in images.</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/max.html#unravel-image-tools-max"><span class="std std-ref"><strong>img_max</strong></span></a>: Print the max intensity value in an image.</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/spatial_averaging.html#unravel-image-tools-spatial-averaging"><span class="std std-ref"><strong>img_spatial_avg</strong></span></a>: Perform spatial averaging on images.</p></li>
-<li><p><a class="reference internal" href="unravel/image_tools/tif_rb.html#unravel-image-tools-tif-rb"><span class="std std-ref"><strong>img_rb</strong></span></a>: Apply rolling ball filter to TIF images.</p></li>
+<li><p><a class="reference internal" href="unravel/image_tools/rb.html#unravel-image-tools-rb"><span class="std std-ref"><strong>img_rb</strong></span></a>: Apply rolling ball filter to TIF images.</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-8" name="sd-tab-set-0" type="radio">
@@ -519,11 +519,11 @@ Utilities</label><div class="sd-tab-content docutils">
 <label class="sd-tab-label" for="sd-tab-item-9">
 Registration</label><div class="sd-tab-content docutils">
 <ul class="simple">
-<li><p><a class="reference internal" href="unravel/register/prep_reg.html#unravel-register-prep-reg"><span class="std std-ref"><strong>reg_prep</strong></span></a>: Prepare registration (resample the autofluo image).</p></li>
+<li><p><a class="reference internal" href="unravel/register/reg_prep.html#unravel-register-reg-prep"><span class="std std-ref"><strong>reg_prep</strong></span></a>: Prepare registration (resample the autofluo image).</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg.html#unravel-register-reg"><span class="std std-ref"><strong>reg</strong></span></a>: Perform registration (register the autofluo image to an average template).</p></li>
 <li><p><a class="reference internal" href="unravel/register/affine_initializer.html#unravel-register-affine-initializer"><span class="std std-ref"><strong>reg_affine_initializer</strong></span></a>: Part of reg. Roughly aligns the template to the autofl image.</p></li>
-<li><p><a class="reference internal" href="unravel/register/check_reg.html#unravel-register-check-reg"><span class="std std-ref"><strong>reg_check</strong></span></a>: Check registration (aggregate the autofluo and warped atlas images).</p></li>
-<li><p><a class="reference internal" href="unravel/register/check_brain_mask.html#unravel-register-check-brain-mask"><span class="std std-ref"><strong>reg_check_mask</strong></span></a>: Check brain mask for over/under segmentation.</p></li>
+<li><p><a class="reference internal" href="unravel/register/reg_check.html#unravel-register-reg-check"><span class="std std-ref"><strong>reg_check</strong></span></a>: Check registration (aggregate the autofluo and warped atlas images).</p></li>
+<li><p><a class="reference internal" href="unravel/register/reg_check_brain_mask.html#unravel-register-reg-check-brain-mask"><span class="std std-ref"><strong>reg_check_brain_mask</strong></span></a>: Check brain mask for over/under segmentation.</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-10" name="sd-tab-set-1" type="radio">
@@ -549,7 +549,7 @@ Segmentation</label><div class="sd-tab-content docutils">
 Voxel-wise stats</label><div class="sd-tab-content docutils">
 <ul class="simple">
 <li><p><a class="reference internal" href="unravel/voxel_stats/apply_mask.html#unravel-voxel-stats-apply-mask"><span class="std std-ref"><strong>vstats_apply_mask</strong></span></a>: Apply mask to image (e.g., nullify artifacts or isolate signals).</p></li>
-<li><p><a class="reference internal" href="unravel/voxel_stats/prep_vstats.html#unravel-voxel-stats-prep-vstats"><span class="std std-ref"><strong>vstats_prep</strong></span></a>: Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).</p></li>
+<li><p><a class="reference internal" href="unravel/voxel_stats/vstats_prep.html#unravel-voxel-stats-vstats-prep"><span class="std std-ref"><strong>vstats_prep</strong></span></a>: Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/z_score.html#unravel-voxel-stats-z-score"><span class="std std-ref"><strong>vstats_z_score</strong></span></a>: Z-score images.</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/whole_to_LR_avg.html#unravel-voxel-stats-whole-to-lr-avg"><span class="std std-ref"><strong>vstats_whole_to_avg</strong></span></a>: Average left and right hemispheres together.</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/hemi_to_LR_avg.html#unravel-voxel-stats-hemi-to-lr-avg"><span class="std std-ref"><strong>vstats_hemi_to_avg</strong></span></a>: If left and right hemispheres were processed separately (less common), average them together.</p></li>
@@ -564,8 +564,8 @@ Cluster-wise stats</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/cluster_stats/fdr_range.html#unravel-cluster-stats-fdr-range"><span class="std std-ref"><strong>cluster_fdr_range</strong></span></a>: Get FDR q value range yielding clusters.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/fdr.html#unravel-cluster-stats-fdr"><span class="std std-ref"><strong>cluster_fdr</strong></span></a>: FDR-correct 1-p value map → cluster map.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/recursively_mirror_rev_cluster_indices.html#unravel-cluster-stats-recursively-mirror-rev-cluster-indices"><span class="std std-ref"><strong>cluster_mirror_indices</strong></span></a>: Recursively mirror cluster maps for validating clusters in left and right hemispheres.</p></li>
-<li><p><a class="reference internal" href="unravel/cluster_stats/validate_clusters.html#unravel-cluster-stats-validate-clusters"><span class="std std-ref"><strong>cluster_validation</strong></span></a>: Validate clusters w/ cell/label density measurements.</p></li>
-<li><p><a class="reference internal" href="unravel/cluster_stats/valid_clusters_summary.html#unravel-cluster-stats-valid-clusters-summary"><span class="std std-ref"><strong>cluster_summary</strong></span></a>: Summarize info on valid clusters (run after cluster_validation).</p></li>
+<li><p><a class="reference internal" href="unravel/cluster_stats/cluster_validation.html#unravel-cluster-stats-cluster-validation"><span class="std std-ref"><strong>cluster_validation</strong></span></a>: Validate clusters w/ cell/label density measurements.</p></li>
+<li><p><a class="reference internal" href="unravel/cluster_stats/cluster_summary.html#unravel-cluster-stats-cluster-summary"><span class="std std-ref"><strong>cluster_summary</strong></span></a>: Summarize info on valid clusters (run after cluster_validation).</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/org_data.html#unravel-cluster-stats-org-data"><span class="std std-ref"><strong>cluster_org_data</strong></span></a>: Organize CSVs from cluster_validation.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/group_bilateral_data.html#unravel-cluster-stats-group-bilateral-data"><span class="std std-ref"><strong>cluster_group_data</strong></span></a>: Group bilateral cluster data.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/stats.html#unravel-cluster-stats-stats"><span class="std std-ref"><strong>cluster_stats</strong></span></a>: Compute cluster validation statistics.</p></li>
@@ -576,7 +576,7 @@ Cluster-wise stats</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/cluster_stats/legend.html#unravel-cluster-stats-legend"><span class="std std-ref"><strong>cluster_legend</strong></span></a>: Make a legend of regions in cluster maps.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/sunburst.html#unravel-cluster-stats-sunburst"><span class="std std-ref"><strong>cluster_sunburst</strong></span></a>: Create a sunburst plot of regional volumes.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/find_incongruent_clusters.html#unravel-cluster-stats-find-incongruent-clusters"><span class="std std-ref"><strong>cluster_find_incongruent_clusters</strong></span></a>: Find clusters where the effect direction does not match the prediction of cluster_fdr (for validation of non-directional p value maps).</p></li>
-<li><p><a class="reference internal" href="unravel/cluster_stats/crop_clusters.html#unravel-cluster-stats-crop-clusters"><span class="std std-ref"><strong>cluster_crop</strong></span></a>: Crop clusters to a bounding box.</p></li>
+<li><p><a class="reference internal" href="unravel/cluster_stats/crop.html#unravel-cluster-stats-crop"><span class="std std-ref"><strong>cluster_crop</strong></span></a>: Crop clusters to a bounding box.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/effect_sizes/effect_sizes.html#unravel-cluster-stats-effect-sizes-effect-sizes"><span class="std std-ref"><strong>effect_sizes</strong></span></a>: Calculate effect sizes for clusters.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__absolute.html#unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-absolute"><span class="std std-ref"><strong>effect_sizes_sex_abs</strong></span></a>: Calculate absolute effect sizes by sex.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-relative"><span class="std std-ref"><strong>effect_sizes_sex_rel</strong></span></a>: Calculate relative effect sizes by sex.</p></li>
@@ -598,10 +598,10 @@ Region-wise stats</label><div class="sd-tab-content docutils">
 Image I/O</label><div class="sd-tab-content docutils">
 <ul class="simple">
 <li><p><a class="reference internal" href="unravel/image_io/metadata.html#unravel-image-io-metadata"><span class="std std-ref"><strong>io_metadata</strong></span></a>: Handle image metadata.</p></li>
-<li><p><a class="reference internal" href="unravel/image_io/img_io.html#unravel-image-io-img-io"><span class="std std-ref"><strong>io_img</strong></span></a>: Image I/O operations.</p></li>
+<li><p><a class="reference internal" href="unravel/image_io/io_img.html#unravel-image-io-io-img"><span class="std std-ref"><strong>io_img</strong></span></a>: Image I/O operations.</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/nii_info.html#unravel-image-io-nii-info"><span class="std std-ref"><strong>io_nii_info</strong></span></a>: Print info about NIfTI files.</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/nii_hd.html#unravel-image-io-nii-hd"><span class="std std-ref"><strong>io_nii_hd</strong></span></a>: Print NIfTI headers.</p></li>
-<li><p><a class="reference internal" href="unravel/image_io/nii_io.html#unravel-image-io-nii-io"><span class="std std-ref"><strong>io_nii</strong></span></a>: NIfTI I/O operations (binarize, convert data type, scale, etc).</p></li>
+<li><p><a class="reference internal" href="unravel/image_io/io_nii.html#unravel-image-io-io-nii"><span class="std std-ref"><strong>io_nii</strong></span></a>: NIfTI I/O operations (binarize, convert data type, scale, etc).</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/reorient_nii.html#unravel-image-io-reorient-nii"><span class="std std-ref"><strong>io_reorient_nii</strong></span></a>: Reorient NIfTI files.</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/nii_to_tifs.html#unravel-image-io-nii-to-tifs"><span class="std std-ref"><strong>io_nii_to_tifs</strong></span></a>: Convert NIfTI files to TIFFs.</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/nii_to_zarr.html#unravel-image-io-nii-to-zarr"><span class="std std-ref"><strong>io_nii_to_zarr</strong></span></a>: Convert NIfTI files to Zarr.</p></li>
@@ -616,14 +616,14 @@ Image I/O</label><div class="sd-tab-content docutils">
 Image tools</label><div class="sd-tab-content docutils">
 <ul class="simple">
 <li><p><a class="reference internal" href="unravel/image_tools/avg.html#unravel-image-tools-avg"><span class="std std-ref"><strong>img_avg</strong></span></a>: Average NIfTI images.</p></li>
-<li><p><a class="reference internal" href="unravel/image_tools/uniq_intensities.html#unravel-image-tools-uniq-intensities"><span class="std std-ref"><strong>img_unique</strong></span></a>: Find unique intensities in images.</p></li>
+<li><p><a class="reference internal" href="unravel/image_tools/unique_intensities.html#unravel-image-tools-unique-intensities"><span class="std std-ref"><strong>img_unique</strong></span></a>: Find unique intensities in images.</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/max.html#unravel-image-tools-max"><span class="std std-ref"><strong>img_max</strong></span></a>: Print the max intensity value in an image.</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/bbox.html#unravel-image-tools-bbox"><span class="std std-ref"><strong>img_bbox</strong></span></a>: Compute bounding box of non-zero voxels in an image.</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/spatial_averaging.html#unravel-image-tools-spatial-averaging"><span class="std std-ref"><strong>img_spatial_avg</strong></span></a>: Perform spatial averaging on images.</p></li>
-<li><p><a class="reference internal" href="unravel/image_tools/tif_rb.html#unravel-image-tools-tif-rb"><span class="std std-ref"><strong>img_rb</strong></span></a>: Apply rolling ball filter to TIF images.</p></li>
-<li><p><a class="reference internal" href="unravel/image_tools/tif_DoG.html#unravel-image-tools-tif-dog"><span class="std std-ref"><strong>img_DoG</strong></span></a>: Apply Difference of Gaussian filter to TIF images.</p></li>
-<li><p><a class="reference internal" href="unravel/image_tools/pad_img.html#unravel-image-tools-pad-img"><span class="std std-ref"><strong>img_pad</strong></span></a>: Pad images.</p></li>
-<li><p><a class="reference internal" href="unravel/image_tools/extend_image.html#unravel-image-tools-extend-image"><span class="std std-ref"><strong>img_extend</strong></span></a>: Extend images (add padding to one side).</p></li>
+<li><p><a class="reference internal" href="unravel/image_tools/rb.html#unravel-image-tools-rb"><span class="std std-ref"><strong>img_rb</strong></span></a>: Apply rolling ball filter to TIF images.</p></li>
+<li><p><a class="reference internal" href="unravel/image_tools/DoG.html#unravel-image-tools-dog"><span class="std std-ref"><strong>img_DoG</strong></span></a>: Apply Difference of Gaussian filter to TIF images.</p></li>
+<li><p><a class="reference internal" href="unravel/image_tools/pad.html#unravel-image-tools-pad"><span class="std std-ref"><strong>img_pad</strong></span></a>: Pad images.</p></li>
+<li><p><a class="reference internal" href="unravel/image_tools/extend.html#unravel-image-tools-extend"><span class="std std-ref"><strong>img_extend</strong></span></a>: Extend images (add padding to one side).</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/transpose_axes.html#unravel-image-tools-transpose-axes"><span class="std std-ref"><strong>img_transpose</strong></span></a>: Transpose image axes.</p></li>
 </ul>
 </div>
@@ -651,8 +651,8 @@ Utilities</label><div class="sd-tab-content docutils">
 </div>
 <div class="note dropdown admonition">
 <p class="admonition-title">More info on commands</p>
-<p>unravel_commands runs ./&lt;repo_root_dir&gt;/unravel/command_list.py</p>
-<p>Its help guide is here: <a class="reference internal" href="unravel/command_list.html#module-unravel.command_list" title="unravel.command_list"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.command_list</span></code></a></p>
+<p>unravel_commands runs ./&lt;repo_root_dir&gt;/unravel/unravel_commands.py</p>
+<p>Its help guide is here: <a class="reference internal" href="unravel/unravel_commands.html#module-unravel.unravel_commands" title="unravel.unravel_commands"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.unravel_commands</span></code></a></p>
 <p>Commands are defined in the <code class="docutils literal notranslate"><span class="pre">[project.scripts]</span></code> section of the <a class="reference external" href="https://github.com/b-heifets/UNRAVEL/blob/dev/pyproject.toml">pyproject.toml</a> in the root directory of the UNRAVEL repository (repo).</p>
 <p>If new commands are added to run new scripts (a.k.a. modules), reinstall the unravel package with pip.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>root<span class="w"> </span>directory<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>UNRAVEL<span class="w"> </span>repo&gt;
@@ -853,7 +853,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<spa
 <h3>Registration<a class="headerlink" href="#registration" title="Link to this heading">#</a></h3>
 <section id="reg-prep">
 <h4><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code><a class="headerlink" href="#reg-prep" title="Link to this heading">#</a></h4>
-<p><a class="reference internal" href="unravel/register/prep_reg.html#module-unravel.register.prep_reg" title="unravel.register.prep_reg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.prep_reg</span></code></a></p>
+<p><a class="reference internal" href="unravel/register/reg_prep.html#module-unravel.register.reg_prep" title="unravel.register.reg_prep"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.reg_prep</span></code></a></p>
 <ul class="simple">
 <li><p>Prepare autofluo images for registration (resample to a lower resolution)</p></li>
 </ul>
@@ -973,7 +973,7 @@ Select Features… -&gt; select all features (<code class="docutils literal notr
 </section>
 <section id="reg-check">
 <h4><code class="docutils literal notranslate"><span class="pre">reg_check</span></code><a class="headerlink" href="#reg-check" title="Link to this heading">#</a></h4>
-<p><a class="reference internal" href="unravel/register/check_reg.html#module-unravel.register.check_reg" title="unravel.register.check_reg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.check_reg</span></code></a></p>
+<p><a class="reference internal" href="unravel/register/reg_check.html#module-unravel.register.reg_check" title="unravel.register.reg_check"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.reg_check</span></code></a></p>
 <ul class="simple">
 <li><p>Check registration by copying these images to a target directory:</p>
 <ul>
@@ -1147,7 +1147,7 @@ Select Features… -&gt; select all features (<code class="docutils literal notr
 </div>
 <section id="vstats-prep">
 <h4><code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code><a class="headerlink" href="#vstats-prep" title="Link to this heading">#</a></h4>
-<p><a class="reference internal" href="unravel/voxel_stats/prep_vstats.html#module-unravel.voxel_stats.prep_vstats" title="unravel.voxel_stats.prep_vstats"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.prep_vstats</span></code></a></p>
+<p><a class="reference internal" href="unravel/voxel_stats/vstats_prep.html#module-unravel.voxel_stats.vstats_prep" title="unravel.voxel_stats.vstats_prep"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.vstats_prep</span></code></a></p>
 <ul class="simple">
 <li><p>Preprocess immunofluo images and warp them to atlas space for voxel-wise statistics.</p></li>
 </ul>
@@ -1164,10 +1164,10 @@ Select Features… -&gt; select all features (<code class="docutils literal notr
 <p>You can test parameters for background subtraction with:</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="unravel/image_tools/spatial_averaging.html#module-unravel.image_tools.spatial_averaging" title="unravel.image_tools.spatial_averaging"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_tools.spatial_averaging</span></code></a></p></li>
-<li><p><a class="reference internal" href="unravel/image_tools/tif_rb.html#module-unravel.image_tools.tif_rb" title="unravel.image_tools.tif_rb"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_tools.tif_rb</span></code></a></p>
+<li><p><a class="reference internal" href="unravel/image_tools/rb.html#module-unravel.image_tools.rb" title="unravel.image_tools.rb"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_tools.rb</span></code></a></p>
 <ul>
 <li><p>Copy a tif to a test dir for this.</p></li>
-<li><p>Use <a class="reference internal" href="unravel/image_io/img_io.html#module-unravel.image_io.img_io" title="unravel.image_io.img_io"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.img_io</span></code></a> to create a tif series</p></li>
+<li><p>Use <a class="reference internal" href="unravel/image_io/io_img.html#module-unravel.image_io.io_img" title="unravel.image_io.io_img"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.io_img</span></code></a> to create a tif series</p></li>
 </ul>
 </li>
 </ul>
@@ -1313,7 +1313,7 @@ cluster_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span 
 <h3>Cluster validation<a class="headerlink" href="#cluster-validation" title="Link to this heading">#</a></h3>
 <section id="id4">
 <h4><code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code><a class="headerlink" href="#id4" title="Link to this heading">#</a></h4>
-<p><a class="reference internal" href="unravel/cluster_stats/validate_clusters.html#module-unravel.cluster_stats.validate_clusters" title="unravel.cluster_stats.validate_clusters"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.validate_clusters</span></code></a></p>
+<p><a class="reference internal" href="unravel/cluster_stats/cluster_validation.html#module-unravel.cluster_stats.cluster_validation" title="unravel.cluster_stats.cluster_validation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.cluster_validation</span></code></a></p>
 <ul class="simple">
 <li><p>Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or    label densities</p></li>
 </ul>
@@ -1327,12 +1327,12 @@ cluster_validation<span class="w"> </span>-e<span class="w"> </span>&lt;experime
 </section>
 <section id="cluster-summary">
 <h4><code class="docutils literal notranslate"><span class="pre">cluster_summary</span></code><a class="headerlink" href="#cluster-summary" title="Link to this heading">#</a></h4>
-<p><a class="reference internal" href="unravel/cluster_stats/valid_clusters_summary.html#module-unravel.cluster_stats.valid_clusters_summary" title="unravel.cluster_stats.valid_clusters_summary"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.valid_clusters_summary</span></code></a></p>
+<p><a class="reference internal" href="unravel/cluster_stats/cluster_summary.html#module-unravel.cluster_stats.cluster_summary" title="unravel.cluster_stats.cluster_summary"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.cluster_summary</span></code></a></p>
 <ul class="simple">
-<li><p>Aggregates and analyzes cluster validation data from validate_clusters</p></li>
-<li><p>Update parameters in /UNRAVEL/unravel/cluster_stats/valid_clusters_summary.ini and save it with the experiment</p></li>
+<li><p>Aggregates and analyzes cluster validation data from <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code></p></li>
+<li><p>Update parameters in /UNRAVEL/unravel/cluster_stats/cluster_summary.ini and save it with the experiment</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cluster_summary<span class="w"> </span>-c<span class="w"> </span>path/valid_clusters_summary.ini<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-cvd<span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="w"> </span>-vd<span class="w"> </span>path/vstats_dir<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$SAMPLE_KEY</span><span class="w"> </span>--groups<span class="w"> </span>group1<span class="w"> </span>group2<span class="w"> </span>-v
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cluster_summary<span class="w"> </span>-c<span class="w"> </span>path/cluster_summary.ini<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-cvd<span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="w"> </span>-vd<span class="w"> </span>path/vstats_dir<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$SAMPLE_KEY</span><span class="w"> </span>--groups<span class="w"> </span>group1<span class="w"> </span>group2<span class="w"> </span>-v
 </pre></div>
 </div>
 <p>group1 and group2 must match conditions in the sample_key.csv</p>

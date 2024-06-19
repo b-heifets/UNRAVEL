@@ -27,7 +27,7 @@ from rich.live import Live
 from rich.traceback import install
 from scipy.ndimage import binary_dilation, zoom
 
-from unravel.register.prep_reg import prep_reg
+from unravel.register.reg_prep import reg_prep
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii, save_as_zarr
@@ -139,7 +139,7 @@ def main():
                 import sys ; sys.exit()
 
             # Resample to registration resolution to get the mean intensity in the brain
-            img_resampled = prep_reg(img, xy_res, z_res, args.reg_res, int(1), args.miracl)
+            img_resampled = reg_prep(img, xy_res, z_res, args.reg_res, int(1), args.miracl)
 
             # Load 50 um tissue mask 
             tissue_mask_img = load_3D_img(sample_path / args.tissue_mask)

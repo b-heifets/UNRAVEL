@@ -10,7 +10,7 @@ from statsmodels.formula.api import ols
 from statsmodels.stats.anova import anova_lm
 
 from unravel.cluster_stats.stats import cluster_validation_data_df
-from unravel.cluster_stats.stats_table import valid_clusters_summary
+from unravel.cluster_stats.stats_table import cluster_summary
 from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
@@ -203,7 +203,7 @@ def main():
         raw_data_df.to_csv(validation_info_csv, index=False)
 
     # Concat all cluster_validation_info.csv files
-    valid_clusters_summary(f'cluster_validation_info_ANOVA_{args.valid_criterion}.csv', f'cluster_validation_summary_ANOVA_{args.valid_criterion}.csv')
+    cluster_summary(f'cluster_validation_info_ANOVA_{args.valid_criterion}.csv', f'cluster_validation_summary_ANOVA_{args.valid_criterion}.csv')
 
 
 if __name__ == '__main__':

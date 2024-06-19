@@ -24,7 +24,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-def valid_clusters_summary(csv_pattern, output):
+def cluster_summary(csv_pattern, output):
     # Use glob to find all matching CSV files recursively
     csv_files = glob(str(f'**/{csv_pattern}'), recursive=True)
     if not csv_files:
@@ -46,7 +46,7 @@ def valid_clusters_summary(csv_pattern, output):
 def main():
     args = parse_args()
 
-    valid_clusters_summary(args.csv_pattern, args.output)
+    cluster_summary(args.csv_pattern, args.output)
 
 
 if __name__ == '__main__':

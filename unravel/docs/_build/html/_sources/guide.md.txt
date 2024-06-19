@@ -69,9 +69,9 @@ unravel_commands -m
 ::::{tab-set}
 
 ::: {tab-item} Registration
-- [**reg_prep**](unravel.register.prep_reg): Prepare registration (resample the autofluo image).
+- [**reg_prep**](unravel.register.reg_prep): Prepare registration (resample the autofluo image).
 - [**reg**](unravel.register.reg): Perform registration (register the autofluo image to an average template).
-- [**reg_check**](unravel.register.check_reg): Check registration (aggregate the autofluo and warped atlas images).
+- [**reg_check**](unravel.register.reg_check): Check registration (aggregate the autofluo and warped atlas images).
 :::
 
 ::: {tab-item} Warping
@@ -86,7 +86,7 @@ unravel_commands -m
 :::
 
 ::: {tab-item} Voxel-wise stats
-- [**vstats_prep**](unravel.voxel_stats.prep_vstats): Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).
+- [**vstats_prep**](unravel.voxel_stats.vstats_prep): Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).
 - [**vstats_z_score**](unravel.voxel_stats.z_score): Z-score images.
 - [**vstats_whole_to_avg**](unravel.voxel_stats.whole_to_LR_avg): Average left and right hemispheres together.
 - [**vstats**](unravel.voxel_stats.vstats): Compute voxel statistics.
@@ -96,8 +96,8 @@ unravel_commands -m
 - [**cluster_fdr_range**](unravel.cluster_stats.fdr_range): Get FDR q value range yielding clusters.
 - [**cluster_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
 - [**cluster_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
-- [**cluster_validation**](unravel.cluster_stats.validate_clusters): Validate clusters w/ cell/label density measurements.
-- [**cluster_summary**](unravel.cluster_stats.valid_clusters_summary): Summarize info on valid clusters (run after cluster_validation).
+- [**cluster_validation**](unravel.cluster_stats.cluster_validation): Validate clusters w/ cell/label density measurements.
+- [**cluster_summary**](unravel.cluster_stats.cluster_summary): Summarize info on valid clusters (run after cluster_validation).
 :::
 
 ::: {tab-item} Region-wise stats
@@ -112,10 +112,10 @@ unravel_commands -m
 
 ::: {tab-item} Image tools
 - [**img_avg**](unravel.image_tools.avg): Average NIfTI images.
-- [**img_unique**](unravel.image_tools.uniq_intensities): Find unique intensities in images.
+- [**img_unique**](unravel.image_tools.unique_intensities): Find unique intensities in images.
 - [**img_max**](unravel.image_tools.max): Print the max intensity value in an image.
 - [**img_spatial_avg**](unravel.image_tools.spatial_averaging): Perform spatial averaging on images.
-- [**img_rb**](unravel.image_tools.tif_rb): Apply rolling ball filter to TIF images.
+- [**img_rb**](unravel.image_tools.rb): Apply rolling ball filter to TIF images.
 :::
 
 ::: {tab-item} Utilities
@@ -132,11 +132,11 @@ unravel_commands -m
 ::::{tab-set}
 
 :::{tab-item} Registration
-- [**reg_prep**](unravel.register.prep_reg): Prepare registration (resample the autofluo image).
+- [**reg_prep**](unravel.register.reg_prep): Prepare registration (resample the autofluo image).
 - [**reg**](unravel.register.reg): Perform registration (register the autofluo image to an average template).
 - [**reg_affine_initializer**](unravel.register.affine_initializer): Part of reg. Roughly aligns the template to the autofl image.
-- [**reg_check**](unravel.register.check_reg): Check registration (aggregate the autofluo and warped atlas images).
-- [**reg_check_mask**](unravel.register.check_brain_mask): Check brain mask for over/under segmentation.
+- [**reg_check**](unravel.register.reg_check): Check registration (aggregate the autofluo and warped atlas images).
+- [**reg_check_brain_mask**](unravel.register.reg_check_brain_mask): Check brain mask for over/under segmentation.
 :::
 
 :::{tab-item} Warping
@@ -153,7 +153,7 @@ unravel_commands -m
 
 :::{tab-item} Voxel-wise stats
 - [**vstats_apply_mask**](unravel.voxel_stats.apply_mask): Apply mask to image (e.g., nullify artifacts or isolate signals).
-- [**vstats_prep**](unravel.voxel_stats.prep_vstats): Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).
+- [**vstats_prep**](unravel.voxel_stats.vstats_prep): Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).
 - [**vstats_z_score**](unravel.voxel_stats.z_score): Z-score images.
 - [**vstats_whole_to_avg**](unravel.voxel_stats.whole_to_LR_avg): Average left and right hemispheres together.
 - [**vstats_hemi_to_avg**](unravel.voxel_stats.hemi_to_LR_avg): If left and right hemispheres were processed separately (less common), average them together.
@@ -165,8 +165,8 @@ unravel_commands -m
 - [**cluster_fdr_range**](unravel.cluster_stats.fdr_range): Get FDR q value range yielding clusters.
 - [**cluster_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
 - [**cluster_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
-- [**cluster_validation**](unravel.cluster_stats.validate_clusters): Validate clusters w/ cell/label density measurements.
-- [**cluster_summary**](unravel.cluster_stats.valid_clusters_summary): Summarize info on valid clusters (run after cluster_validation).
+- [**cluster_validation**](unravel.cluster_stats.cluster_validation): Validate clusters w/ cell/label density measurements.
+- [**cluster_summary**](unravel.cluster_stats.cluster_summary): Summarize info on valid clusters (run after cluster_validation).
 - [**cluster_org_data**](unravel.cluster_stats.org_data): Organize CSVs from cluster_validation.
 - [**cluster_group_data**](unravel.cluster_stats.group_bilateral_data): Group bilateral cluster data.
 - [**cluster_stats**](unravel.cluster_stats.stats): Compute cluster validation statistics.
@@ -177,7 +177,7 @@ unravel_commands -m
 - [**cluster_legend**](unravel.cluster_stats.legend): Make a legend of regions in cluster maps.
 - [**cluster_sunburst**](unravel.cluster_stats.sunburst): Create a sunburst plot of regional volumes.
 - [**cluster_find_incongruent_clusters**](unravel.cluster_stats.find_incongruent_clusters): Find clusters where the effect direction does not match the prediction of cluster_fdr (for validation of non-directional p value maps).
-- [**cluster_crop**](unravel.cluster_stats.crop_clusters): Crop clusters to a bounding box.
+- [**cluster_crop**](unravel.cluster_stats.crop): Crop clusters to a bounding box.
 - [**effect_sizes**](unravel.cluster_stats.effect_sizes.effect_sizes): Calculate effect sizes for clusters.
 - [**effect_sizes_sex_abs**](unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute): Calculate absolute effect sizes by sex.
 - [**effect_sizes_sex_rel**](unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative): Calculate relative effect sizes by sex.
@@ -193,10 +193,10 @@ unravel_commands -m
 
 :::{tab-item} Image I/O
 - [**io_metadata**](unravel.image_io.metadata): Handle image metadata.
-- [**io_img**](unravel.image_io.img_io): Image I/O operations.
+- [**io_img**](unravel.image_io.io_img): Image I/O operations.
 - [**io_nii_info**](unravel.image_io.nii_info): Print info about NIfTI files.
 - [**io_nii_hd**](unravel.image_io.nii_hd): Print NIfTI headers.
-- [**io_nii**](unravel.image_io.nii_io): NIfTI I/O operations (binarize, convert data type, scale, etc).
+- [**io_nii**](unravel.image_io.io_nii): NIfTI I/O operations (binarize, convert data type, scale, etc).
 - [**io_reorient_nii**](unravel.image_io.reorient_nii): Reorient NIfTI files.
 - [**io_nii_to_tifs**](unravel.image_io.nii_to_tifs): Convert NIfTI files to TIFFs.
 - [**io_nii_to_zarr**](unravel.image_io.nii_to_zarr): Convert NIfTI files to Zarr.
@@ -208,14 +208,14 @@ unravel_commands -m
 
 :::{tab-item} Image tools
 - [**img_avg**](unravel.image_tools.avg): Average NIfTI images.
-- [**img_unique**](unravel.image_tools.uniq_intensities): Find unique intensities in images.
+- [**img_unique**](unravel.image_tools.unique_intensities): Find unique intensities in images.
 - [**img_max**](unravel.image_tools.max): Print the max intensity value in an image.
 - [**img_bbox**](unravel.image_tools.bbox): Compute bounding box of non-zero voxels in an image.
 - [**img_spatial_avg**](unravel.image_tools.spatial_averaging): Perform spatial averaging on images.
-- [**img_rb**](unravel.image_tools.tif_rb): Apply rolling ball filter to TIF images.
-- [**img_DoG**](unravel.image_tools.tif_DoG): Apply Difference of Gaussian filter to TIF images.
-- [**img_pad**](unravel.image_tools.pad_img): Pad images.
-- [**img_extend**](unravel.image_tools.extend_image): Extend images (add padding to one side).
+- [**img_rb**](unravel.image_tools.rb): Apply rolling ball filter to TIF images.
+- [**img_DoG**](unravel.image_tools.DoG): Apply Difference of Gaussian filter to TIF images.
+- [**img_pad**](unravel.image_tools.pad): Pad images.
+- [**img_extend**](unravel.image_tools.extend): Extend images (add padding to one side).
 - [**img_transpose**](unravel.image_tools.transpose_axes): Transpose image axes.
 :::
 
@@ -240,9 +240,9 @@ unravel_commands -m
 
 :::{admonition} More info on commands
 :class: note dropdown
-unravel_commands runs ./\<repo_root_dir\>/unravel/command_list.py
+unravel_commands runs ./\<repo_root_dir\>/unravel/unravel_commands.py
 
-Its help guide is here: {py:mod}`unravel.command_list` 
+Its help guide is here: {py:mod}`unravel.unravel_commands` 
 
 Commands are defined in the `[project.scripts]` section of the [pyproject.toml](https://github.com/b-heifets/UNRAVEL/blob/dev/pyproject.toml) in the root directory of the UNRAVEL repository (repo).
 
@@ -446,7 +446,7 @@ This section provides an overview of common commands available in UNRAVEL, ~orga
 
 ### Registration
 #### `reg_prep`
-{py:mod}`unravel.register.prep_reg` 
+{py:mod}`unravel.register.reg_prep` 
 * Prepare autofluo images for registration (resample to a lower resolution)
 ```bash
 reg_prep -i *.czi -x $XY -z $Z -v  # -i options: tif_dir, .h5, .zarr, .tif
@@ -546,7 +546,7 @@ for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m $TEMPLATE -bc -pad -sm
 
 
 #### `reg_check`
-{py:mod}`unravel.register.check_reg`
+{py:mod}`unravel.register.reg_check`
 * Check registration by copying these images to a target directory: 
     * sample??/reg_outputs/autofl_??um_masked_fixed_reg_input.nii.gz
     * sample??/reg_outputs/atlas_in_tissue_space.nii.gz
@@ -661,7 +661,7 @@ seg_ilastik -i <*.czi, *.h5, or dir w/ tifs> -o seg_dir -ilp $BASE/ilastik_segme
 :::
 
 #### `vstats_prep`
-{py:mod}`unravel.voxel_stats.prep_vstats`
+{py:mod}`unravel.voxel_stats.vstats_prep`
 * Preprocess immunofluo images and warp them to atlas space for voxel-wise statistics.
 ```bash
 vstats_prep -i cFos -rb 4 -x $XY -z $Z -o cFos_rb4_atlas_space.nii.gz -v -e $DIRS
@@ -680,9 +680,9 @@ The radius should be similar to the largest feature that you want to preserve.
 
 You can test parameters for background subtraction with: 
 * {py:mod}`unravel.image_tools.spatial_averaging`
-* {py:mod}`unravel.image_tools.tif_rb`
+* {py:mod}`unravel.image_tools.rb`
     * Copy a tif to a test dir for this. 
-    * Use {py:mod}`unravel.image_io.img_io` to create a tif series
+    * Use {py:mod}`unravel.image_io.io_img` to create a tif series
 :::
 
 #### `vstats_z_score`
@@ -790,7 +790,7 @@ cluster_mirror_indices -m RH -v
 ### Cluster validation
 
 #### `cluster_validation`
-{py:mod}`unravel.cluster_stats.validate_clusters`
+{py:mod}`unravel.cluster_stats.cluster_validation`
 * Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or    label densities
 ```bash
 # Basic usage:
@@ -801,11 +801,11 @@ for q in 0.005 0.01 0.05 0.1 ; do for side in LH RH ; do cluster_validation -e $
 ```
 
 #### `cluster_summary`
-{py:mod}`unravel.cluster_stats.valid_clusters_summary`
-* Aggregates and analyzes cluster validation data from validate_clusters
-* Update parameters in /UNRAVEL/unravel/cluster_stats/valid_clusters_summary.ini and save it with the experiment
+{py:mod}`unravel.cluster_stats.cluster_summary`
+* Aggregates and analyzes cluster validation data from `cluster_validation`
+* Update parameters in /UNRAVEL/unravel/cluster_stats/cluster_summary.ini and save it with the experiment
 ```bash
-cluster_summary -c path/valid_clusters_summary.ini -e $DIRS -cvd '*' -vd path/vstats_dir -sk $SAMPLE_KEY --groups group1 group2 -v
+cluster_summary -c path/cluster_summary.ini -e $DIRS -cvd '*' -vd path/vstats_dir -sk $SAMPLE_KEY --groups group1 group2 -v
 ```
 group1 and group2 must match conditions in the sample_key.csv
 

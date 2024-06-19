@@ -388,7 +388,7 @@
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SM</span><span class="p">,</span> <span class="n">SuppressMetavar</span>
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">resolve_path</span>
-<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">pad_img</span>
+<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">pad</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_func_name_args_times</span><span class="p">,</span> <span class="n">print_cmd_and_times</span><span class="p">,</span> <span class="n">initialize_progress_bar</span><span class="p">,</span> <span class="n">get_samples</span>
 <span class="kn">from</span> <span class="nn">unravel.warp.warp</span> <span class="kn">import</span> <span class="n">warp</span>
 
@@ -490,7 +490,7 @@
                 <span class="c1"># Optionally pad the fixed image with 15% of voxels on all sides</span>
                 <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">pad_img</span><span class="p">:</span> 
                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    Adding padding to the registration input</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="n">fixed_img</span> <span class="o">=</span> <span class="n">pad_img</span><span class="p">(</span><span class="n">fixed_img</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mf">0.15</span><span class="p">)</span>
+                    <span class="n">fixed_img</span> <span class="o">=</span> <span class="n">pad</span><span class="p">(</span><span class="n">fixed_img</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mf">0.15</span><span class="p">)</span>
 
                 <span class="c1"># Optionally smooth the fixed image (e.g., when it is an autofluorescence image)</span>
                 <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">smooth</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>

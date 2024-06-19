@@ -6,14 +6,14 @@ unravel.image_tools package
 
    avg
    bbox
-   extend_image
+   extend
    max
-   pad_img
+   pad
    spatial_averaging
-   tif_DoG
-   tif_rb
+   DoG
+   rb
    transpose_axes
-   uniq_intensities
+   unique_intensities
    atlas/toc
 
 .. automodule:: unravel.image_tools

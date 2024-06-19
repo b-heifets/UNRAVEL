@@ -373,13 +373,13 @@
 <span class="kn">from</span> <span class="nn">rich.live</span> <span class="kn">import</span> <span class="n">Live</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 
-<span class="kn">from</span> <span class="nn">unravel.image_io.nii_io</span> <span class="kn">import</span> <span class="n">convert_dtype</span>
+<span class="kn">from</span> <span class="nn">unravel.image_io.io_nii</span> <span class="kn">import</span> <span class="n">convert_dtype</span>
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SM</span><span class="p">,</span> <span class="n">SuppressMetavar</span>
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">load_3D_img</span>
-<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">pad_img</span>
+<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">pad</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_func_name_args_times</span><span class="p">,</span> <span class="n">print_cmd_and_times</span><span class="p">,</span> <span class="n">initialize_progress_bar</span><span class="p">,</span> <span class="n">get_samples</span>
-<span class="kn">from</span> <span class="nn">unravel.register.prep_reg</span> <span class="kn">import</span> <span class="n">prep_reg</span>
+<span class="kn">from</span> <span class="nn">unravel.register.reg_prep</span> <span class="kn">import</span> <span class="n">reg_prep</span>
 <span class="kn">from</span> <span class="nn">unravel.warp.warp</span> <span class="kn">import</span> <span class="n">warp</span>
 
 
@@ -442,7 +442,7 @@
 <span class="sd">        - interpol (str): Type of interpolation (linear, bSpline, nearestNeighbor, multiLabel).</span>
 <span class="sd">        - dtype (str): Desired dtype for output (e.g., uint8, uint16). Default: uint16&quot;&quot;&quot;</span>
     <span class="c1"># Pad the image</span>
-    <span class="n">img</span> <span class="o">=</span> <span class="n">pad_img</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mf">0.15</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">pad</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mf">0.15</span><span class="p">)</span>
 
     <span class="c1"># Create NIfTI, set header info, and save the input for warp()</span>
     <span class="n">fixed_reg_input</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="n">fixed_reg_in</span>
@@ -496,7 +496,7 @@
             <span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">chann_idx</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">z_res</span><span class="p">)</span>
 
             <span class="c1"># Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)</span>
-            <span class="n">img</span> <span class="o">=</span> <span class="n">prep_reg</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">miracl</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">reg_prep</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">miracl</span><span class="p">)</span>
 
             <span class="c1"># Warp native image to atlas space</span>
             <span class="n">to_atlas</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">fixed_reg_in</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">interpol</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;uint16&#39;</span><span class="p">)</span>

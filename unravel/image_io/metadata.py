@@ -18,6 +18,9 @@ Inputs:
 
 Outputs:
     - ./parameters/metadata.txt (path should be relative to ./sample??)
+
+Next command:
+    - ``reg_prep`` for registration
 """
 
 import argparse

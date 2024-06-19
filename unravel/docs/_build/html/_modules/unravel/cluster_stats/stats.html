@@ -409,7 +409,7 @@
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">initialize_progress_bar</span><span class="p">,</span> <span class="n">print_cmd_and_times</span>
-<span class="kn">from</span> <span class="nn">unravel.cluster_stats.stats_table</span> <span class="kn">import</span> <span class="n">valid_clusters_summary</span>
+<span class="kn">from</span> <span class="nn">unravel.cluster_stats.stats_table</span> <span class="kn">import</span> <span class="n">cluster_summary</span>
 
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/stats.html#unravel.cluster_stats.stats.parse_args">[docs]</a>
@@ -770,9 +770,9 @@
 
     <span class="c1"># Concat all cluster_validation_info.csv files</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">valid_clusters_summary</span><span class="p">(</span><span class="s1">&#39;cluster_validation_info_t-test.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster_validation_summary_t-test.csv&#39;</span><span class="p">)</span>
+        <span class="n">cluster_summary</span><span class="p">(</span><span class="s1">&#39;cluster_validation_info_t-test.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster_validation_summary_t-test.csv&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">valid_clusters_summary</span><span class="p">(</span><span class="s1">&#39;cluster_validation_info_tukey.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster_validation_summary_tukey.csv&#39;</span><span class="p">)</span></div>
+        <span class="n">cluster_summary</span><span class="p">(</span><span class="s1">&#39;cluster_validation_info_tukey.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster_validation_summary_tukey.csv&#39;</span><span class="p">)</span></div>
 
 
 

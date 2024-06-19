@@ -22,13 +22,13 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.image_io.nii_io import convert_dtype
+from unravel.image_io.io_nii import convert_dtype
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.img_tools import pad_img
+from unravel.core.img_tools import pad
 from unravel.core.utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
-from unravel.register.prep_reg import prep_reg
+from unravel.register.reg_prep import reg_prep
 from unravel.warp.warp import warp
 
 
@@ -83,7 +83,7 @@ def to_atlas(sample_path, img, fixed_reg_in, atlas, output, interpol, dtype='uin
         - interpol (str): Type of interpolation (linear, bSpline, nearestNeighbor, multiLabel).
         - dtype (str): Desired dtype for output (e.g., uint8, uint16). Default: uint16"""
     # Pad the image
-    img = pad_img(img, pad_width=0.15)
+    img = pad(img, pad_width=0.15)
 
     # Create NIfTI, set header info, and save the input for warp()
     fixed_reg_input = sample_path / fixed_reg_in
@@ -134,7 +134,7 @@ def main():
             img, xy_res, z_res = load_3D_img(img_path, args.chann_idx, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)
 
             # Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)
-            img = prep_reg(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
+            img = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
 
             # Warp native image to atlas space
             to_atlas(sample_path, img, args.fixed_reg_in, args.atlas, output, args.interpol, dtype='uint16')

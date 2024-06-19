@@ -4,11 +4,11 @@ unravel.register package
 .. toctree::
    :maxdepth: 2
 
-   prep_reg
+   reg_prep
    reg
    affine_initializer
-   check_reg
-   check_brain_mask
+   reg_check
+   reg_check_brain_mask
 
 .. automodule:: unravel.register
    :members:

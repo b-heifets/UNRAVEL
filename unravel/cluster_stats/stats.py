@@ -58,7 +58,7 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import initialize_progress_bar, print_cmd_and_times
-from unravel.cluster_stats.stats_table import valid_clusters_summary
+from unravel.cluster_stats.stats_table import cluster_summary
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -402,9 +402,9 @@ def main():
 
     # Concat all cluster_validation_info.csv files
     if len(args.groups) == 2:
-        valid_clusters_summary('cluster_validation_info_t-test.csv', 'cluster_validation_summary_t-test.csv')
+        cluster_summary('cluster_validation_info_t-test.csv', 'cluster_validation_summary_t-test.csv')
     else:
-        valid_clusters_summary('cluster_validation_info_tukey.csv', 'cluster_validation_summary_tukey.csv')
+        cluster_summary('cluster_validation_info_tukey.csv', 'cluster_validation_summary_tukey.csv')
 
 
 if __name__ == '__main__':

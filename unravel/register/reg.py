@@ -37,7 +37,7 @@ from unravel.image_io.reorient_nii import reorient_nii
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
 from unravel.core.img_io import resolve_path
-from unravel.core.img_tools import pad_img
+from unravel.core.img_tools import pad
 from unravel.core.utils import print_func_name_args_times, print_cmd_and_times, initialize_progress_bar, get_samples
 from unravel.warp.warp import warp
 
@@ -131,7 +131,7 @@ def main():
                 # Optionally pad the fixed image with 15% of voxels on all sides
                 if args.pad_img: 
                     print(f'\n    Adding padding to the registration input\n')
-                    fixed_img = pad_img(fixed_img, pad_width=0.15)
+                    fixed_img = pad(fixed_img, pad_width=0.15)
 
                 # Optionally smooth the fixed image (e.g., when it is an autofluorescence image)
                 if args.smooth > 0:

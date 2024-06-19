@@ -53,7 +53,7 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
     curl https://pyenv.run | bash
     ```
 
-    **c. Add pyenv to your shell startup file (.bashrc or .zshrx):**
+    **c. Add pyenv to your shell startup file (.bashrc or .zshrc):**
     ```bash
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
     echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
@@ -113,9 +113,9 @@ pip install unravel
         sudo apt-get install -y fsl
         ```
 
-11. **Confirm the installation and get started by viewing the help guide in `prep_reg.py`:**
+11. **Confirm the installation and get started by viewing the help guide in the ``unravel.image_io.metadata`` module (``io_metadata`` commad) :**
     ```bash
-    prep_reg.py -h
+    io_metadata -h
     ```
 
 12. **Update scripts periodically:**
@@ -142,5 +142,5 @@ alias ilastik=run_ilastik.sh
 
 Apply the changes by restarting the terminal or source your shell configuration file: 
 ```bash
-. ~/.zshrc
+. ~/.bashrc
 ```

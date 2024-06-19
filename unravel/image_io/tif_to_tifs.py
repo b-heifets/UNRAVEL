@@ -14,8 +14,8 @@ Outputs:
     - ./<tif_dir_out>/slice_<asterisk>.tif series
     - ./parameters/metadata (text file)
 
-Next script: 
-    prep_reg.sh
+Next command: 
+    ``reg_prep`` for registration
 """
 
 import argparse
