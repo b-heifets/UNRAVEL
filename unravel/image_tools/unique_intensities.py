@@ -32,22 +32,39 @@ from unravel.core.utils import print_cmd_and_times
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/input_img.nii.gz', required=True, action=SM)
-    parser.add_argument('-m', '--minextent', help='Min cluster size in voxels (Default: 1)', default=1, action=SM, type=int)
+    parser.add_argument('-m', '--min_extent', help='Min cluster size in voxels (Default: 1)', default=1, action=SM, type=int)
     parser.add_argument('-s', '--print_sizes', help='Print cluster IDs and sizes. Default: False', default=False, action='store_true')
     # parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
+def uniq_intensities(input, min_extent=1, print_sizes=False):
+    """Loads a 3D image and prints non-zero unique intensity values in a space-separated list.
+
+    Args:
+        input (_type_): _description_
+        min_extent (int, optional): _description_. Defaults to 1.
+        print_sizes (bool, optional): _description_. Defaults to False.
+
+    Returns:
+        list of ints: list of unique intensities
+    """
+    if str(input).endswith(".nii.gz"):
+        nii = nib.load(input)
+        img = np.asanyarray(nii.dataobj, dtype=np.uint16).squeeze()
+    else: 
+        img = load_3D_img(input)
+
+    uniq_intensities = cluster_IDs(img, min_extent=min_extent, print_IDs=True, print_sizes=print_sizes)
+
+    return uniq_intensities
+
 def main():
     args = parse_args()
 
-    if str(args.input).endswith(".nii.gz"):
-        nii = nib.load(args.input)
-        img = np.asanyarray(nii.dataobj, dtype=np.uint16).squeeze()
-    else: 
-        img = load_3D_img(args.input)
+    # Print unique intensities in image
+    uniq_intensities(args.input, args.min_extent, args.print_sizes)
 
-    cluster_IDs(img, min_extent=args.minextent, print_IDs=True, print_sizes=args.print_sizes)
 
 if __name__ == '__main__': 
     install()
