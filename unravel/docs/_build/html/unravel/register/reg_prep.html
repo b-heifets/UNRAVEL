@@ -494,14 +494,14 @@
 <blockquote>
 <div><p>reg_prep -i &lt;asterisk&gt;.czi -td &lt;path/brain_mask_tifs&gt; -e &lt;list of paths to exp dirs&gt; -v</p>
 </div></blockquote>
-<p>Run script from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.</p>
+<p>Run command from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.</p>
 <dl class="simple">
 <dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p>&lt;asterisk&gt;.czi, autofluo/&lt;asterisk&gt;.tif series, autofluo, &lt;asterisk&gt;.tif, or &lt;asterisk&gt;.h5</p>
 </dd>
 <dt>Outputs:</dt><dd><p>./sample??/reg_inputs/autofl_&lt;asterisk&gt;um.nii.gz
 ./sample??/reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif series (used for training ilastik for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>)</p>
 </dd>
-<dt>Next script:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> or <code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
+<dt>Next command:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> or <code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
 </dd>
 </dl>
 </section>

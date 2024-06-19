@@ -11,8 +11,8 @@ Usage for activating sample?? dirs for certain conditions:
 ----------------------------------------------------------
     utils_toggle -c <path/sample_key.csv> -a <Saline MDMA> -v -e <list_of_exp_dir_paths>
 
-For conditions in the activate list, the script will remove the "_" from the sample?? dir name.
-For conditions not in the activate list, the script will prepend "_" to the sample?? dir name.    
+For conditions in the activate list, the command will remove the "_" from the sample?? dir name.
+For conditions not in the activate list, the command will prepend "_" to the sample?? dir name.    
 
 The sample_key.csv file should have the following format:
     dir_name,condition

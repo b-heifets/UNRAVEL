@@ -127,7 +127,7 @@ def main():
     # Make parameters directory in the sample?? folder
     os.makedirs("parameters", exist_ok=True)
 
-    # Save metadata to text file so resolution can be obtained by other scripts
+    # Save metadata to text file so resolution can be obtained by other commands/modules
     metadata_txt_path = Path(".", "parameters", "metadata")
     with open(metadata_txt_path, 'w') as file: 
         file.write(f"Voxel size: {xy_res:.4f}x{xy_res:.4f}x{z_res:.4f} µm^3")

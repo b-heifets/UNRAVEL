@@ -16,7 +16,7 @@ Difference of Gaussians:
     - The ratio of simga2 to sigma1 should ideally be at least 1.5 to 2. This helps ensure that the blurring difference is significant enough to highlight the features of interest.
 
 Note: 
-    - This script is intended to test the DoG method on a single image.
+    - This command is intended to test the DoG method on a single image.
     - 2D DoG is not implemented in vstats_prep. 
     - DoG could be added to vstats_prep in the future if needed. 
     - 3D spatial averaging and 2D rolling ball background subtraction are used in vstats_prep instead.

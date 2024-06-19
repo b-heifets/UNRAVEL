@@ -7,7 +7,7 @@ Usage
 -----
     cluster_mirror_indices -m RH -v
     
-Use this script after ``cluster_fdr`` to mirror the cluster indices for the other side of the brain before running ``cluster_validation``.  
+Use this command after ``cluster_fdr`` to mirror the cluster indices for the other side of the brain before running ``cluster_validation``.  
 """
 
 import argparse

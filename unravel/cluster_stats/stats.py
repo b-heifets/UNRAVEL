@@ -27,7 +27,7 @@ Example unilateral inputs in the subdirs:
     - condition2_sample03_<cell|label>_density_data.csv
     - condition2_sample04_<cell|label>_density_data.csv
 
-Example bilateral inputs (if any file has _LH.csv or _RH.csv, the script will attempt to pool data):
+Example bilateral inputs (if any file has _LH.csv or _RH.csv, the command will attempt to pool data):
     - condition1_sample01_<cell|label>_density_data_LH.csv
     - condition1_sample01_<cell|label>_density_data_RH.csv
 

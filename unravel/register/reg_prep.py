@@ -7,7 +7,7 @@ Usage:
 ------
     reg_prep -i <asterisk>.czi -td <path/brain_mask_tifs> -e <list of paths to exp dirs> -v
 
-Run script from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
+Run command from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
     <asterisk>.czi, autofluo/<asterisk>.tif series, autofluo, <asterisk>.tif, or <asterisk>.h5 
@@ -16,7 +16,7 @@ Outputs:
     ./sample??/reg_inputs/autofl_<asterisk>um.nii.gz
     ./sample??/reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif series (used for training ilastik for ``seg_brain_mask``) 
 
-Next script: 
+Next command: 
     ``seg_copy_tifs`` for ``seg_brain_mask`` or ``reg``
 """
 

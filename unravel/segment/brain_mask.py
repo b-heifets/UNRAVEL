@@ -20,7 +20,7 @@ Outputs:
     - reg_inputs/autofl_<asterisk>um_brain_mask.nii.gz (can be used for ``reg`` and ``vstats_z_score``)
     - reg_inputs/autofl_<asterisk>um_masked.nii.gz
 
-Next script: 
+Next command: 
     - ``reg``
 """
 

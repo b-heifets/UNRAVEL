@@ -7,10 +7,10 @@ Usage:
 ------
     utils_prepend -sk <path/sample_key.csv> -f -r
 
-This script renames files in the current directory based on the conditions specified in the CSV file.
+This command renames files in the current directory based on the conditions specified in the CSV file.
 
 The sample_key.csv should have two columns: 'dir_name' and 'condition'.
-The script will prepend the 'condition' to the filenames matching the 'dir_name' prefix.
+The command will prepend the 'condition' to the filenames matching the 'dir_name' prefix.
 
 For example, if the CSV contains the following rows:
     dir_name,condition

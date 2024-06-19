@@ -3,15 +3,13 @@
 """
 Use ``io_h5_to_tifs`` from UNRAVEL to load a h5/hdf5 image and save it as tifs.
 
-Run this script from a sample?? folder containing the image.h5 file.
-
 Usage:
 ------
     io_h5_to_tifs -i path/image.h5 -t autofl
 
 Inputs:
     - image.h5 either from -i path/image.h5 or largest <asterisk>.h5 in cwd
-    - This script assumes that the first dataset in the hdf5 file has the highest resolution.
+    - This assumes that the first dataset in the hdf5 file has the highest resolution.
 
 Outputs:
     - ./<tif_dir_out>/slice_<asterisk>.tif series
@@ -120,7 +118,7 @@ def main():
     # Make parameters directory in the sample?? folder
     os.makedirs("parameters", exist_ok=True)
 
-    # Save metadata to text file so resolution can be obtained by other scripts
+    # Save metadata to text file so resolution can be obtained by other commands/modules
     metadata_txt_path = Path(".", "parameters", "metadata")
     with open(metadata_txt_path, 'w') as file: 
         file.write(f'Voxel size: {xy_res}x{xy_res}x{z_res} micron^3')

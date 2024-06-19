@@ -69,7 +69,7 @@ def parse_args():
 # TODO: Move cell vs. label arg from config back to argparse and make it a required arg to prevent accidentally using the wrong metric
 
 def run_script(script_name, script_args):
-    """Run a script using subprocess that respects the system's PATH and captures output."""
+    """Run a command/script using subprocess that respects the system's PATH and captures output."""
     # Convert all script arguments to string
     script_args = [str(arg) for arg in script_args]
     command = [script_name] + script_args

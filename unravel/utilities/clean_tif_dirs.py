@@ -3,7 +3,7 @@
 """
 Use ``utils_clean_tifs`` from UNRAVEL to clean directories w/ tif series.
 
-Run script from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
+Run command from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
 
 Usage:
 ------

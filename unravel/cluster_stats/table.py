@@ -8,7 +8,7 @@ Usage:
     cluster_table
 
 Prereqs:
-    ``cluster_index`` has been run. Run this script from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
+    ``cluster_index`` has been run. Run this command from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
 
 Sorting by hierarchy and volume:
 --------------------------------

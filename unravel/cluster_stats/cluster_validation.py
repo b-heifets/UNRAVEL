@@ -13,8 +13,8 @@ Outputs:
     - ./sample??/clusters/<cluster_index_dir>/outer_bounds.txt
     - ./sample??/clusters/<cluster_index_dir>/<args.density>_data.csv
 
-For -s, if a dir name is provided, the script will load ./sample??/seg_dir/sample??_seg_dir.nii.gz. 
-If a relative path is provided, the script will load the image at the specified path.
+For -s, if a dir name is provided, the command will load ./sample??/seg_dir/sample??_seg_dir.nii.gz. 
+If a relative path is provided, the command will load the image at the specified path.
 
 Next command:
     ``cluster_summary``

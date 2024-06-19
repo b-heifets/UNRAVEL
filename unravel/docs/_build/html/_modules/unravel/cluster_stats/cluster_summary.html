@@ -425,7 +425,7 @@
 <div class="viewcode-block" id="run_script">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/cluster_summary.html#unravel.cluster_stats.cluster_summary.run_script">[docs]</a>
 <span class="k">def</span> <span class="nf">run_script</span><span class="p">(</span><span class="n">script_name</span><span class="p">,</span> <span class="n">script_args</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a script using subprocess that respects the system&#39;s PATH and captures output.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a command/script using subprocess that respects the system&#39;s PATH and captures output.&quot;&quot;&quot;</span>
     <span class="c1"># Convert all script arguments to string</span>
     <span class="n">script_args</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">script_args</span><span class="p">]</span>
     <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="n">script_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">script_args</span>

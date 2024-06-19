@@ -33,7 +33,7 @@ def parse_args():
     parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., autofl_50um_masked_fixed_reg_input.nii.gz)', required=True, action=SM)
     parser.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz (e.g., template)', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/init_tform_py.nii.gz', required=True, action=SM)
-    parser.add_argument('-t', '--time_out', help='Duration in seconds to allow this script to run. Default: 10', default=10, type=int, action=SM)
+    parser.add_argument('-t', '--time_out', help='Duration in seconds to allow this command/module to run. Default: 10', default=10, type=int, action=SM)
     parser.epilog = __doc__
     return parser.parse_args()
 

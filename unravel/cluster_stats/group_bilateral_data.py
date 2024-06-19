@@ -3,7 +3,7 @@
 """
 Use ``cluster_group_data`` from UNRAVEL to organize bilateral csv outputs from ``cluster_validation``
 
-Run this script in the target_dir from ``cluster_org_data``
+Run this command in the target_dir from ``cluster_org_data``
         
 Usage
 -----
@@ -15,13 +15,13 @@ Folder naming convention:
     - <cluster_validation_dir>_LH for left hemisphere files
     - <cluster_validation_dir>_RH for right hemisphere files
 
-For example, if the script is run in a directory containing the following directories:
+For example, if the command is run in a directory containing the following directories:
     - cluster_valid_results_1_LH
     - cluster_valid_results_1_RH
     - cluster_valid_results_2_LH
     - cluster_valid_results_2_RH
 
-The script will create a new directory for each cluster and move the corresponding left and right hemisphere files into it. 
+The command will create a new directory for each cluster and move the corresponding left and right hemisphere files into it. 
 The original directories will be removed.
 
 The resulting directory structure will be:
