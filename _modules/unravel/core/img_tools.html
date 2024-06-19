@@ -582,7 +582,17 @@
 <div class="viewcode-block" id="cluster_IDs">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.cluster_IDs">[docs]</a>
 <span class="k">def</span> <span class="nf">cluster_IDs</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">min_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">print_IDs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_sizes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prints cluster IDs [and sizes] for clusters &gt; minextent voxels&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets unique intensities [and sizes] for regions/clusters &gt; minextent voxels and prints them in a string-separated list. </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        ndarray</span>
+<span class="sd">        min_extent (int, optional): _description_. Defaults to 1.</span>
+<span class="sd">        print_IDs (bool, optional): _description_. Defaults to False.</span>
+<span class="sd">        print_sizes (bool, optional): _description_. Defaults to False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list of ints: list of unique intensities</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Get unique intensities and their counts</span>
     <span class="n">unique_intensities</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">ndarray</span><span class="p">[</span><span class="n">ndarray</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
