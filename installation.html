@@ -414,7 +414,7 @@ libffi-dev<span class="w"> </span>liblzma-dev<span class="w"> </span>python-open
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>https://pyenv.run<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 </pre></div>
 </div>
-<p><strong>c. Add pyenv to your shell startup file (.bashrc or .zshrx):</strong></p>
+<p><strong>c. Add pyenv to your shell startup file (.bashrc or .zshrc):</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PYENV_ROOT=&quot;$HOME/.pyenv&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
 <span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
 <span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;if command -v pyenv 1&gt;/dev/null 2&gt;&amp;1; then\n  eval &quot;$(pyenv init --path)&quot;\nfi&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
@@ -477,8 +477,8 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </li>
 </ul>
 </li>
-<li><p><strong>Confirm the installation and get started by viewing the help guide in <code class="docutils literal notranslate"><span class="pre">prep_reg.py</span></code>:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>prep_reg.py<span class="w"> </span>-h
+<li><p><strong>Confirm the installation and get started by viewing the help guide in the <code class="docutils literal notranslate"><span class="pre">unravel.image_io.metadata</span></code> module (<code class="docutils literal notranslate"><span class="pre">io_metadata</span></code> commad) :</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>io_metadata<span class="w"> </span>-h
 </pre></div>
 </div>
 </li>
@@ -505,7 +505,7 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </pre></div>
 </div>
 <p>Apply the changes by restarting the terminal or source your shell configuration file:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>~/.zshrc
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>~/.bashrc
 </pre></div>
 </div>
 </section>

@@ -5,12 +5,12 @@ unravel.image_io package
    :maxdepth: 2
 
    h5_to_tifs
-   img_io
    img_to_npy
+   io_img
    metadata
    nii_hd
    nii_info
-   nii_io
+   io_nii
    nii_to_tifs
    nii_to_zarr
    reorient_nii

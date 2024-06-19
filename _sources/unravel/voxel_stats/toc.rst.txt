@@ -5,7 +5,7 @@ unravel.voxel_stats package
    :maxdepth: 3
 
    apply_mask
-   prep_vstats
+   vstats_prep
    z_score
    whole_to_LR_avg
    hemi_to_LR_avg

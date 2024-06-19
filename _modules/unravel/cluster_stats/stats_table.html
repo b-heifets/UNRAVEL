@@ -378,9 +378,9 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="valid_clusters_summary">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/stats_table.html#unravel.cluster_stats.stats_table.valid_clusters_summary">[docs]</a>
-<span class="k">def</span> <span class="nf">valid_clusters_summary</span><span class="p">(</span><span class="n">csv_pattern</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
+<div class="viewcode-block" id="cluster_summary">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/stats_table.html#unravel.cluster_stats.stats_table.cluster_summary">[docs]</a>
+<span class="k">def</span> <span class="nf">cluster_summary</span><span class="p">(</span><span class="n">csv_pattern</span><span class="p">,</span> <span class="n">output</span><span class="p">):</span>
     <span class="c1"># Use glob to find all matching CSV files recursively</span>
     <span class="n">csv_files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;**/</span><span class="si">{</span><span class="n">csv_pattern</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span> <span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">csv_files</span><span class="p">:</span>
@@ -405,7 +405,7 @@
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
 
-    <span class="n">valid_clusters_summary</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csv_pattern</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
+    <span class="n">cluster_summary</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csv_pattern</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span></div>
 
 
 
