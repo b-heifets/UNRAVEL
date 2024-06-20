@@ -3,6 +3,7 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
+import datetime
 import os
 import sys
 
@@ -28,7 +29,8 @@ sys.path.append(os.path.abspath('../warp'))
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'UNRAVEL'
-copyright = '2024, Daniel Ryskamp Rijsketic, Austen Casey, Boris Heifets'
+current_year = datetime.datetime.now().year
+copyright = f'{current_year}, the UNRAVEL team'
 author = 'Daniel Ryskamp Rijsketic, Austen Casey, Boris Heifets'
 release = '1.0.0'
 
