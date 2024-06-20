@@ -5,14 +5,18 @@ Use ``cluster_stats`` from UNRAVEL to validate clusters based on differences in 
 
 T-test usage:  
 ------------- 
-    cluster_stats --groups <group1> <group2>
+    cluster_stats --groups <group1> <group2> -hg <group1|group2>
 
 Tukey's test usage: 
 -------------------
-    cluster_stats --groups <group1> <group2> <group3> <group4> ...
+    cluster_stats --groups <group1> <group2> <group3> <group4> ... -hg <group1|group2>
 
-Input subdirs: 
-    <asterisk> 
+Note: 
+    - Organize data in directories for each comparison (e.g., psilocybin > saline, etc.)
+    - This script will loop through all directories in the current working dir and process the data in each subdir.
+    - Each subdir should contain .csv files with the density data for each cluster.
+    - The first 2 groups reflect the main comparison for validation rates.
+    - Clusters are not considered valid if the effect direction does not match the expected direction.
 
 Input files: 
     <asterisk>_density_data.csv from ``cluster_validation`` (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
@@ -64,11 +68,13 @@ def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates)',  nargs='+', required=True)
     parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group data (e.g., see info for examples)',  nargs='*', default=None, action=SM)
+    parser.add_argument('-hg', '--higher_group', help='Specify the group that is expected to have a higher mean based on the direction of the p value map', required=True)
     parser.add_argument('-alt', "--alternate", help="Number of tails and direction ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
     parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from cluster_fdr). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
+
 
 # TODO: Test grouping of conditions. Test w/ label densities data. Could set up dunnett's tests and/or holm sidak tests.
 
@@ -265,8 +271,18 @@ def main():
     args = parse_args()
     current_dir = Path.cwd()
 
+    # Check for subdirectories in the current working directory
+    subdirs = [d for d in current_dir.iterdir() if d.is_dir()]
+    if not subdirs:
+        print(f"    [red1]No directories found in the current working directory: {current_dir}")
+        return
+    if subdirs[0].name == '_valid_clusters_stats':
+        print(f"    [red1]Only the '_valid_clusters_stats' directory found in the current working directory: {current_dir}")
+        print("    [red1]The script was likely run from a subdirectory instead of a directory containing subdirectories.")
+        return
+
     # Iterate over all subdirectories in the current working directory
-    for subdir in [d for d in current_dir.iterdir() if d.is_dir()]:
+    for subdir in subdirs:
         print(f"\nProcessing directory: [default bold]{subdir.name}[/]")
 
         # Load all .csv files in the current subdirectory
@@ -300,7 +316,7 @@ def main():
         # Aggregate the data from all .csv files and pool the data if hemispheres are present
         data_df = cluster_validation_data_df(density_col, has_hemisphere, csv_files, args.groups, data_col, data_col_pooled, args.condition_prefixes)
         if data_df.empty:
-            print("No data files match the specified groups. The prefixes of the csv files must match the group names.")
+            print("    [red1]No data files match the specified groups. The prefixes of the csv files must match the group names.")
             continue
 
         # Check the number of groups and perform the appropriate statistical test
@@ -319,24 +335,36 @@ def main():
             print(f"Running [gold1 bold]Tukey's tests")
             stats_df = perform_tukey_test(data_df, args.groups, density_col)
 
+        # Validate the clusters based on the expected direction of the effect
+        if args.higher_group not in args.groups:
+            print(f"    [red1]Error: The specified higher group '{args.higher_group}' is not one of the groups.")
+            return
+        expected_direction = '>' if args.higher_group == args.groups[0] else '<'
+        incongruent_clusters = stats_df[(stats_df['higher_mean_group'] != args.higher_group) & (stats_df['significance'] != 'n.s.')]['cluster_ID'].tolist()
+
+        with open(output_dir / 'incongruent_clusters.txt', 'w') as f:
+            f.write('\n'.join(map(str, incongruent_clusters)))
+        
+        print(f"Expected effect direction: [green bold]{args.groups[0]} {expected_direction} {args.groups[1]}")
+
+        if not incongruent_clusters:
+            print("All significant clusters are congruent with the expected direction")
+        else:
+            print(f"{len(incongruent_clusters)} of {total_clusters} clusters are incongruent with the expected direction.")
+            print (f"Although they had a significant difference, they not considered valid.")
+            print (f"'incongruent_clusters.txt' lists cluster IDs for incongruent clusters.")
+
+        # Invalidate clusters that are incongruent with the expected direction
+        stats_df['significance'] = stats_df.apply(lambda row: 'n.s.' if row['cluster_ID'] in incongruent_clusters else row['significance'], axis=1)
+
+        # Remove invalidated clusters from the list of significant clusters
+        significant_clusters = stats_df[stats_df['significance'] != 'n.s.']['cluster_ID']
+        significant_cluster_ids = significant_clusters.unique().tolist()
+        significant_cluster_ids_str = ' '.join(map(str, significant_cluster_ids))
+
         # Save the results to a .csv file
         stats_results_csv = output_dir / 't-test_results.csv' if len(args.groups) == 2 else output_dir / 'tukey_results.csv'
         stats_df.to_csv(stats_results_csv, index=False)
-
-        # Get the overall mean density for each condition and determine the effect direction
-        group_one_mean = data_df[data_df['condition'] == args.groups[0]][density_col].mean()
-        group_two_mean = data_df[data_df['condition'] == args.groups[1]][density_col].mean()
-        if group_one_mean > group_two_mean:
-            effect_direction = '>'
-        elif group_one_mean < group_two_mean:
-            effect_direction = '<'
-        elif group_one_mean == group_two_mean: 
-            effect_direction = '=='
-
-        if len(args.groups) == 2:
-            print(f"Effect direction: [green bold]{args.groups[0]} {effect_direction} {args.groups[1]}")
-        else:
-            print(f"Effect direction of interest: [green bold]{args.groups[0]} {effect_direction} {args.groups[1]}")
 
         # Extract the FDR q value from the first csv file (float after 'FDR' or 'q' in the file name)
         first_csv_name = csv_files[0]
@@ -347,7 +375,7 @@ def main():
             p_val_txt = next(Path(subdir).glob('**/*' + args.p_val_txt), None)
             if p_val_txt is None:
                 # If no file is found, print an error message and skip further processing for this directory
-                print(f"No p-value file found matching '{args.p_val_txt}' in directory {subdir}. Please check the file name and path.")
+                print(f"    [red1]No p-value file found matching '{args.p_val_txt}' in directory {subdir}. Please check the file name and path.")
                 import sys ; sys.exit()
             with open(p_val_txt, 'r') as f:
                 p_value_thresh = float(f.read())
@@ -358,10 +386,7 @@ def main():
 
         # Print validation info: 
         print(f"FDR q: [cyan bold]{fdr_q}[/] == p-value threshold: [cyan bold]{p_value_thresh}")
-        significant_clusters = stats_df[stats_df['p-value'] < 0.05]['cluster_ID']
-        significant_cluster_ids = significant_clusters.unique().tolist()
-        significant_cluster_ids_str = ' '.join(map(str, significant_cluster_ids))
-        print(f"Valid cluster IDs: [blue bold]{significant_cluster_ids_str}")
+        print(f"Valid cluster IDs: {significant_cluster_ids_str}")
         print(f"[default]# of valid / total #: [bright_magenta]{len(significant_cluster_ids)} / {total_clusters}")
         validation_rate = len(significant_cluster_ids) / total_clusters * 100
         print(f"Cluster validation rate: [purple bold]{validation_rate:.2f}%")
@@ -376,7 +401,7 @@ def main():
         # Save the # of sig. clusters, total clusters, and cluster validation rate to a .txt file
         validation_inf_txt = output_dir / 'cluster_validation_info_t-test.txt' if len(args.groups) == 2 else output_dir / 'cluster_validation_info_tukey.txt'
         with open(validation_inf_txt, 'w') as f:
-            f.write(f"Direction: {args.groups[0]} {effect_direction} {args.groups[1]}\n")
+            f.write(f"Direction: {args.groups[0]} {expected_direction} {args.groups[1]}\n")
             f.write(f"FDR q: {fdr_q} == p-value threshold {p_value_thresh}\n")
             f.write(f"Valid cluster IDs: {significant_cluster_ids_str}\n")
             f.write(f"# of valid / total #: {len(significant_cluster_ids)} / {total_clusters}\n")
@@ -389,7 +414,7 @@ def main():
         
         # Save cluster validation info for ``cluster_summary`` 
         data_df = pd.DataFrame({
-            'Direction': [f"{args.groups[0]} {effect_direction} {args.groups[1]}"],
+            'Direction': [f"{args.groups[0]} {expected_direction} {args.groups[1]}"],
             'FDR q': [fdr_q],
             'P value thresh': [p_value_thresh],
             'Valid clusters': [significant_cluster_ids_str],

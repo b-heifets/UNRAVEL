@@ -492,17 +492,25 @@
 <section id="t-test-usage">
 <h2>T-test usage:<a class="headerlink" href="#t-test-usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cluster_stats –groups &lt;group1&gt; &lt;group2&gt;</p>
+<div><p>cluster_stats –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;group1|group2&gt;</p>
 </div></blockquote>
 </section>
 <section id="tukey-s-test-usage">
 <h2>Tukey’s test usage:<a class="headerlink" href="#tukey-s-test-usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cluster_stats –groups &lt;group1&gt; &lt;group2&gt; &lt;group3&gt; &lt;group4&gt; …</p>
+<div><p>cluster_stats –groups &lt;group1&gt; &lt;group2&gt; &lt;group3&gt; &lt;group4&gt; … -hg &lt;group1|group2&gt;</p>
 </div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Organize data in directories for each comparison (e.g., psilocybin &gt; saline, etc.)</p></li>
+<li><p>This script will loop through all directories in the current working dir and process the data in each subdir.</p></li>
+<li><p>Each subdir should contain .csv files with the density data for each cluster.</p></li>
+<li><p>The first 2 groups reflect the main comparison for validation rates.</p></li>
+<li><p>Clusters are not considered valid if the effect direction does not match the expected direction.</p></li>
+</ul>
+</div>
 <dl class="simple">
-<dt>Input subdirs:</dt><dd><p>&lt;asterisk&gt;</p>
-</dd>
 <dt>Input files:</dt><dd><p>&lt;asterisk&gt;_density_data.csv from <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code> (e.g., in each subdir named after the rev_cluster_index.nii.gz file)</p>
 </dd>
 <dt>CSV naming conventions:</dt><dd><ul class="simple">

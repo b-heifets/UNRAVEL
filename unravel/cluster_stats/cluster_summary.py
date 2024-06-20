@@ -5,11 +5,19 @@ Use ``cluster_summary`` from UNRAVEL to aggregate and analyze cluster validation
 
 Usage if running directly after ``cluster_validation``:
 -------------------------------------------------------
-    cluster_summary -c <path/config.ini> -e <exp dir paths> -cvd '*' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -v
+    cluster_summary -c <path/config.ini> -e <exp dir paths> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
+
+Note: 
+    - The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.
 
 Usage if running after ``cluster_validation`` and ``cluster_org_data``:
 -----------------------------------------------------------------------
-    cluster_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -v
+    cluster_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
+
+Note:
+    - For the second usage, the ``-e``, ``-cvd``, and ``-vd`` arguments are not needed because the data is already in the working directory.
+    - Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.
+    - Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run ``cluster_legend``).
 
 The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.
 
@@ -28,6 +36,9 @@ The sample_key.csv file should have the following format:
     dir_name,condition
     sample01,control
     sample02,treatment
+
+If you need to rerun this script, delete the following directories and files in the current working directory:
+find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} \; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} \; -o -name 3D_brains -exec rm -rf {} \; -o -name valid_clusters_tables_and_legend -exec rm -rf {} \; -o -name _valid_clusters_stats -exec rm -rf {} \;
 """
 
 import argparse
@@ -59,6 +70,7 @@ def parse_args():
     # cluster_stats --groups <group1> <group2>
     parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cluster_stats)',  nargs='+')
     parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for cluster_stats)',  nargs='*', default=None, action=SM)
+    parser.add_argument('-hg', '--higher_group', help='Specify the group that is expected to have a higher mean based on the direction of the p value map', required=True)
 
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
@@ -67,6 +79,7 @@ def parse_args():
 # TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. Could make cells vs. labels are arg. Could add a raw data output organized for the SI table. # The valid cluster sunburst could have the val dir name and be copied to a central location
 # TODO: Consider moving find_and_copy_files() to unravel/unravel/utils.py
 # TODO: Move cell vs. label arg from config back to argparse and make it a required arg to prevent accidentally using the wrong metric
+# TODO: Add a reset option to delete all output files and directories from the current working directory
 
 def run_script(script_name, script_args):
     """Run a command/script using subprocess that respects the system's PATH and captures output."""
@@ -116,7 +129,8 @@ def main():
         stats_args = [
             '--groups', *args.groups,
             '-alt', cfg.stats.alternate,
-            '-pvt', cfg.org_data.p_val_txt
+            '-pvt', cfg.org_data.p_val_txt, 
+            '-hg', args.higher_group
         ]
         if args.condition_prefixes:
             stats_args.append(['-cp', *args.condition_prefixes])
