@@ -2,10 +2,10 @@
    sphinx-quickstart on Tue Jun  4 17:52:09 2024.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
-
+   
 .. raw:: html
 
-    <a href="cv" target="_blank">
+    <a href="https://github.com/b-heifets/UNRAVEL/tree/dev" target="_blank">
         <img id="unravel-logo" src="_static/UNRAVEL_logo.png" alt="UNRAVEL Logo" class="custom-logo" style="background-color: transparent;">
     </a>
 
