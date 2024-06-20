@@ -492,14 +492,28 @@
 <section id="usage-if-running-directly-after-cluster-validation">
 <h2>Usage if running directly after <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code>:<a class="headerlink" href="#usage-if-running-directly-after-cluster-validation" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cluster_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd ‘*’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -v</p>
+<div><p>cluster_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd ‘psilocybin_v_saline_tstat1_q&lt;asterisk&gt;’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; -v</p>
 </div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</p></li>
+</ul>
+</div>
 </section>
 <section id="usage-if-running-after-cluster-validation-and-cluster-org-data">
 <h2>Usage if running after <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code> and <code class="docutils literal notranslate"><span class="pre">cluster_org_data</span></code>:<a class="headerlink" href="#usage-if-running-after-cluster-validation-and-cluster-org-data" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cluster_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -v</p>
+<div><p>cluster_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; -v</p>
 </div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>For the second usage, the <code class="docutils literal notranslate"><span class="pre">-e</span></code>, <code class="docutils literal notranslate"><span class="pre">-cvd</span></code>, and <code class="docutils literal notranslate"><span class="pre">-vd</span></code> arguments are not needed because the data is already in the working directory.</p></li>
+<li><p>Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.</p></li>
+<li><p>Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run <code class="docutils literal notranslate"><span class="pre">cluster_legend</span></code>).</p></li>
+</ul>
+</div>
 <p>The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</p>
 <dl class="simple">
 <dt>Runs commands in this order:</dt><dd><ul class="simple">
@@ -519,6 +533,8 @@ sample01,control
 sample02,treatment</p>
 </dd>
 </dl>
+<p>If you need to rerun this script, delete the following directories and files in the current working directory:
+find . -name _valid_clusters -exec rm -rf {} ; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} ; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} ; -o -name 3D_brains -exec rm -rf {} ; -o -name valid_clusters_tables_and_legend -exec rm -rf {} ; -o -name _valid_clusters_stats -exec rm -rf {} ;</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.cluster_summary.parse_args">

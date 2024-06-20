@@ -356,11 +356,19 @@
 
 <span class="sd">Usage if running directly after ``cluster_validation``:</span>
 <span class="sd">-------------------------------------------------------</span>
-<span class="sd">    cluster_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd &#39;*&#39; -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -v</span>
+<span class="sd">    cluster_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd &#39;psilocybin_v_saline_tstat1_q&lt;asterisk&gt;&#39; -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; -v</span>
+
+<span class="sd">Note: </span>
+<span class="sd">    - The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</span>
 
 <span class="sd">Usage if running after ``cluster_validation`` and ``cluster_org_data``:</span>
 <span class="sd">-----------------------------------------------------------------------</span>
-<span class="sd">    cluster_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -v</span>
+<span class="sd">    cluster_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; -v</span>
+
+<span class="sd">Note:</span>
+<span class="sd">    - For the second usage, the ``-e``, ``-cvd``, and ``-vd`` arguments are not needed because the data is already in the working directory.</span>
+<span class="sd">    - Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.</span>
+<span class="sd">    - Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run ``cluster_legend``).</span>
 
 <span class="sd">The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</span>
 
@@ -379,6 +387,9 @@
 <span class="sd">    dir_name,condition</span>
 <span class="sd">    sample01,control</span>
 <span class="sd">    sample02,treatment</span>
+
+<span class="sd">If you need to rerun this script, delete the following directories and files in the current working directory:</span>
+<span class="sd">find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} \; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} \; -o -name 3D_brains -exec rm -rf {} \; -o -name valid_clusters_tables_and_legend -exec rm -rf {} \; -o -name _valid_clusters_stats -exec rm -rf {} \;</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -412,6 +423,7 @@
     <span class="c1"># cluster_stats --groups &lt;group1&gt; &lt;group2&gt;</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of group prefixes. 2 groups --&gt; t-test. &gt;2 --&gt; Tukey</span><span class="se">\&#39;</span><span class="s1">s tests (The first 2 groups reflect the main comparison for validation rates; for cluster_stats)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_prefixes&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Condition prefixes to group related data (optional for cluster_stats)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-hg&#39;</span><span class="p">,</span> <span class="s1">&#39;--higher_group&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Specify the group that is expected to have a higher mean based on the direction of the p value map&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
@@ -421,6 +433,7 @@
 <span class="c1"># TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. Could make cells vs. labels are arg. Could add a raw data output organized for the SI table. # The valid cluster sunburst could have the val dir name and be copied to a central location</span>
 <span class="c1"># TODO: Consider moving find_and_copy_files() to unravel/unravel/utils.py</span>
 <span class="c1"># TODO: Move cell vs. label arg from config back to argparse and make it a required arg to prevent accidentally using the wrong metric</span>
+<span class="c1"># TODO: Add a reset option to delete all output files and directories from the current working directory</span>
 
 <div class="viewcode-block" id="run_script">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/cluster_summary.html#unravel.cluster_stats.cluster_summary.run_script">[docs]</a>
@@ -475,7 +488,8 @@
         <span class="n">stats_args</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span>
             <span class="s1">&#39;-alt&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">alternate</span><span class="p">,</span>
-            <span class="s1">&#39;-pvt&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">org_data</span><span class="o">.</span><span class="n">p_val_txt</span>
+            <span class="s1">&#39;-pvt&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">org_data</span><span class="o">.</span><span class="n">p_val_txt</span><span class="p">,</span> 
+            <span class="s1">&#39;-hg&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">higher_group</span>
         <span class="p">]</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">condition_prefixes</span><span class="p">:</span>
             <span class="n">stats_args</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">condition_prefixes</span><span class="p">])</span>
