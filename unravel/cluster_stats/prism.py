@@ -201,7 +201,7 @@ def main():
         density_col_summary_df.to_csv(output_dir / f'{density_col}_summary.csv', index=False)
         density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_clusters.csv', index=False)
 
-    print(f"\n    Saved results in [bright_magenta]./_prism/")
+    print(f"\n    Saved results in [bright_magenta]{output_dir}")
 
 
 if __name__ == '__main__':
