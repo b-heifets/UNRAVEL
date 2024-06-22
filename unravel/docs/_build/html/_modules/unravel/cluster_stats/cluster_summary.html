@@ -372,7 +372,7 @@
 
 <span class="sd">The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</span>
 
-<span class="sd">Runs commands in this order:</span>
+<span class="sd">``cluster_summary`` runs commands in this order:</span>
 <span class="sd">    - ``cluster_org_data``</span>
 <span class="sd">    - ``cluster_group_data``</span>
 <span class="sd">    - ``utils_prepend``</span>
@@ -390,6 +390,11 @@
 
 <span class="sd">If you need to rerun this script, delete the following directories and files in the current working directory:</span>
 <span class="sd">find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} \; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} \; -o -name 3D_brains -exec rm -rf {} \; -o -name valid_clusters_tables_and_legend -exec rm -rf {} \; -o -name _valid_clusters_stats -exec rm -rf {} \;</span>
+
+<span class="sd">If you want to aggregate CSVs for sunburst plots of valid clusters, run this in a root directory:</span>
+<span class="sd">find . -name &quot;valid_clusters_sunburst.csv&quot; -exec sh -c &#39;cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})&#39; \;</span>
+
+<span class="sd">Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv). </span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -434,6 +439,8 @@
 <span class="c1"># TODO: Consider moving find_and_copy_files() to unravel/unravel/utils.py</span>
 <span class="c1"># TODO: Move cell vs. label arg from config back to argparse and make it a required arg to prevent accidentally using the wrong metric</span>
 <span class="c1"># TODO: Add a reset option to delete all output files and directories from the current working directory</span>
+<span class="c1"># TODO: Aggregate CSVs for valid cluster sunburst plots</span>
+<span class="c1"># TODO: Sort the overall valid cluster sunburst csv </span>
 
 <div class="viewcode-block" id="run_script">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/cluster_summary.html#unravel.cluster_stats.cluster_summary.run_script">[docs]</a>
@@ -578,27 +585,27 @@
         <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_table&#39;</span><span class="p">,</span> <span class="n">table_args</span><span class="p">)</span>
         <span class="n">find_and_copy_files</span><span class="p">(</span><span class="s1">&#39;*_valid_clusters_table.xlsx&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span><span class="p">)</span>
     
-    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
 
-        <span class="c1"># Run cluster_prism</span>
-        <span class="n">valid_cluster_ids_sorted_txt</span> <span class="o">=</span> <span class="n">valid_clusters_index_dir</span> <span class="o">/</span> <span class="s1">&#39;valid_cluster_IDs_sorted_by_anatomy.txt&#39;</span>
-        <span class="k">if</span> <span class="n">valid_cluster_ids_sorted_txt</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">valid_cluster_ids_sorted_txt</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-                <span class="n">valid_cluster_ids_sorted</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span> 
-            <span class="n">valid_cluster_ids_sorted</span> <span class="o">=</span> <span class="n">valid_cluster_ids</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_cluster_ids_sorted</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">prism_args</span> <span class="o">=</span> <span class="p">[</span>
-                <span class="s1">&#39;-ids&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">valid_cluster_ids_sorted</span><span class="p">,</span>
-                <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span>
-            <span class="p">]</span>
-            <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prism</span><span class="o">.</span><span class="n">save_all</span><span class="p">:</span>
-                <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-sa&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-                <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
-            <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_prism&#39;</span><span class="p">,</span> <span class="n">prism_args</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    No valid cluster IDs found for </span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s2">. Skipping cluster_prism...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="c1"># Run cluster_prism</span>
+            <span class="n">valid_cluster_ids_sorted_txt</span> <span class="o">=</span> <span class="n">valid_clusters_index_dir</span> <span class="o">/</span> <span class="s1">&#39;valid_cluster_IDs_sorted_by_anatomy.txt&#39;</span>
+            <span class="k">if</span> <span class="n">valid_cluster_ids_sorted_txt</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">valid_cluster_ids_sorted_txt</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">valid_cluster_ids_sorted</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="n">valid_cluster_ids_sorted</span> <span class="o">=</span> <span class="n">valid_cluster_ids</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_cluster_ids_sorted</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">prism_args</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="s1">&#39;-ids&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">valid_cluster_ids_sorted</span><span class="p">,</span>
+                    <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span>
+                <span class="p">]</span>
+                <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prism</span><span class="o">.</span><span class="n">save_all</span><span class="p">:</span>
+                    <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-sa&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                    <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
+                <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_prism&#39;</span><span class="p">,</span> <span class="n">prism_args</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    No valid cluster IDs found for </span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s2">. Skipping cluster_prism...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Copy the atlas and binarize it for visualization in DSI studio</span>
     <span class="n">dest_atlas</span> <span class="o">=</span> <span class="n">dsi_dir</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">atlas</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
