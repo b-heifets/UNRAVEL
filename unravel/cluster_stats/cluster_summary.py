@@ -21,7 +21,7 @@ Note:
 
 The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.
 
-Runs commands in this order:
+``cluster_summary`` runs commands in this order:
     - ``cluster_org_data``
     - ``cluster_group_data``
     - ``utils_prepend``
@@ -39,6 +39,11 @@ The sample_key.csv file should have the following format:
 
 If you need to rerun this script, delete the following directories and files in the current working directory:
 find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} \; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} \; -o -name 3D_brains -exec rm -rf {} \; -o -name valid_clusters_tables_and_legend -exec rm -rf {} \; -o -name _valid_clusters_stats -exec rm -rf {} \;
+
+If you want to aggregate CSVs for sunburst plots of valid clusters, run this in a root directory:
+find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})' \;
+
+Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv). 
 """
 
 import argparse
@@ -80,6 +85,8 @@ def parse_args():
 # TODO: Consider moving find_and_copy_files() to unravel/unravel/utils.py
 # TODO: Move cell vs. label arg from config back to argparse and make it a required arg to prevent accidentally using the wrong metric
 # TODO: Add a reset option to delete all output files and directories from the current working directory
+# TODO: Aggregate CSVs for valid cluster sunburst plots
+# TODO: Sort the overall valid cluster sunburst csv 
 
 def run_script(script_name, script_args):
     """Run a command/script using subprocess that respects the system's PATH and captures output."""
@@ -219,27 +226,27 @@ def main():
         run_script('cluster_table', table_args)
         find_and_copy_files('*_valid_clusters_table.xlsx', subdir, Path().cwd() / 'valid_clusters_tables_and_legend')
     
-    if Path('valid_clusters_tables_and_legend').exists():
+        if Path('valid_clusters_tables_and_legend').exists():
 
-        # Run cluster_prism
-        valid_cluster_ids_sorted_txt = valid_clusters_index_dir / 'valid_cluster_IDs_sorted_by_anatomy.txt'
-        if valid_cluster_ids_sorted_txt.exists():
-            with open(valid_cluster_ids_sorted_txt, 'r') as f:
-                valid_cluster_ids_sorted = f.read().split()
-        else: 
-            valid_cluster_ids_sorted = valid_cluster_ids
-        if len(valid_cluster_ids_sorted) > 0:
-            prism_args = [
-                '-ids', *valid_cluster_ids_sorted,
-                '-p', subdir,
-            ]
-            if cfg.prism.save_all:
-                prism_args.append('-sa')
-            if args.verbose:
-                prism_args.append('-v')
-            run_script('cluster_prism', prism_args)
-        else:
-            print(f"\n    No valid cluster IDs found for {subdir}. Skipping cluster_prism...\n")
+            # Run cluster_prism
+            valid_cluster_ids_sorted_txt = valid_clusters_index_dir / 'valid_cluster_IDs_sorted_by_anatomy.txt'
+            if valid_cluster_ids_sorted_txt.exists():
+                with open(valid_cluster_ids_sorted_txt, 'r') as f:
+                    valid_cluster_ids_sorted = f.read().split()
+            else: 
+                valid_cluster_ids_sorted = valid_cluster_ids
+            if len(valid_cluster_ids_sorted) > 0:
+                prism_args = [
+                    '-ids', *valid_cluster_ids_sorted,
+                    '-p', subdir,
+                ]
+                if cfg.prism.save_all:
+                    prism_args.append('-sa')
+                if args.verbose:
+                    prism_args.append('-v')
+                run_script('cluster_prism', prism_args)
+            else:
+                print(f"\n    No valid cluster IDs found for {subdir}. Skipping cluster_prism...\n")
 
     # Copy the atlas and binarize it for visualization in DSI studio
     dest_atlas = dsi_dir / Path(cfg.index.atlas).name
