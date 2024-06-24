@@ -1,0 +1,141 @@
+[project]
+name = "unravel"
+version = "1.0.0-beta"
+description = "UNRAVEL: UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images"
+readme = "README.md"
+license = { text = "GNU General Public License v3.0" }
+authors = [
+    { name = "Daniel Ryskamp Rijsketic", email = "danrijs@stanford.edu" }, 
+    { name = "Austen Brooks Casey", email = "abcasey@stanford.edu" }, 
+    { name = "Boris Dov Heifets", email = "bheifets@stanford.edu" }
+]
+maintainers = [
+    { name = "Daniel Ryskamp Rijsketic", email = "danrijs@stanford.edu" }
+]
+dependencies = [
+    "aicspylibczi>=3.1.2,<4.0.0",
+    "antspyx>=0.4.2,<1.0.0",
+    "connected_components_3d>=3.12.3,<4.0.0",
+    "czifile>=2019.7.2,<2020.0.0",
+    "dask>=2023.4.1,<2024.0.0",
+    "fslpy>=3.18.2,<4.0.0",
+    "h5py>=3.8.0,<4.0.0",
+    "lxml>=4.9.3,<5.0.0",
+    "matplotlib>=3.7.1,<4.0.0",
+    "myst-parser",
+    "nibabel>=5.2.1,<6.0.0",
+    "numpy>=1.25.2,<2.0.0",
+    "opencv_python>=4.7.0.72,<5.0.0",
+    "openpyxl>=3.1.2,<4.0.0",
+    "pandas>=1.5.3,<2.0.0",
+    "pydata-sphinx-theme",
+    "rich>=13.7.1,<14.0.0",
+    "rich_argparse>=1.4.0,<2.0.0",
+    "scipy>=1.13.1,<2.0.0",
+    "seaborn>=0.13.2,<1.0.0",
+    "setuptools>=65.5.0,<66.0.0",
+    "sphinx",
+    "statsmodels>=0.14.0,<1.0.0",
+    "termcolor>=2.4.0,<3.0.0",
+    "tifffile>=2023.8.30,<2024.0.0",
+    "wheel",
+    "zarr>=2.14.2,<3.0.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "myst-parser",
+    "python-cfonts",
+    "pydata_sphinx_theme",
+    "sphinx",
+    "sphinx-autobuild", 
+    "sphinx-togglebutton", 
+    "sphinx-design",
+    "sphinxcontrib-mermaid"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/b-heifets/UNRAVEL"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+packages = ["unravel"]
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+unravel_commands = "unravel.unravel_commands:main"
+atlas_relabel = "unravel.image_tools.atlas.relable_nii:main"
+atlas_wireframe = "unravel.image_tools.atlas.wireframe:main"
+cluster_fdr_range = "unravel.cluster_stats.fdr_range:main"
+cluster_fdr = "unravel.cluster_stats.fdr:main"
+cluster_mirror_indices = "unravel.cluster_stats.recursively_mirror_rev_cluster_indices:main"
+cluster_brain_model = "unravel.cluster_stats.brain_model:main"
+cluster_find_incongruent = "unravel.cluster_stats.find_incongruent_clusters:main"
+cluster_sunburst = "unravel.cluster_stats.sunburst:main"
+cluster_group_data = "unravel.cluster_stats.group_bilateral_data:main"
+cluster_index = "unravel.cluster_stats.index:main"
+cluster_legend = "unravel.cluster_stats.legend:main"
+cluster_org_data = "unravel.cluster_stats.org_data:main"
+cluster_prism = "unravel.cluster_stats.prism:main"
+cluster_stats = "unravel.cluster_stats.stats:main"
+cluster_summary = "unravel.cluster_stats.cluster_summary:main"
+cluster_table = "unravel.cluster_stats.table:main"
+cluster_validation = "unravel.cluster_stats.cluster_validation:main"
+cluster_crop = "unravel.cluster_stats.crop:main"
+effect_sizes = "unravel.cluster_stats.effect_sizes.effect_sizes:main"
+effect_sizes_sex_abs = "unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute:main"
+effect_sizes_sex_rel = "unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative:main"
+io_h5_to_tifs = "unravel.image_io.h5_to_tifs:main"
+io_img = "unravel.image_io.io_img:main"
+io_img_to_npy = "unravel.image_io.img_to_npy:main"
+io_metadata = "unravel.image_io.metadata:main"
+io_nii_hd = "unravel.image_io.nii_hd:main"
+io_nii_info = "unravel.image_io.nii_info:main"
+io_nii = "unravel.image_io.io_nii:main"
+io_nii_to_tifs = "unravel.image_io.nii_to_tifs:main"
+io_nii_to_zarr = "unravel.image_io.nii_to_zarr:main"
+io_reorient_nii = "unravel.image_io.reorient_nii:main"
+io_tif_to_tifs = "unravel.image_io.tif_to_tifs:main"
+io_zarr_to_nii = "unravel.image_io.zarr_to_nii:main"
+img_avg = "unravel.image_tools.avg:main"
+img_bbox = "unravel.image_tools.bbox:main"
+img_extend = "unravel.image_tools.extend:main"
+img_max = "unravel.image_tools.max:main"
+img_pad = "unravel.image_tools.pad:main"
+img_spatial_avg = "unravel.image_tools.spatial_averaging:main"
+img_DoG = "unravel.image_tools.DoG:main"
+img_rb = "unravel.image_tools.rb:main"
+img_transpose = "unravel.image_tools.transpose_axes:main"
+img_unique = "unravel.image_tools.unique_intensities:main"
+rstats_summary = "unravel.region_stats.rstats_summary:main"
+rstats = "unravel.region_stats.rstats:main"
+rstats_mean_IF = "unravel.region_stats.rstats_mean_IF:main"
+rstats_mean_IF_in_seg = "unravel.region_stats.rstats_mean_IF_in_segmented_voxels:main"
+rstats_mean_IF_summary = "unravel.region_stats.rstats_mean_IF_summary:main"
+reg_affine_initializer = "unravel.register.affine_initializer:main"
+reg_check_brain_mask = "unravel.register.reg_check_brain_mask:main"
+reg_prep = "unravel.register.reg_prep:main"
+reg = "unravel.register.reg:main"
+reg_check = "unravel.register.reg_check:main"
+seg_brain_mask = "unravel.segment.brain_mask:main"
+seg_copy_tifs = "unravel.segment.copy_tifs:main"
+seg_ilastik = "unravel.segment.ilastik_pixel_classification:main"
+utils_agg_files = "unravel.utilities.aggregate_files_from_sample_dirs:main"
+utils_agg_files_rec = "unravel.utilities.aggregate_files_recursively:main"
+utils_clean_tifs = "unravel.utilities.clean_tif_dirs:main"
+utils_prepend = "unravel.utilities.prepend_conditions:main"
+utils_rename = "unravel.utilities.rename:main"
+utils_toggle = "unravel.utilities.toggle_samples:main"
+vstats_apply_mask = "unravel.voxel_stats.apply_mask:main"
+vstats_hemi_to_avg = "unravel.voxel_stats.hemi_to_LR_avg:main"
+vstats_whole_to_avg = "unravel.voxel_stats.whole_to_LR_avg:main"
+vstats_mirror = "unravel.voxel_stats.mirror:main"
+vstats_prep = "unravel.voxel_stats.vstats_prep:main"
+vstats = "unravel.voxel_stats.vstats:main"
+vstats_z_score = "unravel.voxel_stats.z_score:main"
+warp_to_atlas = "unravel.warp.to_atlas:main"
+warp_to_native = "unravel.warp.to_native:main"
+warp = "unravel.warp.warp:main"
