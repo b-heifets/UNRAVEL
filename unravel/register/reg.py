@@ -164,7 +164,6 @@ def main():
 
                 print(f'\n\n    Generating the initial transform matrix for aligning the moving image (e.g., template) to the fixed image (e.g., tissue) \n')
                 command = [
-                    'python', 
                     'reg_affine_initializer', 
                     '-f', fixed_img_for_reg_path, 
                     '-m', args.moving_img, 
