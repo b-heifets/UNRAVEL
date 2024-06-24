@@ -494,6 +494,20 @@
 <blockquote>
 <div><p>vstats -mas mask.nii.gz -v</p>
 </div></blockquote>
+</section>
+<section id="usage-w-additional-options">
+<h2>Usage w/ additional options:<a class="headerlink" href="#usage-w-additional-options" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>vstats -mas mask.nii.gz -p 12000 -k 0 -op output_prefix -a atlas.nii.gz -v –options –seed=1</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The –options flag is used to pass additional options to the randomise command.</p></li>
+<li><p>It should be the last flag specified in the command.</p></li>
+<li><p>The options should be specified as separate strings, e.g., –options –seed=1 -T</p></li>
+</ul>
+</div>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><ul class="simple">
 <li><p>Input images from <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code>, <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code>, or <code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code>.</p></li>
@@ -593,6 +607,7 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-w-additional-options">Usage w/ additional options:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.check_fdr_command"><code class="docutils literal notranslate"><span class="pre">check_fdr_command()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.create_design_ttest2"><code class="docutils literal notranslate"><span class="pre">create_design_ttest2()</span></code></a></li>
