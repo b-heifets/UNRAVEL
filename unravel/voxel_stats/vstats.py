@@ -7,6 +7,15 @@ Usage:
 ------
     vstats -mas mask.nii.gz -v
 
+Usage w/ additional options:
+----------------------------
+    vstats -mas mask.nii.gz -p 12000 -k 0 -op output_prefix -a atlas.nii.gz -v --options --seed=1
+
+Note:
+    - The --options flag is used to pass additional options to the randomise command.
+    - It should be the last flag specified in the command.
+    - The options should be specified as separate strings, e.g., --options --seed=1 -T
+    
 Prereqs: 
     - Input images from ``vstats_prep``, ``vstats_z_score``, or ``vstats_whole_to_avg``.
 
@@ -36,10 +45,10 @@ def parse_args():
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
     parser.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300). Default: 18000', type=int, default=18000, action=SM)
     parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
-    parser.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--seed=1 -T"', nargs='*', default=[])
-    parser.add_argument('-on', '--output_prefix', help='Prefix of output files. Default: current working dir name.', action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
+    parser.add_argument('-op', '--output_prefix', help='Prefix of output files. Default: current working dir name.', action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (copied to stats/ for easier vizualization; Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
+    parser.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--seed=1 -T"', nargs=argparse.REMAINDER, default=[])
     parser.epilog = __doc__
     return parser.parse_args()
 
