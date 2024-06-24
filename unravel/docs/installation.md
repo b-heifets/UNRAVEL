@@ -127,6 +127,8 @@ pip install unravel
     cd <path/to/repo/clone>
 
     git pull  # This will update the local repo
+
+    pip install -e .  # This will update commands and install new dependencies
     ```
 
 ## Editing .bashrc or .zshrc
