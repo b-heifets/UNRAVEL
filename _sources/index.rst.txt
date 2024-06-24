@@ -5,7 +5,7 @@
    
 .. raw:: html
 
-    <a href="https://github.com/b-heifets/UNRAVEL/tree/dev" target="_blank">
+    <a href="https://github.com/b-heifets/UNRAVEL/tree/main" target="_blank">
         <img id="unravel-logo" src="_static/UNRAVEL_logo.png" alt="UNRAVEL Logo" class="custom-logo" style="background-color: transparent;">
     </a>
 
@@ -48,7 +48,7 @@ UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet
     * Quantification of cell/label densities across the brain
     * Voxel-wise analysis of fluorescent signals and cluster correction
     * Validation of hot/cold spots via cell/label density quantification at cellular resolution
-* `UNRAVEL GitHub repository <https://github.com/b-heifets/UNRAVEL/tree/dev>`_
+* `UNRAVEL GitHub repository <https://github.com/b-heifets/UNRAVEL/tree/main>`_
 * `Initial UNRAVEL publication <https://www.nature.com/articles/s41386-023-01613-4>`_
 * UNRAVEL was developed by `the Heifets lab <https://heifetslab.stanford.edu/>`_ and `TensorAnalytics <https://sites.google.com/view/tensoranalytics/home?authuser=0>`_
 * Additional support/guidance was provided by:
