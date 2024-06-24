@@ -119,8 +119,14 @@ pip install unravel
     ```
 
 12. **Update scripts periodically:**
+    :::{hint}
+    * Make a backup of the code that you used for analysis before updating
+    :::
+
     ```bash
-    git pull
+    cd <path/to/repo/clone>
+
+    git pull  # This will update the local repo
     ```
 
 ## Editing .bashrc or .zshrc
