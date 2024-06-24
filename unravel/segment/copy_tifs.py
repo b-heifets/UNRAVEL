@@ -38,7 +38,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def copy_specific_slices(sample_path, source_dir, target_dir, slice_numbers):
+def copy_specific_slices(sample_path, source_dir, target_dir, slice_numbers, verbose=False):
     """Copy the specified slices to the target directory.
     
     Args:
@@ -51,10 +51,10 @@ def copy_specific_slices(sample_path, source_dir, target_dir, slice_numbers):
         if any(file_path.stem.endswith(f"{slice:04}") for slice in map(int, slice_numbers)):
             dest_file = target_dir / f'{sample_path.name}_{file_path.name}'
             shutil.copy(file_path, dest_file)
-            if args.verbose:
+            if verbose:
                 print(f"Copied {file_path} to {dest_file}")
         else:
-            if args.verbose:
+            if verbose:
                 print(f"File {file_path.name} does not match specified slices and was not copied.")
 
 
@@ -78,7 +78,7 @@ def main():
             source_path = resolve_path(sample_path, args.input)
 
             # Copy the selected slices to the target directory
-            copy_specific_slices(sample_path, source_path, target_dir, args.slices)
+            copy_specific_slices(sample_path, source_path, target_dir, args.slices, args.verbose)
 
             progress.update(task_id, advance=1)
 
