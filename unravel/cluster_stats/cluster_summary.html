@@ -516,7 +516,7 @@
 </div>
 <p>The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</p>
 <dl class="simple">
-<dt>Runs commands in this order:</dt><dd><ul class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">cluster_summary</span></code> runs commands in this order:</dt><dd><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cluster_org_data</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cluster_group_data</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code></p></li>
@@ -535,6 +535,9 @@ sample02,treatment</p>
 </dl>
 <p>If you need to rerun this script, delete the following directories and files in the current working directory:
 find . -name _valid_clusters -exec rm -rf {} ; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} ; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} ; -o -name 3D_brains -exec rm -rf {} ; -o -name valid_clusters_tables_and_legend -exec rm -rf {} ; -o -name _valid_clusters_stats -exec rm -rf {} ;</p>
+<p>If you want to aggregate CSVs for sunburst plots of valid clusters, run this in a root directory:
+find . -name “valid_clusters_sunburst.csv” -exec sh -c ‘cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})’ ;</p>
+<p>Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv).</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.cluster_summary.parse_args">
