@@ -244,7 +244,7 @@ unravel_commands runs ./\<repo_root_dir\>/unravel/unravel_commands.py
 
 Its help guide is here: {py:mod}`unravel.unravel_commands` 
 
-Commands are defined in the `[project.scripts]` section of the [pyproject.toml](https://github.com/b-heifets/UNRAVEL/blob/dev/pyproject.toml) in the root directory of the UNRAVEL repository (repo).
+Commands are defined in the `[project.scripts]` section of the [pyproject.toml](https://github.com/b-heifets/UNRAVEL/blob/main/pyproject.toml) in the root directory of the UNRAVEL repository (repo).
 
 If new commands are added to run new scripts (a.k.a. modules), reinstall the unravel package with pip. 
 
