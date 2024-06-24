@@ -5,7 +5,7 @@ Use ``seg_brain_mask`` from UNRAVEL to run a trained ilastik project (pixel clas
 
 Usage:
 ------
-    seg_brain_mask -v 
+    seg_brain_mask -ilp <path/brain_mask.ilp> [-i reg_inputs/autofl_50um.nii.gz] [-r 50] [-v] 
 
 Prereqs: 
     - Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif (from ``reg_prep``)
