@@ -136,10 +136,12 @@ def main():
     shutil.copy(args.atlas, stats_dir)
 
     # Merge and smooth the input images
-    images = glob('*.nii.gz') 
+    images = sorted(glob('*.nii.gz'))
     merged_file = stats_dir / 'all.nii.gz'
     if not merged_file.exists():
-        print('\n    Merging *.nii.gz into ./stats/all.nii.gz')
+        print('\n    Merging *.nii.gz into ./stats/all.nii.gz with this order of files:')
+        for image in images:
+            print(f'    {image}')
         avwutils.fslmerge('t', str(merged_file), *images)
     else: 
         print('\n    ./stats/all.nii.gz exists. Skipping...\n')
