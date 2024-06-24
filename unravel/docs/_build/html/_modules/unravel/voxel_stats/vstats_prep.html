@@ -419,6 +419,7 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
+<span class="c1"># TODO: Fix this so -x and -z don&#39;t have to be provided if io_metadata has been run</span>
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../unravel/voxel_stats/vstats_prep.html#unravel.voxel_stats.vstats_prep.main">[docs]</a>
@@ -448,7 +449,7 @@
             <span class="c1"># Load full res image [and xy and z voxel size in microns], to be resampled [and reoriented], padded, and warped</span>
             <span class="n">img_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">sample_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">img_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No files match the pattern </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">sample_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No files match the pattern </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">sample_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">continue</span>
             <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">chann_idx</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">)</span>
 

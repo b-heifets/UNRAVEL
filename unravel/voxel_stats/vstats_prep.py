@@ -65,6 +65,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
+# TODO: Fix this so -x and -z don't have to be provided if io_metadata has been run
 
 def main():
     args = parse_args()
@@ -92,7 +93,7 @@ def main():
             # Load full res image [and xy and z voxel size in microns], to be resampled [and reoriented], padded, and warped
             img_path = next(sample_path.glob(str(args.input)), None)
             if img_path is None:
-                print(f"No files match the pattern {args.input} in {sample_path}")
+                print(f"\n    [red1]No files match the pattern {args.input} in {sample_path}\n")
                 continue
             img = load_3D_img(img_path, args.chann_idx, "xyz")
 
