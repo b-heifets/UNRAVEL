@@ -15,7 +15,7 @@
 
 ---
 
-### *Please see [UNRAVEL documentation](https://b-heifets.github.io/UNRAVEL/) for guides on [installation](https://b-heifets.github.io/UNRAVEL/installation.html) and [anaysis](https://b-heifets.github.io/UNRAVEL/guide.html)*
+### *Please see [UNRAVEL documentation](https://b-heifets.github.io/UNRAVEL/) for guides on [installation](https://b-heifets.github.io/UNRAVEL/installation.html) and [analysis](https://b-heifets.github.io/UNRAVEL/guide.html)*
 
 ---
 
