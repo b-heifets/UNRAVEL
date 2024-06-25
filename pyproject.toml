@@ -75,7 +75,7 @@ dev = [
 
 [tool.setuptools]
 package-dir = {"" = "."}
-packages = ["unravel"]
+packages = { find = {} }
 
 [build-system]
 requires = ["setuptools", "wheel"]
