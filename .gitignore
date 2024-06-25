@@ -100,3 +100,6 @@ venv.bak/
 ._*
 .Spotlight-V100
 .Trashes
+
+# Pickle file from Sphinx 
+unravel/docs/_build/doctrees/environment.pickle
