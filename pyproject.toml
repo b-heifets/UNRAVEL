@@ -1,5 +1,5 @@
 [project]
-name = "unravel"
+name = "heifetslab_unravel"
 version = "1.0.0-beta"
 description = "UNRAVEL: UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images"
 readme = "README.md"
@@ -41,6 +41,19 @@ dependencies = [
     "wheel",
     "zarr>=2.14.2,<3.0.0"
 ]
+keywords = ["neuroscience", "image analysis", "light sheet microscopy", "brain mapping", "data analysis", "voxel-wise analysis", "cell density quantification"]
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps."
+]
 
 [project.optional-dependencies]
 dev = [
@@ -51,11 +64,14 @@ dev = [
     "sphinx-autobuild", 
     "sphinx-togglebutton", 
     "sphinx-design",
-    "sphinxcontrib-mermaid"
+    "sphinxcontrib-mermaid",
+    "build",
+    "twine"
 ]
 
 [project.urls]
 "Homepage" = "https://github.com/b-heifets/UNRAVEL"
+"Documentation" = "https://b-heifets.github.io/UNRAVEL/"
 
 [tool.setuptools]
 package-dir = {"" = "."}
