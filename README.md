@@ -1,4 +1,4 @@
-[![UNRAVEL Logo](https://github.com/b-heifets/UNRAVEL/blob/main/unravel/docs/_static/UNRAVEL_logo.png)](https://b-heifets.github.io/UNRAVEL/)
+[![UNRAVEL Logo](https://raw.githubusercontent.com/b-heifets/UNRAVEL/main/unravel/docs/_static/UNRAVEL_logo.png)](https://b-heifets.github.io/UNRAVEL/)
 
 ### UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images
 * UNRAVEL is a [Python](https://www.python.org/) package & command line tool for the analysis of brain-wide imaging data, automating: 
@@ -19,7 +19,7 @@
 
 ---
 
-[<img src="https://github.com/b-heifets/UNRAVEL/blob/main/unravel/docs/_static/Heifets_lab_logo.png" alt="Heifets Lab" width="500">](https://heifetslab.stanford.edu/)
+[<img src="https://raw.githubusercontent.com/b-heifets/UNRAVEL/main/unravel/docs/_static/Heifets_lab_logo.png" alt="Heifets Lab" width="500">](https://heifetslab.stanford.edu/)
 
 
 
@@ -29,7 +29,7 @@
 * [UNRAVEL visualizer GitHub repo](https://github.com/MetaCell/cfos-visualizer/)
 * Developed by [MetaCell](https://metacell.us/) with support from the [Heifets lab](https://heifetslab.stanford.edu/)
 
-[![UNRAVEL visualizer](https://github.com/b-heifets/UNRAVEL/blob/main/unravel/docs/_static/UNRAVEL_visualizer.png)](https://heifetslab-unravel.org/)
+[![UNRAVEL visualizer](https://raw.githubusercontent.com/b-heifets/UNRAVEL/main/unravel/docs/_static/UNRAVEL_visualizer.png)](https://heifetslab-unravel.org/)
 
 ### Contact us
 If you have any questions, suggestions, or are interested in collaborations and contributions, please reach out to us. 
