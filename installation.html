@@ -365,6 +365,19 @@
 <li><p>Please send questions/issues to <a class="reference external" href="mailto:danrijs&#37;&#52;&#48;stanford&#46;edu">danrijs<span>&#64;</span>stanford<span>&#46;</span>edu</a>, so we can improve this guide for future users.</p></li>
 <li><p>If you are unfamiliar with the terminal, please review these <a class="reference external" href="https://andysbrainbook.readthedocs.io/en/latest/index.html">command line tutorials</a></p></li>
 </ul>
+<section id="tl-dr">
+<h2>TL;DR<a class="headerlink" href="#tl-dr" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Activate a virtual environment in python</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>heifetslab-unravel
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Install <a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation">FSL</a></p></li>
+<li><p>Install <a class="reference external" href="https://www.ilastik.org/download.html">Ilastik</a></p></li>
+</ul>
+</section>
 <section id="setting-up-windows-subsystem-for-linux-wsl">
 <h2>Setting Up Windows Subsystem for Linux (WSL)<a class="headerlink" href="#setting-up-windows-subsystem-for-linux-wsl" title="Link to this heading">#</a></h2>
 <ol class="arabic">
@@ -395,15 +408,9 @@
 <section id="installing-unravel-on-linux-or-wsl">
 <h2>Installing UNRAVEL on Linux or WSL<a class="headerlink" href="#installing-unravel-on-linux-or-wsl" title="Link to this heading">#</a></h2>
 <ol class="arabic">
-<li><p><strong>Open a terminal and navigate to the directory where you want to clone the UNRAVEL GitHub repository:</strong></p></li>
-<li><p><strong>Clone the repository:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/b-heifets/UNRAVEL.git
-git<span class="w"> </span>checkout<span class="w"> </span>dev
-</pre></div>
-</div>
-<p><a class="reference external" href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">GitHub Cloning Documentation</a></p>
-</li>
-<li><p><strong>Install pyenv to manage Python versions and create a virtual environment:</strong></p>
+<li><p><strong>Open a terminal</strong></p></li>
+<li><p><strong>Install pyenv, venv, or other tool(s) to manage Python versions and create a virtual environment:</strong></p>
+<h3 class="rubric" id="option-a-using-pyenv">Option A: Using pyenv</h3>
 <p><strong>a. Install dependencies:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>make<span class="w"> </span>build-essential<span class="w"> </span>libssl-dev<span class="w"> </span>zlib1g-dev<span class="w"> </span><span class="se">\</span>
@@ -412,7 +419,7 @@ libncurses5-dev<span class="w"> </span>libncursesw5-dev<span class="w"> </span>x
 libffi-dev<span class="w"> </span>liblzma-dev<span class="w"> </span>python-openssl<span class="w"> </span>git
 </pre></div>
 </div>
-<p><strong>b. Install pyenv:</strong></p>
+<p><strong>b. Install <a class="reference external" href="https://github.com/pyenv/pyenv#installation">pyenv</a>:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>https://pyenv.run<span class="w"> </span><span class="p">|</span><span class="w"> </span>bash
 </pre></div>
 </div>
@@ -424,37 +431,42 @@ libffi-dev<span class="w"> </span>liblzma-dev<span class="w"> </span>python-open
 <span class="nb">exec</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SHELL</span><span class="s2">&quot;</span>
 </pre></div>
 </div>
-<p><a class="reference external" href="https://github.com/pyenv/pyenv#installation">pyenv Installation Guide</a></p>
-</li>
-<li><p><strong>Install Python 3.11:</strong></p>
+<p><strong>d. Install Python 3.11:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pyenv<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.11.3
 </pre></div>
 </div>
-</li>
-<li><p><strong>Create and activate a virtual environment:</strong></p>
+<p><strong>e. Create and activate a virtual environment:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pyenv<span class="w"> </span>virtualenv<span class="w"> </span><span class="m">3</span>.11.3<span class="w"> </span>unravel
 pyenv<span class="w"> </span>activate<span class="w"> </span>unravel
 </pre></div>
 </div>
-</li>
-<li><p><strong>Install pip if needed:</strong>
-<a class="reference external" href="https://pip.pypa.io/en/stable/installation/">Pip Installation Guide</a></p></li>
-<li><p><strong>Install UNRAVEL locally:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<h3 class="rubric" id="option-b-using-venv">Option B: Using venv</h3>
+<p><strong>a. Install Python 3.11 if it’s not already installed:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>python3.11<span class="w"> </span>python3.11-venv<span class="w"> </span>python3.11-dev
+</pre></div>
+</div>
+<p><strong>b. Create and activate a virtual environment:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3.11<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>unravel_env
+<span class="nb">source</span><span class="w"> </span>unravel_env/bin/activate
 </pre></div>
 </div>
 </li>
+<li><p><strong>Install UNRAVEL:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>heifetslab-unravel
+</pre></div>
+</div>
+</li>
+<li><p><strong>Download atlas/template files and locate them in <code class="docutils literal notranslate"><span class="pre">./atlas/</span></code>:</strong>
+<a class="reference external" href="https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing">Google Drive Link</a></p></li>
 </ol>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
-<p>Add unravel to PyPI so that users can install it by running something like:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>unravel
-</pre></div>
+<ul class="simple">
+<li><p>Update the paths to atlas files so they work with paths relative to the project</p></li>
+</ul>
 </div>
-</div>
-<ol class="arabic" start="8">
-<li><p><strong>Download atlas/template files and locate them in <code class="docutils literal notranslate"><span class="pre">./atlas/</span></code>:</strong>
-<a class="reference external" href="https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing">Google Drive Link</a></p></li>
+<ol class="arabic" start="5">
 <li><p><strong>Install Ilastik:</strong></p>
 <ul>
 <li><p>Download the Ilastik installer from the <a class="reference external" href="https://www.ilastik.org/download.html">Ilastik website</a>.</p></li>
@@ -479,10 +491,48 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </li>
 </ul>
 </li>
-<li><p><strong>Confirm the installation and get started by viewing the help guide in the <code class="docutils literal notranslate"><span class="pre">unravel.image_io.metadata</span></code> module (<code class="docutils literal notranslate"><span class="pre">io_metadata</span></code> commad) :</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>io_metadata<span class="w"> </span>-h
+<li><p><strong>Confirm the installation</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>unravel_commands<span class="w"> </span>-c<span class="w"> </span>
 </pre></div>
 </div>
+</li>
+</ol>
+</section>
+<section id="edit-bashrc-or-zshrc-to-set-up-dependencies">
+<h2>Edit .bashrc or .zshrc to set up dependencies<a class="headerlink" href="#edit-bashrc-or-zshrc-to-set-up-dependencies" title="Link to this heading">#</a></h2>
+<p>Add the following to your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code> shell configuration file, and change <code class="docutils literal notranslate"><span class="pre">/usr/local/</span></code> to the path where FSL and Ilastik are installed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/usr/local/fsl/bin
+<span class="nb">export</span><span class="w"> </span><span class="nv">FSLDIR</span><span class="o">=</span>/usr/local/fsl
+<span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">FSLDIR</span><span class="si">}</span>/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
+.<span class="w"> </span><span class="si">${</span><span class="nv">FSLDIR</span><span class="si">}</span>/etc/fslconf/fsl.sh
+<span class="nb">export</span><span class="w"> </span>FSLDIR<span class="w"> </span>PATH
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/ilastik-1.3.3post3-Linux:<span class="nv">$PATH</span><span class="w"> </span><span class="c1"># Update the version</span>
+
+<span class="c1"># Add this too if you want to open ilastik via the terminal by running: ilastik</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ilastik</span><span class="o">=</span>run_ilastik.sh
+</pre></div>
+</div>
+<p>Apply the changes by restarting the terminal or source your shell configuration file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>~/.bashrc
+</pre></div>
+</div>
+</section>
+<section id="get-started-with-analysis">
+<h2>Get started with analysis<a class="headerlink" href="#get-started-with-analysis" title="Link to this heading">#</a></h2>
+<p><a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html">UNRAVEL guide</a></p>
+</section>
+<section id="optional-editable-installation-of-unravel">
+<h2>Optional: editable installation of UNRAVEL<a class="headerlink" href="#optional-editable-installation-of-unravel" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>This is an alternate installation method from <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">heifetslab-unravel</span></code></p></li>
+</ul>
+<ol class="arabic">
+<li><p><strong>Open a terminal and navigate to the directory where you want to clone the UNRAVEL GitHub repository:</strong></p></li>
+<li><p><strong>Clone the repository:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/b-heifets/UNRAVEL.git
+</pre></div>
+</div>
+<p><a class="reference external" href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">GitHub Cloning Documentation</a></p>
 </li>
 <li><p><strong>Update scripts periodically:</strong></p>
 <div class="admonition hint">
@@ -500,25 +550,10 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </div>
 </li>
 </ol>
-</section>
-<section id="editing-bashrc-or-zshrc">
-<h2>Editing .bashrc or .zshrc<a class="headerlink" href="#editing-bashrc-or-zshrc" title="Link to this heading">#</a></h2>
-<p>Add the following to your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code> file, and change <code class="docutils literal notranslate"><span class="pre">/usr/local/</span></code> to the path where FSL is installed:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/usr/local/fsl/bin
-<span class="nb">export</span><span class="w"> </span><span class="nv">FSLDIR</span><span class="o">=</span>/usr/local/fsl
-<span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">FSLDIR</span><span class="si">}</span>/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
-.<span class="w"> </span><span class="si">${</span><span class="nv">FSLDIR</span><span class="si">}</span>/etc/fslconf/fsl.sh
-<span class="nb">export</span><span class="w"> </span>FSLDIR<span class="w"> </span>PATH
-<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/ilastik-1.3.3post3-Linux:<span class="nv">$PATH</span>
-
-<span class="c1"># Add these to open ilastik via the terminal by running: ilastik</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/ilastik-1.3.3post3-Linux:<span class="nv">$PATH</span><span class="w"> </span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ilastik</span><span class="o">=</span>run_ilastik.sh
-</pre></div>
-</div>
-<p>Apply the changes by restarting the terminal or source your shell configuration file:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>~/.bashrc
-</pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To add extra depedencies (e.g., for updating documentation), run:
+<code class="docutils literal notranslate"><span class="pre">bash</span>&#160;&#160;&#160;&#160; <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">&quot;.[dev]&quot;</span>&#160;&#160;&#160;&#160; </code></p>
 </div>
 </section>
 </section>
@@ -569,9 +604,12 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tl-dr">TL;DR</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-windows-subsystem-for-linux-wsl">Setting Up Windows Subsystem for Linux (WSL)</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-unravel-on-linux-or-wsl">Installing UNRAVEL on Linux or WSL</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#editing-bashrc-or-zshrc">Editing .bashrc or .zshrc</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edit-bashrc-or-zshrc-to-set-up-dependencies">Edit .bashrc or .zshrc to set up dependencies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-started-with-analysis">Get started with analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-editable-installation-of-unravel">Optional: editable installation of UNRAVEL</a></li>
 </ul>
   </nav></div>
 
