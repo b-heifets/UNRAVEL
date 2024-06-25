@@ -1,6 +1,6 @@
 [project]
 name = "heifetslab_unravel"
-version = "1.0.0b2"
+version = "1.0.0b3"
 description = "UNRAVEL: UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images"
 readme = "README.md"
 license = { text = "GNU General Public License v3.0" }
@@ -75,7 +75,7 @@ dev = [
 
 [tool.setuptools]
 package-dir = {"" = "."}
-packages = ["unravel"]
+packages = { find = {} }
 
 [build-system]
 requires = ["setuptools", "wheel"]

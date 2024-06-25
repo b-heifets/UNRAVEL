@@ -4,6 +4,16 @@
 
 * If you are unfamiliar with the terminal, please review these [command line tutorials](https://andysbrainbook.readthedocs.io/en/latest/index.html)
 
+
+## TL;DR
+* Activate a virtual environment in python
+```bash
+pip install heifetslab-unravel
+```
+* Install [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation)
+* Install [Ilastik](https://www.ilastik.org/download.html)
+
+
 ## Setting Up Windows Subsystem for Linux (WSL)
 
 1. **Install WSL:**
@@ -28,16 +38,11 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
 
 ## Installing UNRAVEL on Linux or WSL
 
-1. **Open a terminal and navigate to the directory where you want to clone the UNRAVEL GitHub repository:**
+1. **Open a terminal**
 
-2. **Clone the repository:**
-    ```bash
-    git clone https://github.com/b-heifets/UNRAVEL.git
-    git checkout dev
-    ```
-    [GitHub Cloning Documentation](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
+2. **Install pyenv, venv, or other tool(s) to manage Python versions and create a virtual environment:**
 
-3. **Install pyenv to manage Python versions and create a virtual environment:**
+    ### Option A: Using pyenv
 
     **a. Install dependencies:**
     ```bash
@@ -48,7 +53,7 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
     libffi-dev liblzma-dev python-openssl git
     ```
 
-    **b. Install pyenv:**
+    **b. Install [pyenv](https://github.com/pyenv/pyenv#installation):**
     ```bash
     curl https://pyenv.run | bash
     ```
@@ -62,40 +67,45 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
     exec "$SHELL"
     ```
 
-    [pyenv Installation Guide](https://github.com/pyenv/pyenv#installation)
-
-4. **Install Python 3.11:**
+    **d. Install Python 3.11:**
     ```bash
     pyenv install 3.11.3
     ```
 
-5. **Create and activate a virtual environment:**
+    **e. Create and activate a virtual environment:**
     ```bash
     pyenv virtualenv 3.11.3 unravel
     pyenv activate unravel
     ```
 
-6. **Install pip if needed:**
-    [Pip Installation Guide](https://pip.pypa.io/en/stable/installation/)
+    ### Option B: Using venv
 
-7. **Install UNRAVEL locally:**
+    **a. Install Python 3.11 if it's not already installed:**
     ```bash
-    pip install -e .
+    sudo apt-get update
+    sudo apt-get install -y python3.11 python3.11-venv python3.11-dev
     ```
 
-:::{todo}
-Add unravel to PyPI so that users can install it by running something like: 
-
-```bash
-pip install unravel
-```
-:::
+    **b. Create and activate a virtual environment:**
+    ```bash
+    python3.11 -m venv unravel_env
+    source unravel_env/bin/activate
+    ```
 
 
-8. **Download atlas/template files and locate them in `./atlas/`:**
+3. **Install UNRAVEL:**
+    ```bash
+    pip install heifetslab-unravel
+    ```
+
+4. **Download atlas/template files and locate them in `./atlas/`:**
     [Google Drive Link](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)
 
-9. **Install Ilastik:**
+:::{todo}
+* Update the paths to atlas files so they work with paths relative to the project
+:::
+
+5. **Install Ilastik:**
     - Download the Ilastik installer from the [Ilastik website](https://www.ilastik.org/download.html).
     - Follow the installation instructions specific to your operating system.
     - Example for Linux:
@@ -105,7 +115,7 @@ pip install unravel
         sudo mv ilastik-1.3.3post3-Linux /usr/local/
         ```
 
-10. **Install FSL:**
+6. **Install FSL:**
     - Follow the installation instructions from the [FSL website](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation).
     - Example for Ubuntu:
         ```bash
@@ -113,12 +123,51 @@ pip install unravel
         sudo apt-get install -y fsl
         ```
 
-11. **Confirm the installation and get started by viewing the help guide in the ``unravel.image_io.metadata`` module (``io_metadata`` commad) :**
+7. **Confirm the installation**
     ```bash
-    io_metadata -h
+    unravel_commands -c 
     ```
 
-12. **Update scripts periodically:**
+## Edit .bashrc or .zshrc to set up dependencies
+
+Add the following to your `.bashrc` or `.zshrc` shell configuration file, and change `/usr/local/` to the path where FSL and Ilastik are installed:
+
+```bash
+export PATH=$PATH:/usr/local/fsl/bin
+export FSLDIR=/usr/local/fsl
+PATH=${FSLDIR}/bin:${PATH}
+. ${FSLDIR}/etc/fslconf/fsl.sh
+export FSLDIR PATH
+export PATH=/usr/local/ilastik-1.3.3post3-Linux:$PATH # Update the version
+
+# Add this too if you want to open ilastik via the terminal by running: ilastik
+alias ilastik=run_ilastik.sh
+```
+
+Apply the changes by restarting the terminal or source your shell configuration file: 
+```bash
+. ~/.bashrc
+```
+
+
+## Get started with analysis 
+
+[UNRAVEL guide](https://b-heifets.github.io/UNRAVEL/guide.html)
+
+
+## Optional: editable installation of UNRAVEL
+
+* This is an alternate installation method from `pip install heifetslab-unravel`
+
+1. **Open a terminal and navigate to the directory where you want to clone the UNRAVEL GitHub repository:**
+
+2. **Clone the repository:**
+    ```bash
+    git clone https://github.com/b-heifets/UNRAVEL.git
+    ```
+    [GitHub Cloning Documentation](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
+
+3. **Update scripts periodically:**
     :::{hint}
     * Make a backup of the code that you used for analysis before updating
     :::
@@ -131,24 +180,9 @@ pip install unravel
     pip install -e .  # This will update commands and install new dependencies
     ```
 
-## Editing .bashrc or .zshrc
-
-Add the following to your `.bashrc` or `.zshrc` file, and change `/usr/local/` to the path where FSL is installed:
-
-```bash
-export PATH=$PATH:/usr/local/fsl/bin
-export FSLDIR=/usr/local/fsl
-PATH=${FSLDIR}/bin:${PATH}
-. ${FSLDIR}/etc/fslconf/fsl.sh
-export FSLDIR PATH
-export PATH=/usr/local/ilastik-1.3.3post3-Linux:$PATH
-
-# Add these to open ilastik via the terminal by running: ilastik
-export PATH=/usr/local/ilastik-1.3.3post3-Linux:$PATH 
-alias ilastik=run_ilastik.sh
-```
-
-Apply the changes by restarting the terminal or source your shell configuration file: 
-```bash
-. ~/.bashrc
-```
+:::{note}
+To add extra depedencies (e.g., for updating documentation), run: 
+    ```bash
+    pip install -e ".[dev]"
+    ```
+:::
