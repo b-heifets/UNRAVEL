@@ -51,7 +51,9 @@ dev = [
     "sphinx-autobuild", 
     "sphinx-togglebutton", 
     "sphinx-design",
-    "sphinxcontrib-mermaid"
+    "sphinxcontrib-mermaid",
+    "build",
+    "twine"
 ]
 
 [project.urls]
