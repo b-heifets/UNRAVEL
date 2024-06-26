@@ -17,7 +17,7 @@ Prereqs:
     ``reg_prep``, [``seg_copy_tifs``], & [``seg_brain_mask``]
 
 Next steps: 
-    ``reg_check``
+    ``reg_check`` and ``vstats_prep``
 """
 
 import argparse
