@@ -355,7 +355,8 @@
 <span class="sd">Use ``vstats_prep`` from UNRAVEL to load an immunofluo image, subtract its background, and warp it to atlas space.</span>
 
 <span class="sd">Usage:</span>
-<span class="sd">    vstats_prep -i ochann -rb 4 -x 3.5232 -z 6 -o ochann_rb4_gubra_space.nii.gz -e &lt;list of paths to experiment directories&gt; -v</span>
+<span class="sd">------</span>
+<span class="sd">    vstats_prep -i &lt;asterisk&gt;.czi -rb 4 -x $XY -z $Z -o ochann_rb4_atlas_space.nii.gz -e [$DIRS] [-v]</span>
 
 <span class="sd">Prereqs: </span>
 <span class="sd">    ``reg``</span>

@@ -6,7 +6,8 @@
 
 
 ## TL;DR
-* Activate a virtual environment in python
+* Activate a virtual environment in Python
+* Install UNRAVEL via [PyPI](https://pypi.org/project/heifetslab-unravel/):
 ```bash
 pip install heifetslab-unravel
 ```
