@@ -216,8 +216,5 @@ Apply the changes by restarting the terminal or source your shell configuration 
     ```
 
 :::{note}
-To add extra depedencies (e.g., for updating documentation), run: 
-    ```bash
-    pip install -e ".[dev]"
-    ```
+To add extra depedencies (e.g., for updating documentation), run: ``pip install -e ".[dev]"``
 :::
