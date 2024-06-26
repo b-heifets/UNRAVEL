@@ -5,7 +5,7 @@ Use ``reg_prep`` from UNRAVEL to load a full resolution autofluo image and resam
 
 Usage:
 ------
-    reg_prep -i <asterisk>.czi -td <path/brain_mask_tifs> -e <list of paths to exp dirs> -v
+    reg_prep -i <asterisk>.czi [-e <list of paths to exp dirs>] [-v]
 
 Run command from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
 
@@ -53,6 +53,8 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
+
+# TODO: Remove args.target_dir since this can be done with ``seg_copy_tifs``
 
 
 @print_func_name_args_times()

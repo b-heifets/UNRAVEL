@@ -16,6 +16,7 @@ Usage w/ both masks for side-specific z-scoring:
     vstats_z_score -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v
 
 Next steps: 
+    - Aggregate outputs with ``utils_agg_files``.
     - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average hemispheres together.
     - If using side-specific z-scoring, next use ``vstats_hemi_to_avg`` to average the images.
     - Run ``vstats`` to perform voxel-wise stats.
@@ -111,15 +112,15 @@ def main():
 
             if Path(args.input).is_absolute():
                 input_path = Path(args.input)
-                if not input_path.exists():
-                    print(f"\n [red]The specified input file {input_path} does not exist.")
-                    import sys ; sys.exit()
             else:
-                # Handle relative path or pattern replacement
                 if f"{args.pattern}" in args.input:
                     input_path = Path(sample_path / args.input.replace(f"{args.pattern}", f"{sample_path.name}"))
                 else:
                     input_path = Path(sample_path / args.input)
+            
+            if not input_path.exists():
+                print(f"\n [red]The specified input file {input_path} does not exist.")
+                import sys ; sys.exit()
 
             output = Path(str(input_path).replace('.nii.gz', f'_{args.suffix}.nii.gz'))
             if output.exists():
