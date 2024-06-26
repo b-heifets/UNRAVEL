@@ -6,10 +6,7 @@
     * Quantification of cell/label densities across the brain
     * Voxel-wise analysis of fluorescent signals and cluster correction
     * Validation of hot/cold spots via cell/label density quantification at cellular resolution
-* [UNRAVEL can be installed via the Python Package Index (PyPI)](https://pypi.org/project/heifetslab-unravel/) with this command:
-  ```bash
-  pip install heifetslab-unravel
-  ```
+* UNRAVEL can be installed via [PyPI](https://pypi.org/project/heifetslab-unravel/): ``pip install heifetslab-unravel``
 * [Initial UNRAVEL publication](https://www.nature.com/articles/s41386-023-01613-4)
 * UNRAVEL was developed by [the Heifets lab](https://heifetslab.stanford.edu/) and [TensorAnalytics](https://sites.google.com/view/tensoranalytics/home?authuser=0)
 * Additional support/guidance was provided by: 
