@@ -5,6 +5,7 @@
 * If you are unfamiliar with the terminal, please review these [command line tutorials](https://andysbrainbook.readthedocs.io/en/latest/index.html)
 
 
+
 ## TL;DR
 * Activate a virtual environment in Python
 * Install UNRAVEL via [PyPI](https://pypi.org/project/heifetslab-unravel/):
@@ -13,6 +14,27 @@ pip install heifetslab-unravel
 ```
 * Install [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation)
 * Install [Ilastik](https://www.ilastik.org/download.html)
+
+
+
+## Updating UNRAVEL
+
+To update UNRAVEL to the latest version, use the following command:
+
+```bash
+pip install --upgrade heifetslab-unravel
+```
+
+:::{note}
+When you run analyses, please note the version of UNRAVEL you are using for reproducibility.
+
+To check the installed version of UNRAVEL, use the following command:
+
+```bash
+pip show heifetslab-unravel
+```
+:::
+
 
 
 ## Setting Up Windows Subsystem for Linux (WSL)
