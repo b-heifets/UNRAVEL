@@ -3,9 +3,9 @@
 """
 Use ``seg_copy_tifs`` from UNRAVEL to copy a subset of .tif files to a target dir for training ilastik.
 
-Usage to prep for ``seg_brain_mask`` (if --mask_dir <path/mask_dir> and -e <exp dir paths> were not specified in ``reg_prep``):
--------------------------------------------------------------------------------------------------------------------------------
-    seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0010 0060 0110 -o ilastik_brain_mask
+Usage to prep for ``seg_brain_mask``:
+-------------------------------------
+    seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0000 0005 0050 -o ilastik_brain_mask
 
 Usage to prep for ``seg_ilastik`` to segment full resolution immunofluorescence images:
 ---------------------------------------------------------------------------------------
