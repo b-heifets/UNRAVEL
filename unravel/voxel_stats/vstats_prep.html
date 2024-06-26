@@ -491,9 +491,12 @@
   <section id="module-unravel.voxel_stats.vstats_prep">
 <span id="unravel-voxel-stats-vstats-prep-module"></span><span id="unravel-voxel-stats-vstats-prep"></span><h1>unravel.voxel_stats.vstats_prep module<a class="headerlink" href="#module-unravel.voxel_stats.vstats_prep" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> from UNRAVEL to load an immunofluo image, subtract its background, and warp it to atlas space.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>vstats_prep -i &lt;asterisk&gt;.czi -rb 4 -x $XY -z $Z -o ochann_rb4_atlas_space.nii.gz -e [$DIRS] [-v]</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>vstats_prep -i ochann -rb 4 -x 3.5232 -z 6 -o ochann_rb4_gubra_space.nii.gz -e &lt;list of paths to experiment directories&gt; -v</p>
-</dd>
 <dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
 </dd>
 <dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p>&lt;asterisk&gt;.czi, ochann/&lt;asterisk&gt;.tif, ochann, &lt;asterisk&gt;.tif, &lt;asterisk&gt;.h5, or &lt;asterisk&gt;.zarr</p>
@@ -503,6 +506,7 @@
 <dt>Next steps:</dt><dd><p>Aggregate outputs with <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code> and run <code class="docutils literal notranslate"><span class="pre">vstats</span></code>.</p>
 </dd>
 </dl>
+</section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.voxel_stats.vstats_prep.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats_prep.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats_prep.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats_prep.parse_args" title="Link to this definition">#</a></dt>
@@ -561,6 +565,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats_prep.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats_prep.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>

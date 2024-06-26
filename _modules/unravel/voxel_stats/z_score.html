@@ -369,6 +369,7 @@
 <span class="sd">    vstats_z_score -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v</span>
 
 <span class="sd">Next steps: </span>
+<span class="sd">    - Aggregate outputs with ``utils_agg_files``.</span>
 <span class="sd">    - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average hemispheres together.</span>
 <span class="sd">    - If using side-specific z-scoring, next use ``vstats_hemi_to_avg`` to average the images.</span>
 <span class="sd">    - Run ``vstats`` to perform voxel-wise stats.</span>
@@ -472,15 +473,15 @@
 
             <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
                 <span class="n">input_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">input_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> [red]The specified input file </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
-                    <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="c1"># Handle relative path or pattern replacement</span>
                 <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
                     <span class="n">input_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sample_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">input_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">input_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"> [red]The specified input file </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+                <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
             <span class="n">output</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;_</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nii.gz&#39;</span><span class="p">))</span>
             <span class="k">if</span> <span class="n">output</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>

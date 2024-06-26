@@ -491,10 +491,10 @@
   <section id="module-unravel.segment.copy_tifs">
 <span id="unravel-segment-copy-tifs-module"></span><span id="unravel-segment-copy-tifs"></span><h1>unravel.segment.copy_tifs module<a class="headerlink" href="#module-unravel.segment.copy_tifs" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> from UNRAVEL to copy a subset of .tif files to a target dir for training ilastik.</p>
-<section id="usage-to-prep-for-seg-brain-mask-if-mask-dir-path-mask-dir-and-e-exp-dir-paths-were-not-specified-in-reg-prep">
-<h2>Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> (if –mask_dir &lt;path/mask_dir&gt; and -e &lt;exp dir paths&gt; were not specified in <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>):<a class="headerlink" href="#usage-to-prep-for-seg-brain-mask-if-mask-dir-path-mask-dir-and-e-exp-dir-paths-were-not-specified-in-reg-prep" title="Link to this heading">#</a></h2>
+<section id="usage-to-prep-for-seg-brain-mask">
+<h2>Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>:<a class="headerlink" href="#usage-to-prep-for-seg-brain-mask" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0010 0060 0110 -o ilastik_brain_mask</p>
+<div><p>seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0000 0005 0050 -o ilastik_brain_mask</p>
 </div></blockquote>
 </section>
 <section id="usage-to-prep-for-seg-ilastik-to-segment-full-resolution-immunofluorescence-images">
@@ -577,7 +577,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-brain-mask-if-mask-dir-path-mask-dir-and-e-exp-dir-paths-were-not-specified-in-reg-prep">Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> (if –mask_dir &lt;path/mask_dir&gt; and -e &lt;exp dir paths&gt; were not specified in <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>):</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-brain-mask">Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-ilastik-to-segment-full-resolution-immunofluorescence-images">Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code> to segment full resolution immunofluorescence images:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.copy_specific_slices"><code class="docutils literal notranslate"><span class="pre">copy_specific_slices()</span></code></a></li>
