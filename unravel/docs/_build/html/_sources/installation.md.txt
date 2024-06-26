@@ -25,16 +25,28 @@ To update UNRAVEL to the latest version, use the following command:
 pip install --upgrade heifetslab-unravel
 ```
 
-:::{note}
-When you run analyses, please note the version of UNRAVEL you are using for reproducibility.
+:::{admonition} Please note the version of UNRAVEL you are using for reproducibility.
+:class: note dropdown
 
 To check the installed version of UNRAVEL, use the following command:
 
 ```bash
 pip show heifetslab-unravel
+
 ```
+
+To check the latest version, go to the [heifetslab-unravel PyPI page](https://pypi.org/project/heifetslab-unravel/)
 :::
 
+:::{admonition} Checking changes between versions
+:class: note dropdown
+
+Releases and update notes for UNRAVEL can be found [here](https://github.com/b-heifets/UNRAVEL/releases) on GitHub .
+
+For more detailed information, you can view the commit history:
+* [Main branch commits](https://github.com/b-heifets/UNRAVEL/commits/main)
+* [Dev branch commits](https://github.com/b-heifets/UNRAVEL/commits/dev)
+:::
 
 
 ## Setting Up Windows Subsystem for Linux (WSL)
