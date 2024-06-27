@@ -33,7 +33,7 @@ def parse_args():
     parser.add_argument('-td', '--target_dir', help='path/target_dir name for gathering files. Default: current working dir', default=None, action=SM)
     parser.add_argument('-i', '--input', help='relative path to the source file to copy (if sample?? )', required=True, action=SM)
     parser.add_argument('-a', '--add_prefix', help='Add "sample??_" prefix to the output files', action='store_true')
-    parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -55,7 +55,7 @@ def aggregate_files_from_sample_dirs(sample_path, pattern, rel_path_to_src_file,
     if src_path.exists():
         shutil.copy(src_path, target_output)
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -81,8 +81,10 @@ def main():
             progress.update(task_id, advance=1)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.utilities.aggregate_files_from_sample_dirs':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

@@ -70,6 +70,8 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
@@ -80,6 +82,7 @@ def parse_args():
     parser.add_argument('-z', '--zero_origin', help='Provide flag to zero the origin of the affine matrix.', action='store_true', default=False)
     parser.add_argument('-a', '--apply', help='Provide flag to apply the new orientation to the ndarray data.', action='store_true', default=False)
     parser.add_argument('-fc', '--form_code', help='Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned)', type=int, default=None)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -199,6 +202,7 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
 
     return new_nii
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -215,7 +219,10 @@ def main():
             nib.save(new_nii, args.input.replace('.nii.gz', f'_{args.target_ort}.nii.gz'))
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.image_io.reorient_nii':
     install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

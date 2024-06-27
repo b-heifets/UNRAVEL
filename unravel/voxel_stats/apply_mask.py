@@ -50,9 +50,10 @@ def parse_args():
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resample input to this res in microns for ``reg``. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
+
 
 @print_func_name_args_times()
 def load_mask(mask_path):
@@ -110,6 +111,7 @@ def apply_mask_to_ndarray(ndarray, mask_ndarray, other_mask=None, mask_condition
 
     return ndarray
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -189,8 +191,10 @@ def main():
             progress.update(task_id, advance=1)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.voxel_stats.apply_mask':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

@@ -23,6 +23,8 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
@@ -30,6 +32,7 @@ def parse_args():
     parser.add_argument('-i', '--input', help='Path to the input TIFF file.', required=True, action=SM)
     parser.add_argument('-o', '--output', help='Path to save the output TIFF file.', default=None, action=SM)
     parser.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels.', default=None, type=int, action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -55,6 +58,7 @@ def save_tif(img, output_path):
     cv2.imwrite(output_path, img)
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -70,6 +74,10 @@ def main():
     save_tif(img, output_path)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.image_tools.rb':
     install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

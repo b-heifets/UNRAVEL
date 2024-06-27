@@ -15,11 +15,14 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/image.nii.gz', default=None, action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     return parser.parse_args()
 
 
@@ -37,12 +40,17 @@ def find_max_intensity(file_path):
     return max_intensity
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
     max_intensity = find_max_intensity(args.input)
     print(max_intensity)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.image_tools.max':
     install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

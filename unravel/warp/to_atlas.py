@@ -53,7 +53,7 @@ def parse_args():
     parser.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default]).', default='bSpline', action=SM)
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the raw image. Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -112,6 +112,7 @@ def to_atlas(sample_path, img, fixed_reg_in, atlas, output, interpol, dtype='uin
         nib.save(output_nii, output)
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -142,8 +143,10 @@ def main():
             progress.update(task_id, advance=1)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.warp.to_atlas':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

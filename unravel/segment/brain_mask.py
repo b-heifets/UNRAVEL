@@ -47,11 +47,12 @@ def parse_args():
     parser.add_argument('-ilp', '--ilastik_prj', help='path/brain_mask.ilp. Default: brain_mask.ilp', default='brain_mask.ilp', action=SM)
     parser.add_argument('-r', '--reg_res', help='Resolution of autofluo input image in microns. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-l', '--ilastik_log', help='Show Ilastik log', action='store_true')
-    parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -104,8 +105,10 @@ def main():
             progress.update(task_id, advance=1)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.segment.brain_mask':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

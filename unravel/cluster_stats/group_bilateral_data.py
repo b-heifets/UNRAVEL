@@ -79,7 +79,7 @@ def group_hemisphere_data(base_path):
             shutil.rmtree(lh_dir)
             shutil.rmtree(rh_dir)
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -94,8 +94,10 @@ def main():
         group_hemisphere_data(base_path)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.group_bilateral_data':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

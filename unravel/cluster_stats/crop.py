@@ -32,6 +32,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
+
 def save_cropped_img(img_cropped, xy_res, z_res, args, cluster=None):
     if args.output:
         save_path = args.output
@@ -48,6 +49,7 @@ def save_cropped_img(img_cropped, xy_res, z_res, args, cluster=None):
     else:
         save_as_nii(img_cropped, save_path, xy_res, z_res, data_type='uint16')
 
+@print_cmd_and_times
 def main(): 
     args = parse_args()
    
@@ -56,7 +58,6 @@ def main():
     else:
         img = load_3D_img(args.input, return_res=True)
         xy_res, z_res = args.xy_res, args.z_res
-
 
     # Crop image
     if args.bbox:
@@ -80,8 +81,10 @@ def main():
         exit()
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.crop':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

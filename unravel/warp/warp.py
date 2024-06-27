@@ -36,7 +36,7 @@ def parse_args():
     parser.add_argument('-o', '--output', help='path/output.nii.gz', required=True, action=SM)
     parser.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from ``reg``)', default=False, action='store_true')
     parser.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity if flag provided', default=False, action='store_true')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -110,6 +110,7 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     nib.save(warped_img_nii, output_path)
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -120,8 +121,10 @@ def main():
     warp(reg_outputs_path, moving_img_path, fixed_img_path, args.output, args.inverse, args.interpol)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.warp.warp':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

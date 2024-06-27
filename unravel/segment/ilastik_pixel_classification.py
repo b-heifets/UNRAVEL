@@ -64,6 +64,7 @@ def save_labels_as_masks(tif_dir, labels, segmentation_dir, output_name):
         nib.save(nifti_img, segmentation_dir.joinpath(f"{output_name}_{label}.nii.gz"))
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -112,8 +113,10 @@ def main():
             progress.update(task_id, advance=1)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.segment.ilastik_pixel_classification':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

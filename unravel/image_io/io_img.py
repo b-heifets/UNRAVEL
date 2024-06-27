@@ -38,10 +38,13 @@ def parse_args():
 
 # TODO: Test if other scripts in image_io are redundant and can be removed. If not, consolidate them into this script.
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
+    # print(f'\nIn main(){Configuration.verbose=}\n')
+    # Configuration.verbose = args.verbose
+    # print(f'\nIn main(){Configuration.verbose=}\n')
 
     # Load image and metadata
     if args.xy_res is None or args.z_res is None:
@@ -69,8 +72,10 @@ def main():
         save_as_tifs(img, args.output, ndarray_axis_order=args.axis_order)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.image_io.io_img':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

@@ -68,7 +68,7 @@ def extend_one_side_3d_array(ndarray, side, extension):
 
     return extended_array
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -106,8 +106,10 @@ def main():
             progress.update(task_id, advance=1)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.image_tools.extend':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

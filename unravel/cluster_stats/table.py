@@ -271,7 +271,7 @@ def get_fill_color(value, max_value):
     
     return fill_color, font_color
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -536,8 +536,10 @@ def main():
         f.write(valid_cluster_ids_str)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.table':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

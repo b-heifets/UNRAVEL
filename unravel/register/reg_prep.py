@@ -51,6 +51,7 @@ def parse_args():
     parser.add_argument('-s', '--slices', help='List of slice numbers to copy, e.g., 0000 0400 0800', nargs='*', type=str, default=[])
     parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -82,6 +83,7 @@ def reg_prep(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
     return img_resampled
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -130,8 +132,10 @@ def main():
             progress.update(task_id, advance=1)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.register.reg_prep':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

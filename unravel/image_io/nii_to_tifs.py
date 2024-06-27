@@ -14,14 +14,18 @@ import os
 import nibabel as nib
 import numpy as np
 import tifffile as tif
+from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='image.nii.gz', action=SM)
     parser.add_argument('-o', '--output_dir', help='Name of output folder', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -41,12 +45,18 @@ def nii_to_tifs(nii_path, output_dir):
         slice_ = np.flipud(slice_) # Flip vertically
         tif.imwrite(os.path.join(output_dir, f'slice_{i:04d}.tif'), slice_) #not opening in FIJI as one stack
 
+
+@print_cmd_and_times
 def main():
     args = parse_args()
     
     nii_to_tifs(args.input, args.output_dir)
 
+
+if __name__ == '__main__' or __name__ == 'unravel.image_io.nii_to_tifs':
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
 if __name__ == '__main__':
     main()
-
-#Daniel Rijsketic 08/25/23 (Heifets lab) 

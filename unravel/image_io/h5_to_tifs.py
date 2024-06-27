@@ -26,15 +26,19 @@ import h5py
 import numpy as np
 from pathlib import Path
 from rich import print
+from rich.traceback import install
 from tifffile import imwrite 
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/image.h5', action=SM)
     parser.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -100,6 +104,7 @@ def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
     print(f"    Output: [default bold]{tif_dir_out}\n")
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -127,6 +132,11 @@ def main():
     tifs_output_path = Path(".", args.tif_dir)
     save_as_tifs(img, tifs_output_path)
 
+
+if __name__ == '__main__' or __name__ == 'unravel.image_io.h5_to_tifs':
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

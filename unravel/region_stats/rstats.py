@@ -194,7 +194,7 @@ def calculate_regional_cell_densities(sample_path, regional_counts_df, regional_
     regional_densities_df.to_csv(output_path, index=False)
     print(f"    Saving regional cell densities to {output_path}\n")
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -261,8 +261,10 @@ def main():
             progress.update(task_id, advance=1)
     
     
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.region_stats.rstats':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

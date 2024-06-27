@@ -266,7 +266,7 @@ def perform_tukey_test(df, groups, density_col):
 
     return stats_df 
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
     current_dir = Path.cwd()
@@ -432,8 +432,10 @@ def main():
         cluster_summary('cluster_validation_info_tukey.csv', 'cluster_validation_summary_tukey.csv')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.stats':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

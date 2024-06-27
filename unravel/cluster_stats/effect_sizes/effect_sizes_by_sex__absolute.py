@@ -28,10 +28,14 @@ The effect size is calculated as the unbiased Hedge\'s g effect sizes (corrected
 import argparse
 import os
 import pandas as pd
+from rich.traceback import install
 from scipy.stats import t
 from termcolor import colored
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
+
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -39,6 +43,7 @@ def parse_args():
     parser.add_argument('-c1', '--condition_1', help='First condition of interest from csv (e.g., saline [data matching prefix pooled])', action=SM)
     parser.add_argument('-c2', '--condition_2', help='Second condition (e.g, psilocybin [data matching prefix pooled])', action=SM)
     parser.add_argument('-c', '--clusters', help='Space separated list of valid cluster IDs (default: process all clusters)', default=None, nargs='*', type=int, action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -141,6 +146,8 @@ def hedges_g(df, condition_1, condition_2, sex):
 
     return results_df
 
+
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -162,6 +169,12 @@ def main():
         male_effect_sizes_filtered = filter_dataframe(male_effect_sizes, args.clusters)
         filtered_m_output = f"{os.path.splitext(args.input_csv)[0]}_Hedges_g_{args.condition_1}_{args.condition_2}_M_valid_clusters.csv"
         male_effect_sizes_filtered.to_csv(filtered_m_output, index=False)
+
+
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute':
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

@@ -23,15 +23,21 @@ The effect size is calculated as the unbiased Hedge\'s g effect sizes (corrected
     Hedges' g = ((c2-c1)/spooled*corr_factor)
     CI = Hedges' g +/- t * SE
     0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large
+
+Effect size calculations are described in the supplemental information here: https://pubmed.ncbi.nlm.nih.gov/37248402/
 """
 
 import argparse
 import os
 import pandas as pd
+from rich.traceback import install
 from scipy.stats import t
 from termcolor import colored
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
+
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -39,6 +45,7 @@ def parse_args():
     parser.add_argument('-c1', '--condition_1', help='First condition of interest from csv (e.g., saline [data matching prefix pooled])', action=SM)
     parser.add_argument('-c2', '--condition_2', help='Second condition (e.g, psilocybin [data matching prefix pooled])', action=SM)
     parser.add_argument('-c', '--clusters', help='Space separated list of valid cluster IDs (default: process all clusters)', default=None, nargs='*', type=int, action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -142,7 +149,7 @@ def filter_dataframe(df, cluster_list):
     # Keep only rows where 'Cluster' value after removing "Cluster_" matches an integer in the cluster list
     return df[df['Cluster'].str.replace('Cluster_', '').astype(int).isin(cluster_list)]
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -158,7 +165,10 @@ def main():
         effect_sizes_filtered.to_csv(filtered_output, index=False)
 
 
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.effect_sizes.effect_sizes':
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
 if __name__ == '__main__':
     main()
-
-# Effect size calculations described in the supplemental information: https://pubmed.ncbi.nlm.nih.gov/37248402/

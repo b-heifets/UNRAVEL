@@ -15,6 +15,8 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
@@ -29,6 +31,8 @@ def nii_axis_codes(nii):
     axcodes = ''.join(axcodes_tuple) 
     return axcodes
 
+
+@print_cmd_and_times
 def main():
     args = parse_args()
     
@@ -55,6 +59,10 @@ def main():
     print(f'\nAffine matrix ([default bold]{axcodes}[/]):\n{nii.affine}\n')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.image_io.nii_info':
     install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

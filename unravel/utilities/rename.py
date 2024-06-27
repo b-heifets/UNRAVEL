@@ -17,6 +17,9 @@ from pathlib import Path
 from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
+
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -25,6 +28,7 @@ def parse_args():
     parser.add_argument('-t', '--type', help='Specify what to rename: "files", "dirs", or "both" (default: both)', choices=['files', 'dirs', 'both'], default='both', action=SM)
     parser.add_argument('-r', '--recursive', help='Perform the renaming recursively', action='store_true', default=False)
     parser.add_argument('-d', '--dry_run', help='Print old and new names without performing the renaming', action='store_true', default=False)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -62,12 +66,17 @@ def rename_files(directory, old_text, new_text, recursive=False, rename_type='bo
                     print(f"Renamed '{path}' to '{new_path}'")
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
     
     rename_files(Path().cwd(), args.old_text, args.new_text, args.recursive, args.type, args.dry_run)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.utilities.rename':
     install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

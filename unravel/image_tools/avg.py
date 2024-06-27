@@ -16,12 +16,15 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--inputs', help='Input file(s) or pattern(s) to process. Default is "*.nii.gz".',  nargs='*', default=['*.nii.gz'], action=SM)
     parser.add_argument('-o', '--output', help='Output file name. Default is "avg.nii.gz".', default='avg.nii.gz', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -65,6 +68,10 @@ def main():
     print("Saved averaged image to avg.nii.gz\n")
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.image_tools.avg':
     install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

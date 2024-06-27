@@ -63,6 +63,7 @@ def get_dims_from_tifs(tifs_path):
     return x_dim, y_dim, z_dim
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -97,8 +98,10 @@ def main():
             progress.update(task_id, advance=1)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.image_io.metadata:main':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()
