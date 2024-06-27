@@ -110,7 +110,7 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
     **e. Create and activate a virtual environment:**
     ```bash
     pyenv virtualenv 3.11.3 unravel
-    pyenv activate unravel
+    pyenv activate unravel # To deactivate, run: pyenv deactivate
     ```
 
     ### Option B: Using venv
@@ -202,16 +202,21 @@ Apply the changes by restarting the terminal or source your shell configuration 
     ```
     [GitHub Cloning Documentation](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
 
-3. **Update scripts periodically:**
+3. **Install UNRAVEL locally**
+    ```bash
+    cd UNRAVEL
+    <activate a virtual environment> # e.g., pyenv activate unravel
+    pip install -e .
+    ```
+
+4. **Update scripts periodically:**
     :::{hint}
     * Make a backup of the code that you used for analysis before updating
     :::
 
     ```bash
-    cd <path/to/repo/clone>
-
+    cd <path/to/UNRAVEL>
     git pull  # This will update the local repo
-
     pip install -e .  # This will update commands and install new dependencies
     ```
 
