@@ -30,13 +30,16 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times
+
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-c', '--csv_name', help='Name of the CSV file.', required=True, action=SM)
     parser.add_argument('-l', '--lesser_group', help='Group with a lower mean for the comparison of interest.', required=True, action=SM)
     parser.add_argument('-g', '--greater_group', help='Group with a higher mean for the comparison of interest.', required=True, action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -61,7 +64,7 @@ def find_incongruent_clusters(df, expected_lower_mean_group, expected_higher_mea
     
     return incongruent_clusters
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -85,7 +88,11 @@ def main():
             print(f'    CSV: {args.csv_name}')
             print("    No incongruent clusters found.\n")
 
-if __name__ == '__main__':
+
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.find_incongruent_clusters':
     install()
     args = parse_args()
-    print_cmd_and_times(main)()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
+    main()

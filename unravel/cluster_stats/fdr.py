@@ -232,7 +232,7 @@ def process_fdr_and_clusters(input, mask, q, min_size, avg_img1, avg_img2, outpu
     # Remove the original cluster index file
     Path(cluster_index_path).unlink()
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -252,8 +252,11 @@ def main():
             except Exception as exc:
                 print(f'{q_value} generated an exception: {exc}')
 
-if __name__ == '__main__': 
+
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.fdr':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

@@ -87,6 +87,7 @@ def hemi_to_LR_avg(lh_file, rh_file, kernel=0, axis=0, shift=2, atlas_mask=None)
     print(f"    Saved averaged image to {output_filename}")
 
 
+@print_cmd_and_times
 def main(): 
     args = parse_args()
 
@@ -102,8 +103,10 @@ def main():
             hemi_to_LR_avg(lh_file, rh_file, args.kernel, args.axis, args.shift, args.atlas_mask)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.voxel_stats.hemi_to_LR_avg':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

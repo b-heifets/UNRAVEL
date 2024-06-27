@@ -165,7 +165,7 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
             if vstats_path is not None:
                 copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt)
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -183,8 +183,10 @@ def main():
             organize_validation_data(sample_path, clusters_path, args.cluster_val_dirs, args.density_type, target_dir, args.vstats_path, args.p_val_txt)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.org_data':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

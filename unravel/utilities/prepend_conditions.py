@@ -65,7 +65,7 @@ def prepend_conditions(base_path, csv_file, rename_files, rename_dirs, recursive
         condition = row['condition']
         rename_items(base_path, dir_name, condition, rename_files, rename_dirs, recursive)
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -73,8 +73,10 @@ def main():
     prepend_conditions(base_path, args.sample_key, args.file, args.dirs, args.recursive)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.utilities.prepend_conditions':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

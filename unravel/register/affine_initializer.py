@@ -26,6 +26,9 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
+
 
 
 def parse_args():
@@ -34,6 +37,7 @@ def parse_args():
     parser.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz (e.g., template)', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/init_tform_py.nii.gz', required=True, action=SM)
     parser.add_argument('-t', '--time_out', help='Duration in seconds to allow this command/module to run. Default: 10', default=10, type=int, action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -80,7 +84,7 @@ def run_with_timeout(fixed_image, moving_image, reg_outputs_path, timeout):
         # If the process completed within the timeout, get the result
         return queue.get()
 
-
+@print_cmd_and_times
 def main(): 
     args = parse_args()
     
@@ -90,6 +94,10 @@ def main():
         print("The affine initializer did not complete successfully w/ 10 second timeout. Lengthen the timeout period of ``reg_affine_initializer`` (.e.g, 180 seconds)")
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.register.affine_initializer':
     install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

@@ -54,6 +54,7 @@ def parse_args():
 
 # TODO: Add an email option to send a message when the processing is complete. Add progress bar. See if fragments can be generated in parallel. Could make avg and avg diff maps in this script (e.g., before merge since this is fast)
 
+
 def check_fdr_command():
     """Check if the 'fdr' command is available in the system's path."""
     if shutil.which('fdr') is None:
@@ -133,6 +134,7 @@ def run_randomise_parallel(input_image_path, mask_path, permutations, output_nam
             print("Error during command execution:\n" + str(e))
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -190,8 +192,10 @@ def main():
     run_randomise_parallel(glm_input_file, args.mask, args.permutations, output_prefix, design_fts_path, args.options, args.verbose)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.voxel_stats.vstats':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

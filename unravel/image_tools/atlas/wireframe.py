@@ -18,11 +18,14 @@ Outputs:
 import argparse
 import nibabel as nib
 import numpy as np
-from concurrent.futures import ThreadPoolExecutor
 import pandas as pd
+from concurrent.futures import ThreadPoolExecutor
+from rich.traceback import install
 from scipy.ndimage import binary_dilation, binary_erosion
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
@@ -30,6 +33,7 @@ def parse_args():
     parser.add_argument('-i', '--input', help='path/atlas_img.nii.gz', required=True, action=SM)
     parser.add_argument('-wo', '--wire_output', help='Wireframe image output path. Default: path/atlas_img_W.nii.gz', action=SM)
     parser.add_argument('-id', '--id_output', help='Wireframe image with atlas IDs output path. Default: path/atlas_img_W_IDs.nii.gz', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -96,7 +100,7 @@ def generate_wireframe(atlas_ndarray, unique_intensities):
     wireframe_img_IDs = wireframe_img * atlas_ndarray 
     return wireframe_img.astype(np.uint8), wireframe_img_IDs.astype(np.uint16)
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -135,5 +139,10 @@ def main():
     nib.save(nib.Nifti1Image(wireframe_img_IDs, atlas_nii.affine, atlas_nii.header), id_output)
 
     
+if __name__ == '__main__' or __name__ == 'unravel.image_tools.atlas.wireframe':
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
 if __name__ == '__main__':
     main()

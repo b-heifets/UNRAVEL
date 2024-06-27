@@ -55,7 +55,7 @@ def generate_sunburst(cluster, img, atlas, xyz_res_in_um, data_type, output_dir)
         cluster_sunburst_path = output_dir / f'cluster_{cluster}_sunburst.csv'
         sunburst_df = sunburst(cluster_image, atlas, xyz_res_in_um, cluster_sunburst_path)
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -107,8 +107,10 @@ def main():
     sunburst_df = sunburst(valid_cluster_index, atlas, xyz_res_in_um, output_dir / 'valid_clusters_sunburst.csv', args.output_rgb_lut)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.index':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

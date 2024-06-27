@@ -45,6 +45,8 @@ from scipy.stats import ttest_ind, dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
@@ -56,11 +58,13 @@ def parse_args():
     parser.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
     parser.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
     parser.add_argument('-s', '--show_plot', help='Show plot if flag is provided', action='store_true')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cluster_stats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 # TODO: CSVs are loaded for each region. It would be more efficient to load them once for processing all regions. 
+
 
 # Set Arial as the font
 mpl.rcParams['font.family'] = 'Arial'
@@ -283,6 +287,7 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
         plt.show()
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -315,6 +320,10 @@ def main():
         plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=args.test, show_plot=args.show_plot, alt=args.alternate)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__' or __name__ == 'unravel.region_stats.rstats_mean_IF_summary':
     install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

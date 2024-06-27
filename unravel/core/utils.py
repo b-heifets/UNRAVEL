@@ -34,6 +34,7 @@ Examples:
         - print_cmd_and_times(main)()
 """
 
+import argparse
 import functools
 import shutil
 import numpy as np
@@ -189,9 +190,10 @@ def print_cmd_and_times(func):
             start_time = datetime.now()
             file.write(f"\n    Start: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
 
+        console = Console()  # Instantiate the Console object
+
         # If verbose, print command and times
         if Configuration.verbose:
-            console = Console()  # Instantiate the Console object
             console.print(f"\n\n[bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]{' '.join(sys.argv[1:])}[/]\n")
             print(f"\n    [bright_blue]Start:[/] " + start_time.strftime('%Y-%m-%d %H:%M:%S') + "\n")
 

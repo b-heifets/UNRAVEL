@@ -52,7 +52,7 @@ def mirror(img, axis=0, shift=2):
 
     return mirrored_img
 
-
+@print_cmd_and_times
 def main(): 
     args = parse_args()
 
@@ -72,8 +72,10 @@ def main():
             nib.save(mirrored_nii, mirrored_filename)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.voxel_stats.mirror':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

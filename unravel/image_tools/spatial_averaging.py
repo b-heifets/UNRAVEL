@@ -111,7 +111,7 @@ def spatial_average_2D(volume, filter_func, kernel_size=(3, 3), threads=8):
 
     return processed_volume
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
     
@@ -149,8 +149,10 @@ def main():
         save_as_zarr(img, args.output, ndarray_axis_order=args.axis_order)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.image_tools.spatial_averaging':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

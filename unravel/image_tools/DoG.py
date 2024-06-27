@@ -29,6 +29,8 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
@@ -37,10 +39,12 @@ def parse_args():
     parser.add_argument('-o', '--output', help='Path to save the output TIFF file.', default=None, action=SM)
     parser.add_argument('-g1', '--sigma1', help='Sigma for the first Gaussian blur in DoG (targets noise)', default=None, required=True, type=float)
     parser.add_argument('-g2', '--sigma2', help='Sigma for the second Gaussian blur in DoG (targets signal).', default=None, required=True, type=float)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Add support for other image types and 3D images. 
+
 
 def load_tif(tif_path):
     '''Load a single tif file using OpenCV and return ndarray.'''
@@ -60,7 +64,7 @@ def save_tif(img, output_path):
     '''Save an image as a tif file.'''
     cv2.imwrite(output_path, img)
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -76,6 +80,10 @@ def main():
     save_tif(img, output_path)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.image_tools.DoG':
     install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

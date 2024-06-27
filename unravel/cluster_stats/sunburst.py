@@ -41,7 +41,7 @@ def parse_args():
     parser.add_argument('-i', '--input', help='path/rev_cluster_index.nii.gz (e.g., with valid clusters)', required=True, action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -115,6 +115,7 @@ def sunburst(img, atlas, atlas_res_in_um, output_path, output_rgb_lut=False):
 
     return final_df
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -140,8 +141,10 @@ def main():
     print(f'\n{sunburst_df}\n')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.sunburst':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

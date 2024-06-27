@@ -16,7 +16,9 @@ from rich.traceback import install
 from unravel.image_io.nii_info import nii_axis_codes
 from unravel.image_io.reorient_nii import reorient_nii
 from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
 from unravel.core.img_tools import pad
+from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
@@ -25,10 +27,12 @@ def parse_args():
     parser.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     parser.add_argument('-r', '--ref_nii', help='Reference image for setting the orientation code', action=SM)
     parser.add_argument('-o', '--output', help='path/img.nii.gz. Default: None (saves as path/img_pad.nii.gz) ', default=None, action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
 
+@print_cmd_and_times
 def main(): 
     args = parse_args()
 
@@ -58,6 +62,11 @@ def main():
         padded_img_path = args.output
     nib.save(fixed_img_padded_nii, padded_img_path)
 
-if __name__ == '__main__': 
+
+if __name__ == '__main__' or __name__ == 'unravel.image_tools.pad':
     install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

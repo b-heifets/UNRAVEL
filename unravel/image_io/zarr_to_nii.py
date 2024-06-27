@@ -50,6 +50,7 @@ def save_as_nii(ndarray, output_path):
     nib.save(nifti_image, output_path)
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -58,8 +59,10 @@ def main():
     save_as_nii(img, output_path)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.image_io.zarr_to_nii':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

@@ -48,9 +48,10 @@ def parse_args():
     parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
+
 
 @print_func_name_args_times()
 def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, target_res=50, pad_fraction=0.15, miracl=False):
@@ -148,6 +149,7 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
     return native_img
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -169,8 +171,10 @@ def main():
             progress.update(task_id, advance=1)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.warp.to_native':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)() 
+
+if __name__ == '__main__':
+    main()

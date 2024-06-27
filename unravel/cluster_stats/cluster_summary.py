@@ -58,7 +58,7 @@ from unravel.cluster_stats.org_data import cp
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import print_cmd_and_times, load_config
-from unravel.utilities.aggregate_files_w_recursive_search import find_and_copy_files
+from unravel.utilities.aggregate_files_recursively import find_and_copy_files
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -95,6 +95,7 @@ def run_script(script_name, script_args):
     command = [script_name] + script_args
     subprocess.run(command, check=True, stdout=None, stderr=None)
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -268,8 +269,10 @@ def main():
             run_script('cluster_legend', legend_args)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.cluster_summary':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

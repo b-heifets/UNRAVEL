@@ -50,6 +50,7 @@ def save_as_zarr(ndarray, output_path, d_type):
     dask_array.to_zarr(output_path, compressor=compressor, overwrite=True)
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -63,8 +64,10 @@ def main():
     save_as_zarr(img, output_path, d_type)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.image_io.nii_to_zarr':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

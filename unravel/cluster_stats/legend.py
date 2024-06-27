@@ -67,7 +67,7 @@ def apply_rgb_to_cell(ws, df_w_rgb, col_w_labels, col_num):
         fill = PatternFill(start_color=hex_color, end_color=hex_color, fill_type='solid')
         region_cell.fill = fill
 
-
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -319,8 +319,10 @@ def main():
         file.write(f'\nAdditional abbreviations not shown in the region abbreviation legend (SI table): {other_abbreviation_to_definitions}\n')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.legend':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

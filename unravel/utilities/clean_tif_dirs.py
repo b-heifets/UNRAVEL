@@ -88,6 +88,8 @@ def clean_tifs_dir(path_to_tif_dir, move, verbose):
                 new_file_path = file.with_name(new_file_name)
                 file.rename(new_file_path)
 
+
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -108,8 +110,10 @@ def main():
             progress.update(task_id, advance=1)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.utilities.clean_tif_dirs':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

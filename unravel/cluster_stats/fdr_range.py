@@ -18,6 +18,7 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times
 
 
@@ -28,6 +29,7 @@ def parse_args():
     parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
     parser.add_argument('-q', '--q_values', help='Space-separated list of q values. If omitted, a default list is used.', nargs='*', default=q_values_default, type=float, action=SM)
     parser.add_argument('-th', '--threads', help='Number of threads. Default: 22', default=22, type=int, action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -67,8 +69,9 @@ def fdr_range(input_path, mask_path, q_value):
 
     return q_value, probability_threshold_float
 
-
+@print_cmd_and_times
 def main():
+    install()
     args = parse_args()
     
     # Initialize ThreadPoolExecutor
@@ -90,7 +93,11 @@ def main():
     q_values_resulting_in_clusters_str = ' '.join([smart_float_format(q) for q in q_values_resulting_in_clusters])
     print(f'\n{q_values_resulting_in_clusters_str}\n')
 
-if __name__ == '__main__': 
+
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.fdr_range':
     install()
     args = parse_args()
-    print_cmd_and_times(main)()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
+    main()

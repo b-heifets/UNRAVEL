@@ -90,6 +90,7 @@ def whole_to_LR_avg(file, kernel=0, axis=0, shift=2, atlas_mask=None):
     nib.save(averaged_nii, averaged_filename)
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -106,8 +107,10 @@ def main():
             whole_to_LR_avg(file, args.kernel, args.axis, args.shift, args.atlas_mask)
         
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.voxel_stats.whole_to_LR_avg':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

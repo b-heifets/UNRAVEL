@@ -16,7 +16,10 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
+from unravel.core.config import Configuration
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.utils import print_cmd_and_times
+
 
 
 def parse_args():
@@ -26,11 +29,13 @@ def parse_args():
     parser.add_argument('-ic', '--csv_input', help='path/input.csv w/ old IDs in column 1 and new IDs in column 2', required=True, action=SM)
     parser.add_argument('-oc', '--csv_output', help='Optionally provide prefix to output label volume summaries (e.g., volume_summary)', default=None, action=SM)
     parser.add_argument('-odt', '--data_type', help='Output data type. Default: uint16', default="uint16", action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
-
+@print_cmd_and_times
 def main():
+    install()
     args = parse_args()
 
     # Load the specified columns from the CSV with CCFv3 info
@@ -73,6 +78,11 @@ def main():
         volume_summary_old_labels.to_csv(f'{args.csv_output}_old_labels.csv', index=False)
         volume_summary_new_labels.to_csv(f'{args.csv_output}_new_labels.csv', index=False)
 
-if __name__ == '__main__':
+
+if __name__ == '__main__' or __name__ == 'unravel.image_tools.atlas.relabel_nii':
     install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

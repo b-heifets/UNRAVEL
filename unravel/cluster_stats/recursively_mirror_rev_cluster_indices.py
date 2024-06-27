@@ -29,7 +29,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Glob pattern to match files. Default: **/*rev_cluster_index.nii.gz', default='**/*rev_cluster_index.nii.gz', action=SM)
     parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
-    parser.add_argument('-v', '--verbose', action='store_true', help='Increase verbosity')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -52,6 +52,7 @@ def process_file(file_path, args):
     mirrored_filename = file_path.parent / f"{basename}_{'LH' if args.mas_side == 'RH' else 'RH'}.nii.gz"
     nib.save(mirrored_nii, mirrored_filename)
 
+@print_cmd_and_times
 def main(): 
     args = parse_args()
 
@@ -62,8 +63,10 @@ def main():
         executor.map(lambda file: process_file(file, args), files)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.recursively_mirror_rev_cluster_indices:main':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

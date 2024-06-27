@@ -34,7 +34,9 @@ from scipy.stats import ttest_ind
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
-from unravel.core.utils import initialize_progress_bar
+from unravel.core.config import Configuration
+from unravel.core.utils import initialize_progress_bar, print_cmd_and_times
+
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -49,10 +51,12 @@ def parse_args():
     parser.add_argument('-o', '--output', help='Output directory for plots (Default: <args.test_type>_plots)', action=SM)
     parser.add_argument('-alt', "--alternate", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
     parser.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Dunnett's test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.
+
 
 def get_region_details(region_id, df):
     # Adjust to account for the unique region IDs.
@@ -276,6 +280,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     return test_results_df
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
     
@@ -437,8 +442,10 @@ def main():
         final_summary.to_csv(Path(out_dir) / f'__significance_summary_{side}.csv', index=False)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__' or __name__ == 'unravel.region_stats.rstats_summary':
     install()
-    main()
+    args = parse_args()
+    Configuration.verbose = args.verbose
 
-# Effect size calculations described in the supplemental information: https://pubmed.ncbi.nlm.nih.gov/37248402/
+if __name__ == '__main__':
+    main()

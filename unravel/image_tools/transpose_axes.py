@@ -40,6 +40,8 @@ def transpose_img(ndarray, axis_1, axis_2, axis_3):
     """Transposes axes of ndarray"""
     return ndarray.transpose(axis_1, axis_2, axis_3)
 
+
+@print_cmd_and_times
 def main():
     args = parse_args()
     
@@ -58,8 +60,11 @@ def main():
         output = str(Path(args.input).resolve()).replace(".nii.gz", f"_transposed.nii.gz")
         save_as_nii(tranposed_img, output, xy_res, z_res)
 
-if __name__ == '__main__': 
+
+if __name__ == '__main__' or __name__ == 'unravel.image_tools.transpose_axes':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

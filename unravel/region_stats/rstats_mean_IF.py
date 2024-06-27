@@ -16,13 +16,15 @@ Next:
 """
 
 import argparse
-import os
-from pathlib import Path 
+import csv
 import nibabel as nib
 import numpy as np
-import csv
+from pathlib import Path 
+from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.config import Configuration
+from unravel.core.utils import print_cmd_and_times
 from unravel.image_tools.unique_intensities import uniq_intensities
 
 
@@ -31,6 +33,7 @@ def parse_args():
     parser.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", required=True, action=SM)
     parser.add_argument('-a', '--atlas', help='Path/atlas.nii.gz', required=True, action=SM)
     parser.add_argument('-r', '--regions', nargs='*', type=int, help='Space-separated list of region intensities to process')
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -76,9 +79,10 @@ def write_to_csv(data, output_file):
         for key, value in data.items():
             writer.writerow([key, value])
 
+
+@print_cmd_and_times
 def main():
     args = parse_args()
-
 
     # Either use the provided list of region IDs or create it using unique intensities
     if args.regions:
@@ -111,5 +115,11 @@ def main():
 
     print('CSVs with regional mean IF intensities output to ./rstats_mean_IF/')
 
-if __name__ == "__main__":
+
+if __name__ == '__main__' or __name__ == 'unravel.region_stats.rstats_mean_IF':
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+
+if __name__ == '__main__':
     main()

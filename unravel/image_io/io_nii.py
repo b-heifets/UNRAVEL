@@ -41,7 +41,7 @@ def parse_args():
     parser.add_argument('-s', '--scale', help='Scale the data to the range of the new data type', action='store_true', default=False)
     parser.add_argument('-b', '--binary', help='Convert to binary image.', action='store_true', default=False)
     parser.add_argument('-z', '--zscore', help='Convert the range of z-scored data (use uint8 data type).', action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
@@ -87,6 +87,7 @@ def convert_dtype(ndarray, data_type, scale_mode='none', fixed_scale_range=None,
     return ndarray.astype(np.dtype(data_type))
 
 
+@print_cmd_and_times
 def main():
     args = parse_args()
 
@@ -146,8 +147,10 @@ def main():
     nib.save(new_nii, output_path)
 
 
-if __name__ == '__main__':
+if __name__ == '__main__' or __name__ == 'unravel.image_io.io_nii':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()
