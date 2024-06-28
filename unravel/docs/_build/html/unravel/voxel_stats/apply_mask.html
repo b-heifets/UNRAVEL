@@ -419,7 +419,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_w_recursive_search.html">unravel.utilities.aggregate_files_w_recursive_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
@@ -486,76 +486,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.voxel_stats.apply_mask">
-<span id="unravel-voxel-stats-apply-mask-module"></span><span id="unravel-voxel-stats-apply-mask"></span><h1>unravel.voxel_stats.apply_mask module<a class="headerlink" href="#module-unravel.voxel_stats.apply_mask" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">vstats_apply_mask</span></code> from UNRAVEL to zeros out voxels in image based on a mask and direction args.</p>
-<section id="usage-to-zero-out-voxels-in-image-where-mask-0-e-g-to-exclude-voxels-representing-artifacts">
-<h2>Usage to zero out voxels in image where mask &gt; 0 (e.g., to exclude voxels representing artifacts):<a class="headerlink" href="#usage-to-zero-out-voxels-in-image-where-mask-0-e-g-to-exclude-voxels-representing-artifacts" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats_apply_mask -mas 6e10_seg_ilastik_2/sample??_6e10_seg_ilastik_2.nii.gz -i 6e10_rb20 -o 6e10_rb20_wo_artifacts -di greater -v</p>
-</div></blockquote>
-</section>
-<section id="usage-to-zero-out-voxels-in-image-where-mask-1-e-g-to-preserve-signal-from-segmented-microglia-clusters">
-<h2>Usage to zero out voxels in image where mask &lt; 1 (e.g., to preserve signal from segmented microglia clusters):<a class="headerlink" href="#usage-to-zero-out-voxels-in-image-where-mask-1-e-g-to-preserve-signal-from-segmented-microglia-clusters" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats_apply_mask -mas iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters -v</p>
-</div></blockquote>
-</section>
-<section id="usage-to-replace-voxels-in-image-with-the-mean-intensity-in-the-brain-where-mask-0">
-<h2>Usage to replace voxels in image with the mean intensity in the brain where mask &gt; 0:<a class="headerlink" href="#usage-to-replace-voxels-in-image-with-the-mean-intensity-in-the-brain-where-mask-0" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats_apply_mask -mas FOS_seg_ilastik/FOS_seg_ilastik_2.nii.gz -i FOS -o FOS_wo_halo.zarr -di greater -m -v</p>
-</div></blockquote>
-<p>This version allows for dilatation of the full res seg_mask (slow, but precise)</p>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/apply_mask.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.load_mask">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">load_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/apply_mask.html#load_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.load_mask" title="Link to this definition">#</a></dt>
-<dd><p>Load .nii.gz and return to an ndarray with a binary dtype</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.mean_intensity_in_brain">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">mean_intensity_in_brain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tissue_mask</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/apply_mask.html#mean_intensity_in_brain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.mean_intensity_in_brain" title="Link to this definition">#</a></dt>
-<dd><p>Z-score the image using the mask.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>img</strong> (<em>-</em>) – the ndarray to be z-scored.</p></li>
-<li><p><strong>mask</strong> (<em>-</em>) – the brain mask ndarray</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.dilate_mask">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">dilate_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterations</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/apply_mask.html#dilate_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.dilate_mask" title="Link to this definition">#</a></dt>
-<dd><p>Dilate the given mask (ndarray) by a specified number of iterations.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.scale_bool_to_full_res">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">scale_bool_to_full_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_res_dims</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/apply_mask.html#scale_bool_to_full_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.scale_bool_to_full_res" title="Link to this definition">#</a></dt>
-<dd><p>Scale ndarray to match x, y, z dimensions provided. Uses nearest-neighbor interpolation by default to preserve a binary data type.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.apply_mask_to_ndarray">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">apply_mask_to_ndarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_condition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'less'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/apply_mask.html#apply_mask_to_ndarray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.apply_mask_to_ndarray" title="Link to this definition">#</a></dt>
-<dd><p>Replace voxels in the ndarray with a new_value based on mask conditions. Optionally use a second mask to restrict application spatially.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.apply_mask.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/apply_mask.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.apply_mask.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-voxel-stats-apply-mask-module">
+<span id="unravel-voxel-stats-apply-mask"></span><h1>unravel.voxel_stats.apply_mask module<a class="headerlink" href="#unravel-voxel-stats-apply-mask-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -595,27 +527,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-zero-out-voxels-in-image-where-mask-0-e-g-to-exclude-voxels-representing-artifacts">Usage to zero out voxels in image where mask &gt; 0 (e.g., to exclude voxels representing artifacts):</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-zero-out-voxels-in-image-where-mask-1-e-g-to-preserve-signal-from-segmented-microglia-clusters">Usage to zero out voxels in image where mask &lt; 1 (e.g., to preserve signal from segmented microglia clusters):</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-replace-voxels-in-image-with-the-mean-intensity-in-the-brain-where-mask-0">Usage to replace voxels in image with the mean intensity in the brain where mask &gt; 0:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.load_mask"><code class="docutils literal notranslate"><span class="pre">load_mask()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.mean_intensity_in_brain"><code class="docutils literal notranslate"><span class="pre">mean_intensity_in_brain()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.dilate_mask"><code class="docutils literal notranslate"><span class="pre">dilate_mask()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.scale_bool_to_full_res"><code class="docutils literal notranslate"><span class="pre">scale_bool_to_full_res()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.apply_mask_to_ndarray"><code class="docutils literal notranslate"><span class="pre">apply_mask_to_ndarray()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.apply_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

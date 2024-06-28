@@ -419,7 +419,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_w_recursive_search.html">unravel.utilities.aggregate_files_w_recursive_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
@@ -486,73 +486,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.region_stats.rstats">
-<span id="unravel-region-stats-rstats-module"></span><span id="unravel-region-stats-rstats"></span><h1>unravel.region_stats.rstats module<a class="headerlink" href="#module-unravel.region_stats.rstats" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">rstats</span></code> from UNRAVEL to quantify cell densities for all regions in an atlas.</p>
-<section id="usage-if-the-atlas-is-already-in-native-space-from-warp-to-native">
-<h2>Usage if the atlas is already in native space from <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code>:<a class="headerlink" href="#usage-if-the-atlas-is-already-in-native-space-from-warp-to-native" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>rstats -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline –dirs sample14 sample36</p>
-</div></blockquote>
-</section>
-<section id="usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster">
-<h2>Usage if the native atlas is not available; it is not saved (faster):<a class="headerlink" href="#usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>rstats -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline –dirs sample14 sample36</p>
-</div></blockquote>
-<dl class="simple">
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>CSV file with cell counts, region volumes, or cell densities for each region</p></li>
-</ul>
-</dd>
-<dt>Notes</dt><dd><ul class="simple">
-<li><p>Regarding –type, also use ‘counts’ or ‘cell_desities’ for object counts or object densities</p></li>
-</ul>
-</dd>
-<dt>Prereqs:</dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>, <code class="docutils literal notranslate"><span class="pre">reg</span></code>, and <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code></p></li>
-</ul>
-</dd>
-<dt>Next steps:</dt><dd><ul class="simple">
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code> to summarize the results</p></li>
-</ul>
-</dd>
-</dl>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.get_atlas_region_at_coords">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">get_atlas_region_at_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#get_atlas_region_at_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.get_atlas_region_at_coords" title="Link to this definition">#</a></dt>
-<dd><p>“Get the ndarray atlas region intensity at the given coordinates</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.count_cells_in_regions">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">count_cells_in_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#count_cells_in_regions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.count_cells_in_regions" title="Link to this definition">#</a></dt>
-<dd><p>Count the number of cells in each region based on atlas region intensities</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.calculate_regional_volumes">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">calculate_regional_volumes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#calculate_regional_volumes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.calculate_regional_volumes" title="Link to this definition">#</a></dt>
-<dd><p>Calculate volumes for given regions in an atlas image.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.calculate_regional_cell_densities">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">calculate_regional_cell_densities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regional_counts_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regional_volumes_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#calculate_regional_cell_densities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.calculate_regional_cell_densities" title="Link to this definition">#</a></dt>
-<dd><p>Calculate cell densities for each region in the atlas.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-region-stats-rstats-module">
+<span id="unravel-region-stats-rstats"></span><h1>unravel.region_stats.rstats module<a class="headerlink" href="#unravel-region-stats-rstats-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -592,25 +527,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-if-the-atlas-is-already-in-native-space-from-warp-to-native">Usage if the atlas is already in native space from <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code>:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster">Usage if the native atlas is not available; it is not saved (faster):</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.get_atlas_region_at_coords"><code class="docutils literal notranslate"><span class="pre">get_atlas_region_at_coords()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.count_cells_in_regions"><code class="docutils literal notranslate"><span class="pre">count_cells_in_regions()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.calculate_regional_volumes"><code class="docutils literal notranslate"><span class="pre">calculate_regional_volumes()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.calculate_regional_cell_densities"><code class="docutils literal notranslate"><span class="pre">calculate_regional_cell_densities()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

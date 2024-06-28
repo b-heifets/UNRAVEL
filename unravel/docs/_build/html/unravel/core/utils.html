@@ -419,7 +419,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_w_recursive_search.html">unravel.utilities.aggregate_files_w_recursive_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
@@ -635,13 +635,16 @@ If both sample_dir_list and exp_dir_paths are provided, paths are added to the l
 <dl class="py method">
 <dt class="sig sig-object py" id="unravel.core.utils.AverageTimePerIterationColumn.render">
 <span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/utils.html#AverageTimePerIterationColumn.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.AverageTimePerIterationColumn.render" title="Link to this definition">#</a></dt>
-<dd><p>Should return a renderable object.</p>
+<dd><p>Render the average time per iteration.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>task</strong> (<em>Task</em>)</p>
+<dd class="field-odd"><p><strong>task</strong> – An object representing a task, which should have a <cite>speed</cite> attribute.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Text</em></p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A Text object displaying the average time per iteration.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><em>Text</em></p>
 </dd>
 </dl>
 </dd></dl>

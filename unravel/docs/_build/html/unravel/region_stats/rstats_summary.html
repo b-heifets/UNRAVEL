@@ -419,7 +419,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_w_recursive_search.html">unravel.utilities.aggregate_files_w_recursive_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
@@ -486,73 +486,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.region_stats.rstats_summary">
-<span id="unravel-region-stats-rstats-summary-module"></span><span id="unravel-region-stats-rstats-summary"></span><h1>unravel.region_stats.rstats_summary module<a class="headerlink" href="#module-unravel.region_stats.rstats_summary" title="Link to this heading">#</a></h1>
-<dl class="simple">
-<dt>Use <code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code> from UNRAVEL to plot cell densensities for each region and summarize results.</dt><dd><p>CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,…,MDMA_sample01,…,Meth_sample23,…</p>
-</dd>
-</dl>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>rstats_summary –groups Saline MDMA Meth -d 10000 -hemi r</p>
-</div></blockquote>
-<dl class="simple">
-<dt>To do:</dt><dd><p>Add module for Dunnett’s tests (don’t use this option for now)</p>
-</dd>
-<dt>Outputs:</dt><dd><p>Plots and a summary CSV to the current directory.</p>
-</dd>
-</dl>
-<p>Example hex code list (flank arg w/ double quotes): [‘#2D67C8’, ‘#27AF2E’, ‘#D32525’, ‘#7F25D3’]</p>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats_summary.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_summary.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_summary.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_summary.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats_summary.get_region_details">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_summary.</span></span><span class="sig-name descname"><span class="pre">get_region_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">region_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_summary.html#get_region_details"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_summary.get_region_details" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats_summary.parse_color_argument">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_summary.</span></span><span class="sig-name descname"><span class="pre">parse_color_argument</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">color_arg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_summary.html#parse_color_argument"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_summary.parse_color_argument" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats_summary.summarize_significance">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_summary.</span></span><span class="sig-name descname"><span class="pre">summarize_significance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_summary.html#summarize_significance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_summary.summarize_significance" title="Link to this definition">#</a></dt>
-<dd><p>Summarize the results of the statistical tests.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>test_df</strong> (<em>-</em>) – the DataFrame containing the test results (w/ columns: group1, group2, p-value, meandiff)</p></li>
-<li><p><strong>id</strong> (<em>-</em>) – the region or cluster ID</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the DataFrame containing the summarized results</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p>summary_df (DataFrame)</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats_summary.process_and_plot_data">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_summary.</span></span><span class="sig-name descname"><span class="pre">process_and_plot_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_abbr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_summary.html#process_and_plot_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_summary.process_and_plot_data" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats_summary.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_summary.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_summary.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_summary.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-region-stats-rstats-summary-module">
+<span id="unravel-region-stats-rstats-summary"></span><h1>unravel.region_stats.rstats_summary module<a class="headerlink" href="#unravel-region-stats-rstats-summary-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -592,24 +527,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_summary.get_region_details"><code class="docutils literal notranslate"><span class="pre">get_region_details()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_summary.parse_color_argument"><code class="docutils literal notranslate"><span class="pre">parse_color_argument()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_summary.summarize_significance"><code class="docutils literal notranslate"><span class="pre">summarize_significance()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_summary.process_and_plot_data"><code class="docutils literal notranslate"><span class="pre">process_and_plot_data()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

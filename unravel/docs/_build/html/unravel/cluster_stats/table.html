@@ -419,7 +419,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_w_recursive_search.html">unravel.utilities.aggregate_files_w_recursive_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
@@ -486,104 +486,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.cluster_stats.table">
-<span id="unravel-cluster-stats-table-module"></span><span id="unravel-cluster-stats-table"></span><h1>unravel.cluster_stats.table module<a class="headerlink" href="#module-unravel.cluster_stats.table" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_table</span></code> from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cluster_table</p>
-</div></blockquote>
-<dl class="simple">
-<dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">cluster_index</span></code> has been run. Run this command from the valid_clusters dir. &lt;asterisk&gt;cluster_info.txt in working dir.</p>
-</dd>
-</dl>
-</section>
-<section id="sorting-by-hierarchy-and-volume">
-<h2>Sorting by hierarchy and volume:<a class="headerlink" href="#sorting-by-hierarchy-and-volume" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>Group by Depth: Starting from the earliest depth column, for each depth level:</dt><dd><ul class="simple">
-<li><p>Sum the volumes of all rows sharing the same region (or combination of regions up to that depth).</p></li>
-<li><p>Sort these groups by their aggregate volume in descending order, ensuring larger groups are prioritized.</p></li>
-</ul>
-</dd>
-<dt>Sort Within Groups: Within each group created in step 1:</dt><dd><ul class="simple">
-<li><p>Sort the rows by their individual volume in descending order.</p></li>
-</ul>
-</dd>
-<dt>Maintain Grouping Order:</dt><dd><ul class="simple">
-<li><p>As we move to deeper depth levels, maintain the grouping and ordering established in previous steps (only adjusting the order within groups based on the new depth’s aggregate volumes).</p></li>
-</ul>
-</dd>
-</dl>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.table.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/table.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.table.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.table.fill_na_with_last_known">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">fill_na_with_last_known</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/table.html#fill_na_with_last_known"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.table.fill_na_with_last_known" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.table.sort_sunburst_hierarchy">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">sort_sunburst_hierarchy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/table.html#sort_sunburst_hierarchy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.table.sort_sunburst_hierarchy" title="Link to this definition">#</a></dt>
-<dd><p>Sort the DataFrame by hierarchy and volume.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.table.undo_fill_with_original">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">undo_fill_with_original</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df_sorted</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_original</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/table.html#undo_fill_with_original"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.table.undo_fill_with_original" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.table.can_collapse">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">can_collapse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth_col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/table.html#can_collapse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.table.can_collapse" title="Link to this definition">#</a></dt>
-<dd><p>Determine if regions in the specified depth column can be collapsed.
-Returns a DataFrame with regions that can be collapsed based on volume and count criteria.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.table.collapse_hierarchy">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">collapse_hierarchy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/table.html#collapse_hierarchy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.table.collapse_hierarchy" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.table.calculate_top_regions">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">calculate_top_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_vol_threshold</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/table.html#calculate_top_regions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.table.calculate_top_regions" title="Link to this definition">#</a></dt>
-<dd><p>Identify the top regions based on the dynamically collapsed hierarchy,
-ensuring they meet the specified percentage volume criterion.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>df_collapsed</strong> – DataFrame with the hierarchy collapsed where meaningful.</p></li>
-<li><p><strong>top_n</strong> – The number of top regions to identify.</p></li>
-<li><p><strong>percent_vol_threshold</strong> – The minimum percentage of total volume these regions should represent.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>DataFrame with the top regions and their volumes if the criterion is met; otherwise, None.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.table.get_top_regions_and_percent_vols">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">get_top_regions_and_percent_vols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sunburst_csv_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">percent_vol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/table.html#get_top_regions_and_percent_vols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.table.get_top_regions_and_percent_vols" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.table.get_fill_color">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">get_fill_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/table.html#get_fill_color"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.table.get_fill_color" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.table.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.table.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/table.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.table.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-cluster-stats-table-module">
+<span id="unravel-cluster-stats-table"></span><h1>unravel.cluster_stats.table module<a class="headerlink" href="#unravel-cluster-stats-table-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -623,29 +527,6 @@ ensuring they meet the specified percentage volume criterion.</p>
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sorting-by-hierarchy-and-volume">Sorting by hierarchy and volume:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.fill_na_with_last_known"><code class="docutils literal notranslate"><span class="pre">fill_na_with_last_known()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.sort_sunburst_hierarchy"><code class="docutils literal notranslate"><span class="pre">sort_sunburst_hierarchy()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.undo_fill_with_original"><code class="docutils literal notranslate"><span class="pre">undo_fill_with_original()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.can_collapse"><code class="docutils literal notranslate"><span class="pre">can_collapse()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.collapse_hierarchy"><code class="docutils literal notranslate"><span class="pre">collapse_hierarchy()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.calculate_top_regions"><code class="docutils literal notranslate"><span class="pre">calculate_top_regions()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.get_top_regions_and_percent_vols"><code class="docutils literal notranslate"><span class="pre">get_top_regions_and_percent_vols()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.get_fill_color"><code class="docutils literal notranslate"><span class="pre">get_fill_color()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.table.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

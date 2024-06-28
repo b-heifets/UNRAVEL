@@ -419,7 +419,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_w_recursive_search.html">unravel.utilities.aggregate_files_w_recursive_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
@@ -486,56 +486,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.warp.to_atlas">
-<span id="unravel-warp-to-atlas-module"></span><span id="unravel-warp-to-atlas"></span><h1>unravel.warp.to_atlas module<a class="headerlink" href="#module-unravel.warp.to_atlas" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">warp_to_atlas</span></code> from UNRAVEL to warp a native image to atlas space.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>warp_to_atlas -i ochann -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v]</p>
-</div></blockquote>
-<dl class="simple">
-<dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
-</dd>
-<dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p>&lt;asterisk&gt;.czi, ochann/&lt;asterisk&gt;.tif, ochann, &lt;asterisk&gt;.tif, &lt;asterisk&gt;.h5, or &lt;asterisk&gt;.zarr</p>
-</dd>
-</dl>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_atlas.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_atlas.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_atlas.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_atlas.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_atlas.copy_nii_header">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_atlas.</span></span><span class="sig-name descname"><span class="pre">copy_nii_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_img</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_atlas.html#copy_nii_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_atlas.copy_nii_header" title="Link to this definition">#</a></dt>
-<dd><p>Copy header info from nii_img to new_img</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_atlas.to_atlas">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_atlas.</span></span><span class="sig-name descname"><span class="pre">to_atlas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_reg_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'uint16'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_atlas.html#to_atlas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_atlas.to_atlas" title="Link to this definition">#</a></dt>
-<dd><p>Warp the image to atlas space using ANTsPy.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sample_path</strong> (<em>-</em>) – Path to the sample directory.</p></li>
-<li><p><strong>img</strong> (<em>-</em>) – 3D image.</p></li>
-<li><p><strong>fixed_reg_in</strong> (<em>-</em>) – Name of the fixed image for registration.</p></li>
-<li><p><strong>atlas</strong> (<em>-</em>) – Path to the atlas.</p></li>
-<li><p><strong>output</strong> (<em>-</em>) – Path to the output.</p></li>
-<li><p><strong>interpol</strong> (<em>-</em>) – Type of interpolation (linear, bSpline, nearestNeighbor, multiLabel).</p></li>
-<li><p><strong>dtype</strong> (<em>-</em>) – Desired dtype for output (e.g., uint8, uint16). Default: uint16</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_atlas.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_atlas.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_atlas.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_atlas.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-warp-to-atlas-module">
+<span id="unravel-warp-to-atlas"></span><h1>unravel.warp.to_atlas module<a class="headerlink" href="#unravel-warp-to-atlas-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -575,22 +527,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_atlas.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_atlas.copy_nii_header"><code class="docutils literal notranslate"><span class="pre">copy_nii_header()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_atlas.to_atlas"><code class="docutils literal notranslate"><span class="pre">to_atlas()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_atlas.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

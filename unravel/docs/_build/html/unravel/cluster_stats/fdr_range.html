@@ -419,7 +419,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_w_recursive_search.html">unravel.utilities.aggregate_files_w_recursive_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
@@ -486,52 +486,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.cluster_stats.fdr_range">
-<span id="unravel-cluster-stats-fdr-range-module"></span><span id="unravel-cluster-stats-fdr-range"></span><h1>unravel.cluster_stats.fdr_range module<a class="headerlink" href="#module-unravel.cluster_stats.fdr_range" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_fdr_range</span></code> from UNRAVEL to output a list of FDR q values that yeild clusters.</p>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cluster_fdr_range -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz</p>
-</div></blockquote>
-<dl class="simple">
-<dt>Inputs:</dt><dd><ul class="simple">
-<li><p>p value map (e.g., <em>vox_p_*stat</em>.nii.gz from vstats)</p></li>
-</ul>
-</dd>
-</dl>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.fdr_range.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr_range.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr_range.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr_range.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.fdr_range.smart_float_format">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr_range.</span></span><span class="sig-name descname"><span class="pre">smart_float_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_decimals</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr_range.html#smart_float_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr_range.smart_float_format" title="Link to this definition">#</a></dt>
-<dd><p>Format float with up to <cite>max_decimals</cite> places, but strip unnecessary trailing zeros.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.fdr_range.fdr_range">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr_range.</span></span><span class="sig-name descname"><span class="pre">fdr_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr_range.html#fdr_range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr_range.fdr_range" title="Link to this definition">#</a></dt>
-<dd><p>Perform FDR correction on the input p value map using a mask.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_path</strong> (<em>-</em>) – the path to the p value map</p></li>
-<li><p><strong>mask_path</strong> (<em>-</em>) – the path to the mask</p></li>
-<li><p><strong>q_value</strong> (<em>-</em>) – the q value for FDR correction</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.fdr_range.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr_range.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr_range.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr_range.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-cluster-stats-fdr-range-module">
+<span id="unravel-cluster-stats-fdr-range"></span><h1>unravel.cluster_stats.fdr_range module<a class="headerlink" href="#unravel-cluster-stats-fdr-range-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -571,22 +527,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr_range.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr_range.smart_float_format"><code class="docutils literal notranslate"><span class="pre">smart_float_format()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr_range.fdr_range"><code class="docutils literal notranslate"><span class="pre">fdr_range()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr_range.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

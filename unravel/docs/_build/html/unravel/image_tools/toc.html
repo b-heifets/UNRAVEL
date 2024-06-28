@@ -419,7 +419,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_w_recursive_search.html">unravel.utilities.aggregate_files_w_recursive_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
@@ -487,95 +487,19 @@
 <h1>unravel.image_tools package<a class="headerlink" href="#unravel-image-tools-package" title="Link to this heading">#</a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="avg.html">unravel.image_tools.avg module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="avg.html#usage">Usage:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="avg.html#unravel.image_tools.avg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="avg.html#unravel.image_tools.avg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="bbox.html">unravel.image_tools.bbox module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="bbox.html#usage">Usage:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bbox.html#unravel.image_tools.bbox.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="bbox.html#unravel.image_tools.bbox.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="extend.html">unravel.image_tools.extend module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="extend.html#unravel.image_tools.extend.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="extend.html#unravel.image_tools.extend.extend_one_side_3d_array"><code class="docutils literal notranslate"><span class="pre">extend_one_side_3d_array()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="extend.html#unravel.image_tools.extend.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="max.html">unravel.image_tools.max module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="max.html#usage">Usage:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="max.html#unravel.image_tools.max.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="max.html#unravel.image_tools.max.find_max_intensity"><code class="docutils literal notranslate"><span class="pre">find_max_intensity()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="max.html#unravel.image_tools.max.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pad.html">unravel.image_tools.pad module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pad.html#usage">Usage:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pad.html#unravel.image_tools.pad.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="pad.html#unravel.image_tools.pad.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="spatial_averaging.html">unravel.image_tools.spatial_averaging module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="spatial_averaging.html#usage">Usage:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spatial_averaging.html#unravel.image_tools.spatial_averaging.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="spatial_averaging.html#unravel.image_tools.spatial_averaging.spatial_average_3D"><code class="docutils literal notranslate"><span class="pre">spatial_average_3D()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="spatial_averaging.html#unravel.image_tools.spatial_averaging.apply_2D_mean_filter"><code class="docutils literal notranslate"><span class="pre">apply_2D_mean_filter()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="spatial_averaging.html#unravel.image_tools.spatial_averaging.spatial_average_2D"><code class="docutils literal notranslate"><span class="pre">spatial_average_2D()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="spatial_averaging.html#unravel.image_tools.spatial_averaging.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="DoG.html">unravel.image_tools.DoG module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="DoG.html#usage">Usage:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="DoG.html#unravel.image_tools.DoG.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="DoG.html#unravel.image_tools.DoG.load_tif"><code class="docutils literal notranslate"><span class="pre">load_tif()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="DoG.html#unravel.image_tools.DoG.difference_of_gaussians"><code class="docutils literal notranslate"><span class="pre">difference_of_gaussians()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="DoG.html#unravel.image_tools.DoG.save_tif"><code class="docutils literal notranslate"><span class="pre">save_tif()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="DoG.html#unravel.image_tools.DoG.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="rb.html">unravel.image_tools.rb module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rb.html#usage">Usage:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rb.html#unravel.image_tools.rb.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="rb.html#unravel.image_tools.rb.load_tif"><code class="docutils literal notranslate"><span class="pre">load_tif()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="rb.html#unravel.image_tools.rb.rolling_ball_subtraction"><code class="docutils literal notranslate"><span class="pre">rolling_ball_subtraction()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="rb.html#unravel.image_tools.rb.save_tif"><code class="docutils literal notranslate"><span class="pre">save_tif()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="rb.html#unravel.image_tools.rb.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="transpose_axes.html">unravel.image_tools.transpose_axes module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="transpose_axes.html#usage">Usage:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="transpose_axes.html#unravel.image_tools.transpose_axes.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="transpose_axes.html#unravel.image_tools.transpose_axes.transpose_img"><code class="docutils literal notranslate"><span class="pre">transpose_img()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="transpose_axes.html#unravel.image_tools.transpose_axes.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="unique_intensities.html">unravel.image_tools.unique_intensities module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="unique_intensities.html#usage-for-printing-all-non-zero-intensities">Usage for printing all non-zero intensities:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unique_intensities.html#usage-for-printing-the-number-of-voxels-for-each-intensity-that-is-present">Usage for printing the number of voxels for each intensity that is present:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unique_intensities.html#usage-for-checking-which-clusters-are-present-if-the-min-cluster-size-was-100-voxels">Usage for checking which clusters are present if the min cluster size was 100 voxels:</a></li>
-<li class="toctree-l2"><a class="reference internal" href="unique_intensities.html#unravel.image_tools.unique_intensities.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="unique_intensities.html#unravel.image_tools.unique_intensities.uniq_intensities"><code class="docutils literal notranslate"><span class="pre">uniq_intensities()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="unique_intensities.html#unravel.image_tools.unique_intensities.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="avg.html">unravel.image_tools.avg module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bbox.html">unravel.image_tools.bbox module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="extend.html">unravel.image_tools.extend module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="max.html">unravel.image_tools.max module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pad.html">unravel.image_tools.pad module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="spatial_averaging.html">unravel.image_tools.spatial_averaging module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DoG.html">unravel.image_tools.DoG module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rb.html">unravel.image_tools.rb module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="transpose_axes.html">unravel.image_tools.transpose_axes module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="atlas/toc.html">unravel.image_tools.atlas package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="atlas/relabel_nii.html#usage">Usage:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="atlas/relabel_nii.html#unravel.image_tools.atlas.relabel_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="atlas/relabel_nii.html#unravel.image_tools.atlas.relabel_nii.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="atlas/wireframe.html#usage">Usage:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="atlas/wireframe.html#unravel.image_tools.atlas.wireframe.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="atlas/wireframe.html#unravel.image_tools.atlas.wireframe.process_intensity"><code class="docutils literal notranslate"><span class="pre">process_intensity()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="atlas/wireframe.html#unravel.image_tools.atlas.wireframe.generate_wireframe"><code class="docutils literal notranslate"><span class="pre">generate_wireframe()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="atlas/wireframe.html#unravel.image_tools.atlas.wireframe.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
 </ul>
 </li>
 </ul>

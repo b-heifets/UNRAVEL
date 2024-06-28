@@ -419,7 +419,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_w_recursive_search.html">unravel.utilities.aggregate_files_w_recursive_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
@@ -486,58 +486,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.image_tools.unique_intensities">
-<span id="unravel-image-tools-unique-intensities-module"></span><span id="unravel-image-tools-unique-intensities"></span><h1>unravel.image_tools.unique_intensities module<a class="headerlink" href="#module-unravel.image_tools.unique_intensities" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">img_unique</span></code> from UNRAVEL to print a list of unique intensities greater than 0.</p>
-<section id="usage-for-printing-all-non-zero-intensities">
-<h2>Usage for printing all non-zero intensities:<a class="headerlink" href="#usage-for-printing-all-non-zero-intensities" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>img_unique -i path/input_img.nii.gz</p>
-</div></blockquote>
-</section>
-<section id="usage-for-printing-the-number-of-voxels-for-each-intensity-that-is-present">
-<h2>Usage for printing the number of voxels for each intensity that is present:<a class="headerlink" href="#usage-for-printing-the-number-of-voxels-for-each-intensity-that-is-present" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>img_unique -i path/input_img.nii.gz</p>
-</div></blockquote>
-</section>
-<section id="usage-for-checking-which-clusters-are-present-if-the-min-cluster-size-was-100-voxels">
-<h2>Usage for checking which clusters are present if the min cluster size was 100 voxels:<a class="headerlink" href="#usage-for-checking-which-clusters-are-present-if-the-min-cluster-size-was-100-voxels" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>img_unique -i path/input_img.nii.gz -m 100</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_tools.unique_intensities.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.unique_intensities.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/unique_intensities.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.unique_intensities.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_tools.unique_intensities.uniq_intensities">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.unique_intensities.</span></span><span class="sig-name descname"><span class="pre">uniq_intensities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_extent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_sizes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/unique_intensities.html#uniq_intensities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.unique_intensities.uniq_intensities" title="Link to this definition">#</a></dt>
-<dd><p>Loads a 3D image and prints non-zero unique intensity values in a space-separated list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input</strong> (<em>_type_</em>) – _description_</p></li>
-<li><p><strong>min_extent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – _description_. Defaults to 1.</p></li>
-<li><p><strong>print_sizes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – _description_. Defaults to False.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>list of unique intensities</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a> of ints</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_tools.unique_intensities.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.unique_intensities.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/unique_intensities.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.unique_intensities.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-image-tools-unique-intensities-module">
+<span id="unravel-image-tools-unique-intensities"></span><h1>unravel.image_tools.unique_intensities module<a class="headerlink" href="#unravel-image-tools-unique-intensities-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -577,23 +527,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-printing-all-non-zero-intensities">Usage for printing all non-zero intensities:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-printing-the-number-of-voxels-for-each-intensity-that-is-present">Usage for printing the number of voxels for each intensity that is present:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-checking-which-clusters-are-present-if-the-min-cluster-size-was-100-voxels">Usage for checking which clusters are present if the min cluster size was 100 voxels:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.unique_intensities.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.unique_intensities.uniq_intensities"><code class="docutils literal notranslate"><span class="pre">uniq_intensities()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.unique_intensities.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

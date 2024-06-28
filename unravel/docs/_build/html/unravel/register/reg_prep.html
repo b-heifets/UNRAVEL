@@ -419,7 +419,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_w_recursive_search.html">unravel.utilities.aggregate_files_w_recursive_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
@@ -486,62 +486,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.register.reg_prep">
-<span id="unravel-register-reg-prep-module"></span><span id="unravel-register-reg-prep"></span><h1>unravel.register.reg_prep module<a class="headerlink" href="#module-unravel.register.reg_prep" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code> from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>reg_prep -i &lt;asterisk&gt;.czi [-e &lt;list of paths to exp dirs&gt;] [-v]</p>
-</div></blockquote>
-<p>Run command from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.</p>
-<dl class="simple">
-<dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p>&lt;asterisk&gt;.czi, autofluo/&lt;asterisk&gt;.tif series, autofluo, &lt;asterisk&gt;.tif, or &lt;asterisk&gt;.h5</p>
-</dd>
-<dt>Outputs:</dt><dd><p>./sample??/reg_inputs/autofl_&lt;asterisk&gt;um.nii.gz
-./sample??/reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif series (used for training ilastik for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>)</p>
-</dd>
-<dt>Next command:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> or <code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
-</dd>
-</dl>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.reg_prep.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.reg_prep.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg_prep.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg_prep.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.reg_prep.reg_prep">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.reg_prep.</span></span><span class="sig-name descname"><span class="pre">reg_prep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miracl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg_prep.html#reg_prep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg_prep.reg_prep" title="Link to this definition">#</a></dt>
-<dd><p>Prepare the autofluo image for <code class="docutils literal notranslate"><span class="pre">reg</span></code> or mimic preprocessing  for <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ndarray</strong> (<em>-</em>) – full res 3D autofluo image.</p></li>
-<li><p><strong>xy_res</strong> (<em>-</em>) – x/y resolution in microns of ndarray.</p></li>
-<li><p><strong>z_res</strong> (<em>-</em>) – z resolution in microns of ndarray.</p></li>
-<li><p><strong>reg_res</strong> (<em>-</em>) – Resample input to this resolution in microns for <code class="docutils literal notranslate"><span class="pre">reg</span></code>.</p></li>
-<li><p><strong>zoom_order</strong> (<em>-</em>) – Order for resampling (scipy.ndimage.zoom).</p></li>
-<li><p><strong>miracl</strong> (<em>-</em>) – Include reorientation step to mimic MIRACL’s tif to .nii.gz conversion.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Resampled image.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p>img_resampled (np.ndarray)</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.reg_prep.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.reg_prep.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg_prep.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg_prep.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-register-reg-prep-module">
+<span id="unravel-register-reg-prep"></span><h1>unravel.register.reg_prep module<a class="headerlink" href="#unravel-register-reg-prep-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -581,21 +527,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_prep.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_prep.reg_prep"><code class="docutils literal notranslate"><span class="pre">reg_prep()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_prep.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

@@ -419,7 +419,7 @@
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_w_recursive_search.html">unravel.utilities.aggregate_files_w_recursive_search module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
@@ -486,109 +486,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.cluster_stats.fdr">
-<span id="unravel-cluster-stats-fdr-module"></span><span id="unravel-cluster-stats-fdr"></span><h1>unravel.cluster_stats.fdr module<a class="headerlink" href="#module-unravel.cluster_stats.fdr" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code> from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.</p>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cluster_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05</p>
-</div></blockquote>
-<dl class="simple">
-<dt>Inputs:</dt><dd><ul class="simple">
-<li><p>p value map (e.g., &lt;asterisk&gt;vox_p_&lt;asterisk&gt;stat&lt;asterisk&gt;.nii.gz from vstats)</p></li>
-</ul>
-</dd>
-<dt>Outputs saved in the output directory:</dt><dd><ul class="simple">
-<li><p>FDR-adjusted p value map</p></li>
-<li><p>Cluster information CSV</p></li>
-<li><p>Reversed cluster index image (output_dir/input_name_rev_cluster_index.nii.gz)</p></li>
-<li><p>min_cluster_size_in_voxels.txt</p></li>
-<li><p>p_value_threshold.txt</p></li>
-<li><p>1-p_value_threshold.txt</p></li>
-</ul>
-</dd>
-</dl>
-<p>Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.</p>
-<dl class="simple">
-<dt>Making directional cluster indices from non-directional p value maps output from ANOVAs:</dt><dd><ul class="simple">
-<li><p>Provide the average immunostaining intensity images for each group being contrasted (<code class="docutils literal notranslate"><span class="pre">img_avg</span></code>)</p></li>
-<li><p>The –output needs to have &lt;group1&gt;_v_&lt;group2&gt; in the name</p></li>
-<li><p>_v_ will be replaced with _gt_ or _lt_ based on the effect direction</p></li>
-<li><p>The cluster index will be split accoding to the effect directions</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code> -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v</p></li>
-</ul>
-</dd>
-</dl>
-<p>For bilateral data processed with a hemispheric mask, next run <code class="docutils literal notranslate"><span class="pre">cluster_mirror_indices</span></code> to mirror the cluster indices to the other hemisphere.</p>
-<p>For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code>.</p>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.fdr.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.fdr.fdr">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">fdr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fdr_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr.html#fdr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr.fdr" title="Link to this definition">#</a></dt>
-<dd><p>Perform FDR correction on the input p value map using a mask.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_path</strong> (<em>-</em>) – the path to the p value map</p></li>
-<li><p><strong>fdr_path</strong> (<em>-</em>) – the path to the output directory</p></li>
-<li><p><strong>mask_path</strong> (<em>-</em>) – the path to the mask</p></li>
-<li><p><strong>q_value</strong> (<em>-</em>) – the q value for FDR correction</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Saves in the fdr_path:</dt><dd><ul class="simple">
-<li><p>FDR-adjusted p value map</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>the path to the FDR-adjusted p value map
-- probability_threshold (float): the probability threshold for the FDR correction</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>adjusted_pval_output_path (str)</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.fdr.cluster_index">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">cluster_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adj_p_val_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr.html#cluster_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr.cluster_index" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.fdr.reverse_clusters">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">reverse_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_index_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_index_nii</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr.html#reverse_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr.reverse_clusters" title="Link to this definition">#</a></dt>
-<dd><p>Reverse the cluster IDs in a cluster index image (ndarray). Return the reversed cluster index ndarray.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.fdr.split_clusters_based_on_effect">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">split_clusters_based_on_effect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rev_cluster_index_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_img1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_img2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_cluster_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_index_nii</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr.html#split_clusters_based_on_effect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr.split_clusters_based_on_effect" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.fdr.process_fdr_and_clusters">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">process_fdr_and_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_img1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_img2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr.html#process_fdr_and_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr.process_fdr_and_clusters" title="Link to this definition">#</a></dt>
-<dd><p>Process FDR correction and cluster index generation for a given q value.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.fdr.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.fdr.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/fdr.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.fdr.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-cluster-stats-fdr-module">
+<span id="unravel-cluster-stats-fdr"></span><h1>unravel.cluster_stats.fdr module<a class="headerlink" href="#unravel-cluster-stats-fdr-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -628,25 +527,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr.fdr"><code class="docutils literal notranslate"><span class="pre">fdr()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr.cluster_index"><code class="docutils literal notranslate"><span class="pre">cluster_index()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr.reverse_clusters"><code class="docutils literal notranslate"><span class="pre">reverse_clusters()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr.split_clusters_based_on_effect"><code class="docutils literal notranslate"><span class="pre">split_clusters_based_on_effect()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr.process_fdr_and_clusters"><code class="docutils literal notranslate"><span class="pre">process_fdr_and_clusters()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
