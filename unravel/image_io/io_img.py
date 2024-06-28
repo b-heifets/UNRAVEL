@@ -71,7 +71,7 @@ def main():
         save_as_tifs(img, args.output, ndarray_axis_order=args.axis_order)
 
     verbose_end_msg()
-    
+
 
 if __name__ == '__main__':
     main()
