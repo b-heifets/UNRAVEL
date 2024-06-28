@@ -491,45 +491,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.voxel_stats.other.r_to_p">
-<span id="unravel-voxel-stats-other-r-to-p-module"></span><span id="unravel-voxel-stats-other-r-to-p"></span><h1>unravel.voxel_stats.other.r_to_p module<a class="headerlink" href="#module-unravel.voxel_stats.other.r_to_p" title="Link to this heading">#</a></h1>
-<p>Converts correlation map to z-score, p value, and FDR p value maps.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>path/r_to_p.py -i sample01_cfos_correlation_map.nii.gz -x 25 -z 25 -v</p>
-</div></blockquote>
-<dl class="simple">
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>&lt;image&gt;_z_score_map.nii.gz</p></li>
-<li><p>&lt;image&gt;_p_value_map.nii.gz</p></li>
-<li><p>&lt;image&gt;_p_value_map_fdr_corrected.nii.gz</p></li>
-</ul>
-</dd>
-</dl>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.other.r_to_p.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.other.r_to_p.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/unravel/voxel_stats/other/r_to_p.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.other.r_to_p.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.other.r_to_p.r_to_z">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.other.r_to_p.</span></span><span class="sig-name descname"><span class="pre">r_to_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">correlation_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/unravel/voxel_stats/other/r_to_p.html#r_to_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.other.r_to_p.r_to_z" title="Link to this definition">#</a></dt>
-<dd><p>Convert a Pearson correlation map (ndarray) to a Z-score map (ndarray) using Fisher’s Z-transformation via np.arctanh</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.other.r_to_p.z_to_p">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.other.r_to_p.</span></span><span class="sig-name descname"><span class="pre">z_to_p</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_map</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/unravel/voxel_stats/other/r_to_p.html#z_to_p"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.other.r_to_p.z_to_p" title="Link to this definition">#</a></dt>
-<dd><p>Convert a Z-score map (ndarray) to a two-tailed p-value map (ndarray)</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.other.r_to_p.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.other.r_to_p.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/unravel/voxel_stats/other/r_to_p.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.other.r_to_p.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-voxel-stats-other-r-to-p-module">
+<span id="unravel-voxel-stats-other-r-to-p"></span><h1>unravel.voxel_stats.other.r_to_p module<a class="headerlink" href="#unravel-voxel-stats-other-r-to-p-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -569,22 +532,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.other.r_to_p.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.other.r_to_p.r_to_z"><code class="docutils literal notranslate"><span class="pre">r_to_z()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.other.r_to_p.z_to_p"><code class="docutils literal notranslate"><span class="pre">z_to_p()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.other.r_to_p.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

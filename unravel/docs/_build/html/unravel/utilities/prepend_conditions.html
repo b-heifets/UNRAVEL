@@ -486,8 +486,48 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-utilities-prepend-conditions-module">
-<span id="unravel-utilities-prepend-conditions"></span><h1>unravel.utilities.prepend_conditions module<a class="headerlink" href="#unravel-utilities-prepend-conditions-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.utilities.prepend_conditions">
+<span id="unravel-utilities-prepend-conditions-module"></span><span id="unravel-utilities-prepend-conditions"></span><h1>unravel.utilities.prepend_conditions module<a class="headerlink" href="#module-unravel.utilities.prepend_conditions" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code> from UNRAVEL to prepend conditions to filenames based on a CSV key.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>utils_prepend -sk &lt;path/sample_key.csv&gt; -f -r</p>
+</div></blockquote>
+<p>This command renames files in the current directory based on the conditions specified in the CSV file.</p>
+<p>The sample_key.csv should have two columns: ‘dir_name’ and ‘condition’.
+The command will prepend the ‘condition’ to the filenames matching the ‘dir_name’ prefix.</p>
+<dl class="simple">
+<dt>For example, if the CSV contains the following rows:</dt><dd><p>dir_name,condition
+sample01,control
+sample02,treatment</p>
+</dd>
+<dt>Files will be renamed as follows:</dt><dd><p>‘sample01_file.csv’ –&gt; ‘control_sample01_file.csv’
+‘sample02_file.csv’ –&gt; ‘treatment_sample02_file.csv’.</p>
+</dd>
+</dl>
+<p>If needed, files and/or folders can be renamed with <code class="docutils literal notranslate"><span class="pre">utils_rename</span></code>.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.prepend_conditions.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.prepend_conditions.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/prepend_conditions.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.prepend_conditions.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.prepend_conditions.rename_items">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.prepend_conditions.</span></span><span class="sig-name descname"><span class="pre">rename_items</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/prepend_conditions.html#rename_items"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.prepend_conditions.rename_items" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.prepend_conditions.prepend_conditions">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.prepend_conditions.</span></span><span class="sig-name descname"><span class="pre">prepend_conditions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rename_dirs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recursive</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/prepend_conditions.html#prepend_conditions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.prepend_conditions.prepend_conditions" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.prepend_conditions.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.prepend_conditions.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/prepend_conditions.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.prepend_conditions.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +567,22 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.prepend_conditions.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.prepend_conditions.rename_items"><code class="docutils literal notranslate"><span class="pre">rename_items()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.prepend_conditions.prepend_conditions"><code class="docutils literal notranslate"><span class="pre">prepend_conditions()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.prepend_conditions.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

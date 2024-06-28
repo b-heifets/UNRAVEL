@@ -486,8 +486,202 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-cluster-stats-stats-module">
-<span id="unravel-cluster-stats-stats"></span><h1>unravel.cluster_stats.stats module<a class="headerlink" href="#unravel-cluster-stats-stats-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.cluster_stats.stats">
+<span id="unravel-cluster-stats-stats-module"></span><span id="unravel-cluster-stats-stats"></span><h1>unravel.cluster_stats.stats module<a class="headerlink" href="#module-unravel.cluster_stats.stats" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_stats</span></code> from UNRAVEL to validate clusters based on differences in cell/object or label density w/ t-tests.</p>
+<section id="t-test-usage">
+<h2>T-test usage:<a class="headerlink" href="#t-test-usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_stats –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;group1|group2&gt;</p>
+</div></blockquote>
+</section>
+<section id="tukey-s-test-usage">
+<h2>Tukey’s test usage:<a class="headerlink" href="#tukey-s-test-usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_stats –groups &lt;group1&gt; &lt;group2&gt; &lt;group3&gt; &lt;group4&gt; … -hg &lt;group1|group2&gt;</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Organize data in directories for each comparison (e.g., psilocybin &gt; saline, etc.)</p></li>
+<li><p>This script will loop through all directories in the current working dir and process the data in each subdir.</p></li>
+<li><p>Each subdir should contain .csv files with the density data for each cluster.</p></li>
+<li><p>The first 2 groups reflect the main comparison for validation rates.</p></li>
+<li><p>Clusters are not considered valid if the effect direction does not match the expected direction.</p></li>
+</ul>
+</div>
+<dl class="simple">
+<dt>Input files:</dt><dd><p>&lt;asterisk&gt;_density_data.csv from <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code> (e.g., in each subdir named after the rev_cluster_index.nii.gz file)</p>
+</dd>
+<dt>CSV naming conventions:</dt><dd><ul class="simple">
+<li><p>Condition: first word before ‘_’ in the file name</p></li>
+<li><p>Side: last word before .csv (LH or RH)</p></li>
+</ul>
+</dd>
+<dt>Example unilateral inputs in the subdirs:</dt><dd><ul class="simple">
+<li><p>condition1_sample01_&lt;cell|label&gt;_density_data.csv</p></li>
+<li><p>condition1_sample02_&lt;cell|label&gt;_density_data.csv</p></li>
+<li><p>condition2_sample03_&lt;cell|label&gt;_density_data.csv</p></li>
+<li><p>condition2_sample04_&lt;cell|label&gt;_density_data.csv</p></li>
+</ul>
+</dd>
+<dt>Example bilateral inputs (if any file has _LH.csv or _RH.csv, the command will attempt to pool data):</dt><dd><ul class="simple">
+<li><p>condition1_sample01_&lt;cell|label&gt;_density_data_LH.csv</p></li>
+<li><p>condition1_sample01_&lt;cell|label&gt;_density_data_RH.csv</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Grouping data by condition prefixes:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">cluster_stats</span></code> –groups psilocybin saline –condition_prefixes saline psilocybin
+- This will treat all ‘psilocybin*’ conditions as one group and all ‘saline*’ conditions as another
+- Since there will then effectively be two conditions in this case, they will be compared using a t-test</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="simple">
+<dt>Columns in the .csv files:</dt><dd><p>sample, cluster_ID, &lt;cell_count|label_volume&gt;, cluster_volume, &lt;cell_density|label_density&gt;, …</p>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>./_valid_clusters_stats/</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.stats.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.stats.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/stats.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.stats.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.stats.condition_selector">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.stats.</span></span><span class="sig-name descname"><span class="pre">condition_selector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unique_conditions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_column</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Conditions'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/stats.html#condition_selector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.stats.condition_selector" title="Link to this definition">#</a></dt>
+<dd><p>Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.
+This function checks if the ‘condition’ is exactly present in the ‘Conditions’ column or is a prefix of any condition in this column.
+If the exact condition is found, it selects those rows.
+If the condition is a prefix (e.g., ‘saline’ matches ‘saline-1’, ‘saline-2’), it selects all rows where the ‘Conditions’ column starts with this prefix.
+An error is raised if the condition is neither found as an exact match nor as a prefix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – DataFrame whose ‘Conditions’ column contains the conditions of interest.</p></li>
+<li><p><strong>condition</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The condition or prefix of interest.</p></li>
+<li><p><strong>unique_conditions</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a>) – List of unique conditions in the ‘Conditions’ column to validate against.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A boolean Series to select rows based on the condition.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.Series</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.stats.cluster_validation_data_df">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.stats.</span></span><span class="sig-name descname"><span class="pre">cluster_validation_data_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">density_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_hemisphere</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_col_pooled</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_prefixes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/stats.html#cluster_validation_data_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.stats.cluster_validation_data_df" title="Link to this definition">#</a></dt>
+<dd><p>Aggregate the data from all .csv files, pool bilateral data if hemispheres are present, optionally pool data by condition, and return the DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>density_col</strong> (<em>-</em>) – the column name for the density data</p></li>
+<li><p><strong>has_hemisphere</strong> (<em>-</em>) – whether the data files contain hemisphere indicators (e.g., _LH.csv or _RH.csv)</p></li>
+<li><p><strong>csv_files</strong> (<em>-</em>) – a list of .csv files</p></li>
+<li><p><strong>groups</strong> (<em>-</em>) – a list of group names</p></li>
+<li><p><strong>data_col</strong> (<em>-</em>) – the column name for the data (cell_count or label_volume)</p></li>
+<li><p><strong>data_col_pooled</strong> (<em>-</em>) – the column name for the pooled data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>the DataFrame containing the cluster data</dt><dd><ul class="simple">
+<li><p>Columns: ‘condition’, ‘sample’, ‘cluster_ID’, ‘cell_count’, ‘cluster_volume’, ‘cell_density’</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>data_df (pd.DataFrame)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.stats.valid_clusters_t_test">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.stats.</span></span><span class="sig-name descname"><span class="pre">valid_clusters_t_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alternative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'two-sided'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/stats.html#valid_clusters_t_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.stats.valid_clusters_t_test" title="Link to this definition">#</a></dt>
+<dd><p>Perform unpaired t-tests for each cluster in the DataFrame and return the results as a DataFrame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>-</em>) – the DataFrame containing the cluster data
+- Columns: ‘condition’, ‘sample’, ‘cluster_ID’, ‘cell_count’, ‘cluster_volume’, ‘cell_density’</p></li>
+<li><p><strong>group1</strong> (<em>-</em>) – the name of the first group</p></li>
+<li><p><strong>group2</strong> (<em>-</em>) – the name of the second group</p></li>
+<li><p><strong>density_col</strong> (<em>-</em>) – the column name for the density data</p></li>
+<li><p><strong>alternative</strong> (<em>-</em>) – the alternative hypothesis (‘two-sided’, ‘less’, or ‘greater’)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>the DataFrame containing the t-test results</dt><dd><ul class="simple">
+<li><p>Columns: ‘cluster_ID’, ‘comparison’, ‘higher_mean_group’, ‘p-value’, ‘significance’</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>stats_df (pd.DataFrame)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.stats.perform_tukey_test">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.stats.</span></span><span class="sig-name descname"><span class="pre">perform_tukey_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_col</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/stats.html#perform_tukey_test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.stats.perform_tukey_test" title="Link to this definition">#</a></dt>
+<dd><p>Perform Tukey’s HSD test for each cluster in the DataFrame and return the results as a DataFrame</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>df</strong> (<em>-</em>) – the DataFrame containing the cluster data
+- Columns: ‘condition’, ‘sample’, ‘cluster_ID’, ‘cell_count’, ‘cluster_volume’, ‘cell_density’</p></li>
+<li><p><strong>groups</strong> (<em>-</em>) – a list of group names</p></li>
+<li><p><strong>density_col</strong> (<em>-</em>) – the column name for the density data</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>the DataFrame containing the Tukey’s HSD test results</dt><dd><ul class="simple">
+<li><p>Columns: ‘cluster_ID’, ‘comparison’, ‘higher_mean_group’, ‘p-value’, ‘significance’</p></li>
+</ul>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>stats_df (pd.DataFrame)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.stats.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.stats.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/stats.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.stats.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +721,25 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t-test-usage">T-test usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tukey-s-test-usage">Tukey’s test usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.stats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.stats.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.stats.cluster_validation_data_df"><code class="docutils literal notranslate"><span class="pre">cluster_validation_data_df()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.stats.valid_clusters_t_test"><code class="docutils literal notranslate"><span class="pre">valid_clusters_t_test()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.stats.perform_tukey_test"><code class="docutils literal notranslate"><span class="pre">perform_tukey_test()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.stats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

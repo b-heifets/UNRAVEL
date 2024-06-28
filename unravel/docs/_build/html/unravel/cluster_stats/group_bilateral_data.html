@@ -486,8 +486,55 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-cluster-stats-group-bilateral-data-module">
-<span id="unravel-cluster-stats-group-bilateral-data"></span><h1>unravel.cluster_stats.group_bilateral_data module<a class="headerlink" href="#unravel-cluster-stats-group-bilateral-data-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.cluster_stats.group_bilateral_data">
+<span id="unravel-cluster-stats-group-bilateral-data-module"></span><span id="unravel-cluster-stats-group-bilateral-data"></span><h1>unravel.cluster_stats.group_bilateral_data module<a class="headerlink" href="#module-unravel.cluster_stats.group_bilateral_data" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_group_data</span></code> from UNRAVEL to organize bilateral csv outputs from <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code></p>
+<p>Run this command in the target_dir from <code class="docutils literal notranslate"><span class="pre">cluster_org_data</span></code></p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_group_data</p>
+</div></blockquote>
+<p>It consolidates CSV files into pooled directories based on hemisphere.</p>
+<dl class="simple">
+<dt>Folder naming convention:</dt><dd><ul class="simple">
+<li><p>&lt;cluster_validation_dir&gt;_LH for left hemisphere files</p></li>
+<li><p>&lt;cluster_validation_dir&gt;_RH for right hemisphere files</p></li>
+</ul>
+</dd>
+<dt>For example, if the command is run in a directory containing the following directories:</dt><dd><ul class="simple">
+<li><p>cluster_valid_results_1_LH</p></li>
+<li><p>cluster_valid_results_1_RH</p></li>
+<li><p>cluster_valid_results_2_LH</p></li>
+<li><p>cluster_valid_results_2_RH</p></li>
+</ul>
+</dd>
+</dl>
+<p>The command will create a new directory for each cluster and move the corresponding left and right hemisphere files into it.
+The original directories will be removed.</p>
+<dl class="simple">
+<dt>The resulting directory structure will be:</dt><dd><ul class="simple">
+<li><p>cluster_valid_results_1</p></li>
+<li><p>cluster_valid_results_2</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.group_bilateral_data.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.group_bilateral_data.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/group_bilateral_data.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.group_bilateral_data.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.group_bilateral_data.group_hemisphere_data">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.group_bilateral_data.</span></span><span class="sig-name descname"><span class="pre">group_hemisphere_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/group_bilateral_data.html#group_hemisphere_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.group_bilateral_data.group_hemisphere_data" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.group_bilateral_data.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.group_bilateral_data.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/group_bilateral_data.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.group_bilateral_data.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +574,21 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.group_bilateral_data.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.group_bilateral_data.group_hemisphere_data"><code class="docutils literal notranslate"><span class="pre">group_hemisphere_data()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.group_bilateral_data.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

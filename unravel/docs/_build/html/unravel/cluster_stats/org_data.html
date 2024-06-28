@@ -486,8 +486,80 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-cluster-stats-org-data-module">
-<span id="unravel-cluster-stats-org-data"></span><h1>unravel.cluster_stats.org_data module<a class="headerlink" href="#unravel-cluster-stats-org-data-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.cluster_stats.org_data">
+<span id="unravel-cluster-stats-org-data-module"></span><span id="unravel-cluster-stats-org-data"></span><h1>unravel.cluster_stats.org_data module<a class="headerlink" href="#module-unravel.cluster_stats.org_data" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_org_data</span></code> from UNRAVEL to aggregate and organize csv outputs from <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code>.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_org_data -e &lt;list of experiment directories&gt; -cvd ‘&lt;asterisk&gt;’ -td &lt;target_dir&gt; -vd &lt;path/vstats_dir&gt; -v</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.org_data.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/org_data.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.org_data.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.org_data.find_matching_directory">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">find_matching_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">long_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/org_data.html#find_matching_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.org_data.find_matching_directory" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.org_data.cp">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">cp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/org_data.html#cp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.org_data.cp" title="Link to this definition">#</a></dt>
+<dd><p>Copy a file from src path to a dest path, optionally printing the action.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src</strong> (<em>-</em>) – the source path</p></li>
+<li><p><strong>dest</strong> (<em>-</em>) – the destination path</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.org_data.copy_stats_files">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">copy_stats_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">validation_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vstats_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_val_txt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/org_data.html#copy_stats_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.org_data.copy_stats_files" title="Link to this definition">#</a></dt>
+<dd><p>Copy the cluster info, p value threshold, and rev_cluster_index files to the target directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>validation_dir</strong> (<em>-</em>) – the path to the validation directory</p></li>
+<li><p><strong>dest_path</strong> (<em>-</em>) – the path to the new directory</p></li>
+<li><p><strong>vstats_path</strong> (<em>-</em>) – the path to the vstats directory</p></li>
+<li><p><strong>p_val_txt</strong> (<em>-</em>) – the name of the file with the corrected p value threshold</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.org_data.organize_validation_data">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">organize_validation_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validation_dir_pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vstats_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p_val_txt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/org_data.html#organize_validation_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.org_data.organize_validation_data" title="Link to this definition">#</a></dt>
+<dd><p>Copy the cluster validation, p value, cluster info, and rev_cluster_index files to the target directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sample_path</strong> (<em>-</em>) – the path to the sample directory</p></li>
+<li><p><strong>clusters_path</strong> (<em>-</em>) – the path to the clusters directory</p></li>
+<li><p><strong>validation_dir_pattern</strong> (<em>-</em>) – the pattern to match the validation directories</p></li>
+<li><p><strong>density_type</strong> (<em>-</em>) – the type of density data to aggregate (cell or label)</p></li>
+<li><p><strong>target_dir</strong> (<em>-</em>) – the path to the target directory</p></li>
+<li><p><strong>vstats_path</strong> (<em>-</em>) – the path to the vstats directory</p></li>
+<li><p><strong>p_val_txt</strong> (<em>-</em>) – the name of the file with the corrected p value threshold</p></li>
+<li><p><strong>cluster_idx</strong> (<em>-</em>) – the name of the rev_cluster_index file</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.org_data.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.org_data.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/org_data.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.org_data.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +599,24 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.org_data.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.org_data.find_matching_directory"><code class="docutils literal notranslate"><span class="pre">find_matching_directory()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.org_data.cp"><code class="docutils literal notranslate"><span class="pre">cp()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.org_data.copy_stats_files"><code class="docutils literal notranslate"><span class="pre">copy_stats_files()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.org_data.organize_validation_data"><code class="docutils literal notranslate"><span class="pre">organize_validation_data()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.org_data.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

@@ -486,8 +486,47 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-segment-brain-mask-module">
-<span id="unravel-segment-brain-mask"></span><h1>unravel.segment.brain_mask module<a class="headerlink" href="#unravel-segment-brain-mask-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.segment.brain_mask">
+<span id="unravel-segment-brain-mask-module"></span><span id="unravel-segment-brain-mask"></span><h1>unravel.segment.brain_mask module<a class="headerlink" href="#module-unravel.segment.brain_mask" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> from UNRAVEL to run a trained ilastik project (pixel classification) to mask the brain (often better registration).</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>seg_brain_mask -ilp &lt;path/brain_mask.ilp&gt; [-i reg_inputs/autofl_50um.nii.gz] [-r 50] [-v]</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p>Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif (from <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>)</p></li>
+<li><p>Save brain_mask.ilp in experiment directory of use -ilp</p></li>
+</ul>
+</dd>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>reg_inputs/autofl_&lt;asterisk&gt;um.nii.gz</p></li>
+<li><p>brain_mask.ilp # in exp dir</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>reg_inputs/autofl_&lt;asterisk&gt;um_tifs_ilastik_brain_seg/slice_&lt;asterisk&gt;.tif series</p></li>
+<li><p>reg_inputs/autofl_&lt;asterisk&gt;um_brain_mask.nii.gz (can be used for <code class="docutils literal notranslate"><span class="pre">reg</span></code> and <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code>)</p></li>
+<li><p>reg_inputs/autofl_&lt;asterisk&gt;um_masked.nii.gz</p></li>
+</ul>
+</dd>
+<dt>Next command:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.segment.brain_mask.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.segment.brain_mask.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/brain_mask.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.brain_mask.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.segment.brain_mask.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.segment.brain_mask.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/brain_mask.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.brain_mask.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +566,20 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.brain_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.brain_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

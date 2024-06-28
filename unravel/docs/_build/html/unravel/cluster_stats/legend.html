@@ -486,8 +486,43 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-cluster-stats-legend-module">
-<span id="unravel-cluster-stats-legend"></span><h1>unravel.cluster_stats.legend module<a class="headerlink" href="#unravel-cluster-stats-legend-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.cluster_stats.legend">
+<span id="unravel-cluster-stats-legend-module"></span><span id="unravel-cluster-stats-legend"></span><h1>unravel.cluster_stats.legend module<a class="headerlink" href="#module-unravel.cluster_stats.legend" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_legend</span></code> from UNRAVEL to summarize regional abbreviations from &lt;asterisk&gt;_valid_clusters_table.xlsx files.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_legend</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Inputs:</dt><dd><p>&lt;asterisk&gt;_valid_clusters_table.xlsx files in the working directory output from <code class="docutils literal notranslate"><span class="pre">cluster_table</span></code></p>
+</dd>
+<dt>Outputs:</dt><dd><p>legend.xlsx</p>
+</dd>
+</dl>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.legend.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.legend.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/legend.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.legend.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.legend.extract_unique_regions_from_file">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.legend.</span></span><span class="sig-name descname"><span class="pre">extract_unique_regions_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/legend.html#extract_unique_regions_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.legend.extract_unique_regions_from_file" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.legend.apply_rgb_to_cell">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.legend.</span></span><span class="sig-name descname"><span class="pre">apply_rgb_to_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ws</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">df_w_rgb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_w_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">col_num</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/legend.html#apply_rgb_to_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.legend.apply_rgb_to_cell" title="Link to this definition">#</a></dt>
+<dd><p>Apply RGB values to cells in the worksheet.</p>
+<p>Parameters: ws (openpyxl worksheet), df_w_rgb (DataFrame with RGB values), col_w_labels (column with region labels), region (region name), col_num (column number to apply the RGB values starting from 0)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.legend.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.legend.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/legend.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.legend.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +562,22 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.legend.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.legend.extract_unique_regions_from_file"><code class="docutils literal notranslate"><span class="pre">extract_unique_regions_from_file()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.legend.apply_rgb_to_cell"><code class="docutils literal notranslate"><span class="pre">apply_rgb_to_cell()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.legend.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

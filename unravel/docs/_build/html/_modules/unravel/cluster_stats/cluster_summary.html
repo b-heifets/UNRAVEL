@@ -1,0 +1,714 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unravel.cluster_stats.cluster_summary &#8212; UNRAVEL docs</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/cluster_summary';</script>
+    <link rel="icon" href="../../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">UNRAVEL docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide.html">
+    Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide.html">
+    Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">unravel.clus...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for unravel.cluster_stats.cluster_summary</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">Use ``cluster_summary`` from UNRAVEL to aggregate and analyze cluster validation data from ``cluster_validation``.</span>
+
+<span class="sd">Usage if running directly after ``cluster_validation``:</span>
+<span class="sd">-------------------------------------------------------</span>
+<span class="sd">    cluster_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd &#39;psilocybin_v_saline_tstat1_q&lt;asterisk&gt;&#39; -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; -v</span>
+
+<span class="sd">Note: </span>
+<span class="sd">    - The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</span>
+
+<span class="sd">Usage if running after ``cluster_validation`` and ``cluster_org_data``:</span>
+<span class="sd">-----------------------------------------------------------------------</span>
+<span class="sd">    cluster_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; -v</span>
+
+<span class="sd">Note:</span>
+<span class="sd">    - For the second usage, the ``-e``, ``-cvd``, and ``-vd`` arguments are not needed because the data is already in the working directory.</span>
+<span class="sd">    - Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.</span>
+<span class="sd">    - Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run ``cluster_legend``).</span>
+
+<span class="sd">The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.</span>
+
+<span class="sd">``cluster_summary`` runs commands in this order:</span>
+<span class="sd">    - ``cluster_org_data``</span>
+<span class="sd">    - ``cluster_group_data``</span>
+<span class="sd">    - ``utils_prepend``</span>
+<span class="sd">    - ``cluster_stats``</span>
+<span class="sd">    - ``cluster_index``</span>
+<span class="sd">    - ``cluster_brain_model``</span>
+<span class="sd">    - ``cluster_table``</span>
+<span class="sd">    - ``cluster_prism``</span>
+<span class="sd">    - ``cluster_legend``</span>
+
+<span class="sd">The sample_key.csv file should have the following format:</span>
+<span class="sd">    dir_name,condition</span>
+<span class="sd">    sample01,control</span>
+<span class="sd">    sample02,treatment</span>
+
+<span class="sd">If you need to rerun this script, delete the following directories and files in the current working directory:</span>
+<span class="sd">find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} \; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} \; -o -name 3D_brains -exec rm -rf {} \; -o -name valid_clusters_tables_and_legend -exec rm -rf {} \; -o -name _valid_clusters_stats -exec rm -rf {} \;</span>
+
+<span class="sd">If you want to aggregate CSVs for sunburst plots of valid clusters, run this in a root directory:</span>
+<span class="sd">find . -name &quot;valid_clusters_sunburst.csv&quot; -exec sh -c &#39;cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})&#39; \;</span>
+
+<span class="sd">Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv). </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
+<span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
+
+<span class="kn">from</span> <span class="nn">unravel.cluster_stats.org_data</span> <span class="kn">import</span> <span class="n">cp</span>
+<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span> 
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">load_config</span>
+<span class="kn">from</span> <span class="nn">unravel.utilities.aggregate_files_recursively</span> <span class="kn">import</span> <span class="n">find_and_copy_files</span>
+
+
+<div class="viewcode-block" id="parse_args">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cluster_summary.html#unravel.cluster_stats.cluster_summary.parse_args">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the config.ini file. Default: unravel/cluster_stats/cluster_summary.ini&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;cluster_summary.ini&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="c1"># cluster_org_data -e &lt;list of experiment directories&gt; -cvd &#39;*&#39; -td &lt;target_dir&gt; -vd &lt;path/vstats_dir&gt; -v</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process. (needed for cluster_org_data)&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cvd&#39;</span><span class="p">,</span> <span class="s1">&#39;--cluster_val_dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for cluster_org_data&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span> 
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-vd&#39;</span><span class="p">,</span> <span class="s1">&#39;--vstats_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cluster_org_data)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="c1"># utils_prepend -c &lt;path/sample_key.csv&gt; -f -r</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sk&#39;</span><span class="p">,</span> <span class="s1">&#39;--sample_key&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/sample_key.csv w/ directory names and conditions (for utils_prepend)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="c1"># cluster_stats --groups &lt;group1&gt; &lt;group2&gt;</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of group prefixes. 2 groups --&gt; t-test. &gt;2 --&gt; Tukey</span><span class="se">\&#39;</span><span class="s1">s tests (The first 2 groups reflect the main comparison for validation rates; for cluster_stats)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_prefixes&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Condition prefixes to group related data (optional for cluster_stats)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-hg&#39;</span><span class="p">,</span> <span class="s1">&#39;--higher_group&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Specify the group that is expected to have a higher mean based on the direction of the p value map&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
+
+
+<span class="c1"># TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. Could make cells vs. labels are arg. Could add a raw data output organized for the SI table. # The valid cluster sunburst could have the val dir name and be copied to a central location</span>
+<span class="c1"># TODO: Consider moving find_and_copy_files() to unravel/unravel/utils.py</span>
+<span class="c1"># TODO: Move cell vs. label arg from config back to argparse and make it a required arg to prevent accidentally using the wrong metric</span>
+<span class="c1"># TODO: Add a reset option to delete all output files and directories from the current working directory</span>
+<span class="c1"># TODO: Aggregate CSVs for valid cluster sunburst plots</span>
+<span class="c1"># TODO: Sort the overall valid cluster sunburst csv </span>
+
+
+<div class="viewcode-block" id="run_script">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cluster_summary.html#unravel.cluster_stats.cluster_summary.run_script">[docs]</a>
+<span class="k">def</span> <span class="nf">run_script</span><span class="p">(</span><span class="n">script_name</span><span class="p">,</span> <span class="n">script_args</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run a command/script using subprocess that respects the system&#39;s PATH and captures output.&quot;&quot;&quot;</span>
+    <span class="c1"># Convert all script arguments to string</span>
+    <span class="n">script_args</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">script_args</span><span class="p">]</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="n">script_name</span><span class="p">]</span> <span class="o">+</span> <span class="n">script_args</span>
+    <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cluster_summary.html#unravel.cluster_stats.cluster_summary.main">[docs]</a>
+<span class="nd">@log_command</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">install</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+    <span class="n">verbose_start_msg</span><span class="p">()</span>
+
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+    
+    <span class="c1"># Run cluster_org_data</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">exp_paths</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_val_dirs</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">vstats_path</span><span class="p">:</span>
+        <span class="n">org_data_args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">exp_paths</span><span class="p">,</span>
+            <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">org_data</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span>
+            <span class="s1">&#39;-cvd&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_val_dirs</span><span class="p">,</span>
+            <span class="s1">&#39;-vd&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">vstats_path</span><span class="p">,</span>
+            <span class="s1">&#39;-dt&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">org_data</span><span class="o">.</span><span class="n">density_type</span><span class="p">,</span>
+            <span class="s1">&#39;-pvt&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">org_data</span><span class="o">.</span><span class="n">p_val_txt</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">org_data_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_org_data&#39;</span><span class="p">,</span> <span class="n">org_data_args</span><span class="p">)</span>
+
+    <span class="c1"># Run cluster_group_data</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_group_data&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;-v&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_group_data&#39;</span><span class="p">,</span> <span class="p">[])</span>
+
+    <span class="c1"># Run utils_prepend</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">sample_key</span><span class="p">:</span>
+        <span class="n">prepend_conditions_args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;-sk&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">sample_key</span><span class="p">,</span>
+            <span class="s1">&#39;-f&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;-r&#39;</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">prepend_conditions_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;utils_prepend&#39;</span><span class="p">,</span> <span class="n">prepend_conditions_args</span><span class="p">)</span>
+
+    <span class="c1"># Run cluster_stats</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+        <span class="n">stats_args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span>
+            <span class="s1">&#39;-alt&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">alternate</span><span class="p">,</span>
+            <span class="s1">&#39;-pvt&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">org_data</span><span class="o">.</span><span class="n">p_val_txt</span><span class="p">,</span> 
+            <span class="s1">&#39;-hg&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">higher_group</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">condition_prefixes</span><span class="p">:</span>
+            <span class="n">stats_args</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">condition_prefixes</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">stats_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_stats&#39;</span><span class="p">,</span> <span class="n">stats_args</span><span class="p">)</span>
+
+    <span class="n">dsi_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;3D_brains&#39;</span>
+    <span class="n">dsi_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+    
+    <span class="c1"># Iterate over all subdirectories in the current working directory and run the following scripts</span>
+    <span class="k">for</span> <span class="n">subdir</span> <span class="ow">in</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;3D_brains&#39;</span> <span class="ow">and</span> <span class="n">d</span><span class="o">.</span><span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span><span class="p">]:</span>
+
+        <span class="c1"># Load all .csv files in the current subdirectory</span>
+        <span class="n">csv_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subdir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.csv&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">csv_files</span><span class="p">:</span>
+            <span class="k">continue</span>  <span class="c1"># Skip directories with no CSV files</span>
+
+        <span class="n">stats_output</span> <span class="o">=</span> <span class="n">subdir</span> <span class="o">/</span> <span class="s1">&#39;_valid_clusters_stats&#39;</span>
+        <span class="n">valid_clusters_ids_txt</span> <span class="o">=</span> <span class="n">stats_output</span> <span class="o">/</span> <span class="s1">&#39;valid_cluster_IDs_t-test.txt&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">stats_output</span> <span class="o">/</span> <span class="s1">&#39;valid_cluster_IDs_tukey.txt&#39;</span>
+
+        <span class="k">if</span> <span class="n">valid_clusters_ids_txt</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">valid_clusters_ids_txt</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">valid_cluster_ids</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+        <span class="n">rev_cluster_index_path</span> <span class="o">=</span> <span class="n">subdir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">subdir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_rev_cluster_index.nii.gz&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">rev_cluster_index_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">rev_cluster_index_path</span> <span class="o">=</span> <span class="n">subdir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">subdir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_rev_cluster_index_RH.nii.gz&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">rev_cluster_index_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>        
+            <span class="n">rev_cluster_index_path</span> <span class="o">=</span> <span class="n">subdir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">subdir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_rev_cluster_index_LH.nii.gz&#39;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">rev_cluster_index_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">rev_cluster_index_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">subdir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*rev_cluster_index*&quot;</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">rev_cluster_index_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    No valid cluster index file found in </span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s2">. Skipping...&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>  <span class="c1"># Skip this directory and move to the next</span>
+
+        <span class="n">valid_clusters_index_dir</span> <span class="o">=</span> <span class="n">subdir</span> <span class="o">/</span> <span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">valid_clusters_dir</span>
+        
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_cluster_ids</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    No clusters were valid for </span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s2">. Skipping...&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Run cluster_index</span>
+        <span class="n">index_args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;-ci&#39;</span><span class="p">,</span> <span class="n">rev_cluster_index_path</span><span class="p">,</span>
+            <span class="s1">&#39;-ids&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">valid_cluster_ids</span><span class="p">,</span>
+            <span class="s1">&#39;-vcd&#39;</span><span class="p">,</span> <span class="n">valid_clusters_index_dir</span><span class="p">,</span>
+            <span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">atlas</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">output_rgb_lut</span><span class="p">:</span>
+            <span class="n">index_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-rgb&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">index_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_index&#39;</span><span class="p">,</span> <span class="n">index_args</span><span class="p">)</span>
+
+        <span class="c1"># Run cluster_brain_model</span>
+        <span class="n">valid_cluster_index_path</span> <span class="o">=</span> <span class="n">valid_clusters_index_dir</span> <span class="o">/</span> <span class="nb">str</span><span class="p">(</span><span class="n">rev_cluster_index_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;_</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">valid_clusters_dir</span><span class="si">}</span><span class="s1">.nii.gz&#39;</span><span class="p">)</span>
+        <span class="n">brain_args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">valid_cluster_index_path</span><span class="p">,</span>
+            <span class="s1">&#39;-ax&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">axis</span><span class="p">,</span>
+            <span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">shift</span><span class="p">,</span>
+            <span class="s1">&#39;-sa&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">split_atlas</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">mirror</span><span class="p">:</span> 
+            <span class="n">brain_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">brain_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_brain_model&#39;</span><span class="p">,</span> <span class="n">brain_args</span><span class="p">)</span>
+
+        <span class="c1"># Aggregate files from cluster_brain_model</span>
+        <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">brain</span><span class="o">.</span><span class="n">mirror</span><span class="p">:</span> 
+            <span class="n">find_and_copy_files</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;*</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">valid_clusters_dir</span><span class="si">}</span><span class="s1">_ABA_WB.nii.gz&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">dsi_dir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">find_and_copy_files</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;*</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">valid_clusters_dir</span><span class="si">}</span><span class="s1">_ABA.nii.gz&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">dsi_dir</span><span class="p">)</span>
+        <span class="n">find_and_copy_files</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;*</span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">valid_clusters_dir</span><span class="si">}</span><span class="s1">_rgba.txt&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">dsi_dir</span><span class="p">)</span>
+
+        <span class="c1"># Run cluster_table</span>
+        <span class="n">table_args</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;-vcd&#39;</span><span class="p">,</span> <span class="n">valid_clusters_index_dir</span><span class="p">,</span>
+            <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">top_regions</span><span class="p">,</span>
+            <span class="s1">&#39;-pv&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">table</span><span class="o">.</span><span class="n">percent_vol</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="n">table_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
+        <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_table&#39;</span><span class="p">,</span> <span class="n">table_args</span><span class="p">)</span>
+        <span class="n">find_and_copy_files</span><span class="p">(</span><span class="s1">&#39;*_valid_clusters_table.xlsx&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span><span class="p">)</span>
+    
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+
+            <span class="c1"># Run cluster_prism</span>
+            <span class="n">valid_cluster_ids_sorted_txt</span> <span class="o">=</span> <span class="n">valid_clusters_index_dir</span> <span class="o">/</span> <span class="s1">&#39;valid_cluster_IDs_sorted_by_anatomy.txt&#39;</span>
+            <span class="k">if</span> <span class="n">valid_cluster_ids_sorted_txt</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">valid_cluster_ids_sorted_txt</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">valid_cluster_ids_sorted</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="n">valid_cluster_ids_sorted</span> <span class="o">=</span> <span class="n">valid_cluster_ids</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">valid_cluster_ids_sorted</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">prism_args</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="s1">&#39;-ids&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">valid_cluster_ids_sorted</span><span class="p">,</span>
+                    <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span>
+                <span class="p">]</span>
+                <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prism</span><span class="o">.</span><span class="n">save_all</span><span class="p">:</span>
+                    <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-sa&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                    <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
+                <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_prism&#39;</span><span class="p">,</span> <span class="n">prism_args</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    No valid cluster IDs found for </span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s2">. Skipping cluster_prism...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Copy the atlas and binarize it for visualization in DSI studio</span>
+    <span class="n">dest_atlas</span> <span class="o">=</span> <span class="n">dsi_dir</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">atlas</span><span class="p">)</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dest_atlas</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">cp</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">atlas</span><span class="p">,</span> <span class="n">dsi_dir</span><span class="p">)</span>
+        <span class="n">atlas_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dest_atlas</span><span class="p">)</span>
+        <span class="n">atlas_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">atlas_nii</span><span class="o">.</span><span class="n">dataobj</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">atlas_nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_data_dtype</span><span class="p">())</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+        <span class="n">atlas_img</span><span class="p">[</span><span class="n">atlas_img</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">atlas_img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">atlas_nii_bin</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">atlas_img</span><span class="p">,</span> <span class="n">atlas_nii</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span> <span class="n">atlas_nii</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+        <span class="n">atlas_nii_bin</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+        <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">atlas_nii_bin</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">dest_atlas</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;_bin.nii.gz&#39;</span><span class="p">))</span>
+
+        <span class="c1"># Run cluster_legend</span>
+        <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">legend_args</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;valid_clusters_tables_and_legend&#39;</span>
+            <span class="p">]</span>
+            <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_legend&#39;</span><span class="p">,</span> <span class="n">legend_args</span><span class="p">)</span>
+
+    <span class="n">verbose_end_msg</span><span class="p">()</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, the UNRAVEL team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -502,7 +502,9 @@ and enhancing command-line scripts with progress bars and detailed function exec
 <li><p>load_config: Load settings from a config file.</p></li>
 <li><p>get_samples: Get a list of sample directories based on provided parameters.</p></li>
 <li><p>initialize_progress_bar: Initialize a Rich progress bar.</p></li>
-<li><p>print_cmd_and_times: Decorator to log and print command execution details.</p></li>
+<li><p>verbose_start_msg: Print the start command and time if verbose mode is enabled.</p></li>
+<li><p>verbose_end_msg: Print the end time if verbose mode is enabled.</p></li>
+<li><p>log_command: Decorator to log the command and execution times to a hidden file.</p></li>
 <li><p>print_func_name_args_times: Decorator to print function execution details.</p></li>
 <li><p>load_text_from_file: Load text content from a file.</p></li>
 <li><p>copy_files: Copy specified files from source to target directory.</p></li>
@@ -513,20 +515,10 @@ and enhancing command-line scripts with progress bars and detailed function exec
 </dl>
 <p class="rubric">Examples</p>
 <ul class="simple">
-<li><p>from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times, load_text_from_file copy_files</p></li>
+<li><p>from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_func_name_args_times, load_text_from_file copy_files</p></li>
 <li><p>config = load_config(“path/to/config.ini”)</p></li>
 <li><p>samples = get_samples(exp_dir_paths=[“/path/to/exp1”, “/path/to/exp2”])</p></li>
 <li><p>progress, task_id = initialize_progress_bar(len(samples), task_message=”[red]Processing samples…”)</p></li>
-<li><dl class="simple">
-<dt>if __name__ == ‘__main__’:</dt><dd><ul>
-<li><p>install()</p></li>
-<li><p>args = parse_args()</p></li>
-<li><p>Configuration.verbose = args.verbose</p></li>
-<li><p>print_cmd_and_times(main)()</p></li>
-</ul>
-</dd>
-</dl>
-</li>
 </ul>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.utils.load_config">
@@ -657,9 +649,21 @@ If both sample_dir_list and exp_dir_paths are provided, paths are added to the l
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.utils.print_cmd_and_times">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">print_cmd_and_times</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/utils.html#print_cmd_and_times"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.print_cmd_and_times" title="Link to this definition">#</a></dt>
-<dd><p>A decorator to print the script name, arguments, start/end times, use rich traceback, and log commands to a hidden file.</p>
+<dt class="sig sig-object py" id="unravel.core.utils.verbose_start_msg">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">verbose_start_msg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/utils.html#verbose_start_msg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.verbose_start_msg" title="Link to this definition">#</a></dt>
+<dd><p>Print the start command and time if verbose mode is enabled.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.utils.verbose_end_msg">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">verbose_end_msg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/utils.html#verbose_end_msg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.verbose_end_msg" title="Link to this definition">#</a></dt>
+<dd><p>Print the end time if verbose mode is enabled.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.utils.log_command">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">log_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/utils.html#log_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.log_command" title="Link to this definition">#</a></dt>
+<dd><p>A decorator for main() to log the command and execution times to a hidden file (.command_log.txt).</p>
 </dd></dl>
 
 <dl class="py function">
@@ -764,7 +768,9 @@ and returns a string based on the name of the file or directory.</p>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.initialize_progress_bar"><code class="docutils literal notranslate"><span class="pre">initialize_progress_bar()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.print_cmd_and_times"><code class="docutils literal notranslate"><span class="pre">print_cmd_and_times()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.verbose_start_msg"><code class="docutils literal notranslate"><span class="pre">verbose_start_msg()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.verbose_end_msg"><code class="docutils literal notranslate"><span class="pre">verbose_end_msg()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.log_command"><code class="docutils literal notranslate"><span class="pre">log_command()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.get_dir_name_from_args"><code class="docutils literal notranslate"><span class="pre">get_dir_name_from_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.print_func_name_args_times"><code class="docutils literal notranslate"><span class="pre">print_func_name_args_times()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.load_text_from_file"><code class="docutils literal notranslate"><span class="pre">load_text_from_file()</span></code></a></li>

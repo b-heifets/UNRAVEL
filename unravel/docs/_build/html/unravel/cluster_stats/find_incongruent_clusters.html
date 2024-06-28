@@ -486,8 +486,41 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-cluster-stats-find-incongruent-clusters-module">
-<span id="unravel-cluster-stats-find-incongruent-clusters"></span><h1>unravel.cluster_stats.find_incongruent_clusters module<a class="headerlink" href="#unravel-cluster-stats-find-incongruent-clusters-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.cluster_stats.find_incongruent_clusters">
+<span id="unravel-cluster-stats-find-incongruent-clusters-module"></span><span id="unravel-cluster-stats-find-incongruent-clusters"></span><h1>unravel.cluster_stats.find_incongruent_clusters module<a class="headerlink" href="#module-unravel.cluster_stats.find_incongruent_clusters" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_find_incongruent</span></code> from UNRAVEL if <code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code> was used to convert non-directional p value maps into directional cluster indices. This helps to find clusters where the direction of the mean intensity difference between groups does not match direction of the difference in cell/label density between groups.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_find_incongruent -c tukey_results.csv -l groupA -g groupB</p>
+</div></blockquote>
+<p>This is useful to find clusters where z-scoring introduces incongruencies between the mean intensity difference and the density difference.</p>
+<p>For example, if group A has increased IF in region A and not B, z-scoring may decrease the relative intensity of region B.
+This decrease for region B for one group, may introduce a difference in the mean intensity between groups that is not reflected in the density difference.</p>
+<dl class="simple">
+<dt>Input csv:</dt><dd><p>./_cluster_validation_info/tukey_results.csv  or ttest_results.csv from <code class="docutils literal notranslate"><span class="pre">cluster_stats</span></code></p>
+</dd>
+<dt>Columns:</dt><dd><p>‘cluster_ID’, ‘comparison’, ‘higher_mean_group’, ‘p-value’, ‘significance’</p>
+</dd>
+<dt>Output:</dt><dd><p>Cluster IDs where the mean intensity difference does not match the density difference between groups A and B.</p>
+</dd>
+</dl>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.find_incongruent_clusters.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.find_incongruent_clusters.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/find_incongruent_clusters.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.find_incongruent_clusters.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.find_incongruent_clusters.find_incongruent_clusters">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.find_incongruent_clusters.</span></span><span class="sig-name descname"><span class="pre">find_incongruent_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_lower_mean_group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected_higher_mean_group</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/find_incongruent_clusters.html#find_incongruent_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.find_incongruent_clusters.find_incongruent_clusters" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.find_incongruent_clusters.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.find_incongruent_clusters.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/find_incongruent_clusters.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.find_incongruent_clusters.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +560,21 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.find_incongruent_clusters.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.find_incongruent_clusters.find_incongruent_clusters"><code class="docutils literal notranslate"><span class="pre">find_incongruent_clusters()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.find_incongruent_clusters.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

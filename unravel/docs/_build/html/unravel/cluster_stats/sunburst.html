@@ -486,8 +486,87 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-cluster-stats-sunburst-module">
-<span id="unravel-cluster-stats-sunburst"></span><h1>unravel.cluster_stats.sunburst module<a class="headerlink" href="#unravel-cluster-stats-sunburst-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.cluster_stats.sunburst">
+<span id="unravel-cluster-stats-sunburst-module"></span><span id="unravel-cluster-stats-sunburst"></span><h1>unravel.cluster_stats.sunburst module<a class="headerlink" href="#module-unravel.cluster_stats.sunburst" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_sunburst</span></code> from UNRAVEL to generate a sunburst plot of regional volumes across all levels of the ABA hierarchy.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_sunburst -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code> generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them.</p></li>
+<li><p>Optional: <code class="docutils literal notranslate"><span class="pre">cluster_index</span></code> generates a rev_cluster_index.nii.gz w/ valid clusters.</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><p>path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]</p>
+</dd>
+</dl>
+<p>Plot region volumes (<a class="reference external" href="https://app.flourish.studio/">https://app.flourish.studio/</a>)</p>
+<dl class="simple">
+<dt>Data tab:</dt><dd><p>Paste in data from csv, categories columns = Depth_&lt;asterisk&gt; columns, Size by = Volumes column</p>
+</dd>
+<dt>Preview tab:</dt><dd><p>Hierarchy -&gt; Depth to 10, Colors -&gt; paste RGB codes into Custom overrides</p>
+</dd>
+</dl>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.sunburst.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.sunburst.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/sunburst.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.sunburst.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.sunburst.calculate_regional_volumes">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.sunburst.</span></span><span class="sig-name descname"><span class="pre">calculate_regional_volumes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_res_in_um</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/sunburst.html#calculate_regional_volumes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.sunburst.calculate_regional_volumes" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the volumes of labeled regions in the input image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>-</em>) – the input image ndarray.</p></li>
+<li><p><strong>atlas</strong> (<em>-</em>) – the atlas ndarray.</p></li>
+<li><p><strong>atlas_res_in_um</strong> (<em>-</em>) – the atlas resolution in in microns.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a dictionary of region volumes (key = region ID, value = volume in mm^3)</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>volumes_dict (dict)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.sunburst.sunburst">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.sunburst.</span></span><span class="sig-name descname"><span class="pre">sunburst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_res_in_um</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_rgb_lut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/sunburst.html#sunburst"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.sunburst.sunburst" title="Link to this definition">#</a></dt>
+<dd><p>Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>-</em>)</p></li>
+<li><p><strong>atlas</strong> (<em>-</em>)</p></li>
+<li><p><strong>atlas_res_in_um</strong> (<em>-</em>) – the atlas resolution in microns. For example, (25, 25, 25)</p></li>
+<li><p><strong>output_rgb_lut</strong> (<em>-</em>) – flag to output the RGB values for each abbreviation to a CSV file</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>CSV file containing the regional volumes for the sunburst plot (input_sunburst.csv)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.cluster_stats.sunburst.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.sunburst.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/sunburst.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.sunburst.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +606,22 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.sunburst.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.sunburst.calculate_regional_volumes"><code class="docutils literal notranslate"><span class="pre">calculate_regional_volumes()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.sunburst.sunburst"><code class="docutils literal notranslate"><span class="pre">sunburst()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.sunburst.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

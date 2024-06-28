@@ -486,8 +486,123 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-image-io-reorient-nii-module">
-<span id="unravel-image-io-reorient-nii"></span><h1>unravel.image_io.reorient_nii module<a class="headerlink" href="#unravel-image-io-reorient-nii-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.image_io.reorient_nii">
+<span id="unravel-image-io-reorient-nii-module"></span><span id="unravel-image-io-reorient-nii"></span><h1>unravel.image_io.reorient_nii module<a class="headerlink" href="#module-unravel.image_io.reorient_nii" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">io_reorient_nii</span></code> from UNRAVEL to set the orientation of a .nii.gz or its affine matrix.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_reorient_nii -i image.nii.gz -t PIR -a -z</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Output:</dt><dd><ul class="simple">
+<li><p>The new .nii.gz file with the new orientation (e.g., image_PIR.nii.gz or image_PIR_applied.nii.gz)</p></li>
+</ul>
+</dd>
+<dt>The axis codes are:</dt><dd><p>R: Right / L: Left
+A: Anterior / P: Posterior
+S: Superior / I: Inferior</p>
+</dd>
+</dl>
+<p>The orientation code is a 3-letter code that indicates the direction of the axes in the image.</p>
+<dl class="simple">
+<dt>For the RAS+ orientation (default for NIfTI):</dt><dd><ul class="simple">
+<li><p>The right side is at the positive direction of the x-axis</p></li>
+<li><p>The anterior side is at the positive direction of the y-axis</p></li>
+<li><p>The superior side is at the positive direction of the z-axis</p></li>
+</ul>
+</dd>
+</dl>
+<p>The orientation code also indicates the orientation of the axes in the affine matrix.</p>
+<dl>
+<dt>Example affine for RAS+ orientation:</dt><dd><p>[[1  0  0  0]
+[ 0  1  0  0]
+[ 0  0  1  0]
+[ 0  0  0  1]]</p>
+<ul class="simple">
+<li><p>The 1st letter is R since the 1st diagonal value is positive (the right side is at the positive direction of the x-axis)</p></li>
+<li><p>The 2nd letter is A since the 2nd diagonal value is positive (the anterior side is at the positive direction of the y-axis)</p></li>
+<li><p>The 3rd letter is S since the 3rd diagonal value is positive (the superior side is at the positive direction of the z-axis)</p></li>
+</ul>
+</dd>
+<dt>Example affine for LPS+ orientation:</dt><dd><p>[[-1  0  0  0]
+[  0 -1  0  0]
+[  0  0  1  0]
+[  0  0  0  1]]</p>
+<blockquote>
+<div><p>-For LPS, the 1st letter is L since the 1st diagonal value is negative.
+-The 2nd letter is P since the 2nd diagonal value is negative.
+-The 3rd letter is S since the 3rd diagonal value is positive.</p>
+</div></blockquote>
+</dd>
+<dt>Example affine for PIR+ orientation (default for CCFv3):</dt><dd><p>[[ 0  0  1  0]
+[ -1  0  0  0]
+[  0 -1  0  0]
+[  0  0  0  1]]</p>
+</dd>
+<dt>For PIR:</dt><dd><dl class="simple">
+<dt>First letter determination:</dt><dd><p>-The 1st column has a non-zero value at the 2nd row, so the 1st letter is either A or P (2nd letter of the default ‘RAS’ orientation code).
+-Since the valud is negative, the 1st letter is P</p>
+</dd>
+<dt>Second letter determination:</dt><dd><p>-The 2nd column has a non-zero value at the 3rd row, so the 2nd letter is either S or I (3rd letter of the default ‘RAS’ orientation code).
+-Since the value is negative, the 2nd letter is I</p>
+</dd>
+<dt>Third letter determination:</dt><dd><p>-The 3rd column has a non-zero value at the 1st row, so the 3rd letter is either R or L (1st letter of the default ‘RAS’ orientation code).
+-Since the value is positive, the 3rd letter is R</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.reorient_nii.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.reorient_nii.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/reorient_nii.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.reorient_nii.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.reorient_nii.transform_nii_affine">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.reorient_nii.</span></span><span class="sig-name descname"><span class="pre">transform_nii_affine</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/reorient_nii.html#transform_nii_affine"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.reorient_nii.transform_nii_affine" title="Link to this definition">#</a></dt>
+<dd><p>Transform the affine matrix of a NIfTI image to a target orientation and return the new affine matrix</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nii</strong> (<em>nibabel.nifti1.Nifti1Image</em>) – NIfTI image</p></li>
+<li><p><strong>target_ort</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Target orientation axis codes (e.g., RAS)</p></li>
+<li><p><strong>zero_origin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Zero the origin of the affine matrix. Default: False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.reorient_nii.reorient_nii">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.reorient_nii.</span></span><span class="sig-name descname"><span class="pre">reorient_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_ort</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zero_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">form_code</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/reorient_nii.html#reorient_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.reorient_nii.reorient_nii" title="Link to this definition">#</a></dt>
+<dd><p>Reorient a NIfTI image or its affine matrix to a target orientation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nii_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Path to the NIfTI image</p></li>
+<li><p><strong>target_ort</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Target orientation axis codes (e.g., RAS)</p></li>
+<li><p><strong>zero_origin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Zero the origin of the affine matrix. Default: False</p></li>
+<li><p><strong>apply</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Apply the new orientation to the ndarray data. Default: False</p></li>
+<li><p><strong>form_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned). Default: None (get from the input NIfTI image)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>new_nii (nibabel.nifti1.Nifti1Image): NIfTI image with the new orientation
+If apply False: new_affine (np.ndarray): New affine matrix</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If apply True</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.reorient_nii.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.reorient_nii.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/reorient_nii.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.reorient_nii.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +642,22 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.reorient_nii.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.reorient_nii.transform_nii_affine"><code class="docutils literal notranslate"><span class="pre">transform_nii_affine()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.reorient_nii.reorient_nii"><code class="docutils literal notranslate"><span class="pre">reorient_nii()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.reorient_nii.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

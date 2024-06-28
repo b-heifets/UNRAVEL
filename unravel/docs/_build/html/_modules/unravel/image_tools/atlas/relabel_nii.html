@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unravel.voxel_stats.other.r_to_p &#8212; UNRAVEL docs</title>
+    <title>unravel.image_tools.atlas.relabel_nii &#8212; UNRAVEL docs</title>
   
   
   
@@ -49,7 +49,7 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/voxel_stats/other/r_to_p';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/image_tools/atlas/relabel_nii';</script>
     <link rel="icon" href="../../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" />
@@ -331,7 +331,7 @@
     
     <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">unravel.voxe...</li>
+    <li class="breadcrumb-item active" aria-current="page">unravel.imag...</li>
   </ul>
 </nav>
 </div>
@@ -348,114 +348,100 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for unravel.voxel_stats.other.r_to_p</h1><div class="highlight"><pre>
+  <h1>Source code for unravel.image_tools.atlas.relabel_nii</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Converts correlation map to z-score, p value, and FDR p value maps.</span>
+<span class="sd">Use ``atlas_relabel`` from UNRAVEL to convert intensities (e.g., atlas label IDs) based on a CSV.</span>
 
-<span class="sd">Usage:</span>
+<span class="sd">Usage: </span>
 <span class="sd">------</span>
-<span class="sd">    path/r_to_p.py -i sample01_cfos_correlation_map.nii.gz -x 25 -z 25 -v</span>
-
-<span class="sd">Outputs: </span>
-<span class="sd">    - &lt;image&gt;_z_score_map.nii.gz</span>
-<span class="sd">    - &lt;image&gt;_p_value_map.nii.gz</span>
-<span class="sd">    - &lt;image&gt;_p_value_map_fdr_corrected.nii.gz</span>
+<span class="sd">    atlas_relabel -i path/old_image.nii.gz -o path/new_image.nii.gz -ic path/input.csv -oc volume_summary -odt uint16</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
-<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span>
-<span class="kn">from</span> <span class="nn">statsmodels.stats.multitest</span> <span class="kn">import</span> <span class="n">multipletests</span>
 
-<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">load_3D_img</span><span class="p">,</span> <span class="n">save_as_nii</span>
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
+<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
+
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../../unravel/voxel_stats/other/r_to_p.html#unravel.voxel_stats.other.r_to_p.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../../unravel/image_tools/atlas/relabel_nii.html#unravel.image_tools.atlas.relabel_nii.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;[path/]image.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-x&#39;</span><span class="p">,</span> <span class="s1">&#39;--xy_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;x/y voxel size in microns. Default: get via metadata&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-z&#39;</span><span class="p">,</span> <span class="s1">&#39;--z_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;z voxel size in microns. Default: get via metadata&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--alpha&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;FDR alpha. Default: 0.05&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/old_image.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/new_image.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ic&#39;</span><span class="p">,</span> <span class="s1">&#39;--csv_input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/input.csv w/ old IDs in column 1 and new IDs in column 2&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-oc&#39;</span><span class="p">,</span> <span class="s1">&#39;--csv_output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Optionally provide prefix to output label volume summaries (e.g., volume_summary)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-odt&#39;</span><span class="p">,</span> <span class="s1">&#39;--data_type&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output data type. Default: uint16&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;uint16&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
 
-<div class="viewcode-block" id="r_to_z">
-<a class="viewcode-back" href="../../../../unravel/voxel_stats/other/r_to_p.html#unravel.voxel_stats.other.r_to_p.r_to_z">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">r_to_z</span><span class="p">(</span><span class="n">correlation_map</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Pearson correlation map (ndarray) to a Z-score map (ndarray) using Fisher&#39;s Z-transformation via np.arctanh&quot;&quot;&quot;</span>
-    <span class="c1"># Adjust values slightly (e.g., in the seed region) if they are exactly 1 or -1 to avoid divide by zero error</span>
-    <span class="n">max_value</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="mf">1e-10</span>  <span class="c1"># Adjust 1e-10 to a suitable tolerance value</span>
-    <span class="n">adjusted_correlation_map</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">correlation_map</span><span class="p">,</span> <span class="o">-</span><span class="n">max_value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">arctanh</span><span class="p">(</span><span class="n">adjusted_correlation_map</span><span class="p">)</span> <span class="c1"># Fast equivalent to Fisher&#39;s Z-transformation: 0.5 * np.log((1 + adjusted_correlation_map) / (1 - adjusted_correlation_map))</span></div>
-
-
-<div class="viewcode-block" id="z_to_p">
-<a class="viewcode-back" href="../../../../unravel/voxel_stats/other/r_to_p.html#unravel.voxel_stats.other.r_to_p.z_to_p">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">z_to_p</span><span class="p">(</span><span class="n">z_map</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a Z-score map (ndarray) to a two-tailed p-value map (ndarray)&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">norm</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">z_map</span><span class="p">))</span> <span class="o">*</span> <span class="mi">2</span> <span class="c1">#https://www.geeksforgeeks.org/how-to-find-a-p-value-from-a-z-score-in-python/</span></div>
-
-
-
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../../unravel/voxel_stats/other/r_to_p.html#unravel.voxel_stats.other.r_to_p.main">[docs]</a>
+<a class="viewcode-back" href="../../../../unravel/image_tools/atlas/relabel_nii.html#unravel.image_tools.atlas.relabel_nii.main">[docs]</a>
+<span class="nd">@log_command</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
-
-    <span class="c1"># Load Pearson correlation map</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">z_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
-        <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">z_res</span>
-
-    <span class="n">correlation_map</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
-
-    <span class="c1"># Apply Fisher Z-transformation to convert to z-score map</span>
-    <span class="n">z_map</span> <span class="o">=</span> <span class="n">r_to_z</span><span class="p">(</span><span class="n">correlation_map</span><span class="p">)</span>
-
-    <span class="c1"># Convert z-score map to p-value map</span>
-    <span class="n">p_map</span> <span class="o">=</span> <span class="n">z_to_p</span><span class="p">(</span><span class="n">z_map</span><span class="p">)</span>
-
-    <span class="c1"># Invert P value map for visualization</span>
-    <span class="n">inv_p_map</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p_map</span>
-
-    <span class="c1"># Apply multiple comparisons correction (False Discovery Rate, FDR)</span>
-    <span class="n">alpha_level</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># Set your desired alpha level</span>
-    <span class="n">_</span><span class="p">,</span> <span class="n">p_map_fdr_corrected</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">multipletests</span><span class="p">(</span><span class="n">p_map</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha_level</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;fdr_bh&#39;</span><span class="p">)</span>
-    <span class="n">p_map_fdr_corrected</span> <span class="o">=</span> <span class="n">p_map_fdr_corrected</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">p_map</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-
-    <span class="c1"># Invert FDR corrected P value map for visualization</span>
-    <span class="n">inv_p_map_fdr_corrected</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">p_map_fdr_corrected</span>
-
-    <span class="c1"># Save the Z-score map and P-value maps</span>
-    <span class="n">output_prefix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.nii.gz&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-    <span class="n">save_as_nii</span><span class="p">(</span><span class="n">z_map</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s2">_z_score_map.nii.gz&quot;</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
-    <span class="n">save_as_nii</span><span class="p">(</span><span class="n">inv_p_map</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s2">_1-p_value_map.nii.gz&quot;</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
-    <span class="n">save_as_nii</span><span class="p">(</span><span class="n">inv_p_map_fdr_corrected</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_prefix</span><span class="si">}</span><span class="s2">_1-p_value_map_fdr_corrected.nii.gz&quot;</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Z-score map, P-value map, and FDR-corrected P-value map saved.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
-
-    
-    
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span> 
     <span class="n">install</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
-    <span class="n">print_cmd_and_times</span><span class="p">(</span><span class="n">main</span><span class="p">)()</span>
+    <span class="n">verbose_start_msg</span><span class="p">()</span>
+
+    <span class="c1"># Load the specified columns from the CSV with CCFv3 info</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csv_input</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_input</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csv_input</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;CSV file not found: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">csv_input</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Get column names</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+
+    <span class="c1"># Convert values in columns to integers</span>
+    <span class="n">df</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="c1"># Load the NIfTI image</span>
+    <span class="n">nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">(</span><span class="n">dtye</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+    <span class="c1"># Initialize an empty ndarray with the same shape as img and data type uint16</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">data_type</span><span class="p">:</span> 
+        <span class="n">new_img_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">data_type</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">new_img_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span>
+
+    <span class="c1"># Replace voxel values in the new image array with the new labels</span>
+    <span class="k">for</span> <span class="n">old_label</span><span class="p">,</span> <span class="n">new_label</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">df</span><span class="p">[</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]]):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">img</span> <span class="o">==</span> <span class="n">old_label</span>
+        <span class="n">new_img_array</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_label</span>
+
+    <span class="c1"># Convert the ndarray to an NIfTI image and save</span>
+    <span class="n">new_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">new_img_array</span><span class="p">,</span> <span class="n">nii</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+    <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">new_nii</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+
+    <span class="c1"># Summarize the volume for each label before and after the replacement</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_output</span><span class="p">:</span>
+        <span class="n">old_labels</span><span class="p">,</span> <span class="n">counts_old_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">new_labels</span><span class="p">,</span> <span class="n">counts_new_labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">new_img_array</span><span class="p">,</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">volume_summary_old_labels</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="n">old_labels</span><span class="p">,</span> <span class="s1">&#39;voxel_count&#39;</span><span class="p">:</span> <span class="n">counts_old_labels</span><span class="p">})</span>
+        <span class="n">volume_summary_new_labels</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">columns</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="n">new_labels</span><span class="p">,</span> <span class="s1">&#39;voxel_count&#39;</span><span class="p">:</span> <span class="n">counts_new_labels</span><span class="p">})</span>
+        <span class="n">volume_summary_old_labels</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">csv_output</span><span class="si">}</span><span class="s1">_old_labels.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">volume_summary_new_labels</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">csv_output</span><span class="si">}</span><span class="s1">_new_labels.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">verbose_end_msg</span><span class="p">()</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
                 </article>

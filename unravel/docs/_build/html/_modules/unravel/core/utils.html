@@ -365,7 +365,9 @@
 <span class="sd">    - load_config: Load settings from a config file.</span>
 <span class="sd">    - get_samples: Get a list of sample directories based on provided parameters.</span>
 <span class="sd">    - initialize_progress_bar: Initialize a Rich progress bar.</span>
-<span class="sd">    - print_cmd_and_times: Decorator to log and print command execution details.</span>
+<span class="sd">    - verbose_start_msg: Print the start command and time if verbose mode is enabled.</span>
+<span class="sd">    - verbose_end_msg: Print the end time if verbose mode is enabled.</span>
+<span class="sd">    - log_command: Decorator to log the command and execution times to a hidden file.</span>
 <span class="sd">    - print_func_name_args_times: Decorator to print function execution details.</span>
 <span class="sd">    - load_text_from_file: Load text content from a file.</span>
 <span class="sd">    - copy_files: Copy specified files from source to target directory.</span>
@@ -374,15 +376,11 @@
 <span class="sd">    Import the functions and decorators to enhance your scripts.</span>
 
 <span class="sd">Examples:</span>
-<span class="sd">    - from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times, load_text_from_file copy_files</span>
+<span class="sd">    - from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_func_name_args_times, load_text_from_file copy_files</span>
 <span class="sd">    - config = load_config(&quot;path/to/config.ini&quot;)</span>
 <span class="sd">    - samples = get_samples(exp_dir_paths=[&quot;/path/to/exp1&quot;, &quot;/path/to/exp2&quot;])</span>
 <span class="sd">    - progress, task_id = initialize_progress_bar(len(samples), task_message=&quot;[red]Processing samples...&quot;)</span>
-<span class="sd">    - if __name__ == &#39;__main__&#39;:</span>
-<span class="sd">        - install()</span>
-<span class="sd">        - args = parse_args()</span>
-<span class="sd">        - Configuration.verbose = args.verbose</span>
-<span class="sd">        - print_cmd_and_times(main)()</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -557,12 +555,36 @@
 
 
 
-<span class="c1"># Main function decorator</span>
+<span class="c1"># Logging and printing functions</span>
+<span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
 
-<div class="viewcode-block" id="print_cmd_and_times">
-<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.print_cmd_and_times">[docs]</a>
-<span class="k">def</span> <span class="nf">print_cmd_and_times</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A decorator to print the script name, arguments, start/end times, use rich traceback, and log commands to a hidden file.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="verbose_start_msg">
+<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.verbose_start_msg">[docs]</a>
+<span class="k">def</span> <span class="nf">verbose_start_msg</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the start command and time if verbose mode is enabled.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">[bold bright_magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [purple3]</span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">[/]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [bright_blue]Start:[/] </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cmd</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="verbose_end_msg">
+<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.verbose_end_msg">[docs]</a>
+<span class="k">def</span> <span class="nf">verbose_end_msg</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the end time if verbose mode is enabled.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">:mushroom: [bold bright_magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [purple3]finished[/] [bright_blue]at:[/] </span><span class="si">{</span><span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">[gold1]![/][dark_orange]![/][red1]![/] </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="log_command">
+<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.log_command">[docs]</a>
+<span class="k">def</span> <span class="nf">log_command</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A decorator for main() to log the command and execution times to a hidden file (.command_log.txt).&quot;&quot;&quot;</span>
     <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="n">log_file</span> <span class="o">=</span> <span class="s2">&quot;.command_log.txt&quot;</span>  <span class="c1"># Name of the hidden log file</span>
@@ -576,18 +598,7 @@
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
             <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Start: </span><span class="si">{</span><span class="n">start_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-        <span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>  <span class="c1"># Instantiate the Console object</span>
-
-        <span class="c1"># If verbose, print command and times</span>
-        <span class="k">if</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">[bold bright_magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [purple3]</span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">[/]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [bright_blue]Start:[/] &quot;</span> <span class="o">+</span> <span class="n">start_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-
         <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># Call the original function</span>
-
-        <span class="k">if</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
-            <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">:mushroom: [bold bright_magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [purple3]finished[/] [bright_blue]at:[/] </span><span class="si">{</span><span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">[gold1]![/][dark_orange]![/][red1]![/] </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
         <span class="c1"># Always log end time to file</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">log_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>

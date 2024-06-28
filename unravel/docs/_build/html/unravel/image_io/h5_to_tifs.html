@@ -486,8 +486,68 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-image-io-h5-to-tifs-module">
-<span id="unravel-image-io-h5-to-tifs"></span><h1>unravel.image_io.h5_to_tifs module<a class="headerlink" href="#unravel-image-io-h5-to-tifs-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.image_io.h5_to_tifs">
+<span id="unravel-image-io-h5-to-tifs-module"></span><span id="unravel-image-io-h5-to-tifs"></span><h1>unravel.image_io.h5_to_tifs module<a class="headerlink" href="#module-unravel.image_io.h5_to_tifs" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">io_h5_to_tifs</span></code> from UNRAVEL to load a h5/hdf5 image and save it as tifs.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_h5_to_tifs -i path/image.h5 -t autofl</p>
+</div></blockquote>
+<dl class="simple">
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>image.h5 either from -i path/image.h5 or largest &lt;asterisk&gt;.h5 in cwd</p></li>
+<li><p>This assumes that the first dataset in the hdf5 file has the highest resolution.</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>./&lt;tif_dir_out&gt;/slice_&lt;asterisk&gt;.tif series</p></li>
+<li><p>./parameters/metadata (text file)</p></li>
+</ul>
+</dd>
+<dt>Next command:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code> for registration</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/h5_to_tifs.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.find_largest_h5_file">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">find_largest_h5_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/h5_to_tifs.html#find_largest_h5_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.find_largest_h5_file" title="Link to this definition">#</a></dt>
+<dd><p>Find and return the path to the largest .h5 file in the current directory</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.load_h5">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">load_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hdf5_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desired_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/h5_to_tifs.html#load_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.load_h5" title="Link to this definition">#</a></dt>
+<dd><p>Load full res image from an HDF5 file (.h5) and return ndarray
+Default: axis_order=xyz (other option: axis_order=”zyx”)
+Default: returns: ndarray
+If return_res=True returns: ndarray, xy_res, z_res (resolution in um)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.metadata_from_h5">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">metadata_from_h5</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hdf5_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/h5_to_tifs.html#metadata_from_h5"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.metadata_from_h5" title="Link to this definition">#</a></dt>
+<dd><p>Returns tuple with xy_voxel_size and z_voxel_size in microns from full res HDF5 image</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.save_as_tifs">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">save_as_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tif_dir_out</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'xyz'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/h5_to_tifs.html#save_as_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.save_as_tifs" title="Link to this definition">#</a></dt>
+<dd><p>Save &lt;ndarray&gt; as tifs in &lt;Path(tif_dir_out)&gt;</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_io.h5_to_tifs.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_io.h5_to_tifs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/h5_to_tifs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.h5_to_tifs.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +587,24 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.find_largest_h5_file"><code class="docutils literal notranslate"><span class="pre">find_largest_h5_file()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.load_h5"><code class="docutils literal notranslate"><span class="pre">load_h5()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.metadata_from_h5"><code class="docutils literal notranslate"><span class="pre">metadata_from_h5()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.save_as_tifs"><code class="docutils literal notranslate"><span class="pre">save_as_tifs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.h5_to_tifs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

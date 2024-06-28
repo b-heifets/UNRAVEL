@@ -486,8 +486,45 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-register-affine-initializer-module">
-<span id="unravel-register-affine-initializer"></span><h1>unravel.register.affine_initializer module<a class="headerlink" href="#unravel-register-affine-initializer-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.register.affine_initializer">
+<span id="unravel-register-affine-initializer-module"></span><span id="unravel-register-affine-initializer"></span><h1>unravel.register.affine_initializer module<a class="headerlink" href="#module-unravel.register.affine_initializer" title="Link to this heading">#</a></h1>
+<p>Run <code class="docutils literal notranslate"><span class="pre">reg_affine_initializer</span></code> from UNRAVEL as a seperate process to kill it after a time out. This also allows for suppressing error messages.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg_affine_initializer -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10</p>
+</div></blockquote>
+</section>
+<section id="python-usage">
+<h2>Python usage:<a class="headerlink" href="#python-usage" title="Link to this heading">#</a></h2>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_affine_initializer&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_outputs/ANTsPy_init_tform.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span> <span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">devnull</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">devnull</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.affine_initializer.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.affine_initializer.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/affine_initializer.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.affine_initializer.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.affine_initializer.affine_initializer_wrapper">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.affine_initializer.</span></span><span class="sig-name descname"><span class="pre">affine_initializer_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fixed_image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_outputs_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/affine_initializer.html#affine_initializer_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.affine_initializer.affine_initializer_wrapper" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.affine_initializer.run_with_timeout">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.affine_initializer.</span></span><span class="sig-name descname"><span class="pre">run_with_timeout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fixed_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_outputs_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/affine_initializer.html#run_with_timeout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.affine_initializer.run_with_timeout" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.affine_initializer.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.affine_initializer.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/affine_initializer.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.affine_initializer.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +564,23 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-usage">Python usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.affine_initializer.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.affine_initializer.affine_initializer_wrapper"><code class="docutils literal notranslate"><span class="pre">affine_initializer_wrapper()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.affine_initializer.run_with_timeout"><code class="docutils literal notranslate"><span class="pre">run_with_timeout()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.affine_initializer.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

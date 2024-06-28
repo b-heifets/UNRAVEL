@@ -486,8 +486,78 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-voxel-stats-vstats-module">
-<span id="unravel-voxel-stats-vstats"></span><h1>unravel.voxel_stats.vstats module<a class="headerlink" href="#unravel-voxel-stats-vstats-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.voxel_stats.vstats">
+<span id="unravel-voxel-stats-vstats-module"></span><span id="unravel-voxel-stats-vstats"></span><h1>unravel.voxel_stats.vstats module<a class="headerlink" href="#module-unravel.voxel_stats.vstats" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">vstats</span></code> from UNRAVEL to run voxel-wise stats using FSL’s randomise_parallel command.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>vstats -mas mask.nii.gz -v</p>
+</div></blockquote>
+</section>
+<section id="usage-w-additional-options">
+<h2>Usage w/ additional options:<a class="headerlink" href="#usage-w-additional-options" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>vstats -mas mask.nii.gz -p 12000 -k 0 -op output_prefix -a atlas.nii.gz -v –options –seed=1</p>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The –options flag is used to pass additional options to the randomise command.</p></li>
+<li><p>It should be the last flag specified in the command.</p></li>
+<li><p>The options should be specified as separate strings, e.g., –options –seed=1 -T</p></li>
+</ul>
+</div>
+<dl class="simple">
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p>Input images from <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code>, <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code>, or <code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code>.</p></li>
+</ul>
+</dd>
+<dt>Next steps:</dt><dd><ul class="simple">
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">cluster_fdr_range</span></code> and <code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code> to correct for multiple comparisons.</p></li>
+</ul>
+</dd>
+</dl>
+<p>For info on how to set up and run voxel-wise analyses, see: <a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#voxel-wise-stats">https://b-heifets.github.io/UNRAVEL/guide.html#voxel-wise-stats</a></p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.check_fdr_command">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">check_fdr_command</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats.html#check_fdr_command"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.check_fdr_command" title="Link to this definition">#</a></dt>
+<dd><p>Check if the ‘fdr’ command is available in the system’s path.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.create_design_ttest2">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">create_design_ttest2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mat_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group1_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group2_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats.html#create_design_ttest2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.create_design_ttest2" title="Link to this definition">#</a></dt>
+<dd><p>Create design matrix for a two-group unpaired t-test.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.get_groups_info">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">get_groups_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats.html#get_groups_info"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.get_groups_info" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.calculate_fragments">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">calculate_fragments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_contrasts</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_permutations_per_contrast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">18000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permutations_per_fragment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats.html#calculate_fragments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.calculate_fragments" title="Link to this definition">#</a></dt>
+<dd><p>Calculate the total number of fragments based on the number of contrasts.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.run_randomise_parallel">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">run_randomise_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permutations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_fts_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats.html#run_randomise_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.run_randomise_parallel" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.voxel_stats.vstats.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +597,26 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-w-additional-options">Usage w/ additional options:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.check_fdr_command"><code class="docutils literal notranslate"><span class="pre">check_fdr_command()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.create_design_ttest2"><code class="docutils literal notranslate"><span class="pre">create_design_ttest2()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.get_groups_info"><code class="docutils literal notranslate"><span class="pre">get_groups_info()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.calculate_fragments"><code class="docutils literal notranslate"><span class="pre">calculate_fragments()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.run_randomise_parallel"><code class="docutils literal notranslate"><span class="pre">run_randomise_parallel()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 

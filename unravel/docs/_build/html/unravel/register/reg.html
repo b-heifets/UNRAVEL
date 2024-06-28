@@ -486,8 +486,55 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-register-reg-module">
-<span id="unravel-register-reg"></span><h1>unravel.register.reg module<a class="headerlink" href="#unravel-register-reg-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.register.reg">
+<span id="unravel-register-reg-module"></span><span id="unravel-register-reg"></span><h1>unravel.register.reg module<a class="headerlink" href="#module-unravel.register.reg" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">reg</span></code> from UNRAVEL to register an average template brain/atlas to a resampled autofl brain.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg -m &lt;path/template.nii.gz&gt; -bc -pad -sm 0.4 -ort &lt;3 letter orientation code&gt;</p>
+</div></blockquote>
+<dl class="simple">
+<dt>ort_code letter options:</dt><dd><ul class="simple">
+<li><p>A/P=Anterior/Posterior</p></li>
+<li><p>L/R=Left/Right</p></li>
+<li><p>S/I=Superior/Interior</p></li>
+<li><p>The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)</p></li>
+</ul>
+</dd>
+<dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>, [<code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code>], &amp; [<code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>]</p>
+</dd>
+<dt>Next steps:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg_check</span></code> and <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code></p>
+</dd>
+</dl>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.reg.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.reg.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.reg.bias_correction">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.reg.</span></span><span class="sig-name descname"><span class="pre">bias_correction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shrink_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg.html#bias_correction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg.bias_correction" title="Link to this definition">#</a></dt>
+<dd><p>Perform N4 bias field correction on a .nii.gz and return an ndarray</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Path to input image.nii.gz</p></li>
+<li><p><strong>mask_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Path to mask image.nii.gz</p></li>
+<li><p><strong>shrink_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Shrink factor for bias field correction</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Print output</p></li>
+<li><p><strong>output_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Path to save corrected image</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.reg.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.reg.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -527,6 +574,21 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg.bias_correction"><code class="docutils literal notranslate"><span class="pre">bias_correction()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
 
