@@ -24,7 +24,8 @@ from statsmodels.stats.multitest import multipletests
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -50,8 +51,12 @@ def z_to_p(z_map):
     return norm.sf(abs(z_map)) * 2 #https://www.geeksforgeeks.org/how-to-find-a-p-value-from-a-z-score-in-python/
 
 
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Load Pearson correlation map
     if args.xy_res is None or args.z_res is None:
@@ -87,9 +92,8 @@ def main():
     save_as_nii(inv_p_map_fdr_corrected, f"{output_prefix}_1-p_value_map_fdr_corrected.nii.gz", xy_res, z_res, data_type='float32')
     print("\n    Z-score map, P-value map, and FDR-corrected P-value map saved.\n")
     
-    
-if __name__ == '__main__': 
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    verbose_end_msg()
+
+
+if __name__ == '__main__':
+    main()
