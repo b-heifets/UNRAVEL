@@ -27,7 +27,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 
 
 def parse_args():
@@ -89,9 +89,13 @@ def clean_tifs_dir(path_to_tif_dir, move, verbose):
                 file.rename(new_file_path)
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     
@@ -109,11 +113,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.utilities.clean_tif_dirs':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

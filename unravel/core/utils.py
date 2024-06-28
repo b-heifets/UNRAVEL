@@ -14,7 +14,9 @@ Functions:
     - load_config: Load settings from a config file.
     - get_samples: Get a list of sample directories based on provided parameters.
     - initialize_progress_bar: Initialize a Rich progress bar.
-    - print_cmd_and_times: Decorator to log and print command execution details.
+    - verbose_start_msg: Print the start command and time if verbose mode is enabled.
+    - verbose_end_msg: Print the end time if verbose mode is enabled.
+    - log_command: Decorator to log the command and execution times to a hidden file.
     - print_func_name_args_times: Decorator to print function execution details.
     - load_text_from_file: Load text content from a file.
     - copy_files: Copy specified files from source to target directory.
@@ -23,15 +25,11 @@ Usage:
     Import the functions and decorators to enhance your scripts.
 
 Examples:
-    - from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times, load_text_from_file copy_files
+    - from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_func_name_args_times, load_text_from_file copy_files
     - config = load_config("path/to/config.ini")
     - samples = get_samples(exp_dir_paths=["/path/to/exp1", "/path/to/exp2"])
     - progress, task_id = initialize_progress_bar(len(samples), task_message="[red]Processing samples...")
-    - if __name__ == '__main__':
-        - install()
-        - args = parse_args()
-        - Configuration.verbose = args.verbose
-        - print_cmd_and_times(main)()
+
 """
 
 import argparse
@@ -173,10 +171,28 @@ def initialize_progress_bar(num_of_items_to_iterate, task_message="[red]Processi
     return progress, task_id
 
 
-# Main function decorator
+# Logging and printing functions
+console = Console()
 
-def print_cmd_and_times(func):
-    """A decorator to print the script name, arguments, start/end times, use rich traceback, and log commands to a hidden file."""
+def verbose_start_msg():
+    """Print the start command and time if verbose mode is enabled."""
+    if Configuration.verbose:
+        cmd = f"\n{os.path.basename(sys.argv[0])} {' '.join(sys.argv[1:])}"
+        console.print(f"\n\n[bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]{' '.join(sys.argv[1:])}[/]\n")
+        print(f"\n    [bright_blue]Start:[/] {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        return cmd
+    return None
+
+def verbose_end_msg():
+    """Print the end time if verbose mode is enabled."""
+    if Configuration.verbose:
+        end_time = datetime.now()
+        console.print(f"\n\n:mushroom: [bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold1]![/][dark_orange]![/][red1]![/] \n")
+        return end_time.strftime('%Y-%m-%d %H:%M:%S')
+    return None
+
+def log_command(func):
+    """A decorator for main() to log the command and execution times to a hidden file (.command_log.txt)."""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         log_file = ".command_log.txt"  # Name of the hidden log file
@@ -190,18 +206,7 @@ def print_cmd_and_times(func):
             start_time = datetime.now()
             file.write(f"\n    Start: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
 
-        console = Console()  # Instantiate the Console object
-
-        # If verbose, print command and times
-        if Configuration.verbose:
-            console.print(f"\n\n[bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]{' '.join(sys.argv[1:])}[/]\n")
-            print(f"\n    [bright_blue]Start:[/] " + start_time.strftime('%Y-%m-%d %H:%M:%S') + "\n")
-
         result = func(*args, **kwargs)  # Call the original function
-
-        if Configuration.verbose:
-            end_time = datetime.now()
-            console.print(f"\n\n:mushroom: [bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold1]![/][dark_orange]![/][red1]![/] \n")
 
         # Always log end time to file
         with open(log_file, "a") as file:

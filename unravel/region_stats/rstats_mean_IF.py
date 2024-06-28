@@ -24,7 +24,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 from unravel.image_tools.unique_intensities import uniq_intensities
 
 
@@ -80,9 +80,12 @@ def write_to_csv(data, output_file):
             writer.writerow([key, value])
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Either use the provided list of region IDs or create it using unique intensities
     if args.regions:
@@ -115,11 +118,8 @@ def main():
 
     print('CSVs with regional mean IF intensities output to ./rstats_mean_IF/')
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.region_stats.rstats_mean_IF':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

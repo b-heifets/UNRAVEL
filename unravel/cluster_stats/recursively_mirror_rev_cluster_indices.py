@@ -20,7 +20,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 from unravel.voxel_stats.mirror import mirror
 
 def parse_args():
@@ -52,9 +52,13 @@ def process_file(file_path, args):
     mirrored_filename = file_path.parent / f"{basename}_{'LH' if args.mas_side == 'RH' else 'RH'}.nii.gz"
     nib.save(mirrored_nii, mirrored_filename)
 
-@print_cmd_and_times
-def main(): 
+@log_command
+def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
 
     root_path = Path().resolve()
     files = list(root_path.glob(args.pattern))
@@ -62,11 +66,8 @@ def main():
     with ThreadPoolExecutor() as executor:
         executor.map(lambda file: process_file(file, args), files)
 
-
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.recursively_mirror_rev_cluster_indices:main':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()

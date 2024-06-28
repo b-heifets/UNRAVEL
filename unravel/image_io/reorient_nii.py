@@ -71,7 +71,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -202,9 +202,13 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
 
     return new_nii
 
-@print_cmd_and_times
+
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     nii = nib.load(args.input)
     new_nii = reorient_nii(nii, args.target_ort, zero_origin=args.zero_origin, apply=args.apply, form_code=args.form_code)
@@ -218,11 +222,8 @@ def main():
         else:
             nib.save(new_nii, args.input.replace('.nii.gz', f'_{args.target_ort}.nii.gz'))
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.image_io.reorient_nii':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

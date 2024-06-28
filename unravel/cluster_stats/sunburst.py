@@ -33,7 +33,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -115,9 +115,13 @@ def sunburst(img, atlas, atlas_res_in_um, output_path, output_rgb_lut=False):
 
     return final_df
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
 
     # Load the input image and convert to numpy array
     nii = nib.load(args.input)
@@ -140,11 +144,8 @@ def main():
     print(f'\n\n[magenta bold]{output_name}[/]:')    
     print(f'\n{sunburst_df}\n')
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.sunburst':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

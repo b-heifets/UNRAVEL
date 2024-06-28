@@ -24,7 +24,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -58,9 +58,12 @@ def save_tif(img, output_path):
     cv2.imwrite(output_path, img)
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Load the image
     img = load_tif(args.input)
@@ -73,11 +76,8 @@ def main():
     output_path = args.output if args.output is not None else args.input.replace('.tif', f'_rb{args.rb_radius}.tif')
     save_tif(img, output_path)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.image_tools.rb':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

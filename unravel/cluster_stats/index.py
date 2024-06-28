@@ -23,7 +23,7 @@ from rich.traceback import install
 from unravel.cluster_stats.sunburst import sunburst
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -55,9 +55,13 @@ def generate_sunburst(cluster, img, atlas, xyz_res_in_um, data_type, output_dir)
         cluster_sunburst_path = output_dir / f'cluster_{cluster}_sunburst.csv'
         sunburst_df = sunburst(cluster_image, atlas, xyz_res_in_um, cluster_sunburst_path)
 
-@print_cmd_and_times
+
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     if args.cluster_idx is None: 
         print(f"\n    No cluster index provided. Skipping.")
@@ -106,11 +110,8 @@ def main():
     # Generate the sunburst plot for the valid cluster index
     sunburst_df = sunburst(valid_cluster_index, atlas, xyz_res_in_um, output_dir / 'valid_clusters_sunburst.csv', args.output_rgb_lut)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.index':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

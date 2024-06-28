@@ -16,7 +16,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.img_tools import find_bounding_box, cluster_IDs
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -30,9 +30,12 @@ def parse_args():
     return parser.parse_args()
 
 
-@print_cmd_and_times
+@log_command
 def main():
-    args = parse_args() 
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     img = load_3D_img(args.input)
 
@@ -62,11 +65,8 @@ def main():
         with open(output, 'w') as f:
             f.write(f"{xmin}:{xmax}, {ymin}:{ymax}, {zmin}:{zmax}")
 
-    
-if __name__ == '__main__' or __name__ == 'unravel.image_tools.bbox':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
     main()

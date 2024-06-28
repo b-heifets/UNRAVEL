@@ -37,7 +37,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
@@ -134,9 +134,12 @@ def run_randomise_parallel(input_image_path, mask_path, permutations, output_nam
             print("Error during command execution:\n" + str(e))
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     cwd = Path.cwd()
     stats_dir = cwd / 'stats'
@@ -191,11 +194,8 @@ def main():
     # Run the randomise_parallel command
     run_randomise_parallel(glm_input_file, args.mask, args.permutations, output_prefix, design_fts_path, args.options, args.verbose)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.voxel_stats.vstats':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

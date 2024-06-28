@@ -44,7 +44,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
@@ -232,9 +232,12 @@ def process_fdr_and_clusters(input, mask, q, min_size, avg_img1, avg_img2, outpu
     # Remove the original cluster index file
     Path(cluster_index_path).unlink()
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Prepare directory paths and outputs
     results = []
@@ -252,11 +255,8 @@ def main():
             except Exception as exc:
                 print(f'{q_value} generated an exception: {exc}')
 
-
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.fdr':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()

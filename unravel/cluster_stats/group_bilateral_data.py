@@ -36,7 +36,8 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -79,9 +80,12 @@ def group_hemisphere_data(base_path):
             shutil.rmtree(lh_dir)
             shutil.rmtree(rh_dir)
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     base_path = Path.cwd()
 
@@ -93,11 +97,8 @@ def main():
     if has_hemisphere: 
         group_hemisphere_data(base_path)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.group_bilateral_data':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

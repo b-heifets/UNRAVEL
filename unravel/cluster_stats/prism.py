@@ -40,7 +40,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -128,8 +128,12 @@ def generate_summary_table(csv_files, data_column_name):
     return all_conditions_df
 
 
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     path = Path(args.path) if args.path else Path.cwd()
 
@@ -203,9 +207,8 @@ def main():
 
     print(f"\n    Saved results in [bright_magenta]{output_dir}")
 
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    main()

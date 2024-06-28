@@ -65,3 +65,60 @@ def main():
 if __name__ == '__main__': 
     install()
     main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+
+from unravel.core.config import Configuration
+
+
+
+@log_command
+def main():
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
+
+    verbose_end_msg()
+
+
+
+if __name__ == '__main__':
+    main()
+
+
+# Search for print_cmd_and_times and remove it.
+# Reinstall on my computer and cb in windy and dev. Email Windy and Peter back. Shamloo
+
+
+
+
+
+
+
+
+
+

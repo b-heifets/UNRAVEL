@@ -15,7 +15,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -41,17 +41,17 @@ def find_and_copy_files(pattern, src_dir, dest_dir):
             # print(f"Copied: {file_path} to {dest_dir}")
 
 
-@print_cmd_and_times
+@log_command
 def main():
-    args = parse_args()
-
-    find_and_copy_files(args.pattern, args.source, args.destination)
-
-
-if __name__ == '__main__' or __name__ == 'unravel.utilities.aggregate_files_recursively':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
+    verbose_start_msg()
+
+    find_and_copy_files(args.pattern, args.source, args.destination)
+
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
     main()

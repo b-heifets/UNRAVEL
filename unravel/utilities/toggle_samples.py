@@ -29,7 +29,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, get_samples
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples
 
 
 def parse_args():
@@ -45,9 +45,12 @@ def parse_args():
     return parser.parse_args()
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     active_samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     inactive_samples = get_samples(args.dirs, f'_{args.pattern}', args.exp_paths)
@@ -84,11 +87,8 @@ def main():
             else: 
                 print(f"[red1]{status}[/] [default bold]{stripped_sample_name}[/] ([default bold]{condition}[/]). New path: {new_name}")
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.utilities.toggle_samples':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

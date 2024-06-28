@@ -46,7 +46,7 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -287,9 +287,12 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
         plt.show()
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     if (args.order and not args.labels) or (not args.order and args.labels):
         raise ValueError("Both --order and --labels must be provided together.")
@@ -319,11 +322,8 @@ def main():
     for region_id in region_ids_to_process:
         plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=args.test, show_plot=args.show_plot, alt=args.alternate)
 
-
-if __name__ == '__main__' or __name__ == 'unravel.region_stats.rstats_mean_IF_summary':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()

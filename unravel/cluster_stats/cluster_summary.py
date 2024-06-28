@@ -57,8 +57,9 @@ from rich.traceback import install
 from unravel.cluster_stats.org_data import cp
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.utils import print_cmd_and_times, load_config
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, load_config
 from unravel.utilities.aggregate_files_recursively import find_and_copy_files
+
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -88,6 +89,7 @@ def parse_args():
 # TODO: Aggregate CSVs for valid cluster sunburst plots
 # TODO: Sort the overall valid cluster sunburst csv 
 
+
 def run_script(script_name, script_args):
     """Run a command/script using subprocess that respects the system's PATH and captures output."""
     # Convert all script arguments to string
@@ -95,9 +97,13 @@ def run_script(script_name, script_args):
     command = [script_name] + script_args
     subprocess.run(command, check=True, stdout=None, stderr=None)
 
-@print_cmd_and_times
+
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     cfg = load_config(args.config)
     
@@ -268,11 +274,8 @@ def main():
             ]
             run_script('cluster_legend', legend_args)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.cluster_summary':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

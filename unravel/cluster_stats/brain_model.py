@@ -23,7 +23,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 from unravel.voxel_stats.mirror import mirror
 
 
@@ -38,9 +38,13 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-@print_cmd_and_times
+
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     if args.mirror:
         output = args.input.replace('.nii.gz', '_ABA_WB.nii.gz')
@@ -106,11 +110,8 @@ def main():
         with open(txt_output, 'a') as f:
             f.write(rgba_str + '\n')
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.brain_model':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

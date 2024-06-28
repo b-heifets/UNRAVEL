@@ -15,7 +15,7 @@ from rich.traceback import install
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
@@ -41,9 +41,12 @@ def transpose_img(ndarray, axis_1, axis_2, axis_3):
     return ndarray.transpose(axis_1, axis_2, axis_3)
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
     
     if args.return_res:
         img, xy_res, z_res = load_3D_img(args.input, args.channel, desired_axis_order=args.axis_order, return_res=args.return_res)
@@ -60,11 +63,8 @@ def main():
         output = str(Path(args.input).resolve()).replace(".nii.gz", f"_transposed.nii.gz")
         save_as_nii(tranposed_img, output, xy_res, z_res)
 
-
-if __name__ == '__main__' or __name__ == 'unravel.image_tools.transpose_axes':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()

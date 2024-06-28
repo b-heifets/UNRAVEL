@@ -21,7 +21,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -52,9 +52,12 @@ def mirror(img, axis=0, shift=2):
 
     return mirrored_img
 
-@print_cmd_and_times
-def main(): 
+@log_command
+def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     files = Path().cwd().glob(args.pattern)
     for file in files:
@@ -71,11 +74,8 @@ def main():
             mirrored_nii = nib.Nifti1Image(mirrored_img, nii.affine, nii.header)
             nib.save(mirrored_nii, mirrored_filename)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.voxel_stats.mirror':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

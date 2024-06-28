@@ -19,7 +19,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.utils import print_cmd_and_times, get_samples
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples
 
 
 def parse_args():
@@ -165,9 +165,12 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
             if vstats_path is not None:
                 copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt)
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     target_dir = Path(args.target_dir).resolve() if args.target_dir else Path.cwd()
     target_dir.mkdir(exist_ok=True, parents=True)
@@ -182,11 +185,8 @@ def main():
         if clusters_path.exists():
             organize_validation_data(sample_path, clusters_path, args.cluster_val_dirs, args.density_type, target_dir, args.vstats_path, args.p_val_txt)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.org_data':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

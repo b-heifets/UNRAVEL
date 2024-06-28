@@ -18,7 +18,7 @@ from unravel.image_io.reorient_nii import reorient_nii
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
 from unravel.core.img_tools import pad
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -32,9 +32,12 @@ def parse_args():
     return parser.parse_args()
 
 
-@print_cmd_and_times
-def main(): 
+@log_command
+def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     nii = nib.load(args.input)
 
@@ -62,11 +65,8 @@ def main():
         padded_img_path = args.output
     nib.save(fixed_img_padded_nii, padded_img_path)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.image_tools.pad':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

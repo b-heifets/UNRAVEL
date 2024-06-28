@@ -23,7 +23,7 @@ from rich.traceback import install
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.img_io import resolve_path
-from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -57,9 +57,13 @@ def copy_specific_slices(sample_path, source_dir, target_dir, slice_numbers, ver
             if verbose:
                 print(f"File {file_path.name} does not match specified slices and was not copied.")
 
-@print_cmd_and_times
+
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Create the target directory for copying the selected slices
     target_dir = Path(args.output)
@@ -82,11 +86,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.segment.copy_tifs':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

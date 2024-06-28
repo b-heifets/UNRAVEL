@@ -30,7 +30,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 from unravel.voxel_stats.apply_mask import load_mask
 from unravel.voxel_stats.mirror import mirror
         
@@ -90,9 +90,12 @@ def whole_to_LR_avg(file, kernel=0, axis=0, shift=2, atlas_mask=None):
     nib.save(averaged_nii, averaged_filename)
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     files = Path().cwd().glob(args.pattern)
     print(f'\nImages to process: {list(files)}\n')
@@ -105,12 +108,9 @@ def main():
         for file in files:
             whole_to_LR_avg(file, args)
             whole_to_LR_avg(file, args.kernel, args.axis, args.shift, args.atlas_mask)
-        
+    
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.voxel_stats.whole_to_LR_avg':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

@@ -27,8 +27,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
-
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -84,20 +83,21 @@ def run_with_timeout(fixed_image, moving_image, reg_outputs_path, timeout):
         # If the process completed within the timeout, get the result
         return queue.get()
 
-@print_cmd_and_times
-def main(): 
+
+@log_command
+def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
     
     # Run the affine initializer with a specified timeout (in seconds)
     run_with_timeout(args.fixed_img, args.moving_img, args.output, timeout=args.time_out)
     if not Path(args.output).exists():
         print("The affine initializer did not complete successfully w/ 10 second timeout. Lengthen the timeout period of ``reg_affine_initializer`` (.e.g, 180 seconds)")
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.register.affine_initializer':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

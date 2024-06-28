@@ -20,7 +20,7 @@ from rich.traceback import install
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_h5, save_as_nii, save_as_tifs, save_as_zarr
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -38,13 +38,12 @@ def parse_args():
 
 # TODO: Test if other scripts in image_io are redundant and can be removed. If not, consolidate them into this script.
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
-
-    # print(f'\nIn main(){Configuration.verbose=}\n')
-    # Configuration.verbose = args.verbose
-    # print(f'\nIn main(){Configuration.verbose=}\n')
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Load image and metadata
     if args.xy_res is None or args.z_res is None:
@@ -71,11 +70,8 @@ def main():
     else: 
         save_as_tifs(img, args.output, ndarray_axis_order=args.axis_order)
 
-
-if __name__ == '__main__' or __name__ == 'unravel.image_io.io_img':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()

@@ -20,7 +20,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
@@ -50,19 +50,19 @@ def save_as_nii(ndarray, output_path):
     nib.save(nifti_image, output_path)
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     img = zarr_to_ndarray(args.input)
     output_path = define_zarr_to_nii_output(args.output)
     save_as_nii(img, output_path)
 
-
-if __name__ == '__main__' or __name__ == 'unravel.image_io.zarr_to_nii':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()
