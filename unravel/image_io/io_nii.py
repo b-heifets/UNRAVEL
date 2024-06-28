@@ -30,7 +30,8 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Convert the data type of a .nii.gz image', formatter_class=SuppressMetavar)
@@ -87,9 +88,12 @@ def convert_dtype(ndarray, data_type, scale_mode='none', fixed_scale_range=None,
     return ndarray.astype(np.dtype(data_type))
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Load the .nii.gz file
     nii_path = args.input if args.input.endswith('.nii.gz') else f'{args.input}.nii.gz'
@@ -146,11 +150,8 @@ def main():
         output_path = args.output if args.output else nii_path.replace('.nii.gz', f'_{args.data_type}.nii.gz')
     nib.save(new_nii, output_path)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.image_io.io_nii':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

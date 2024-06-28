@@ -27,7 +27,8 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_tifs
 from unravel.core.img_tools import pixel_classification
-from unravel.core.utils import get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples, print_func_name_args_times, initialize_progress_bar
+
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -64,9 +65,12 @@ def save_labels_as_masks(tif_dir, labels, segmentation_dir, output_name):
         nib.save(nifti_img, segmentation_dir.joinpath(f"{output_name}_{label}.nii.gz"))
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     
@@ -112,11 +116,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.segment.ilastik_pixel_classification':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

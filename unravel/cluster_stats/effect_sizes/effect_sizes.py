@@ -36,7 +36,7 @@ from termcolor import colored
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -149,9 +149,12 @@ def filter_dataframe(df, cluster_list):
     # Keep only rows where 'Cluster' value after removing "Cluster_" matches an integer in the cluster list
     return df[df['Cluster'].str.replace('Cluster_', '').astype(int).isin(cluster_list)]
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Generate CSVs with effect sizes
     effect_sizes = hedges_g(args.input_csv, args.condition_1, args.condition_2)
@@ -164,11 +167,8 @@ def main():
         filtered_output = f"{os.path.splitext(args.input_csv)[0]}_Hedges_g_{args.condition_1}_{args.condition_2}_valid_clusters.csv"
         effect_sizes_filtered.to_csv(filtered_output, index=False)
 
-
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.effect_sizes.effect_sizes':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()

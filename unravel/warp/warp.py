@@ -25,7 +25,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_func_name_args_times, print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
@@ -110,9 +110,12 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     nib.save(warped_img_nii, output_path)
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     reg_outputs_path = Path(args.reg_outputs).resolve()
     moving_img_path = str(Path(args.moving_img).resolve())
@@ -120,11 +123,8 @@ def main():
 
     warp(reg_outputs_path, moving_img_path, fixed_img_path, args.output, args.inverse, args.interpol)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.warp.warp':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

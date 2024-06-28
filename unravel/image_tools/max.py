@@ -16,7 +16,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -40,17 +40,18 @@ def find_max_intensity(file_path):
     return max_intensity
 
 
-@print_cmd_and_times
+@log_command
 def main():
-    args = parse_args()
-    max_intensity = find_max_intensity(args.input)
-    print(max_intensity)
-
-
-if __name__ == '__main__' or __name__ == 'unravel.image_tools.max':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
+    verbose_start_msg()
+    
+    max_intensity = find_max_intensity(args.input)
+    print(max_intensity)
+
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
     main()

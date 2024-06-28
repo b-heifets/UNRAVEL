@@ -17,7 +17,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -28,8 +28,14 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
+
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
     
     # Resolve file patterns to actual file paths
     all_files = []
@@ -67,11 +73,8 @@ def main():
     nib.save(averaged_nii, args.output)
     print("Saved averaged image to avg.nii.gz\n")
 
-
-if __name__ == '__main__' or __name__ == 'unravel.image_tools.avg':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()

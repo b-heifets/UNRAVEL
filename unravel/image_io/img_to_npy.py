@@ -15,7 +15,7 @@ from rich.traceback import install
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -27,9 +27,12 @@ def parse_args():
     return parser.parse_args()
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     img = load_3D_img(args.input, desired_axis_order=args.axis_order)
 
@@ -47,11 +50,8 @@ def main():
     # Save the ndarray to a binary file in NumPy `.npy` format
     np.save(output, img)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.image_io.img_to_npy':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

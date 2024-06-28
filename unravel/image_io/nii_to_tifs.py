@@ -18,7 +18,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -46,17 +46,15 @@ def nii_to_tifs(nii_path, output_dir):
         tif.imwrite(os.path.join(output_dir, f'slice_{i:04d}.tif'), slice_) #not opening in FIJI as one stack
 
 
-@print_cmd_and_times
+@log_command
 def main():
-    args = parse_args()
-    
-    nii_to_tifs(args.input, args.output_dir)
-
-
-if __name__ == '__main__' or __name__ == 'unravel.image_io.nii_to_tifs':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
+    verbose_start_msg()
+    
+    nii_to_tifs(args.input, args.output_dir)
+
 
 if __name__ == '__main__':
     main()

@@ -18,8 +18,7 @@ from rich.traceback import install
 
 from unravel.core.config import Configuration
 from unravel.core.argparse_utils import SuppressMetavar, SM
-from unravel.core.utils import print_cmd_and_times
-
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -33,10 +32,13 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-@print_cmd_and_times
+
+@log_command
 def main():
     install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Load the specified columns from the CSV with CCFv3 info
     if Path(args.csv_input).exists() and args.csv_input.endswith('.csv'):
@@ -78,11 +80,8 @@ def main():
         volume_summary_old_labels.to_csv(f'{args.csv_output}_old_labels.csv', index=False)
         volume_summary_new_labels.to_csv(f'{args.csv_output}_new_labels.csv', index=False)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.image_tools.atlas.relabel_nii':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

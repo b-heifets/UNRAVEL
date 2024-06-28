@@ -17,7 +17,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples, copy_files
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, copy_files
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
@@ -31,9 +31,12 @@ def parse_args():
     return parser.parse_args()
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Create the target directory for copying the selected slices
     target_dir = Path(args.target_dir) if args.target_dir is not None else Path.cwd()
@@ -57,11 +60,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
-
-if __name__ == '__main__' or __name__ == 'unravel.register.reg_check_brain_mask':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()

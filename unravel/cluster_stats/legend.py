@@ -28,7 +28,7 @@ from openpyxl.styles import Alignment
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -67,9 +67,13 @@ def apply_rgb_to_cell(ws, df_w_rgb, col_w_labels, col_num):
         fill = PatternFill(start_color=hex_color, end_color=hex_color, fill_type='solid')
         region_cell.fill = fill
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
 
     path = Path(args.path) if args.path else Path.cwd()
 
@@ -318,11 +322,8 @@ def main():
             file.write(f"\nNumbers ({layers_set}) = cortical layers\n")
         file.write(f'\nAdditional abbreviations not shown in the region abbreviation legend (SI table): {other_abbreviation_to_definitions}\n')
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.legend':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

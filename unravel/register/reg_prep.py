@@ -31,7 +31,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, resolve_path, save_as_tifs, save_as_nii
 from unravel.core.img_tools import resample, reorient_for_raw_to_nii_conv
-from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, print_func_name_args_times
 from unravel.segment.copy_tifs import copy_specific_slices
 
 
@@ -83,9 +83,12 @@ def reg_prep(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
     return img_resampled
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     if args.target_dir is not None:
         # Create the target directory for copying the selected slices for ``seg_brain_mask``
@@ -131,11 +134,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
-
-if __name__ == '__main__' or __name__ == 'unravel.register.reg_prep':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()

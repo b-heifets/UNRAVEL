@@ -16,7 +16,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -32,9 +32,12 @@ def nii_axis_codes(nii):
     return axcodes
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
     
     nii = nib.load(args.input)
     
@@ -52,17 +55,13 @@ def main():
     voxel_sizes = tuple(np.array(voxel_sizes) * 1000)
     print(f'\nVoxel sizes (in microns):\n{voxel_sizes}')
 
-
     # Print orientation and affine
     axcodes = nii_axis_codes(nii)
     np.set_printoptions(precision=4, suppress=True)
     print(f'\nAffine matrix ([default bold]{axcodes}[/]):\n{nii.affine}\n')
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.image_io.nii_info':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

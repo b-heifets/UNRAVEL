@@ -31,7 +31,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -64,9 +64,12 @@ def find_incongruent_clusters(df, expected_lower_mean_group, expected_higher_mea
     
     return incongruent_clusters
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     current_dir = Path.cwd()
 
@@ -88,11 +91,8 @@ def main():
             print(f'    CSV: {args.csv_name}')
             print("    No incongruent clusters found.\n")
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.find_incongruent_clusters':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

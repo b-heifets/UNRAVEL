@@ -35,7 +35,7 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import initialize_progress_bar, print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar
 
 
 def parse_args():
@@ -280,9 +280,12 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     return test_results_df
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
     
     # Find all CSV files in the current directory matching *cell_densities.csv
     file_list = [file for file in os.listdir('.') if file.endswith('cell_densities.csv')]
@@ -441,11 +444,8 @@ def main():
         final_summary = pd.merge(regional_summary, all_summaries, on='Region_ID', how='left') 
         final_summary.to_csv(Path(out_dir) / f'__significance_summary_{side}.csv', index=False)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.region_stats.rstats_summary':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

@@ -44,7 +44,7 @@ from scipy.ndimage import uniform_filter
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii, save_as_tifs, save_as_zarr
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
@@ -111,9 +111,13 @@ def spatial_average_2D(volume, filter_func, kernel_size=(3, 3), threads=8):
 
     return processed_volume
 
-@print_cmd_and_times
+
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
     
     # Load image and metadata
     if args.xy_res is None or args.z_res is None:
@@ -148,11 +152,8 @@ def main():
     elif args.output.endswith('.zarr'):
         save_as_zarr(img, args.output, ndarray_axis_order=args.axis_order)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.image_tools.spatial_averaging':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

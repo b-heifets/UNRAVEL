@@ -18,7 +18,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -66,17 +66,17 @@ def rename_files(directory, old_text, new_text, recursive=False, rename_type='bo
                     print(f"Renamed '{path}' to '{new_path}'")
 
 
-@print_cmd_and_times
+@log_command
 def main():
-    args = parse_args()
-    
-    rename_files(Path().cwd(), args.old_text, args.new_text, args.recursive, args.type, args.dry_run)
-
-
-if __name__ == '__main__' or __name__ == 'unravel.utilities.rename':
     install()
     args = parse_args()
     Configuration.verbose = args.verbose
+    verbose_start_msg()
+    
+    rename_files(Path().cwd(), args.old_text, args.new_text, args.recursive, args.type, args.dry_run)
+
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
     main()

@@ -43,7 +43,7 @@ from rich.traceback import install
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.utils import get_samples, initialize_progress_bar, print_func_name_args_times, print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times
 from unravel.warp.to_atlas import to_atlas
 
 
@@ -91,9 +91,12 @@ def z_score(img, mask):
     return z_scored_img
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     if args.no_tmask and args.atlas_mask is None: 
         print("\n    [red]Please provide a path for --atlas_mask if --tissue_mask is not used\n")
@@ -164,11 +167,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.voxel_stats.z_score':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

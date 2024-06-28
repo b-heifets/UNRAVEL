@@ -35,7 +35,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.img_io import load_3D_img, resolve_path, save_as_nii
 from unravel.core.img_tools import pixel_classification
-from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 
 
 def parse_args():
@@ -52,9 +52,12 @@ def parse_args():
     return parser.parse_args()
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
 
@@ -104,11 +107,8 @@ def main():
             # brain_mask(sample, args)
             progress.update(task_id, advance=1)
 
-
-if __name__ == '__main__' or __name__ == 'unravel.segment.brain_mask':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()

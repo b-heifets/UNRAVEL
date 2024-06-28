@@ -34,7 +34,7 @@ from termcolor import colored
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -147,9 +147,12 @@ def hedges_g(df, condition_1, condition_2, sex):
     return results_df
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Generate CSVs with absolute sex effect sizes
     female_effect_sizes = hedges_g(args.input_csv, args.condition_1, args.condition_2, 'F')
@@ -170,11 +173,8 @@ def main():
         filtered_m_output = f"{os.path.splitext(args.input_csv)[0]}_Hedges_g_{args.condition_1}_{args.condition_2}_M_valid_clusters.csv"
         male_effect_sizes_filtered.to_csv(filtered_m_output, index=False)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

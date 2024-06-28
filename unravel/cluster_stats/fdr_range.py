@@ -19,7 +19,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -69,10 +69,12 @@ def fdr_range(input_path, mask_path, q_value):
 
     return q_value, probability_threshold_float
 
-@print_cmd_and_times
+@log_command
 def main():
     install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
     
     # Initialize ThreadPoolExecutor
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.threads) as executor:
@@ -93,11 +95,8 @@ def main():
     q_values_resulting_in_clusters_str = ' '.join([smart_float_format(q) for q in q_values_resulting_in_clusters])
     print(f'\n{q_values_resulting_in_clusters_str}\n')
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.fdr_range':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

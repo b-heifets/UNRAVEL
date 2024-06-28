@@ -30,7 +30,7 @@ import tifffile
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -116,9 +116,12 @@ def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
     print(f"    Output: [default bold]{tif_dir_out}\n")
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     if args.input:
         tif_path = args.input
@@ -146,11 +149,8 @@ def main():
     
     save_as_tifs(img, tifs_output_path)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.image_io.tif_to_tifs':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

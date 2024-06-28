@@ -16,7 +16,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii
 from unravel.core.img_tools import find_bounding_box, cluster_IDs, crop
-from unravel.core.utils import print_cmd_and_times, load_text_from_file
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, load_text_from_file
 
 
 def parse_args():
@@ -49,9 +49,13 @@ def save_cropped_img(img_cropped, xy_res, z_res, args, cluster=None):
     else:
         save_as_nii(img_cropped, save_path, xy_res, z_res, data_type='uint16')
 
-@print_cmd_and_times
-def main(): 
+
+@log_command
+def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
    
     if args.xy_res is None or args.z_res is None:
         img, xy_res, z_res = load_3D_img(args.input, return_res=True)
@@ -80,11 +84,8 @@ def main():
         print("    [red1]No bbox or cluster specified. Exiting.")
         exit()
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.crop':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

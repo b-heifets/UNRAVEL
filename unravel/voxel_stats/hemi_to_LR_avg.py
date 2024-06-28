@@ -31,7 +31,7 @@ from fsl.wrappers import fslmaths
 
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 from unravel.voxel_stats.apply_mask import load_mask
 from unravel.voxel_stats.mirror import mirror
 
@@ -87,9 +87,12 @@ def hemi_to_LR_avg(lh_file, rh_file, kernel=0, axis=0, shift=2, atlas_mask=None)
     print(f"    Saved averaged image to {output_filename}")
 
 
-@print_cmd_and_times
-def main(): 
+@log_command
+def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     path = Path.cwd()
     rh_files = list(path.glob('*_RH.nii.gz'))
@@ -102,11 +105,8 @@ def main():
             lh_file = path / str(rh_file).replace('_RH.nii.gz', '_LH.nii.gz')
             hemi_to_LR_avg(lh_file, rh_file, args.kernel, args.axis, args.shift, args.atlas_mask)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.voxel_stats.hemi_to_LR_avg':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

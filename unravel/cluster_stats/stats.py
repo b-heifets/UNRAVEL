@@ -61,7 +61,8 @@ from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import initialize_progress_bar, print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar
+
 from unravel.cluster_stats.stats_table import cluster_summary
 
 def parse_args():
@@ -74,7 +75,6 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
-
 
 # TODO: Test grouping of conditions. Test w/ label densities data. Could set up dunnett's tests and/or holm sidak tests.
 
@@ -266,9 +266,13 @@ def perform_tukey_test(df, groups, density_col):
 
     return stats_df 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
     current_dir = Path.cwd()
 
     # Check for subdirectories in the current working directory
@@ -431,11 +435,8 @@ def main():
     else:
         cluster_summary('cluster_validation_info_tukey.csv', 'cluster_validation_summary_tukey.csv')
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.stats':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

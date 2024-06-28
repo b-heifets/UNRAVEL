@@ -36,7 +36,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, load_nii_subset, resolve_path
 from unravel.core.img_tools import cluster_IDs
-from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, print_func_name_args_times
 from unravel.warp.to_native import to_native
 
 
@@ -194,9 +194,13 @@ def density_in_cluster_parallel(cluster_bbox_results, native_cluster_index_cropp
                 print(f'Cluster {cluster_ID} generated an exception: {exc}')
     return results
 
-@print_cmd_and_times
+
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     
@@ -295,11 +299,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.cluster_stats.cluster_validation':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

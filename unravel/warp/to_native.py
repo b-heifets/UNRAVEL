@@ -30,7 +30,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_image_metadata_from_txt, save_as_zarr, save_as_nii
 from unravel.core.img_tools import reverse_reorient_for_raw_to_nii_conv
-from unravel.core.utils import get_samples, initialize_progress_bar, print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times
 from unravel.warp.warp import warp
 
 
@@ -149,9 +149,12 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
     return native_img
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
 
@@ -170,11 +173,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.warp.to_native':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()

@@ -26,7 +26,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.img_tools import cluster_IDs
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -61,18 +61,18 @@ def uniq_intensities(input, min_extent=1, print_sizes=False):
     return uniq_intensities
 
 
-@print_cmd_and_times
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Print unique intensities in image
     uniq_intensities(args.input, args.min_extent, args.print_sizes)
 
-
-if __name__ == '__main__' or __name__ == 'unravel.image_tools.unique_intensities':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
     main()

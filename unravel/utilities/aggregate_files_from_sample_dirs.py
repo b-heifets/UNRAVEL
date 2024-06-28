@@ -22,7 +22,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 
 
 def parse_args():
@@ -55,9 +55,13 @@ def aggregate_files_from_sample_dirs(sample_path, pattern, rel_path_to_src_file,
     if src_path.exists():
         shutil.copy(src_path, target_output)
 
-@print_cmd_and_times
+
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     if args.target_dir is None:
         target_dir = Path().cwd()
@@ -80,11 +84,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
+    verbose_end_msg()
 
-if __name__ == '__main__' or __name__ == 'unravel.utilities.aggregate_files_from_sample_dirs':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
 
 if __name__ == '__main__':
     main()
