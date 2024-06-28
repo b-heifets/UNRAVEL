@@ -19,7 +19,7 @@ from rich.live import Live
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.utils import print_cmd_and_times, initialize_progress_bar
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar
 
 
 def parse_args():
@@ -45,8 +45,12 @@ def detect_outliers(values):
     return outliers
 
 
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     mask = load_3D_img(args.mask)
 
@@ -81,10 +85,8 @@ def main():
     else:
         print("No outliers detected!")
 
+    verbose_end_msg()
 
-if __name__ == "__main__":
-    from rich.traceback import install
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()
