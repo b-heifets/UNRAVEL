@@ -462,7 +462,7 @@ libffi-dev<span class="w"> </span>liblzma-dev<span class="w"> </span>python-open
 </div>
 <p><strong>e. Create and activate a virtual environment:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pyenv<span class="w"> </span>virtualenv<span class="w"> </span><span class="m">3</span>.11.3<span class="w"> </span>unravel
-pyenv<span class="w"> </span>activate<span class="w"> </span>unravel
+pyenv<span class="w"> </span>activate<span class="w"> </span>unravel<span class="w"> </span><span class="c1"># To deactivate, run: pyenv deactivate</span>
 </pre></div>
 </div>
 <h3 class="rubric" id="option-b-using-venv">Option B: Using venv</h3>
@@ -559,6 +559,13 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </div>
 <p><a class="reference external" href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">GitHub Cloning Documentation</a></p>
 </li>
+<li><p><strong>Install UNRAVEL locally</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>UNRAVEL
+&lt;activate<span class="w"> </span>a<span class="w"> </span>virtual<span class="w"> </span>environment&gt;<span class="w"> </span><span class="c1"># e.g., pyenv activate unravel</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+</li>
 <li><p><strong>Update scripts periodically:</strong></p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
@@ -566,10 +573,8 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 <li><p>Make a backup of the code that you used for analysis before updating</p></li>
 </ul>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path/to/repo/clone&gt;
-
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path/to/UNRAVEL&gt;
 git<span class="w"> </span>pull<span class="w">  </span><span class="c1"># This will update the local repo</span>
-
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w">  </span><span class="c1"># This will update commands and install new dependencies</span>
 </pre></div>
 </div>

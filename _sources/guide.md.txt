@@ -226,7 +226,7 @@ unravel_commands -m
 
 :::{tab-item} Utilities
 - [**utils_agg_files**](unravel.utilities.aggregate_files_from_sample_dirs): Aggregate files from sample directories.
-- [**utils_agg_files_rec**](unravel.utilities.aggregate_files_w_recursive_search): Recursively aggregate files.
+- [**utils_agg_files_rec**](unravel.utilities.aggregate_files_recursively): Recursively aggregate files.
 - [**utils_prepend**](unravel.utilities.prepend_conditions): Prepend conditions to files using sample_key.csv.
 - [**utils_rename**](unravel.utilities.rename): Rename files.
 - [**utils_toggle**](unravel.utilities.toggle_samples): Toggle sample?? folders for select batch processing.

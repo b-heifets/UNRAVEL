@@ -373,7 +373,7 @@
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">load_3D_img</span><span class="p">,</span> <span class="n">save_as_h5</span><span class="p">,</span> <span class="n">save_as_nii</span><span class="p">,</span> <span class="n">save_as_tifs</span><span class="p">,</span> <span class="n">save_as_zarr</span>
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_cmd_and_times</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
 
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/image_io/io_img.html#unravel.image_io.io_img.parse_args">[docs]</a>
@@ -394,12 +394,14 @@
 
 <span class="c1"># TODO: Test if other scripts in image_io are redundant and can be removed. If not, consolidate them into this script.</span>
 
-
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../unravel/image_io/io_img.html#unravel.image_io.io_img.main">[docs]</a>
+<span class="nd">@log_command</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">install</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
-
+    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+    <span class="n">verbose_start_msg</span><span class="p">()</span>
 
     <span class="c1"># Load image and metadata</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">z_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -424,15 +426,14 @@
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">):</span>
         <span class="n">save_as_h5</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">axis_order</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span> 
-        <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">axis_order</span><span class="p">)</span></div>
+        <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">axis_order</span><span class="p">)</span>
 
+    <span class="n">verbose_end_msg</span><span class="p">()</span></div>
 
+    
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span> 
-    <span class="n">install</span><span class="p">()</span>
-    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
-    <span class="n">print_cmd_and_times</span><span class="p">(</span><span class="n">main</span><span class="p">)()</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
 </pre></div>
 
                 </article>

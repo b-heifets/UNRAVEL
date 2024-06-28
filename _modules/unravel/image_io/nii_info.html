@@ -368,6 +368,8 @@
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SM</span><span class="p">,</span> <span class="n">SuppressMetavar</span>
+<span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
 
 
 <div class="viewcode-block" id="parse_args">
@@ -388,10 +390,15 @@
     <span class="k">return</span> <span class="n">axcodes</span></div>
 
 
+
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../unravel/image_io/nii_info.html#unravel.image_io.nii_info.main">[docs]</a>
+<span class="nd">@log_command</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">install</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+    <span class="n">verbose_start_msg</span><span class="p">()</span>
     
     <span class="n">nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
     
@@ -409,16 +416,16 @@
     <span class="n">voxel_sizes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">voxel_sizes</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Voxel sizes (in microns):</span><span class="se">\n</span><span class="si">{</span><span class="n">voxel_sizes</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-
     <span class="c1"># Print orientation and affine</span>
     <span class="n">axcodes</span> <span class="o">=</span> <span class="n">nii_axis_codes</span><span class="p">(</span><span class="n">nii</span><span class="p">)</span>
     <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">precision</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">suppress</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Affine matrix ([default bold]</span><span class="si">{</span><span class="n">axcodes</span><span class="si">}</span><span class="s1">[/]):</span><span class="se">\n</span><span class="si">{</span><span class="n">nii</span><span class="o">.</span><span class="n">affine</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Affine matrix ([default bold]</span><span class="si">{</span><span class="n">axcodes</span><span class="si">}</span><span class="s1">[/]):</span><span class="se">\n</span><span class="si">{</span><span class="n">nii</span><span class="o">.</span><span class="n">affine</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">verbose_end_msg</span><span class="p">()</span></div>
 
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">install</span><span class="p">()</span>
     <span class="n">main</span><span class="p">()</span>
 </pre></div>
 

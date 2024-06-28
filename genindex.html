@@ -525,7 +525,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/utilities/aggregate_files_w_recursive_search.html#unravel.utilities.aggregate_files_w_recursive_search.find_and_copy_files">find_and_copy_files() (in module unravel.utilities.aggregate_files_w_recursive_search)</a>
+      <li><a href="unravel/utilities/aggregate_files_recursively.html#unravel.utilities.aggregate_files_recursively.find_and_copy_files">find_and_copy_files() (in module unravel.utilities.aggregate_files_recursively)</a>
 </li>
       <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.find_bounding_box">find_bounding_box() (in module unravel.core.img_tools)</a>
 </li>
@@ -627,10 +627,10 @@
       </ul></li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_image_metadata_from_txt">load_image_metadata_from_txt() (in module unravel.core.img_io)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.load_mask">load_mask() (in module unravel.voxel_stats.apply_mask)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_nii">load_nii() (in module unravel.core.img_io)</a>
 </li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_nii_orientation">load_nii_orientation() (in module unravel.core.img_io)</a>
@@ -648,6 +648,8 @@
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_tifs">load_tifs() (in module unravel.core.img_io)</a>
 </li>
       <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_zarr">load_zarr() (in module unravel.core.img_io)</a>
+</li>
+      <li><a href="unravel/core/utils.html#unravel.core.utils.log_command">log_command() (in module unravel.core.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -774,7 +776,7 @@
 </li>
         <li><a href="unravel/utilities/aggregate_files_from_sample_dirs.html#unravel.utilities.aggregate_files_from_sample_dirs.main">(in module unravel.utilities.aggregate_files_from_sample_dirs)</a>
 </li>
-        <li><a href="unravel/utilities/aggregate_files_w_recursive_search.html#unravel.utilities.aggregate_files_w_recursive_search.main">(in module unravel.utilities.aggregate_files_w_recursive_search)</a>
+        <li><a href="unravel/utilities/aggregate_files_recursively.html#unravel.utilities.aggregate_files_recursively.main">(in module unravel.utilities.aggregate_files_recursively)</a>
 </li>
         <li><a href="unravel/utilities/clean_tif_dirs.html#unravel.utilities.clean_tif_dirs.main">(in module unravel.utilities.clean_tif_dirs)</a>
 </li>
@@ -959,7 +961,7 @@
 </li>
         <li><a href="unravel/utilities/aggregate_files_from_sample_dirs.html#module-unravel.utilities.aggregate_files_from_sample_dirs">unravel.utilities.aggregate_files_from_sample_dirs</a>
 </li>
-        <li><a href="unravel/utilities/aggregate_files_w_recursive_search.html#module-unravel.utilities.aggregate_files_w_recursive_search">unravel.utilities.aggregate_files_w_recursive_search</a>
+        <li><a href="unravel/utilities/aggregate_files_recursively.html#module-unravel.utilities.aggregate_files_recursively">unravel.utilities.aggregate_files_recursively</a>
 </li>
         <li><a href="unravel/utilities/clean_tif_dirs.html#module-unravel.utilities.clean_tif_dirs">unravel.utilities.clean_tif_dirs</a>
 </li>
@@ -1143,7 +1145,7 @@
 </li>
         <li><a href="unravel/utilities/aggregate_files_from_sample_dirs.html#unravel.utilities.aggregate_files_from_sample_dirs.parse_args">(in module unravel.utilities.aggregate_files_from_sample_dirs)</a>
 </li>
-        <li><a href="unravel/utilities/aggregate_files_w_recursive_search.html#unravel.utilities.aggregate_files_w_recursive_search.parse_args">(in module unravel.utilities.aggregate_files_w_recursive_search)</a>
+        <li><a href="unravel/utilities/aggregate_files_recursively.html#unravel.utilities.aggregate_files_recursively.parse_args">(in module unravel.utilities.aggregate_files_recursively)</a>
 </li>
         <li><a href="unravel/utilities/clean_tif_dirs.html#unravel.utilities.clean_tif_dirs.parse_args">(in module unravel.utilities.clean_tif_dirs)</a>
 </li>
@@ -1191,8 +1193,6 @@
       <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.plot_data">plot_data() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
 </li>
       <li><a href="unravel/utilities/prepend_conditions.html#unravel.utilities.prepend_conditions.prepend_conditions">prepend_conditions() (in module unravel.utilities.prepend_conditions)</a>
-</li>
-      <li><a href="unravel/core/utils.html#unravel.core.utils.print_cmd_and_times">print_cmd_and_times() (in module unravel.core.utils)</a>
 </li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.print_func_name_args_times">print_func_name_args_times() (in module unravel.core.utils)</a>
 </li>
@@ -1824,10 +1824,10 @@
 </li>
       </ul></li>
       <li>
-    unravel.utilities.aggregate_files_w_recursive_search
+    unravel.utilities.aggregate_files_recursively
 
       <ul>
-        <li><a href="unravel/utilities/aggregate_files_w_recursive_search.html#module-unravel.utilities.aggregate_files_w_recursive_search">module</a>
+        <li><a href="unravel/utilities/aggregate_files_recursively.html#module-unravel.utilities.aggregate_files_recursively">module</a>
 </li>
       </ul></li>
       <li>
@@ -1950,9 +1950,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/cluster_stats/stats.html#unravel.cluster_stats.stats.valid_clusters_t_test">valid_clusters_t_test() (in module unravel.cluster_stats.stats)</a>
 </li>
+      <li><a href="unravel/core/config.html#unravel.core.config.Configuration.verbose">verbose (unravel.core.config.Configuration attribute)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/core/config.html#unravel.core.config.Configuration.verbose">verbose (unravel.core.config.Configuration attribute)</a>
+      <li><a href="unravel/core/utils.html#unravel.core.utils.verbose_end_msg">verbose_end_msg() (in module unravel.core.utils)</a>
+</li>
+      <li><a href="unravel/core/utils.html#unravel.core.utils.verbose_start_msg">verbose_start_msg() (in module unravel.core.utils)</a>
 </li>
   </ul></td>
 </tr></table>
