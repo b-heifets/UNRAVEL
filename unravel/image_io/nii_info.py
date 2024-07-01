@@ -22,6 +22,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/img.nii.gz', action=SM)
+    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
