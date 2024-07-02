@@ -27,6 +27,7 @@ def parse_args():
     parser.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     parser.add_argument('-r', '--ref_nii', help='Reference image for setting the orientation code', action=SM)
     parser.add_argument('-o', '--output', help='path/img.nii.gz. Default: None (saves as path/img_pad.nii.gz) ', default=None, action=SM)
+    parser.add_argument('-zero', '--zero_origin', help='Set the origin to zero in the affine matrix. Default: False', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
@@ -53,11 +54,13 @@ def main():
 
     # Set the orientation of the image (use if not already set correctly in the header; check with ``io_reorient_nii``)
     if args.ort_code: 
-        fixed_img_padded_nii = reorient_nii(fixed_img_padded_nii, args.ort_code, zero_origin=True, apply=False, form_code=1)
-    else:
+        fixed_img_padded_nii = reorient_nii(fixed_img_padded_nii, args.ort_code, zero_origin=args.zero_origin, apply=False, form_code=1)
+    elif args.ref_nii:
         ref_nii = nib.load(args.ref_nii)
         ort_code = nii_axis_codes(ref_nii)
-        fixed_img_padded_nii = reorient_nii(fixed_img_padded_nii, ort_code, zero_origin=True, apply=False, form_code=1)
+        fixed_img_padded_nii = reorient_nii(fixed_img_padded_nii, ort_code, zero_origin=args.zero_origin, apply=False, form_code=1)
+    else:
+        fixed_img_padded_nii = reorient_nii(fixed_img_padded_nii, nii_axis_codes(nii), zero_origin=True, apply=False, form_code=1)
 
     if args.output is None:
         padded_img_path = args.input.replace('.nii.gz', '_pad.nii.gz')
