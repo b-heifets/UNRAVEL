@@ -9,10 +9,10 @@ Usage for printing all non-zero intensities:
 
 Usage for printing the number of voxels for each intensity that is present:
 ---------------------------------------------------------------------------
-    img_unique -i path/input_img.nii.gz
+    img_unique -i path/input_img.nii.gz -s
 
-Usage for checking which clusters are present if the min cluster size was 100 voxels:
--------------------------------------------------------------------------------------
+Usage for printing unique intensities w/ a min cluster size > 100 voxels:
+-------------------------------------------------------------------------
     img_unique -i path/input_img.nii.gz -m 100
 """
 

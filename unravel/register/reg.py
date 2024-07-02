@@ -53,7 +53,6 @@ def parse_args():
 
     # Optional arguments:
     parser.add_argument('-f', '--fixed_img', help='reg_inputs/autofl_50um_masked.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um_masked.nii.gz", action=SM)
-    parser.add_argument('-o', '--output', help='Warped moving image aligned with the fixed image. Default: <moving_img>__warped_moving_img.nii.gz', default=None, action=SM)
     parser.add_argument('-mas', '--mask', help="Brain mask for bias correction. Default: reg_inputs/autofl_50um_brain_mask.nii.gz. or pass in None", default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
     parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from ``reg`` (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
     parser.add_argument('-tp', '--tform_prefix', help='Prefix of transforms output from ants.registration. Default: ANTsPy_', default="ANTsPy_", action=SM)
@@ -63,7 +62,7 @@ def parse_args():
     parser.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     parser.add_argument('-ia', '--init_align', help='Name of initially aligned image (moving reg input). Default: <moving_img>__initial_alignment_to_fixed_img.nii.gz' , default=None, action=SM)
     parser.add_argument('-it', '--init_time', help='Time in seconds allowed for ``reg_affine_initializer`` to run. Default: 30' , default='30', type=str, action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (outputs <reg_outputs>/<atlas>_in_tissue_space.nii.gz for checking reg; Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
@@ -148,7 +147,7 @@ def main():
                 reg_inputs_fixed_img_nii = nib.Nifti1Image(fixed_img, fixed_img_nii.affine.copy(), fixed_img_nii.header)
                 reg_inputs_fixed_img_nii.set_data_dtype(np.float32)
 
-                # Set the orientation of the image (use if not already set correctly in the header; check with ``io_nii``)
+                # Set the orientation of the image (use if not already set correctly in the header; check with ``io_nii_info``)
                 if args.ort_code: 
                     reg_inputs_fixed_img_nii = reorient_nii(reg_inputs_fixed_img_nii, args.ort_code, zero_origin=True, apply=False, form_code=1)
 
@@ -203,10 +202,10 @@ def main():
                 print(f'\n    Running registration \n')
                 output_prefix = str(Path(reg_outputs_path, args.tform_prefix))
                 reg = ants.registration(
-                    fixed=fixed_image, # e.g., fixed autofluo image
-                    moving=transformed_image, # e.g., the initially aligned moving image (e.g., template)
+                    fixed=fixed_image,  # e.g., fixed autofluo image
+                    moving=transformed_image,  # e.g., the initially aligned moving image (e.g., template)
                     type_of_transform='SyN',  # SyN = symmetric normalization
-                    grad_step=0.1, # Gradient step size
+                    grad_step=0.1,  # Gradient step size
                     syn_metric='CC',  # Cross-correlation
                     syn_sampling=2,  # Corresponds to CC radius
                     reg_iterations=(100, 70, 50, 20),  # Convergence criteria
