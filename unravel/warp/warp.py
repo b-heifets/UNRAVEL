@@ -13,6 +13,9 @@ Usage for inverse warping tissue to atlas space:
 
 Prereq: 
     ``reg``
+
+Note: 
+    This warps padded images in ./reg_outputs (i.e., images that match the padded fixed reg input). For unpadded final images, use ``warp_to_fixed`` and ``warp_to_atlas``.
 """
 
 import ants
@@ -47,7 +50,7 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     Applies the transformations to an image using ANTsPy.
 
     Parameters:
-    reg_outputs_path (str): Path to the reg_outputs folder (contains transformation files)
+    reg_outputs_path (Path): Path to the reg_outputs folder (contains transformation files)
     moving_img_path (str): Path to the image to be transformed.
     fixed_img_path (str): Path to the reference image for applying the transform.
     output_path (str): Path where the transformed image will be saved.
