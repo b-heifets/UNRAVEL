@@ -60,7 +60,7 @@ def main():
         ort_code = nii_axis_codes(ref_nii)
         fixed_img_padded_nii = reorient_nii(fixed_img_padded_nii, ort_code, zero_origin=args.zero_origin, apply=False, form_code=1)
     else:
-        fixed_img_padded_nii = reorient_nii(fixed_img_padded_nii, nii_axis_codes(nii), zero_origin=True, apply=False, form_code=1)
+        fixed_img_padded_nii = reorient_nii(fixed_img_padded_nii, nii_axis_codes(nii), zero_origin=args.zero_origin, apply=False, form_code=1)
 
     if args.output is None:
         padded_img_path = args.input.replace('.nii.gz', '_pad.nii.gz')
