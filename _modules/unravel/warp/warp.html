@@ -366,6 +366,9 @@
 
 <span class="sd">Prereq: </span>
 <span class="sd">    ``reg``</span>
+
+<span class="sd">Note: </span>
+<span class="sd">    This warps padded images in ./reg_outputs (i.e., images that match the padded fixed reg input). For unpadded final images, use ``warp_to_fixed`` and ``warp_to_atlas``.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">ants</span>
@@ -405,7 +408,7 @@
 <span class="sd">    Applies the transformations to an image using ANTsPy.</span>
 
 <span class="sd">    Parameters:</span>
-<span class="sd">    reg_outputs_path (str): Path to the reg_outputs folder (contains transformation files)</span>
+<span class="sd">    reg_outputs_path (Path): Path to the reg_outputs folder (contains transformation files)</span>
 <span class="sd">    moving_img_path (str): Path to the image to be transformed.</span>
 <span class="sd">    fixed_img_path (str): Path to the reference image for applying the transform.</span>
 <span class="sd">    output_path (str): Path where the transformed image will be saved.</span>
