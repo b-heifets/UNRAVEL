@@ -432,8 +432,8 @@ unravel_commands<span class="w"> </span>-m
 <label class="sd-tab-label" for="sd-tab-item-0">
 Registration</label><div class="sd-tab-content docutils">
 <ul class="simple">
-<li><p><a class="reference internal" href="unravel/register/reg_prep.html#unravel-register-reg-prep"><span class="std std-ref"><strong>reg_prep</strong></span></a>: Prepare registration (resample the autofluo image).</p></li>
-<li><p><a class="reference internal" href="unravel/register/reg.html#unravel-register-reg"><span class="std std-ref"><strong>reg</strong></span></a>: Perform registration (register the autofluo image to an average template).</p></li>
+<li><p><a class="reference internal" href="unravel/register/reg_prep.html#unravel-register-reg-prep"><span class="std std-ref"><strong>reg_prep</strong></span></a>: Prepare registration (resample the autofluo image to lower res).</p></li>
+<li><p><a class="reference internal" href="unravel/register/reg.html#unravel-register-reg"><span class="std std-ref"><strong>reg</strong></span></a>: Perform registration (e.g., register the autofluo image to an average template).</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg_check.html#unravel-register-reg-check"><span class="std std-ref"><strong>reg_check</strong></span></a>: Check registration (aggregate the autofluo and warped atlas images).</p></li>
 </ul>
 </div>
@@ -442,7 +442,7 @@ Registration</label><div class="sd-tab-content docutils">
 Warping</label><div class="sd-tab-content docutils">
 <ul class="simple">
 <li><p><a class="reference internal" href="unravel/warp/to_atlas.html#unravel-warp-to-atlas"><span class="std std-ref"><strong>warp_to_atlas</strong></span></a>: Warp images to atlas space.</p></li>
-<li><p><a class="reference internal" href="unravel/warp/to_native.html#unravel-warp-to-native"><span class="std std-ref"><strong>warp_to_native</strong></span></a>: Warp images to native space.</p></li>
+<li><p><a class="reference internal" href="unravel/warp/to_native.html#unravel-warp-to-native"><span class="std std-ref"><strong>warp_to_native</strong></span></a>: Warp images to native img space, unpad, and scale to full res.</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-2" name="sd-tab-set-0" type="radio">
@@ -519,8 +519,8 @@ Utilities</label><div class="sd-tab-content docutils">
 <label class="sd-tab-label" for="sd-tab-item-9">
 Registration</label><div class="sd-tab-content docutils">
 <ul class="simple">
-<li><p><a class="reference internal" href="unravel/register/reg_prep.html#unravel-register-reg-prep"><span class="std std-ref"><strong>reg_prep</strong></span></a>: Prepare registration (resample the autofluo image).</p></li>
-<li><p><a class="reference internal" href="unravel/register/reg.html#unravel-register-reg"><span class="std std-ref"><strong>reg</strong></span></a>: Perform registration (register the autofluo image to an average template).</p></li>
+<li><p><a class="reference internal" href="unravel/register/reg_prep.html#unravel-register-reg-prep"><span class="std std-ref"><strong>reg_prep</strong></span></a>: Prepare registration (resample the autofluo image to lower res).</p></li>
+<li><p><a class="reference internal" href="unravel/register/reg.html#unravel-register-reg"><span class="std std-ref"><strong>reg</strong></span></a>: Perform registration (e.g., register the autofluo image to an average template).</p></li>
 <li><p><a class="reference internal" href="unravel/register/affine_initializer.html#unravel-register-affine-initializer"><span class="std std-ref"><strong>reg_affine_initializer</strong></span></a>: Part of reg. Roughly aligns the template to the autofl image.</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg_check.html#unravel-register-reg-check"><span class="std std-ref"><strong>reg_check</strong></span></a>: Check registration (aggregate the autofluo and warped atlas images).</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg_check_brain_mask.html#unravel-register-reg-check-brain-mask"><span class="std std-ref"><strong>reg_check_brain_mask</strong></span></a>: Check brain mask for over/under segmentation.</p></li>
@@ -531,8 +531,9 @@ Registration</label><div class="sd-tab-content docutils">
 Warping</label><div class="sd-tab-content docutils">
 <ul class="simple">
 <li><p><a class="reference internal" href="unravel/warp/to_atlas.html#unravel-warp-to-atlas"><span class="std std-ref"><strong>warp_to_atlas</strong></span></a>: Warp images to atlas space.</p></li>
-<li><p><a class="reference internal" href="unravel/warp/to_native.html#unravel-warp-to-native"><span class="std std-ref"><strong>warp_to_native</strong></span></a>: Warp images to native space.</p></li>
-<li><p><a class="reference internal" href="unravel/warp/warp.html#unravel-warp-warp"><span class="std std-ref"><strong>warp</strong></span></a>: Warp between moving and fixed images.</p></li>
+<li><p><a class="reference internal" href="unravel/warp/to_fixed.html#unravel-warp-to-fixed"><span class="std std-ref"><strong>warp_to_fixed</strong></span></a>: Warp images to fixed img space and unpad.</p></li>
+<li><p><a class="reference internal" href="unravel/warp/to_native.html#unravel-warp-to-native"><span class="std std-ref"><strong>warp_to_native</strong></span></a>: Warp images to native img space, unpad, and scale to full res.</p></li>
+<li><p><a class="reference internal" href="unravel/warp/warp.html#unravel-warp-warp"><span class="std std-ref"><strong>warp</strong></span></a>: Warp between moving and fixed images (these have 15% padding from reg)</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-11" name="sd-tab-set-1" type="radio">
@@ -623,6 +624,7 @@ Image tools</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/image_tools/rb.html#unravel-image-tools-rb"><span class="std std-ref"><strong>img_rb</strong></span></a>: Apply rolling ball filter to TIF images.</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/DoG.html#unravel-image-tools-dog"><span class="std std-ref"><strong>img_DoG</strong></span></a>: Apply Difference of Gaussian filter to TIF images.</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/pad.html#unravel-image-tools-pad"><span class="std std-ref"><strong>img_pad</strong></span></a>: Pad images.</p></li>
+<li><p><a class="reference internal" href="unravel/image_tools/resample.html#unravel-image-tools-resample"><span class="std std-ref"><strong>img_resample</strong></span></a>: Resample images.</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/extend.html#unravel-image-tools-extend"><span class="std std-ref"><strong>img_extend</strong></span></a>: Extend images (add padding to one side).</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/transpose_axes.html#unravel-image-tools-transpose-axes"><span class="std std-ref"><strong>img_transpose</strong></span></a>: Transpose image axes.</p></li>
 </ul>
