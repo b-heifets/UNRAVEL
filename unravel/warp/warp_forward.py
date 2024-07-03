@@ -65,7 +65,7 @@ def forward_warp(fixed_img_path, reg_outputs_path, fixed_reg_in, moving_img_path
     warped_nii_path = str(warp_outputs_dir / str(Path(moving_img_path).name).replace(".nii.gz", "_in_fixed_img_space.nii.gz"))
     if not Path(warped_nii_path).exists():
         print(f'\n    Warping the moving image to fixed image space\n')
-        fixed_img_for_reg_path = str(reg_outputs_path / fixed_reg_in)
+        fixed_img_for_reg_path = str(Path(reg_outputs_path) / fixed_reg_in)
         warp(reg_outputs_path, moving_img_path, fixed_img_for_reg_path, warped_nii_path, inverse=False, interpol=interpol)
 
     # Lower bit depth to match atlas space image
