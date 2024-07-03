@@ -31,6 +31,10 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
+# TODO: Update the resolution in the header of the resampled image
+# TODO: Add command to pyproject.toml and unravel_commands.py
+# TODO: Add to toctree in docs
+
 
 @log_command
 def main():
