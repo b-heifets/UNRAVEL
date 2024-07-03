@@ -395,7 +395,7 @@ def main():
             },
             "img_resample": {
                 "module": "unravel.image_tools.resample",
-                "description": "Pad images.",
+                "description": "Resample image.nii.gz.",
                 "common": False
             },
             "img_extend": {
