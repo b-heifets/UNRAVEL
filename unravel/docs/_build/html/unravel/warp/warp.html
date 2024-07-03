@@ -504,6 +504,10 @@
 <dt>Prereq:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This warps padded images in ./reg_outputs (i.e., images that match the padded fixed reg input). For unpadded final images, use <code class="docutils literal notranslate"><span class="pre">warp_to_fixed</span></code> and <code class="docutils literal notranslate"><span class="pre">warp_to_atlas</span></code>.</p>
+</div>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.warp.warp.parse_args">
@@ -515,7 +519,7 @@
 <span class="sig-prename descclassname"><span class="pre">unravel.warp.warp.</span></span><span class="sig-name descname"><span class="pre">warp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg_outputs_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/warp.html#warp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.warp.warp" title="Link to this definition">#</a></dt>
 <dd><p>Applies the transformations to an image using ANTsPy.</p>
 <p>Parameters:
-reg_outputs_path (str): Path to the reg_outputs folder (contains transformation files)
+reg_outputs_path (Path): Path to the reg_outputs folder (contains transformation files)
 moving_img_path (str): Path to the image to be transformed.
 fixed_img_path (str): Path to the reference image for applying the transform.
 output_path (str): Path where the transformed image will be saved.

@@ -489,10 +489,22 @@
   <section id="module-unravel.register.reg">
 <span id="unravel-register-reg-module"></span><span id="unravel-register-reg"></span><h1>unravel.register.reg module<a class="headerlink" href="#module-unravel.register.reg" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">reg</span></code> from UNRAVEL to register an average template brain/atlas to a resampled autofl brain.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<section id="usage-for-tissue-registration">
+<h2>Usage for tissue registration:<a class="headerlink" href="#usage-for-tissue-registration" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>reg -m &lt;path/template.nii.gz&gt; -bc -pad -sm 0.4 -ort &lt;3 letter orientation code&gt;</p>
+<div><p>reg -m &lt;path/template.nii.gz&gt; -bc -sm 0.4 -ort &lt;3 letter orientation code&gt;</p>
+</div></blockquote>
+</section>
+<section id="usage-for-atlas-to-atlas-registration">
+<h2>Usage for atlas to atlas registration:<a class="headerlink" href="#usage-for-atlas-to-atlas-registration" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg -m &lt;path/atlas1.nii.gz&gt; -f &lt;path/atlas2.nii.gz&gt; -m2 &lt;path/atlas2.nii.gz&gt;</p>
+</div></blockquote>
+</section>
+<section id="usage-for-template-to-template-registration">
+<h2>Usage for template to template registration:<a class="headerlink" href="#usage-for-template-to-template-registration" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg -m &lt;path/template1.nii.gz&gt; -f &lt;path/template2.nii.gz&gt; -m2 &lt;path/template2.nii.gz&gt; -inp linear</p>
 </div></blockquote>
 <dl class="simple">
 <dt>ort_code letter options:</dt><dd><ul class="simple">
@@ -507,6 +519,13 @@
 <dt>Next steps:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg_check</span></code> and <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code></p>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Images in reg_inputs are not padded.</p></li>
+<li><p>Images in reg_outputs have 15% padding.</p></li>
+</ul>
+</div>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.register.reg.parse_args">
@@ -583,7 +602,9 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-tissue-registration">Usage for tissue registration:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-atlas-to-atlas-registration">Usage for atlas to atlas registration:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-template-to-template-registration">Usage for template to template registration:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg.bias_correction"><code class="docutils literal notranslate"><span class="pre">bias_correction()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
