@@ -96,6 +96,11 @@ def main():
                 "description": "Warp images to atlas space.",
                 "common": True
             },
+            "warp_to_fixed": {
+                "module": "unravel.warp.to_fixed",
+                "description": "Warp images to native space.",
+                "common": False
+            },
             "warp_to_native": {
                 "module": "unravel.warp.to_native",
                 "description": "Warp images to native space.",
@@ -385,6 +390,11 @@ def main():
             },
             "img_pad": {
                 "module": "unravel.image_tools.pad",
+                "description": "Pad images.",
+                "common": False
+            },
+            "img_resample": {
+                "module": "unravel.image_tools.resample",
                 "description": "Pad images.",
                 "common": False
             },

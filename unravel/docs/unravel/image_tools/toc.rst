@@ -9,6 +9,7 @@ unravel.image_tools package
    extend
    max
    pad
+   resample
    spatial_averaging
    DoG
    rb
