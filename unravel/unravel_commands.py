@@ -393,6 +393,11 @@ def main():
                 "description": "Pad images.",
                 "common": False
             },
+            "img_resample": {
+                "module": "unravel.image_tools.resample",
+                "description": "Pad images.",
+                "common": False
+            },
             "img_extend": {
                 "module": "unravel.image_tools.extend",
                 "description": "Extend images (add padding to one side).",

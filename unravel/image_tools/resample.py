@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``resample`` from UNRAVEL to resample an image.nii.gz and save it.
+Use ``img_resample`` from UNRAVEL to resample an image.nii.gz and save it.
 
 Usage:
 ------
@@ -32,8 +32,6 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Update the resolution in the header of the resampled image
-# TODO: Add command to pyproject.toml and unravel_commands.py
-# TODO: Add to toctree in docs
 
 
 @log_command
