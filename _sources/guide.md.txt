@@ -69,14 +69,14 @@ unravel_commands -m
 ::::{tab-set}
 
 ::: {tab-item} Registration
-- [**reg_prep**](unravel.register.reg_prep): Prepare registration (resample the autofluo image).
-- [**reg**](unravel.register.reg): Perform registration (register the autofluo image to an average template).
+- [**reg_prep**](unravel.register.reg_prep): Prepare registration (resample the autofluo image to lower res).
+- [**reg**](unravel.register.reg): Perform registration (e.g., register the autofluo image to an average template).
 - [**reg_check**](unravel.register.reg_check): Check registration (aggregate the autofluo and warped atlas images).
 :::
 
 ::: {tab-item} Warping
 - [**warp_to_atlas**](unravel.warp.to_atlas): Warp images to atlas space.
-- [**warp_to_native**](unravel.warp.to_native): Warp images to native space.
+- [**warp_to_native**](unravel.warp.to_native): Warp images to native img space, unpad, and scale to full res.
 :::
 
 ::: {tab-item} Segmentation
@@ -132,8 +132,8 @@ unravel_commands -m
 ::::{tab-set}
 
 :::{tab-item} Registration
-- [**reg_prep**](unravel.register.reg_prep): Prepare registration (resample the autofluo image).
-- [**reg**](unravel.register.reg): Perform registration (register the autofluo image to an average template).
+- [**reg_prep**](unravel.register.reg_prep): Prepare registration (resample the autofluo image to lower res).
+- [**reg**](unravel.register.reg): Perform registration (e.g., register the autofluo image to an average template).
 - [**reg_affine_initializer**](unravel.register.affine_initializer): Part of reg. Roughly aligns the template to the autofl image.
 - [**reg_check**](unravel.register.reg_check): Check registration (aggregate the autofluo and warped atlas images).
 - [**reg_check_brain_mask**](unravel.register.reg_check_brain_mask): Check brain mask for over/under segmentation.
@@ -141,8 +141,9 @@ unravel_commands -m
 
 :::{tab-item} Warping
 - [**warp_to_atlas**](unravel.warp.to_atlas): Warp images to atlas space.
-- [**warp_to_native**](unravel.warp.to_native): Warp images to native space.
-- [**warp**](unravel.warp.warp): Warp between moving and fixed images.
+- [**warp_to_fixed**](unravel.warp.to_fixed): Warp images to fixed img space and unpad.
+- [**warp_to_native**](unravel.warp.to_native): Warp images to native img space, unpad, and scale to full res.
+- [**warp**](unravel.warp.warp): Warp between moving and fixed images (these have 15% padding from reg)
 :::
 
 :::{tab-item} Segmentation
@@ -215,6 +216,7 @@ unravel_commands -m
 - [**img_rb**](unravel.image_tools.rb): Apply rolling ball filter to TIF images.
 - [**img_DoG**](unravel.image_tools.DoG): Apply Difference of Gaussian filter to TIF images.
 - [**img_pad**](unravel.image_tools.pad): Pad images.
+- [**img_resample**](unravel.image_tools.resample): Resample images.
 - [**img_extend**](unravel.image_tools.extend): Extend images (add padding to one side).
 - [**img_transpose**](unravel.image_tools.transpose_axes): Transpose image axes.
 :::

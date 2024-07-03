@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>unravel.voxel_stats.hemi_to_LR_avg module &#8212; UNRAVEL docs</title>
+    <title>unravel.image_tools.resample module &#8212; UNRAVEL docs</title>
   
   
   
@@ -48,12 +48,12 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/voxel_stats/hemi_to_LR_avg';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/image_tools/resample';</script>
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="unravel.voxel_stats.vstats module" href="vstats.html" />
-    <link rel="prev" title="unravel.voxel_stats.whole_to_LR_avg module" href="whole_to_LR_avg.html" />
+    <link rel="next" title="unravel.image_tools.spatial_averaging module" href="spatial_averaging.html" />
+    <link rel="prev" title="unravel.image_tools.pad module" href="pad.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -329,17 +329,17 @@
 <li class="toctree-l2"><a class="reference internal" href="../segment/ilastik_pixel_classification.html">unravel.segment.ilastik_pixel_classification module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.voxel_stats package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="apply_mask.html">unravel.voxel_stats.apply_mask module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vstats_prep.html">unravel.voxel_stats.vstats_prep module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="z_score.html">unravel.voxel_stats.z_score module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="whole_to_LR_avg.html">unravel.voxel_stats.whole_to_LR_avg module</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.voxel_stats.hemi_to_LR_avg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="vstats.html">unravel.voxel_stats.vstats module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="mirror.html">unravel.voxel_stats.mirror module</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="other/toc.html">unravel.voxel_stats.other package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="other/IF_outliers.html">unravel.voxel_stats.other.IF_outliers module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="other/r_to_p.html">unravel.voxel_stats.other.r_to_p module</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../voxel_stats/toc.html">unravel.voxel_stats package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../voxel_stats/apply_mask.html">unravel.voxel_stats.apply_mask module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../voxel_stats/vstats_prep.html">unravel.voxel_stats.vstats_prep module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../voxel_stats/z_score.html">unravel.voxel_stats.z_score module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../voxel_stats/whole_to_LR_avg.html">unravel.voxel_stats.whole_to_LR_avg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../voxel_stats/hemi_to_LR_avg.html">unravel.voxel_stats.hemi_to_LR_avg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../voxel_stats/vstats.html">unravel.voxel_stats.vstats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../voxel_stats/mirror.html">unravel.voxel_stats.mirror module</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../voxel_stats/other/toc.html">unravel.voxel_stats.other package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../voxel_stats/other/IF_outliers.html">unravel.voxel_stats.other.IF_outliers module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../voxel_stats/other/r_to_p.html">unravel.voxel_stats.other.r_to_p module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -402,21 +402,21 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../image_tools/toc.html">unravel.image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../image_tools/avg.html">unravel.image_tools.avg module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_tools/bbox.html">unravel.image_tools.bbox module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_tools/extend.html">unravel.image_tools.extend module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_tools/max.html">unravel.image_tools.max module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_tools/pad.html">unravel.image_tools.pad module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_tools/resample.html">unravel.image_tools.resample module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_tools/spatial_averaging.html">unravel.image_tools.spatial_averaging module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_tools/DoG.html">unravel.image_tools.DoG module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_tools/rb.html">unravel.image_tools.rb module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_tools/transpose_axes.html">unravel.image_tools.transpose_axes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_tools/unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../image_tools/atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.image_tools package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="avg.html">unravel.image_tools.avg module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bbox.html">unravel.image_tools.bbox module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="extend.html">unravel.image_tools.extend module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="max.html">unravel.image_tools.max module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pad.html">unravel.image_tools.pad module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.image_tools.resample module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spatial_averaging.html">unravel.image_tools.spatial_averaging module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DoG.html">unravel.image_tools.DoG module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rb.html">unravel.image_tools.rb module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="transpose_axes.html">unravel.image_tools.transpose_axes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -471,9 +471,9 @@
     <li class="breadcrumb-item"><a href="../toc.html" class="nav-link">unravel package</a></li>
     
     
-    <li class="breadcrumb-item"><a href="toc.html" class="nav-link">unravel.voxel_stats package</a></li>
+    <li class="breadcrumb-item"><a href="toc.html" class="nav-link">unravel.image_tools package</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">unravel.voxe...</li>
+    <li class="breadcrumb-item active" aria-current="page">unravel.imag...</li>
   </ul>
 </nav>
 </div>
@@ -490,40 +490,23 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.voxel_stats.hemi_to_LR_avg">
-<span id="unravel-voxel-stats-hemi-to-lr-avg-module"></span><span id="unravel-voxel-stats-hemi-to-lr-avg"></span><h1>unravel.voxel_stats.hemi_to_LR_avg module<a class="headerlink" href="#module-unravel.voxel_stats.hemi_to_LR_avg" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">vstats_hemi_to_avg</span></code> from UNRAVEL to automatically average hemisphere images with their mirrored counterparts. This can also smooth the images with a kernel and apply a mask.</p>
+  <section id="unravel-image-tools-resample-module">
+<span id="unravel-image-tools-resample"></span><h1>unravel.image_tools.resample module<a class="headerlink" href="#unravel-image-tools-resample-module" title="Link to this heading">#</a></h1>
+<p id="module-unravel.image_tools.resample">Use <code class="docutils literal notranslate"><span class="pre">img_resample</span></code> from UNRAVEL to resample an image.nii.gz and save it.</p>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>vstats_hemi_to_avg -k 0.1 -tp -v</p>
+<div><p>img_resample -i input_image.nii.gz -xy xy_res -z z_res -res target_res [-zo zoom_order] [-o output_image.nii.gz]</p>
 </div></blockquote>
-<dl class="simple">
-<dt>Inputs:</dt><dd><ul class="simple">
-<li><p>input_img_LH.nii.gz</p></li>
-<li><p>input_img_RH.nii.gz</p></li>
-</ul>
-</dd>
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>input_img_LRavg.nii.gz</p></li>
-<li><p>input_img_s100_LRavg.nii.gz</p></li>
-</ul>
-</dd>
-</dl>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.hemi_to_LR_avg.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.hemi_to_LR_avg.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/hemi_to_LR_avg.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.hemi_to_LR_avg.parse_args" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.image_tools.resample.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.resample.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/resample.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.resample.parse_args" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.hemi_to_LR_avg.hemi_to_LR_avg">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.hemi_to_LR_avg.</span></span><span class="sig-name descname"><span class="pre">hemi_to_LR_avg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lh_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rh_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shift</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/hemi_to_LR_avg.html#hemi_to_LR_avg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.hemi_to_LR_avg.hemi_to_LR_avg" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.hemi_to_LR_avg.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.hemi_to_LR_avg.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/hemi_to_LR_avg.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.hemi_to_LR_avg.main" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.image_tools.resample.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.resample.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/resample.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.resample.main" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -539,20 +522,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="whole_to_LR_avg.html"
+       href="pad.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">unravel.voxel_stats.whole_to_LR_avg module</p>
+        <p class="prev-next-title">unravel.image_tools.pad module</p>
       </div>
     </a>
     <a class="right-next"
-       href="vstats.html"
+       href="spatial_averaging.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.voxel_stats.vstats module</p>
+        <p class="prev-next-title">unravel.image_tools.spatial_averaging module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -575,16 +558,15 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.hemi_to_LR_avg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.hemi_to_LR_avg.hemi_to_LR_avg"><code class="docutils literal notranslate"><span class="pre">hemi_to_LR_avg()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.hemi_to_LR_avg.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.resample.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.resample.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../_sources/unravel/voxel_stats/hemi_to_LR_avg.rst.txt">
+    <a href="../../_sources/unravel/image_tools/resample.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>
