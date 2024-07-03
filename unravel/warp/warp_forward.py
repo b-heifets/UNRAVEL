@@ -92,6 +92,8 @@ def forward_warp(fixed_img_path, reg_outputs_path, fixed_reg_in, moving_img_path
     ]
 
     # Save as .nii.gz
+    Path(output).parent.mkdir(exist_ok=True, parents=True)
+    fixed_img_for_reg_path = str(Path(reg_outputs_path) / fixed_reg_in)
     save_as_nii(warped_img, output, None, None, moving_nii.header.get_data_dtype(), reference=fixed_img_for_reg_path)
 
     return warped_img
