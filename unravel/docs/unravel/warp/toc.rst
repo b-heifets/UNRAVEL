@@ -5,6 +5,7 @@ unravel.warp package
    :maxdepth: 2
 
    to_atlas
+   to_fixed
    to_native
    warp
 

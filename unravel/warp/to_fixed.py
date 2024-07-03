@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``warp_forward`` from UNRAVEL to forward warp a moving image (e.g., from atlas space) to fixed image space (e.g., tissue space). The input/output do not need padding.
+Use ``warp_to_fixed`` from UNRAVEL to forward warp a moving image (e.g., from atlas space) to fixed image space (e.g., tissue space). The input/output do not need padding.
 
 Usage:
 ------
-    warp_forward -f reg_inputs/autofl_50um_masked.nii.gz -m path/moving_img.nii.gz -o path/warped_img.nii.gz -ro reg_outputs -fri autofl_50um_masked_fixed_reg_input.nii.gz [-i multiLabel] [-r 50] [-v]
+    warp_to_fixed -f reg_inputs/autofl_50um_masked.nii.gz -m path/moving_img.nii.gz -o path/warped_img.nii.gz -ro reg_outputs -fri autofl_50um_masked_fixed_reg_input.nii.gz [-i multiLabel] [-r 50] [-v]
 
 Note: 
     Run this from the folder containing reg_outputs.

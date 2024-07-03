@@ -96,6 +96,11 @@ def main():
                 "description": "Warp images to atlas space.",
                 "common": True
             },
+            "warp_to_fixed": {
+                "module": "unravel.warp.to_fixed",
+                "description": "Warp images to native space.",
+                "common": False
+            },
             "warp_to_native": {
                 "module": "unravel.warp.to_native",
                 "description": "Warp images to native space.",
