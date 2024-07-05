@@ -12,7 +12,7 @@ Usage if the native atlas is not available; it is not saved (faster):
     rstats -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline --dirs sample14 sample36
 
 Outputs:
-    - CSV file with cell counts, region volumes, or cell densities for each region
+    - CSV files in ./sample??/regional_stats/ with cell counts, region volumes, or cell densities for each region
 
 Notes 
     - Regarding --type, also use 'counts' or 'cell_desities' for object counts or object densities
@@ -50,7 +50,7 @@ def parse_args():
     parser.add_argument('-t', '--type', help='Type of measurement (options: counts, volumes, cell_densities [default])', default='cell_densities', action=SM)
     parser.add_argument('-c', '--condition', help='One word name for group (prepended to sample ID for rstats_summary)', required=True, action=SM)
     parser.add_argument('-s', '--seg_img_path', help='rel_path/segmentation_image.nii.gz (can be glob pattern)', required=True, action=SM)
-    parser.add_argument('-a', '--atlas_path', help='rel_path/native_atlas_split.nii.gz (only use this option if this file exists; left label IDs increased by 20,000)', default=None, action=SM)
+    parser.add_argument('-a', '--atlas_path', help='rel_path/native_atlas_split.nii.gz (use this -a if this exists from ``warp_to_native``, otherwise use -m ; "split" == left label IDs increased by 20,000)', default=None, action=SM)
     parser.add_argument('-m', '--moving_img', help='path/atlas_image.nii.gz to warp from atlas space', default=None, action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
     parser.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, action=SM)
