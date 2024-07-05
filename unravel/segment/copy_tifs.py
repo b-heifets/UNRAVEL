@@ -53,9 +53,6 @@ def copy_specific_slices(sample_path, source_dir, target_dir, slice_numbers, ver
             shutil.copy(file_path, dest_file)
             if verbose:
                 print(f"Copied {file_path} to {dest_file}")
-        else:
-            if verbose:
-                print(f"File {file_path.name} does not match specified slices and was not copied.")
 
 
 @log_command
