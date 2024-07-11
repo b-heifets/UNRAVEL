@@ -443,11 +443,11 @@
             <span class="n">cluster_correction_dir</span> <span class="o">=</span> <span class="n">validation_dir_name</span>
 
         <span class="c1"># Regular expression to match the part before and after &#39;q*&#39; to remove any suffix added to the rev_cluster_index&lt;suffix&gt;.nii.gz</span>
-        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(.*q\d+\.\d+)(_.*)&#39;</span>
+        <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;(.*q\d+\.\d+)(_.+)?&#39;</span>  <span class="c1"># This also works when there is no &quot;suffix&quot;</span>
         <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">cluster_correction_dir</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
             <span class="n">cluster_correction_dir</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">suffix</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># Remove the leading underscore</span>
+            <span class="n">suffix</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span> <span class="k">if</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># This gets the string after the q value if there is one</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No match found in cluster_org_data</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 

@@ -372,7 +372,7 @@
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 
-<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span> 
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span> 
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
 <span class="kn">from</span> <span class="nn">unravel.voxel_stats.mirror</span> <span class="kn">import</span> <span class="n">mirror</span>
@@ -391,6 +391,8 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
+
+<span class="c1"># TODO: Consider consolidating regional_summary.csv (regional_summary_CCFv3-2017.csv) and regional_summary_CCFv3-2020.csv and ideally add logic to match usage automatic (i.e., no extra arg needed)</span>
 
 
 <div class="viewcode-block" id="main">
