@@ -267,6 +267,13 @@ def main():
 
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
+            # Load resolutions and dimensions of full res image for scaling 
+            metadata_path = sample_path / args.metadata
+            xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
+            if xy_res is None:
+                print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ io_metadata")
+                import sys ; sys.exit()
+
             # Define output
             output_dir = sample_path / "regional_stats"
             output_dir.mkdir(exist_ok=True, parents=True)
@@ -324,12 +331,6 @@ def main():
 
             # Calculate regional volumes
             if args.type == 'region_volumes' or args.type == 'cell_densities':
-                # Load resolutions and dimensions of full res image for scaling 
-                metadata_path = sample_path / args.metadata
-                xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
-                if xy_res is None:
-                    print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ io_metadata")
-                    import sys ; sys.exit()
 
                 # Calculate regional volumes
                 region_ids = region_info_df['Region_ID']
