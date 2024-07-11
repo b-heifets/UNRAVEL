@@ -304,7 +304,7 @@ def main():
                 region_info_df = pd.read_csv(args.csv_path)
 
             # Count cells in regions
-            if args.type == 'counts' or args.type == 'cell_densities' or args.type == 'label_densities' or args.type == 'label_volumes':
+            if args.type == 'counts' or args.type == 'cell_densities':
                 regional_counts_df, region_ids, atlas = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df)
 
             # Calculate volumes of segmented voxels in regions
@@ -319,6 +319,7 @@ def main():
                 segmented_regions = seg_img * atlas_img
 
                 # Calculate the volume of each segmented region
+                region_ids = region_info_df['Region_ID']
                 regional_volumes_in_seg_df = calculate_regional_volumes(sample_path, segmented_regions, region_ids, xy_res, z_res, args.condition, region_info_df)
 
             # Calculate regional volumes
