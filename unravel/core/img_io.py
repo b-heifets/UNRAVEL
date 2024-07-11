@@ -232,6 +232,8 @@ def load_tifs(tif_path, desired_axis_order="xyz", return_res=False, return_metad
     def load_single_tif(tif_file):
         """Load a single .tif file using OpenCV and return the ndarray."""
         img = cv2.imread(str(tif_file), cv2.IMREAD_UNCHANGED)
+        if img is None:
+            raise ValueError(f"Failed to load image: {tif_file}")
         return img
     tif_files = sorted(Path(tif_path).parent.glob("*.tif"))
     if parallel_loading:
