@@ -88,6 +88,7 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
     Returns:
     --------
     - region_counts_df (DataFrame): DataFrame with regional cell counts in the last column (Region_ID, Side, ID_path, Region, Abbr, <condition>_<sample_name>).
+    - region_ids (list): List of region IDs in the atlas.
 
     Output:
     -------
@@ -157,7 +158,7 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
 
     print(f"    Saving region counts to {output_path}\n")
 
-    return region_counts_df, region_ids, atlas_img
+    return region_counts_df, region_ids
 
 def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, condition, region_info_df):
     """Calculate volumes for given regions in an atlas image.
@@ -312,7 +313,7 @@ def main():
 
             # Count cells in regions
             if args.type == 'counts' or args.type == 'cell_densities':
-                regional_counts_df, region_ids, atlas = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df)
+                regional_counts_df, region_ids = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df)
 
             # Calculate volumes of segmented voxels in regions
             if args.type == 'label_densities' or args.type == 'label_volumes':
@@ -334,7 +335,7 @@ def main():
 
                 # Calculate regional volumes
                 region_ids = region_info_df['Region_ID']
-                regional_volumes_df = calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, args.condition, region_info_df)
+                regional_volumes_df = calculate_regional_volumes(sample_path, atlas_img, region_ids, xy_res, z_res, args.condition, region_info_df)
 
             # Calculate regional cell densities
             if args.type == 'cell_densities':
