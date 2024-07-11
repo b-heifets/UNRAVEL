@@ -21,7 +21,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_utils import SuppressMetavar, SM 
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 from unravel.voxel_stats.mirror import mirror
@@ -37,6 +37,8 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
+
+# TODO: Consider consolidating regional_summary.csv (regional_summary_CCFv3-2017.csv) and regional_summary_CCFv3-2020.csv and ideally add logic to match usage automatic (i.e., no extra arg needed)
 
 
 @log_command
