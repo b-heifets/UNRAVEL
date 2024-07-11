@@ -14,8 +14,11 @@ Usage if the native atlas is not available; it is not saved (faster):
 Outputs:
     - CSV files in ./sample??/regional_stats/ with cell counts, region volumes, or cell densities for each region
 
-Notes 
-    - Regarding --type, also use 'counts' or 'cell_desities' for object counts or object densities
+Note: 
+    - Regarding --type, alternatively use 'counts' or 'volumes' for object counts or regional volumes
+    - CCFv3-2020__regionID_side_IDpath_region_abbr.csv is in UNRAVEL/unravel/core/csvs/
+    - It has columns: Region_ID, Side, ID_path, Region, Abbr
+    - Alternatively, use gubra__regionID_side_IDpath_region_abbr.csv or other region info CSVs
 
 Prereqs: 
     - ``reg_prep``, ``reg``, and ``seg_ilastik``
@@ -57,6 +60,10 @@ def parse_args():
     parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
     parser.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (reg). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
+    parser.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default='CCFv3-2020__regionID_side_IDpath_region_abbr.csv', action=SM)
+
+
+
     parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
@@ -69,7 +76,7 @@ def get_atlas_region_at_coords(atlas, x, y, z):
     return atlas[int(x), int(y), int(z)]
 
 @print_func_name_args_times()
-def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition):
+def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condition, region_info_df):
     """Count the number of cells in each region based on atlas region intensities"""
 
     # Check that the image and atlas have the same shape
@@ -112,9 +119,6 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
     # Add column header to the region counts
     region_counts_series = region_counts_series.rename_axis('Region_ID').reset_index(name=f'{condition}_{sample_name}')
 
-    # Load csv with region IDs, sides, ID_paths, names, and abbreviations
-    region_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'gubra__regionID_side_IDpath_region_abbr.csv')
-
     # Merge the region counts into the region information dataframe
     region_counts_df = region_info_df.merge(region_counts_series, on='Region_ID', how='left')
 
@@ -138,7 +142,7 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
 
     return region_counts_df, region_ids, atlas_img
 
-def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, condition):
+def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, condition, region_info_df):
     """Calculate volumes for given regions in an atlas image."""
 
     print("\n    Calculating regional volumes\n")
@@ -156,7 +160,6 @@ def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, co
     regional_volumes = {region_id: voxel_counts[region_id] * voxel_volume for region_id in region_ids}
 
     # Merge the regional volumes into the region information dataframe
-    region_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'gubra__regionID_side_IDpath_region_abbr.csv')
     sample_name = sample_path.name
     region_info_df[f'{condition}_{sample_name}'] = region_info_df['Region_ID'].map(regional_volumes)
     regional_volumes_df = region_info_df.fillna(0)
@@ -169,7 +172,6 @@ def calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, co
 
     return regional_volumes_df
 
-# Function to calculate regional cell densities
 def calculate_regional_cell_densities(sample_path, regional_counts_df, regional_volumes_df, condition):
     """Calculate cell densities for each region in the atlas."""
 
@@ -240,9 +242,12 @@ def main():
                 print("    [red1]Atlas image not found. Please provide a path to the atlas image or the moving image")
                 import sys ; sys.exit()
 
+            # Load the region information dataframe
+            region_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path)
+
             # Count cells in regions
             if args.type == 'counts' or args.type == 'cell_densities':
-                regional_counts_df, region_ids, atlas = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition)
+                regional_counts_df, region_ids, atlas = count_cells_in_regions(sample_path, seg_img, atlas_img, args.connect, args.condition, region_info_df)
 
             # Calculate regional volumes
             if args.type == 'volumes' or args.type == 'cell_densities':
@@ -254,9 +259,9 @@ def main():
                     import sys ; sys.exit()
 
                 # Calculate regional volumes
-                region_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'gubra__regionID_side_IDpath_region_abbr.csv')
+                
                 region_ids = region_info_df['Region_ID']
-                regional_volumes_df = calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, args.condition)
+                regional_volumes_df = calculate_regional_volumes(sample_path, atlas, region_ids, xy_res, z_res, args.condition, region_info_df)
 
             # Calculate regional cell densities
             if args.type == 'cell_densities':
