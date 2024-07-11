@@ -81,11 +81,11 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             cluster_correction_dir = validation_dir_name
 
         # Regular expression to match the part before and after 'q*' to remove any suffix added to the rev_cluster_index<suffix>.nii.gz
-        pattern = r'(.*q\d+\.\d+)(_.*)'
+        pattern = r'(.*q\d+\.\d+)(_.+)?'  # This also works when there is no "suffix"
         match = re.match(pattern, cluster_correction_dir)
         if match:
             cluster_correction_dir = match.group(1)
-            suffix = match.group(2)[1:]  # Remove the leading underscore
+            suffix = match.group(2)[1:] if match.group(2) else ''  # This gets the string after the q value if there is one
         else:
             print("\n    [red1]No match found in cluster_org_data\n")
 
