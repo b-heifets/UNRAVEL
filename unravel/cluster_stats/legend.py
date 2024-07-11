@@ -12,6 +12,11 @@ Inputs:
 
 Outputs:
     legend.xlsx
+
+Note: 
+    - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/
+    - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst
+    - Alternatively, use CCFv3_info.csv (for gubra) or provide a custom CSV with the same columns.
 """
 
 import argparse
@@ -34,6 +39,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--path', help='Path to the directory containing the *_valid_clusters_table.xlsx files. Default: current working directory', action=SM)
+    parser.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
@@ -74,7 +80,6 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-
     path = Path(args.path) if args.path else Path.cwd()
 
     # Find cluster_* dirs in the current dir
@@ -102,7 +107,10 @@ def main():
     columns_to_load = ['structure_id_path', 'very_general_region',  'collapsed_region_name', 'abbreviation', 'collapsed_region', 'other_abbreviation', 'other_abbreviation_defined', 'layer', 'sunburst']
 
     # Load the specified columns from the CSV with CCFv3 info
-    ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'CCFv3_info.csv', usecols=columns_to_load)
+    if args.csv_path == 'CCFv3_info.csv' or args.csv_path == 'CCFv3-2020_info.csv': 
+        ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path, usecols=columns_to_load)
+    else:
+        ccfv3_info_df = pd.read_csv(args.csv_path, usecols=columns_to_load)
 
     # Creat a dictionary to hold the mappings for the region abbreviation to collapsed region abbreviation
     abbreviation_to_collapsed_dict = dict(zip(ccfv3_info_df['abbreviation'], ccfv3_info_df['collapsed_region']))
@@ -163,9 +171,7 @@ def main():
 
     # Sort the dictionary by key
     other_abbreviation_to_definitions = dict(sorted(other_abbreviation_to_definitions.items()))
-
     print(f'Additional abbreviations not shown in the region abbreviation legend (SI table): {other_abbreviation_to_definitions}')
-
 
     # Get the 'very_general_region' column from the CCFv3_info.csv file and use it to get the 'very_general_region' for each region in unique_regions_collapsed
     very_general_region_dict = dict(zip(ccfv3_info_df['collapsed_region'], ccfv3_info_df['very_general_region']))
