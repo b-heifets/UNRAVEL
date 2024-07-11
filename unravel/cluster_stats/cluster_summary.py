@@ -207,7 +207,8 @@ def main():
             '-i', valid_cluster_index_path,
             '-ax', cfg.brain.axis,
             '-s', cfg.brain.shift,
-            '-sa', cfg.brain.split_atlas
+            '-sa', cfg.brain.split_atlas,
+            '-csv', cfg.brain.csv_path
         ]
         if cfg.brain.mirror: 
             brain_args.append('-m')
