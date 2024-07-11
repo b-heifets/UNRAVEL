@@ -8,6 +8,11 @@ Usage
     cluster_mirror_indices -m RH -v
     
 Use this command after ``cluster_fdr`` to mirror the cluster indices for the other side of the brain before running ``cluster_validation``.  
+
+Note:
+    - Use -ax 2 and -s 0 for the CCFv3 2020 atlas.
+    - Use -ax 0 and -s 2 for the 25 um Gubra atlas
+
 """
 
 import argparse
@@ -27,13 +32,11 @@ def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-m', '--mas_side', help='Side of the brain corresponding to the mask used for ``vstats`` and ``cluster_fdr`` (RH or LH)', choices=['RH', 'LH'], required=True, action=SM)
     parser.add_argument('-p', '--pattern', help='Glob pattern to match files. Default: **/*rev_cluster_index.nii.gz', default='**/*rev_cluster_index.nii.gz', action=SM)
-    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
-    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
+    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
+    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
-
-# TODO: adapt to work with CCFv3 images if needed 
 
 
 def process_file(file_path, args):
