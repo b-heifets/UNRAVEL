@@ -8,8 +8,9 @@ Usage:
 ------
     vstats_mirror -v
 
-Note: 
-    The current defaults are specific to our version of the Gubra atlas and may need to be adjusted for other atlases.
+Note:
+    - Use -ax 2 and -s 0 for the CCFv3 2020 atlas.
+    - Use -ax 0 and -s 2 for the 25 um Gubra atlas
 """
 
 import argparse
@@ -26,17 +27,15 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Pattern to match files. Default: *.nii.gz', default='*.nii.gz', action=SM)
-    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
-    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
+    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
+    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: adapt to work with CCFv3 images if needed 
-
 
 @print_func_name_args_times()
-def mirror(img, axis=0, shift=2):
+def mirror(img, axis=2, shift=0):
     """Mirror an image along the specified axis and shift the content by the specified number of voxels.
     
     Args:
@@ -46,12 +45,19 @@ def mirror(img, axis=0, shift=2):
     # Flip the image data along the specified axis
     flipped_img = np.flip(img, axis=axis)
 
-    # Shift the image data by padding with zeros on the left and cropping on the right
-    # This adds 2 voxels of zeros on the left side (beginning) and removes 2 voxels from the right side (end)
-    mirrored_img = np.pad(flipped_img, ((shift, 0), (0, 0), (0, 0)), mode='constant', constant_values=0)[:-shift, :, :]
+    if shift == 0: 
+        return flipped_img
+    else: 
+        # Shift the image data by padding with zeros on the left and cropping on the right
+        # This adds 2 voxels of zeros on the left side (beginning) and removes 2 voxels from the right side (end)
+        if axis == 0: 
+            mirrored_img = np.pad(flipped_img, ((shift, 0), (0, 0), (0, 0)), mode='constant', constant_values=0)[:-shift, :, :]
+            return mirrored_img
+        else: 
+            print('[red1]Logic for shifting content in axeses other than 0 has not been added. Please request this if needed.')
+    return
 
-    return mirrored_img
-
+    
 @log_command
 def main():
     install()

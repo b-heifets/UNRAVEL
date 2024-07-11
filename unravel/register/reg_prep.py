@@ -5,7 +5,7 @@ Use ``reg_prep`` from UNRAVEL to load a full resolution autofluo image and resam
 
 Usage:
 ------
-    reg_prep -i <asterisk>.czi [-e <list of paths to exp dirs>] [-v]
+    reg_prep -i <asterisk>.czi -x <x/y voxel size in microns> -z <z voxel size> [-e <list of paths to exp dirs>] [-v]
 
 Run command from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
 
@@ -32,7 +32,6 @@ from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, resolve_path, save_as_tifs, save_as_nii
 from unravel.core.img_tools import resample, reorient_for_raw_to_nii_conv
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, print_func_name_args_times
-from unravel.segment.copy_tifs import copy_specific_slices
 
 
 def parse_args():
@@ -41,20 +40,18 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='Full res image input path relative (rel_path) to ./sample??', required=True, action=SM)
+    parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns of the input image.', required=True, type=float, action=SM)  # Set up   Default: get via ``io_metadata``
+    parser.add_argument('-z', '--z_res', help='z voxel size in microns of the input image.', required=True, type=float, action=SM)  # Set up   Default: get via ``io_metadata``
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
     parser.add_argument('-o', '--output', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
-    parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns of the input image. Default: get via metadata', default=None, type=float, action=SM)
-    parser.add_argument('-z', '--z_res', help='z voxel size in microns of the input image. Default: get via metadata', default=None, type=float, action=SM)
     parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)
-    parser.add_argument('-td', '--target_dir', help='path/target_dir name to copy specific slices for seg_brain_mask (see usage)', default=None, action=SM)
-    parser.add_argument('-s', '--slices', help='List of slice numbers to copy, e.g., 0000 0400 0800', nargs='*', type=str, default=[])
     parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: Remove args.target_dir since this can be done with ``seg_copy_tifs``
+# TODO: The script works if -x and -z are provided. Fix it so that it works if they are not provided (i.e., get res via ``io_metadata`` output: sample??/parameters/metadata.txt)
 
 
 @print_func_name_args_times()
@@ -89,11 +86,6 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    if args.target_dir is not None:
-        # Create the target directory for copying the selected slices for ``seg_brain_mask``
-        target_dir = Path(args.target_dir)
-        target_dir.mkdir(exist_ok=True, parents=True)
-
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
@@ -125,11 +117,6 @@ def main():
 
             # Save the prepped autofl image (for ``reg`` if skipping ``seg_brain_mask`` and for applying the brain mask)
             save_as_nii(img_resampled, output, args.reg_res, args.reg_res, np.uint16)
-
-            if args.target_dir is not None:
-                # Copy specific slices to the target directory
-                tif_dir = str(output).replace('.nii.gz', '_tifs')
-                copy_specific_slices(sample_path, tif_dir, target_dir, args.slices)
 
             progress.update(task_id, advance=1)
 
