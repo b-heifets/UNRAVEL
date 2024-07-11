@@ -279,7 +279,7 @@ def main():
                 continue
 
             # Load the segmentation image
-            if args.type == 'counts' or args.type == 'cell_densities':
+            if args.type == 'counts' or args.type == 'cell_densities' or args.type == 'label_densities' or args.type == 'label_volumes':
                 seg_img_path = next(sample_path.glob(str(args.seg_img_path)), None)
                 if seg_img_path is None:
                     print(f"No files match the pattern {args.seg_img_path} in {sample_path}")
