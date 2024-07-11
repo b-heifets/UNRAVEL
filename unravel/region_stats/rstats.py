@@ -330,7 +330,7 @@ def main():
                 regional_volumes_in_seg_df = calculate_regional_volumes(sample_path, segmented_regions, region_ids, xy_res, z_res, args.condition, region_info_df)
 
             # Calculate regional volumes
-            if args.type == 'region_volumes' or args.type == 'cell_densities':
+            if args.type == 'region_volumes' or args.type == 'cell_densities' or args.type == 'label_densities':
 
                 # Calculate regional volumes
                 region_ids = region_info_df['Region_ID']
