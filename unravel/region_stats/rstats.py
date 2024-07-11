@@ -126,15 +126,13 @@ def count_cells_in_regions(sample_path, seg_img, atlas_img, connectivity, condit
     centroids_df['Region_ID'] = centroids_df.apply(lambda row: get_atlas_region_at_coords(atlas_img, row['x'], row['y'], row['z']), axis=1)
 
     # Save the centroids as a CSV file
+    sample_name = sample_path.name
     centroid_output_filename = f"{condition}_{sample_name}_cell_centroids.csv" if condition else f"{sample_name}_cell_centroids.csv"
     centroids_df.to_csv(sample_path / "regional_stats" / centroid_output_filename, index=False)
 
     # Count how many centroids are in each region
     print("    Counting cells in each region")
     region_counts_series = centroids_df['Region_ID'].value_counts()
-
-    # Get the sample name from the sample directory
-    sample_name = sample_path.name
 
     # Add column header to the region counts
     region_counts_series = region_counts_series.rename_axis('Region_ID').reset_index(name=f'{condition}_{sample_name}')
