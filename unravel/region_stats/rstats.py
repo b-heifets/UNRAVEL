@@ -25,6 +25,7 @@ Prereqs:
     - ``reg_prep``, ``reg``, and ``seg_ilastik``
 
 Next steps:
+    - Use ``utils_agg_files`` to aggregate the CSVs from sample directories to the current directory
     - Use ``rstats_summary`` to summarize the results
 """
 
