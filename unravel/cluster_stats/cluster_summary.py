@@ -230,7 +230,7 @@ def main():
             '-vcd', valid_clusters_index_dir,
             '-t', cfg.table.top_regions,
             '-pv', cfg.table.percent_vol,
-            '-csv', cfg.table.info_csv_path
+            '-csv', cfg.index.info_csv_path
         ]
         if args.verbose:
             table_args.append('-v')
