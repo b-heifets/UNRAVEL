@@ -128,7 +128,7 @@ def main():
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
             output = sample_path / "atlas_space" / args.output
-            output.mkdir(exist_ok=True, parents=True)
+            output.parent.mkdir(exist_ok=True, parents=True)
             if output.exists():
                 print(f"\n\n    {output} already exists. Skipping.\n")
                 continue
