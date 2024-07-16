@@ -52,6 +52,12 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
+
+# TODO: Address this warning:
+# /usr/local/UNRAVEL_dev/unravel/cluster_stats/prism.py:190: PerformanceWarning: dropping on a non-lexsorted multi-index without a level parameter may impact performance.
+# density_col_summary_df_sum = density_col_summary_df_sum.drop('cluster_ID').reset_index().T
+
+
 def sort_samples(sample_names):
     # Extract the numeric part of the sample names and sort by it
     return sorted(sample_names, key=lambda x: int(''.join(filter(str.isdigit, x))))

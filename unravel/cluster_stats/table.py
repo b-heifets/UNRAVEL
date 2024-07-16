@@ -21,6 +21,11 @@ Sort Within Groups: Within each group created in step 1:
 
 Maintain Grouping Order:
    - As we move to deeper depth levels, maintain the grouping and ordering established in previous steps (only adjusting the order within groups based on the new depth's aggregate volumes).
+
+Note: 
+    - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/
+    - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst
+    - Alternatively, use CCFv3_info.csv (for gubra) or provide a custom CSV with the same columns.   
 """
 
 
@@ -48,6 +53,7 @@ def parse_args():
     parser.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from unravel.cluster_stats.index (else cwd)', action=SM)
     parser.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
     parser.add_argument('-pv', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
+    parser.add_argument('-csv', '--info_csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
@@ -325,7 +331,10 @@ def main():
     columns_to_load = ['abbreviation', 'general_region',  'structure_id_path']
 
     # Load the specified columns from the CSV with CCFv3 info
-    ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'CCFv3_info.csv', usecols=columns_to_load)
+    if args.info_csv_path == 'CCFv3_info.csv' or args.info_csv_path == 'CCFv3-2020_info.csv': 
+        ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.info_csv_path, usecols=columns_to_load)
+    else:
+        ccfv3_info_df = pd.read_csv(args.info_csv_path, usecols=columns_to_load)
 
     # For each cluster directory
     for cluster_sunburst_csv in cluster_sunburst_csvs:

@@ -193,7 +193,9 @@ def main():
             '-ci', rev_cluster_index_path,
             '-ids', *valid_cluster_ids,
             '-vcd', valid_clusters_index_dir,
-            '-a', cfg.index.atlas
+            '-a', cfg.index.atlas,
+            '-scsv', cfg.index.sunburst_csv_path,
+            '-icsv', cfg.index.info_csv_path
         ]
         if cfg.index.output_rgb_lut:
             index_args.append('-rgb')
@@ -207,7 +209,8 @@ def main():
             '-i', valid_cluster_index_path,
             '-ax', cfg.brain.axis,
             '-s', cfg.brain.shift,
-            '-sa', cfg.brain.split_atlas
+            '-sa', cfg.brain.split_atlas,
+            '-csv', cfg.brain.csv_path
         ]
         if cfg.brain.mirror: 
             brain_args.append('-m')
@@ -226,7 +229,8 @@ def main():
         table_args = [
             '-vcd', valid_clusters_index_dir,
             '-t', cfg.table.top_regions,
-            '-pv', cfg.table.percent_vol
+            '-pv', cfg.table.percent_vol,
+            '-csv', cfg.index.info_csv_path
         ]
         if args.verbose:
             table_args.append('-v')
@@ -270,7 +274,8 @@ def main():
         # Run cluster_legend
         if Path('valid_clusters_tables_and_legend').exists():
             legend_args = [
-                '-p', 'valid_clusters_tables_and_legend'
+                '-p', 'valid_clusters_tables_and_legend',
+                '-csv', cfg.index.info_csv_path
             ]
             run_script('cluster_legend', legend_args)
 

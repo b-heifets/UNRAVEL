@@ -21,6 +21,11 @@ Data tab:
     
 Preview tab:
     Hierarchy -> Depth to 10, Colors -> paste RGB codes into Custom overrides
+
+Note:
+    - CSVs are in UNRAVEL/unravel/core/csvs/
+    - sunburst_IDPath_Abbrv_CCFv3-2020.csv or sunburst_IDPath_Abbrv.csv
+    - CCFv3-2020_info.csv or CCFv3_info.csv
 """
 
 import argparse
@@ -41,9 +46,13 @@ def parse_args():
     parser.add_argument('-i', '--input', help='path/rev_cluster_index.nii.gz (e.g., with valid clusters)', required=True, action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
+    parser.add_argument('-scsv', '--sunburst_csv_path', help='CSV name or path/name.csv. Default: sunburst_IDPath_Abbrv_CCFv3-2020.csv', default='sunburst_IDPath_Abbrv_CCFv3-2020.csv', action=SM)
+    parser.add_argument('-icsv', '--info_csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
+
+# TODO: Look into consolidating csvs
 
 
 def calculate_regional_volumes(img, atlas, atlas_res_in_um):
@@ -68,7 +77,7 @@ def calculate_regional_volumes(img, atlas, atlas_res_in_um):
 
     return dict(zip(uniq_values, volumes))
 
-def sunburst(img, atlas, atlas_res_in_um, output_path, output_rgb_lut=False):
+def sunburst(img, atlas, atlas_res_in_um, output_path, sunburst_csv_path='sunburst_IDPath_Abbrv_CCFv3-2020.csv', info_csv_path='CCFv3-2020_info.csv', output_rgb_lut=False):
     """Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy.
     
     Args:
@@ -83,8 +92,16 @@ def sunburst(img, atlas, atlas_res_in_um, output_path, output_rgb_lut=False):
 
     volumes_dict = calculate_regional_volumes(img, atlas, atlas_res_in_um)
 
-    sunburst_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'sunburst_IDPath_Abbrv.csv')
-    ccf_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'CCFv3_info.csv', usecols=['lowered_ID', 'abbreviation'])
+    if sunburst_csv_path == 'sunburst_IDPath_Abbrv.csv' or sunburst_csv_path == 'sunburst_IDPath_Abbrv_CCFv3-2020.csv': 
+        sunburst_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / sunburst_csv_path)
+    else:
+        sunburst_df = pd.read_csv(sunburst_csv_path)
+
+    # Load the specified columns from the CSV with CCFv3 info
+    if info_csv_path == 'CCFv3_info.csv' or info_csv_path == 'CCFv3-2020_info.csv': 
+        ccf_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / info_csv_path, usecols=['lowered_ID', 'abbreviation'])
+    else:
+        ccf_df = pd.read_csv(info_csv_path, usecols=['lowered_ID', 'abbreviation'])
 
     # Create a mapping from region ID to volume
     histo_df = pd.DataFrame(list(volumes_dict.items()), columns=['Region', 'Volume_(mm^3)'])
@@ -139,7 +156,7 @@ def main():
     output_name = str(Path(args.input).name).replace('.nii.gz', '_sunburst.csv')
     output_path = Path(args.input).parent / output_name
     
-    sunburst_df = sunburst(img, atlas, xyz_res_in_um, output_path, args.output_rgb_lut)
+    sunburst_df = sunburst(img, atlas, xyz_res_in_um, output_path, args.sunburst_csv_path, args.info_csv_path, args.output_rgb_lut)
 
     print(f'\n\n[magenta bold]{output_name}[/]:')    
     print(f'\n{sunburst_df}\n')

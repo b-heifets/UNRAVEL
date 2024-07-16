@@ -3,14 +3,24 @@
 """
 Use ``cluster_brain_model`` from UNRAVEL to prep .nii.gz and RGBA .txt for vizualization in dsi_studio.
 
-Usage
------
-    cluster_brain_model -i input.csv -m -sa path/gubra_ano_split_25um.nii.gz -v
+Usage with CCFv3:
+-----------------
+    cluster_brain_model -i input.nii.gz -m -sa path/atlas_CCFv3_2020_30um_split.nii.gz -v 
 
-The input image will be binarized and multiplied by the split atlas to apply region IDs.
+Usage with gubra atlas:
+-----------------------
+    cluster_brain_model -i input.nii.gz -m -sa path/gubra_ano_split_25um.nii.gz -v -ax 0 -s 2
 
 Outputs: 
-    img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
+    - img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
+    - rgba.txt (RGBA values for each region in the cluster index)
+
+Note: 
+    - The input image will be binarized and multiplied by the split atlas to apply region IDs.
+    - regional_summary_CCFv3-2020.csv is in UNRAVEL/unravel/core/csvs/
+    - It has columns: Region_ID, ID_Path, Region, Abbr, General_Region, R, G, B
+    - Alternatively, use regional_summary.csv or provide a custom CSV with the same columns.
+    - Use DSI Studio to visualize the cluster index with the RGBA values.
 """
 
 import argparse
@@ -31,9 +41,10 @@ def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help="path/img.nii.gz (e.g., valid cluster index)", required=True, action=SM)
     parser.add_argument('-m', '--mirror', help='Mirror the image in the x-axis for a bilateral representation. Default: False', action='store_true', default=False)
-    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
-    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
+    parser.add_argument('-ax', '--axis', help='Axis to flip the image along if mirroing. Default: 2', default=2, type=int, action=SM)
+    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-sa', '--split_atlas', help='path/gubra_ano_split_25um.nii.gz. Default: gubra_ano_split_25um.nii.gz', default='gubra_ano_split_25um.nii.gz', action=SM)
+    parser.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: regional_summary_CCFv3-2020.csv', default='regional_summary_CCFv3-2020.csv', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
@@ -93,10 +104,12 @@ def main():
     present_regions = np.where(histogram > 0)[0] + 1 # Add 1 to account for the background
 
     # Get R, G, B values for each region
-    color_map = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'regional_summary.csv') #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
+    if args.csv_path == 'regional_summary.csv' or args.csv_path == 'regional_summary_CCFv3-2020.csv': 
+        color_map = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
+    else:
+        color_map = pd.read_csv(args.csv_path)
 
     # Delete rgba.txt if it exists (used for coloring the regions in DSI Studio)
-    
     if Path(txt_output).exists():
         Path(txt_output).unlink()
 
