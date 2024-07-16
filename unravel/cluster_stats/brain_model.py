@@ -3,9 +3,13 @@
 """
 Use ``cluster_brain_model`` from UNRAVEL to prep .nii.gz and RGBA .txt for vizualization in dsi_studio.
 
-Usage
------
-    cluster_brain_model -i input.csv -m -sa path/gubra_ano_split_25um.nii.gz -v
+Usage with CCFv3:
+-----------------
+    cluster_brain_model -i input.nii.gz -m -sa path/atlas_CCFv3_2020_30um_split.nii.gz -v 
+
+Usage with gubra atlas:
+-----------------------
+    cluster_brain_model -i input.nii.gz -m -sa path/gubra_ano_split_25um.nii.gz -v -ax 0 -s 2
 
 Outputs: 
     - img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
@@ -37,8 +41,8 @@ def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help="path/img.nii.gz (e.g., valid cluster index)", required=True, action=SM)
     parser.add_argument('-m', '--mirror', help='Mirror the image in the x-axis for a bilateral representation. Default: False', action='store_true', default=False)
-    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
-    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
+    parser.add_argument('-ax', '--axis', help='Axis to flip the image along if mirroing. Default: 2', default=2, type=int, action=SM)
+    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
     parser.add_argument('-sa', '--split_atlas', help='path/gubra_ano_split_25um.nii.gz. Default: gubra_ano_split_25um.nii.gz', default='gubra_ano_split_25um.nii.gz', action=SM)
     parser.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: regional_summary_CCFv3-2020.csv', default='regional_summary_CCFv3-2020.csv', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)

@@ -274,8 +274,8 @@ def main():
         # Run cluster_legend
         if Path('valid_clusters_tables_and_legend').exists():
             legend_args = [
-                '-p', 'valid_clusters_tables_and_legend'
-                '-csv', cfg.table.info_csv_path,
+                '-p', 'valid_clusters_tables_and_legend',
+                '-csv', cfg.index.info_csv_path
             ]
             run_script('cluster_legend', legend_args)
 
