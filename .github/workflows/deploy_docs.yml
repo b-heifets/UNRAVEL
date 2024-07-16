@@ -38,6 +38,9 @@ jobs:
         ls -la
         echo "Listing unravel/docs directory:"
         ls -la unravel/docs
+        echo "Current repository and branch:"
+        git remote -v
+        git branch
 
     - name: Build documentation
       run: |
