@@ -911,6 +911,8 @@ rstats_summary --groups Saline MDMA Meth -d 10000 -hemi r
 ```
 
 ```{todo}
+Add notes here on ploting sunbursts and viewing clusters in 3D. Prompt us when you get to this step (notes on Slack)
+
 Also show the structure of data from cluster_validation and rstats_summary
 
 Add support for CCFv3 2020

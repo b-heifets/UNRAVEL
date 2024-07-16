@@ -363,6 +363,11 @@
 
 <span class="sd">Outputs:</span>
 <span class="sd">    legend.xlsx</span>
+
+<span class="sd">Note: </span>
+<span class="sd">    - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/</span>
+<span class="sd">    - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst</span>
+<span class="sd">    - Alternatively, use CCFv3_info.csv (for gubra) or provide a custom CSV with the same columns.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -387,6 +392,7 @@
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the directory containing the *_valid_clusters_table.xlsx files. Default: current working directory&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-csv&#39;</span><span class="p">,</span> <span class="s1">&#39;--csv_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
@@ -436,7 +442,6 @@
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
-
     <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">path</span><span class="p">)</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">path</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
 
     <span class="c1"># Find cluster_* dirs in the current dir</span>
@@ -464,7 +469,10 @@
     <span class="n">columns_to_load</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;structure_id_path&#39;</span><span class="p">,</span> <span class="s1">&#39;very_general_region&#39;</span><span class="p">,</span>  <span class="s1">&#39;collapsed_region_name&#39;</span><span class="p">,</span> <span class="s1">&#39;abbreviation&#39;</span><span class="p">,</span> <span class="s1">&#39;collapsed_region&#39;</span><span class="p">,</span> <span class="s1">&#39;other_abbreviation&#39;</span><span class="p">,</span> <span class="s1">&#39;other_abbreviation_defined&#39;</span><span class="p">,</span> <span class="s1">&#39;layer&#39;</span><span class="p">,</span> <span class="s1">&#39;sunburst&#39;</span><span class="p">]</span>
 
     <span class="c1"># Load the specified columns from the CSV with CCFv3 info</span>
-    <span class="n">ccfv3_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="s1">&#39;CCFv3_info.csv&#39;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">columns_to_load</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3_info.csv&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">:</span> 
+        <span class="n">ccfv3_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">columns_to_load</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ccfv3_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">columns_to_load</span><span class="p">)</span>
 
     <span class="c1"># Creat a dictionary to hold the mappings for the region abbreviation to collapsed region abbreviation</span>
     <span class="n">abbreviation_to_collapsed_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ccfv3_info_df</span><span class="p">[</span><span class="s1">&#39;abbreviation&#39;</span><span class="p">],</span> <span class="n">ccfv3_info_df</span><span class="p">[</span><span class="s1">&#39;collapsed_region&#39;</span><span class="p">]))</span>
@@ -525,9 +533,7 @@
 
     <span class="c1"># Sort the dictionary by key</span>
     <span class="n">other_abbreviation_to_definitions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">other_abbreviation_to_definitions</span><span class="o">.</span><span class="n">items</span><span class="p">()))</span>
-
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Additional abbreviations not shown in the region abbreviation legend (SI table): </span><span class="si">{</span><span class="n">other_abbreviation_to_definitions</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-
 
     <span class="c1"># Get the &#39;very_general_region&#39; column from the CCFv3_info.csv file and use it to get the &#39;very_general_region&#39; for each region in unique_regions_collapsed</span>
     <span class="n">very_general_region_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">ccfv3_info_df</span><span class="p">[</span><span class="s1">&#39;collapsed_region&#39;</span><span class="p">],</span> <span class="n">ccfv3_info_df</span><span class="p">[</span><span class="s1">&#39;very_general_region&#39;</span><span class="p">]))</span>
