@@ -266,7 +266,7 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
     save_metadata : str, optional
         Path to save metadata file. Default is None.
     xy_res : float, optional
-        The resolution in the xy-plane.
+        The resolution in the xy-plane (use if res is not specified in the metadata).
     z_res : float, optional
         The resolution in the z-plane.
 
@@ -284,7 +284,18 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
     ndarray = np.asanyarray(nii.dataobj).astype(data_type)
     ndarray = np.squeeze(ndarray)
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
+
+    res_specified = True if xy_res is not None else False
+    if res_specified:
+        original_xy_res = xy_res
+        original_z_res = z_res
+
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(nii_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
+
+    if res_specified:
+        xy_res = original_xy_res
+        z_res = original_z_res
+
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
 @print_func_name_args_times()
