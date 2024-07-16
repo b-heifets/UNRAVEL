@@ -361,6 +361,11 @@
 <span class="sd">Outputs:</span>
 <span class="sd">    - path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz</span>
 <span class="sd">    - path/valid_clusters/cluster_&lt;asterisk&gt;_sunburst.csv</span>
+
+<span class="sd">Note:</span>
+<span class="sd">    - CSVs are in UNRAVEL/unravel/core/csvs/</span>
+<span class="sd">    - sunburst_IDPath_Abbrv_CCFv3-2020.csv or sunburst_IDPath_Abbrv.csv</span>
+<span class="sd">    - CCFv3-2020_info.csv or CCFv3_info.csv</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
@@ -386,10 +391,14 @@
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-vcd&#39;</span><span class="p">,</span> <span class="s1">&#39;--valid_clusters_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/name_of_the_output_directory. Default: valid_clusters&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;_valid_clusters&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--atlas&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-rgb&#39;</span><span class="p">,</span> <span class="s1">&#39;--output_rgb_lut&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-scsv&#39;</span><span class="p">,</span> <span class="s1">&#39;--sunburst_csv_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: sunburst_IDPath_Abbrv_CCFv3-2020.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sunburst_IDPath_Abbrv_CCFv3-2020.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-icsv&#39;</span><span class="p">,</span> <span class="s1">&#39;--info_csv_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
+
+<span class="c1"># TODO: Look into consolidating csvs </span>
 
 
 <div class="viewcode-block" id="generate_sunburst">
@@ -467,7 +476,7 @@
     <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">valid_cluster_index</span><span class="p">,</span> <span class="n">nii</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="p">),</span> <span class="n">output_image_path</span><span class="p">)</span>
     
     <span class="c1"># Generate the sunburst plot for the valid cluster index</span>
-    <span class="n">sunburst_df</span> <span class="o">=</span> <span class="n">sunburst</span><span class="p">(</span><span class="n">valid_cluster_index</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">xyz_res_in_um</span><span class="p">,</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;valid_clusters_sunburst.csv&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output_rgb_lut</span><span class="p">)</span>
+    <span class="n">sunburst_df</span> <span class="o">=</span> <span class="n">sunburst</span><span class="p">(</span><span class="n">valid_cluster_index</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">xyz_res_in_um</span><span class="p">,</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;valid_clusters_sunburst.csv&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">sunburst_csv_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output_rgb_lut</span><span class="p">)</span>
 
     <span class="n">verbose_end_msg</span><span class="p">()</span></div>
 

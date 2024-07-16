@@ -491,16 +491,34 @@
   <section id="module-unravel.cluster_stats.brain_model">
 <span id="unravel-cluster-stats-brain-model-module"></span><span id="unravel-cluster-stats-brain-model"></span><h1>unravel.cluster_stats.brain_model module<a class="headerlink" href="#module-unravel.cluster_stats.brain_model" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cluster_brain_model</span></code> from UNRAVEL to prep .nii.gz and RGBA .txt for vizualization in dsi_studio.</p>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<section id="usage-with-ccfv3">
+<h2>Usage with CCFv3:<a class="headerlink" href="#usage-with-ccfv3" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cluster_brain_model -i input.csv -m -sa path/gubra_ano_split_25um.nii.gz -v</p>
+<div><p>cluster_brain_model -i input.nii.gz -m -sa path/atlas_CCFv3_2020_30um_split.nii.gz -v</p>
 </div></blockquote>
-<p>The input image will be binarized and multiplied by the split atlas to apply region IDs.</p>
+</section>
+<section id="usage-with-gubra-atlas">
+<h2>Usage with gubra atlas:<a class="headerlink" href="#usage-with-gubra-atlas" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cluster_brain_model -i input.nii.gz -m -sa path/gubra_ano_split_25um.nii.gz -v -ax 0 -s 2</p>
+</div></blockquote>
 <dl class="simple">
-<dt>Outputs:</dt><dd><p>img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)</p>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)</p></li>
+<li><p>rgba.txt (RGBA values for each region in the cluster index)</p></li>
+</ul>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The input image will be binarized and multiplied by the split atlas to apply region IDs.</p></li>
+<li><p>regional_summary_CCFv3-2020.csv is in UNRAVEL/unravel/core/csvs/</p></li>
+<li><p>It has columns: Region_ID, ID_Path, Region, Abbr, General_Region, R, G, B</p></li>
+<li><p>Alternatively, use regional_summary.csv or provide a custom CSV with the same columns.</p></li>
+<li><p>Use DSI Studio to visualize the cluster index with the RGBA values.</p></li>
+</ul>
+</div>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.brain_model.parse_args">
@@ -560,7 +578,8 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-with-ccfv3">Usage with CCFv3:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-with-gubra-atlas">Usage with gubra atlas:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.brain_model.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.brain_model.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>

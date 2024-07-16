@@ -406,6 +406,12 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
+
+<span class="c1"># TODO: Address this warning:</span>
+<span class="c1"># /usr/local/UNRAVEL_dev/unravel/cluster_stats/prism.py:190: PerformanceWarning: dropping on a non-lexsorted multi-index without a level parameter may impact performance.</span>
+<span class="c1"># density_col_summary_df_sum = density_col_summary_df_sum.drop(&#39;cluster_ID&#39;).reset_index().T</span>
+
+
 <div class="viewcode-block" id="sort_samples">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/prism.html#unravel.cluster_stats.prism.sort_samples">[docs]</a>
 <span class="k">def</span> <span class="nf">sort_samples</span><span class="p">(</span><span class="n">sample_names</span><span class="p">):</span>
