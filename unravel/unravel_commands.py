@@ -247,6 +247,16 @@ def main():
                 "description": "Crop clusters to a bounding box.",
                 "common": False
             },
+            "cluster_mean_IF": {
+                "module": "unravel.cluster_stats.mean_IF",
+                "description": "Compute mean immunofluo intensities for each cluster. ",
+                "common": False
+            },
+            "cluster_mean_IF_summary": {
+                "module": "unravel.cluster_stats.mean_IF_summary",
+                "description": "Plot mean immunofluo intensities for each cluster.",
+                "common": False
+            },
             "effect_sizes": {
                 "module": "unravel.cluster_stats.effect_sizes.effect_sizes",
                 "description": "Calculate effect sizes for clusters.",
@@ -286,7 +296,7 @@ def main():
             },
             "rstats_mean_IF_summary": {
                 "module": "unravel.region_stats.rstats_mean_IF_summary",
-                "description": "Summarize mean immunofluo intensities for regions.",
+                "description": "Plot mean immunofluo intensities for regions.",
                 "common": False
             }
         },
