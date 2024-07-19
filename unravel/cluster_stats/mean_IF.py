@@ -93,8 +93,8 @@ def main():
     if args.clusters:
         clusters = args.clusters
     else:
-        print(f'\nProcessing these region IDs from {args.atlas}')
-        clusters = uniq_intensities(args.atlas)
+        print(f'\nProcessing these clusters IDs from {Path(args.cluster_index).name}:')
+        clusters = uniq_intensities(args.cluster_index)
         print()
 
     output_folder = Path('clusters_mean_IF')
