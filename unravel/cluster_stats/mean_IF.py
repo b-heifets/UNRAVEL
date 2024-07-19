@@ -100,7 +100,7 @@ def main():
         clusters = uniq_intensities(args.cluster_index)
         print()
 
-    output_folder = Path(f'cluster_mean_IF_{str(Path(args.cluster_index).name).replace('.nii.gz', '')}')
+    output_folder = Path(f'cluster_mean_IF_{str(Path(args.cluster_index).name).replace(".nii.gz", "")}')
     output_folder.mkdir(parents=True, exist_ok=True)
 
     files = Path().cwd().glob(args.input_pattern)
