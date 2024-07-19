@@ -5,10 +5,13 @@ Use ``cluster_mean_IF`` from UNRAVEL to measure mean intensity of immunofluoresc
 
 Usage:
 ------
-    clusters_mean_IF -ip '<asterisk>.nii.gz' -ci path/rev_cluster_index.nii.gz
+    cluster_mean_IF -ci path/rev_cluster_index.nii.gz
+
+Inputs:
+    - This can be run from the vstats directory (will process .nii.gz images in the current directory)
 
 Outputs: 
-    - ./clusters_mean_IF/image_name.csv for each image
+    - ./cluster_mean_IF_{cluster_index}/image_name.csv for each image
 
 Next: 
     - cd cluster_mean_IF
@@ -32,7 +35,7 @@ from unravel.image_tools.unique_intensities import uniq_intensities
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-ip', '--input_pattern', help="Pattern for NIfTI images to process (e.g., '*.nii.gz') relative to cwd", required=True, action=SM)
+    parser.add_argument('-ip', '--input_pattern', help="Pattern for NIfTI images to process relative to cwd. Default: '*.nii.gz'", default='*.nii.gz', action=SM)
     parser.add_argument('-ci', '--cluster_index', help='Path/rev_cluster_index.nii.gz from ``cluster_fdr``', required=True, action=SM)
     parser.add_argument('-c', '--clusters', help='Space-separated list of cluster IDs to process. Default: all clusters', nargs='*', type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
@@ -97,7 +100,7 @@ def main():
         clusters = uniq_intensities(args.cluster_index)
         print()
 
-    output_folder = Path('clusters_mean_IF')
+    output_folder = Path(f'cluster_mean_IF_{str(Path(args.cluster_index).name).replace('.nii.gz', '')}')
     output_folder.mkdir(parents=True, exist_ok=True)
 
     files = Path().cwd().glob(args.input_pattern)
@@ -118,7 +121,7 @@ def main():
 
             write_to_csv(mean_intensities, output)
 
-    print('CSVs with mean IF intensities output to ./clusters_mean_IF/')
+    print(f'CSVs with mean IF intensities output to ./{output_folder}/')
 
     verbose_end_msg()
 
