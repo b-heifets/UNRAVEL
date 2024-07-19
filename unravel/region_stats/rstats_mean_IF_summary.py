@@ -24,7 +24,11 @@ Inputs:
 Prereqs:
     - Generate CSV inputs withs ``rstats_IF_mean`` or ``rstats_IF_mean_in_seg``
     - After ``rstats_IF_mean_in_seg``, aggregate CSV inputs with ``utils_agg_files``
-    - If needed, add conditions to input CSV file names: utils_prepend -sk $SAMPLE_KEY -f
+    - If needed, add conditions to input CSV file names: ``utils_prepend`` -sk $SAMPLE_KEY -f
+
+Outputs:
+    - rstats_mean_IF_summary/region_<region_id>_<region_abbr>.pdf for each region
+    - If significant differences are found, a prefix '_' is added to the filename to sort the files
 
 The look up table (LUT) csv has these columns: 
     'Region_ID', 'Side', 'Name', 'Abbr'
@@ -64,6 +68,8 @@ def parse_args():
 
 # TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cluster_stats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 # TODO: CSVs are loaded for each region. It would be more efficient to load them once for processing all regions. 
+# TODO: Update coloring of plots to match ABA colors (i.e., use code from rstats_summary.py)
+# TODO: Save a CSV with the results of the statistical tests for each region.
 
 
 # Set Arial as the font
