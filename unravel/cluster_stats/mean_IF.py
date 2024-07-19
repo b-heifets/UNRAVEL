@@ -5,14 +5,16 @@ Use ``cluster_mean_IF`` from UNRAVEL to measure mean intensity of immunofluoresc
 
 Usage:
 ------
-    clusters_mean_IF -i '<asterisk>.nii.gz' -a path/atlas
+    clusters_mean_IF -ip '<asterisk>.nii.gz' -ci path/rev_cluster_index.nii.gz
 
 Outputs: 
     - ./clusters_mean_IF/image_name.csv for each image
 
 Next: 
     - cd cluster_mean_IF
-    - ``cluster_mean_IF_summary``
+    - utils_prepend -sk <path/sample_key.csv> -f
+    - cluster_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
+    - cluster_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests
 """
 
 import argparse
