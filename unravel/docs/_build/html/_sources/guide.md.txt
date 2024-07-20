@@ -179,8 +179,8 @@ unravel_commands -m
 - [**cluster_sunburst**](unravel.cluster_stats.sunburst): Create a sunburst plot of regional volumes.
 - [**cluster_find_incongruent_clusters**](unravel.cluster_stats.find_incongruent_clusters): Find clusters where the effect direction does not match the prediction of cluster_fdr (for validation of non-directional p value maps).
 - [**cluster_crop**](unravel.cluster_stats.crop): Crop clusters to a bounding box.
-- [**cluster_mean_IF**](unravel.cluster_stats.cluster_mean_IF): Compute mean immunofluo intensities for each cluster.
-- [**cluster_mean_IF_summary**](unravel.cluster_stats.cluster_mean_IF_summary): Plot mean immunofluo intensities for each cluster.
+- [**cluster_mean_IF**](unravel.cluster_stats.mean_IF): Compute mean immunofluo intensities for each cluster.
+- [**cluster_mean_IF_summary**](unravel.cluster_stats.mean_IF_summary): Plot mean immunofluo intensities for each cluster.
 - [**effect_sizes**](unravel.cluster_stats.effect_sizes.effect_sizes): Calculate effect sizes for clusters.
 - [**effect_sizes_sex_abs**](unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute): Calculate absolute effect sizes by sex.
 - [**effect_sizes_sex_rel**](unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative): Calculate relative effect sizes by sex.
