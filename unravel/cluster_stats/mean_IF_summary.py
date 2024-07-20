@@ -1,37 +1,29 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each region intensity ID.
+Use ``cluster_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each cluster in atlas space.
 
 Usage for t-tests:
 ------------------
-    rstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
+    cluster_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
 
 Usage for Tukey's tests w/ reordering and renaming of conditions:
 -----------------------------------------------------------------
-    rstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1
-
-Usage with a custom atlas:
---------------------------
-    atlas=path/custom_atlas.nii.gz ; rstats_mean_IF_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest
+    cluster_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1
 
 Note:
-    - The first word of the csv inputs is used for the the group names (e.g. Control from Control_sample01_cFos_rb4_atlas_space_z.csv)
+    - The first word of the csv inputs is used for the the group names (underscore separated).
 
 Inputs: 
-    - <asterisk>.csv in the working dir with these columns: 'Region_Intensity', 'Mean_IF_Intensity'
+    - <asterisk>.csv in the working dir with these columns: 'Cluster_ID', 'Mean_IF_Intensity'
 
 Prereqs:
-    - Generate CSV inputs withs ``rstats_IF_mean`` or ``rstats_IF_mean_in_seg``
-    - After ``rstats_IF_mean_in_seg``, aggregate CSV inputs with ``utils_agg_files``
-    - If needed, add conditions to input CSV file names: ``utils_prepend`` -sk $SAMPLE_KEY -f
+    - Generate CSV inputs withs ``cluster_IF_mean``
+    - Add conditions to input CSV file names: ``utils_prepend -sk $SAMPLE_KEY -f
 
 Outputs:
-    - rstats_mean_IF_summary/region_<region_id>_<region_abbr>.pdf for each region
+    - cluster_mean_IF_summary/cluster_<cluster_id>.pdf for each cluster
     - If significant differences are found, a prefix '_' is added to the filename to sort the files
-
-The look up table (LUT) csv has these columns: 
-    'Region_ID', 'Side', 'Name', 'Abbr'
 """
 
 import argparse
@@ -55,27 +47,25 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', action=SM)
-    parser.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: gubra__region_ID_side_name_abbr.csv', default="gubra__region_ID_side_name_abbr.csv", action=SM)
+    parser.add_argument('--cluster_ids', help='List of cluster IDs to process (Default: process all clusters)', nargs='*', type=int, action=SM)
     parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', action=SM)
     parser.add_argument('--labels', nargs='*', help='Group Labels in same order', action=SM)
     parser.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
     parser.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
-    parser.add_argument('-s', '--show_plot', help='Show plot if flag is provided', action='store_true')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cluster_stats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
-# TODO: CSVs are loaded for each region. It would be more efficient to load them once for processing all regions. 
-# TODO: Update coloring of plots to match ABA colors (i.e., use code from rstats_summary.py)
-# TODO: Save a CSV with the results of the statistical tests for each region.
+# TODO: CSVs are loaded for each cluster. It would be more efficient to load them once for processing all clusters. 
+# TODO: Perhaps functions in this script could be made more generic and used in rstats_mean_IF_summary.py as well.
+# TODO: Save a CSV with the results for each cluster.
 
 
 # Set Arial as the font
 mpl.rcParams['font.family'] = 'Arial'
 
-def load_data(region_id):
+def load_data(cluster_id):
     data = []
     
     # Load all CSVs in the directory
@@ -84,8 +74,8 @@ def load_data(region_id):
             group_name = filename.split("_")[0]
             df = pd.read_csv(filename)
 
-            # Filter by the region ID
-            mean_intensity = df[df["Region_Intensity"] == region_id]["Mean_IF_Intensity"].values
+            # Filter by the cluster ID
+            mean_intensity = df[df["Cluster_ID"] == cluster_id]["Mean_IF_Intensity"].values
 
             if len(mean_intensity) > 0:
                 data.append({
@@ -96,48 +86,7 @@ def load_data(region_id):
     if data:
         return pd.DataFrame(data)
     else:
-        raise ValueError(f"    [red1]No data found for region ID {region_id}")
-
-def get_max_region_id_from_csvs():
-    """Retrieve the maximum Region_Intensity from all input CSVs."""
-    max_region_id = -1
-    for filename in os.listdir():
-        if filename.endswith('.csv'):
-            df = pd.read_csv(filename)
-            max_id_in_file = df["Region_Intensity"].max()
-            if max_id_in_file > max_region_id:
-                max_region_id = max_id_in_file
-    return max_region_id
-
-def get_region_details(region_id, csv_path):
-    region_df = pd.read_csv(csv_path)
-    region_row = region_df[region_df["Region_ID"] == region_id].iloc[0]
-    return region_row["Name"], region_row["Abbr"]
-
-def get_all_region_ids(csv_path):
-    """Retrieve all region IDs from the provided CSV."""
-    region_df = pd.read_csv(csv_path)
-    return region_df["Region_ID"].tolist()
-
-def filter_region_ids(region_ids, max_region_id):
-    """Filter region IDs to be within the maximum region ID from the CSVs."""
-    return [region_id for region_id in region_ids if region_id <= max_region_id]
-
-def remove_zero_intensity_regions(region_ids):
-    """Remove regions with Mean_IF_Intensity of 0 across all input CSVs."""
-    valid_region_ids = []
-    for region_id in region_ids:
-        all_zero = True
-        for filename in os.listdir():
-            if filename.endswith('.csv'):
-                df = pd.read_csv(filename)
-                mean_intensity = df[df["Region_Intensity"] == region_id]["Mean_IF_Intensity"].values
-                if len(mean_intensity) > 0 and mean_intensity[0] != 0:
-                    all_zero = False
-                    break
-        if not all_zero:
-            valid_region_ids.append(region_id)
-    return valid_region_ids
+        raise ValueError(f"    [red1]No data found for cluster ID: {cluster_id}")
 
 def perform_t_tests(df, order):
     """Perform t-tests between groups in the DataFrame."""
@@ -155,13 +104,11 @@ def perform_t_tests(df, order):
             })
     return pd.DataFrame(comparisons)
 
-def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tukey', show_plot=False, alt='two-sided'):
-    df = load_data(region_id)
+def plot_data(cluster_id, order=None, labels=None, test_type='tukey', alt='two-sided'):
+    df = load_data(cluster_id)
 
     if 'group' not in df.columns:
-        raise KeyError(f"    [red1]'group' column not found in the DataFrame for {region_id}. Ensure the CSV files contain the correct data.")
-
-    region_name, region_abbr = get_region_details(region_id, csv_path)
+        raise KeyError(f"    [red1]'group' column not found in the DataFrame for {cluster_id}. Ensure the CSV files contain the correct data.")
     
     # Define a list of potential colors
     predefined_colors = [
@@ -273,24 +220,20 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
     ax.set_xlabel(None)
 
     # Save the plot
-    output_folder = Path('regional_mean_IF_summary')
+    output_folder = Path('cluster_mean_IF_summary')
     output_folder.mkdir(parents=True, exist_ok=True)
 
-    title = f"{region_name} ({region_abbr})"
+    title = f"Cluster: {cluster_id}"
     wrapped_title = textwrap.fill(title, 42)  # wraps at x characters. Adjust as needed.
     plt.title(wrapped_title)
     plt.tight_layout()
-    region_abbr = region_abbr.replace("/", "-") # Replace problematic characters for file paths
 
     is_significant = not significant_comparisons.empty
     file_prefix = '_' if is_significant else ''
-    file_name = f"{file_prefix}region_{region_id}_{region_abbr}.pdf"
+    file_name = f"{file_prefix}cluster_{cluster_id}.pdf"
     plt.savefig(output_folder / file_name)
 
     plt.close()
-
-    if show_plot:
-        plt.show()
 
 
 @log_command
@@ -313,20 +256,12 @@ def main():
             print(f'    {filename}')
     print()
 
-    # If region IDs are provided using -r, use them; otherwise, get all region IDs from the CSV
-    lut = Path(__file__).parent.parent / 'core' / 'csvs' / args.lut
-    region_ids_to_process = args.region_ids if args.region_ids else get_all_region_ids(lut)
+    # If cluster IDs are provided, use them; otherwise, get all cluster IDs from the first CSV
+    clusters_to_process = args.cluster_ids if args.cluster_ids else pd.read_csv(next(Path().glob('*.csv'))).Cluster_ID.unique()
 
-    # Filter region IDs based on max Region_Intensity in input CSVs
-    max_region_id = get_max_region_id_from_csvs()
-    region_ids_to_process = filter_region_ids(region_ids_to_process, max_region_id)
-
-    # Remove regions with Mean_IF_Intensity of 0 across all input CSVs
-    region_ids_to_process = remove_zero_intensity_regions(region_ids_to_process)
-
-    # Process each region ID
-    for region_id in region_ids_to_process:
-        plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=args.test, show_plot=args.show_plot, alt=args.alternate)
+    # Process each cluster ID
+    for cluster_id in clusters_to_process:
+        plot_data(cluster_id, args.order, args.labels, test_type=args.test, alt=args.alternate)
 
     verbose_end_msg()
     

@@ -52,7 +52,7 @@ def uniq_intensities(input, min_extent=1, print_sizes=False):
     """
     if str(input).endswith(".nii.gz"):
         nii = nib.load(input)
-        img = np.asanyarray(nii.dataobj, dtype=np.uint16).squeeze()
+        img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
     else: 
         img = load_3D_img(input)
 

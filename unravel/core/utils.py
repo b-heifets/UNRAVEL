@@ -193,6 +193,7 @@ def verbose_end_msg():
 
 def log_command(func):
     """A decorator for main() to log the command and execution times to a hidden file (.command_log.txt)."""
+    # TODO: avoid logging when -h or --help is used
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         log_file = ".command_log.txt"  # Name of the hidden log file

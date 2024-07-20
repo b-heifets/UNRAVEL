@@ -32,7 +32,7 @@ def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", required=True, action=SM)
     parser.add_argument('-a', '--atlas', help='Path/atlas.nii.gz', required=True, action=SM)
-    parser.add_argument('-r', '--regions', nargs='*', type=int, help='Space-separated list of region intensities to process')
+    parser.add_argument('-r', '--regions', help='Space-separated list of region intensities to process', nargs='*', type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
@@ -45,10 +45,10 @@ def calculate_mean_intensity(atlas, image, regions=None):
 
     # Filter out background
     valid_mask = atlas > 0
-    valid_atlas = atlas[valid_mask].astype(int)
+    valid_atlas = atlas[valid_mask].astype(int)  # Convert to int for bincount
     valid_image = image[valid_mask]
 
-    # Use bincount to get sums for each region
+    # Use bincount to sum intensities for each cluster and count voxels
     sums = np.bincount(valid_atlas, weights=valid_image)
     counts = np.bincount(valid_atlas)
 

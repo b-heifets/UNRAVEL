@@ -54,11 +54,13 @@ def parse_args():
     parser.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
     parser.add_argument('-pv', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
     parser.add_argument('-csv', '--info_csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
+    parser.add_argument('-rgb', '--sunburst_rgbs', help='CSV name or path/name.csv. Default: sunburst_RGBs.csv', default='sunburst_RGBs.csv', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Correct font color for the volumes column. 'fiber tracts' is filled with white rather than the color of the fiber tracts
+# TODO: 'CUL4, 5' is not filled with the color of the region. 
 
 
 def fill_na_with_last_known(df):
@@ -386,7 +388,10 @@ def main():
     print(f'\n{top_regions_and_percent_vols_df.to_string(index=False)}\n')
 
     # Load csv with RGB values 
-    sunburst_RGBs_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'sunburst_RGBs.csv', header=None)
+    if args.sunburst_rgbs == 'sunburst_RGBs.csv': 
+        sunburst_RGBs_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'sunburst_RGBs.csv', header=None)
+    else:
+        sunburst_RGBs_df = pd.read_csv(args.sunburst_rgbs, header=None)
 
     # Parse the dataframe to get a dictionary of region names and their corresponding RGB values
     rgb_values = {}
