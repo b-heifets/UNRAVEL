@@ -14,8 +14,8 @@ Outputs:
     - ./cluster_mean_IF_{cluster_index}/image_name.csv for each image
 
 Next: 
-    - cd cluster_mean_IF
-    - utils_prepend -sk <path/sample_key.csv> -f
+    - cd cluster_mean_IF...
+    - utils_prepend -sk <path/sample_key.csv> -f  # If needed
     - cluster_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
     - cluster_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests
 """
