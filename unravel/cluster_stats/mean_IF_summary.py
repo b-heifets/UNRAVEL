@@ -15,7 +15,7 @@ Note:
     - The first word of the csv inputs is used for the the group names (underscore separated).
 
 Inputs: 
-    - <asterisk>.csv in the working dir with these columns: 'Cluster_ID', 'Mean_IF_Intensity'
+    - `<asterisk>.csv` in the working dir with these columns: 'Cluster_ID', 'Mean_IF_Intensity'
 
 Prereqs:
     - Generate CSV inputs withs ``cluster_IF_mean``
