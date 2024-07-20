@@ -21,6 +21,8 @@ unravel.cluster_stats package
    sunburst
    table
    crop
+   mean_IF
+   mean_IF_summary
    effect_sizes/toc
 
 .. automodule:: unravel.cluster_stats
