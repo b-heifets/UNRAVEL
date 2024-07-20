@@ -383,7 +383,7 @@
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/index.html#unravel.cluster_stats.index.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF.html#unravel.cluster_stats.index.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ci&#39;</span><span class="p">,</span> <span class="s1">&#39;--cluster_idx&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the reverse cluster index NIfTI file.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -399,10 +399,11 @@
 
 
 <span class="c1"># TODO: Look into consolidating csvs </span>
+<span class="c1"># TODO: A few regions are omitted (e.g., 2017-IDs: 728 1007 1025 1056 1064). Look into this (see Packaging_UNRAVEL.docx for notes) and add a warning when voxels are not accounted for in a sunburst. </span>
 
 
 <div class="viewcode-block" id="generate_sunburst">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/index.html#unravel.cluster_stats.index.generate_sunburst">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF.html#unravel.cluster_stats.index.generate_sunburst">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_sunburst</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">xyz_res_in_um</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a sunburst plot for a given cluster.</span>
 <span class="sd">    </span>
@@ -423,7 +424,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/index.html#unravel.cluster_stats.index.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/mean_IF.html#unravel.cluster_stats.index.main">[docs]</a>
 <span class="nd">@log_command</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">install</span><span class="p">()</span>
