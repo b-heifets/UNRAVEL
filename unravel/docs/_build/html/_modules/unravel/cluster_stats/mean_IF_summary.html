@@ -366,11 +366,11 @@
 <span class="sd">    - The first word of the csv inputs is used for the the group names (underscore separated).</span>
 
 <span class="sd">Inputs: </span>
-<span class="sd">    - All csv files in the working dir with these columns: ``Cluster_ID``, ``Mean_IF_Intensity``</span>
+<span class="sd">    - &lt;asterisk&gt;.csv files in the working dir with these columns: Cluster_ID, Mean_IF_Intensity</span>
 
 <span class="sd">Prereqs:</span>
 <span class="sd">    - Generate CSV inputs withs ``cluster_IF_mean``</span>
-<span class="sd">    - Add conditions to input CSV file names: ``utils_prepend -sk $SAMPLE_KEY -f</span>
+<span class="sd">    - Add conditions to input CSV file names: ``utils_prepend`` -sk $SAMPLE_KEY -f</span>
 
 <span class="sd">Outputs:</span>
 <span class="sd">    - cluster_mean_IF_summary/cluster_&lt;cluster_id&gt;.pdf for each cluster</span>
