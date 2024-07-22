@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_prism`` from UNRAVEL to organize cell_count|label_volume, cluster_volume, and <cell|label>_density data from cluster and sample and save as csv for plotting in Prism.
+Use ``cluster_prism`` from UNRAVEL to organize data for clusters for plotting in Prism.
 
 Usage
 -----
     cluster_prism -ids 1 2 3
-        
+
+Note:
+    - cluster_table saves valid_clusters_dir/valid_cluster_IDs_sorted_by_anatomy.txt
+
 Inputs:
-    <asterisk>.csv from cluster_org_data (in working dir)
+    <asterisk>.csv from ``cluster_org_data`` (in working dir) or ``cluster_mean_IF``
 
 CSV naming conventions:
-    - Condition: first word before '_' in the file name
+    - Condition: first word before '_' in the file name (use ``utils_prepend`` if needed)
     - Sample: second word in file name
 
 Example unilateral inputs:
@@ -23,12 +26,17 @@ Example unilateral inputs:
 Example bilateral inputs (if any file has _LH.csv or _RH.csv, the command will attempt to pool data):
     - condition1_sample01_<cell|label>_density_data_LH.csv
     - condition1_sample01_<cell|label>_density_data_RH.csv
-    - ...
 
-Columns in the .csv files:
-    sample, cluster_ID, <cell_count|label_volume>, cluster_volume, <cell_density|label_density>, ...
+Columns in the input .csv files:
+    sample, cluster_ID, <cell_count|label_volume|mean_IF_intensity>, [cluster_volume], [cell_density|label_density], ...
 
-Outputs saved in ./cluster_validation_summary/
+Outputs:
+    - Outputs saved in ./cluster_validation_summary/
+    - Cluster order follows -ids order
+    - <cell_count|label_volume|mean_IF_intensity>_summary.csv
+    - [<cell_density|label_density>_summary.csv]
+    - [<cell_density|label_density>_summary_across_clusters.csv]
+    - [cluster_volume_summary.csv]
 """
 
 import argparse
@@ -45,8 +53,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs to include in the summary.', nargs='+', type=int, required=True, action=SM)
-    parser.add_argument('-sa', '--save_all', help='Also save CSVs w/ cell_count|label_volume and cluster_volume data', action='store_true', default=False)
+    parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs to include in the summary.', nargs='+', type=int, default=None, action=SM)
     parser.add_argument('-p', '--path', help='Path to the directory containing the CSV files from ``cluster_validation``. Default: current directory', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
@@ -94,9 +101,14 @@ def generate_summary_table(csv_files, data_column_name):
                 RH_df = pd.read_csv(str(file).replace('_LH.csv', '_RH.csv'), usecols=['sample', 'cluster_ID', data_column_name])
 
                 # Sum the data_col of the LH and RH dataframes
-                df = pd.concat([LH_df, RH_df], ignore_index=True).groupby(['sample', 'cluster_ID']).agg( # Group by sample and cluster_ID
-                    **{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='sum')} # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method
-                ).reset_index() # Reset the index to avoid a multi-index dataframe
+                if data_column_name == 'cell_count' or data_column_name == 'label_volume':
+                    df = pd.concat([LH_df, RH_df], ignore_index=True).groupby(['sample', 'cluster_ID']).agg( # Group by sample and cluster_ID
+                        **{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='sum')} # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method
+                    ).reset_index() # Reset the index to avoid a multi-index dataframe
+                elif data_column_name == 'mean_IF_intensity':
+                    df = pd.concat([LH_df, RH_df], ignore_index=True).groupby(['sample', 'cluster_ID']).agg( # Group by sample and cluster_ID
+                        **{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='mean')} # Mean of mean_IF_intensity, unpacking the dict into keyword arguments for the .agg() method
+                    ).reset_index()
 
         else:
             # Load the CSV file into a pandas dataframe
@@ -156,60 +168,76 @@ def main():
         data_col, density_col = 'cell_count', 'cell_density'
     elif 'label_volume' in first_df.columns:
         data_col, density_col = 'label_volume', 'label_density'
+    elif 'mean_IF_intensity' in first_df.columns:
+        data_col, density_col = 'mean_IF_intensity', None
     else:
         print("Error: Unrecognized data columns in input files.")
         return
 
     # Generate a summary table for the cell_count or label_volume data
-    data_col_summary_df = generate_summary_table(csv_files, data_col)
+    data_col_summary_df = generate_summary_table(csv_files, data_col)  # Columns: sample, cluster_ID, cell_count|label_volume|mean_IF_intensity
 
     # Generate a summary table for the cluster volume data
-    cluster_volume_summary_df = generate_summary_table(csv_files, 'cluster_volume')
+    if 'cluster_volume' in first_df.columns:
+        cluster_volume_summary_df = generate_summary_table(csv_files, 'cluster_volume')  # Columns: sample, cluster_ID, cluster_volume
+    else:
+        cluster_volume_summary_df = None
 
     # Generate a summary table for the cell_density or label_density data
-    density_col_summary_df = generate_summary_table(csv_files, density_col)
+    if density_col is not None:
+        density_col_summary_df = generate_summary_table(csv_files, density_col)  # Columns: sample, cluster_ID, cell_density|label_density
+    else:
+        density_col_summary_df = None
 
     # Exclude clusters that are not in the list of valid clusters
     if args.valid_cluster_ids is not None:
         data_col_summary_df = data_col_summary_df[data_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
-        cluster_volume_summary_df = cluster_volume_summary_df[cluster_volume_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
-        density_col_summary_df = density_col_summary_df[density_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
+        if cluster_volume_summary_df is not None:
+            cluster_volume_summary_df = cluster_volume_summary_df[cluster_volume_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
+        if density_col_summary_df is not None:
+            density_col_summary_df = density_col_summary_df[density_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
 
         # Sort data frames such that the 'cluster_ID' column matches the order of clusters in args.valid_cluster_ids
         data_col_summary_df = data_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
-        cluster_volume_summary_df = cluster_volume_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
-        density_col_summary_df = density_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
+        if cluster_volume_summary_df is not None:
+            cluster_volume_summary_df = cluster_volume_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
+        if density_col_summary_df is not None:
+            density_col_summary_df = density_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
 
-    # Sum each column in the summary tables other than the 'cluster_ID' column, which could be dropped
+    # For a summary across clusters, sum each column in the summary tables other than the 'cluster_ID' column, which could be dropped
     data_col_summary_df_sum = data_col_summary_df.sum()
-    cluster_volume_summary_df_sum = cluster_volume_summary_df.sum()
+    if cluster_volume_summary_df is not None:
+        cluster_volume_summary_df_sum = cluster_volume_summary_df.sum()
 
-    # Calculate the density sum from the sum of the cell_count or label_volume and cluster_volume sums
+    # For a summary across clusters, calculate the density sum from the sum of the cell_count or label_volume and cluster_volume sums
     if 'cell_count' in first_df.columns:
         density_col_summary_df_sum = data_col_summary_df_sum / cluster_volume_summary_df_sum
     elif 'label_volume' in first_df.columns:
         density_col_summary_df_sum = data_col_summary_df_sum / cluster_volume_summary_df_sum * 100
 
-    # Organize the df like the original summary tables
-    multi_index = data_col_summary_df.columns
-    density_col_summary_df_sum.columns = multi_index
-    density_col_summary_df_sum = density_col_summary_df_sum.drop('cluster_ID').reset_index().T
+    # For a summary across clusters, organize the df like the original summary tables
+    if cluster_volume_summary_df is not None and density_col_summary_df is not None:
+        multi_index = data_col_summary_df.columns
+        density_col_summary_df_sum.columns = multi_index
+        density_col_summary_df_sum = density_col_summary_df_sum.drop('cluster_ID').reset_index().T
 
     # Make output dir
     output_dir = path / '_prism'
     Path(output_dir).mkdir(exist_ok=True)
 
     # Save the summary tables to .csv files
-    if args.save_all:
-        data_col_summary_df.to_csv(output_dir / f'{data_col}_summary.csv', index=False)
-        cluster_volume_summary_df.to_csv(output_dir / 'cluster_volume_summary.csv', index=False)
-
     if args.valid_cluster_ids is not None:
-        density_col_summary_df.to_csv(output_dir / f'{density_col}_summary_for_valid_clusters.csv', index=False)
-        density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_valid_clusters.csv', index=False)
+        data_col_summary_df.to_csv(output_dir / f'{data_col}_summary_for_valid_clusters.csv', index=False)
+        if 'cluster_volume' in first_df.columns:
+            density_col_summary_df.to_csv(output_dir / f'{density_col}_summary_for_valid_clusters.csv', index=False)
+            density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_valid_clusters.csv', index=False)
+            cluster_volume_summary_df.to_csv(output_dir / 'valid_cluster_volume_summary.csv', index=False)
     else:
-        density_col_summary_df.to_csv(output_dir / f'{density_col}_summary.csv', index=False)
-        density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_clusters.csv', index=False)
+        data_col_summary_df.to_csv(output_dir / f'{data_col}_summary.csv', index=False)
+        if 'cluster_volume' in first_df.columns:
+            density_col_summary_df.to_csv(output_dir / f'{density_col}_summary.csv', index=False)
+            density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_clusters.csv', index=False)
+            cluster_volume_summary_df.to_csv(output_dir / 'cluster_volume_summary.csv', index=False)
 
     print(f"\n    Saved results in [bright_magenta]{output_dir}")
 

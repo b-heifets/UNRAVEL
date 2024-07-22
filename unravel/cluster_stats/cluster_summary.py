@@ -252,8 +252,6 @@ def main():
                     '-ids', *valid_cluster_ids_sorted,
                     '-p', subdir,
                 ]
-                if cfg.prism.save_all:
-                    prism_args.append('-sa')
                 if args.verbose:
                     prism_args.append('-v')
                 run_script('cluster_prism', prism_args)

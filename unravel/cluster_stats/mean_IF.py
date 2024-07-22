@@ -12,6 +12,7 @@ Inputs:
 
 Outputs: 
     - ./cluster_mean_IF_{cluster_index}/image_name.csv for each image
+    - Columns: sample, cluster_ID, mean_IF_intensity
 
 Next: 
     - cd cluster_mean_IF...
@@ -76,13 +77,13 @@ def calculate_mean_intensity_in_clusters(cluster_index, img, clusters=None):
 
     return mean_intensities_dict
 
-def write_to_csv(data, output_file):
-    """Writes the data to a CSV file."""
+def write_to_csv(data, output_file, sample):
+    """Writes the data to a CSV file with sample name included."""
     with open(output_file, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["Cluster_ID", "Mean_IF_Intensity"])
+        writer.writerow(["sample", "cluster_ID", "mean_IF_intensity"])
         for key, value in data.items():
-            writer.writerow([key, value])
+            writer.writerow([sample, key, value])
 
 
 @log_command
@@ -119,7 +120,9 @@ def main():
             output_filename = str(file.name).replace('.nii.gz', '.csv')
             output = output_folder / output_filename
 
-            write_to_csv(mean_intensities, output)
+            parts = str(Path(file).name).split('_')
+            sample = parts[1] 
+            write_to_csv(mean_intensities, output, sample)
 
     print(f'CSVs with mean IF intensities output to ./{output_folder}/')
 

@@ -15,7 +15,7 @@ Note:
     - The first word of the csv inputs is used for the the group names (underscore separated).
 
 Inputs: 
-    - <asterisk>.csv files in the working dir with these columns: Cluster_ID, Mean_IF_Intensity
+    - <asterisk>.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity
 
 Prereqs:
     - Generate CSV inputs withs ``cluster_IF_mean``
@@ -75,7 +75,7 @@ def load_data(cluster_id):
             df = pd.read_csv(filename)
 
             # Filter by the cluster ID
-            mean_intensity = df[df["Cluster_ID"] == cluster_id]["Mean_IF_Intensity"].values
+            mean_intensity = df[df["cluster_ID"] == cluster_id]["mean_IF_intensity"].values
 
             if len(mean_intensity) > 0:
                 data.append({
@@ -257,7 +257,7 @@ def main():
     print()
 
     # If cluster IDs are provided, use them; otherwise, get all cluster IDs from the first CSV
-    clusters_to_process = args.cluster_ids if args.cluster_ids else pd.read_csv(next(Path().glob('*.csv'))).Cluster_ID.unique()
+    clusters_to_process = args.cluster_ids if args.cluster_ids else pd.read_csv(next(Path().glob('*.csv'))).cluster_ID.unique()
 
     # Process each cluster ID
     for cluster_id in clusters_to_process:

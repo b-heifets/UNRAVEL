@@ -45,7 +45,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Look into consolidating csvs 
-# TODO: A few regions are omitted (e.g., 2017-IDs: 728 1007 1025 1056 1064). Look into this (see Packaging_UNRAVEL.docx for notes) and add a warning when voxels are not accounted for in a sunburst. 
+# TODO: valid_clusters_sunburst.csv but sometimes regions are omitted for a cluster specific sunburst. Look into this (see Packaging_UNRAVEL.docx for notes) and add a warning to this script when voxels are not accounted for in a cluster specific sunburst. 
 
 
 def generate_sunburst(cluster, img, atlas, xyz_res_in_um, data_type, output_dir):
