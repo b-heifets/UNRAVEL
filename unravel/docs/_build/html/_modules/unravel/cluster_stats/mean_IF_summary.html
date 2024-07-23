@@ -366,7 +366,7 @@
 <span class="sd">    - The first word of the csv inputs is used for the the group names (underscore separated).</span>
 
 <span class="sd">Inputs: </span>
-<span class="sd">    - &lt;asterisk&gt;.csv files in the working dir with these columns: Cluster_ID, Mean_IF_Intensity</span>
+<span class="sd">    - &lt;asterisk&gt;.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity</span>
 
 <span class="sd">Prereqs:</span>
 <span class="sd">    - Generate CSV inputs withs ``cluster_IF_mean``</span>
@@ -414,6 +414,7 @@
 <span class="c1"># TODO: CSVs are loaded for each cluster. It would be more efficient to load them once for processing all clusters. </span>
 <span class="c1"># TODO: Perhaps functions in this script could be made more generic and used in rstats_mean_IF_summary.py as well.</span>
 <span class="c1"># TODO: Save a CSV with the results for each cluster.</span>
+<span class="c1"># TODO: Check that this works for other test types (tested with t-tests).</span>
 
 
 <span class="c1"># Set Arial as the font</span>
@@ -431,7 +432,7 @@
             <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
 
             <span class="c1"># Filter by the cluster ID</span>
-            <span class="n">mean_intensity</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Cluster_ID&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cluster_id</span><span class="p">][</span><span class="s2">&quot;Mean_IF_Intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+            <span class="n">mean_intensity</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;cluster_ID&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cluster_id</span><span class="p">][</span><span class="s2">&quot;mean_IF_intensity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mean_intensity</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
@@ -595,7 +596,9 @@
     <span class="n">file_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_prefix</span><span class="si">}</span><span class="s2">cluster_</span><span class="si">{</span><span class="n">cluster_id</span><span class="si">}</span><span class="s2">.pdf&quot;</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">output_folder</span> <span class="o">/</span> <span class="n">file_name</span><span class="p">)</span>
 
-    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">test_df</span></div>
 
 
 
@@ -622,11 +625,38 @@
     <span class="nb">print</span><span class="p">()</span>
 
     <span class="c1"># If cluster IDs are provided, use them; otherwise, get all cluster IDs from the first CSV</span>
-    <span class="n">clusters_to_process</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_ids</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_ids</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.csv&#39;</span><span class="p">)))</span><span class="o">.</span><span class="n">Cluster_ID</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="n">clusters_to_process</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_ids</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_ids</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.csv&#39;</span><span class="p">)))</span><span class="o">.</span><span class="n">cluster_ID</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
 
     <span class="c1"># Process each cluster ID</span>
+    <span class="n">test_df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">cluster_id</span> <span class="ow">in</span> <span class="n">clusters_to_process</span><span class="p">:</span>
-        <span class="n">plot_data</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">order</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">test_type</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">alternate</span><span class="p">)</span>
+        <span class="n">test_df</span> <span class="o">=</span> <span class="n">plot_data</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">order</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">test_type</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="n">alt</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">alternate</span><span class="p">)</span>
+
+        <span class="c1"># Add the cluster ID to the DataFrame</span>
+        <span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_id</span>
+
+        <span class="c1"># Make cluster_ID the first column</span>
+        <span class="n">test_df</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;group1&#39;</span><span class="p">,</span> <span class="s1">&#39;group2&#39;</span><span class="p">,</span> <span class="s1">&#39;p-adj&#39;</span><span class="p">,</span> <span class="s1">&#39;reject&#39;</span><span class="p">]]</span>
+
+        <span class="c1"># Concat the results for each cluster</span>
+        <span class="n">test_df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">test_df_all</span><span class="p">,</span> <span class="n">test_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="n">test_df_all</span><span class="p">[</span><span class="s1">&#39;significance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df_all</span><span class="p">[</span><span class="s1">&#39;p-adj&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="s1">&#39;****&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.0001</span> <span class="k">else</span> <span class="s1">&#39;***&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.001</span> <span class="k">else</span> <span class="s1">&#39;**&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.01</span> <span class="k">else</span> <span class="s1">&#39;*&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="k">else</span> <span class="s1">&#39;n.s.&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Drop the reject column</span>
+    <span class="n">test_df_all</span> <span class="o">=</span> <span class="n">test_df_all</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;reject&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Save the results to a CSV</span>
+    <span class="n">output_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;cluster_mean_IF_summary&#39;</span><span class="p">)</span>
+    <span class="n">output_folder</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span> <span class="o">==</span> <span class="s1">&#39;tukey&#39;</span><span class="p">:</span>
+        <span class="n">test_df_all</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_folder</span> <span class="o">/</span> <span class="s1">&#39;cluster_mean_IF_summary_tukey.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span> <span class="o">==</span> <span class="s1">&#39;dunnett&#39;</span><span class="p">:</span>
+        <span class="n">test_df_all</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_folder</span> <span class="o">/</span> <span class="s1">&#39;cluster_mean_IF_summary_dunnett.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">test</span> <span class="o">==</span> <span class="s1">&#39;ttest&#39;</span><span class="p">:</span>
+        <span class="n">test_df_all</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_folder</span> <span class="o">/</span> <span class="s1">&#39;cluster_mean_IF_summary_ttest.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">test_df_all</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">verbose_end_msg</span><span class="p">()</span></div>
 

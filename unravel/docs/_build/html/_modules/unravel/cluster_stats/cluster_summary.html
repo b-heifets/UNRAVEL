@@ -611,8 +611,6 @@
                     <span class="s1">&#39;-ids&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">valid_cluster_ids_sorted</span><span class="p">,</span>
                     <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">subdir</span><span class="p">,</span>
                 <span class="p">]</span>
-                <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">prism</span><span class="o">.</span><span class="n">save_all</span><span class="p">:</span>
-                    <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-sa&#39;</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
                     <span class="n">prism_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">)</span>
                 <span class="n">run_script</span><span class="p">(</span><span class="s1">&#39;cluster_prism&#39;</span><span class="p">,</span> <span class="n">prism_args</span><span class="p">)</span>

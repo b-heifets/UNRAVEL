@@ -492,17 +492,23 @@
                   
   <section id="module-unravel.cluster_stats.prism">
 <span id="unravel-cluster-stats-prism-module"></span><span id="unravel-cluster-stats-prism"></span><h1>unravel.cluster_stats.prism module<a class="headerlink" href="#module-unravel.cluster_stats.prism" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_prism</span></code> from UNRAVEL to organize cell_count|label_volume, cluster_volume, and &lt;cell|label&gt;_density data from cluster and sample and save as csv for plotting in Prism.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_prism</span></code> from UNRAVEL to organize data for clusters for plotting in Prism.</p>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
 <div><p>cluster_prism -ids 1 2 3</p>
 </div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>cluster_table saves valid_clusters_dir/valid_cluster_IDs_sorted_by_anatomy.txt</p></li>
+</ul>
+</div>
 <dl class="simple">
-<dt>Inputs:</dt><dd><p>&lt;asterisk&gt;.csv from cluster_org_data (in working dir)</p>
+<dt>Inputs:</dt><dd><p>&lt;asterisk&gt;.csv from <code class="docutils literal notranslate"><span class="pre">cluster_org_data</span></code> (in working dir) or <code class="docutils literal notranslate"><span class="pre">cluster_mean_IF</span></code></p>
 </dd>
 <dt>CSV naming conventions:</dt><dd><ul class="simple">
-<li><p>Condition: first word before ‘_’ in the file name</p></li>
+<li><p>Condition: first word before ‘_’ in the file name (use <code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code> if needed)</p></li>
 <li><p>Sample: second word in file name</p></li>
 </ul>
 </dd>
@@ -516,13 +522,20 @@
 <dt>Example bilateral inputs (if any file has _LH.csv or _RH.csv, the command will attempt to pool data):</dt><dd><ul class="simple">
 <li><p>condition1_sample01_&lt;cell|label&gt;_density_data_LH.csv</p></li>
 <li><p>condition1_sample01_&lt;cell|label&gt;_density_data_RH.csv</p></li>
-<li><p>…</p></li>
 </ul>
 </dd>
-<dt>Columns in the .csv files:</dt><dd><p>sample, cluster_ID, &lt;cell_count|label_volume&gt;, cluster_volume, &lt;cell_density|label_density&gt;, …</p>
+<dt>Columns in the input .csv files:</dt><dd><p>sample, cluster_ID, &lt;cell_count|label_volume|mean_IF_intensity&gt;, [cluster_volume], [cell_density|label_density], …</p>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>Outputs saved in ./cluster_validation_summary/</p></li>
+<li><p>Cluster order follows -ids order</p></li>
+<li><p>&lt;cell_count|label_volume|mean_IF_intensity&gt;_summary.csv</p></li>
+<li><p>[&lt;cell_density|label_density&gt;_summary.csv]</p></li>
+<li><p>[&lt;cell_density|label_density&gt;_summary_across_clusters.csv]</p></li>
+<li><p>[cluster_volume_summary.csv]</p></li>
+</ul>
 </dd>
 </dl>
-<p>Outputs saved in ./cluster_validation_summary/</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.prism.parse_args">
