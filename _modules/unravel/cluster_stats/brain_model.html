@@ -356,11 +356,11 @@
 
 <span class="sd">Usage with CCFv3:</span>
 <span class="sd">-----------------</span>
-<span class="sd">    cluster_brain_model -i input.nii.gz -m -sa path/atlas_CCFv3_2020_30um_split.nii.gz -v </span>
+<span class="sd">    cluster_brain_model -i input.nii.gz -sa path/atlas_CCFv3_2020_30um_split.nii.gz -m -v </span>
 
 <span class="sd">Usage with gubra atlas:</span>
 <span class="sd">-----------------------</span>
-<span class="sd">    cluster_brain_model -i input.nii.gz -m -sa path/gubra_ano_split_25um.nii.gz -v -ax 0 -s 2</span>
+<span class="sd">    cluster_brain_model -i input.nii.gz -sa path/gubra_ano_split_25um.nii.gz -m -ax 0 -s 2 -v -csv regional_summary.csv</span>
 
 <span class="sd">Outputs: </span>
 <span class="sd">    - img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)</span>
@@ -474,6 +474,12 @@
         <span class="n">combined_region_id</span> <span class="o">=</span> <span class="n">region_id</span> <span class="k">if</span> <span class="n">region_id</span> <span class="o">&lt;</span> <span class="mi">20000</span> <span class="k">else</span> <span class="n">region_id</span> <span class="o">-</span> <span class="mi">20000</span>
         <span class="n">region_rgb</span> <span class="o">=</span> <span class="n">color_map</span><span class="p">[</span><span class="n">color_map</span><span class="p">[</span><span class="s1">&#39;Region_ID&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">combined_region_id</span><span class="p">][[</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">]]</span>
 
+        <span class="k">if</span> <span class="n">region_rgb</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]Region ID </span><span class="si">{</span><span class="n">region_id</span><span class="si">}</span><span class="s2"> not found in the color map (see help regarding the -csv argument). Exiting.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">txt_output</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">txt_output</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+            <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+    
         <span class="c1"># Convert R, G, B values to space-separated R G B A values (one line per region)</span>
         <span class="n">rgba_str</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">region_rgb</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39; 255&#39;</span>
 
