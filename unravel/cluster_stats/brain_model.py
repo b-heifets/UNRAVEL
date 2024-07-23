@@ -5,11 +5,11 @@ Use ``cluster_brain_model`` from UNRAVEL to prep .nii.gz and RGBA .txt for vizua
 
 Usage with CCFv3:
 -----------------
-    cluster_brain_model -i input.nii.gz -m -sa path/atlas_CCFv3_2020_30um_split.nii.gz -v 
+    cluster_brain_model -i input.nii.gz -sa path/atlas_CCFv3_2020_30um_split.nii.gz -m -v 
 
 Usage with gubra atlas:
 -----------------------
-    cluster_brain_model -i input.nii.gz -m -sa path/gubra_ano_split_25um.nii.gz -v -ax 0 -s 2
+    cluster_brain_model -i input.nii.gz -sa path/gubra_ano_split_25um.nii.gz -m -ax 0 -s 2 -v -csv regional_summary.csv
 
 Outputs: 
     - img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
@@ -118,6 +118,12 @@ def main():
         combined_region_id = region_id if region_id < 20000 else region_id - 20000
         region_rgb = color_map[color_map['Region_ID'] == combined_region_id][['R', 'G', 'B']]
 
+        if region_rgb.empty:
+            print(f"\n    [red1]Region ID {region_id} not found in the color map (see help regarding the -csv argument). Exiting.\n")
+            if Path(txt_output).exists():
+                Path(txt_output).unlink()
+            import sys ; sys.exit()
+    
         # Convert R, G, B values to space-separated R G B A values (one line per region)
         rgba_str = ' '.join(region_rgb.astype(str).values[0]) + ' 255'
 

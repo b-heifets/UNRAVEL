@@ -7,16 +7,22 @@ Usage:
 ------
     cluster_mean_IF -ci path/rev_cluster_index.nii.gz
 
+Prereqs: 
+    - vstats
+    - cluster_fdr
+
 Inputs:
     - This can be run from the vstats directory (will process .nii.gz images in the current directory)
 
 Outputs: 
     - ./cluster_mean_IF_{cluster_index}/image_name.csv for each image
+    - Columns: sample, cluster_ID, mean_IF_intensity
 
 Next: 
     - cd cluster_mean_IF...
     - utils_prepend -sk <path/sample_key.csv> -f  # If needed
-    - cluster_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
+    - [cluster_index and cluster_table]  # for an xlsx table and anatomically ordered clusters that can be used with cluster_prism
+    - cluster_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats
     - cluster_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests
 """
 
@@ -76,13 +82,13 @@ def calculate_mean_intensity_in_clusters(cluster_index, img, clusters=None):
 
     return mean_intensities_dict
 
-def write_to_csv(data, output_file):
-    """Writes the data to a CSV file."""
+def write_to_csv(data, output_file, sample):
+    """Writes the data to a CSV file with sample name included."""
     with open(output_file, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(["Cluster_ID", "Mean_IF_Intensity"])
+        writer.writerow(["sample", "cluster_ID", "mean_IF_intensity"])
         for key, value in data.items():
-            writer.writerow([key, value])
+            writer.writerow([sample, key, value])
 
 
 @log_command
@@ -119,7 +125,9 @@ def main():
             output_filename = str(file.name).replace('.nii.gz', '.csv')
             output = output_folder / output_filename
 
-            write_to_csv(mean_intensities, output)
+            parts = str(Path(file).name).split('_')
+            sample = parts[1] 
+            write_to_csv(mean_intensities, output, sample)
 
     print(f'CSVs with mean IF intensities output to ./{output_folder}/')
 

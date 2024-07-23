@@ -15,7 +15,7 @@ Note:
     - The first word of the csv inputs is used for the the group names (underscore separated).
 
 Inputs: 
-    - <asterisk>.csv files in the working dir with these columns: Cluster_ID, Mean_IF_Intensity
+    - <asterisk>.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity
 
 Prereqs:
     - Generate CSV inputs withs ``cluster_IF_mean``
@@ -60,6 +60,7 @@ def parse_args():
 # TODO: CSVs are loaded for each cluster. It would be more efficient to load them once for processing all clusters. 
 # TODO: Perhaps functions in this script could be made more generic and used in rstats_mean_IF_summary.py as well.
 # TODO: Save a CSV with the results for each cluster.
+# TODO: Check that this works for other test types (tested with t-tests).
 
 
 # Set Arial as the font
@@ -75,7 +76,7 @@ def load_data(cluster_id):
             df = pd.read_csv(filename)
 
             # Filter by the cluster ID
-            mean_intensity = df[df["Cluster_ID"] == cluster_id]["Mean_IF_Intensity"].values
+            mean_intensity = df[df["cluster_ID"] == cluster_id]["mean_IF_intensity"].values
 
             if len(mean_intensity) > 0:
                 data.append({
@@ -235,6 +236,8 @@ def plot_data(cluster_id, order=None, labels=None, test_type='tukey', alt='two-s
 
     plt.close()
 
+    return test_df
+
 
 @log_command
 def main():
@@ -257,11 +260,38 @@ def main():
     print()
 
     # If cluster IDs are provided, use them; otherwise, get all cluster IDs from the first CSV
-    clusters_to_process = args.cluster_ids if args.cluster_ids else pd.read_csv(next(Path().glob('*.csv'))).Cluster_ID.unique()
+    clusters_to_process = args.cluster_ids if args.cluster_ids else pd.read_csv(next(Path().glob('*.csv'))).cluster_ID.unique()
 
     # Process each cluster ID
+    test_df_all = pd.DataFrame()
     for cluster_id in clusters_to_process:
-        plot_data(cluster_id, args.order, args.labels, test_type=args.test, alt=args.alternate)
+        test_df = plot_data(cluster_id, args.order, args.labels, test_type=args.test, alt=args.alternate)
+
+        # Add the cluster ID to the DataFrame
+        test_df['cluster_ID'] = cluster_id
+
+        # Make cluster_ID the first column
+        test_df = test_df[['cluster_ID', 'group1', 'group2', 'p-adj', 'reject']]
+
+        # Concat the results for each cluster
+        test_df_all = pd.concat([test_df_all, test_df], ignore_index=True)
+    
+    test_df_all['significance'] = test_df_all['p-adj'].apply(lambda p: '****' if p < 0.0001 else '***' if p < 0.001 else '**' if p < 0.01 else '*' if p < 0.05 else 'n.s.')
+    
+    # Drop the reject column
+    test_df_all = test_df_all.drop(columns='reject')
+
+    # Save the results to a CSV
+    output_folder = Path('cluster_mean_IF_summary')
+    output_folder.mkdir(parents=True, exist_ok=True)
+    if args.test == 'tukey':
+        test_df_all.to_csv(output_folder / 'cluster_mean_IF_summary_tukey.csv', index=False)
+    elif args.test == 'dunnett':
+        test_df_all.to_csv(output_folder / 'cluster_mean_IF_summary_dunnett.csv', index=False)
+    elif args.test == 'ttest':
+        test_df_all.to_csv(output_folder / 'cluster_mean_IF_summary_ttest.csv', index=False)
+
+    print(f'\n{test_df_all}\n')
 
     verbose_end_msg()
     
