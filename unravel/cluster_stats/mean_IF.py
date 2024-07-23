@@ -7,6 +7,10 @@ Usage:
 ------
     cluster_mean_IF -ci path/rev_cluster_index.nii.gz
 
+Prereqs: 
+    - vstats
+    - cluster_fdr
+
 Inputs:
     - This can be run from the vstats directory (will process .nii.gz images in the current directory)
 
@@ -17,7 +21,8 @@ Outputs:
 Next: 
     - cd cluster_mean_IF...
     - utils_prepend -sk <path/sample_key.csv> -f  # If needed
-    - cluster_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
+    - [cluster_index and cluster_table]  # for an xlsx table and anatomically ordered clusters that can be used with cluster_prism
+    - cluster_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats
     - cluster_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests
 """
 
