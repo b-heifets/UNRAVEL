@@ -33,8 +33,8 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-ci', '--cluster_idx', help='Path to the reverse cluster index NIfTI file.', default=None, action=SM)
-    parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs.', nargs='+', type=int, default=None, action=SM)
+    parser.add_argument('-ci', '--cluster_idx', help='Path to the reverse cluster index NIfTI file.', required=True, action=SM)
+    parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs.', nargs='+', type=int, required=True, action=SM)
     parser.add_argument('-vcd', '--valid_clusters_dir', help='path/name_of_the_output_directory. Default: valid_clusters', default='_valid_clusters', action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
@@ -45,10 +45,9 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Look into consolidating csvs 
-# TODO: valid_clusters_sunburst.csv but sometimes regions are omitted for a cluster specific sunburst. Look into this (see Packaging_UNRAVEL.docx for notes) and add a warning to this script when voxels are not accounted for in a cluster specific sunburst. 
 
 
-def generate_sunburst(cluster, img, atlas, xyz_res_in_um, data_type, output_dir):
+def generate_sunburst(cluster, img, atlas, xyz_res_in_um, data_type, output_dir, sunburst_csv_path, info_csv_path, output_rgb_lut):
     """Generate a sunburst plot for a given cluster.
     
     Args:
@@ -63,7 +62,7 @@ def generate_sunburst(cluster, img, atlas, xyz_res_in_um, data_type, output_dir)
     if np.any(mask):
         cluster_image = np.where(mask, cluster, 0).astype(data_type)
         cluster_sunburst_path = output_dir / f'cluster_{cluster}_sunburst.csv'
-        sunburst_df = sunburst(cluster_image, atlas, xyz_res_in_um, cluster_sunburst_path)
+        sunburst_df = sunburst(cluster_image, atlas, xyz_res_in_um, cluster_sunburst_path, sunburst_csv_path, info_csv_path, output_rgb_lut)
 
 
 @log_command
@@ -73,14 +72,6 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    if args.cluster_idx is None: 
-        print(f"\n    No cluster index provided. Skipping.")
-        return
-
-    if args.valid_cluster_ids is None: 
-        print(f"\n    No valid clusters provided. Skipping.")
-        return
-
     output_dir = Path(args.valid_clusters_dir)
     output_dir.mkdir(exist_ok=True, parents=True)
     output_image_path = output_dir / str(Path(args.cluster_idx).name).replace('.nii.gz', f'_{output_dir.name}.nii.gz')
@@ -88,12 +79,14 @@ def main():
         print(f"\n    {output_image_path.name} already exists. Skipping.")
         return
 
+    # Load the cluster index and set the data type
     nii = nib.load(args.cluster_idx)
     img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
     max_cluster_id = int(img.max())
     data_type = np.uint16 if max_cluster_id >= 256 else np.uint8
     img = img.astype(data_type)
     
+    # Load the atlas and get the resolution in microns
     atlas_nii = nib.load(args.atlas)
     atlas = np.asanyarray(atlas_nii.dataobj, dtype=atlas_nii.header.get_data_dtype()).squeeze()
     atlas_res = atlas_nii.header.get_zooms() # (x, y, z) in mm
@@ -110,7 +103,7 @@ def main():
     
     # Parallel processing of sunburst plots
     with ThreadPoolExecutor() as executor:
-        futures = [executor.submit(generate_sunburst, cluster, img, atlas, xyz_res_in_um, data_type, output_dir) for cluster in args.valid_cluster_ids]
+        futures = [executor.submit(generate_sunburst, cluster, img, atlas, xyz_res_in_um, data_type, output_dir, args.sunburst_csv_path, args.info_csv_path, args.output_rgb_lut) for cluster in args.valid_cluster_ids]
         for future in futures:
             future.result()  # Wait for all threads to complete
 
@@ -119,6 +112,8 @@ def main():
     
     # Generate the sunburst plot for the valid cluster index
     sunburst_df = sunburst(valid_cluster_index, atlas, xyz_res_in_um, output_dir / 'valid_clusters_sunburst.csv', args.sunburst_csv_path, args.info_csv_path, args.output_rgb_lut)
+
+    print(sunburst_df)
 
     verbose_end_msg()
 
