@@ -195,7 +195,7 @@ def main():
             '-vcd', valid_clusters_index_dir,
             '-a', cfg.index.atlas,
             '-scsv', cfg.index.sunburst_csv_path,
-            '-icsv', cfg.index.info_csv_path
+            '-in', cfg.index.info_csv_path
         ]
         if cfg.index.output_rgb_lut:
             index_args.append('-rgb')
