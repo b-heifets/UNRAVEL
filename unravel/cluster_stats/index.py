@@ -103,7 +103,7 @@ def main():
     
     # Parallel processing of sunburst plots
     with ThreadPoolExecutor() as executor:
-        futures = [executor.submit(generate_sunburst, cluster, img, atlas, xyz_res_in_um, data_type, output_dir, args.sunburst_csv, args.info_csv_path, args.output_rgb_lut) for cluster in args.valid_cluster_ids]
+        futures = [executor.submit(generate_sunburst, cluster, img, atlas, xyz_res_in_um, data_type, output_dir, args.sunburst_csv, args.info, args.output_rgb_lut) for cluster in args.valid_cluster_ids]
         for future in futures:
             future.result()  # Wait for all threads to complete
 
@@ -111,7 +111,7 @@ def main():
     nib.save(nib.Nifti1Image(valid_cluster_index, nii.affine, nii.header), output_image_path)
     
     # Generate the sunburst plot for the valid cluster index
-    sunburst_df = sunburst(valid_cluster_index, atlas, xyz_res_in_um, output_dir / 'valid_clusters_sunburst.csv', args.sunburst_csv, args.info_csv_path, args.output_rgb_lut)
+    sunburst_df = sunburst(valid_cluster_index, atlas, xyz_res_in_um, output_dir / 'valid_clusters_sunburst.csv', args.sunburst_csv, args.info, args.output_rgb_lut)
 
     print(sunburst_df)
 
