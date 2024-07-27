@@ -53,7 +53,7 @@ For more detailed information, you can view the commit history:
 
 1. **Install WSL:**
 
-    - Open PowerShell as Administrator and run:
+    - Open the start menu and right click on PowerShell to run it as an Administrator. Then run:
       ```powershell
       wsl --install
       ```
@@ -69,6 +69,14 @@ For more detailed information, you can view the commit history:
     - Open your installed Linux distribution from the Start menu.
     - Follow the prompts to set up your username and password.
 
+4. **Enable copy and paste:**
+
+    - 
+
+:::{note}
+To enable copy/paste in the PowerShell or WSL, click the icon in the upper left --> Properties --> Edit Options -> check "Use Ctrl+Shift+C/V as Copy/Paste --> OK. 
+:::
+
 For detailed instructions, visit the [WSL Installation Guide](https://docs.microsoft.com/en-us/windows/wsl/install).
 
 ## Installing UNRAVEL on Linux or WSL
@@ -82,10 +90,11 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
     **a. Install dependencies:**
     ```bash
     sudo apt-get update
+
     sudo apt-get install -y make build-essential libssl-dev zlib1g-dev \
     libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
     libncurses5-dev libncursesw5-dev xz-utils tk-dev \
-    libffi-dev liblzma-dev python-openssl git
+    libffi-dev liblzma-dev python3-openssl git
     ```
 
     **b. Install [pyenv](https://github.com/pyenv/pyenv#installation):**
