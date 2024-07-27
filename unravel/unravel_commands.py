@@ -127,6 +127,11 @@ def main():
                 "module": "unravel.segment.ilastik_pixel_classification",
                 "description": "Perform pixel classification w/ Ilastik to segment features of interest.",
                 "common": True
+            },
+            "seg_labels_to_masks": {
+                "module": "unravel.segment.labels_to_masks",
+                "description": "Convert each label to a binary .nii.gz.",
+                "common": False
             }
         },
         "Voxel-wise stats": {

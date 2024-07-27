@@ -91,6 +91,14 @@ def main():
     # Filter out files that start with legend
     xlsx_files = [f for f in xlsx_files if not str(f).split('/')[-1].startswith('legend')]
 
+    if xlsx_files == []:
+        print("\n    [red1]No *_valid_clusters_table.xlsx files found in the specified directory. Exiting...\n")
+        import sys ; sys.exit()
+    else:
+        print(f'\nProcessing:')
+        for file in xlsx_files:
+            print(f'    {file}')
+
     # Initialize a set to store unique regions from all files, accounting for headers in the second row
     all_unique_regions = set() # Using a set to avoid duplicates
 
@@ -101,7 +109,12 @@ def main():
 
     # Convert the set to a sorted list for easier reading
     all_unique_regions = sorted(list(all_unique_regions))
-    print(f'\n{all_unique_regions=}\n')
+
+    if len(all_unique_regions) == 0:
+        print("\n    [red1]No regions found in the xlsx files. Headers expected in the second row. Exiting...\n")
+        import sys ; sys.exit()
+
+    print(f'\nRegions: {all_unique_regions}\n')
 
     # Specify the column names you want to load
     columns_to_load = ['structure_id_path', 'very_general_region',  'collapsed_region_name', 'abbreviation', 'collapsed_region', 'other_abbreviation', 'other_abbreviation_defined', 'layer', 'sunburst']
