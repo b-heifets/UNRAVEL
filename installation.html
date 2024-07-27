@@ -408,7 +408,7 @@
 <ol class="arabic">
 <li><p><strong>Install WSL:</strong></p>
 <ul>
-<li><p>Open PowerShell as Administrator and run:</p>
+<li><p>Open the start menu and right click on PowerShell to run it as an Administrator. Then run:</p>
 <div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">wsl</span> <span class="p">-</span><span class="n">-install</span>
 </pre></div>
 </div>
@@ -427,7 +427,16 @@
 <li><p>Follow the prompts to set up your username and password.</p></li>
 </ul>
 </li>
+<li><p><strong>Enable copy and paste:</strong></p>
+<ul class="simple">
+<li></li>
+</ul>
+</li>
 </ol>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To enable copy/paste in the PowerShell or WSL, click the icon in the upper left –&gt; Properties –&gt; Edit Options -&gt; check “Use Ctrl+Shift+C/V as Copy/Paste –&gt; OK.</p>
+</div>
 <p>For detailed instructions, visit the <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install">WSL Installation Guide</a>.</p>
 </section>
 <section id="installing-unravel-on-linux-or-wsl">
@@ -438,10 +447,11 @@
 <h3 class="rubric" id="option-a-using-pyenv">Option A: Using pyenv</h3>
 <p><strong>a. Install dependencies:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>make<span class="w"> </span>build-essential<span class="w"> </span>libssl-dev<span class="w"> </span>zlib1g-dev<span class="w"> </span><span class="se">\</span>
 libbz2-dev<span class="w"> </span>libreadline-dev<span class="w"> </span>libsqlite3-dev<span class="w"> </span>wget<span class="w"> </span>curl<span class="w"> </span>llvm<span class="w"> </span><span class="se">\</span>
 libncurses5-dev<span class="w"> </span>libncursesw5-dev<span class="w"> </span>xz-utils<span class="w"> </span>tk-dev<span class="w"> </span><span class="se">\</span>
-libffi-dev<span class="w"> </span>liblzma-dev<span class="w"> </span>python-openssl<span class="w"> </span>git
+libffi-dev<span class="w"> </span>liblzma-dev<span class="w"> </span>python3-openssl<span class="w"> </span>git
 </pre></div>
 </div>
 <p><strong>b. Install <a class="reference external" href="https://github.com/pyenv/pyenv#installation">pyenv</a>:</strong></p>

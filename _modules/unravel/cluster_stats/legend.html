@@ -453,6 +453,14 @@
     <span class="c1"># Filter out files that start with legend</span>
     <span class="n">xlsx_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">xlsx_files</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;legend&#39;</span><span class="p">)]</span>
 
+    <span class="k">if</span> <span class="n">xlsx_files</span> <span class="o">==</span> <span class="p">[]:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No *_valid_clusters_table.xlsx files found in the specified directory. Exiting...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Processing:&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">xlsx_files</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    </span><span class="si">{</span><span class="n">file</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
     <span class="c1"># Initialize a set to store unique regions from all files, accounting for headers in the second row</span>
     <span class="n">all_unique_regions</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span> <span class="c1"># Using a set to avoid duplicates</span>
 
@@ -463,7 +471,12 @@
 
     <span class="c1"># Convert the set to a sorted list for easier reading</span>
     <span class="n">all_unique_regions</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">all_unique_regions</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">all_unique_regions</span><span class="si">=}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">all_unique_regions</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No regions found in the xlsx files. Headers expected in the second row. Exiting...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Regions: </span><span class="si">{</span><span class="n">all_unique_regions</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1"># Specify the column names you want to load</span>
     <span class="n">columns_to_load</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;structure_id_path&#39;</span><span class="p">,</span> <span class="s1">&#39;very_general_region&#39;</span><span class="p">,</span>  <span class="s1">&#39;collapsed_region_name&#39;</span><span class="p">,</span> <span class="s1">&#39;abbreviation&#39;</span><span class="p">,</span> <span class="s1">&#39;collapsed_region&#39;</span><span class="p">,</span> <span class="s1">&#39;other_abbreviation&#39;</span><span class="p">,</span> <span class="s1">&#39;other_abbreviation_defined&#39;</span><span class="p">,</span> <span class="s1">&#39;layer&#39;</span><span class="p">,</span> <span class="s1">&#39;sunburst&#39;</span><span class="p">]</span>
