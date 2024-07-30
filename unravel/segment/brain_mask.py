@@ -45,7 +45,6 @@ def parse_args():
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     parser.add_argument('-ilp', '--ilastik_prj', help='path/brain_mask.ilp. Default: brain_mask.ilp', default='brain_mask.ilp', action=SM)
-    parser.add_argument('-r', '--reg_res', help='Resolution of autofluo input image in microns. Default: 50', default=50, type=int, action=SM)
     parser.add_argument('-l', '--ilastik_log', help='Show Ilastik log', action='store_true')
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
@@ -92,17 +91,17 @@ def main():
             # Convert anything voxels to 0 if > 1 (label 1 = tissue; other labels converted to 0)
             brain_mask = np.where(seg_img > 1, 0, seg_img)
 
-            # Save brain mask as nifti
-            save_as_nii(brain_mask, brain_mask_output, args.reg_res, args.reg_res, np.uint8)
+            # # Load autofl image
+            autofl_img, xy_res, z_res = load_3D_img(autofl_img_path, return_res=True)
 
-            # Load autofl image
-            autofl_img = load_3D_img(autofl_img_path)
+            # Save brain mask as nifti
+            save_as_nii(brain_mask, brain_mask_output, xy_res, z_res, np.uint8)
 
             # Apply brain mask to autofluo image
             autofl_masked = np.where(seg_img == 1, autofl_img, 0)
 
             # Save masked autofl image
-            save_as_nii(autofl_masked, autofl_img_masked_output, args.reg_res, args.reg_res, np.uint16)
+            save_as_nii(autofl_masked, autofl_img_masked_output, xy_res, z_res, np.uint16)
 
             # brain_mask(sample, args)
             progress.update(task_id, advance=1)
