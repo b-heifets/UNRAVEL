@@ -74,7 +74,11 @@ For more detailed information, you can view the commit history:
     - 
 
 :::{note}
+After WSL is installed, you may open and use the WSL app. 
+
 To enable copy/paste in the PowerShell or WSL, click the icon in the upper left --> Properties --> Edit Options -> check "Use Ctrl+Shift+C/V as Copy/Paste --> OK. 
+
+[Video tutorial](https://www.youtube.com/watch?v=i547sSXhq0E) on navigating to your files (either the WSL file system or your C and D drives).
 :::
 
 For detailed instructions, visit the [WSL Installation Guide](https://docs.microsoft.com/en-us/windows/wsl/install).
@@ -86,6 +90,12 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
 2. **Install pyenv, venv, or other tool(s) to manage Python versions and create a virtual environment:**
 
     ### Option A: Using pyenv
+
+    :::{note}
+    Pyenv can work on Windows, but this is not recommended (e.g., see notes [here](https://github.com/pyenv/pyenv))
+    
+    Alternatively, use [pyenv-win](https://github.com/pyenv-win/pyenv-win), [venv](https://docs.python.org/3/library/venv.html), or [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html).
+    :::
 
     **a. Install dependencies:**
     ```bash
@@ -104,11 +114,14 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
 
     **c. Add pyenv to your shell startup file (.bashrc or .zshrc):**
     ```bash
+    (
+    echo '' >> ~/.bashrc
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
     echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-    echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init --path)"\nfi' >> ~/.bashrc
-    echo -e 'if command -v pyenv 1>/dev/null 2>&1; then\n  eval "$(pyenv init -)"\nfi' >> ~/.bashrc
-    exec "$SHELL"
+    echo 'eval "$(pyenv init --path)"' >> ~/.bashrc
+    echo 'eval "$(pyenv init -)"' >> ~/.bashrc
+    echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+    )
     ```
 
     **d. Install Python 3.11:**
@@ -150,14 +163,7 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
 :::
 
 5. **Install Ilastik:**
-    - Download the Ilastik installer from the [Ilastik website](https://www.ilastik.org/download.html).
-    - Follow the installation instructions specific to your operating system.
-    - Example for Linux:
-        ```bash
-        wget https://files.ilastik.org/ilastik-1.3.3post3-Linux.tar.bz2
-        tar -xjf ilastik-1.3.3post3-Linux.tar.bz2
-        sudo mv ilastik-1.3.3post3-Linux /usr/local/
-        ```
+    - [Ilastik installation website](https://www.ilastik.org/download.html).
 
 6. **Install FSL:**
     - Follow the installation instructions from the [FSL website](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation).

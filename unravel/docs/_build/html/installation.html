@@ -433,7 +433,9 @@
 </ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
+<p>After WSL is installed, you may open and use the WSL app.</p>
 <p>To enable copy/paste in the PowerShell or WSL, click the icon in the upper left –&gt; Properties –&gt; Edit Options -&gt; check “Use Ctrl+Shift+C/V as Copy/Paste –&gt; OK.</p>
+<p><a class="reference external" href="https://www.youtube.com/watch?v=i547sSXhq0E">Video tutorial</a> on navigating to your files (either the WSL file system or your C and D drives).</p>
 </div>
 <p>For detailed instructions, visit the <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install">WSL Installation Guide</a>.</p>
 </section>
@@ -443,6 +445,11 @@
 <li><p><strong>Open a terminal</strong></p></li>
 <li><p><strong>Install pyenv, venv, or other tool(s) to manage Python versions and create a virtual environment:</strong></p>
 <h3 class="rubric" id="option-a-using-pyenv">Option A: Using pyenv</h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Pyenv can work on Windows, but this is not recommended (e.g., see notes <a class="reference external" href="https://github.com/pyenv/pyenv">here</a>)</p>
+<p>Alternatively, use <a class="reference external" href="https://github.com/pyenv-win/pyenv-win">pyenv-win</a>, <a class="reference external" href="https://docs.python.org/3/library/venv.html">venv</a>, or <a class="reference external" href="https://conda.io/projects/conda/en/latest/user-guide/install/index.html">conda</a>.</p>
+</div>
 <p><strong>a. Install dependencies:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 
@@ -457,11 +464,14 @@ libffi-dev<span class="w"> </span>liblzma-dev<span class="w"> </span>python3-ope
 </pre></div>
 </div>
 <p><strong>c. Add pyenv to your shell startup file (.bashrc or .zshrc):</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PYENV_ROOT=&quot;$HOME/.pyenv&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PYENV_ROOT=&quot;$HOME/.pyenv&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
 <span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;export PATH=&quot;$PYENV_ROOT/bin:$PATH&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
-<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;if command -v pyenv 1&gt;/dev/null 2&gt;&amp;1; then\n  eval &quot;$(pyenv init --path)&quot;\nfi&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
-<span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s1">&#39;if command -v pyenv 1&gt;/dev/null 2&gt;&amp;1; then\n  eval &quot;$(pyenv init -)&quot;\nfi&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
-<span class="nb">exec</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SHELL</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;eval &quot;$(pyenv init --path)&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;eval &quot;$(pyenv init -)&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;eval &quot;$(pyenv virtualenv-init -)&quot;&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>~/.bashrc
+<span class="o">)</span>
 </pre></div>
 </div>
 <p><strong>d. Install Python 3.11:</strong></p>
@@ -501,16 +511,8 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </div>
 <ol class="arabic" start="5">
 <li><p><strong>Install Ilastik:</strong></p>
-<ul>
-<li><p>Download the Ilastik installer from the <a class="reference external" href="https://www.ilastik.org/download.html">Ilastik website</a>.</p></li>
-<li><p>Follow the installation instructions specific to your operating system.</p></li>
-<li><p>Example for Linux:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>wget<span class="w"> </span>https://files.ilastik.org/ilastik-1.3.3post3-Linux.tar.bz2
-tar<span class="w"> </span>-xjf<span class="w"> </span>ilastik-1.3.3post3-Linux.tar.bz2
-sudo<span class="w"> </span>mv<span class="w"> </span>ilastik-1.3.3post3-Linux<span class="w"> </span>/usr/local/
-</pre></div>
-</div>
-</li>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.ilastik.org/download.html">Ilastik installation website</a>.</p></li>
 </ul>
 </li>
 <li><p><strong>Install FSL:</strong></p>
