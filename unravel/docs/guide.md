@@ -150,6 +150,7 @@ unravel_commands -m
 - [**seg_copy_tifs**](unravel.segment.copy_tifs): Copy TIF images (copy select tifs to target dir for training ilastik).
 - [**seg_brain_mask**](unravel.segment.brain_mask): Create brain mask (segment resampled autofluo tifs).
 - [**seg_ilastik**](unravel.segment.ilastik_pixel_classification): Perform pixel classification w/ Ilastik to segment features of interest.
+- [**seg_labels_to_masks**](unravel.segment.labels_to_masks): Convert each label to a binary .nii.gz. 
 :::
 
 :::{tab-item} Voxel-wise stats

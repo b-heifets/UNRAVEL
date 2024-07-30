@@ -50,7 +50,7 @@ def parse_args():
 
     # Optional arguments:
     parser.add_argument('-sa', '--spatial_avg', help='Spatial averaging in 2D or 3D (2 or 3). Default: None', default=None, type=int, action=SM)
-    parser.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels (Default: 4)', default=4, type=int, action=SM)
+    parser.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels (Default: None)', default=None, type=int, action=SM)
     parser.add_argument('-x', '--xy_res', help='Native x/y voxel size in microns (Default: get via metadata)', default=None, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='Native z voxel size in microns (Default: get via metadata)', default=None, type=float, action=SM)
     parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
@@ -110,17 +110,18 @@ def main():
                 img = spatial_average_2D(img, apply_2D_mean_filter, kernel_size=(3, 3))
 
             # Rolling ball background subtraction
-            rb_img = rolling_ball_subtraction_opencv_parallel(img, radius=args.rb_radius, threads=args.threads)  
+            if args.rb_radius is not None:
+                img = rolling_ball_subtraction_opencv_parallel(img, radius=args.rb_radius, threads=args.threads)  
 
             # Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)
-            rb_img = reg_prep(rb_img, args.xy_res, args.z_res, args.reg_res, args.zoom_order, args.miracl)
+            img = reg_prep(img, args.xy_res, args.z_res, args.reg_res, args.zoom_order, args.miracl)
 
             # Warp the image to atlas space
             fixed_reg_input = Path(sample_path, args.fixed_reg_in)    
             if not fixed_reg_input.exists():
                 fixed_reg_input = sample_path / "reg_outputs" / "autofl_50um_fixed_reg_input.nii.gz"
 
-            to_atlas(sample_path, rb_img, fixed_reg_input, args.atlas, output, args.interpol, dtype='uint16')
+            to_atlas(sample_path, img, fixed_reg_input, args.atlas, output, args.interpol, dtype='uint16')
 
             # Copy the atlas to atlas_space
             atlas_space = sample_path / "atlas_space"
