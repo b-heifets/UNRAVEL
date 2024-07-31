@@ -14,6 +14,8 @@ This module contains functions processing 3D images:
 """
 
 
+import os
+import shutil
 import cv2 
 import numpy as np
 import subprocess
@@ -78,15 +80,20 @@ def reverse_reorient_for_raw_to_nii_conv(ndarray):
 #             subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 @print_func_name_args_times()
-def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_log=None):
+def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executable=None):
     """Segment tif series with Ilastik using pixel classification."""
-    tif_list = sorted(glob(f"{tif_dir}/*.tif"))
-    if not tif_list:
-        print(f"No TIF files found in {tif_dir}.")
+
+    if ilastik_executable is None:
+        print("\n    [red1]Ilastik executable path not provided. Please provide the path to the Ilastik executable.\n")
         return
 
+    tif_list = sorted(glob(f"{tif_dir}/*.tif"))
+    if not tif_list:
+        print(f"\n    [red1]No TIF files found in {tif_dir}.\n")
+        return
+    
     cmd = [
-        'run_ilastik.sh',  # Make sure this path is correct
+        ilastik_executable, # Path to ilastik executable as a string
         '--headless',
         '--project', str(ilastik_project),
         '--export_source', 'Simple Segmentation',
@@ -95,7 +102,8 @@ def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_log=None)
     ] + tif_list
 
     print("\n    Running Ilastik with command:\n", ' '.join(cmd))
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    # result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, shell=(os.name == 'nt'))
     if result.returncode != 0:
         print("\n    Ilastik failed with error:\n", result.stderr)
     else:
