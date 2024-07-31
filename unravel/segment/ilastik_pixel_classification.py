@@ -5,8 +5,8 @@ Use ``seg_ilastik`` from UNRAVEL to run a trained ilastik project (pixel classif
 
 Usage:
 ------
-    seg_ilastik -t cfos -o cfos_seg -ilp path/ilastik_project.ilp
-    seg_ilastik -i <asterisk>.czi -o cfos_seg -ilp path/ilastik_project.ilp
+    seg_ilastik -ie <path/ilastik_executable> -t cfos -o cfos_seg -ilp path/ilastik_project.ilp
+    seg_ilastik -ie <path/ilastik_executable> -i <asterisk>.czi -o cfos_seg -ilp path/ilastik_project.ilp
 
 To train an Ilastik project, organize training slices into folder (e.g., 3 slices from 3 samples per condition; ``seg_copy_tifs`` can help).
 
@@ -35,6 +35,7 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable.', required=True, action=SM)
     parser.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
     parser.add_argument('-t', '--tifs_dir', help='path/input_dir_w_tifs', required=True, action=SM)
     parser.add_argument('-i', '--input', help='If path/input_dir_w_tifs does not exist, provide a rel_path/image to make it', action=SM)
@@ -101,7 +102,7 @@ def main():
 
             # Perform pixel classification and output segmented tifs to output dir
             output_tif_dir.mkdir(exist_ok=True, parents=True)
-            pixel_classification(str(input_tif_dir), str(args.ilastik_prj), str(output_tif_dir), ilastik_log=args.ilastik_log)
+            pixel_classification(str(input_tif_dir), str(args.ilastik_prj), str(output_tif_dir), args.ilastik_exe)
 
             # Convert each label to a binary mask and save as .nii.gz
             save_labels_as_masks(output_tif_dir, args.labels, segmentation_dir, args.output)

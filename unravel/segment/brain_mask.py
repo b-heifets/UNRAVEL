@@ -5,7 +5,7 @@ Use ``seg_brain_mask`` from UNRAVEL to run a trained ilastik project (pixel clas
 
 Usage:
 ------
-    seg_brain_mask -ilp <path/brain_mask.ilp> [-i reg_inputs/autofl_50um.nii.gz] [-r 50] [-v] 
+    seg_brain_mask -ie <path/ilastik_executable> -ilp <path/brain_mask.ilp> [-i reg_inputs/autofl_50um.nii.gz] [-r 50] [-v] 
 
 Prereqs: 
     - Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif (from ``reg_prep``)
@@ -43,9 +43,9 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
+    parser.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable.', required=True, action=SM)
     parser.add_argument('-ilp', '--ilastik_prj', help='path/brain_mask.ilp. Default: brain_mask.ilp', default='brain_mask.ilp', action=SM)
-    parser.add_argument('-l', '--ilastik_log', help='Show Ilastik log', action='store_true')
+    parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
@@ -83,7 +83,7 @@ def main():
                 ilastik_project = Path(sample_path.parent, args.ilastik_prj).resolve()
             else:
                 ilastik_project = Path(args.ilastik_prj).resolve()
-            pixel_classification(autofl_tif_directory, ilastik_project, seg_dir, args.ilastik_log)
+            pixel_classification(autofl_tif_directory, ilastik_project, seg_dir, args.ilastik_exe)
 
             # Load brain mask image
             seg_img = load_3D_img(seg_dir, "xyz")
