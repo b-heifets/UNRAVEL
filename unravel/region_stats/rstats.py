@@ -269,7 +269,7 @@ def main():
 
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            # Load resolutions and dimensions of full res image for scaling 
+            # Load resolutions from metadata
             metadata_path = sample_path / args.metadata
             xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
             if xy_res is None:
