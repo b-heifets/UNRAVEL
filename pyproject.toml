@@ -23,7 +23,7 @@ dependencies = [
     "lxml>=4.9.3,<5.0.0",
     "matplotlib>=3.7.1,<4.0.0",
     "nibabel>=5.2.1,<6.0.0",
-    "numpy=1.24.4",  # was "numpy>=1.25.2,<2.0.0" and 1.26.4 would be installed, but 1.25 or 1.26 causes a warning in WSL
+    "numpy==1.24.4",  # was "numpy>=1.25.2,<2.0.0" and 1.26.4 would be installed, but 1.25 or 1.26 causes a warning in WSL
     "opencv_python>=4.7.0.72,<5.0.0",
     "openpyxl>=3.1.2,<4.0.0",
     "pandas>=1.5.3,<2.0.0",
