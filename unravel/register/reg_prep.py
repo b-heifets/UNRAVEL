@@ -5,7 +5,7 @@ Use ``reg_prep`` from UNRAVEL to load a full resolution autofluo image and resam
 
 Usage:
 ------
-    reg_prep -i <asterisk>.czi -x <x/y voxel size in microns> -z <z voxel size> [-e <list of paths to exp dirs>] [-v]
+    reg_prep -i <asterisk>.czi [-e <list of paths to exp dirs>] [-v]
 
 Run command from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
 
@@ -29,7 +29,7 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.img_io import load_3D_img, resolve_path, save_as_tifs, save_as_nii
+from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii
 from unravel.core.img_tools import resample, reorient_for_raw_to_nii_conv
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, print_func_name_args_times
 
@@ -40,8 +40,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='Full res image input path relative (rel_path) to ./sample??', required=True, action=SM)
-    parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns of the input image.', required=True, type=float, action=SM)  # Set up   Default: get via ``io_metadata``
-    parser.add_argument('-z', '--z_res', help='z voxel size in microns of the input image.', required=True, type=float, action=SM)  # Set up   Default: get via ``io_metadata``
+    parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
     parser.add_argument('-o', '--output', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg. Default: 50', default=50, type=int, action=SM)
@@ -50,8 +49,6 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
-
-# TODO: The script works if -x and -z are provided. Fix it so that it works if they are not provided (i.e., get res via ``io_metadata`` output: sample??/parameters/metadata.txt)
 
 
 @print_func_name_args_times()
@@ -98,14 +95,21 @@ def main():
             # Define output
             output = resolve_path(sample_path, args.output, make_parents=True)
             if output.exists():
-                print(f"\n\n    {output.name} already exists. Skipping.\n")
+                print(f"\n\n    {args.output} already exists. Skipping.\n")
                 continue
             
             # Define input image path
             img_path = resolve_path(sample_path, args.input)
 
-            # Load full res autofluo image [and xy and z voxel size in microns]
-            img, xy_res, z_res = load_3D_img(img_path, args.channel, "xyz", return_res=True, xy_res=args.xy_res, z_res=args.z_res)
+            # Load resolutions from metadata
+            metadata_path = sample_path / args.metadata
+            xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
+            if xy_res is None:
+                print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ io_metadata")
+                import sys ; sys.exit()
+
+            # Load full res autofluo image
+            img = load_3D_img(img_path, args.channel)
 
             # Prepare the autofluo image for registration
             img_resampled = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
