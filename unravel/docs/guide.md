@@ -1,6 +1,172 @@
 # Guide
 
-* If you are unfamiliar with the terminal, please review these [command line tutorials](https://andysbrainbook.readthedocs.io/en/latest/index.html).
+* If you are unfamiliar with the terminal, start here: 
+   * [Linux in 100 seconds](https://www.youtube.com/watch?v=rrB13utjYV4)
+   * [Bash in 100 seconds](https://www.youtube.com/watch?v=I4EWvMFj37g)
+   * Refer to common commands and tips in the cheat sheet
+
+:::{admonition} Terminal command cheat sheet
+:class: hint dropdown
+
+### Working Directory
+
+The working directory, or current directory, is the folder in the file system that a user or program is currently accessing. 
+
+- **Default Location**: The terminal typically starts in your home directory.
+- **Relative Paths**: Commands use paths relative to the working directory.
+- **Changing Directories**: Use `cd /path/to/directory` to change the working directory.
+- **Viewing the Directory**: Use `pwd` to display the current working directory.
+- **Importance**: Knowing your working directory is often crucial for executing commands and managing files as intended.
+
+### Learning About Commands
+- **Help Option**: Many commands offer a `--help` option to provide a quick overview of usage. For example, `ls --help` or `ls -h`.
+- **Manual Pages**: Use `man <command>` to access the manual page for detailed information about a command. For example, `man ls` provides options and descriptions for the `ls` command.
+- **`which`**: Use `which <command>` to locate the executable file for a command. For example, `which python` shows where the Python interpreter is installed.
+
+### Listing Files
+- `ls`: List files and directories.
+- `ls -l`: List files in long format, including details like permissions, size, and modification date.
+- `ls -a`: List all files, including hidden files, which start with a "." (unravel commands are logged in a hidden file [.command_log.txt]). 
+- `ls -1`: List files in a single column.
+
+### Viewing and Creating Files
+- `cat <filename>`: Display the contents of a file.
+- `echo "string" > new.txt`: Create a new file named `new.txt` and write "string" to it.
+- `echo "string" >> new.txt`: Append "string" to the existing `new.txt` file.
+- `touch new.txt`: Create a new file that is empty
+
+### File/Folder Management
+- `mkdir <dir_name>`: Make directory
+- `rm -rf <dir_name>`: Delete folder and all contents recursively (be careful where you run this and what patterns you use)
+- `rm <file>` or `rm <path/file>`
+
+### Navigation and Shortcuts
+- **Tab completion**: Use tab to auto-complete file and directory names.
+- **Up arrow**: Scroll through command history. In zsh, type a partial command and press the up arrow to find past commands starting with the typed string.
+- `cd <path>`: Change the current directory to `<path>`. Drag/drop a file or folder into the terminal to paste the path to it. Or select the file/folder, hit Ctrl + C, select the terminal, and press Ctrl + Shift + V.
+- `cd <Tab>` or `cd <Tab Tab>`: To see folders in the working dir that you can cd to (with zsh use Tab and Shift + Tab to cycle --> enter or space)
+- `cd ..`: Move up one directory level.
+- `cd ../..`: Move up two directory levels.
+- `cd ../dir`: Move up one directory and then into `dir`.
+- `cd -`: Switch to the previous directory.
+- `cd`: Change to the home directory.
+- `cd ~/`: Change to the home directory using the tilde shortcut.
+
+### Command History
+- `history`: Print the history of terminal commands
+- `!3`: Run the third command in the history
+- `cat .command_log.txt`: Print the history of unravel commands
+- `cat .command_log.txt | tail -10`: Print the last 10 lines
+- `cat .command_log.txt | head -10`: Print the first 10 lines
+
+### Keyboard Shortcuts
+- **Copy/Paste**: 
+  - `Ctrl + Shift + C`: Copy text
+  - `Ctrl + Shift + V`: Paste text.
+  - Or select text and click the middle wheel on the mouse to copy and paste.
+
+- **Movement**: 
+  - `Ctrl + A`: Move to the beginning of the line.
+  - `Ctrl + E`: Move to the end of the line.
+  - `Ctrl + Arrow`: Move word by word.
+
+- **Deleting**: 
+  - `Ctrl + W`: Delete the word before the cursor (space-separated for bash, additional delimiters for zsh).
+  - `Ctrl + U`: Delete from the cursor to the beginning of the line.
+  - `Ctrl + K`: Delete from the cursor to the end of the line.
+  - `Ctrl + Y`: Paste the last killed text.
+
+- **Find**: 
+  - `Ctrl + Shift + F`: Open the search bar to find text.
+
+### Command Execution and Scripting
+- Using `;` vs. `&`: `;` chains commands to execute sequentially, while `&` runs a command in the background.
+- Another way to chain commands is to "pipe" ("|" character) the output from one command (what would be printed to the terminal) so it is used as the input of the next command
+   - For example, `cat <filename> | wc -l`: Cat would print the contents of <filename>, but here this is used as the input for wc, which counts the number of lines (e.g., rows in a csv)
+- Parentheses `()` for multi-line commands: Group commands to execute them in a subshell.
+
+### Global Variables
+- `$PWD`: Variable with the current working directory path.
+- `$PATH`: List of directories that have executable files. Allows for executing scripts without providing the full path (e.g., path/script.py --> script.py). Folders with UNRAVEL scripts don't need to be added to the $PATH if it installed w/ `pip`. 
+- See the "Define common variables in a shell script" section below on how to define common environmental variables that can be loaded for each terminal session
+
+### Batch Processing Via Loops
+- For loops examples: 
+   - `for d in dir* ; do original_dir=$PWD ; cd $d ; pwd ; cd $original_dir ; done` 
+   - `for s in sample?? ; do cat $s/parameters/metadata.txt ; done`
+   - `for d in <space separated list of experiment folder> ; do cd $d ; for s in sample?? ; do echo $s ; done ; done`
+   - `for i in 1 2 3 4; do echo $i ; done`
+   - `for i in {1..10}; do echo $i ; done`
+   - Parallel processing w/ &: `for i in *.nii.gz ; do fslmaths $i -bin ${i::-7}_bin -odt char & done  # Binarizes all images, output data type 8-bit, ${i::-7} trims last 7 characters in bash (does not work in zsh)` (run `echo` to see when processes are done).
+
+### Variables and Substitution
+- `$PWD`: Variable with the current working directory path.
+- `$()`: Command substitution to capture output for use in commands (e.g., `x=$(for )`)
+
+### File Searching and Manipulation
+- `find`: Search for files in a directory hierarchy.
+  - `find . -name "*.txt"`: Search for text files matching this pattern.
+  - `find $PWD -name "*.txt" -exec rm {} \;`: Find all `.txt` files and delete them.
+- `grep`: Search text using patterns.
+  - `grep -r <string_in_files>`: Recursively search for a pattern
+  - `grep -r --exclude-dir=docs <pattern>`: Search for a pattern while excluding specific directories.
+  - `grep -r <pattern1> | grep <pattern2>`: Search for a pattern filter to preserve lines with a second string
+  - `grep -r <pattern1> | grep -v <pattern2>`: Search for a pattern filter to exlude lines with a second string
+- [`fzf`](https://github.com/junegunn/fzf): A command-line fuzzy finder that allows you to search and filter items interactively, providing a fast and efficient way to locate files, commands, or history entries.
+
+### Text Processing
+- `sed`: Stream editor for filtering and transforming text.
+  - `sed 's/old/new/g' file`: Replace all occurrences of `old` with `new` in `file` (use *.txt for multiple files)
+
+### Aliases
+
+Aliases are shortcuts for longer commands or sequences of commands, making it easier and quicker to execute frequently used commands. You can create aliases in your shell configuration file (like `.bashrc` for Bash or `.zshrc` for Zsh).
+
+  #### How to Create Aliases:
+  - Open your shell configuration file:
+    ```bash
+    nano ~/.bashrc  # For Bash users
+    nano ~/.zshrc   # For Zsh users
+    ```
+  - Add alias definitions in the format:
+    ```bash
+    alias shortname='full command'
+    ```
+    For example:
+    ```bash
+    alias ll='ls -l'
+    alias ilastik='path/to/ilastik_executable'
+    alias i="io_nii_info -i "
+    alias gs='git status'
+    ```
+  - Save the file and reload your configuration:
+    ```bash
+    source ~/.bashrc  # For Bash users
+    source ~/.zshrc   # For Zsh users
+    ```
+
+### FSL Commands for NIfTI files (.nii.gz extension)
+- `fslmaths`: Perform mathematical operations on images.
+  - `add`
+  - `sub`,
+  - `bin` (binarize)
+  - `uthr` (Zero out intenisties above upper threshold)
+  - `thr` (Zero out intenisties below  threshold)
+  - `mas` (mask).
+  - Use `-odt` at end to set output data type (char for 8-bit and short for unsigned 16-bit). Default is float 32-bit. Pay attention to the max range that each data type can represent (e.g., 255 for 8-bit and 65,535 for 16-bit).
+  - ".nii.gz" is automatically added
+  - Examples:
+  - `fslmaths img_1 -bin img_1_bin -odt char  # char is for 8-bit`
+  - `fslmaths img_2 -mas img_1_bin -odt short  # This used img_1_bin as a mask`
+  - `fslmaths img_1_bin -mul -1 -add 1 img_1_bin_inv -odt char  # This inverts a mask`
+  - `fslmaths img_1 -sub img_2 diff  # Then check if the images are the same: fslstats diff -R `
+  - `fslmaths img_1 -sub img_1 blank  # Make an empty image for adding masks of each region`
+  - `for i in 1 56 672 ; do fslmaths atlas -thr $i -uthr $i region_${i} -odt short`
+  - `for i in region_mask*.nii.gz ; do fslmaths blank -add $i blank ; done ; mv blank.nii.gz all_regions.nii.gz`
+- `fslstats`: Compute statistics on images (-R, -V, -M)
+- `fslroi`: Crop or expand images. 
+- `fslcpgeom`: Copy header info (e.g., resolution and position in global space for viewing) from one image to another.
+:::
 
 ---
 
@@ -48,6 +214,12 @@ To view help on arguments for each script (a.k.a. module) in the online document
 
 ## Listing commands
 ```bash
+# List common commands
+unravel_commands -c
+
+# List common commands and filter results
+unravel_commands -c | grep vstats  # Just print commands related to voxel-wise statistics
+
 # List common commands and their descriptions
 unravel_commands -c -d
 
