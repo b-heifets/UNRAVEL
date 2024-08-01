@@ -12,9 +12,8 @@ Outputs:
     - path/valid_clusters/cluster_<asterisk>_sunburst.csv
 
 Note:
-    - CSVs are in UNRAVEL/unravel/core/csvs/
-    - sunburst_IDPath_Abbrv_CCFv3-2020.csv or sunburst_IDPath_Abbrv.csv
-    - CCFv3-2020_info.csv or CCFv3_info.csv
+    - Default csv: UNRAVEL/unravel/core/csvs/sunburst_IDPath_Abbrv.csv
+    - CCFv3-2020_info.csv or CCFv3-2017_info.csv
 """
 
 from pathlib import Path
@@ -38,7 +37,7 @@ def parse_args():
     parser.add_argument('-vcd', '--valid_clusters_dir', help='path/name_of_the_output_directory. Default: valid_clusters', default='_valid_clusters', action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
-    parser.add_argument('-scsv', '--sunburst_csv', help='CSV name or path/name.csv. Default: sunburst_IDPath_Abbrv_CCFv3-2020.csv', default='sunburst_IDPath_Abbrv_CCFv3-2020.csv', action=SM)
+    parser.add_argument('-scsv', '--sunburst_csv', help='CSV name or path/name.csv. Default: sunburst_IDPath_Abbrv.csv', default='sunburst_IDPath_Abbrv.csv', action=SM)
     parser.add_argument('-in', '--info', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__

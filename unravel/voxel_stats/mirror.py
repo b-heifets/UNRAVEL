@@ -10,7 +10,7 @@ Usage:
 
 Note:
     - Use -ax 2 and -s 0 for the CCFv3 2020 atlas.
-    - Use -ax 0 and -s 2 for the 25 um Gubra atlas
+    - Use -ax 0 and -s 2 for the 25 um Gubra atlas.
 """
 
 import argparse

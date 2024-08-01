@@ -16,9 +16,9 @@ Outputs:
 Example hex code list (flank arg w/ double quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']
 
 Note: 
-    - regional_summary_CCFv3-2020.csv is in UNRAVEL/unravel/core/csvs/
+    - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020_regional_summary.csv
     - It has columns: Region_ID, ID_Path, Region, Abbr, General_Region, R, G, B
-    - Alternatively, use regional_summary.csv or provide a custom CSV with the same columns.
+    - Alternatively, use CCFv3-2017_regional_summary.csv or provide a custom CSV with the same columns.
 """
 
 import argparse
@@ -51,7 +51,7 @@ def parse_args():
     parser.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", action=SM)
     parser.add_argument('-d', '--divide', type=float, help='Divide the cell densities by the specified value for plotting (default is None)', default=None, action=SM)
     parser.add_argument('-y', '--ylabel', help='Y-axis label (Default: cell_density)', default='cell_density', action=SM)
-    parser.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: regional_summary_CCFv3-2020.csv', default='regional_summary_CCFv3-2020.csv', action=SM)
+    parser.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
     parser.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', action=SM)
     parser.add_argument('-s', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups", default='light:white', action=SM)
     parser.add_argument('-o', '--output', help='Output directory for plots (Default: <args.test_type>_plots)', action=SM)
@@ -83,7 +83,7 @@ def parse_color_argument(color_arg, num_groups, region_id, csv_path):
         elif color_arg == 'ABA':
             # Determine the RGB color for bars based on the region_id
             combined_region_id = region_id if region_id < 20000 else region_id - 20000
-            if csv_path == 'regional_summary.csv' or csv_path == 'regional_summary_CCFv3-2020.csv': 
+            if csv_path == 'CCFv3-2017_regional_summary.csv' or csv_path == 'CCFv3-2020_regional_summary.csv': 
                 results_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / csv_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
             else:
                 results_df = pd.read_csv(csv_path)
@@ -270,7 +270,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     has_significant_results = True if significant_comparisons.shape[0] > 0 else False
 
     # Extract the general region for the filename (output file name prefix for sorting by region)
-    if args.csv_path == 'regional_summary.csv' or args.csv_path == 'regional_summary_CCFv3-2020.csv': 
+    if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv': 
         regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
     else:
         regional_summary = pd.read_csv(args.csv_path)
@@ -416,8 +416,8 @@ def main():
                 all_summaries_pooled = pd.concat([all_summaries_pooled, summary_df], ignore_index=True)
                 progress.update(task_id, advance=1)
 
-        # Merge with the original regional_summary.csv and write to a new CSV
-        if args.csv_path == 'regional_summary.csv' or args.csv_path == 'regional_summary_CCFv3-2020.csv': 
+        # Merge with the original CCFv3-2020_regional_summary.csv and write to a new CSV
+        if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv': 
             regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
         else:
             regional_summary = pd.read_csv(args.csv_path)
@@ -449,8 +449,8 @@ def main():
                 all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
                 progress.update(task_id, advance=1)
 
-        # Merge with the original regional_summary.csv and write to a new CSV
-        if args.csv_path == 'regional_summary.csv' or args.csv_path == 'regional_summary_CCFv3-2020.csv': 
+        # Merge with the original CCFv3-2020_regional_summary.csv and write to a new CSV
+        if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv': 
             regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
         else:
             regional_summary = pd.read_csv(args.csv_path)

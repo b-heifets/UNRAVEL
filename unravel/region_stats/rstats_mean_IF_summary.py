@@ -17,6 +17,8 @@ Usage with a custom atlas:
 
 Note:
     - The first word of the csv inputs is used for the the group names (e.g. Control from Control_sample01_cFos_rb4_atlas_space_z.csv)
+    - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv
+    - Alternatively, use CCFv3-2017__regionID_side_IDpath_region_abbr.csv or provide a custom CSV with the same columns.
 
 Inputs: 
     - <asterisk>.csv in the working dir with these columns: 'Region_Intensity', 'Mean_IF_Intensity'
@@ -56,7 +58,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', action=SM)
-    parser.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: gubra__region_ID_side_name_abbr.csv', default="gubra__region_ID_side_name_abbr.csv", action=SM)
+    parser.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default="CCFv3-2020__regionID_side_IDpath_region_abbr.csv", action=SM)
     parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', action=SM)
     parser.add_argument('--labels', nargs='*', help='Group Labels in same order', action=SM)
     parser.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
@@ -112,7 +114,7 @@ def get_max_region_id_from_csvs():
 def get_region_details(region_id, csv_path):
     region_df = pd.read_csv(csv_path)
     region_row = region_df[region_df["Region_ID"] == region_id].iloc[0]
-    return region_row["Name"], region_row["Abbr"]
+    return region_row["Region"], region_row["Abbr"]
 
 def get_all_region_ids(csv_path):
     """Retrieve all region IDs from the provided CSV."""
