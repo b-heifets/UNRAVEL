@@ -5,7 +5,7 @@ Use ``vstats_prep`` from UNRAVEL to load an immunofluo image, subtract its backg
 
 Usage:
 ------
-    vstats_prep -i <asterisk>.czi -rb 4 -x $XY -z $Z -o ochann_rb4_atlas_space.nii.gz -e [$DIRS] [-v]
+    vstats_prep -i <asterisk>.czi -rb 4 -x $XY -z $Z -o cfos_rb4_30um_CCF_space.nii.gz -e [$DIRS] [-v]
 
 Prereqs: 
     ``reg``
@@ -14,7 +14,7 @@ Input examples (path is relative to ./sample??; 1st glob match processed):
     <asterisk>.czi, ochann/<asterisk>.tif, ochann, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr
 
 Example output:
-    ./sample??/atlas_space/sample??_ochann_rb4_gubra_space.nii.gz
+    ./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz
 
 Next steps: 
     Aggregate outputs with ``utils_agg_files`` and run ``vstats``.
@@ -46,7 +46,7 @@ def parse_args():
 
     # Required arguments:
     parser.add_argument('-i', '--input', help='path to full res image', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='Output file name w/o "sample??_" (added automatically). E.g., ochann_rb4_gubra_space.nii.gz', required=True, action=SM)
+    parser.add_argument('-o', '--output', help='Output file name w/o "sample??_" (added automatically). E.g., cfos_rb4_30um_CCF_space.nii.gz', required=True, action=SM)
 
     # Optional arguments:
     parser.add_argument('-sa', '--spatial_avg', help='Spatial averaging in 2D or 3D (2 or 3). Default: None', default=None, type=int, action=SM)
@@ -56,7 +56,7 @@ def parse_args():
     parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
     parser.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: uint16', default="uint16", action=SM)
     parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the raw image. Default: 1', default=1, type=int, action=SM)
     parser.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default]).', default='bSpline', action=SM)

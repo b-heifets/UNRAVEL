@@ -3,13 +3,9 @@
 """
 Use ``cluster_brain_model`` from UNRAVEL to prep .nii.gz and RGBA .txt for vizualization in dsi_studio.
 
-Usage with CCFv3:
------------------
-    cluster_brain_model -i input.nii.gz -sa path/atlas_CCFv3_2020_30um_split.nii.gz -m -v 
-
-Usage with gubra atlas:
------------------------
-    cluster_brain_model -i input.nii.gz -sa path/gubra_ano_split_25um.nii.gz -m -ax 0 -s 2 -v -csv regional_summary.csv
+Usage:
+------
+    cluster_brain_model -i input.nii.gz -sa atlas/atlas_CCFv3_2020_30um_split.nii.gz -m -v 
 
 Outputs: 
     - img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
@@ -17,6 +13,7 @@ Outputs:
 
 Note: 
     - The input image will be binarized and multiplied by the split atlas to apply region IDs.
+    - Split means the left hemisphere region IDs are increased by 20000.
     - regional_summary_CCFv3-2020.csv is in UNRAVEL/unravel/core/csvs/
     - It has columns: Region_ID, ID_Path, Region, Abbr, General_Region, R, G, B
     - Alternatively, use regional_summary.csv or provide a custom CSV with the same columns.
@@ -43,7 +40,7 @@ def parse_args():
     parser.add_argument('-m', '--mirror', help='Mirror the image in the x-axis for a bilateral representation. Default: False', action='store_true', default=False)
     parser.add_argument('-ax', '--axis', help='Axis to flip the image along if mirroing. Default: 2', default=2, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
-    parser.add_argument('-sa', '--split_atlas', help='path/gubra_ano_split_25um.nii.gz. Default: gubra_ano_split_25um.nii.gz', default='gubra_ano_split_25um.nii.gz', action=SM)
+    parser.add_argument('-sa', '--split_atlas', help='path/split_atlas.nii.gz. Default: atlas/atlas_CCFv3_2020_30um_split.nii.gz', default='atlas/atlas_CCFv3_2020_30um_split.nii.gz', action=SM)
     parser.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: regional_summary_CCFv3-2020.csv', default='regional_summary_CCFv3-2020.csv', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__

@@ -869,14 +869,12 @@ rstats_summary --groups Saline MDMA Meth -d 10000 -hemi r
 │   ├── sample03
 │   └── sample04
 ├── atlas
-│   ├── gubra_ano_25um_bin.nii.gz  # bin indicates that this has been binarized (background = 0; foreground = 1)
-│   ├── gubra_ano_combined_25um.nii.gz  # Each atlas region has a unique intensity/ID
-│   ├── gubra_ano_split_25um.nii.gz  # Intensities in the left hemisphere are increased by 20,000
-│   ├── gubra_mask_25um_wo_ventricles_root_fibers_LH.nii.gz  # Left hemisphere mask that excludes ventricles, undefined regions (root), and fiber tracts
-│   ├── gubra_mask_25um_wo_ventricles_root_fibers_RH.nii.gz
-│   └── gubra_template_25um.nii.gz  # Average template brain that is aligned with the atlas
+│   ├── atlas_CCFv3_2020_30um.nii.gz  # Each atlas region has a unique intensity/ID
+│   ├── atlas_CCFv3_2020_30um_split.nii.gz  # Intensities in the left hemisphere are increased by 20,000
+│   ├── average_template_CCFv3_30um.nii.gz  # Average template brain that is aligned with the atlas
+│   └── mask_CCFv3_2020_30um_RH_wo_root_ventricles_fibers_OB.nii.gz  # Right hemisphere mask that excludes undefined regions (root), ventricles, and fiber tracts
 ├── reg_results
-├── ilastik_brain_mask
+├── brain_mask
 │   ├── brain_mask.ilp  # Ilastik project trained with the pixel classification workflow to segment the brain in resampled autofluo images
 │   ├── sample01_slice_0000.tif
 │   ├── sample01_slice_0005.tif

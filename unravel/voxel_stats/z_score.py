@@ -59,7 +59,7 @@ def parse_args():
     parser.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
     parser.add_argument('-n', '--no_tmask', help='Provide flag to avoid use of tmas', action='store_true')
     parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a fixed image for warping a brain mask to atlas space (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a fixed image for warping a brain mask to atlas space (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
     parser.add_argument('-inp', '--interpol', help='Type of interpolation (nearestNeighbor, multiLabel [default]).', default='multiLabel', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
     parser.epilog = __doc__

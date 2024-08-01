@@ -5,13 +5,13 @@ Run ``reg_affine_initializer`` from UNRAVEL as a seperate process to kill it aft
 
 Usage:
 ------
-    reg_affine_initializer -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10
+    reg_affine_initializer -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m atlas/average_template_CCFv3_30um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10
 
 Python usage:
 -------------
 >>> import subprocess
 >>> import os
->>> command = ['python', 'reg_affine_initializer', '-f', 'reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', '-m', '/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz', '-o', 'reg_outputs/ANTsPy_init_tform.nii.gz', '-t', '10' ]
+>>> command = ['python', 'reg_affine_initializer', '-f', 'reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', '-m', 'atlas/average_template_CCFv3_30um.nii.gz', '-o', 'reg_outputs/ANTsPy_init_tform.nii.gz', '-t', '10' ]
 >>> with open(os.devnull, 'w') as devnull:
 >>>    subprocess.run(command, stderr=devnull)
 """
