@@ -101,7 +101,7 @@ If you have any questions, suggestions, or are interested in collaborations and 
 
 Developers
 ----------
-* **Daniel Ryskamp Rijsketic** (lead developer and maintainer) - `danrijs@stanford.edu <mailto:danrijs@stanford.edu>`_
+* **Daniel Ryskamp Rijsketic** (developer and maintainer) - `danrijs@stanford.edu <mailto:danrijs@stanford.edu>`_
 * **Austen Casey** (developer) - `abcasey@stanford.edu <mailto:abcasey@stanford.edu>`_
 * **MetaCell** (UNRAVEL visualizer developers) - `info@metacell.us <info@metacell.us>`_
 * **Boris Heifets** (PI) - `bheifets@stanford.edu <mailto:bheifets@stanford.edu>`_
@@ -128,7 +128,7 @@ Main dependencies
 * `pandas <https://pandas.pydata.org/>`_
 * `cc3d <https://pypi.org/project/connected-components-3d/>`_
 * Registration and warping workflows were inspired by `MIRACL <https://miracl.readthedocs.io/en/latest/>`_
-* We adapted `LSFM/iDISCO+ atlases <https://pubmed.ncbi.nlm.nih.gov/33063286/>`_ from `Gubra <https://www.gubra.dk/cro-services/3d-imaging/>`_
+* We warped this `LSFM/iDISCO+ average template brain <https://pubmed.ncbi.nlm.nih.gov/33063286/>`_ to Allen brain atlas space (CCFv3) and refined alignment. 
 
 Support is welcome for
 ----------------------
