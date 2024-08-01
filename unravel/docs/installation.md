@@ -12,6 +12,13 @@
 ```bash
 pip install heifetslab-unravel
 ```
+* Or, for an editable install run:
+```bash
+git clone https://github.com/b-heifets/UNRAVEL.git
+cd UNRAVEL
+pip install -e .
+```
+* Download atlas/template files: [Google Drive Link](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)
 * Install [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation)
 * Install [Ilastik](https://www.ilastik.org/download.html)
 
@@ -68,10 +75,6 @@ For more detailed information, you can view the commit history:
 
     - Open your installed Linux distribution from the Start menu.
     - Follow the prompts to set up your username and password.
-
-4. **Enable copy and paste:**
-
-    - 
 
 :::{note}
 After WSL is installed, you may open and use the WSL app. 
@@ -155,7 +158,7 @@ For detailed instructions, visit the [WSL Installation Guide](https://docs.micro
     pip install heifetslab-unravel
     ```
 
-4. **Download atlas/template files and locate them in `./atlas/`:**
+4. **Download atlas/template files:**
     [Google Drive Link](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)
 
 :::{todo}
