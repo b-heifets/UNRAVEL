@@ -365,6 +365,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">import</span> <span class="nn">cv2</span> 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
@@ -440,15 +442,20 @@
 <div class="viewcode-block" id="pixel_classification">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.pixel_classification">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">pixel_classification</span><span class="p">(</span><span class="n">tif_dir</span><span class="p">,</span> <span class="n">ilastik_project</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">ilastik_log</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">pixel_classification</span><span class="p">(</span><span class="n">tif_dir</span><span class="p">,</span> <span class="n">ilastik_project</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">ilastik_executable</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Segment tif series with Ilastik using pixel classification.&quot;&quot;&quot;</span>
-    <span class="n">tif_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tif_dir</span><span class="si">}</span><span class="s2">/*.tif&quot;</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">tif_list</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No TIF files found in </span><span class="si">{</span><span class="n">tif_dir</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ilastik_executable</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]Ilastik executable path not provided. Please provide the path to the Ilastik executable.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span>
 
+    <span class="n">tif_list</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">tif_dir</span><span class="si">}</span><span class="s2">/*.tif&quot;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tif_list</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No TIF files found in </span><span class="si">{</span><span class="n">tif_dir</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s1">&#39;run_ilastik.sh&#39;</span><span class="p">,</span>  <span class="c1"># Make sure this path is correct</span>
+        <span class="n">ilastik_executable</span><span class="p">,</span> <span class="c1"># Path to ilastik executable as a string</span>
         <span class="s1">&#39;--headless&#39;</span><span class="p">,</span>
         <span class="s1">&#39;--project&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">ilastik_project</span><span class="p">),</span>
         <span class="s1">&#39;--export_source&#39;</span><span class="p">,</span> <span class="s1">&#39;Simple Segmentation&#39;</span><span class="p">,</span>
@@ -457,7 +464,8 @@
     <span class="p">]</span> <span class="o">+</span> <span class="n">tif_list</span>
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Running Ilastik with command:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># result = subprocess.run(cmd, capture_output=True, text=True)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Ilastik failed with error:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
