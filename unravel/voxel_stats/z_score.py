@@ -52,7 +52,6 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-td', '--target_dir', help='path/target_dir name for gathering outputs from all samples (use -e w/ all paths)', default=None, action=SM)
     parser.add_argument('-i', '--input', help='full_path/img.nii.gz or rel_path/img.nii.gz ("sample??" works for batch processing)', required=True, action=SM)
     parser.add_argument('-s', '--suffix', help='Output suffix. Default: z (.nii.gz replaced w/ _z.nii.gz)', default='z', action=SM)
     parser.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
@@ -100,11 +99,6 @@ def main():
 
     if args.no_tmask and args.atlas_mask is None: 
         print("\n    [red]Please provide a path for --atlas_mask if --tissue_mask is not used\n")
-
-    if args.target_dir is not None:
-        # Create the target directory for copying outputs for ``vstats``
-        target_dir = Path(args.target_dir)
-        target_dir.mkdir(exist_ok=True, parents=True)
 
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
 
@@ -160,10 +154,6 @@ def main():
             nii.header.set_data_dtype(np.float32)
             z_scored_nii = nib.Nifti1Image(z_scored_img, nii.affine, nii.header)
             nib.save(z_scored_nii, output)
-
-            if args.target_dir is not None:
-                target_output = target_dir / output.name
-                shutil.copy(output, target_output)
 
             progress.update(task_id, advance=1)
 
