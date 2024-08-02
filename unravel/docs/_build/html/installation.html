@@ -417,9 +417,9 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <h3>Installing WSL:<a class="headerlink" href="#installing-wsl" title="Link to this heading">#</a></h3>
 <ul>
 <li><p>Open the start menu, search for PowerShell, and right click on PowerShell to run it as an Administrator. Then run:</p>
-<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">wsl</span> <span class="p">-</span><span class="n">-install</span>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">wsl</span> <span class="p">-</span><span class="n">-install</span>  <span class="c"># If this works, the Ubuntu linux distrobution will be installed by default</span>
 
-<span class="c"># If that does not work, run this</span>
+<span class="c"># If that does not work, run this and follow additional steps</span>
 <span class="nb">Enable-WindowsOptionalFeature</span> <span class="n">-Online</span> <span class="n">-FeatureName</span> <span class="n">Microsoft-Windows-Subsystem-Linux</span>
 </pre></div>
 </div>
@@ -494,8 +494,8 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </pre></div>
 </div>
 <p><strong>b. Create and activate a virtual environment:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3.11<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>unravel_env
-<span class="nb">source</span><span class="w"> </span>unravel_env/bin/activate
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3.11<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>unravel
+<span class="nb">source</span><span class="w"> </span>unravel/bin/activate
 </pre></div>
 </div>
 </li>
