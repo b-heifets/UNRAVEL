@@ -20,7 +20,7 @@ Prereqs:
     - Input images from ``vstats_prep``, ``vstats_z_score``, or ``vstats_whole_to_avg``.
 
 Next steps:
-    - Run ``cluster_fdr_range`` and ``cluster_fdr`` to correct for multiple comparisons.
+    - Run ``cstats_fdr_range`` and ``cstats_fdr`` to correct for multiple comparisons.
 
 For info on how to set up and run voxel-wise analyses, see: https://b-heifets.github.io/UNRAVEL/guide.html#voxel-wise-stats
 """

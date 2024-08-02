@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_brain_model`` from UNRAVEL to prep .nii.gz and RGBA .txt for vizualization in dsi_studio.
+Use ``cstats_brain_model`` from UNRAVEL to prep .nii.gz and RGBA .txt for vizualization in dsi_studio.
 
 Usage:
 ------
-    cluster_brain_model -i input.nii.gz -sa atlas/atlas_CCFv3_2020_30um_split.nii.gz -m -v 
+    cstats_brain_model -i input.nii.gz -sa atlas/atlas_CCFv3_2020_30um_split.nii.gz -m -v 
 
 Outputs: 
     - img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)

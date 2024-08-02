@@ -75,7 +75,7 @@ def parse_args():
     parser.add_argument('-it', '--init_time', help='Time in seconds allowed for ``reg_affine_initializer`` to run. Default: 30' , default='30', type=str, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
-    return parser.parse_args()
+    return parser.parse_args()  
 
 
 @print_func_name_args_times()

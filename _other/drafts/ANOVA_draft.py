@@ -9,7 +9,7 @@ from rich.traceback import install
 from statsmodels.formula.api import ols
 from statsmodels.stats.anova import anova_lm
 
-from unravel.cluster_stats.stats import cluster_validation_data_df
+from unravel.cluster_stats.cstats import cluster_validation_data_df
 from unravel.cluster_stats.stats_table import cluster_summary
 from unravel.core.argparse_utils import SuppressMetavar, SM
 

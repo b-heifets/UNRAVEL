@@ -68,7 +68,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cluster_stats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
+# TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cstats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 # TODO: CSVs are loaded for each region. It would be more efficient to load them once for processing all regions. 
 # TODO: Update coloring of plots to match ABA colors (i.e., use code from rstats_summary.py)
 # TODO: Save a CSV with the results of the statistical tests for each region.

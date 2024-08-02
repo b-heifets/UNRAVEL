@@ -172,92 +172,92 @@ def main():
             }
         },
         "Cluster-wise stats": {
-            "cluster_fdr_range": {
+            "cstats_fdr_range": {
                 "module": "unravel.cluster_stats.fdr_range",
                 "description": "Get FDR q value range yielding clusters.",
                 "common": True
             },
-            "cluster_fdr": {
+            "cstats_fdr": {
                 "module": "unravel.cluster_stats.fdr",
                 "description": "FDR-correct 1-p value map --> cluster map.",
                 "common": True
             },
-            "cluster_mirror_indices": {
+            "cstats_mirror_indices": {
                 "module": "unravel.cluster_stats.recursively_mirror_rev_cluster_indices",
                 "description": "Recursively mirror cluster maps for validating clusters in left and right hemispheres.",
                 "common": True
             },
-            "cluster_validation": {
-                "module": "unravel.cluster_stats.cluster_validation",
+            "cstats_validation": {
+                "module": "unravel.cluster_stats.validation",
                 "description": "Validate clusters w/ cell/label density measurements.",
                 "common": True
             },
-            "cluster_summary": {
-                "module": "unravel.cluster_stats.cluster_summary",
+            "cstats_summary": {
+                "module": "unravel.cluster_stats.summary",
                 "description": "Summarize info on valid clusters (run after cluster_validation).",
                 "common": True
             },
-            "cluster_org_data": {
+            "cstats_org_data": {
                 "module": "unravel.cluster_stats.org_data",
                 "description": "Organize CSVs from custer_validation.",
                 "common": False
             },
-            "cluster_group_data": {
+            "cstats_group_data": {
                 "module": "unravel.cluster_stats.group_bilateral_data",
                 "description": "Group bilateral cluster data.",
                 "common": False
             },
-            "cluster_stats": {
-                "module": "unravel.cluster_stats.stats",
-                "description": "Compute cluster vallidation statistics.",
+            "cstats": {
+                "module": "unravel.cluster_stats.cstats",
+                "description": "Compute cluster validation statistics.",
                 "common": False
             },
-            "cluster_index": {
+            "cstats_index": {
                 "module": "unravel.cluster_stats.index",
                 "description": "Make a valid cluster map and sunburst plots.",
                 "common": False
             },
-            "cluster_brain_model": {
+            "cstats_brain_model": {
                 "module": "unravel.cluster_stats.brain_model",
                 "description": "Make a 3D brain model from a cluster map (for DSI studio)",
                 "common": False
             },
-            "cluster_table": {
+            "cstats_table": {
                 "module": "unravel.cluster_stats.table",
                 "description": "Create a table of cluster validation data.",
                 "common": False
             },
-            "cluster_prism": {
+            "cstats_prism": {
                 "module": "unravel.cluster_stats.prism",
                 "description": "Generate CSVs for bar charts in Prism.",
                 "common": False
             },
-            "cluster_legend": {
+            "cstats_legend": {
                 "module": "unravel.cluster_stats.legend",
                 "description": "Make a legend of regions in cluster maps.",
                 "common": False
             },
-            "cluster_sunburst": {
+            "cstats_sunburst": {
                 "module": "unravel.cluster_stats.sunburst",
                 "description": "Create a sunburst plot of regional volumes.",
                 "common": False
             },
-            "cluster_find_incongruent": {
+            "cstats_find_incongruent": {
                 "module": "unravel.cluster_stats.find_incongruent_clusters",
                 "description": "Find clusters where the effect direction does not match the prediction of cluster_fdr (for validation of non-directional p value maps).",
                 "common": False
             },
-            "cluster_crop": {
+            "cstats_crop": {
                 "module": "unravel.cluster_stats.crop",
                 "description": "Crop clusters to a bounding box.",
                 "common": False
             },
-            "cluster_mean_IF": {
+            "cstats_mean_IF": {
                 "module": "unravel.cluster_stats.mean_IF",
                 "description": "Compute mean immunofluo intensities for each cluster. ",
                 "common": False
             },
-            "cluster_mean_IF_summary": {
+            "cstats_mean_IF_summary": {
                 "module": "unravel.cluster_stats.mean_IF_summary",
                 "description": "Plot mean immunofluo intensities for each cluster.",
                 "common": False

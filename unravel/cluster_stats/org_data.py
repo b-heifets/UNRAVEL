@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_org_data`` from UNRAVEL to aggregate and organize csv outputs from ``cluster_validation``.
+Use ``cstats_org_data`` from UNRAVEL to aggregate and organize csv outputs from ``cstats_validation``.
 
 Usage
 -----
-    cluster_org_data -e <list of experiment directories> -cvd '<asterisk>' -td <target_dir> -vd <path/vstats_dir> -v
+    cstats_org_data -e <list of experiment directories> -cvd '<asterisk>' -td <target_dir> -vd <path/vstats_dir> -v
 """
 
 import argparse
@@ -31,7 +31,7 @@ def parse_args():
     parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir (the dir ``vstats`` was run from) to copy p val, info, and index files if provided', default=None, action=SM)
     parser.add_argument('-dt', '--density_type', help='Type of density data to aggregate (cell [default] or label).', default='cell', action=SM)
     parser.add_argument('-td', '--target_dir', help='path/dir to copy results. If omitted, copy data to the cwd', default=None, action=SM)
-    parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from ``cluster_fdr``). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
+    parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from ``cstats_fdr``). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
@@ -87,7 +87,7 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             cluster_correction_dir = match.group(1)
             suffix = match.group(2)[1:] if match.group(2) else ''  # This gets the string after the q value if there is one
         else:
-            print("\n    [red1]No match found in cluster_org_data\n")
+            print("\n    [red1]No match found in cstats_org_data\n")
 
         cluster_correction_path = vstats_path / 'stats' / cluster_correction_dir
 

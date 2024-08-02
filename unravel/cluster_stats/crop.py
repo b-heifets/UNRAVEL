@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_crop`` from UNRAVEL to load image, load bounding box, crop cluster, and save as .nii.gz.
+Use ``cstats_crop`` from UNRAVEL to load image, load bounding box, crop cluster, and save as .nii.gz.
 
 Usage
 -----
-    cluster_crop -i path/img.nii.gz -b path/bbox.txt -o path/output_img.nii.gz -a -x $XY -z $Z -v
+    cstats_crop -i path/img.nii.gz -b path/bbox.txt -o path/output_img.nii.gz -a -x $XY -z $Z -v
 """
 
 import argparse

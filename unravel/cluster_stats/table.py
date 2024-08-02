@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
+Use ``cstats_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
 
 Usage:
 ------
-    cluster_table
+    cstats_table
 
 Prereqs:
-    ``cluster_index`` has been run. Run this command from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
+    ``cstats_index`` has been run. Run this command from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
 
 Sorting by hierarchy and volume:
 --------------------------------

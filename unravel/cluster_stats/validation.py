@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_validation`` from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify cell/label densities.
+Use ``cstats_validation`` from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify cell/label densities.
 
 Usage:
 ------
-    cluster_validation -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
+    cstats_validation -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
 
 cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
 
@@ -17,7 +17,7 @@ For -s, if a dir name is provided, the command will load ./sample??/seg_dir/samp
 If a relative path is provided, the command will load the image at the specified path.
 
 Next command:
-    ``cluster_summary``
+    ``cstats_summary``
 """
 
 

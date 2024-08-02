@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_fdr`` from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.
+Use ``cstats_fdr`` from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.
 
 Usage
 -----
-    cluster_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05
+    cstats_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05
 
 Inputs: 
     - p value map (e.g., <asterisk>vox_p_<asterisk>stat<asterisk>.nii.gz from vstats)    
@@ -25,11 +25,11 @@ Making directional cluster indices from non-directional p value maps output from
     - The --output needs to have <group1>_v_<group2> in the name
     - _v_ will be replaced with _gt_ or _lt_ based on the effect direction 
     - The cluster index will be split accoding to the effect directions
-    - ``cluster_fdr`` -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v
+    - ``cstats_fdr`` -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v
 
-For bilateral data processed with a hemispheric mask, next run ``cluster_mirror_indices`` to mirror the cluster indices to the other hemisphere.
+For bilateral data processed with a hemispheric mask, next run ``cstats_mirror_indices`` to mirror the cluster indices to the other hemisphere.
 
-For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cluster_validation``.
+For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cstats_validation``.
 """
 
 import argparse
@@ -61,7 +61,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: could add optional args like in ``vstats`` for running the ``cluster_fdr`` command. 
+# TODO: could add optional args like in ``vstats`` for running the ``cstats_fdr`` command. 
 
 @print_func_name_args_times()
 def fdr(input_path, fdr_path, mask_path, q_value):
