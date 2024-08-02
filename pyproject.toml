@@ -1,6 +1,6 @@
 [project]
 name = "heifetslab-unravel"
-version = "1.0.0b6"
+version = "1.0.0b7"
 description = "UNRAVEL: UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images"
 readme = "README.md"
 license = { text = "GNU General Public License v3.0" }

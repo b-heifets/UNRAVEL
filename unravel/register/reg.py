@@ -5,7 +5,7 @@ Use ``reg`` from UNRAVEL to register an average template brain/atlas to a resamp
 
 Usage for tissue registration:
 ------------------------------
-    reg -m <path/template.nii.gz> -bc -sm 0.4 -ort <3 letter orientation code>
+    reg -m <path/template.nii.gz> -bc -sm 0.4 -ort <3 letter orientation code> -m2 atlas/atlas_CCFv3_2020_30um.nii.gz
 
 Usage for atlas to atlas registration:
 --------------------------------------
@@ -76,6 +76,8 @@ def parse_args():
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()  
+
+# TODO: Update padding/unpadding logic to allow for additional padding if needed
 
 
 @print_func_name_args_times()
