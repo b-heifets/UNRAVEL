@@ -15,7 +15,7 @@ pip install heifetslab-unravel
 ```bash
 git clone https://github.com/b-heifets/UNRAVEL.git
 cd UNRAVEL
-pip install -e .
+pip install -e .  # Also run this for updates
 ```
 * Download atlas/template files: [Google Drive Link](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)
 * Install [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation)
@@ -57,33 +57,35 @@ For more detailed information, you can view the commit history:
 
 ## Setting Up Windows Subsystem for Linux (WSL)
 
-1. **Install WSL:**
+If you are using Windows and are unfamilar with WSL, check out the first few min of this [video](https://www.youtube.com/watch?v=-atblwgc63E) 
 
-    - Open the start menu and right click on PowerShell to run it as an Administrator. Then run:
-      ```powershell
-      wsl --install
-      ```
+### Installing WSL:
+- Open the start menu, search for PowerShell, and right click on PowerShell to run it as an Administrator. Then run:
+    ```powershell
+    wsl --install
 
-    - Restart your computer if prompted.
+    # If that does not work, run this
+    Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+    ```
+- Restart your computer when prompted.
+- Open the Microsoft Store and search "linux" --> Run Linux On Windows
+- Select Ubuntu and install
+- Open the PowerShell and start WSL by running: 
+    ```powershell
+    wsl
+    ```
+- Or open the WSL app or the Ubuntu app from that Start menu.
+- Follow the prompts to set up your username and password.
 
-2. **Install a Linux distribution:**
-
-    - After the restart, open the Microsoft Store and install your preferred Linux distribution (e.g., Ubuntu).
-
-3. **Initialize your Linux distribution:**
-
-    - Open your installed Linux distribution from the Start menu.
-    - Follow the prompts to set up your username and password.
+For detailed installation instructions, visit the [WSL Installation Guide](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 :::{note}
-After WSL is installed, you may open and use the WSL app. 
-
 To enable copy/paste in the PowerShell or WSL, click the icon in the upper left --> Properties --> Edit Options -> check "Use Ctrl+Shift+C/V as Copy/Paste --> OK. 
 
 [Video tutorial](https://www.youtube.com/watch?v=i547sSXhq0E) on navigating to your files (either the WSL file system or your C and D drives).
 :::
 
-For detailed instructions, visit the [WSL Installation Guide](https://docs.microsoft.com/en-us/windows/wsl/install).
+
 
 ## Installing UNRAVEL on Linux or WSL
 

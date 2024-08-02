@@ -223,10 +223,7 @@ unravel_commands -c | grep vstats  # Just print commands related to voxel-wise s
 # List common commands and their descriptions
 unravel_commands -c -d
 
-# List all commands and their descriptions
-unravel_commands -d 
-
-# List the modules run by each command
+# List all commands and the modules that they run
 unravel_commands -m
 ```
 
@@ -265,11 +262,11 @@ unravel_commands -m
 :::
 
 ::: {tab-item} Cluster-wise stats
-- [**cluster_fdr_range**](unravel.cluster_stats.fdr_range): Get FDR q value range yielding clusters.
-- [**cluster_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
-- [**cluster_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
-- [**cluster_validation**](unravel.cluster_stats.cluster_validation): Validate clusters w/ cell/label density measurements.
-- [**cluster_summary**](unravel.cluster_stats.cluster_summary): Summarize info on valid clusters (run after cluster_validation).
+- [**cstats_fdr_range**](unravel.cluster_stats.fdr_range): Get FDR q value range yielding clusters.
+- [**cstats_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
+- [**cstats_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
+- [**cstats_validation**](unravel.cluster_stats.cluster_validation): Validate clusters w/ cell/label density measurements.
+- [**cstats_summary**](unravel.cluster_stats.cluster_summary): Summarize info on valid clusters (run after cluster_validation).
 :::
 
 ::: {tab-item} Region-wise stats
@@ -336,24 +333,24 @@ unravel_commands -m
 :::
 
 :::{tab-item} Cluster-wise stats
-- [**cluster_fdr_range**](unravel.cluster_stats.fdr_range): Get FDR q value range yielding clusters.
-- [**cluster_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
-- [**cluster_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
-- [**cluster_validation**](unravel.cluster_stats.cluster_validation): Validate clusters w/ cell/label density measurements.
-- [**cluster_summary**](unravel.cluster_stats.cluster_summary): Summarize info on valid clusters (run after cluster_validation).
-- [**cluster_org_data**](unravel.cluster_stats.org_data): Organize CSVs from cluster_validation.
-- [**cluster_group_data**](unravel.cluster_stats.group_bilateral_data): Group bilateral cluster data.
-- [**cluster_stats**](unravel.cluster_stats.stats): Compute cluster validation statistics.
-- [**cluster_index**](unravel.cluster_stats.index): Make a valid cluster map and sunburst plots.
-- [**cluster_brain_model**](unravel.cluster_stats.brain_model): Make a 3D brain model from a cluster map (for DSI studio).
-- [**cluster_table**](unravel.cluster_stats.table): Create a table of cluster validation data.
-- [**cluster_prism**](unravel.cluster_stats.prism): Generate CSVs for bar charts in Prism.
-- [**cluster_legend**](unravel.cluster_stats.legend): Make a legend of regions in cluster maps.
-- [**cluster_sunburst**](unravel.cluster_stats.sunburst): Create a sunburst plot of regional volumes.
-- [**cluster_find_incongruent_clusters**](unravel.cluster_stats.find_incongruent_clusters): Find clusters where the effect direction does not match the prediction of cluster_fdr (for validation of non-directional p value maps).
-- [**cluster_crop**](unravel.cluster_stats.crop): Crop clusters to a bounding box.
-- [**cluster_mean_IF**](unravel.cluster_stats.mean_IF): Compute mean immunofluo intensities for each cluster.
-- [**cluster_mean_IF_summary**](unravel.cluster_stats.mean_IF_summary): Plot mean immunofluo intensities for each cluster.
+- [**cstats_fdr_range**](unravel.cluster_stats.fdr_range): Get FDR q value range yielding clusters.
+- [**cstats_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
+- [**cstats_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
+- [**cstats_validation**](unravel.cluster_stats.cluster_validation): Validate clusters w/ cell/label density measurements.
+- [**cstats_summary**](unravel.cluster_stats.cluster_summary): Summarize info on valid clusters (run after cluster_validation).
+- [**cstats_org_data**](unravel.cluster_stats.org_data): Organize CSVs from cluster_validation.
+- [**cstats_group_data**](unravel.cluster_stats.group_bilateral_data): Group bilateral cluster data.
+- [**cstats**](unravel.cluster_stats.cstats): Compute cluster validation statistics.
+- [**cstats_index**](unravel.cluster_stats.index): Make a valid cluster map and sunburst plots.
+- [**cstats_brain_model**](unravel.cluster_stats.brain_model): Make a 3D brain model from a cluster map (for DSI studio).
+- [**cstats_table**](unravel.cluster_stats.table): Create a table of cluster validation data.
+- [**cstats_prism**](unravel.cluster_stats.prism): Generate CSVs for bar charts in Prism.
+- [**cstats_legend**](unravel.cluster_stats.legend): Make a legend of regions in cluster maps.
+- [**cstats_sunburst**](unravel.cluster_stats.sunburst): Create a sunburst plot of regional volumes.
+- [**cstats_find_incongruent_clusters**](unravel.cluster_stats.find_incongruent_clusters): Find clusters where the effect direction does not match the prediction of cluster_fdr (for validation of non-directional p value maps).
+- [**cstats_crop**](unravel.cluster_stats.crop): Crop clusters to a bounding box.
+- [**cstats_mean_IF**](unravel.cluster_stats.mean_IF): Compute mean immunofluo intensities for each cluster.
+- [**cstats_mean_IF_summary**](unravel.cluster_stats.mean_IF_summary): Plot mean immunofluo intensities for each cluster.
 - [**effect_sizes**](unravel.cluster_stats.effect_sizes.effect_sizes): Calculate effect sizes for clusters.
 - [**effect_sizes_sex_abs**](unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute): Calculate absolute effect sizes by sex.
 - [**effect_sizes_sex_rel**](unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative): Calculate relative effect sizes by sex.
@@ -436,7 +433,6 @@ pip install -e .
 ## Set up
 
 Recommended steps to set up for analysis:
-
 
 ### Back up raw data
    * For Heifets lab members, we keep one copy of raw data on an external drive and another on a remote server (Dan and Austen have access)
@@ -772,7 +768,7 @@ seg_ilastik -i <*.czi, *.h5, or dir w/ tifs> -o seg_dir -ilp $BASE/ilastik_segme
 2. **Generate and add .nii.gz files to vstats subfolders**:
    - Input images are from ``vstats_prep`` and may have been z-scored with ``vstats_z_score`` (we z-score c-Fos labeling as intensities are not extreme)
       - Alternatively, ``warp_to_atlas`` may be used is preprocessing is not desired.
-   - For bilateral data, left and right sides can be averaged with ``vstats_whole_to_avg`` (then use a unilateral hemisphere mask for ``vstats`` and ``cluster_fdr``).
+   - For bilateral data, left and right sides can be averaged with ``vstats_whole_to_avg`` (then use a unilateral hemisphere mask for ``vstats`` and ``cstats_fdr``).
    - We smooth data (e.g., with a 100 µm kernel) to account for innacuracies in registration
       - This can be performed with ``vstats_whole_to_avg`` or ``vstats``
    - Prepend filenames with a one word condition (e.g., `drug_sample01_atlas_space_z.nii.gz`).
@@ -933,7 +929,7 @@ These commands are useful for multiple comparison correction of 1 - p value maps
 img_avg -i Control_*.nii.gz -o Control_avg.nii.gz
 ```
 
-#### `cluster_fdr_range`
+#### `cstats_fdr_range`
 {py:mod}`unravel.cluster_stats.fdr_range`
 * Outputs a list of FDR q values that yeild clusters.
 ```bash
@@ -947,14 +943,14 @@ for j in *_vox_p_*.nii.gz ; do q_values=$(cluster_fdr_range -mas $MASK -i $j) ; 
 q_values=$(cluster_fdr_range -i vox_p_fstat1.nii.gz -mas $MASK) ; cluster_fdr -i vox_p_fstat1.nii.gz -mas $MASK -o fstat1 -v -a1 Control_avg.nii.gz -a2 Deep_avg.nii.gz -q $q_values
 ```
 
-#### `cluster_fdr`
+#### `cstats_fdr`
 {py:mod}`unravel.cluster_stats.fdr`
 * Perform FDR correction on a 1 - p value map to define clusters
 ```bash
 cluster_fdr -i vox_p_tstat1.nii.gz -mas mask.nii.gz -q 0.05
 ```
 
-#### `cluster_mirror_indices`
+#### `cstats_mirror_indices`
 {py:mod}`unravel.cluster_stats.recursively_mirror_rev_cluster_indices`
 * Recursively flip the content of rev_cluster_index.nii.gz images
 * Run this in the ./stats/ folder to process all subdirs with reverse cluster maps (cluster IDs go from large to small)
@@ -966,7 +962,7 @@ cluster_mirror_indices -m RH -v
 
 ### Cluster validation
 
-#### `cluster_validation`
+#### `cstats_validation`
 {py:mod}`unravel.cluster_stats.cluster_validation`
 * Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or    label densities
 ```bash
@@ -977,10 +973,10 @@ cluster_validation -e <experiment paths> -m <path/rev_cluster_index_to_warp_from
 for q in 0.005 0.01 0.05 0.1 ; do for side in LH RH ; do cluster_validation -e $DIRS -m path/vstats/contrast/stats/contrast_vox_p_tstat1_q${q}/contrast_vox_p_tstat1_q${q}_rev_cluster_index_${side}.nii.gz -s seg_dir/sample??_seg_dir_1.nii.gz -v ; done ; done
 ```
 
-#### `cluster_summary`
+#### `cstats_summary`
 {py:mod}`unravel.cluster_stats.cluster_summary`
-* Aggregates and analyzes cluster validation data from `cluster_validation`
-* Update parameters in /UNRAVEL/unravel/cluster_stats/cluster_summary.ini and save it with the experiment
+* Aggregates and analyzes cluster validation data from `cstats_validation`
+* Update parameters in /UNRAVEL/unravel/cstats/cluster_summary.ini and save it with the experiment
 ```bash
 cluster_summary -c path/cluster_summary.ini -e $DIRS -cvd '*' -vd path/vstats_dir -sk $SAMPLE_KEY --groups group1 group2 -v
 ```
