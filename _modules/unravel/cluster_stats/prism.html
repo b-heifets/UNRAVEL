@@ -352,17 +352,17 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``cluster_prism`` from UNRAVEL to organize data for clusters for plotting in Prism.</span>
+<span class="sd">Use ``cstats_prism`` from UNRAVEL to organize data for clusters for plotting in Prism.</span>
 
 <span class="sd">Usage</span>
 <span class="sd">-----</span>
-<span class="sd">    cluster_prism -ids 1 2 3</span>
+<span class="sd">    cstats_prism -ids 1 2 3</span>
 
 <span class="sd">Note:</span>
-<span class="sd">    - cluster_table saves valid_clusters_dir/valid_cluster_IDs_sorted_by_anatomy.txt</span>
+<span class="sd">    - cstats_table saves valid_clusters_dir/valid_cluster_IDs_sorted_by_anatomy.txt</span>
 
 <span class="sd">Inputs:</span>
-<span class="sd">    &lt;asterisk&gt;.csv from ``cluster_org_data`` (in working dir) or ``cluster_mean_IF``</span>
+<span class="sd">    &lt;asterisk&gt;.csv from ``cstats_org_data`` (in working dir) or ``cstats_mean_IF``</span>
 
 <span class="sd">CSV naming conventions:</span>
 <span class="sd">    - Condition: first word before &#39;_&#39; in the file name (use ``utils_prepend`` if needed)</span>
@@ -407,7 +407,7 @@
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ids&#39;</span><span class="p">,</span> <span class="s1">&#39;--valid_cluster_ids&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Space-separated list of valid cluster IDs to include in the summary.&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the directory containing the CSV files from ``cluster_validation`` or ``cluster_mean_IF``. Default: current directory&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the directory containing the CSV files from ``cstats_validation`` or ``cstats_mean_IF``. Default: current directory&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>

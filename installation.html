@@ -363,7 +363,7 @@
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
 <ul class="simple">
 <li><p>Please send questions/issues to <a class="reference external" href="mailto:danrijs&#37;&#52;&#48;stanford&#46;edu">danrijs<span>&#64;</span>stanford<span>&#46;</span>edu</a>, so we can improve this guide for future users.</p></li>
-<li><p>If you are unfamiliar with the terminal, please review these <a class="reference external" href="https://andysbrainbook.readthedocs.io/en/latest/index.html">command line tutorials</a></p></li>
+<li><p>If you are unfamiliar with the terminal, please review the beginning of our <a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html">guide</a></p></li>
 </ul>
 <section id="tl-dr">
 <h2>TL;DR<a class="headerlink" href="#tl-dr" title="Link to this heading">#</a></h2>
@@ -379,7 +379,7 @@
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/b-heifets/UNRAVEL.git
 <span class="nb">cd</span><span class="w"> </span>UNRAVEL
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w">  </span><span class="c1"># Also run this for updates</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -414,36 +414,36 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </section>
 <section id="setting-up-windows-subsystem-for-linux-wsl">
 <h2>Setting Up Windows Subsystem for Linux (WSL)<a class="headerlink" href="#setting-up-windows-subsystem-for-linux-wsl" title="Link to this heading">#</a></h2>
-<ol class="arabic">
-<li><p><strong>Install WSL:</strong></p>
+<p>If you are using Windows and are unfamilar with WSL, check out the first few min of this <a class="reference external" href="https://www.youtube.com/watch?v=-atblwgc63E">video</a></p>
+<section id="installing-wsl">
+<h3>Installing WSL:<a class="headerlink" href="#installing-wsl" title="Link to this heading">#</a></h3>
 <ul>
-<li><p>Open the start menu and right click on PowerShell to run it as an Administrator. Then run:</p>
+<li><p>Open the start menu, search for PowerShell, and right click on PowerShell to run it as an Administrator. Then run:</p>
 <div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">wsl</span> <span class="p">-</span><span class="n">-install</span>
+
+<span class="c"># If that does not work, run this</span>
+<span class="nb">Enable-WindowsOptionalFeature</span> <span class="n">-Online</span> <span class="n">-FeatureName</span> <span class="n">Microsoft-Windows-Subsystem-Linux</span>
 </pre></div>
 </div>
 </li>
-<li><p>Restart your computer if prompted.</p></li>
-</ul>
+<li><p>Restart your computer when prompted.</p></li>
+<li><p>Open the Microsoft Store and search “linux” –&gt; Run Linux On Windows</p></li>
+<li><p>Select Ubuntu and install</p></li>
+<li><p>Open the PowerShell and start WSL by running:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">wsl</span>
+</pre></div>
+</div>
 </li>
-<li><p><strong>Install a Linux distribution:</strong></p>
-<ul class="simple">
-<li><p>After the restart, open the Microsoft Store and install your preferred Linux distribution (e.g., Ubuntu).</p></li>
-</ul>
-</li>
-<li><p><strong>Initialize your Linux distribution:</strong></p>
-<ul class="simple">
-<li><p>Open your installed Linux distribution from the Start menu.</p></li>
+<li><p>Or open the WSL app or the Ubuntu app from that Start menu.</p></li>
 <li><p>Follow the prompts to set up your username and password.</p></li>
 </ul>
-</li>
-</ol>
+<p>For detailed installation instructions, visit the <a class="reference external" href="https://learn.microsoft.com/en-us/windows/wsl/install">WSL Installation Guide</a>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>After WSL is installed, you may open and use the WSL app.</p>
 <p>To enable copy/paste in the PowerShell or WSL, click the icon in the upper left –&gt; Properties –&gt; Edit Options -&gt; check “Use Ctrl+Shift+C/V as Copy/Paste –&gt; OK.</p>
 <p><a class="reference external" href="https://www.youtube.com/watch?v=i547sSXhq0E">Video tutorial</a> on navigating to your files (either the WSL file system or your C and D drives).</p>
 </div>
-<p>For detailed instructions, visit the <a class="reference external" href="https://docs.microsoft.com/en-us/windows/wsl/install">WSL Installation Guide</a>.</p>
+</section>
 </section>
 <section id="installing-unravel-on-linux-or-wsl">
 <h2>Installing UNRAVEL on Linux or WSL<a class="headerlink" href="#installing-unravel-on-linux-or-wsl" title="Link to this heading">#</a></h2>
@@ -651,7 +651,10 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tl-dr">TL;DR</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-unravel">Updating UNRAVEL</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-windows-subsystem-for-linux-wsl">Setting Up Windows Subsystem for Linux (WSL)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-windows-subsystem-for-linux-wsl">Setting Up Windows Subsystem for Linux (WSL)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-wsl">Installing WSL:</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-unravel-on-linux-or-wsl">Installing UNRAVEL on Linux or WSL</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edit-bashrc-or-zshrc-to-set-up-dependencies">Edit .bashrc or .zshrc to set up dependencies</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-started-with-analysis">Get started with analysis</a></li>

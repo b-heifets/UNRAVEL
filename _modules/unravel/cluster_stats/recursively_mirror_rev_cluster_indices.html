@@ -352,17 +352,17 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``cluster_mirror_indices`` from UNRAVEL to recursively process img.nii.gz files, apply mirroring, and save new files.</span>
+<span class="sd">Use ``cstats_mirror_indices`` from UNRAVEL to recursively process img.nii.gz files, apply mirroring, and save new files.</span>
 
 <span class="sd">Usage</span>
 <span class="sd">-----</span>
-<span class="sd">    cluster_mirror_indices -m RH -v</span>
+<span class="sd">    cstats_mirror_indices -m RH -v</span>
 <span class="sd">    </span>
-<span class="sd">Use this command after ``cluster_fdr`` to mirror the cluster indices for the other side of the brain before running ``cluster_validation``.  </span>
+<span class="sd">Use this command after ``cstats_fdr`` to mirror the cluster indices for the other side of the brain before running ``cstats_validation``.  </span>
 
 <span class="sd">Note:</span>
 <span class="sd">    - Use -ax 2 and -s 0 for the CCFv3 2020 atlas.</span>
-<span class="sd">    - Use -ax 0 and -s 2 for the 25 um Gubra atlas</span>
+<span class="sd">    - Use -ax 0 and -s 2 for the 25 um Gubra atlas.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -382,7 +382,7 @@
 <a class="viewcode-back" href="../../../unravel/cluster_stats/recursively_mirror_rev_cluster_indices.html#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--mas_side&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Side of the brain corresponding to the mask used for ``vstats`` and ``cluster_fdr`` (RH or LH)&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RH&#39;</span><span class="p">,</span> <span class="s1">&#39;LH&#39;</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--mas_side&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Side of the brain corresponding to the mask used for ``vstats`` and ``cstats_fdr`` (RH or LH)&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;RH&#39;</span><span class="p">,</span> <span class="s1">&#39;LH&#39;</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Glob pattern to match files. Default: **/*rev_cluster_index.nii.gz&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;**/*rev_cluster_index.nii.gz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ax&#39;</span><span class="p">,</span> <span class="s1">&#39;--axis&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Axis to flip the image along. Default: 2&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--shift&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of voxels to shift content after flipping. Default: 0&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>

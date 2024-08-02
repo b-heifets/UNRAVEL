@@ -358,13 +358,13 @@
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
-<span class="sd">    reg_affine_initializer -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10</span>
+<span class="sd">    reg_affine_initializer -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m atlas/average_template_CCFv3_30um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10</span>
 
 <span class="sd">Python usage:</span>
 <span class="sd">-------------</span>
 <span class="sd">&gt;&gt;&gt; import subprocess</span>
 <span class="sd">&gt;&gt;&gt; import os</span>
-<span class="sd">&gt;&gt;&gt; command = [&#39;python&#39;, &#39;reg_affine_initializer&#39;, &#39;-f&#39;, &#39;reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz&#39;, &#39;-m&#39;, &#39;/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz&#39;, &#39;-o&#39;, &#39;reg_outputs/ANTsPy_init_tform.nii.gz&#39;, &#39;-t&#39;, &#39;10&#39; ]</span>
+<span class="sd">&gt;&gt;&gt; command = [&#39;python&#39;, &#39;reg_affine_initializer&#39;, &#39;-f&#39;, &#39;reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz&#39;, &#39;-m&#39;, &#39;atlas/average_template_CCFv3_30um.nii.gz&#39;, &#39;-o&#39;, &#39;reg_outputs/ANTsPy_init_tform.nii.gz&#39;, &#39;-t&#39;, &#39;10&#39; ]</span>
 <span class="sd">&gt;&gt;&gt; with open(os.devnull, &#39;w&#39;) as devnull:</span>
 <span class="sd">&gt;&gt;&gt;    subprocess.run(command, stderr=devnull)</span>
 <span class="sd">&quot;&quot;&quot;</span>

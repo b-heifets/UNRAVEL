@@ -352,14 +352,14 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``cluster_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</span>
+<span class="sd">Use ``cstats_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
-<span class="sd">    cluster_table</span>
+<span class="sd">    cstats_table</span>
 
 <span class="sd">Prereqs:</span>
-<span class="sd">    ``cluster_index`` has been run. Run this command from the valid_clusters dir. &lt;asterisk&gt;cluster_info.txt in working dir.</span>
+<span class="sd">    ``cstats_index`` has been run. Run this command from the valid_clusters dir. &lt;asterisk&gt;cluster_info.txt in working dir.</span>
 
 <span class="sd">Sorting by hierarchy and volume:</span>
 <span class="sd">--------------------------------</span>
@@ -376,7 +376,7 @@
 <span class="sd">Note: </span>
 <span class="sd">    - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/</span>
 <span class="sd">    - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst</span>
-<span class="sd">    - Alternatively, use CCFv3_info.csv (for gubra) or provide a custom CSV with the same columns.   </span>
+<span class="sd">    - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.   </span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
@@ -713,7 +713,7 @@
     <span class="n">columns_to_load</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;abbreviation&#39;</span><span class="p">,</span> <span class="s1">&#39;general_region&#39;</span><span class="p">,</span>  <span class="s1">&#39;structure_id_path&#39;</span><span class="p">]</span>
 
     <span class="c1"># Load the specified columns from the CSV with CCFv3 info</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3_info.csv&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">:</span> 
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2017_info.csv&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">:</span> 
         <span class="n">ccfv3_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">columns_to_load</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ccfv3_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">columns_to_load</span><span class="p">)</span>

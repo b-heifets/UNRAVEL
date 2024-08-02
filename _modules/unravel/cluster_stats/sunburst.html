@@ -352,15 +352,15 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``cluster_sunburst`` from UNRAVEL to generate a sunburst plot of regional volumes across all levels of the ABA hierarchy.</span>
+<span class="sd">Use ``cstats_sunburst`` from UNRAVEL to generate a sunburst plot of regional volumes across all levels of the ABA hierarchy.</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">------ </span>
-<span class="sd">    cluster_sunburst -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v</span>
+<span class="sd">    cstats_sunburst -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v</span>
 
 <span class="sd">Prereqs: </span>
-<span class="sd">    - ``cluster_validation`` generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them. </span>
-<span class="sd">    - Optional: ``cluster_index`` generates a rev_cluster_index.nii.gz w/ valid clusters.</span>
+<span class="sd">    - ``cstats_validation`` generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them. </span>
+<span class="sd">    - Optional: ``cstats_index`` generates a rev_cluster_index.nii.gz w/ valid clusters.</span>
 <span class="sd">    </span>
 <span class="sd">Outputs:</span>
 <span class="sd">    path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]</span>
@@ -374,9 +374,8 @@
 <span class="sd">    Hierarchy -&gt; Depth to 10, Colors -&gt; paste RGB codes into Custom overrides</span>
 
 <span class="sd">Note:</span>
-<span class="sd">    - CSVs are in UNRAVEL/unravel/core/csvs/</span>
-<span class="sd">    - sunburst_IDPath_Abbrv_CCFv3-2020.csv or sunburst_IDPath_Abbrv.csv</span>
-<span class="sd">    - CCFv3-2020_info.csv or CCFv3_info.csv</span>
+<span class="sd">    - Default csv: UNRAVEL/unravel/core/csvs/sunburst_IDPath_Abbrv.csv</span>
+<span class="sd">    - CCFv3-2020_info.csv or CCFv3-2017_info.csv</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -397,9 +396,9 @@
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy&#39;</span><span class="p">,</span> <span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/rev_cluster_index.nii.gz (e.g., with valid clusters)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--atlas&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--atlas&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;atlas/atlas_CCFv3_2020_30um.nii.gz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-rgb&#39;</span><span class="p">,</span> <span class="s1">&#39;--output_rgb_lut&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-scsv&#39;</span><span class="p">,</span> <span class="s1">&#39;--sunburst_csv_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: sunburst_IDPath_Abbrv_CCFv3-2020.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sunburst_IDPath_Abbrv_CCFv3-2020.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-scsv&#39;</span><span class="p">,</span> <span class="s1">&#39;--sunburst_csv_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: sunburst_IDPath_Abbrv.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sunburst_IDPath_Abbrv.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-icsv&#39;</span><span class="p">,</span> <span class="s1">&#39;--info_csv_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
@@ -436,7 +435,7 @@
 
 <div class="viewcode-block" id="sunburst">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/sunburst.html#unravel.cluster_stats.sunburst.sunburst">[docs]</a>
-<span class="k">def</span> <span class="nf">sunburst</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">atlas_res_in_um</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">sunburst_csv_path</span><span class="o">=</span><span class="s1">&#39;sunburst_IDPath_Abbrv_CCFv3-2020.csv&#39;</span><span class="p">,</span> <span class="n">info_csv_path</span><span class="o">=</span><span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">output_rgb_lut</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">sunburst</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">atlas_res_in_um</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">sunburst_csv_path</span><span class="o">=</span><span class="s1">&#39;sunburst_IDPath_Abbrv.csv&#39;</span><span class="p">,</span> <span class="n">info_csv_path</span><span class="o">=</span><span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">output_rgb_lut</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -451,13 +450,13 @@
 
     <span class="n">volumes_dict</span> <span class="o">=</span> <span class="n">calculate_regional_volumes</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">atlas</span><span class="p">,</span> <span class="n">atlas_res_in_um</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">sunburst_csv_path</span> <span class="o">==</span> <span class="s1">&#39;sunburst_IDPath_Abbrv.csv&#39;</span> <span class="ow">or</span> <span class="n">sunburst_csv_path</span> <span class="o">==</span> <span class="s1">&#39;sunburst_IDPath_Abbrv_CCFv3-2020.csv&#39;</span><span class="p">:</span> 
+    <span class="k">if</span> <span class="n">sunburst_csv_path</span> <span class="o">==</span> <span class="s1">&#39;sunburst_IDPath_Abbrv.csv&#39;</span><span class="p">:</span> 
         <span class="n">sunburst_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">sunburst_csv_path</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sunburst_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="p">)</span>
 
     <span class="c1"># Load the specified columns from the CSV with CCFv3 info</span>
-    <span class="k">if</span> <span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3_info.csv&#39;</span> <span class="ow">or</span> <span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">:</span> 
+    <span class="k">if</span> <span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2017_info.csv&#39;</span> <span class="ow">or</span> <span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">:</span> 
         <span class="n">ccf_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">info_csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lowered_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;abbreviation&#39;</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">ccf_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">info_csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lowered_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;abbreviation&#39;</span><span class="p">])</span>

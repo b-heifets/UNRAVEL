@@ -370,9 +370,8 @@
 
 <span class="sd">Note: </span>
 <span class="sd">    - Regarding --type, alternatively use &#39;counts&#39; or &#39;volumes&#39; for object counts or regional volumes</span>
-<span class="sd">    - CCFv3-2020__regionID_side_IDpath_region_abbr.csv is in UNRAVEL/unravel/core/csvs/</span>
-<span class="sd">    - It has columns: Region_ID, Side, ID_path, Region, Abbr</span>
-<span class="sd">    - Alternatively, use gubra__regionID_side_IDpath_region_abbr.csv or other region info CSVs</span>
+<span class="sd">    - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv</span>
+<span class="sd">    - Columns: Region_ID, Side, ID_path, Region, Abbr</span>
 
 <span class="sd">Prereqs: </span>
 <span class="sd">    - ``reg_prep``, ``reg``, and ``seg_ilastik``</span>
@@ -677,7 +676,7 @@
                 <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
             <span class="c1"># Load the region information dataframe</span>
-            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020__regionID_side_IDpath_region_abbr.csv&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;gubra__regionID_side_IDpath_region_abbr.csv&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020__regionID_side_IDpath_region_abbr.csv&#39;</span><span class="p">:</span>
                 <span class="n">region_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">region_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csv_path</span><span class="p">)</span>
