@@ -62,9 +62,9 @@ If you are using Windows and are unfamilar with WSL, check out the first few min
 ### Installing WSL:
 - Open the start menu, search for PowerShell, and right click on PowerShell to run it as an Administrator. Then run:
     ```powershell
-    wsl --install
+    wsl --install  # If this works, the Ubuntu linux distrobution will be installed by default
 
-    # If that does not work, run this
+    # If that does not work, run this and follow additional steps
     Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
     ```
 - Restart your computer when prompted.
@@ -149,8 +149,8 @@ To enable copy/paste in the PowerShell or WSL, click the icon in the upper left 
 
     **b. Create and activate a virtual environment:**
     ```bash
-    python3.11 -m venv unravel_env
-    source unravel_env/bin/activate
+    python3.11 -m venv unravel
+    source unravel/bin/activate
     ```
 
 
