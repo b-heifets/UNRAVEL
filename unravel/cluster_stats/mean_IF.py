@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.
+Use ``cstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.
 
 Usage:
 ------
-    cluster_mean_IF -ci path/rev_cluster_index.nii.gz
+    cstats_mean_IF -ci path/rev_cluster_index.nii.gz
 
 Prereqs: 
     - vstats
-    - cluster_fdr
+    - cstats_fdr
 
 Inputs:
     - This can be run from the vstats directory (will process .nii.gz images in the current directory)
@@ -21,9 +21,9 @@ Outputs:
 Next: 
     - cd cluster_mean_IF...
     - utils_prepend -sk <path/sample_key.csv> -f  # If needed
-    - [cluster_index and cluster_table]  # for an xlsx table and anatomically ordered clusters that can be used with cluster_prism
-    - cluster_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats
-    - cluster_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests
+    - [``cstats_index`` and ``cstats_table``]  # for an xlsx table and anatomically ordered clusters that can be used with ``cstats_prism``
+    - cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats
+    - cstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests
 """
 
 import argparse
@@ -42,7 +42,7 @@ from unravel.image_tools.unique_intensities import uniq_intensities
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-ip', '--input_pattern', help="Pattern for NIfTI images to process relative to cwd. Default: '*.nii.gz'", default='*.nii.gz', action=SM)
-    parser.add_argument('-ci', '--cluster_index', help='Path/rev_cluster_index.nii.gz from ``cluster_fdr``', required=True, action=SM)
+    parser.add_argument('-ci', '--cluster_index', help='Path/rev_cluster_index.nii.gz from ``cstats_fdr``', required=True, action=SM)
     parser.add_argument('-c', '--clusters', help='Space-separated list of cluster IDs to process. Default: all clusters', nargs='*', type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
     parser.epilog = __doc__

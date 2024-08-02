@@ -17,9 +17,8 @@ Outputs:
 
 Note: 
     - Regarding --type, alternatively use 'counts' or 'volumes' for object counts or regional volumes
-    - CCFv3-2020__regionID_side_IDpath_region_abbr.csv is in UNRAVEL/unravel/core/csvs/
-    - It has columns: Region_ID, Side, ID_path, Region, Abbr
-    - Alternatively, use gubra__regionID_side_IDpath_region_abbr.csv or other region info CSVs
+    - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv
+    - Columns: Region_ID, Side, ID_path, Region, Abbr
 
 Prereqs: 
     - ``reg_prep``, ``reg``, and ``seg_ilastik``
@@ -307,7 +306,7 @@ def main():
                 import sys ; sys.exit()
 
             # Load the region information dataframe
-            if args.csv_path == 'CCFv3-2020__regionID_side_IDpath_region_abbr.csv' or args.csv_path == 'gubra__regionID_side_IDpath_region_abbr.csv':
+            if args.csv_path == 'CCFv3-2020__regionID_side_IDpath_region_abbr.csv':
                 region_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path)
             else:
                 region_info_df = pd.read_csv(args.csv_path)

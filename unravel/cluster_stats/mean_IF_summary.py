@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each cluster in atlas space.
+Use ``cstats_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each cluster in atlas space.
 
 Usage for t-tests:
 ------------------
-    cluster_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
+    cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
 
 Usage for Tukey's tests w/ reordering and renaming of conditions:
 -----------------------------------------------------------------
-    cluster_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1
+    cstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1
 
 Note:
     - The first word of the csv inputs is used for the the group names (underscore separated).
@@ -18,7 +18,7 @@ Inputs:
     - <asterisk>.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity
 
 Prereqs:
-    - Generate CSV inputs withs ``cluster_IF_mean``
+    - Generate CSV inputs withs ``cstats_IF_mean``
     - Add conditions to input CSV file names: ``utils_prepend`` -sk $SAMPLE_KEY -f
 
 Outputs:
@@ -57,7 +57,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cluster_stats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
+# TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cstats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 # TODO: CSVs are loaded for each cluster. It would be more efficient to load them once for processing all clusters. 
 # TODO: Perhaps functions in this script could be made more generic and used in rstats_mean_IF_summary.py as well.
 # TODO: Save a CSV with the results for each cluster.

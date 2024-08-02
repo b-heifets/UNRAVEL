@@ -11,7 +11,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 def parse_args():
     parser = argparse.ArgumentParser(description='Prepares and displays medical images in fsleyes for analysis.', formatter_class=SuppressMetavar)
     parser.add_argument('-fri', '--fixed_reg_in', help='Pattern for fixed image from registration. Default: *autofl_50um_masked_fixed_reg_input.nii.gz', default="*autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    parser.add_argument('-wa', '--warped_atlas', help='Pattern for the warped atlas image from registration. Default: *gubra_ano_combined_25um_in_tissue_space.nii.gz', default="*gubra_ano_combined_25um_in_tissue_space.nii.gz", action=SM)
+    parser.add_argument('-wa', '--warped_atlas', help='Pattern for the warped atlas image from registration. Default: *atlas_CCFv3_2020_30um_in_tissue_space.nii.gz', default="*atlas_CCFv3_2020_30um_in_tissue_space.nii.gz", action=SM)
     parser.epilog = """Usage: check_reg_fsleyes.py"""
     return parser.parse_args()
 

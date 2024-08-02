@@ -1,36 +1,36 @@
 #!/usr/bin/env python3
 
 """ 
-Use ``cluster_summary`` from UNRAVEL to aggregate and analyze cluster validation data from ``cluster_validation``.
+Use ``cstats_summary`` from UNRAVEL to aggregate and analyze cluster validation data from ``cstats_validation``.
 
-Usage if running directly after ``cluster_validation``:
--------------------------------------------------------
-    cluster_summary -c <path/config.ini> -e <exp dir paths> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
+Usage if running directly after ``cstats_validation``:
+------------------------------------------------------
+    cstats_summary -c <path/config.ini> -e <exp dir paths> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
 
 Note: 
-    - The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.
+    - The current working directory should not have other directories when running this script for the first time. Directories from ``cstats_org_data`` are ok though.
 
-Usage if running after ``cluster_validation`` and ``cluster_org_data``:
------------------------------------------------------------------------
-    cluster_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
+Usage if running after ``cstats_validation`` and ``cstats_org_data``:
+---------------------------------------------------------------------
+    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
 
 Note:
     - For the second usage, the ``-e``, ``-cvd``, and ``-vd`` arguments are not needed because the data is already in the working directory.
     - Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.
-    - Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run ``cluster_legend``).
+    - Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run ``cstats_legend``).
 
-The current working directory should not have other directories when running this script for the first time. Directories from cluster_org_data are ok though.
+The current working directory should not have other directories when running this script for the first time. Directories from cstats_org_data are ok though.
 
-``cluster_summary`` runs commands in this order:
-    - ``cluster_org_data``
-    - ``cluster_group_data``
+``cstats_summary`` runs commands in this order:
+    - ``cstats_org_data``
+    - ``cstats_group_data``
     - ``utils_prepend``
-    - ``cluster_stats``
-    - ``cluster_index``
-    - ``cluster_brain_model``
-    - ``cluster_table``
-    - ``cluster_prism``
-    - ``cluster_legend``
+    - ``cstats``
+    - ``cstats_index``
+    - ``cstats_brain_model``
+    - ``cstats_table``
+    - ``cstats_prism``
+    - ``cstats_legend``
 
 The sample_key.csv file should have the following format:
     dir_name,condition
@@ -54,7 +54,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.cluster_stats.org_data import cp
+from unravel.cstats.org_data import cp
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, load_config
@@ -63,19 +63,19 @@ from unravel.utilities.aggregate_files_recursively import find_and_copy_files
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-c', '--config', help='Path to the config.ini file. Default: unravel/cluster_stats/cluster_summary.ini', default=Path(__file__).parent / 'cluster_summary.ini', action=SM)
+    parser.add_argument('-c', '--config', help='Path to the config.ini file. Default: unravel/cluster_stats/summary.ini', default=Path(__file__).parent / 'summary.ini', action=SM)
 
-    # cluster_org_data -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process. (needed for cluster_org_data)', nargs='*', action=SM)
-    parser.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for cluster_org_data', action=SM) 
-    parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cluster_org_data)', action=SM)
+    # cstats_org_data -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
+    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process. (needed for cstats_org_data)', nargs='*', action=SM)
+    parser.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for cstats_org_data', action=SM) 
+    parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cstats_org_data)', action=SM)
 
     # utils_prepend -c <path/sample_key.csv> -f -r
     parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions (for utils_prepend)', action=SM)
 
-    # cluster_stats --groups <group1> <group2>
-    parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cluster_stats)',  nargs='+')
-    parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for cluster_stats)',  nargs='*', default=None, action=SM)
+    # cstats --groups <group1> <group2>
+    parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cstats)',  nargs='+')
+    parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for cstats)',  nargs='*', default=None, action=SM)
     parser.add_argument('-hg', '--higher_group', help='Specify the group that is expected to have a higher mean based on the direction of the p value map', required=True)
 
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -107,7 +107,7 @@ def main():
 
     cfg = load_config(args.config)
     
-    # Run cluster_org_data
+    # Run cstats_org_data
     if args.exp_paths and args.cluster_val_dirs and args.vstats_path:
         org_data_args = [
             '-e', *args.exp_paths,
@@ -119,13 +119,13 @@ def main():
         ]
         if args.verbose:
             org_data_args.append('-v')
-        run_script('cluster_org_data', org_data_args)
+        run_script('cstats_org_data', org_data_args)
 
-    # Run cluster_group_data
+    # Run cstats_group_data
     if args.verbose:
-        run_script('cluster_group_data', ['-v'])
+        run_script('cstats_group_data', ['-v'])
     else:
-        run_script('cluster_group_data', [])
+        run_script('cstats_group_data', [])
 
     # Run utils_prepend
     if args.sample_key:
@@ -138,7 +138,7 @@ def main():
             prepend_conditions_args.append('-v')
         run_script('utils_prepend', prepend_conditions_args)
 
-    # Run cluster_stats
+    # Run cstats
     if args.groups:
         stats_args = [
             '--groups', *args.groups,
@@ -150,7 +150,7 @@ def main():
             stats_args.append(['-cp', *args.condition_prefixes])
         if args.verbose:
             stats_args.append('-v')
-        run_script('cluster_stats', stats_args)
+        run_script('cstats', stats_args)
 
     dsi_dir = Path().cwd() / '3D_brains'
     dsi_dir.mkdir(parents=True, exist_ok=True) 
@@ -188,7 +188,7 @@ def main():
             print(f"    No clusters were valid for {subdir}. Skipping...")
             continue
 
-        # Run cluster_index
+        # Run cstats_index
         index_args = [
             '-ci', rev_cluster_index_path,
             '-ids', *valid_cluster_ids,
@@ -201,9 +201,9 @@ def main():
             index_args.append('-rgb')
         if args.verbose:
             index_args.append('-v')
-        run_script('cluster_index', index_args)
+        run_script('cstats_index', index_args)
 
-        # Run cluster_brain_model
+        # Run cstats_brain_model
         valid_cluster_index_path = valid_clusters_index_dir / str(rev_cluster_index_path.name).replace('.nii.gz', f'_{cfg.index.valid_clusters_dir}.nii.gz')
         brain_args = [
             '-i', valid_cluster_index_path,
@@ -216,16 +216,16 @@ def main():
             brain_args.append('-m')
         if args.verbose:
             brain_args.append('-v')
-        run_script('cluster_brain_model', brain_args)
+        run_script('cstats_brain_model', brain_args)
 
-        # Aggregate files from cluster_brain_model
+        # Aggregate files from cstats_brain_model
         if cfg.brain.mirror: 
             find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA_WB.nii.gz', subdir, dsi_dir)
         else:
             find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA.nii.gz', subdir, dsi_dir)
         find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_rgba.txt', subdir, dsi_dir)
 
-        # Run cluster_table
+        # Run cstats_table
         table_args = [
             '-vcd', valid_clusters_index_dir,
             '-t', cfg.table.top_regions,
@@ -235,12 +235,12 @@ def main():
         ]
         if args.verbose:
             table_args.append('-v')
-        run_script('cluster_table', table_args)
+        run_script('cstats_table', table_args)
         find_and_copy_files('*_valid_clusters_table.xlsx', subdir, Path().cwd() / 'valid_clusters_tables_and_legend')
     
         if Path('valid_clusters_tables_and_legend').exists():
 
-            # Run cluster_prism
+            # Run cstats_prism
             valid_cluster_ids_sorted_txt = valid_clusters_index_dir / 'valid_cluster_IDs_sorted_by_anatomy.txt'
             if valid_cluster_ids_sorted_txt.exists():
                 with open(valid_cluster_ids_sorted_txt, 'r') as f:
@@ -254,9 +254,9 @@ def main():
                 ]
                 if args.verbose:
                     prism_args.append('-v')
-                run_script('cluster_prism', prism_args)
+                run_script('cstats_prism', prism_args)
             else:
-                print(f"\n    No valid cluster IDs found for {subdir}. Skipping cluster_prism...\n")
+                print(f"\n    No valid cluster IDs found for {subdir}. Skipping cstats_prism...\n")
 
     # Copy the atlas and binarize it for visualization in DSI studio
     dest_atlas = dsi_dir / Path(cfg.index.atlas).name
@@ -270,13 +270,13 @@ def main():
         atlas_nii_bin.header.set_data_dtype(np.uint8)
         nib.save(atlas_nii_bin, str(dest_atlas).replace('.nii.gz', '_bin.nii.gz'))
 
-        # Run cluster_legend
+        # Run cstats_legend
         if Path('valid_clusters_tables_and_legend').exists():
             legend_args = [
                 '-p', 'valid_clusters_tables_and_legend',
                 '-csv', cfg.index.info_csv_path
             ]
-            run_script('cluster_legend', legend_args)
+            run_script('cstats_legend', legend_args)
 
     verbose_end_msg()
 

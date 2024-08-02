@@ -1,0 +1,3 @@
+
+reg -m atlas/iDISCO_template_CCFv3_30um.nii.gz -m2 atlas/atlas_CCFv3_2020_30um.nii.gz -bc -sm 0.4 -ort RPS -v
+    Start: 2024-08-01 17:31:41

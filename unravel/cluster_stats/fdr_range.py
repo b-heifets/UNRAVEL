@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_fdr_range`` from UNRAVEL to output a list of FDR q values that yeild clusters.
+Use ``cstats_fdr_range`` from UNRAVEL to output a list of FDR q values that yeild clusters.
 
 Usage
 -----
-    cluster_fdr_range -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz
+    cstats_fdr_range -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz
 
 Inputs: 
     - p value map (e.g., *vox_p_*stat*.nii.gz from vstats)    

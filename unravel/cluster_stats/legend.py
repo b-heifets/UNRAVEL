@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_legend`` from UNRAVEL to summarize regional abbreviations from <asterisk>_valid_clusters_table.xlsx files.
+Use ``cstats_legend`` from UNRAVEL to summarize regional abbreviations from <asterisk>_valid_clusters_table.xlsx files.
 
 Usage:
 ------
-    cluster_legend
+    cstats_legend
 
 Inputs:
-    <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cluster_table``
+    <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cstats_table``
 
 Outputs:
     legend.xlsx
@@ -16,7 +16,7 @@ Outputs:
 Note: 
     - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/
     - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst
-    - Alternatively, use CCFv3_info.csv (for gubra) or provide a custom CSV with the same columns.
+    - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.
 """
 
 import argparse
@@ -120,7 +120,7 @@ def main():
     columns_to_load = ['structure_id_path', 'very_general_region',  'collapsed_region_name', 'abbreviation', 'collapsed_region', 'other_abbreviation', 'other_abbreviation_defined', 'layer', 'sunburst']
 
     # Load the specified columns from the CSV with CCFv3 info
-    if args.csv_path == 'CCFv3_info.csv' or args.csv_path == 'CCFv3-2020_info.csv': 
+    if args.csv_path == 'CCFv3-2017_info.csv' or args.csv_path == 'CCFv3-2020_info.csv': 
         ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path, usecols=columns_to_load)
     else:
         ccfv3_info_df = pd.read_csv(args.csv_path, usecols=columns_to_load)
@@ -186,7 +186,7 @@ def main():
     other_abbreviation_to_definitions = dict(sorted(other_abbreviation_to_definitions.items()))
     print(f'Additional abbreviations not shown in the region abbreviation legend (SI table): {other_abbreviation_to_definitions}')
 
-    # Get the 'very_general_region' column from the CCFv3_info.csv file and use it to get the 'very_general_region' for each region in unique_regions_collapsed
+    # Get the 'very_general_region' column from the CCFv3-2020_info.csv file and use it to get the 'very_general_region' for each region in unique_regions_collapsed
     very_general_region_dict = dict(zip(ccfv3_info_df['collapsed_region'], ccfv3_info_df['very_general_region']))
     very_general_regions = [very_general_region_dict.get(region, '') for region in unique_regions_collapsed]
 

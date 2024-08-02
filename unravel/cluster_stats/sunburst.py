@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_sunburst`` from UNRAVEL to generate a sunburst plot of regional volumes across all levels of the ABA hierarchy.
+Use ``cstats_sunburst`` from UNRAVEL to generate a sunburst plot of regional volumes across all levels of the ABA hierarchy.
 
 Usage:
 ------ 
-    cluster_sunburst -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v
+    cstats_sunburst -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v
 
 Prereqs: 
-    - ``cluster_validation`` generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them. 
-    - Optional: ``cluster_index`` generates a rev_cluster_index.nii.gz w/ valid clusters.
+    - ``cstats_validation`` generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them. 
+    - Optional: ``cstats_index`` generates a rev_cluster_index.nii.gz w/ valid clusters.
     
 Outputs:
     path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]
@@ -23,9 +23,8 @@ Preview tab:
     Hierarchy -> Depth to 10, Colors -> paste RGB codes into Custom overrides
 
 Note:
-    - CSVs are in UNRAVEL/unravel/core/csvs/
-    - sunburst_IDPath_Abbrv_CCFv3-2020.csv or sunburst_IDPath_Abbrv.csv
-    - CCFv3-2020_info.csv or CCFv3_info.csv
+    - Default csv: UNRAVEL/unravel/core/csvs/sunburst_IDPath_Abbrv.csv
+    - CCFv3-2020_info.csv or CCFv3-2017_info.csv
 """
 
 import argparse
@@ -44,9 +43,9 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 def parse_args():
     parser = argparse.ArgumentParser(description='Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy', formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/rev_cluster_index.nii.gz (e.g., with valid clusters)', required=True, action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
-    parser.add_argument('-scsv', '--sunburst_csv_path', help='CSV name or path/name.csv. Default: sunburst_IDPath_Abbrv_CCFv3-2020.csv', default='sunburst_IDPath_Abbrv_CCFv3-2020.csv', action=SM)
+    parser.add_argument('-scsv', '--sunburst_csv_path', help='CSV name or path/name.csv. Default: sunburst_IDPath_Abbrv.csv', default='sunburst_IDPath_Abbrv.csv', action=SM)
     parser.add_argument('-icsv', '--info_csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
@@ -77,7 +76,7 @@ def calculate_regional_volumes(img, atlas, atlas_res_in_um):
 
     return dict(zip(uniq_values, volumes))
 
-def sunburst(img, atlas, atlas_res_in_um, output_path, sunburst_csv_path='sunburst_IDPath_Abbrv_CCFv3-2020.csv', info_csv_path='CCFv3-2020_info.csv', output_rgb_lut=False):
+def sunburst(img, atlas, atlas_res_in_um, output_path, sunburst_csv_path='sunburst_IDPath_Abbrv.csv', info_csv_path='CCFv3-2020_info.csv', output_rgb_lut=False):
     """Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy.
     
     Args:
@@ -92,13 +91,13 @@ def sunburst(img, atlas, atlas_res_in_um, output_path, sunburst_csv_path='sunbur
 
     volumes_dict = calculate_regional_volumes(img, atlas, atlas_res_in_um)
 
-    if sunburst_csv_path == 'sunburst_IDPath_Abbrv.csv' or sunburst_csv_path == 'sunburst_IDPath_Abbrv_CCFv3-2020.csv': 
+    if sunburst_csv_path == 'sunburst_IDPath_Abbrv.csv': 
         sunburst_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / sunburst_csv_path)
     else:
         sunburst_df = pd.read_csv(sunburst_csv_path)
 
     # Load the specified columns from the CSV with CCFv3 info
-    if info_csv_path == 'CCFv3_info.csv' or info_csv_path == 'CCFv3-2020_info.csv': 
+    if info_csv_path == 'CCFv3-2017_info.csv' or info_csv_path == 'CCFv3-2020_info.csv': 
         ccf_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / info_csv_path, usecols=['lowered_ID', 'abbreviation'])
     else:
         ccf_df = pd.read_csv(info_csv_path, usecols=['lowered_ID', 'abbreviation'])

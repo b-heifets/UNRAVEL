@@ -5,7 +5,7 @@ Use ``seg_copy_tifs`` from UNRAVEL to copy a subset of .tif files to a target di
 
 Usage to prep for ``seg_brain_mask``:
 -------------------------------------
-    seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0000 0005 0050 -o ilastik_brain_mask
+    seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0000 0005 0050 -o brain_mask
 
 Usage to prep for ``seg_ilastik`` to segment full resolution immunofluorescence images:
 ---------------------------------------------------------------------------------------
@@ -31,7 +31,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um_tifs (from ``reg_prep``) or name of directory with raw tifs', default=None, action=SM)
-    parser.add_argument('-o', '--output', help='path/dir to copy TIF files. (e.g., ilastik_brain_mask or ilastik_segmentation)', required=True, action=SM)
+    parser.add_argument('-o', '--output', help='path/dir to copy TIF files. (e.g., brain_mask or ilastik_segmentation)', required=True, action=SM)
     parser.add_argument('-s', '--slices', help='List of slice numbers to copy (4 digits each; space separated)', nargs='*', type=str, default=[])
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__

@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_mirror_indices`` from UNRAVEL to recursively process img.nii.gz files, apply mirroring, and save new files.
+Use ``cstats_mirror_indices`` from UNRAVEL to recursively process img.nii.gz files, apply mirroring, and save new files.
 
 Usage
 -----
-    cluster_mirror_indices -m RH -v
+    cstats_mirror_indices -m RH -v
     
-Use this command after ``cluster_fdr`` to mirror the cluster indices for the other side of the brain before running ``cluster_validation``.  
+Use this command after ``cstats_fdr`` to mirror the cluster indices for the other side of the brain before running ``cstats_validation``.  
 
 Note:
     - Use -ax 2 and -s 0 for the CCFv3 2020 atlas.
-    - Use -ax 0 and -s 2 for the 25 um Gubra atlas
+    - Use -ax 0 and -s 2 for the 25 um Gubra atlas.
 """
 
 import argparse
@@ -29,7 +29,7 @@ from unravel.voxel_stats.mirror import mirror
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-m', '--mas_side', help='Side of the brain corresponding to the mask used for ``vstats`` and ``cluster_fdr`` (RH or LH)', choices=['RH', 'LH'], required=True, action=SM)
+    parser.add_argument('-m', '--mas_side', help='Side of the brain corresponding to the mask used for ``vstats`` and ``cstats_fdr`` (RH or LH)', choices=['RH', 'LH'], required=True, action=SM)
     parser.add_argument('-p', '--pattern', help='Glob pattern to match files. Default: **/*rev_cluster_index.nii.gz', default='**/*rev_cluster_index.nii.gz', action=SM)
     parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
     parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)

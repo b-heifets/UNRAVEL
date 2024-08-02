@@ -20,7 +20,7 @@ Prereqs:
     - Input images from ``vstats_prep``, ``vstats_z_score``, or ``vstats_whole_to_avg``.
 
 Next steps:
-    - Run ``cluster_fdr_range`` and ``cluster_fdr`` to correct for multiple comparisons.
+    - Run ``cstats_fdr_range`` and ``cstats_fdr`` to correct for multiple comparisons.
 
 For info on how to set up and run voxel-wise analyses, see: https://b-heifets.github.io/UNRAVEL/guide.html#voxel-wise-stats
 """
@@ -46,7 +46,7 @@ def parse_args():
     parser.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300). Default: 18000', type=int, default=18000, action=SM)
     parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
     parser.add_argument('-op', '--output_prefix', help='Prefix of output files. Default: current working dir name.', action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (copied to stats/ for easier vizualization; Default: /usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
+    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (copied to stats/ for viewing; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
     parser.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--seed=1 -T"', nargs=argparse.REMAINDER, default=[])
     parser.epilog = __doc__

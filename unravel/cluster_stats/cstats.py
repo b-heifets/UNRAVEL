@@ -71,7 +71,7 @@ def parse_args():
     parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group data (e.g., see info for examples)',  nargs='*', default=None, action=SM)
     parser.add_argument('-hg', '--higher_group', help='Specify the group that is expected to have a higher mean based on the direction of the p value map', required=True)
     parser.add_argument('-alt', "--alternate", help="Number of tails and direction ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
-    parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from cluster_fdr). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
+    parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from cstats_fdr). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
@@ -101,7 +101,7 @@ def condition_selector(df, condition, unique_conditions, condition_column='Condi
     else:
         raise ValueError(f"    [red]Condition {condition} not recognized!")
 
-def cluster_validation_data_df(density_col, has_hemisphere, csv_files, groups, data_col, data_col_pooled, condition_prefixes=None):
+def svalidation_data_df(density_col, has_hemisphere, csv_files, groups, data_col, data_col_pooled, condition_prefixes=None):
     """Aggregate the data from all .csv files, pool bilateral data if hemispheres are present, optionally pool data by condition, and return the DataFrame.
     
     Args:

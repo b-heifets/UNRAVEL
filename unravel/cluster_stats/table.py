@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
+Use ``cstats_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
 
 Usage:
 ------
-    cluster_table
+    cstats_table
 
 Prereqs:
-    ``cluster_index`` has been run. Run this command from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
+    ``cstats_index`` has been run. Run this command from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
 
 Sorting by hierarchy and volume:
 --------------------------------
@@ -25,7 +25,7 @@ Maintain Grouping Order:
 Note: 
     - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/
     - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst
-    - Alternatively, use CCFv3_info.csv (for gubra) or provide a custom CSV with the same columns.   
+    - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.   
 """
 
 
@@ -333,7 +333,7 @@ def main():
     columns_to_load = ['abbreviation', 'general_region',  'structure_id_path']
 
     # Load the specified columns from the CSV with CCFv3 info
-    if args.info_csv_path == 'CCFv3_info.csv' or args.info_csv_path == 'CCFv3-2020_info.csv': 
+    if args.info_csv_path == 'CCFv3-2017_info.csv' or args.info_csv_path == 'CCFv3-2020_info.csv': 
         ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.info_csv_path, usecols=columns_to_load)
     else:
         ccfv3_info_df = pd.read_csv(args.info_csv_path, usecols=columns_to_load)
