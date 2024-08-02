@@ -347,8 +347,8 @@
 <li class="toctree-l2"><a class="reference internal" href="fdr_range.html">unravel.cluster_stats.fdr_range module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fdr.html">unravel.cluster_stats.fdr module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recursively_mirror_rev_cluster_indices.html">unravel.cluster_stats.recursively_mirror_rev_cluster_indices module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html">unravel.cluster_stats.cluster_validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_summary.html">unravel.cluster_stats.cluster_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">unravel.cluster_stats.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">unravel.cluster_stats.summary module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="brain_model.html">unravel.cluster_stats.brain_model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="find_incongruent_clusters.html">unravel.cluster_stats.find_incongruent_clusters module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="group_bilateral_data.html">unravel.cluster_stats.group_bilateral_data module</a></li>
@@ -356,7 +356,7 @@
 <li class="toctree-l2"><a class="reference internal" href="legend.html">unravel.cluster_stats.legend module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="org_data.html">unravel.cluster_stats.org_data module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prism.html">unravel.cluster_stats.prism module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stats.html">unravel.cluster_stats.stats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cstats.html">unravel.cluster_stats.cstats module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stats_table.html">unravel.cluster_stats.stats_table module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sunburst.html">unravel.cluster_stats.sunburst module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="table.html">unravel.cluster_stats.table module</a></li>
@@ -493,16 +493,16 @@
                   
   <section id="module-unravel.cluster_stats.mean_IF">
 <span id="unravel-cluster-stats-mean-if-module"></span><span id="unravel-cluster-stats-mean-if"></span><h1>unravel.cluster_stats.mean_IF module<a class="headerlink" href="#module-unravel.cluster_stats.mean_IF" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_mean_IF</span></code> from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cstats_mean_IF</span></code> from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.</p>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cluster_mean_IF -ci path/rev_cluster_index.nii.gz</p>
+<div><p>cstats_mean_IF -ci path/rev_cluster_index.nii.gz</p>
 </div></blockquote>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><ul class="simple">
 <li><p>vstats</p></li>
-<li><p>cluster_fdr</p></li>
+<li><p>cstats_fdr</p></li>
 </ul>
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
@@ -517,9 +517,9 @@
 <dt>Next:</dt><dd><ul class="simple">
 <li><p>cd cluster_mean_IF…</p></li>
 <li><p>utils_prepend -sk &lt;path/sample_key.csv&gt; -f  # If needed</p></li>
-<li><p>[cluster_index and cluster_table]  # for an xlsx table and anatomically ordered clusters that can be used with cluster_prism</p></li>
-<li><p>cluster_mean_IF_summary –order Control Treatment –labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats</p></li>
-<li><p>cluster_mean_IF_summary –order group3 group2 group1 –labels Group_3 Group_2 Group_1  # Tukey tests</p></li>
+<li><p>[<code class="docutils literal notranslate"><span class="pre">cstats_index</span></code> and <code class="docutils literal notranslate"><span class="pre">cstats_table</span></code>]  # for an xlsx table and anatomically ordered clusters that can be used with <code class="docutils literal notranslate"><span class="pre">cstats_prism</span></code></p></li>
+<li><p>cstats_mean_IF_summary –order Control Treatment –labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats</p></li>
+<li><p>cstats_mean_IF_summary –order group3 group2 group1 –labels Group_3 Group_2 Group_1  # Tukey tests</p></li>
 </ul>
 </dd>
 </dl>

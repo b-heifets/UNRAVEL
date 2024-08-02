@@ -347,8 +347,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/fdr_range.html">unravel.cluster_stats.fdr_range module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/fdr.html">unravel.cluster_stats.fdr module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/recursively_mirror_rev_cluster_indices.html">unravel.cluster_stats.recursively_mirror_rev_cluster_indices module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cluster_stats/cluster_validation.html">unravel.cluster_stats.cluster_validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cluster_stats/cluster_summary.html">unravel.cluster_stats.cluster_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cluster_stats/validation.html">unravel.cluster_stats.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cluster_stats/summary.html">unravel.cluster_stats.summary module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/brain_model.html">unravel.cluster_stats.brain_model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/find_incongruent_clusters.html">unravel.cluster_stats.find_incongruent_clusters module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/group_bilateral_data.html">unravel.cluster_stats.group_bilateral_data module</a></li>
@@ -356,7 +356,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/legend.html">unravel.cluster_stats.legend module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/org_data.html">unravel.cluster_stats.org_data module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/prism.html">unravel.cluster_stats.prism module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cluster_stats/stats.html">unravel.cluster_stats.stats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cluster_stats/cstats.html">unravel.cluster_stats.cstats module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/stats_table.html">unravel.cluster_stats.stats_table module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/sunburst.html">unravel.cluster_stats.sunburst module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../cluster_stats/table.html">unravel.cluster_stats.table module</a></li>
@@ -497,14 +497,14 @@
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>reg_affine_initializer -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m /usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10</p>
+<div><p>reg_affine_initializer -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m atlas/average_template_CCFv3_30um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10</p>
 </div></blockquote>
 </section>
 <section id="python-usage">
 <h2>Python usage:<a class="headerlink" href="#python-usage" title="Link to this heading">#</a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_affine_initializer&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;/usr/local/unravel/atlases/gubra/gubra_template_25um.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_outputs/ANTsPy_init_tform.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span> <span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_affine_initializer&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;atlas/average_template_CCFv3_30um.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_outputs/ANTsPy_init_tform.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span> <span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">devnull</span><span class="p">:</span>
 <span class="gp">&gt;&gt;&gt; </span>   <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">devnull</span><span class="p">)</span>
 </pre></div>

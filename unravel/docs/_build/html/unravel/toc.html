@@ -347,8 +347,8 @@
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/fdr_range.html">unravel.cluster_stats.fdr_range module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/fdr.html">unravel.cluster_stats.fdr module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/recursively_mirror_rev_cluster_indices.html">unravel.cluster_stats.recursively_mirror_rev_cluster_indices module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_stats/cluster_validation.html">unravel.cluster_stats.cluster_validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_stats/cluster_summary.html">unravel.cluster_stats.cluster_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats/validation.html">unravel.cluster_stats.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats/summary.html">unravel.cluster_stats.summary module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/brain_model.html">unravel.cluster_stats.brain_model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/find_incongruent_clusters.html">unravel.cluster_stats.find_incongruent_clusters module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/group_bilateral_data.html">unravel.cluster_stats.group_bilateral_data module</a></li>
@@ -356,7 +356,7 @@
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/legend.html">unravel.cluster_stats.legend module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/org_data.html">unravel.cluster_stats.org_data module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/prism.html">unravel.cluster_stats.prism module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_stats/stats.html">unravel.cluster_stats.stats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats/cstats.html">unravel.cluster_stats.cstats module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/stats_table.html">unravel.cluster_stats.stats_table module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/sunburst.html">unravel.cluster_stats.sunburst module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/table.html">unravel.cluster_stats.table module</a></li>
@@ -703,29 +703,21 @@
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/recursively_mirror_rev_cluster_indices.html#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_stats/cluster_validation.html">unravel.cluster_stats.cluster_validation module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_validation.html#usage">Usage:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_validation.html#unravel.cluster_stats.cluster_validation.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_validation.html#unravel.cluster_stats.cluster_validation.crop_outer_space"><code class="docutils literal notranslate"><span class="pre">crop_outer_space()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_validation.html#unravel.cluster_stats.cluster_validation.cluster_bbox"><code class="docutils literal notranslate"><span class="pre">cluster_bbox()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_validation.html#unravel.cluster_stats.cluster_validation.cluster_bbox_parallel"><code class="docutils literal notranslate"><span class="pre">cluster_bbox_parallel()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_validation.html#unravel.cluster_stats.cluster_validation.count_cells"><code class="docutils literal notranslate"><span class="pre">count_cells()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_validation.html#unravel.cluster_stats.cluster_validation.density_in_cluster"><code class="docutils literal notranslate"><span class="pre">density_in_cluster()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_validation.html#unravel.cluster_stats.cluster_validation.density_in_cluster_parallel"><code class="docutils literal notranslate"><span class="pre">density_in_cluster_parallel()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_validation.html#unravel.cluster_stats.cluster_validation.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats/validation.html">unravel.cluster_stats.validation module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.crop_outer_space"><code class="docutils literal notranslate"><span class="pre">crop_outer_space()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.cluster_bbox"><code class="docutils literal notranslate"><span class="pre">cluster_bbox()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.cluster_bbox_parallel"><code class="docutils literal notranslate"><span class="pre">cluster_bbox_parallel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.count_cells"><code class="docutils literal notranslate"><span class="pre">count_cells()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.density_in_cluster"><code class="docutils literal notranslate"><span class="pre">density_in_cluster()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.density_in_cluster_parallel"><code class="docutils literal notranslate"><span class="pre">density_in_cluster_parallel()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/validation.html#unravel.cluster_stats.validation.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_stats/cluster_summary.html">unravel.cluster_stats.cluster_summary module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_summary.html#usage-if-running-directly-after-cluster-validation">Usage if running directly after <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code>:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_summary.html#usage-if-running-after-cluster-validation-and-cluster-org-data">Usage if running after <code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code> and <code class="docutils literal notranslate"><span class="pre">cluster_org_data</span></code>:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_summary.html#unravel.cluster_stats.cluster_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_summary.html#unravel.cluster_stats.cluster_summary.run_script"><code class="docutils literal notranslate"><span class="pre">run_script()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cluster_summary.html#unravel.cluster_stats.cluster_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats/summary.html">unravel.cluster_stats.summary module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/brain_model.html">unravel.cluster_stats.brain_model module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/brain_model.html#usage-with-ccfv3">Usage with CCFv3:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/brain_model.html#usage-with-gubra-atlas">Usage with gubra atlas:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/brain_model.html#usage">Usage:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/brain_model.html#unravel.cluster_stats.brain_model.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/brain_model.html#unravel.cluster_stats.brain_model.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
@@ -778,15 +770,15 @@
 <li class="toctree-l3"><a class="reference internal" href="cluster_stats/prism.html#unravel.cluster_stats.prism.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_stats/stats.html">unravel.cluster_stats.stats module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/stats.html#t-test-usage">T-test usage:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/stats.html#tukey-s-test-usage">Tukey’s test usage:</a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/stats.html#unravel.cluster_stats.stats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/stats.html#unravel.cluster_stats.stats.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/stats.html#unravel.cluster_stats.stats.cluster_validation_data_df"><code class="docutils literal notranslate"><span class="pre">cluster_validation_data_df()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/stats.html#unravel.cluster_stats.stats.valid_clusters_t_test"><code class="docutils literal notranslate"><span class="pre">valid_clusters_t_test()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/stats.html#unravel.cluster_stats.stats.perform_tukey_test"><code class="docutils literal notranslate"><span class="pre">perform_tukey_test()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="cluster_stats/stats.html#unravel.cluster_stats.stats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cluster_stats/cstats.html">unravel.cluster_stats.cstats module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cstats.html#t-test-usage">T-test usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cstats.html#tukey-s-test-usage">Tukey’s test usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cstats.html#unravel.cluster_stats.cstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cstats.html#unravel.cluster_stats.cstats.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cstats.html#unravel.cluster_stats.cstats.svalidation_data_df"><code class="docutils literal notranslate"><span class="pre">svalidation_data_df()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cstats.html#unravel.cluster_stats.cstats.valid_clusters_t_test"><code class="docutils literal notranslate"><span class="pre">valid_clusters_t_test()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cstats.html#unravel.cluster_stats.cstats.perform_tukey_test"><code class="docutils literal notranslate"><span class="pre">perform_tukey_test()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="cluster_stats/cstats.html#unravel.cluster_stats.cstats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="cluster_stats/stats_table.html">unravel.cluster_stats.stats_table module</a><ul>

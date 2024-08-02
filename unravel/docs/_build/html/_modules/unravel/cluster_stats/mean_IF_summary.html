@@ -352,15 +352,15 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``cluster_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each cluster in atlas space.</span>
+<span class="sd">Use ``cstats_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each cluster in atlas space.</span>
 
 <span class="sd">Usage for t-tests:</span>
 <span class="sd">------------------</span>
-<span class="sd">    cluster_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest</span>
+<span class="sd">    cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest</span>
 
 <span class="sd">Usage for Tukey&#39;s tests w/ reordering and renaming of conditions:</span>
 <span class="sd">-----------------------------------------------------------------</span>
-<span class="sd">    cluster_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1</span>
+<span class="sd">    cstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1</span>
 
 <span class="sd">Note:</span>
 <span class="sd">    - The first word of the csv inputs is used for the the group names (underscore separated).</span>
@@ -369,7 +369,7 @@
 <span class="sd">    - &lt;asterisk&gt;.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity</span>
 
 <span class="sd">Prereqs:</span>
-<span class="sd">    - Generate CSV inputs withs ``cluster_IF_mean``</span>
+<span class="sd">    - Generate CSV inputs withs ``cstats_IF_mean``</span>
 <span class="sd">    - Add conditions to input CSV file names: ``utils_prepend`` -sk $SAMPLE_KEY -f</span>
 
 <span class="sd">Outputs:</span>
@@ -411,7 +411,7 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-<span class="c1"># TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cluster_stats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. </span>
+<span class="c1"># TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cstats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. </span>
 <span class="c1"># TODO: CSVs are loaded for each cluster. It would be more efficient to load them once for processing all clusters. </span>
 <span class="c1"># TODO: Perhaps functions in this script could be made more generic and used in rstats_mean_IF_summary.py as well.</span>
 <span class="c1"># TODO: Save a CSV with the results for each cluster.</span>

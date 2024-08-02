@@ -408,7 +408,7 @@
 <section id="developers">
 <h2>Developers<a class="headerlink" href="#developers" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>Daniel Ryskamp Rijsketic</strong> (lead developer and maintainer) - <a class="reference external" href="mailto:danrijs&#37;&#52;&#48;stanford&#46;edu">danrijs<span>&#64;</span>stanford<span>&#46;</span>edu</a></p></li>
+<li><p><strong>Daniel Ryskamp Rijsketic</strong> (developer and maintainer) - <a class="reference external" href="mailto:danrijs&#37;&#52;&#48;stanford&#46;edu">danrijs<span>&#64;</span>stanford<span>&#46;</span>edu</a></p></li>
 <li><p><strong>Austen Casey</strong> (developer) - <a class="reference external" href="mailto:abcasey&#37;&#52;&#48;stanford&#46;edu">abcasey<span>&#64;</span>stanford<span>&#46;</span>edu</a></p></li>
 <li><p><strong>MetaCell</strong> (UNRAVEL visualizer developers) - <a class="reference external" href="mailto:info&#37;&#52;&#48;metacell&#46;us">info<span>&#64;</span>metacell<span>&#46;</span>us</a></p></li>
 <li><p><strong>Boris Heifets</strong> (PI) - <a class="reference external" href="mailto:bheifets&#37;&#52;&#48;stanford&#46;edu">bheifets<span>&#64;</span>stanford<span>&#46;</span>edu</a></p></li>
@@ -437,7 +437,7 @@
 <li><p><a class="reference external" href="https://pandas.pydata.org/">pandas</a></p></li>
 <li><p><a class="reference external" href="https://pypi.org/project/connected-components-3d/">cc3d</a></p></li>
 <li><p>Registration and warping workflows were inspired by <a class="reference external" href="https://miracl.readthedocs.io/en/latest/">MIRACL</a></p></li>
-<li><p>We adapted <a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/33063286/">LSFM/iDISCO+ atlases</a> from <a class="reference external" href="https://www.gubra.dk/cro-services/3d-imaging/">Gubra</a></p></li>
+<li><p>We warped this <a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/33063286/">LSFM/iDISCO+ average template brain</a> to Allen brain atlas space (CCFv3) and refined alignment.</p></li>
 </ul>
 </section>
 <section id="support-is-welcome-for">
@@ -454,7 +454,10 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#tl-dr">TL;DR</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#updating-unravel">Updating UNRAVEL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation.html#setting-up-windows-subsystem-for-linux-wsl">Setting Up Windows Subsystem for Linux (WSL)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation.html#setting-up-windows-subsystem-for-linux-wsl">Setting Up Windows Subsystem for Linux (WSL)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="installation.html#installing-wsl">Installing WSL:</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#installing-unravel-on-linux-or-wsl">Installing UNRAVEL on Linux or WSL</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#edit-bashrc-or-zshrc-to-set-up-dependencies">Edit .bashrc or .zshrc to set up dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation.html#get-started-with-analysis">Get started with analysis</a></li>
@@ -504,14 +507,14 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide.html#cluster-correction">Cluster correction</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="guide.html#img-avg"><code class="docutils literal notranslate"><span class="pre">img_avg</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide.html#cluster-fdr-range"><code class="docutils literal notranslate"><span class="pre">cluster_fdr_range</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide.html#cluster-fdr"><code class="docutils literal notranslate"><span class="pre">cluster_fdr</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide.html#cluster-mirror-indices"><code class="docutils literal notranslate"><span class="pre">cluster_mirror_indices</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#cstats-fdr-range"><code class="docutils literal notranslate"><span class="pre">cstats_fdr_range</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#cstats-fdr"><code class="docutils literal notranslate"><span class="pre">cstats_fdr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#cstats-mirror-indices"><code class="docutils literal notranslate"><span class="pre">cstats_mirror_indices</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide.html#cluster-validation">Cluster validation</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="guide.html#id4"><code class="docutils literal notranslate"><span class="pre">cluster_validation</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="guide.html#cluster-summary"><code class="docutils literal notranslate"><span class="pre">cluster_summary</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#cstats-validation"><code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="guide.html#cstats-summary"><code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="guide.html#region-wise-stats">Region-wise stats</a><ul>
@@ -571,8 +574,8 @@
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/fdr_range.html">unravel.cluster_stats.fdr_range module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/fdr.html">unravel.cluster_stats.fdr module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/recursively_mirror_rev_cluster_indices.html">unravel.cluster_stats.recursively_mirror_rev_cluster_indices module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/cluster_validation.html">unravel.cluster_stats.cluster_validation module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/cluster_summary.html">unravel.cluster_stats.cluster_summary module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/validation.html">unravel.cluster_stats.validation module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/summary.html">unravel.cluster_stats.summary module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/brain_model.html">unravel.cluster_stats.brain_model module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/find_incongruent_clusters.html">unravel.cluster_stats.find_incongruent_clusters module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/group_bilateral_data.html">unravel.cluster_stats.group_bilateral_data module</a></li>
@@ -580,7 +583,7 @@
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/legend.html">unravel.cluster_stats.legend module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/org_data.html">unravel.cluster_stats.org_data module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/prism.html">unravel.cluster_stats.prism module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/stats.html">unravel.cluster_stats.stats module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/cstats.html">unravel.cluster_stats.cstats module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/stats_table.html">unravel.cluster_stats.stats_table module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/sunburst.html">unravel.cluster_stats.sunburst module</a></li>
 <li class="toctree-l4"><a class="reference internal" href="unravel/cluster_stats/table.html">unravel.cluster_stats.table module</a></li>

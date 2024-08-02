@@ -352,11 +352,11 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``cluster_fdr`` from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.</span>
+<span class="sd">Use ``cstats_fdr`` from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.</span>
 
 <span class="sd">Usage</span>
 <span class="sd">-----</span>
-<span class="sd">    cluster_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05</span>
+<span class="sd">    cstats_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05</span>
 
 <span class="sd">Inputs: </span>
 <span class="sd">    - p value map (e.g., &lt;asterisk&gt;vox_p_&lt;asterisk&gt;stat&lt;asterisk&gt;.nii.gz from vstats)    </span>
@@ -376,11 +376,11 @@
 <span class="sd">    - The --output needs to have &lt;group1&gt;_v_&lt;group2&gt; in the name</span>
 <span class="sd">    - _v_ will be replaced with _gt_ or _lt_ based on the effect direction </span>
 <span class="sd">    - The cluster index will be split accoding to the effect directions</span>
-<span class="sd">    - ``cluster_fdr`` -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v</span>
+<span class="sd">    - ``cstats_fdr`` -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v</span>
 
-<span class="sd">For bilateral data processed with a hemispheric mask, next run ``cluster_mirror_indices`` to mirror the cluster indices to the other hemisphere.</span>
+<span class="sd">For bilateral data processed with a hemispheric mask, next run ``cstats_mirror_indices`` to mirror the cluster indices to the other hemisphere.</span>
 
-<span class="sd">For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cluster_validation``.</span>
+<span class="sd">For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cstats_validation``.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -415,7 +415,7 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-<span class="c1"># TODO: could add optional args like in ``vstats`` for running the ``cluster_fdr`` command. </span>
+<span class="c1"># TODO: could add optional args like in ``vstats`` for running the ``cstats_fdr`` command. </span>
 
 <div class="viewcode-block" id="fdr">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.fdr">[docs]</a>

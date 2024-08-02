@@ -528,92 +528,92 @@
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Cluster-wise stats&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;cluster_fdr_range&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_fdr_range&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.fdr_range&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Get FDR q value range yielding clusters.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_fdr&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_fdr&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.fdr&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;FDR-correct 1-p value map --&gt; cluster map.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_mirror_indices&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_mirror_indices&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.recursively_mirror_rev_cluster_indices&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Recursively mirror cluster maps for validating clusters in left and right hemispheres.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_validation&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.cluster_validation&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;cstats_validation&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.validation&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Validate clusters w/ cell/label density measurements.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_summary&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.cluster_summary&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;cstats_summary&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.summary&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Summarize info on valid clusters (run after cluster_validation).&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_org_data&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_org_data&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.org_data&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Organize CSVs from custer_validation.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_group_data&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_group_data&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.group_bilateral_data&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Group bilateral cluster data.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_stats&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.stats&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Compute cluster vallidation statistics.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;cstats&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.cstats&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Compute cluster validation statistics.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_index&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_index&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.index&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Make a valid cluster map and sunburst plots.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_brain_model&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_brain_model&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.brain_model&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Make a 3D brain model from a cluster map (for DSI studio)&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_table&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_table&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.table&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Create a table of cluster validation data.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_prism&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_prism&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.prism&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Generate CSVs for bar charts in Prism.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_legend&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_legend&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.legend&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Make a legend of regions in cluster maps.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_sunburst&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_sunburst&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.sunburst&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Create a sunburst plot of regional volumes.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_find_incongruent&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_find_incongruent&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.find_incongruent_clusters&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Find clusters where the effect direction does not match the prediction of cluster_fdr (for validation of non-directional p value maps).&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_crop&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_crop&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.crop&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Crop clusters to a bounding box.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_mean_IF&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_mean_IF&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.mean_IF&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Compute mean immunofluo intensities for each cluster. &quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
-            <span class="s2">&quot;cluster_mean_IF_summary&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;cstats_mean_IF_summary&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.mean_IF_summary&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Plot mean immunofluo intensities for each cluster.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>

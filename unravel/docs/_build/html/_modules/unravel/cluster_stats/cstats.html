@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unravel.cluster_stats.stats &#8212; UNRAVEL docs</title>
+    <title>unravel.cluster_stats.cstats &#8212; UNRAVEL docs</title>
   
   
   
@@ -49,7 +49,7 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/stats';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/cstats';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -348,19 +348,19 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for unravel.cluster_stats.stats</h1><div class="highlight"><pre>
+  <h1>Source code for unravel.cluster_stats.cstats</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``cluster_stats`` from UNRAVEL to validate clusters based on differences in cell/object or label density w/ t-tests.    </span>
+<span class="sd">Use ``cstats`` from UNRAVEL to validate clusters based on differences in cell/object or label density w/ t-tests.    </span>
 
 <span class="sd">T-test usage:  </span>
 <span class="sd">------------- </span>
-<span class="sd">    cluster_stats --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;group1|group2&gt;</span>
+<span class="sd">    cstats --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;group1|group2&gt;</span>
 
 <span class="sd">Tukey&#39;s test usage: </span>
 <span class="sd">-------------------</span>
-<span class="sd">    cluster_stats --groups &lt;group1&gt; &lt;group2&gt; &lt;group3&gt; &lt;group4&gt; ... -hg &lt;group1|group2&gt;</span>
+<span class="sd">    cstats --groups &lt;group1&gt; &lt;group2&gt; &lt;group3&gt; &lt;group4&gt; ... -hg &lt;group1|group2&gt;</span>
 
 <span class="sd">Note: </span>
 <span class="sd">    - Organize data in directories for each comparison (e.g., psilocybin &gt; saline, etc.)</span>
@@ -370,7 +370,7 @@
 <span class="sd">    - Clusters are not considered valid if the effect direction does not match the expected direction.</span>
 
 <span class="sd">Input files: </span>
-<span class="sd">    &lt;asterisk&gt;_density_data.csv from ``cluster_validation`` (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    </span>
+<span class="sd">    &lt;asterisk&gt;_density_data.csv from ``cstats_validation`` (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    </span>
 
 <span class="sd">CSV naming conventions:</span>
 <span class="sd">    - Condition: first word before &#39;_&#39; in the file name</span>
@@ -388,7 +388,7 @@
 
 <span class="sd">Examples:</span>
 <span class="sd">    - Grouping data by condition prefixes: </span>
-<span class="sd">        ``cluster_stats`` --groups psilocybin saline --condition_prefixes saline psilocybin</span>
+<span class="sd">        ``cstats`` --groups psilocybin saline --condition_prefixes saline psilocybin</span>
 <span class="sd">        - This will treat all &#39;psilocybin*&#39; conditions as one group and all &#39;saline*&#39; conditions as another</span>
 <span class="sd">        - Since there will then effectively be two conditions in this case, they will be compared using a t-test</span>
 
@@ -417,14 +417,14 @@
 <span class="kn">from</span> <span class="nn">unravel.cluster_stats.stats_table</span> <span class="kn">import</span> <span class="n">cluster_summary</span>
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/stats.html#unravel.cluster_stats.stats.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of group prefixes. 2 groups --&gt; t-test. &gt;2 --&gt; Tukey</span><span class="se">\&#39;</span><span class="s1">s tests (The first 2 groups reflect the main comparison for validation rates)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_prefixes&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Condition prefixes to group data (e.g., see info for examples)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-hg&#39;</span><span class="p">,</span> <span class="s1">&#39;--higher_group&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Specify the group that is expected to have a higher mean based on the direction of the p value map&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-alt&#39;</span><span class="p">,</span> <span class="s2">&quot;--alternate&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of tails and direction (&#39;two-sided&#39; [default], &#39;less&#39; [group1 &lt; group2], or &#39;greater&#39;)&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;two-sided&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pvt&#39;</span><span class="p">,</span> <span class="s1">&#39;--p_val_txt&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of the file w/ the corrected p value thresh (e.g., from cluster_fdr). Default: p_value_threshold.txt&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;p_value_threshold.txt&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pvt&#39;</span><span class="p">,</span> <span class="s1">&#39;--p_val_txt&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of the file w/ the corrected p value thresh (e.g., from cstats_fdr). Default: p_value_threshold.txt&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;p_value_threshold.txt&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
@@ -434,7 +434,7 @@
 
 
 <div class="viewcode-block" id="condition_selector">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/stats.html#unravel.cluster_stats.stats.condition_selector">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.condition_selector">[docs]</a>
 <span class="k">def</span> <span class="nf">condition_selector</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">unique_conditions</span><span class="p">,</span> <span class="n">condition_column</span><span class="o">=</span><span class="s1">&#39;Conditions&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.</span>
 <span class="sd">    This function checks if the &#39;condition&#39; is exactly present in the &#39;Conditions&#39; column or is a prefix of any condition in this column. </span>
@@ -458,9 +458,9 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    [red]Condition </span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2"> not recognized!&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="cluster_validation_data_df">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/stats.html#unravel.cluster_stats.stats.cluster_validation_data_df">[docs]</a>
-<span class="k">def</span> <span class="nf">cluster_validation_data_df</span><span class="p">(</span><span class="n">density_col</span><span class="p">,</span> <span class="n">has_hemisphere</span><span class="p">,</span> <span class="n">csv_files</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">data_col</span><span class="p">,</span> <span class="n">data_col_pooled</span><span class="p">,</span> <span class="n">condition_prefixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="svalidation_data_df">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.svalidation_data_df">[docs]</a>
+<span class="k">def</span> <span class="nf">svalidation_data_df</span><span class="p">(</span><span class="n">density_col</span><span class="p">,</span> <span class="n">has_hemisphere</span><span class="p">,</span> <span class="n">csv_files</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">data_col</span><span class="p">,</span> <span class="n">data_col_pooled</span><span class="p">,</span> <span class="n">condition_prefixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate the data from all .csv files, pool bilateral data if hemispheres are present, optionally pool data by condition, and return the DataFrame.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -528,7 +528,7 @@
 
 
 <div class="viewcode-block" id="valid_clusters_t_test">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/stats.html#unravel.cluster_stats.stats.valid_clusters_t_test">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.valid_clusters_t_test">[docs]</a>
 <span class="k">def</span> <span class="nf">valid_clusters_t_test</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span><span class="p">,</span> <span class="n">density_col</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;two-sided&#39;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform unpaired t-tests for each cluster in the DataFrame and return the results as a DataFrame.</span>
 <span class="sd">    </span>
@@ -579,7 +579,7 @@
 
 
 <div class="viewcode-block" id="perform_tukey_test">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/stats.html#unravel.cluster_stats.stats.perform_tukey_test">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.perform_tukey_test">[docs]</a>
 <span class="k">def</span> <span class="nf">perform_tukey_test</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">density_col</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform Tukey&#39;s HSD test for each cluster in the DataFrame and return the results as a DataFrame</span>
 
@@ -633,7 +633,7 @@
 
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/stats.html#unravel.cluster_stats.stats.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.main">[docs]</a>
 <span class="nd">@log_command</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">install</span><span class="p">()</span>
@@ -784,7 +784,7 @@
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">valid_cluster_IDs</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">significant_cluster_ids_str</span><span class="p">)</span>
         
-        <span class="c1"># Save cluster validation info for ``cluster_summary`` </span>
+        <span class="c1"># Save cluster validation info for ``cstats_summary`` </span>
         <span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
             <span class="s1">&#39;Direction&#39;</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">expected_direction</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
             <span class="s1">&#39;FDR q&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">fdr_q</span><span class="p">],</span>

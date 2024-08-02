@@ -347,8 +347,8 @@
 <li class="toctree-l2"><a class="reference internal" href="fdr_range.html">unravel.cluster_stats.fdr_range module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fdr.html">unravel.cluster_stats.fdr module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recursively_mirror_rev_cluster_indices.html">unravel.cluster_stats.recursively_mirror_rev_cluster_indices module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_validation.html">unravel.cluster_stats.cluster_validation module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cluster_summary.html">unravel.cluster_stats.cluster_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html">unravel.cluster_stats.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary.html">unravel.cluster_stats.summary module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="brain_model.html">unravel.cluster_stats.brain_model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="find_incongruent_clusters.html">unravel.cluster_stats.find_incongruent_clusters module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="group_bilateral_data.html">unravel.cluster_stats.group_bilateral_data module</a></li>
@@ -356,7 +356,7 @@
 <li class="toctree-l2"><a class="reference internal" href="legend.html">unravel.cluster_stats.legend module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="org_data.html">unravel.cluster_stats.org_data module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prism.html">unravel.cluster_stats.prism module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="stats.html">unravel.cluster_stats.stats module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cstats.html">unravel.cluster_stats.cstats module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="stats_table.html">unravel.cluster_stats.stats_table module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sunburst.html">unravel.cluster_stats.sunburst module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.cluster_stats.table module</a></li>
@@ -493,14 +493,14 @@
                   
   <section id="module-unravel.cluster_stats.table">
 <span id="unravel-cluster-stats-table-module"></span><span id="unravel-cluster-stats-table"></span><h1>unravel.cluster_stats.table module<a class="headerlink" href="#module-unravel.cluster_stats.table" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">cluster_table</span></code> from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cstats_table</span></code> from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</p>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cluster_table</p>
+<div><p>cstats_table</p>
 </div></blockquote>
 <dl class="simple">
-<dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">cluster_index</span></code> has been run. Run this command from the valid_clusters dir. &lt;asterisk&gt;cluster_info.txt in working dir.</p>
+<dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">cstats_index</span></code> has been run. Run this command from the valid_clusters dir. &lt;asterisk&gt;cluster_info.txt in working dir.</p>
 </dd>
 </dl>
 </section>
@@ -526,7 +526,7 @@
 <ul class="simple">
 <li><p>CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/</p></li>
 <li><p>It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst</p></li>
-<li><p>Alternatively, use CCFv3_info.csv (for gubra) or provide a custom CSV with the same columns.</p></li>
+<li><p>Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.</p></li>
 </ul>
 </div>
 </section>
