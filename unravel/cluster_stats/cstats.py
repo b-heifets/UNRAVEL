@@ -101,7 +101,7 @@ def condition_selector(df, condition, unique_conditions, condition_column='Condi
     else:
         raise ValueError(f"    [red]Condition {condition} not recognized!")
 
-def svalidation_data_df(density_col, has_hemisphere, csv_files, groups, data_col, data_col_pooled, condition_prefixes=None):
+def cluster_validation_data_df(density_col, has_hemisphere, csv_files, groups, data_col, data_col_pooled, condition_prefixes=None):
     """Aggregate the data from all .csv files, pool bilateral data if hemispheres are present, optionally pool data by condition, and return the DataFrame.
     
     Args:
