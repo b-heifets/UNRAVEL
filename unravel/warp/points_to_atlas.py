@@ -93,6 +93,37 @@ def resample_centroids(centroids, xy_res, z_res, reg_res=50, miracl=False):
 
     return centroids_resampled
 
+def resample_centroids(centroids, xy_res, z_res, reg_res=50, miracl=False):
+    """
+    Resample [and reorient] centroids to match the image preprocessing steps.
+
+    Args:
+        centroids (np.ndarray): N x 3 array of centroid coordinates (x, y, z).
+        xy_res (float): Original x/y resolution in microns.
+        z_res (float): Original z resolution in microns.
+        reg_res (int): Target resolution for registration in microns.
+        miracl (bool): Whether to apply MIRACL reorientation.
+
+    Returns:
+        np.ndarray: Resampled and reoriented centroids.
+    """
+    # Convert voxel coordinates to physical space
+    centroids_physical = centroids * np.array([xy_res, xy_res, z_res])
+
+    # Calculate scaling factors
+    scale_xy = reg_res / xy_res  # Resample to the registration resolution
+    scale_z = reg_res / z_res
+
+    # Resample centroids to the registration resolution
+    centroids_resampled = centroids_physical * np.array([scale_xy, scale_xy, scale_z])
+
+    # Optionally reorient centroids
+    if miracl:
+        # Reorient using the same logic as the reorientation function
+        centroids_resampled = centroids_resampled[:, [2, 0, 1]]
+
+    return centroids_resampled
+
 def centroids_to_nii(centroids_resampled, reg_res, sample_path):
     """
     Create a 3D binary mask from resampled centroids and save it as a NIfTI image.
@@ -104,21 +135,18 @@ def centroids_to_nii(centroids_resampled, reg_res, sample_path):
     """
     # Ensure that centroids are non-negative and within expected bounds
     max_coords = centroids_resampled.max(axis=0)
-    img_shape = (int(max_coords[0] + 1), int(max_coords[1] + 1), int(max_coords[2] + 1))
-    
+    img_shape = (int(max_coords[0] / reg_res) + 1, int(max_coords[1] / reg_res) + 1, int(max_coords[2] / reg_res) + 1)
+
     # Create a 3D binary image
     img = np.zeros(img_shape, dtype='uint8')
 
     # Set the centroid coordinates to 1 in the image
-    for x, y, z in centroids_resampled.astype(int):
+    for x, y, z in (centroids_resampled / reg_res).astype(int):
         if 0 <= x < img_shape[0] and 0 <= y < img_shape[1] and 0 <= z < img_shape[2]:
             img[x, y, z] = 1
 
-    # Define affine transformation if needed (here using an identity matrix as an example)
-    affine = np.eye(4)
-    affine[0, 0] = reg_res
-    affine[1, 1] = reg_res
-    affine[2, 2] = reg_res
+    # Define affine transformation for the NIfTI image
+    affine = np.diag([reg_res, reg_res, reg_res, 1.0])
 
     # Create and save the NIfTI image
     img_nii = nib.Nifti1Image(img, affine)
