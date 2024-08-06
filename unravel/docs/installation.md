@@ -7,52 +7,32 @@
 
 ## TL;DR
 * Activate a virtual environment in Python
-* Install UNRAVEL via [PyPI](https://pypi.org/project/heifetslab-unravel/):
+* **Option A:** install UNRAVEL via [PyPI](https://pypi.org/project/heifetslab-unravel/):
 ```bash
+# Install latest release
 pip install heifetslab-unravel
+
+# Update
+pip install --upgrade heifetslab-unravel
 ```
-* Or, for an editable install run:
+* **Option B:** install UNRAVEL via GitHub (for editing source code and/or incremental updates):
 ```bash
+# Install latest code on the main branch
 git clone https://github.com/b-heifets/UNRAVEL.git
 cd UNRAVEL
-pip install -e .  # Also run this for updates
+pip install -e .
+
+# Update
+git pull 
+pip install -e . 
+```
+* Confirm that the installation worked: 
+```bash
+unravel_commands -c  # This should print common commands
 ```
 * Download atlas/template files: [Google Drive Link](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)
 * Install [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation)
 * Install [Ilastik](https://www.ilastik.org/download.html)
-
-
-
-## Updating UNRAVEL
-
-To update UNRAVEL to the latest version, use the following command:
-
-```bash
-pip install --upgrade heifetslab-unravel
-```
-
-:::{admonition} Please note the version of UNRAVEL you are using for reproducibility.
-:class: note dropdown
-
-To check the installed version of UNRAVEL, use the following command:
-
-```bash
-pip show heifetslab-unravel
-
-```
-
-To check the latest version, go to the [heifetslab-unravel PyPI page](https://pypi.org/project/heifetslab-unravel/)
-:::
-
-:::{admonition} Checking changes between versions
-:class: note dropdown
-
-Releases and update notes for UNRAVEL can be found [here](https://github.com/b-heifets/UNRAVEL/releases) on GitHub .
-
-For more detailed information, you can view the commit history:
-* [Main branch commits](https://github.com/b-heifets/UNRAVEL/commits/main)
-* [Dev branch commits](https://github.com/b-heifets/UNRAVEL/commits/dev)
-:::
 
 
 ## Setting Up Windows Subsystem for Linux (WSL)
@@ -154,17 +134,37 @@ To enable copy/paste in the PowerShell or WSL, click the icon in the upper left 
     ```
 
 
-3. **Install UNRAVEL:**
+3. **Install UNRAVEL**
+
+    ### Option A: Install UNRAVEL via PyPI and use as-is
+
     ```bash
     pip install heifetslab-unravel
     ```
 
+    ### Option B: Editable installation of UNRAVEL
+
+    ```bash
+    cd <path>  # Insert path to where you want to clone the GitHub repository
+
+    git clone https://github.com/b-heifets/UNRAVEL.git  # Clone the repo
+
+    cd UNRAVEL
+
+    <command to activate a virtual environment> # e.g., pyenv activate unravel
+
+    pip install -e .
+    ```
+
+    :::{note}
+    If you want to use another branch, run the following before ``pip install -e .``: 
+    git checkout <branch-name>  # Check out the desired remote branch (e.g., dev)
+
+    To add extra depedencies (e.g., for updating documentation), run: ``pip install -e ".[dev]"`
+    :::
+
 4. **Download atlas/template files:**
     [Google Drive Link](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)
-
-:::{todo}
-* Update the paths to atlas files so they work with paths relative to the project
-:::
 
 5. **Install Ilastik:**
     - [Ilastik installation website](https://www.ilastik.org/download.html).
@@ -177,68 +177,64 @@ To enable copy/paste in the PowerShell or WSL, click the icon in the upper left 
         sudo apt-get install -y fsl
         ```
 
-7. **Confirm the installation**
+7. **Confirm that the installation worked**
     ```bash
     unravel_commands -c 
     ```
 
-## Edit .bashrc or .zshrc to set up dependencies
+8. **Edit .bashrc or .zshrc to set up dependencies**
 
-Add the following to your `.bashrc` or `.zshrc` shell configuration file, and change `/usr/local/` to the path where FSL and Ilastik are installed:
+    - Add the following to your `.bashrc` or `.zshrc` shell configuration file, and change `/usr/local/` to the path where FSL and Ilastik are installed:
 
-```bash
-export PATH=$PATH:/usr/local/fsl/bin
-export FSLDIR=/usr/local/fsl
-PATH=${FSLDIR}/bin:${PATH}
-. ${FSLDIR}/etc/fslconf/fsl.sh
-export FSLDIR PATH
-export PATH=/usr/local/ilastik-1.3.3post3-Linux:$PATH # Update the version
-
-# Add this too if you want to open ilastik via the terminal by running: ilastik
-alias ilastik=run_ilastik.sh
-```
-
-Apply the changes by restarting the terminal or source your shell configuration file: 
-```bash
-. ~/.bashrc
-```
-
-
-## Get started with analysis 
-
-[UNRAVEL guide](https://b-heifets.github.io/UNRAVEL/guide.html)
-
-
-## Optional: editable installation of UNRAVEL
-
-* This is an alternate installation method from `pip install heifetslab-unravel`
-
-1. **Open a terminal and navigate to the directory where you want to clone the UNRAVEL GitHub repository:**
-
-2. **Clone the repository:**
     ```bash
-    git clone https://github.com/b-heifets/UNRAVEL.git
-    ```
-    [GitHub Cloning Documentation](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository)
-
-3. **Install UNRAVEL locally**
-    ```bash
-    cd UNRAVEL
-    <activate a virtual environment> # e.g., pyenv activate unravel
-    pip install -e .
+    export PATH=$PATH:/usr/local/fsl/bin
+    export FSLDIR=/usr/local/fsl
+    PATH=${FSLDIR}/bin:${PATH}
+    . ${FSLDIR}/etc/fslconf/fsl.sh
+    export FSLDIR PATH
+    export PATH=/usr/local/ilastik-1.3.3post3-Linux:$PATH # Update the path and version
     ```
 
-4. **Update scripts periodically:**
+    - Apply the changes by restarting the terminal or source your shell configuration file: 
+    ```bash
+    . ~/.bashrc
+    ```
+
+9. **Update scripts periodically:**
     :::{hint}
-    * Make a backup of the code that you used for analysis before updating
+    Note the release/version and/or backup code before updating for reproducibility
     :::
 
+    ### Option A. Updating UNRAVEL if installed via PyPI:
+    ```bash
+    # Update UNRAVEL if installed via PyPI: 
+    pip install --upgrade heifetslab-unravel
+
+    # Check the installed version of UNRAVEL
+    pip show heifetslab-unravel
+    ```
+    To check the latest version, go to the [heifetslab-unravel PyPI page](https://pypi.org/project/heifetslab-unravel/)
+
+    ### Option B. Updating UNRAVEL if installed via GitHub:
+    This is allows for editing source code and incremental updates
     ```bash
     cd <path/to/UNRAVEL>
     git pull  # This will update the local repo
     pip install -e .  # This will update commands and install new dependencies
     ```
 
-:::{note}
-To add extra depedencies (e.g., for updating documentation), run: ``pip install -e ".[dev]"``
+:::{admonition} Checking changes between versions
+:class: note dropdown
+
+Releases and update notes for UNRAVEL can be found [here](https://github.com/b-heifets/UNRAVEL/releases) on GitHub .
+
+For more detailed information, you can view the commit history:
+* [Main branch commits](https://github.com/b-heifets/UNRAVEL/commits/main)
+* [Dev branch commits](https://github.com/b-heifets/UNRAVEL/commits/dev)
 :::
+
+
+
+## Get started with analysis 
+
+[UNRAVEL guide](https://b-heifets.github.io/UNRAVEL/guide.html)
