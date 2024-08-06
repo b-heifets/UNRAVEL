@@ -40,7 +40,7 @@ def parse_args():
 
     # Required arguments:
     parser.add_argument('-i', '--input', help='INPUT: Path of native image relative to ./sample??', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='Output img.nii.gz (saved as ./sample??/atlas_space/img.nii.gz', required=True, action=SM)
+    parser.add_argument('-o', '--output', help='Output filename. E.g., img_in_atlas_space.nii.gz. Saved in ./sample??/atlas_space/', required=True, action=SM)
 
     # Optional arguments:
     parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
