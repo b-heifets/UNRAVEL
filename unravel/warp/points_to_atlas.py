@@ -8,7 +8,7 @@ Usage:
     warp_points_to_atlas -i regional_stats/<condition>_sample??_cell_centroids.csv -o points_in_atlas_space.csv -r 50 [-a path/atlas.nii.gz -dt uint16 -fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -inp bSpline -zo 1 -mi -v]
 
 Prereqs: 
-    ``reg``
+    ``reg`` and ``rstats``
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
     <asterisk>.czi, ochann/<asterisk>.tif, ochann, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr 
@@ -46,6 +46,7 @@ def parse_args():
     parser.add_argument('-o', '--output', help='Output filename. E.g., points_in_atlas_space.csv (saves in ./sample??/atlas_space/)', required=True, action=SM)
 
     # Optional arguments:
+    parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
 
