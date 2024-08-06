@@ -91,50 +91,40 @@ def resample_centroids(centroids, xy_res, z_res, reg_res=50, miracl=False):
 
     return centroids_resampled
 
+def centroids_to_nii(centroids_resampled, reg_res, sample_path):
+    """
+    Create a 3D binary mask from resampled centroids and save it as a NIfTI image.
 
-# def reg_prep(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
-#     """Prepare the autofluo image for ``reg`` or mimic preprocessing  for ``vstats_prep``.
+    Args:
+        centroids_resampled (np.ndarray): Resampled centroid coordinates.
+        reg_res (float): Resolution in microns used for registration.
+        sample_path (Path): Path to save the NIfTI image.
+    """
+    # Ensure that centroids are non-negative and within expected bounds
+    max_coords = centroids_resampled.max(axis=0)
+    img_shape = (int(max_coords[0] + 1), int(max_coords[1] + 1), int(max_coords[2] + 1))
     
-#     Args:
-#         - ndarray (np.ndarray): full res 3D autofluo image.
-#         - xy_res (float): x/y resolution in microns of ndarray.
-#         - z_res (float): z resolution in microns of ndarray.
-#         - reg_res (int): Resample input to this resolution in microns for ``reg``.
-#         - zoom_order (int): Order for resampling (scipy.ndimage.zoom).
-#         - miracl (bool): Include reorientation step to mimic MIRACL's tif to .nii.gz conversion.
-        
-#     Returns:
-#         - img_resampled (np.ndarray): Resampled image."""
+    # Create a 3D binary image
+    img = np.zeros(img_shape, dtype='uint8')
 
-#     # Resample autofluo image (for registration)
-#     img_resampled = resample(ndarray, xy_res, z_res, reg_res, zoom_order=zoom_order)
+    # Set the centroid coordinates to 1 in the image
+    for x, y, z in centroids_resampled.astype(int):
+        if 0 <= x < img_shape[0] and 0 <= y < img_shape[1] and 0 <= z < img_shape[2]:
+            img[x, y, z] = 1
 
-#     # Optionally reorient autofluo image (mimics MIRACL's tif to .nii.gz conversion)
-#     if miracl: 
-#         img_resampled = reorient_for_raw_to_nii_conv(img_resampled)
+    # Define affine transformation if needed (here using an identity matrix as an example)
+    affine = np.eye(4)
+    affine[0, 0] = reg_res
+    affine[1, 1] = reg_res
+    affine[2, 2] = reg_res
 
-#     return img_resampled
+    # Create and save the NIfTI image
+    img_nii = nib.Nifti1Image(img, affine)
+    img_nii.set_data_dtype(np.uint8)
+    img_path = Path(sample_path) / 'centroids.nii.gz'
+    nib.save(img_nii, str(img_path))
+    print(f"Image saved at {img_path}")
 
-# def resample(ndarray, xy_res, z_res, res, zoom_order=1):
-#     """Resample a 3D ndarray
-    
-#     Parameters:
-#         ndarray: 3D ndarray to resample
-#         xy_res: x/y voxel size in microns (for the original image)
-#         z_res: z voxel size in microns
-#         res: resolution in microns for the resampled image
-#         zoom_order: SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)"""
-#     zf_xy = xy_res / res # Zoom factor
-#     zf_z = z_res / res
-#     img_resampled = ndimage.zoom(ndarray, (zf_xy, zf_xy, zf_z), order=zoom_order)
-#     return img_resampled
-
-# @print_func_name_args_times()
-# def reorient_for_raw_to_nii_conv(ndarray):
-#     """Reorient resampled ndarray for registration or warping to atlas space 
-#     (legacy mode mimics MIRACL's tif to .nii.gz conversion)"""
-#     img_reoriented = np.einsum('zyx->xzy', ndarray)
-#     return np.transpose(img_reoriented, (2, 1, 0))
 
 def pad(ndarray, pad_width=0.15):
     """Pads ndarray by 15% of voxels on all sides"""
@@ -236,16 +226,8 @@ def main():
             # Resample [and reorient] centroids to match the image preprocessing steps
             centroids_resampled = resample_centroids(centroids, xy_res, z_res, args.reg_res, args.miracl)
 
-            # Create a 3D image with the centroids as a binary mask
-            img = np.zeros((int(centroids_resampled[:, 0].max() + 1), int(centroids_resampled[:, 1].max() + 1), int(centroids_resampled[:, 2].max() + 1)), dtype='uint16')
-
-            # Set the centroids to 1 in the image
-            img[centroids_resampled[:, 0].astype(int), centroids_resampled[:, 1].astype(int), centroids_resampled[:, 2].astype(int)] = 1
-
-            # Save the image as a NIfTI
-            img_nii = nib.Nifti1Image(img, np.eye(4))
-            img_nii.set_data_dtype(np.uint8)
-            img_path = sample_path / 'centroids.nii.gz'
+            # Save the resampled centroids as a NIfTI image
+            centroids_to_nii(centroids_resampled, args.reg_res, sample_path)
 
 
             # # Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)
@@ -261,3 +243,49 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+# def reg_prep(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
+#     """Prepare the autofluo image for ``reg`` or mimic preprocessing  for ``vstats_prep``.
+    
+#     Args:
+#         - ndarray (np.ndarray): full res 3D autofluo image.
+#         - xy_res (float): x/y resolution in microns of ndarray.
+#         - z_res (float): z resolution in microns of ndarray.
+#         - reg_res (int): Resample input to this resolution in microns for ``reg``.
+#         - zoom_order (int): Order for resampling (scipy.ndimage.zoom).
+#         - miracl (bool): Include reorientation step to mimic MIRACL's tif to .nii.gz conversion.
+        
+#     Returns:
+#         - img_resampled (np.ndarray): Resampled image."""
+
+#     # Resample autofluo image (for registration)
+#     img_resampled = resample(ndarray, xy_res, z_res, reg_res, zoom_order=zoom_order)
+
+#     # Optionally reorient autofluo image (mimics MIRACL's tif to .nii.gz conversion)
+#     if miracl: 
+#         img_resampled = reorient_for_raw_to_nii_conv(img_resampled)
+
+#     return img_resampled
+
+# def resample(ndarray, xy_res, z_res, res, zoom_order=1):
+#     """Resample a 3D ndarray
+    
+#     Parameters:
+#         ndarray: 3D ndarray to resample
+#         xy_res: x/y voxel size in microns (for the original image)
+#         z_res: z voxel size in microns
+#         res: resolution in microns for the resampled image
+#         zoom_order: SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)"""
+#     zf_xy = xy_res / res # Zoom factor
+#     zf_z = z_res / res
+#     img_resampled = ndimage.zoom(ndarray, (zf_xy, zf_xy, zf_z), order=zoom_order)
+#     return img_resampled
+
+# @print_func_name_args_times()
+# def reorient_for_raw_to_nii_conv(ndarray):
+#     """Reorient resampled ndarray for registration or warping to atlas space 
+#     (legacy mode mimics MIRACL's tif to .nii.gz conversion)"""
+#     img_reoriented = np.einsum('zyx->xzy', ndarray)
+#     return np.transpose(img_reoriented, (2, 1, 0))
