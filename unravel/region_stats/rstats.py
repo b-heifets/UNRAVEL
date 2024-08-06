@@ -306,7 +306,7 @@ def main():
                 import sys ; sys.exit()
 
             # Load the region information dataframe
-            if args.csv_path == 'CCFv3-2020__regionID_side_IDpath_region_abbr.csv':
+            if args.csv_path == 'CCFv3-2020__regionID_side_IDpath_region_abbr.csv' or args.csv_path == 'CCFv3-2017__regionID_side_IDpath_region_abbr.csv':
                 region_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path)
             else:
                 region_info_df = pd.read_csv(args.csv_path)
