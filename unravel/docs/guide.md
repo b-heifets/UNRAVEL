@@ -244,8 +244,9 @@ unravel_commands -m
 :::
 
 ::: {tab-item} Warping
-- [**warp_to_atlas**](unravel.warp.to_atlas): Warp images to atlas space.
+- [**warp_to_atlas**](unravel.warp.to_atlas): Warp full res tissue space images to atlas space.
 - [**warp_to_native**](unravel.warp.to_native): Warp images to native img space, unpad, and scale to full res.
+- [**warp_to_fixed**](unravel.warp.to_fixed): Warp full res tissue space images to fixed img space and unpad.
 :::
 
 ::: {tab-item} Segmentation
@@ -309,9 +310,10 @@ unravel_commands -m
 :::
 
 :::{tab-item} Warping
-- [**warp_to_atlas**](unravel.warp.to_atlas): Warp images to atlas space.
-- [**warp_to_fixed**](unravel.warp.to_fixed): Warp images to fixed img space and unpad.
+- [**warp_to_atlas**](unravel.warp.to_atlas): Warp full res tissue space images to atlas space.
+- [**warp_to_fixed**](unravel.warp.to_fixed): Warp full res tissue space images to fixed img space and unpad.
 - [**warp_to_native**](unravel.warp.to_native): Warp images to native img space, unpad, and scale to full res.
+- [**warp_points_to_atlas**](unravel.warp.points_to_atlas): Warp cell centroids in tissue space to atlas space.
 - [**warp**](unravel.warp.warp): Warp between moving and fixed images (these have 15% padding from reg)
 :::
 
