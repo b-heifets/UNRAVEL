@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``warp_to_atlas`` from UNRAVEL to warp a native image to atlas space.
+Use ``warp_points_to_atlas`` from UNRAVEL to warp cell coordiantes in native image to atlas space.
 
 Usage:
 ------
-    warp_to_atlas -i ochann -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v] 
+    warp_points_to_atlas -i regional_stats/<condition>_sample??_cell_centroids.csv -o points_in_atlas_space.csv -r 50 [-a path/atlas.nii.gz -dt uint16 -fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -inp bSpline -zo 1 -mi -v]
 
 Prereqs: 
     ``reg``
@@ -28,7 +28,7 @@ from scipy import ndimage
 from unravel.image_io.io_nii import convert_dtype
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
-from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt
+from unravel.core.img_io import load_image_metadata_from_txt
 from unravel.core.img_tools import pad
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
 from unravel.register.reg_prep import reg_prep
@@ -46,19 +46,20 @@ def parse_args():
     parser.add_argument('-o', '--output', help='Output filename. E.g., points_in_atlas_space.csv (saves in ./sample??/atlas_space/)', required=True, action=SM)
 
     # Optional arguments:
-    parser.add_argument('-r', '--reg_res', help='Resample input to this res in um for reg. Default: 50', default=50, type=int, action=SM)
+    parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
+    parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
+
+
 
 
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz for use as the fixed image (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
-    parser.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: uint16', default="uint16", action=SM)
     parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     parser.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default]).', default='bSpline', action=SM)
-    parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the raw image. Default: 1', default=1, type=int, action=SM)
-    parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
+
+# TODO: Add commands to .toml, guide, and toctree. 
 
 def resample_centroids(centroids, xy_res, z_res, reg_res=50, miracl=False):
     """
