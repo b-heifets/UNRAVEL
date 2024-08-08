@@ -308,7 +308,7 @@ unravel_commands -m
 - [**reg_check**](unravel.register.reg_check): Check registration (aggregate the autofluo and warped atlas images).
 - [**reg_check_brain_mask**](unravel.register.reg_check_brain_mask): Check brain mask for over/under segmentation.
 :::
-s
+
 :::{tab-item} Warping
 - [**warp_to_atlas**](unravel.warp.to_atlas): Warp full res tissue space images to atlas space.
 - [**warp_to_fixed**](unravel.warp.to_fixed): Warp full res tissue space images to fixed img space and unpad.
