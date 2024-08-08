@@ -139,10 +139,6 @@ def main():
             # This can result in multiple nearby points being grouped into the same voxel, reducing the apparent density of data points.
             centroids_ndarray_resampled = centroids_ndarray_physical / args.reg_res
 
-            # Optionally reorient the coordinates for compatibility with MIRACL
-            if args.miracl:
-                centroids_ndarray_resampled = reorient_for_raw_to_nii_conv(centroids_ndarray_resampled)
-
             # Load output image from ``reg_prep`` (e.g., reg_inputs/autofl_50um.nii.gz) to get shape
             nii = nib.load(sample_path / args.autofl_img)
             autofl_img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
