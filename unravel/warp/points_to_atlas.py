@@ -9,6 +9,10 @@ Usage:
 
 Prereqs: 
     ``reg`` and ``rstats``
+
+Output:
+    - ./sample??/atlas_space/next(glob(args.input)).replace(".csv", ".nii.gz")
+
 """
 
 import argparse
@@ -35,8 +39,7 @@ def parse_args():
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
 
     # Required arguments:
-    parser.add_argument('-i', '--input', help='path/points_in_tissue_space.csv (w/ columns: x, y, z, Region_ID) relative to ./sample?? (first glob match processed)', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='Output filename. E.g., points_in_atlas_space.nii.gz. Saved in ./sample??/atlas_space/', required=True, action=SM)
+    parser.add_argument('-i', '--input', help='regional_stats/<Condition>_sample??_cell_centroids.csv (w/ columns: x, y, z, Region_ID) from ``rstats`` (first glob match processed)', required=True, action=SM)
 
     # Optional arguments:
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz or template matching moving image (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
@@ -93,12 +96,6 @@ def main():
             
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            output = sample_path / "atlas_space" / args.output
-            output.parent.mkdir(exist_ok=True, parents=True)
-            if output.exists():
-                print(f"\n\n    {output} already exists. Skipping.\n")
-                continue
-
             # Load resolutions from metadata
             metadata_path = sample_path / args.metadata
             xy_res, z_res, _, _, _ = load_image_metadata_from_txt(metadata_path)
@@ -109,6 +106,12 @@ def main():
             # Load the csv with cell centroids in full resolution tissue space
             csv_path = next(sample_path.glob(str(args.input)), None)
             centroids_df = pd.read_csv(csv_path)  # Voxel coordinates start at 0
+
+            output = sample_path / "atlas_space" / str(csv_path.name).replace(".csv", ".nii.gz")
+            output.parent.mkdir(exist_ok=True, parents=True)
+            if output.exists():
+                print(f"\n\n    {output} already exists. Skipping.\n")
+                continue
 
             # Remove centroids that are outside the brain (i.e., 'Region_ID' == 0)
             centroids_df = centroids_df[centroids_df['Region_ID'] != 0]
