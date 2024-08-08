@@ -5,13 +5,13 @@ Use ``warp_to_atlas`` from UNRAVEL to warp a native image to atlas space.
 
 Usage:
 ------
-    warp_to_atlas -i ochann -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v] 
+    warp_to_atlas -i cfos -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v] 
 
 Prereqs: 
     ``reg``
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
-    <asterisk>.czi, ochann/<asterisk>.tif, ochann, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr 
+    <asterisk>.czi, cfos/<asterisk>.tif, cfos, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr 
 """
 
 import argparse
