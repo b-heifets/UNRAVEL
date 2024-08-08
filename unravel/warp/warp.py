@@ -5,11 +5,11 @@ Use ``warp`` from UNRAVEL to warp to/from atlas space and registration input spa
 
 Usage for forward warping atlas to tissue space:
 ------------------------------------------------
-    warp -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -ro reg_outputs -o warp/atlas_in_tissue_space.nii.gz -inp multiLabel -v
+    warp -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -ro reg_outputs -o native_space/atlas_in_tissue_space.nii.gz -inp multiLabel -v
 
 Usage for inverse warping tissue to atlas space:
 ------------------------------------------------
-    warp -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -ro reg_outputs -o warp/tissue_in_atlas_space.nii.gz -inv -v
+    warp -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -ro reg_outputs -o atlas_space/tissue_in_atlas_space.nii.gz -inv -v
 
 Prereq: 
     ``reg``

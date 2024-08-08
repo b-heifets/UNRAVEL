@@ -54,7 +54,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.cstats.org_data import cp
+from unravel.cluster_stats.org_data import cp
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, load_config
