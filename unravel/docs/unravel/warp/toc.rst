@@ -8,6 +8,7 @@ unravel.warp package
    to_fixed
    to_native
    warp
+   points_to_atlas
 
 .. automodule:: unravel.warp
    :members:
