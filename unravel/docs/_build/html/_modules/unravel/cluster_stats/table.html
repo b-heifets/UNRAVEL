@@ -1,0 +1,1014 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unravel.cluster_stats.table &#8212; UNRAVEL docs</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/table';</script>
+    <link rel="icon" href="../../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">UNRAVEL docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide.html">
+    Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide.html">
+    Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">unravel.clus...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for unravel.cluster_stats.table</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Use ``cstats_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    cstats_table</span>
+
+<span class="sd">Prereqs:</span>
+<span class="sd">    ``cstats_index`` has been run. Run this command from the valid_clusters dir. &lt;asterisk&gt;cluster_info.txt in working dir.</span>
+
+<span class="sd">Sorting by hierarchy and volume:</span>
+<span class="sd">--------------------------------</span>
+<span class="sd">Group by Depth: Starting from the earliest depth column, for each depth level:</span>
+<span class="sd">   - Sum the volumes of all rows sharing the same region (or combination of regions up to that depth).</span>
+<span class="sd">   - Sort these groups by their aggregate volume in descending order, ensuring larger groups are prioritized.</span>
+
+<span class="sd">Sort Within Groups: Within each group created in step 1:</span>
+<span class="sd">   - Sort the rows by their individual volume in descending order.</span>
+
+<span class="sd">Maintain Grouping Order:</span>
+<span class="sd">   - As we move to deeper depth levels, maintain the grouping and ordering established in previous steps (only adjusting the order within groups based on the new depth&#39;s aggregate volumes).</span>
+
+<span class="sd">Note: </span>
+<span class="sd">    - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/</span>
+<span class="sd">    - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst</span>
+<span class="sd">    - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.   </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">openpyxl</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">openpyxl.styles</span> <span class="kn">import</span> <span class="n">PatternFill</span>
+<span class="kn">from</span> <span class="nn">openpyxl.utils</span> <span class="kn">import</span> <span class="n">get_column_letter</span>
+<span class="kn">from</span> <span class="nn">openpyxl.utils.dataframe</span> <span class="kn">import</span> <span class="n">dataframe_to_rows</span>
+<span class="kn">from</span> <span class="nn">openpyxl.styles</span> <span class="kn">import</span> <span class="n">Border</span><span class="p">,</span> <span class="n">Side</span><span class="p">,</span> <span class="n">Font</span><span class="p">,</span> <span class="n">Alignment</span>
+<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
+<span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
+
+<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
+
+
+<div class="viewcode-block" id="parse_args">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.parse_args">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-vcd&#39;</span><span class="p">,</span> <span class="s1">&#39;--val_clusters_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the valid_clusters dir output from unravel.cluster_stats.index (else cwd)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--top_regions&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of top regions to output. Default: 4&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pv&#39;</span><span class="p">,</span> <span class="s1">&#39;--percent_vol&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-csv&#39;</span><span class="p">,</span> <span class="s1">&#39;--info_csv_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-rgb&#39;</span><span class="p">,</span> <span class="s1">&#39;--sunburst_rgbs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: sunburst_RGBs.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sunburst_RGBs.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
+
+
+<span class="c1"># TODO: Correct font color for the volumes column. &#39;fiber tracts&#39; is filled with white rather than the color of the fiber tracts</span>
+<span class="c1"># TODO: &#39;CUL4, 5&#39; is not filled with the color of the region. </span>
+
+
+<div class="viewcode-block" id="fill_na_with_last_known">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.fill_na_with_last_known">[docs]</a>
+<span class="k">def</span> <span class="nf">fill_na_with_last_known</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
+
+    <span class="c1"># Fill NaN with the last known non-NaN value within each row for depth columns</span>
+    <span class="n">df_filled</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">df_filled</span><span class="p">[</span><span class="n">depth_columns</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_filled</span><span class="p">[</span><span class="n">depth_columns</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;ffill&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">df_filled</span></div>
+
+
+<div class="viewcode-block" id="sort_sunburst_hierarchy">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.sort_sunburst_hierarchy">[docs]</a>
+<span class="k">def</span> <span class="nf">sort_sunburst_hierarchy</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sort the DataFrame by hierarchy and volume.&quot;&quot;&quot;</span>
+
+    <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
+    <span class="n">volume_column</span> <span class="o">=</span> <span class="s1">&#39;Volume_(mm^3)&#39;</span>
+
+    <span class="c1"># For each depth, process groups and sort</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">depth</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">depth_columns</span><span class="p">):</span>
+        <span class="c1"># Temporary DataFrame to hold sorting results for each depth</span>
+        <span class="n">sorted_partial</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+        
+        <span class="c1"># Identify unique groups (rows) up to the current depth (e.g, if Depth_2, then root, grey, CH)</span>
+        <span class="n">unique_groups</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">depth_columns</span><span class="p">[:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+        
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">group_values</span> <span class="ow">in</span> <span class="n">unique_groups</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="c1"># Filter rows belonging to the current group</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">depth_columns</span><span class="p">[:</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">==</span> <span class="n">group_values</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># Boolean series to check which rows == group_values</span>
+            <span class="n">group_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># Apply mask to df to get a df for each group (copy to avoid SettingWithCopyWarning)</span>
+            
+            <span class="c1"># Calculate aggregate volume for the group and add it as a new column</span>
+            <span class="n">group_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="s1">&#39;aggregate_volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group_df</span><span class="p">[</span><span class="n">volume_column</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+            <span class="c1"># Sort the group by individual volume</span>
+            <span class="n">group_df</span> <span class="o">=</span> <span class="n">group_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="p">[</span><span class="n">volume_column</span><span class="p">],</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            
+            <span class="c1"># Append sorted group to the partial result</span>
+            <span class="n">sorted_partial</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">sorted_partial</span><span class="p">,</span> <span class="n">group_df</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="c1"># Replace df with the sorted_partial for the next iteration</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">sorted_partial</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;aggregate_volume&#39;</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="undo_fill_with_original">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.undo_fill_with_original">[docs]</a>
+<span class="k">def</span> <span class="nf">undo_fill_with_original</span><span class="p">(</span><span class="n">df_sorted</span><span class="p">,</span> <span class="n">df_original</span><span class="p">):</span>
+    <span class="c1"># Ensure the original DataFrame has not been altered; otherwise, use a saved copy before any modifications</span>
+    <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df_original</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
+    
+    <span class="c1"># Use the index to replace filled values with original ones where NaN existed</span>
+    <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">depth_columns</span><span class="p">:</span>
+        <span class="n">df_sorted</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_original</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df_sorted</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">column</span><span class="p">]</span> <span class="c1"># Use the index to replace filled values with original ones where NaN existed</span>
+    
+    <span class="k">return</span> <span class="n">df_sorted</span></div>
+
+
+<div class="viewcode-block" id="can_collapse">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.can_collapse">[docs]</a>
+<span class="k">def</span> <span class="nf">can_collapse</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">depth_col</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Determine if regions in the specified depth column can be collapsed.</span>
+<span class="sd">    Returns a DataFrame with regions that can be collapsed based on volume and count criteria.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">volume_column</span> <span class="o">=</span> <span class="s1">&#39;Volume_(mm^3)&#39;</span>
+
+    <span class="c1"># Group by the parent region and aggregate both volume and count (.e.g, if a parent has 3 children, the count is 3)</span>
+    <span class="n">subregion_aggregates</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">depth_col</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">({</span><span class="n">volume_column</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="s1">&#39;count&#39;</span><span class="p">]})</span>
+    <span class="n">subregion_aggregates</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Volume_Sum&#39;</span><span class="p">,</span> <span class="s1">&#39;Count&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Adjust the condition to check for both a volume threshold and a minimum count of subregions</span>
+    <span class="n">pooling_potential</span> <span class="o">=</span> <span class="n">subregion_aggregates</span><span class="p">[(</span><span class="n">subregion_aggregates</span><span class="p">[</span><span class="s1">&#39;Volume_Sum&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">subregion_aggregates</span><span class="p">[</span><span class="s1">&#39;Count&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="n">pooling_potential</span> <span class="c1"># DataFrame with regions that can be collapsed based on volume and count criteria (Depth_*, Volume_Sum, Count)</span></div>
+
+
+<div class="viewcode-block" id="collapse_hierarchy">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.collapse_hierarchy">[docs]</a>
+<span class="k">def</span> <span class="nf">collapse_hierarchy</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">volume_column</span> <span class="o">=</span> <span class="s1">&#39;Volume_(mm^3)&#39;</span>
+    <span class="n">depth_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s1">&#39;Depth&#39;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">depth_level</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">depth_columns</span><span class="p">))):</span>
+        <span class="n">depth_col</span> <span class="o">=</span> <span class="n">depth_columns</span><span class="p">[</span><span class="n">depth_level</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">depth_level</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">break</span>  <span class="c1"># Stop if we&#39;re at the top level</span>
+
+        <span class="c1"># Identify regions that can be collapsed into their parent</span>
+        <span class="n">collapsible_regions</span> <span class="o">=</span> <span class="n">can_collapse</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">depth_col</span><span class="p">)</span>
+
+        <span class="c1"># If collapsible_regions is not empty, proceed with collapsing</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">collapsible_regions</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            
+            <span class="c1"># For each collapsible region name, get the name and the aggregate volume</span>
+            <span class="k">for</span> <span class="n">region</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">collapsible_regions</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+
+                <span class="n">aggregated_volume</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Volume_Sum&#39;</span><span class="p">]</span>
+
+                <span class="c1"># Collapse rows containing the region name and set the volume to the aggregate volume</span>
+                <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">depth_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">region</span><span class="p">,</span> <span class="n">volume_column</span><span class="p">]</span> <span class="o">=</span> <span class="n">aggregated_volume</span>
+
+                <span class="c1"># Set the child region name to NaN in the depth column using the depth level</span>
+                <span class="n">child_depth_col</span> <span class="o">=</span> <span class="n">depth_columns</span><span class="p">[</span><span class="n">depth_level</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> 
+                <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">depth_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">region</span><span class="p">,</span> <span class="n">child_depth_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>    
+
+                <span class="c1"># Also set any subsequent depth columns to NaN</span>
+                <span class="k">for</span> <span class="n">subsequent_depth_col</span> <span class="ow">in</span> <span class="n">depth_columns</span><span class="p">[</span><span class="n">depth_level</span> <span class="o">+</span> <span class="mi">2</span><span class="p">:]:</span>
+                    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">depth_col</span><span class="p">]</span> <span class="o">==</span> <span class="n">region</span><span class="p">,</span> <span class="n">subsequent_depth_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+               
+
+                <span class="c1"># Remove duplicate rows for the collapsed region</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">df</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_top_regions">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.calculate_top_regions">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_top_regions</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">top_n</span><span class="p">,</span> <span class="n">percent_vol_threshold</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Identify the top regions based on the dynamically collapsed hierarchy,</span>
+<span class="sd">    ensuring they meet the specified percentage volume criterion.</span>
+<span class="sd">    </span>
+<span class="sd">    :param df_collapsed: DataFrame with the hierarchy collapsed where meaningful.</span>
+<span class="sd">    :param top_n: The number of top regions to identify.</span>
+<span class="sd">    :param percent_vol_threshold: The minimum percentage of total volume these regions should represent.</span>
+<span class="sd">    :return: DataFrame with the top regions and their volumes if the criterion is met; otherwise, None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get the total volume</span>
+    <span class="n">total_volume</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="c1"># Get top regions</span>
+    <span class="n">df_sorted</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">top_regions_df</span> <span class="o">=</span> <span class="n">df_sorted</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">top_n</span><span class="p">)</span>
+
+    <span class="c1"># Sum the volumes of the top regions</span>
+    <span class="n">top_regions_volume</span> <span class="o">=</span> <span class="n">top_regions_df</span><span class="p">[</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+    <span class="c1"># Calculate the percentage of the total volume the top regions represent</span>
+    <span class="n">percent_vol</span> <span class="o">=</span> <span class="n">top_regions_volume</span> <span class="o">/</span> <span class="n">total_volume</span>
+
+    <span class="c1"># Check if the top regions meet the percentage volume criterion</span>
+    <span class="k">if</span> <span class="n">percent_vol</span> <span class="o">&gt;=</span> <span class="n">percent_vol_threshold</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">top_regions_df</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+    
+<div class="viewcode-block" id="get_top_regions_and_percent_vols">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.get_top_regions_and_percent_vols">[docs]</a>
+<span class="k">def</span> <span class="nf">get_top_regions_and_percent_vols</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="p">,</span> <span class="n">top_regions</span><span class="p">,</span> <span class="n">percent_vol</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="p">)</span>
+
+    <span class="c1"># Check if the DataFrame is empty print a message and return</span>
+    <span class="k">if</span> <span class="n">df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">sunburst_csv_path</span><span class="si">}</span><span class="s1"> is empty. Exiting...&#39;</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+    <span class="c1"># Fill NaN values in the original DataFrame</span>
+    <span class="n">df_filled_na</span> <span class="o">=</span> <span class="n">fill_na_with_last_known</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+    <span class="c1"># Sort the DataFrame by hierarchy and volume</span>
+    <span class="n">df_filled_sorted</span> <span class="o">=</span> <span class="n">sort_sunburst_hierarchy</span><span class="p">(</span><span class="n">df_filled_na</span><span class="p">)</span>
+
+    <span class="c1"># Undo the fill with the original values</span>
+    <span class="n">df_final</span> <span class="o">=</span> <span class="n">undo_fill_with_original</span><span class="p">(</span><span class="n">df_filled_sorted</span><span class="p">,</span> <span class="n">df</span><span class="p">)</span>
+
+    <span class="c1"># Save the sorted DataFrame to a new CSV file</span>
+    <span class="n">sorted_parent_path</span> <span class="o">=</span> <span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;_sorted_sunburst_CSVs&#39;</span>
+    <span class="n">sorted_parent_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">sorted_csv_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;sunburst.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;sunburst_sorted.csv&#39;</span><span class="p">)</span>
+    <span class="n">df_final</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">sorted_parent_path</span> <span class="o">/</span> <span class="n">sorted_csv_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Attempt to calculate top regions, collapsing as necessary</span>
+    <span class="n">criteria_met</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">criteria_met</span><span class="p">:</span>
+        <span class="n">top_regions_df</span> <span class="o">=</span> <span class="n">calculate_top_regions</span><span class="p">(</span><span class="n">df_final</span><span class="p">,</span> <span class="n">top_regions</span><span class="p">,</span> <span class="n">percent_vol</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">top_regions_df</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">top_regions_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span> <span class="c1"># If top regions are found</span>
+            <span class="n">criteria_met</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="c1"># If a top region contributes to less than 1% of the total volume, remove it</span>
+            <span class="n">total_volume</span> <span class="o">=</span> <span class="n">df_final</span><span class="p">[</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="n">top_regions_df</span> <span class="o">=</span> <span class="n">top_regions_df</span><span class="p">[</span><span class="n">top_regions_df</span><span class="p">[</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_volume</span> <span class="o">&gt;</span> <span class="mf">0.01</span><span class="p">]</span>
+
+            <span class="c1"># Initialize lists to hold the top region names and their aggregate volumes</span>
+            <span class="n">top_region_names_and_percent_vols</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="c1"># For each top region, get the region name and the aggregate volume</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">top_regions_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+
+                <span class="c1"># Get the highest depth region name that is not NaN</span>
+                <span class="n">row_wo_volume</span> <span class="o">=</span> <span class="n">row</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+                <span class="n">region_name</span> <span class="o">=</span> <span class="n">row_wo_volume</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                <span class="c1"># Calculate the percentage of the total volume the top regions represent</span>
+                <span class="n">aggregate_volume</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Volume_(mm^3)&#39;</span><span class="p">]</span>
+                <span class="n">percent_vol</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">aggregate_volume</span> <span class="o">/</span> <span class="n">total_volume</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+
+                <span class="c1"># Append the region name and the percentage volume to the list</span>
+                <span class="n">top_region_names_and_percent_vols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">region_name</span><span class="si">}</span><span class="s1"> (</span><span class="si">{</span><span class="n">percent_vol</span><span class="si">}</span><span class="s1">%)&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Save the top regions DataFrame to a new CSV file</span>
+            <span class="n">top_regions_parent_path</span> <span class="o">=</span> <span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;_top_regions_for_each_cluster&#39;</span>
+            <span class="n">top_regions_parent_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">top_regions_csv_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">sunburst_csv_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;sunburst.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;sunburst_top_regions.csv&#39;</span><span class="p">)</span>
+            <span class="n">top_regions_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">top_regions_parent_path</span> <span class="o">/</span> <span class="n">top_regions_csv_name</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Attempt to collapse the hierarchy further</span>
+            <span class="n">df_final</span> <span class="o">=</span> <span class="n">collapse_hierarchy</span><span class="p">(</span><span class="n">df_final</span><span class="p">,</span> <span class="n">verbose</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">df_final</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="k">break</span>  <span class="c1"># Exit if no further collapsing is possible</span>
+
+    <span class="k">return</span> <span class="n">top_region_names_and_percent_vols</span><span class="p">,</span> <span class="n">total_volume</span></div>
+
+
+<span class="c1"># Function to create fill color based on the volume</span>
+<div class="viewcode-block" id="get_fill_color">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.get_fill_color">[docs]</a>
+<span class="k">def</span> <span class="nf">get_fill_color</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">max_value</span><span class="p">):</span>
+    <span class="c1"># Apply a log transform to the volume to enhance visibility of smaller values</span>
+    <span class="c1"># Adding 1 to the value to avoid log(0), and another 1 to max_value to ensure the max_value maps to 1 after log transform</span>
+    <span class="n">log_transformed_value</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  
+    <span class="n">log_transformed_max</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">max_value</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">normalized_value</span> <span class="o">=</span> <span class="n">log_transformed_value</span> <span class="o">/</span> <span class="n">log_transformed_max</span>
+    
+    <span class="c1"># Convert to a scale of 0-255 (for RGB values)</span>
+    <span class="n">rgb_value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">normalized_value</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
+    <span class="c1"># Create fill color as a hex string</span>
+    <span class="n">fill_color</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rgb_value</span><span class="si">:</span><span class="s2">02x</span><span class="si">}{</span><span class="n">rgb_value</span><span class="si">:</span><span class="s2">02x</span><span class="si">}{</span><span class="n">rgb_value</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2">&quot;</span>
+    
+    <span class="c1"># Set the font color to black if the fill color is light (more than 127 in RGB scale), otherwise white</span>
+    <span class="n">font_color</span> <span class="o">=</span> <span class="s2">&quot;000000&quot;</span> <span class="k">if</span> <span class="n">rgb_value</span> <span class="o">&gt;</span> <span class="mi">127</span> <span class="k">else</span> <span class="s2">&quot;FFFFFF&quot;</span>
+    
+    <span class="k">return</span> <span class="n">fill_color</span><span class="p">,</span> <span class="n">font_color</span></div>
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/table.html#unravel.cluster_stats.table.main">[docs]</a>
+<span class="nd">@log_command</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">install</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+    <span class="n">verbose_start_msg</span><span class="p">()</span>
+
+    <span class="c1"># Find cluster_* dirs in the current dir</span>
+    <span class="n">valid_clusters_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">val_clusters_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">val_clusters_dir</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+    <span class="n">cluster_sunburst_csvs</span> <span class="o">=</span> <span class="n">valid_clusters_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;cluster_*_sunburst.csv&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Remove directories from the list</span>
+    <span class="n">cluster_sunburst_csvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">cluster_sunburst_csvs</span> <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">is_file</span><span class="p">()]</span>
+
+    <span class="c1"># Generate dynamic column names based on args.top_regions</span>
+    <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;Volume&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;CoG&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;~Region&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s1">&#39;ID_Path&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Top_Region_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">)]</span>
+
+    <span class="c1"># Load the *cluster_info.txt file from the parent dir to get the cluster Centroid of Gravity (CoG)</span>
+    <span class="n">cluster_info_txt_parent</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">val_clusters_dir</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">val_clusters_dir</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+    <span class="n">cluster_info_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">cluster_info_txt_parent</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*cluster_info.txt&#39;</span><span class="p">))</span>
+    
+    <span class="c1"># If no cluster_info.txt file is found, exit</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cluster_info_files</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">    [red]No *cluster_info.txt file found in </span><span class="si">{</span><span class="n">cluster_info_txt_parent</span><span class="si">}</span><span class="s1">. Exiting...&#39;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cluster_info_file</span> <span class="o">=</span> <span class="n">cluster_info_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># first match</span>
+ 
+    <span class="c1"># Load the cluster info file</span>
+    <span class="n">cluster_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cluster_info_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>  <span class="c1"># Assuming tab-separated values; adjust if different</span>
+
+    <span class="c1"># Reverse the row order of only the first column (excluding the header)</span>
+    <span class="n">first_column_name</span> <span class="o">=</span> <span class="n">cluster_info_df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">reversed_data</span> <span class="o">=</span> <span class="n">cluster_info_df</span><span class="p">[</span><span class="n">first_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="c1"># Reverse the data </span>
+    <span class="n">new_first_column</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">cluster_info_df</span><span class="p">[</span><span class="n">first_column_name</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="mi">1</span><span class="p">],</span> <span class="n">reversed_data</span><span class="p">])</span> <span class="c1"># Concat header w/ reversed data</span>
+    <span class="n">cluster_info_df</span><span class="p">[</span><span class="n">first_column_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_first_column</span><span class="o">.</span><span class="n">values</span> <span class="c1"># Assign the new column back to the DataFrame</span>
+
+    <span class="c1"># Get the CoG for each cluster (values in last three columns of each row)</span>
+    <span class="n">CoGs</span> <span class="o">=</span> <span class="n">cluster_info_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">3</span><span class="p">:]</span><span class="o">.</span><span class="n">values</span>
+
+    <span class="c1"># Convert to this format: &#39;x,y,z&#39;</span>
+    <span class="n">CoGs</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">CoG</span><span class="p">))</span> <span class="k">for</span> <span class="n">CoG</span> <span class="ow">in</span> <span class="n">CoGs</span><span class="p">]</span>
+
+    <span class="c1"># Create a dict w/ the first column as keys and the CoG as values</span>
+    <span class="n">cluster_CoGs</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">cluster_info_df</span><span class="p">[</span><span class="n">first_column_name</span><span class="p">],</span> <span class="n">CoGs</span><span class="p">))</span>
+
+    <span class="c1"># Create an empty DataFrame with the column names</span>
+    <span class="n">top_regions_and_percent_vols_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">column_names</span><span class="p">)</span>
+
+    <span class="c1"># Specify the column names you want to load</span>
+    <span class="n">columns_to_load</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;abbreviation&#39;</span><span class="p">,</span> <span class="s1">&#39;general_region&#39;</span><span class="p">,</span>  <span class="s1">&#39;structure_id_path&#39;</span><span class="p">]</span>
+
+    <span class="c1"># Load the specified columns from the CSV with CCFv3 info</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2017_info.csv&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020_info.csv&#39;</span><span class="p">:</span> 
+        <span class="n">ccfv3_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">columns_to_load</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ccfv3_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">info_csv_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">columns_to_load</span><span class="p">)</span>
+
+    <span class="c1"># For each cluster directory</span>
+    <span class="k">for</span> <span class="n">cluster_sunburst_csv</span> <span class="ow">in</span> <span class="n">cluster_sunburst_csvs</span><span class="p">:</span>
+
+        <span class="c1"># Get the cluster number from the file name &#39;cluster_*_sunburst.csv&#39;</span>
+        <span class="n">cluster_num</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">cluster_sunburst_csv</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Get the CoG string for the current cluster from the dictionary</span>
+        <span class="n">cog_string</span> <span class="o">=</span> <span class="n">cluster_CoGs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cluster_num</span><span class="p">)</span> <span class="k">if</span> <span class="n">cluster_CoGs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">cluster_num</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;Not found&quot;</span>
+
+        <span class="c1"># Get the top regions and their percentage volumes for the current cluster</span>
+        <span class="n">top_regions_and_percent_vols</span><span class="p">,</span> <span class="n">cluster_volume</span> <span class="o">=</span> <span class="n">get_top_regions_and_percent_vols</span><span class="p">(</span><span class="n">cluster_sunburst_csv</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">percent_vol</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+
+        <span class="c1"># Get the top region</span>
+        <span class="n">top_region</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Lookup the general_regio and structure_id_path in the DataFrame using the abbreviation for the top region</span>
+        <span class="n">general_region</span> <span class="o">=</span> <span class="n">ccfv3_info_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ccfv3_info_df</span><span class="p">[</span><span class="s1">&#39;abbreviation&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">top_region</span><span class="p">,</span> <span class="s1">&#39;general_region&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        <span class="n">id_path</span> <span class="o">=</span> <span class="n">ccfv3_info_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">ccfv3_info_df</span><span class="p">[</span><span class="s1">&#39;abbreviation&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">top_region</span><span class="p">,</span> <span class="s1">&#39;structure_id_path&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+        <span class="c1"># Since there could be multiple matches, we take the first one or a default value if not found</span>
+        <span class="n">general_region</span> <span class="o">=</span> <span class="n">general_region</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">general_region</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;General region not found&quot;</span>
+        <span class="n">id_path</span> <span class="o">=</span> <span class="n">id_path</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">id_path</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;ID path not found&quot;</span>
+
+        <span class="c1"># Ensure the list has the exact number of top regions (pad with None if necessary)</span>
+        <span class="n">padded_top_regions</span> <span class="o">=</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">top_regions_and_percent_vols</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">)[:</span><span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">]</span>
+
+        <span class="c1"># Prepare the row data, including placeholders for &#39;Volume&#39;, &#39;CoG&#39;, &#39;~Region&#39;, and top regions</span>
+        <span class="n">row_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">cluster_num</span><span class="p">,</span> <span class="n">cluster_volume</span><span class="p">,</span> <span class="n">cog_string</span><span class="p">,</span> <span class="n">general_region</span><span class="p">,</span> <span class="n">id_path</span><span class="p">]</span> <span class="o">+</span> <span class="n">padded_top_regions</span>   
+
+        <span class="c1"># Ensure column_names matches the structure of row_data</span>
+        <span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">,</span> <span class="s1">&#39;Volume&#39;</span><span class="p">,</span> <span class="s1">&#39;CoG&#39;</span><span class="p">,</span> <span class="s1">&#39;~Region&#39;</span><span class="p">,</span> <span class="s1">&#39;ID_Path&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;Top_Region_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">)]</span>
+
+        <span class="c1"># Create a temporary DataFrame for the current cluster&#39;s data</span>
+        <span class="n">temp_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">row_data</span><span class="p">],</span> <span class="n">columns</span><span class="o">=</span><span class="n">column_names</span><span class="p">)</span>
+
+        <span class="c1"># Concatenate the temporary DataFrame with the main DataFrame</span>
+        <span class="n">top_regions_and_percent_vols_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">top_regions_and_percent_vols_df</span><span class="p">,</span> <span class="n">temp_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Sort the DataFrame by the &#39;ID_Path&#39; column in descending order</span>
+    <span class="n">top_regions_and_percent_vols_df</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;ID_Path&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Drop the &#39;ID_Path&#39; column</span>
+    <span class="n">top_regions_and_percent_vols_df</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;ID_Path&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Convert the &#39;Volume&#39; column to 4 decimal places</span>
+    <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">&#39;Volume&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">&#39;Volume&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">The top regions and their percentage volumes for each cluster:&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">top_regions_and_percent_vols_df</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Load csv with RGB values </span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">sunburst_rgbs</span> <span class="o">==</span> <span class="s1">&#39;sunburst_RGBs.csv&#39;</span><span class="p">:</span> 
+        <span class="n">sunburst_RGBs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="s1">&#39;sunburst_RGBs.csv&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sunburst_RGBs_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">sunburst_rgbs</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># Parse the dataframe to get a dictionary of region names and their corresponding RGB values</span>
+    <span class="n">rgb_values</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sunburst_RGBs_df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="c1"># Format is &#39;region_name: rgb(r,g,b)&#39;</span>
+        <span class="n">region</span><span class="p">,</span> <span class="n">rgb</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;: rgb(&#39;</span><span class="p">)</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">rgb</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;)&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">))</span>
+        <span class="n">rgb_values</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="c1"># Create an Excel workbook and select the active worksheet</span>
+    <span class="n">wb</span> <span class="o">=</span> <span class="n">openpyxl</span><span class="o">.</span><span class="n">Workbook</span><span class="p">()</span>
+    <span class="n">ws</span> <span class="o">=</span> <span class="n">wb</span><span class="o">.</span><span class="n">active</span>
+
+    <span class="n">thin_border</span> <span class="o">=</span> <span class="n">Border</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;thin&#39;</span><span class="p">),</span> <span class="n">right</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;thin&#39;</span><span class="p">),</span> <span class="n">top</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;thin&#39;</span><span class="p">),</span> <span class="n">bottom</span><span class="o">=</span><span class="n">Side</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;thin&#39;</span><span class="p">))</span>
+
+    <span class="c1"># Write each row of the DataFrame to the worksheet and color cells for the top regions</span>
+    <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">dataframe_to_rows</span><span class="p">(</span><span class="n">top_regions_and_percent_vols_df</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">ws</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">top_regions</span><span class="p">):</span>
+
+            <span class="c1"># Find the region name without the percentage to match the RGB values</span>
+            <span class="n">top_region_column_num</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">i</span>
+
+            <span class="n">region_key</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">region</span><span class="p">[</span><span class="n">top_region_column_num</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">region_key</span> <span class="o">=</span> <span class="n">region</span><span class="p">[</span><span class="n">top_region_column_num</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1"># Apply the color to the cell if it matches one of the RGB values</span>
+            <span class="k">if</span> <span class="n">region_key</span> <span class="ow">in</span> <span class="n">rgb_values</span><span class="p">:</span>
+                <span class="c1"># Convert the RGB to a hex string</span>
+                <span class="n">rgb</span> <span class="o">=</span> <span class="n">rgb_values</span><span class="p">[</span><span class="n">region_key</span><span class="p">]</span>
+                <span class="n">hex_color</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:02x}{:02x}{:02x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rgb</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">rgb</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                <span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+                <span class="n">top_region_column_num</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">top_region_column_num</span><span class="p">)</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">fill</span>
+                <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">top_region_column_num</span><span class="p">)</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="n">thin_border</span>
+            <span class="k">elif</span> <span class="n">region_key</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">hex_color</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:02x}{:02x}{:02x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span> <span class="c1"># Grey</span>
+                <span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="n">hex_color</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+                <span class="n">top_region_column_num</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="n">i</span>
+                <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">top_region_column_num</span><span class="p">)</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">fill</span>
+                <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="n">top_region_column_num</span><span class="p">)</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="n">thin_border</span>
+
+    <span class="c1"># Insert a new row at the top</span>
+    <span class="n">ws</span><span class="o">.</span><span class="n">insert_rows</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Insert a new column at the left</span>
+    <span class="n">ws</span><span class="o">.</span><span class="n">insert_cols</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>            
+
+    <span class="c1"># Adjust the column width to fit the content</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">max_length</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">col</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>
+                <span class="n">max_length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">max_length</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">cell</span><span class="o">.</span><span class="n">value</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">max_length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">adjusted_width</span> <span class="o">=</span> <span class="n">max_length</span> <span class="o">+</span> <span class="mi">2</span>  <span class="c1"># Add 2 for a little extra padding</span>
+            <span class="n">column_letter</span> <span class="o">=</span> <span class="n">openpyxl</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">get_column_letter</span><span class="p">(</span><span class="n">col</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">column</span><span class="p">)</span>
+            <span class="n">ws</span><span class="o">.</span><span class="n">column_dimensions</span><span class="p">[</span><span class="n">column_letter</span><span class="p">]</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">adjusted_width</span>
+
+    <span class="c1"># Fill cells in first column with white</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]:</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Fill cells in ninth column with white</span>
+    <span class="n">column</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">top_regions</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="n">get_column_letter</span><span class="p">(</span><span class="n">column</span><span class="p">)]:</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Fill cells in first row with white</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Fill cells in last row with white</span>
+    <span class="n">num_rows</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="n">num_rows</span><span class="p">]:</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="s1">&#39;FFFFFF&#39;</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s1">&#39;solid&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Center align the content</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">min_row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">min_col</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+            <span class="n">cell</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="n">Alignment</span><span class="p">(</span><span class="n">horizontal</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">vertical</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Format column C such that the brightness of the fill is proportional to the volume / total volume and the text brightness is inversely proportional to the fill brightness</span>
+    <span class="c1"># total_volume = top_regions_and_percent_vols_df[&#39;Volume&#39;].sum()</span>
+    <span class="n">volumes</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">&#39;Volume&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">max_volume</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">volumes</span><span class="p">)</span>  <span class="c1"># The largest volume</span>
+
+    <span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">volume</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">volumes</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>  <span class="c1"># Starting from row 3 (C3)</span>
+        <span class="c1"># Calculate the color based on the volume</span>
+        <span class="n">fill_color</span><span class="p">,</span> <span class="n">font_color</span> <span class="o">=</span> <span class="n">get_fill_color</span><span class="p">(</span><span class="n">volume</span><span class="p">,</span> <span class="n">max_volume</span><span class="p">)</span>
+        
+        <span class="c1"># Get the cell at column C and the current row</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="n">ws</span><span class="o">.</span><span class="n">cell</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Column 3 corresponds to column C</span>
+        
+        <span class="c1"># Set the fill color based on the calculated brightness</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">fill</span> <span class="o">=</span> <span class="n">PatternFill</span><span class="p">(</span><span class="n">start_color</span><span class="o">=</span><span class="n">fill_color</span><span class="p">,</span> <span class="n">end_color</span><span class="o">=</span><span class="n">fill_color</span><span class="p">,</span> <span class="n">fill_type</span><span class="o">=</span><span class="s2">&quot;solid&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Set the font color based on the inverse of the fill color&#39;s brightness</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">font_color</span><span class="p">)</span>
+
+    <span class="c1"># Apply a thin border style to cells with content</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span><span class="p">:</span>  <span class="c1"># If the cell has content</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">border</span> <span class="o">=</span> <span class="n">thin_border</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+
+    <span class="c1"># Apply the font to the header row</span>
+    <span class="n">header_font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">&#39;2:2&#39;</span><span class="p">]:</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">header_font</span>
+
+    <span class="c1"># Make column B bold</span>
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">&#39;B&#39;</span><span class="p">]:</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Additional step to ensure cells from column F onwards are black</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">min_col</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span> 
+        <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="p">:</span>  <span class="c1"># If the cell already has font settings applied</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">font</span><span class="o">.</span><span class="n">bold</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;FF000000&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">cell</span><span class="o">.</span><span class="n">font</span> <span class="o">=</span> <span class="n">Font</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Arial&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;FF000000&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Iterate through the cells and merge cells with the same value in column 5</span>
+    <span class="n">current_region</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">first_row</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Adjusted min_row to 2 and min_col/max_col to merge_column because of the added padding row and column</span>
+    <span class="n">merge_column</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">ws</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">(</span><span class="n">min_row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">max_row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">min_col</span><span class="o">=</span><span class="n">merge_column</span><span class="p">,</span> <span class="n">max_col</span><span class="o">=</span><span class="n">merge_column</span><span class="p">):</span>
+        <span class="n">cell</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># row[0] since we&#39;re only looking at one column, and iter_rows yields tuples</span>
+        <span class="k">if</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span> <span class="o">!=</span> <span class="n">current_region</span><span class="p">:</span>
+            <span class="c1"># If the cell value changes, merge the previous cells if there are more than one with the same value</span>
+            <span class="k">if</span> <span class="n">first_row</span> <span class="ow">and</span> <span class="n">first_row</span> <span class="o">&lt;</span> <span class="n">cell</span><span class="o">.</span><span class="n">row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">ws</span><span class="o">.</span><span class="n">merge_cells</span><span class="p">(</span><span class="n">start_row</span><span class="o">=</span><span class="n">first_row</span><span class="p">,</span> <span class="n">start_column</span><span class="o">=</span><span class="n">merge_column</span><span class="p">,</span> <span class="n">end_row</span><span class="o">=</span><span class="n">cell</span><span class="o">.</span><span class="n">row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">end_column</span><span class="o">=</span><span class="n">merge_column</span><span class="p">)</span>
+            <span class="c1"># Update the current region and reset the first_row to the current cell&#39;s row</span>
+            <span class="n">current_region</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">value</span>
+            <span class="n">first_row</span> <span class="o">=</span> <span class="n">cell</span><span class="o">.</span><span class="n">row</span>
+
+    <span class="c1"># After the loop, check and merge the last set of cells if needed</span>
+    <span class="k">if</span> <span class="n">first_row</span> <span class="ow">and</span> <span class="n">first_row</span> <span class="o">&lt;</span> <span class="n">ws</span><span class="o">.</span><span class="n">max_row</span><span class="p">:</span>
+        <span class="n">ws</span><span class="o">.</span><span class="n">merge_cells</span><span class="p">(</span><span class="n">start_row</span><span class="o">=</span><span class="n">first_row</span><span class="p">,</span> <span class="n">start_column</span><span class="o">=</span><span class="n">merge_column</span><span class="p">,</span> <span class="n">end_row</span><span class="o">=</span><span class="n">ws</span><span class="o">.</span><span class="n">max_row</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">end_column</span><span class="o">=</span><span class="n">merge_column</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">cell</span> <span class="ow">in</span> <span class="n">ws</span><span class="p">[</span><span class="s1">&#39;E&#39;</span><span class="p">]:</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">alignment</span> <span class="o">=</span> <span class="n">Alignment</span><span class="p">(</span><span class="n">horizontal</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">vertical</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Save the workbook to a file</span>
+    <span class="n">excel_file_path</span> <span class="o">=</span> <span class="n">valid_clusters_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">valid_clusters_dir</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_valid_clusters_table.xlsx&#39;</span>
+    <span class="n">wb</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">excel_file_path</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Excel file saved at </span><span class="si">{</span><span class="n">excel_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Brighter cell fills in the &#39;Volume&#39; column represent larger volumes (log(10) scaled and normalized to the max volume).&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Get the anatomically sorted list of cluster IDs and save it to a .txt file</span>
+    <span class="n">valid_cluster_ids</span> <span class="o">=</span> <span class="n">top_regions_and_percent_vols_df</span><span class="p">[</span><span class="s1">&#39;Cluster&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">valid_cluster_ids_str</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">valid_cluster_ids</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">valid_clusters_dir</span> <span class="o">/</span> <span class="s1">&#39;valid_cluster_IDs_sorted_by_anatomy.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">valid_cluster_ids_str</span><span class="p">)</span>
+
+    <span class="n">verbose_end_msg</span><span class="p">()</span></div>
+
+    
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, the UNRAVEL team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

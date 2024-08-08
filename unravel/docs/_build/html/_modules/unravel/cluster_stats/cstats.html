@@ -1,0 +1,884 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unravel.cluster_stats.cstats &#8212; UNRAVEL docs</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+
+    <script src="../../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/cstats';</script>
+    <link rel="icon" href="../../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">UNRAVEL docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide.html">
+    Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+        </div>
+      
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav class="navbar-nav">
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide.html">
+    Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square fa-lg" aria-hidden="true"></i></span>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">unravel.clus...</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for unravel.cluster_stats.cstats</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Use ``cstats`` from UNRAVEL to validate clusters based on differences in cell/object or label density w/ t-tests.    </span>
+
+<span class="sd">T-test usage:  </span>
+<span class="sd">------------- </span>
+<span class="sd">    cstats --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;group1|group2&gt;</span>
+
+<span class="sd">Tukey&#39;s test usage: </span>
+<span class="sd">-------------------</span>
+<span class="sd">    cstats --groups &lt;group1&gt; &lt;group2&gt; &lt;group3&gt; &lt;group4&gt; ... -hg &lt;group1|group2&gt;</span>
+
+<span class="sd">Note: </span>
+<span class="sd">    - Organize data in directories for each comparison (e.g., psilocybin &gt; saline, etc.)</span>
+<span class="sd">    - This script will loop through all directories in the current working dir and process the data in each subdir.</span>
+<span class="sd">    - Each subdir should contain .csv files with the density data for each cluster.</span>
+<span class="sd">    - The first 2 groups reflect the main comparison for validation rates.</span>
+<span class="sd">    - Clusters are not considered valid if the effect direction does not match the expected direction.</span>
+
+<span class="sd">Input files: </span>
+<span class="sd">    &lt;asterisk&gt;_density_data.csv from ``cstats_validation`` (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    </span>
+
+<span class="sd">CSV naming conventions:</span>
+<span class="sd">    - Condition: first word before &#39;_&#39; in the file name</span>
+<span class="sd">    - Side: last word before .csv (LH or RH)</span>
+
+<span class="sd">Example unilateral inputs in the subdirs:</span>
+<span class="sd">    - condition1_sample01_&lt;cell|label&gt;_density_data.csv </span>
+<span class="sd">    - condition1_sample02_&lt;cell|label&gt;_density_data.csv</span>
+<span class="sd">    - condition2_sample03_&lt;cell|label&gt;_density_data.csv</span>
+<span class="sd">    - condition2_sample04_&lt;cell|label&gt;_density_data.csv</span>
+
+<span class="sd">Example bilateral inputs (if any file has _LH.csv or _RH.csv, the command will attempt to pool data):</span>
+<span class="sd">    - condition1_sample01_&lt;cell|label&gt;_density_data_LH.csv</span>
+<span class="sd">    - condition1_sample01_&lt;cell|label&gt;_density_data_RH.csv</span>
+
+<span class="sd">Examples:</span>
+<span class="sd">    - Grouping data by condition prefixes: </span>
+<span class="sd">        ``cstats`` --groups psilocybin saline --condition_prefixes saline psilocybin</span>
+<span class="sd">        - This will treat all &#39;psilocybin*&#39; conditions as one group and all &#39;saline*&#39; conditions as another</span>
+<span class="sd">        - Since there will then effectively be two conditions in this case, they will be compared using a t-test</span>
+
+<span class="sd">Columns in the .csv files:</span>
+<span class="sd">    sample, cluster_ID, &lt;cell_count|label_volume&gt;, cluster_volume, &lt;cell_density|label_density&gt;, ...</span>
+
+<span class="sd">Outputs:</span>
+<span class="sd">    - ./_valid_clusters_stats/</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
+<span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
+<span class="kn">from</span> <span class="nn">rich.live</span> <span class="kn">import</span> <span class="n">Live</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.multicomp</span> <span class="kn">import</span> <span class="n">pairwise_tukeyhsd</span>
+
+<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">initialize_progress_bar</span>
+
+<span class="kn">from</span> <span class="nn">unravel.cluster_stats.stats_table</span> <span class="kn">import</span> <span class="n">cluster_summary</span>
+
+<div class="viewcode-block" id="parse_args">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.parse_args">[docs]</a>
+<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of group prefixes. 2 groups --&gt; t-test. &gt;2 --&gt; Tukey</span><span class="se">\&#39;</span><span class="s1">s tests (The first 2 groups reflect the main comparison for validation rates)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_prefixes&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Condition prefixes to group data (e.g., see info for examples)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-hg&#39;</span><span class="p">,</span> <span class="s1">&#39;--higher_group&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Specify the group that is expected to have a higher mean based on the direction of the p value map&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-alt&#39;</span><span class="p">,</span> <span class="s2">&quot;--alternate&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Number of tails and direction (&#39;two-sided&#39; [default], &#39;less&#39; [group1 &lt; group2], or &#39;greater&#39;)&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;two-sided&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pvt&#39;</span><span class="p">,</span> <span class="s1">&#39;--p_val_txt&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of the file w/ the corrected p value thresh (e.g., from cstats_fdr). Default: p_value_threshold.txt&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;p_value_threshold.txt&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
+
+
+<span class="c1"># TODO: Test grouping of conditions. Test w/ label densities data. Could set up dunnett&#39;s tests and/or holm sidak tests.</span>
+
+
+<div class="viewcode-block" id="condition_selector">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.condition_selector">[docs]</a>
+<span class="k">def</span> <span class="nf">condition_selector</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">unique_conditions</span><span class="p">,</span> <span class="n">condition_column</span><span class="o">=</span><span class="s1">&#39;Conditions&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.</span>
+<span class="sd">    This function checks if the &#39;condition&#39; is exactly present in the &#39;Conditions&#39; column or is a prefix of any condition in this column. </span>
+<span class="sd">    If the exact condition is found, it selects those rows.</span>
+<span class="sd">    If the condition is a prefix (e.g., &#39;saline&#39; matches &#39;saline-1&#39;, &#39;saline-2&#39;), it selects all rows where the &#39;Conditions&#39; column starts with this prefix.</span>
+<span class="sd">    An error is raised if the condition is neither found as an exact match nor as a prefix.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (pd.DataFrame): DataFrame whose &#39;Conditions&#39; column contains the conditions of interest.</span>
+<span class="sd">        condition (str): The condition or prefix of interest.</span>
+<span class="sd">        unique_conditions (list): List of unique conditions in the &#39;Conditions&#39; column to validate against.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        pd.Series: A boolean Series to select rows based on the condition.&quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="n">condition</span> <span class="ow">in</span> <span class="n">unique_conditions</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">condition_column</span><span class="p">]</span> <span class="o">==</span> <span class="n">condition</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">any</span><span class="p">(</span><span class="n">cond</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span> <span class="k">for</span> <span class="n">cond</span> <span class="ow">in</span> <span class="n">unique_conditions</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">df</span><span class="p">[</span><span class="n">condition_column</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">condition</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    [red]Condition </span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2"> not recognized!&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="cluster_validation_data_df">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.cluster_validation_data_df">[docs]</a>
+<span class="k">def</span> <span class="nf">cluster_validation_data_df</span><span class="p">(</span><span class="n">density_col</span><span class="p">,</span> <span class="n">has_hemisphere</span><span class="p">,</span> <span class="n">csv_files</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">data_col</span><span class="p">,</span> <span class="n">data_col_pooled</span><span class="p">,</span> <span class="n">condition_prefixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate the data from all .csv files, pool bilateral data if hemispheres are present, optionally pool data by condition, and return the DataFrame.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        - density_col (str): the column name for the density data</span>
+<span class="sd">        - has_hemisphere (bool): whether the data files contain hemisphere indicators (e.g., _LH.csv or _RH.csv)</span>
+<span class="sd">        - csv_files (list): a list of .csv files</span>
+<span class="sd">        - groups (list): a list of group names</span>
+<span class="sd">        - data_col (str): the column name for the data (cell_count or label_volume)</span>
+<span class="sd">        - data_col_pooled (str): the column name for the pooled data</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:    </span>
+<span class="sd">        - data_df (pd.DataFrame): the DataFrame containing the cluster data</span>
+<span class="sd">            - Columns: &#39;condition&#39;, &#39;sample&#39;, &#39;cluster_ID&#39;, &#39;cell_count&#39;, &#39;cluster_volume&#39;, &#39;cell_density&#39;&quot;&quot;&quot;</span>
+
+    <span class="c1"># Create a results dataframe</span>
+    <span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="s1">&#39;sample&#39;</span><span class="p">,</span> <span class="s1">&#39;side&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster_ID&#39;</span><span class="p">,</span> <span class="n">data_col</span><span class="p">,</span> <span class="s1">&#39;cluster_volume&#39;</span><span class="p">,</span> <span class="n">density_col</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">has_hemisphere</span><span class="p">:</span>
+        <span class="c1"># Process files with hemisphere pooling</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Organizing [red1 bold]bilateral[/red1 bold] [dark_orange bold]</span><span class="si">{</span><span class="n">density_col</span><span class="si">}</span><span class="s2">[/] data from [orange1 bold]_LH.csv[/] and [orange1 bold]_RH.csv[/] files...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">csv_files</span><span class="p">:</span>
+            <span class="n">condition_name</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">condition_name</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+                <span class="n">side</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;xmin&#39;</span><span class="p">,</span> <span class="s1">&#39;xmax&#39;</span><span class="p">,</span> <span class="s1">&#39;ymin&#39;</span><span class="p">,</span> <span class="s1">&#39;ymax&#39;</span><span class="p">,</span> <span class="s1">&#39;zmin&#39;</span><span class="p">,</span> <span class="s1">&#39;zmax&#39;</span><span class="p">])</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">condition_name</span>  <span class="c1"># Add the condition to the df</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;side&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">side</span>  <span class="c1"># Add the side </span>
+                <span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data_df</span><span class="p">,</span> <span class="n">df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Pool data by condition, sample, and cluster_ID</span>
+        <span class="n">data_df</span> <span class="o">=</span> <span class="n">data_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;condition&#39;</span><span class="p">,</span> <span class="s1">&#39;sample&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster_ID&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>  <span class="c1"># Group by condition, sample, and cluster_ID</span>
+            <span class="o">**</span><span class="p">{</span><span class="n">data_col_pooled</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">NamedAgg</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="n">data_col</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">),</span>  <span class="c1"># Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method </span>
+            <span class="s1">&#39;pooled_cluster_volume&#39;</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">NamedAgg</span><span class="p">(</span><span class="n">column</span><span class="o">=</span><span class="s1">&#39;cluster_volume&#39;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">)}</span>  <span class="c1"># Sum cluster_volume</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span> <span class="c1"># Reset the index to avoid a multi-index dataframe</span>
+
+        <span class="n">data_df</span><span class="p">[</span><span class="n">density_col</span><span class="p">]</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="n">data_col_pooled</span><span class="p">]</span> <span class="o">/</span> <span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;pooled_cluster_volume&#39;</span><span class="p">]</span>  <span class="c1"># Add a column for cell/label density</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Process files without hemisphere pooling</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Organizing [red1 bold]unilateral[/] [dark_orange bold]</span><span class="si">{</span><span class="n">density_col</span><span class="si">}</span><span class="s2">[/] data...&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">csv_files</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+            <span class="n">condition_name</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">condition_name</span> <span class="ow">in</span> <span class="n">groups</span><span class="p">:</span>
+                <span class="n">df</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">data_col</span><span class="p">,</span> <span class="s1">&#39;cluster_volume&#39;</span><span class="p">,</span> <span class="s1">&#39;xmin&#39;</span><span class="p">,</span> <span class="s1">&#39;xmax&#39;</span><span class="p">,</span> <span class="s1">&#39;ymin&#39;</span><span class="p">,</span> <span class="s1">&#39;ymax&#39;</span><span class="p">,</span> <span class="s1">&#39;zmin&#39;</span><span class="p">,</span> <span class="s1">&#39;zmax&#39;</span><span class="p">])</span>
+                <span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data_df</span><span class="p">,</span> <span class="n">df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">condition_prefixes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">unique_conditions</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unique conditions before grouping with condition_prefixes: </span><span class="si">{</span><span class="n">unique_conditions</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Iterate over the condition prefixes</span>
+        <span class="k">for</span> <span class="n">condition_prefix</span> <span class="ow">in</span> <span class="n">condition_prefixes</span><span class="p">:</span>
+            <span class="c1"># Adjust condition selectors based on potential pooling (return a boolean Series to select rows based on the condition)</span>
+            <span class="n">cond_selector</span> <span class="o">=</span> <span class="n">condition_selector</span><span class="p">(</span><span class="n">data_df</span><span class="p">,</span> <span class="n">condition_prefix</span><span class="p">,</span> <span class="n">unique_conditions</span><span class="p">)</span>
+
+            <span class="c1"># Update the conditions in &#39;condition&#39; column to reflect the pooled conditions</span>
+            <span class="n">data_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">cond_selector</span><span class="p">,</span> <span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">condition_prefix</span>
+
+        <span class="n">unique_conditions</span> <span class="o">=</span> <span class="n">data_df</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unique conditions after grouping with condition_prefixes: </span><span class="si">{</span><span class="n">unique_conditions</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">data_df</span></div>
+
+
+<div class="viewcode-block" id="valid_clusters_t_test">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.valid_clusters_t_test">[docs]</a>
+<span class="k">def</span> <span class="nf">valid_clusters_t_test</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">group1</span><span class="p">,</span> <span class="n">group2</span><span class="p">,</span> <span class="n">density_col</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="s1">&#39;two-sided&#39;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform unpaired t-tests for each cluster in the DataFrame and return the results as a DataFrame.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        - df (pd.DataFrame): the DataFrame containing the cluster data</span>
+<span class="sd">            - Columns: &#39;condition&#39;, &#39;sample&#39;, &#39;cluster_ID&#39;, &#39;cell_count&#39;, &#39;cluster_volume&#39;, &#39;cell_density&#39;</span>
+<span class="sd">        - group1 (str): the name of the first group</span>
+<span class="sd">        - group2 (str): the name of the second group</span>
+<span class="sd">        - density_col (str): the column name for the density data</span>
+<span class="sd">        - alternative (str): the alternative hypothesis (&#39;two-sided&#39;, &#39;less&#39;, or &#39;greater&#39;)</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        - stats_df (pd.DataFrame): the DataFrame containing the t-test results</span>
+<span class="sd">            - Columns: &#39;cluster_ID&#39;, &#39;comparison&#39;, &#39;higher_mean_group&#39;, &#39;p-value&#39;, &#39;significance&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">stats_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">cluster_id</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+        <span class="n">cluster_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cluster_id</span><span class="p">]</span>
+        <span class="n">group1_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cluster_data</span><span class="p">[</span><span class="n">cluster_data</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group1</span><span class="p">][</span><span class="n">density_col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+        <span class="n">group2_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cluster_data</span><span class="p">[</span><span class="n">cluster_data</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group2</span><span class="p">][</span><span class="n">density_col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+        
+        <span class="c1"># Perform unpaired two-tailed t-test</span>
+        <span class="n">t_stat</span><span class="p">,</span> <span class="n">p_value</span> <span class="o">=</span> <span class="n">ttest_ind</span><span class="p">(</span><span class="n">group1_data</span><span class="p">,</span> <span class="n">group2_data</span><span class="p">,</span> <span class="n">equal_var</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">alternative</span><span class="p">)</span>
+        <span class="n">p_value</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p_value</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create a temporary DataFrame for the current t-test result</span>
+        <span class="n">temp_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">cluster_id</span><span class="p">],</span> <span class="s1">&#39;p-value&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">p_value</span><span class="p">]})</span>
+
+        <span class="c1"># Use pd.concat to append the temporary DataFrame</span>
+        <span class="n">stats_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">stats_df</span><span class="p">,</span> <span class="n">temp_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Add a column the higher mean group</span>
+    <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;group1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group1</span>  <span class="c1"># Add columns for the group names</span>
+    <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;group2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">group2</span>
+    <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;comparison&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;group1&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; vs &#39;</span> <span class="o">+</span> <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;group2&#39;</span><span class="p">]</span>
+    <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;group1_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">cluster_id</span><span class="p">:</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cluster_id</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group1</span><span class="p">)][</span><span class="n">density_col</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+    <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;group2_mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">cluster_id</span><span class="p">:</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cluster_id</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">group2</span><span class="p">)][</span><span class="n">density_col</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+    <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;meandiff&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;group1_mean&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;group2_mean&#39;</span><span class="p">]</span>
+    <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;higher_mean_group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;meandiff&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">diff</span><span class="p">:</span> <span class="n">group1</span> <span class="k">if</span> <span class="n">diff</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">group2</span><span class="p">)</span>
+    <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;significance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;p-value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="s1">&#39;****&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.0001</span> <span class="k">else</span> <span class="s1">&#39;***&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.001</span> <span class="k">else</span> <span class="s1">&#39;**&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.01</span> <span class="k">else</span> <span class="s1">&#39;*&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="k">else</span> <span class="s1">&#39;n.s.&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Update columns</span>
+    <span class="n">stats_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;group1_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;group2_mean&#39;</span><span class="p">,</span> <span class="s1">&#39;meandiff&#39;</span><span class="p">,</span> <span class="s1">&#39;group1&#39;</span><span class="p">,</span> <span class="s1">&#39;group2&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">stats_df</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;comparison&#39;</span><span class="p">,</span> <span class="s1">&#39;higher_mean_group&#39;</span><span class="p">,</span> <span class="s1">&#39;p-value&#39;</span><span class="p">,</span> <span class="s1">&#39;significance&#39;</span><span class="p">]]</span>
+
+    <span class="k">return</span> <span class="n">stats_df</span></div>
+
+
+<div class="viewcode-block" id="perform_tukey_test">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.perform_tukey_test">[docs]</a>
+<span class="k">def</span> <span class="nf">perform_tukey_test</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">density_col</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Perform Tukey&#39;s HSD test for each cluster in the DataFrame and return the results as a DataFrame</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        - df (pd.DataFrame): the DataFrame containing the cluster data</span>
+<span class="sd">            - Columns: &#39;condition&#39;, &#39;sample&#39;, &#39;cluster_ID&#39;, &#39;cell_count&#39;, &#39;cluster_volume&#39;, &#39;cell_density&#39;</span>
+<span class="sd">        - groups (list): a list of group names</span>
+<span class="sd">        - density_col (str): the column name for the density data</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        - stats_df (pd.DataFrame): the DataFrame containing the Tukey&#39;s HSD test results</span>
+<span class="sd">            - Columns: &#39;cluster_ID&#39;, &#39;comparison&#39;, &#39;higher_mean_group&#39;, &#39;p-value&#39;, &#39;significance&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">stats_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="n">progress</span><span class="p">,</span> <span class="n">task_id</span> <span class="o">=</span> <span class="n">initialize_progress_bar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()),</span> <span class="s2">&quot;[default]Processing clusters...&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">Live</span><span class="p">(</span><span class="n">progress</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">cluster_id</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+            <span class="n">cluster_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">cluster_id</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">cluster_data</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="c1"># Flatten the data</span>
+                <span class="n">densities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cluster_data</span><span class="p">[</span><span class="n">density_col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+                <span class="n">groups</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">value</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">cluster_data</span><span class="p">[</span><span class="s1">&#39;condition&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+
+                <span class="c1"># Perform Tukey&#39;s HSD test</span>
+                <span class="n">tukey_results</span> <span class="o">=</span> <span class="n">pairwise_tukeyhsd</span><span class="p">(</span><span class="n">endog</span><span class="o">=</span><span class="n">densities</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+
+                <span class="c1"># Extract significant comparisons from Tukey&#39;s results </span>
+                <span class="c1"># Columns: group1, group2, meandiff, p-adj, lower, upper, reject, cluster_ID</span>
+                <span class="n">test_results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">tukey_results</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">columns</span><span class="o">=</span><span class="n">tukey_results</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+                <span class="c1"># Add the cluster ID to the DataFrame</span>
+                <span class="n">test_results_df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">cluster_id</span>
+
+                <span class="c1"># Add a column for the group with the higher mean density</span>
+                <span class="n">test_results_df</span><span class="p">[</span><span class="s1">&#39;higher_mean_group&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_results_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;group1&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;meandiff&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;group2&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+                <span class="c1"># Append the current test results to the overall DataFrame </span>
+                <span class="n">stats_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">stats_df</span><span class="p">,</span> <span class="n">test_results_df</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Update columns</span>
+    <span class="n">stats_df</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;p-adj&#39;</span><span class="p">:</span> <span class="s1">&#39;p-value&#39;</span><span class="p">},</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;comparison&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;group1&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39; vs &#39;</span> <span class="o">+</span> <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;group2&#39;</span><span class="p">]</span>
+    <span class="n">stats_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="s1">&#39;upper&#39;</span><span class="p">,</span> <span class="s1">&#39;reject&#39;</span><span class="p">,</span> <span class="s1">&#39;meandiff&#39;</span><span class="p">,</span> <span class="s1">&#39;group1&#39;</span><span class="p">,</span> <span class="s1">&#39;group2&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;significance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;p-value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="s1">&#39;****&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.0001</span> <span class="k">else</span> <span class="s1">&#39;***&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.001</span> <span class="k">else</span> <span class="s1">&#39;**&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.01</span> <span class="k">else</span> <span class="s1">&#39;*&#39;</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="k">else</span> <span class="s1">&#39;n.s.&#39;</span><span class="p">)</span>
+    <span class="n">stats_df</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">,</span> <span class="s1">&#39;comparison&#39;</span><span class="p">,</span> <span class="s1">&#39;higher_mean_group&#39;</span><span class="p">,</span> <span class="s1">&#39;p-value&#39;</span><span class="p">,</span> <span class="s1">&#39;significance&#39;</span><span class="p">]]</span>
+
+    <span class="k">return</span> <span class="n">stats_df</span> </div>
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.main">[docs]</a>
+<span class="nd">@log_command</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">install</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+    <span class="n">verbose_start_msg</span><span class="p">()</span>
+
+    <span class="n">current_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+
+    <span class="c1"># Check for subdirectories in the current working directory</span>
+    <span class="n">subdirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">current_dir</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">subdirs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    [red1]No directories found in the current working directory: </span><span class="si">{</span><span class="n">current_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="k">if</span> <span class="n">subdirs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;_valid_clusters_stats&#39;</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    [red1]Only the &#39;_valid_clusters_stats&#39; directory found in the current working directory: </span><span class="si">{</span><span class="n">current_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    [red1]The script was likely run from a subdirectory instead of a directory containing subdirectories.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="c1"># Iterate over all subdirectories in the current working directory</span>
+    <span class="k">for</span> <span class="n">subdir</span> <span class="ow">in</span> <span class="n">subdirs</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Processing directory: [default bold]</span><span class="si">{</span><span class="n">subdir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">[/]&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Load all .csv files in the current subdirectory</span>
+        <span class="n">csv_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">subdir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.csv&#39;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">csv_files</span><span class="p">:</span>
+            <span class="k">continue</span>  <span class="c1"># Skip directories with no CSV files</span>
+
+        <span class="c1"># Make output dir</span>
+        <span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">subdir</span><span class="p">)</span> <span class="o">/</span> <span class="s1">&#39;_valid_clusters_stats&#39;</span>
+        <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">validation_info_csv</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;cluster_validation_info_t-test.csv&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;cluster_validation_info_tukey.csv&#39;</span>
+        <span class="k">if</span> <span class="n">validation_info_csv</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Load the first .csv file to check for data columns and set the appropriate column names</span>
+        <span class="n">first_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv_files</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="s1">&#39;cell_count&#39;</span> <span class="ow">in</span> <span class="n">first_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">data_col</span><span class="p">,</span> <span class="n">data_col_pooled</span><span class="p">,</span> <span class="n">density_col</span> <span class="o">=</span> <span class="s1">&#39;cell_count&#39;</span><span class="p">,</span> <span class="s1">&#39;pooled_cell_count&#39;</span><span class="p">,</span> <span class="s1">&#39;cell_density&#39;</span>
+        <span class="k">elif</span> <span class="s1">&#39;label_volume&#39;</span> <span class="ow">in</span> <span class="n">first_df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">data_col</span><span class="p">,</span> <span class="n">data_col_pooled</span><span class="p">,</span> <span class="n">density_col</span> <span class="o">=</span> <span class="s1">&#39;label_volume&#39;</span><span class="p">,</span> <span class="s1">&#39;pooled_label_volume&#39;</span><span class="p">,</span> <span class="s1">&#39;label_density&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: Unrecognized data columns in input files.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="c1"># Get the total number of clusters</span>
+        <span class="n">total_clusters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">first_df</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+
+        <span class="c1"># Check if any files contain hemisphere indicators</span>
+        <span class="n">has_hemisphere</span> <span class="o">=</span> <span class="nb">any</span><span class="p">(</span><span class="s1">&#39;_LH.csv&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="ow">or</span> <span class="s1">&#39;_RH.csv&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">csv_files</span><span class="p">)</span>
+
+        <span class="c1"># Aggregate the data from all .csv files and pool the data if hemispheres are present</span>
+        <span class="n">data_df</span> <span class="o">=</span> <span class="n">cluster_validation_data_df</span><span class="p">(</span><span class="n">density_col</span><span class="p">,</span> <span class="n">has_hemisphere</span><span class="p">,</span> <span class="n">csv_files</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="n">data_col</span><span class="p">,</span> <span class="n">data_col_pooled</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">condition_prefixes</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">data_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    [red1]No data files match the specified groups. The prefixes of the csv files must match the group names.&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Check the number of groups and perform the appropriate statistical test</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># Perform a t-test</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">alternate</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;two-sided&#39;</span><span class="p">,</span> <span class="s1">&#39;less&#39;</span><span class="p">,</span> <span class="s1">&#39;greater&#39;</span><span class="p">]:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error: Invalid alternative hypothesis. Please specify &#39;two-sided&#39;, &#39;less&#39;, or &#39;greater&#39;.&quot;</span><span class="p">)</span>
+                <span class="k">return</span>
+            <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">alternate</span> <span class="o">==</span> <span class="s1">&#39;two-sided&#39;</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running [gold1 bold]</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">alternate</span><span class="si">}</span><span class="s2"> unpaired t-tests&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running [gold1 bold]one-sided unpaired t-tests&quot;</span><span class="p">)</span>
+            <span class="n">stats_df</span> <span class="o">=</span> <span class="n">valid_clusters_t_test</span><span class="p">(</span><span class="n">data_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">density_col</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">alternate</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Perform a Tukey&#39;s test</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running [gold1 bold]Tukey&#39;s tests&quot;</span><span class="p">)</span>
+            <span class="n">stats_df</span> <span class="o">=</span> <span class="n">perform_tukey_test</span><span class="p">(</span><span class="n">data_df</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">,</span> <span class="n">density_col</span><span class="p">)</span>
+
+        <span class="c1"># Validate the clusters based on the expected direction of the effect</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">higher_group</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    [red1]Error: The specified higher group &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">higher_group</span><span class="si">}</span><span class="s2">&#39; is not one of the groups.&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="n">expected_direction</span> <span class="o">=</span> <span class="s1">&#39;&gt;&#39;</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">higher_group</span> <span class="o">==</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&lt;&#39;</span>
+        <span class="n">incongruent_clusters</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[(</span><span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;higher_mean_group&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">args</span><span class="o">.</span><span class="n">higher_group</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;significance&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;n.s.&#39;</span><span class="p">)][</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;incongruent_clusters.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">incongruent_clusters</span><span class="p">)))</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected effect direction: [green bold]</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">expected_direction</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">incongruent_clusters</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;All significant clusters are congruent with the expected direction&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">incongruent_clusters</span><span class="p">)</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">total_clusters</span><span class="si">}</span><span class="s2"> clusters are incongruent with the expected direction.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Although they had a significant difference, they not considered valid.&quot;</span><span class="p">)</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;incongruent_clusters.txt&#39; lists cluster IDs for incongruent clusters.&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Invalidate clusters that are incongruent with the expected direction</span>
+        <span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;significance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats_df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">row</span><span class="p">:</span> <span class="s1">&#39;n.s.&#39;</span> <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">incongruent_clusters</span> <span class="k">else</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;significance&#39;</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Remove invalidated clusters from the list of significant clusters</span>
+        <span class="n">significant_clusters</span> <span class="o">=</span> <span class="n">stats_df</span><span class="p">[</span><span class="n">stats_df</span><span class="p">[</span><span class="s1">&#39;significance&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;n.s.&#39;</span><span class="p">][</span><span class="s1">&#39;cluster_ID&#39;</span><span class="p">]</span>
+        <span class="n">significant_cluster_ids</span> <span class="o">=</span> <span class="n">significant_clusters</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="n">significant_cluster_ids_str</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">significant_cluster_ids</span><span class="p">))</span>
+
+        <span class="c1"># Save the results to a .csv file</span>
+        <span class="n">stats_results_csv</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;t-test_results.csv&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;tukey_results.csv&#39;</span>
+        <span class="n">stats_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">stats_results_csv</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Extract the FDR q value from the first csv file (float after &#39;FDR&#39; or &#39;q&#39; in the file name)</span>
+        <span class="n">first_csv_name</span> <span class="o">=</span> <span class="n">csv_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">fdr_q</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">first_csv_name</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;FDR&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        
+        <span class="c1"># Extract the p-value threshold from the specified .txt file</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">p_val_txt</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">subdir</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;**/*&#39;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">p_val_txt</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">p_val_txt</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># If no file is found, print an error message and skip further processing for this directory</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    [red1]No p-value file found matching &#39;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">p_val_txt</span><span class="si">}</span><span class="s2">&#39; in directory </span><span class="si">{</span><span class="n">subdir</span><span class="si">}</span><span class="s2">. Please check the file name and path.&quot;</span><span class="p">)</span>
+                <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">p_val_txt</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">p_value_thresh</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c1"># Handle other exceptions that may occur during file opening or reading</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;An error occurred while processing the p-value file: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+        <span class="c1"># Print validation info: </span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FDR q: [cyan bold]</span><span class="si">{</span><span class="n">fdr_q</span><span class="si">}</span><span class="s2">[/] == p-value threshold: [cyan bold]</span><span class="si">{</span><span class="n">p_value_thresh</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valid cluster IDs: </span><span class="si">{</span><span class="n">significant_cluster_ids_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[default]# of valid / total #: [bright_magenta]</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">significant_cluster_ids</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">total_clusters</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">validation_rate</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">significant_cluster_ids</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_clusters</span> <span class="o">*</span> <span class="mi">100</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cluster validation rate: [purple bold]</span><span class="si">{</span><span class="n">validation_rate</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Save the raw data dataframe as a .csv file</span>
+        <span class="n">raw_data_csv_prefix</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;raw_data_for_t-test&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;raw_data_for_tukey&#39;</span>
+        <span class="k">if</span> <span class="n">has_hemisphere</span><span class="p">:</span>
+            <span class="n">data_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">raw_data_csv_prefix</span><span class="si">}</span><span class="s1">_pooled.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> 
+            <span class="n">data_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">raw_data_csv_prefix</span><span class="si">}</span><span class="s1">.csv&#39;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="c1"># Save the # of sig. clusters, total clusters, and cluster validation rate to a .txt file</span>
+        <span class="n">validation_inf_txt</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;cluster_validation_info_t-test.txt&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;cluster_validation_info_tukey.txt&#39;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">validation_inf_txt</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Direction: </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">expected_direction</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;FDR q: </span><span class="si">{</span><span class="n">fdr_q</span><span class="si">}</span><span class="s2"> == p-value threshold </span><span class="si">{</span><span class="n">p_value_thresh</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Valid cluster IDs: </span><span class="si">{</span><span class="n">significant_cluster_ids_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;# of valid / total #: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">significant_cluster_ids</span><span class="p">)</span><span class="si">}</span><span class="s2"> / </span><span class="si">{</span><span class="n">total_clusters</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cluster validation rate: </span><span class="si">{</span><span class="n">validation_rate</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">%</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Save the valid cluster IDs to a .txt file</span>
+        <span class="n">valid_cluster_IDs</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;valid_cluster_IDs_t-test.txt&#39;</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">else</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="s1">&#39;valid_cluster_IDs_tukey.txt&#39;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">valid_cluster_IDs</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">significant_cluster_ids_str</span><span class="p">)</span>
+        
+        <span class="c1"># Save cluster validation info for ``cstats_summary`` </span>
+        <span class="n">data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;Direction&#39;</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">expected_direction</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">],</span>
+            <span class="s1">&#39;FDR q&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">fdr_q</span><span class="p">],</span>
+            <span class="s1">&#39;P value thresh&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">p_value_thresh</span><span class="p">],</span>
+            <span class="s1">&#39;Valid clusters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">significant_cluster_ids_str</span><span class="p">],</span>
+            <span class="s1">&#39;# of valid clusters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">significant_cluster_ids</span><span class="p">)],</span>
+            <span class="s1">&#39;# of clusters&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">total_clusters</span><span class="p">],</span>
+            <span class="s1">&#39;Validation rate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">significant_cluster_ids</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">total_clusters</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">100</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">]</span>
+        <span class="p">})</span>
+        
+        <span class="n">data_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">validation_info_csv</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Concat all cluster_validation_info.csv files</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">groups</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">cluster_summary</span><span class="p">(</span><span class="s1">&#39;cluster_validation_info_t-test.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster_validation_summary_t-test.csv&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">cluster_summary</span><span class="p">(</span><span class="s1">&#39;cluster_validation_info_tukey.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;cluster_validation_summary_tukey.csv&#39;</span><span class="p">)</span>
+
+    <span class="n">verbose_end_msg</span><span class="p">()</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2024, the UNRAVEL team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
