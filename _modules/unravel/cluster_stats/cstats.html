@@ -458,9 +458,9 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    [red]Condition </span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s2"> not recognized!&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="svalidation_data_df">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.svalidation_data_df">[docs]</a>
-<span class="k">def</span> <span class="nf">svalidation_data_df</span><span class="p">(</span><span class="n">density_col</span><span class="p">,</span> <span class="n">has_hemisphere</span><span class="p">,</span> <span class="n">csv_files</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">data_col</span><span class="p">,</span> <span class="n">data_col_pooled</span><span class="p">,</span> <span class="n">condition_prefixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="cluster_validation_data_df">
+<a class="viewcode-back" href="../../../unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.cluster_validation_data_df">[docs]</a>
+<span class="k">def</span> <span class="nf">cluster_validation_data_df</span><span class="p">(</span><span class="n">density_col</span><span class="p">,</span> <span class="n">has_hemisphere</span><span class="p">,</span> <span class="n">csv_files</span><span class="p">,</span> <span class="n">groups</span><span class="p">,</span> <span class="n">data_col</span><span class="p">,</span> <span class="n">data_col_pooled</span><span class="p">,</span> <span class="n">condition_prefixes</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Aggregate the data from all .csv files, pool bilateral data if hemispheres are present, optionally pool data by condition, and return the DataFrame.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>

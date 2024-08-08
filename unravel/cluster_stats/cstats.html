@@ -588,8 +588,8 @@ An error is raised if the condition is neither found as an exact match nor as a 
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.cstats.svalidation_data_df">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.cstats.</span></span><span class="sig-name descname"><span class="pre">svalidation_data_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">density_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_hemisphere</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_col_pooled</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_prefixes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/cstats.html#svalidation_data_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.cstats.svalidation_data_df" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.cluster_stats.cstats.cluster_validation_data_df">
+<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.cstats.</span></span><span class="sig-name descname"><span class="pre">cluster_validation_data_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">density_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_hemisphere</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_col</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_col_pooled</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition_prefixes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/cstats.html#cluster_validation_data_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.cstats.cluster_validation_data_df" title="Link to this definition">#</a></dt>
 <dd><p>Aggregate the data from all .csv files, pool bilateral data if hemispheres are present, optionally pool data by condition, and return the DataFrame.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -741,7 +741,7 @@ An error is raised if the condition is neither found as an exact match nor as a 
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tukey-s-test-usage">Tukey’s test usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.cstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.cstats.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.cstats.svalidation_data_df"><code class="docutils literal notranslate"><span class="pre">svalidation_data_df()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.cstats.cluster_validation_data_df"><code class="docutils literal notranslate"><span class="pre">cluster_validation_data_df()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.cstats.valid_clusters_t_test"><code class="docutils literal notranslate"><span class="pre">valid_clusters_t_test()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.cstats.perform_tukey_test"><code class="docutils literal notranslate"><span class="pre">perform_tukey_test()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.cstats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
@@ -791,7 +791,7 @@ An error is raised if the condition is neither found as an exact match nor as a 
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>

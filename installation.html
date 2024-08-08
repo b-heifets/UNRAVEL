@@ -369,17 +369,32 @@
 <h2>TL;DR<a class="headerlink" href="#tl-dr" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>Activate a virtual environment in Python</p></li>
-<li><p>Install UNRAVEL via <a class="reference external" href="https://pypi.org/project/heifetslab-unravel/">PyPI</a>:</p></li>
+<li><p><strong>Option A:</strong> install UNRAVEL via <a class="reference external" href="https://pypi.org/project/heifetslab-unravel/">PyPI</a>:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>heifetslab-unravel
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install latest release</span>
+pip<span class="w"> </span>install<span class="w"> </span>heifetslab-unravel
+
+<span class="c1"># Update</span>
+pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>heifetslab-unravel
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>Or, for an editable install run:</p></li>
+<li><p><strong>Option B:</strong> install UNRAVEL via GitHub (for editing source code and/or incremental updates):</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/b-heifets/UNRAVEL.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install latest code on the main branch</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/b-heifets/UNRAVEL.git
 <span class="nb">cd</span><span class="w"> </span>UNRAVEL
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w">  </span><span class="c1"># Also run this for updates</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+
+<span class="c1"># Update</span>
+git<span class="w"> </span>pull<span class="w"> </span>
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w"> </span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Confirm that the installation worked:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>unravel_commands<span class="w"> </span>-c<span class="w">  </span><span class="c1"># This should print common commands</span>
 </pre></div>
 </div>
 <ul class="simple">
@@ -387,30 +402,6 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li><p>Install <a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation">FSL</a></p></li>
 <li><p>Install <a class="reference external" href="https://www.ilastik.org/download.html">Ilastik</a></p></li>
 </ul>
-</section>
-<section id="updating-unravel">
-<h2>Updating UNRAVEL<a class="headerlink" href="#updating-unravel" title="Link to this heading">#</a></h2>
-<p>To update UNRAVEL to the latest version, use the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>heifetslab-unravel
-</pre></div>
-</div>
-<div class="note dropdown admonition">
-<p class="admonition-title">Please note the version of UNRAVEL you are using for reproducibility.</p>
-<p>To check the installed version of UNRAVEL, use the following command:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>show<span class="w"> </span>heifetslab-unravel
-</pre></div>
-</div>
-<p>To check the latest version, go to the <a class="reference external" href="https://pypi.org/project/heifetslab-unravel/">heifetslab-unravel PyPI page</a></p>
-</div>
-<div class="note dropdown admonition">
-<p class="admonition-title">Checking changes between versions</p>
-<p>Releases and update notes for UNRAVEL can be found <a class="reference external" href="https://github.com/b-heifets/UNRAVEL/releases">here</a> on GitHub .</p>
-<p>For more detailed information, you can view the commit history:</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/b-heifets/UNRAVEL/commits/main">Main branch commits</a></p></li>
-<li><p><a class="reference external" href="https://github.com/b-heifets/UNRAVEL/commits/dev">Dev branch commits</a></p></li>
-</ul>
-</div>
 </section>
 <section id="setting-up-windows-subsystem-for-linux-wsl">
 <h2>Setting Up Windows Subsystem for Linux (WSL)<a class="headerlink" href="#setting-up-windows-subsystem-for-linux-wsl" title="Link to this heading">#</a></h2>
@@ -450,7 +441,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <ol class="arabic">
 <li><p><strong>Open a terminal</strong></p></li>
 <li><p><strong>Install pyenv, venv, or other tool(s) to manage Python versions and create a virtual environment:</strong></p>
-<h3 class="rubric" id="option-a-using-pyenv">Option A: Using pyenv</h3>
+<p class="rubric" id="option-a-using-pyenv">Option A: Using pyenv</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Pyenv can work on Windows, but this is not recommended (e.g., see notes <a class="reference external" href="https://github.com/pyenv/pyenv">here</a>)</p>
@@ -489,7 +480,7 @@ libffi-dev<span class="w"> </span>liblzma-dev<span class="w"> </span>python3-ope
 pyenv<span class="w"> </span>activate<span class="w"> </span>unravel<span class="w"> </span><span class="c1"># To deactivate, run: pyenv deactivate</span>
 </pre></div>
 </div>
-<h3 class="rubric" id="option-b-using-venv">Option B: Using venv</h3>
+<p class="rubric" id="option-b-using-venv">Option B: Using venv</p>
 <p><strong>a. Install Python 3.11 if it’s not already installed:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>python3.11<span class="w"> </span>python3.11-venv<span class="w"> </span>python3.11-dev
@@ -501,21 +492,32 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </pre></div>
 </div>
 </li>
-<li><p><strong>Install UNRAVEL:</strong></p>
+<li><p><strong>Install UNRAVEL</strong></p>
+<p class="rubric" id="option-a-install-unravel-via-pypi-and-use-as-is">Option A: Install UNRAVEL via PyPI and use as-is</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>heifetslab-unravel
 </pre></div>
+</div>
+<p class="rubric" id="option-b-editable-installation-of-unravel">Option B: Editable installation of UNRAVEL</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path&gt;<span class="w">  </span><span class="c1"># Insert path to where you want to clone the GitHub repository</span>
+
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/b-heifets/UNRAVEL.git<span class="w">  </span><span class="c1"># Clone the repo</span>
+
+<span class="nb">cd</span><span class="w"> </span>UNRAVEL
+
+&lt;<span class="nb">command</span><span class="w"> </span>to<span class="w"> </span>activate<span class="w"> </span>a<span class="w"> </span>virtual<span class="w"> </span>environment&gt;<span class="w"> </span><span class="c1"># e.g., pyenv activate unravel</span>
+
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you want to use another branch, run the following before <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code>:
+git checkout <branch-name>  # Check out the desired remote branch (e.g., dev)</p>
+<p>To add extra depedencies (e.g., for updating documentation), run: ``pip install -e “.[dev]”`</p>
 </div>
 </li>
 <li><p><strong>Download atlas/template files:</strong>
 <a class="reference external" href="https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing">Google Drive Link</a></p></li>
-</ol>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<ul class="simple">
-<li><p>Update the paths to atlas files so they work with paths relative to the project</p></li>
-</ul>
-</div>
-<ol class="arabic" start="5">
 <li><p><strong>Install Ilastik:</strong></p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.ilastik.org/download.html">Ilastik installation website</a>.</p></li>
@@ -532,63 +534,46 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </li>
 </ul>
 </li>
-<li><p><strong>Confirm the installation</strong></p>
+<li><p><strong>Confirm that the installation worked</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>unravel_commands<span class="w"> </span>-c<span class="w"> </span>
 </pre></div>
 </div>
 </li>
-</ol>
-</section>
-<section id="edit-bashrc-or-zshrc-to-set-up-dependencies">
-<h2>Edit .bashrc or .zshrc to set up dependencies<a class="headerlink" href="#edit-bashrc-or-zshrc-to-set-up-dependencies" title="Link to this heading">#</a></h2>
-<p>Add the following to your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code> shell configuration file, and change <code class="docutils literal notranslate"><span class="pre">/usr/local/</span></code> to the path where FSL and Ilastik are installed:</p>
+<li><p><strong>Edit .bashrc or .zshrc to set up dependencies</strong></p>
+<ul class="simple">
+<li><p>Add the following to your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code> shell configuration file, and change <code class="docutils literal notranslate"><span class="pre">/usr/local/</span></code> to the path where FSL and Ilastik are installed:</p></li>
+</ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:/usr/local/fsl/bin
 <span class="nb">export</span><span class="w"> </span><span class="nv">FSLDIR</span><span class="o">=</span>/usr/local/fsl
 <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">FSLDIR</span><span class="si">}</span>/bin:<span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>
 .<span class="w"> </span><span class="si">${</span><span class="nv">FSLDIR</span><span class="si">}</span>/etc/fslconf/fsl.sh
 <span class="nb">export</span><span class="w"> </span>FSLDIR<span class="w"> </span>PATH
-<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/ilastik-1.3.3post3-Linux:<span class="nv">$PATH</span><span class="w"> </span><span class="c1"># Update the version</span>
-
-<span class="c1"># Add this too if you want to open ilastik via the terminal by running: ilastik</span>
-<span class="nb">alias</span><span class="w"> </span><span class="nv">ilastik</span><span class="o">=</span>run_ilastik.sh
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/ilastik-1.3.3post3-Linux:<span class="nv">$PATH</span><span class="w"> </span><span class="c1"># Update the path and version</span>
 </pre></div>
 </div>
-<p>Apply the changes by restarting the terminal or source your shell configuration file:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>~/.bashrc
-</pre></div>
-</div>
-</section>
-<section id="get-started-with-analysis">
-<h2>Get started with analysis<a class="headerlink" href="#get-started-with-analysis" title="Link to this heading">#</a></h2>
-<p><a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html">UNRAVEL guide</a></p>
-</section>
-<section id="optional-editable-installation-of-unravel">
-<h2>Optional: editable installation of UNRAVEL<a class="headerlink" href="#optional-editable-installation-of-unravel" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>This is an alternate installation method from <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">heifetslab-unravel</span></code></p></li>
+<li><p>Apply the changes by restarting the terminal or source your shell configuration file:</p></li>
 </ul>
-<ol class="arabic">
-<li><p><strong>Open a terminal and navigate to the directory where you want to clone the UNRAVEL GitHub repository:</strong></p></li>
-<li><p><strong>Clone the repository:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/b-heifets/UNRAVEL.git
-</pre></div>
-</div>
-<p><a class="reference external" href="https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository">GitHub Cloning Documentation</a></p>
-</li>
-<li><p><strong>Install UNRAVEL locally</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>UNRAVEL
-&lt;activate<span class="w"> </span>a<span class="w"> </span>virtual<span class="w"> </span>environment&gt;<span class="w"> </span><span class="c1"># e.g., pyenv activate unravel</span>
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>.<span class="w"> </span>~/.bashrc
 </pre></div>
 </div>
 </li>
 <li><p><strong>Update scripts periodically:</strong></p>
 <div class="admonition hint">
 <p class="admonition-title">Hint</p>
-<ul class="simple">
-<li><p>Make a backup of the code that you used for analysis before updating</p></li>
-</ul>
+<p>Note the release/version and/or backup code before updating for reproducibility</p>
 </div>
+<p class="rubric" id="option-a-updating-unravel-if-installed-via-pypi">Option A. Updating UNRAVEL if installed via PyPI:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Update UNRAVEL if installed via PyPI: </span>
+pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>heifetslab-unravel
+
+<span class="c1"># Check the installed version of UNRAVEL</span>
+pip<span class="w"> </span>show<span class="w"> </span>heifetslab-unravel
+</pre></div>
+</div>
+<p>To check the latest version, go to the <a class="reference external" href="https://pypi.org/project/heifetslab-unravel/">heifetslab-unravel PyPI page</a></p>
+<p class="rubric" id="option-b-updating-unravel-if-installed-via-github">Option B. Updating UNRAVEL if installed via GitHub:</p>
+<p>This is allows for editing source code and incremental updates</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path/to/UNRAVEL&gt;
 git<span class="w"> </span>pull<span class="w">  </span><span class="c1"># This will update the local repo</span>
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w">  </span><span class="c1"># This will update commands and install new dependencies</span>
@@ -596,10 +581,19 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </div>
 </li>
 </ol>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>To add extra depedencies (e.g., for updating documentation), run: <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">&quot;.[dev]&quot;</span></code></p>
+<div class="note dropdown admonition">
+<p class="admonition-title">Checking changes between versions</p>
+<p>Releases and update notes for UNRAVEL can be found <a class="reference external" href="https://github.com/b-heifets/UNRAVEL/releases">here</a> on GitHub .</p>
+<p>For more detailed information, you can view the commit history:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/b-heifets/UNRAVEL/commits/main">Main branch commits</a></p></li>
+<li><p><a class="reference external" href="https://github.com/b-heifets/UNRAVEL/commits/dev">Dev branch commits</a></p></li>
+</ul>
 </div>
+</section>
+<section id="get-started-with-analysis">
+<h2>Get started with analysis<a class="headerlink" href="#get-started-with-analysis" title="Link to this heading">#</a></h2>
+<p><a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html">UNRAVEL guide</a></p>
 </section>
 </section>
 
@@ -650,15 +644,12 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tl-dr">TL;DR</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-unravel">Updating UNRAVEL</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setting-up-windows-subsystem-for-linux-wsl">Setting Up Windows Subsystem for Linux (WSL)</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-wsl">Installing WSL:</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installing-unravel-on-linux-or-wsl">Installing UNRAVEL on Linux or WSL</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#edit-bashrc-or-zshrc-to-set-up-dependencies">Edit .bashrc or .zshrc to set up dependencies</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#get-started-with-analysis">Get started with analysis</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optional-editable-installation-of-unravel">Optional: editable installation of UNRAVEL</a></li>
 </ul>
   </nav></div>
 
@@ -705,7 +696,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>

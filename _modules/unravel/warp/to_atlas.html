@@ -358,13 +358,13 @@
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
-<span class="sd">    warp_to_atlas -i ochann -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v] </span>
+<span class="sd">    warp_to_atlas -i cfos -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v] </span>
 
 <span class="sd">Prereqs: </span>
 <span class="sd">    ``reg``</span>
 
 <span class="sd">Input examples (path is relative to ./sample??; 1st glob match processed): </span>
-<span class="sd">    &lt;asterisk&gt;.czi, ochann/&lt;asterisk&gt;.tif, ochann, &lt;asterisk&gt;.tif, &lt;asterisk&gt;.h5, or &lt;asterisk&gt;.zarr </span>
+<span class="sd">    &lt;asterisk&gt;.czi, cfos/&lt;asterisk&gt;.tif, cfos, &lt;asterisk&gt;.tif, &lt;asterisk&gt;.h5, or &lt;asterisk&gt;.zarr </span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -395,7 +395,7 @@
 
     <span class="c1"># Required arguments:</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;INPUT: Path of native image relative to ./sample??&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output img.nii.gz (saved as ./sample??/atlas_space/img.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output filename. E.g., img_in_atlas_space.nii.gz. Saved in ./sample??/atlas_space/&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="c1"># Optional arguments:</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--chann_idx&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;.czi channel index. Default: 1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -565,7 +565,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>

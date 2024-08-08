@@ -244,8 +244,9 @@ unravel_commands -m
 :::
 
 ::: {tab-item} Warping
-- [**warp_to_atlas**](unravel.warp.to_atlas): Warp images to atlas space.
+- [**warp_to_atlas**](unravel.warp.to_atlas): Warp full res tissue space images to atlas space.
 - [**warp_to_native**](unravel.warp.to_native): Warp images to native img space, unpad, and scale to full res.
+- [**warp_to_fixed**](unravel.warp.to_fixed): Warp full res tissue space images to fixed img space and unpad.
 :::
 
 ::: {tab-item} Segmentation
@@ -265,8 +266,8 @@ unravel_commands -m
 - [**cstats_fdr_range**](unravel.cluster_stats.fdr_range): Get FDR q value range yielding clusters.
 - [**cstats_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
 - [**cstats_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
-- [**cstats_validation**](unravel.cluster_stats.cluster_validation): Validate clusters w/ cell/label density measurements.
-- [**cstats_summary**](unravel.cluster_stats.cluster_summary): Summarize info on valid clusters (run after cluster_validation).
+- [**cstats_validation**](unravel.cluster_stats.validation): Validate clusters w/ cell/label density measurements.
+- [**cstats_summary**](unravel.cluster_stats.summary): Summarize info on valid clusters (run after cluster_validation).
 :::
 
 ::: {tab-item} Region-wise stats
@@ -309,9 +310,10 @@ unravel_commands -m
 :::
 
 :::{tab-item} Warping
-- [**warp_to_atlas**](unravel.warp.to_atlas): Warp images to atlas space.
-- [**warp_to_fixed**](unravel.warp.to_fixed): Warp images to fixed img space and unpad.
+- [**warp_to_atlas**](unravel.warp.to_atlas): Warp full res tissue space images to atlas space.
+- [**warp_to_fixed**](unravel.warp.to_fixed): Warp full res tissue space images to fixed img space and unpad.
 - [**warp_to_native**](unravel.warp.to_native): Warp images to native img space, unpad, and scale to full res.
+- [**warp_points_to_atlas**](unravel.warp.points_to_atlas): Warp cell centroids in tissue space to atlas space.
 - [**warp**](unravel.warp.warp): Warp between moving and fixed images (these have 15% padding from reg)
 :::
 
@@ -336,8 +338,8 @@ unravel_commands -m
 - [**cstats_fdr_range**](unravel.cluster_stats.fdr_range): Get FDR q value range yielding clusters.
 - [**cstats_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
 - [**cstats_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
-- [**cstats_validation**](unravel.cluster_stats.cluster_validation): Validate clusters w/ cell/label density measurements.
-- [**cstats_summary**](unravel.cluster_stats.cluster_summary): Summarize info on valid clusters (run after cluster_validation).
+- [**cstats_validation**](unravel.cluster_stats.validation): Validate clusters w/ cell/label density measurements.
+- [**cstats_summary**](unravel.cluster_stats.summary): Summarize info on valid clusters (run after cluster_validation).
 - [**cstats_org_data**](unravel.cluster_stats.org_data): Organize CSVs from cluster_validation.
 - [**cstats_group_data**](unravel.cluster_stats.group_bilateral_data): Group bilateral cluster data.
 - [**cstats**](unravel.cluster_stats.cstats): Compute cluster validation statistics.
@@ -963,7 +965,7 @@ cluster_mirror_indices -m RH -v
 ### Cluster validation
 
 #### `cstats_validation`
-{py:mod}`unravel.cluster_stats.cluster_validation`
+{py:mod}`unravel.cluster_stats.validation`
 * Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or    label densities
 ```bash
 # Basic usage:
@@ -974,7 +976,7 @@ for q in 0.005 0.01 0.05 0.1 ; do for side in LH RH ; do cluster_validation -e $
 ```
 
 #### `cstats_summary`
-{py:mod}`unravel.cluster_stats.cluster_summary`
+{py:mod}`unravel.cluster_stats.summary`
 * Aggregates and analyzes cluster validation data from `cstats_validation`
 * Update parameters in /UNRAVEL/unravel/cstats/cluster_summary.ini and save it with the experiment
 ```bash

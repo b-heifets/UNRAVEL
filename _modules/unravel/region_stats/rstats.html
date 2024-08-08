@@ -676,7 +676,7 @@
                 <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
             <span class="c1"># Load the region information dataframe</span>
-            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020__regionID_side_IDpath_region_abbr.csv&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020__regionID_side_IDpath_region_abbr.csv&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2017__regionID_side_IDpath_region_abbr.csv&#39;</span><span class="p">:</span>
                 <span class="n">region_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;core&#39;</span> <span class="o">/</span> <span class="s1">&#39;csvs&#39;</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">region_info_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">csv_path</span><span class="p">)</span>
@@ -773,7 +773,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>

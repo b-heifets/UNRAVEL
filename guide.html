@@ -374,7 +374,7 @@
 </ul>
 <div class="hint dropdown admonition">
 <p class="admonition-title">Terminal command cheat sheet</p>
-<h3 class="rubric" id="working-directory">Working Directory</h3>
+<p class="rubric" id="working-directory">Working Directory</p>
 <p>The working directory, or current directory, is the folder in the file system that a user or program is currently accessing.</p>
 <ul class="simple">
 <li><p><strong>Default Location</strong>: The terminal typically starts in your home directory.</p></li>
@@ -383,33 +383,33 @@
 <li><p><strong>Viewing the Directory</strong>: Use <code class="docutils literal notranslate"><span class="pre">pwd</span></code> to display the current working directory.</p></li>
 <li><p><strong>Importance</strong>: Knowing your working directory is often crucial for executing commands and managing files as intended.</p></li>
 </ul>
-<h3 class="rubric" id="learning-about-commands">Learning About Commands</h3>
+<p class="rubric" id="learning-about-commands">Learning About Commands</p>
 <ul class="simple">
 <li><p><strong>Help Option</strong>: Many commands offer a <code class="docutils literal notranslate"><span class="pre">--help</span></code> option to provide a quick overview of usage. For example, <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">--help</span></code> or <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-h</span></code>.</p></li>
 <li><p><strong>Manual Pages</strong>: Use <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">&lt;command&gt;</span></code> to access the manual page for detailed information about a command. For example, <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">ls</span></code> provides options and descriptions for the <code class="docutils literal notranslate"><span class="pre">ls</span></code> command.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">which</span></code></strong>: Use <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">&lt;command&gt;</span></code> to locate the executable file for a command. For example, <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">python</span></code> shows where the Python interpreter is installed.</p></li>
 </ul>
-<h3 class="rubric" id="listing-files">Listing Files</h3>
+<p class="rubric" id="listing-files">Listing Files</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">ls</span></code>: List files and directories.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-l</span></code>: List files in long format, including details like permissions, size, and modification date.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-a</span></code>: List all files, including hidden files, which start with a “.” (unravel commands are logged in a hidden file [.command_log.txt]).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-1</span></code>: List files in a single column.</p></li>
 </ul>
-<h3 class="rubric" id="viewing-and-creating-files">Viewing and Creating Files</h3>
+<p class="rubric" id="viewing-and-creating-files">Viewing and Creating Files</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">&lt;filename&gt;</span></code>: Display the contents of a file.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">&quot;string&quot;</span> <span class="pre">&gt;</span> <span class="pre">new.txt</span></code>: Create a new file named <code class="docutils literal notranslate"><span class="pre">new.txt</span></code> and write “string” to it.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">&quot;string&quot;</span> <span class="pre">&gt;&gt;</span> <span class="pre">new.txt</span></code>: Append “string” to the existing <code class="docutils literal notranslate"><span class="pre">new.txt</span></code> file.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">touch</span> <span class="pre">new.txt</span></code>: Create a new file that is empty</p></li>
 </ul>
-<h3 class="rubric" id="file-folder-management">File/Folder Management</h3>
+<p class="rubric" id="file-folder-management">File/Folder Management</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">&lt;dir_name&gt;</span></code>: Make directory</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-rf</span> <span class="pre">&lt;dir_name&gt;</span></code>: Delete folder and all contents recursively (be careful where you run this and what patterns you use)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">&lt;file&gt;</span></code> or <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">&lt;path/file&gt;</span></code></p></li>
 </ul>
-<h3 class="rubric" id="navigation-and-shortcuts">Navigation and Shortcuts</h3>
+<p class="rubric" id="navigation-and-shortcuts">Navigation and Shortcuts</p>
 <ul class="simple">
 <li><p><strong>Tab completion</strong>: Use tab to auto-complete file and directory names.</p></li>
 <li><p><strong>Up arrow</strong>: Scroll through command history. In zsh, type a partial command and press the up arrow to find past commands starting with the typed string.</p></li>
@@ -422,7 +422,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">cd</span></code>: Change to the home directory.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">~/</span></code>: Change to the home directory using the tilde shortcut.</p></li>
 </ul>
-<h3 class="rubric" id="command-history">Command History</h3>
+<p class="rubric" id="command-history">Command History</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">history</span></code>: Print the history of terminal commands</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">!3</span></code>: Run the third command in the history</p></li>
@@ -430,7 +430,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">.command_log.txt</span> <span class="pre">|</span> <span class="pre">tail</span> <span class="pre">-10</span></code>: Print the last 10 lines</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">.command_log.txt</span> <span class="pre">|</span> <span class="pre">head</span> <span class="pre">-10</span></code>: Print the first 10 lines</p></li>
 </ul>
-<h3 class="rubric" id="keyboard-shortcuts">Keyboard Shortcuts</h3>
+<p class="rubric" id="keyboard-shortcuts">Keyboard Shortcuts</p>
 <ul class="simple">
 <li><p><strong>Copy/Paste</strong>:</p>
 <ul>
@@ -460,7 +460,7 @@
 </ul>
 </li>
 </ul>
-<h3 class="rubric" id="command-execution-and-scripting">Command Execution and Scripting</h3>
+<p class="rubric" id="command-execution-and-scripting">Command Execution and Scripting</p>
 <ul class="simple">
 <li><p>Using <code class="docutils literal notranslate"><span class="pre">;</span></code> vs. <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>: <code class="docutils literal notranslate"><span class="pre">;</span></code> chains commands to execute sequentially, while <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> runs a command in the background.</p></li>
 <li><p>Another way to chain commands is to “pipe” (“|” character) the output from one command (what would be printed to the terminal) so it is used as the input of the next command</p>
@@ -470,13 +470,13 @@
 </li>
 <li><p>Parentheses <code class="docutils literal notranslate"><span class="pre">()</span></code> for multi-line commands: Group commands to execute them in a subshell.</p></li>
 </ul>
-<h3 class="rubric" id="global-variables">Global Variables</h3>
+<p class="rubric" id="global-variables">Global Variables</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">$PWD</span></code>: Variable with the current working directory path.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">$PATH</span></code>: List of directories that have executable files. Allows for executing scripts without providing the full path (e.g., path/script.py –&gt; script.py). Folders with UNRAVEL scripts don’t need to be added to the $PATH if it installed w/ <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p></li>
 <li><p>See the “Define common variables in a shell script” section below on how to define common environmental variables that can be loaded for each terminal session</p></li>
 </ul>
-<h3 class="rubric" id="batch-processing-via-loops">Batch Processing Via Loops</h3>
+<p class="rubric" id="batch-processing-via-loops">Batch Processing Via Loops</p>
 <ul class="simple">
 <li><p>For loops examples:</p>
 <ul>
@@ -489,12 +489,12 @@
 </ul>
 </li>
 </ul>
-<h3 class="rubric" id="variables-and-substitution">Variables and Substitution</h3>
+<p class="rubric" id="variables-and-substitution">Variables and Substitution</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">$PWD</span></code>: Variable with the current working directory path.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">$()</span></code>: Command substitution to capture output for use in commands (e.g., <code class="docutils literal notranslate"><span class="pre">x=$(for</span> <span class="pre">)</span></code>)</p></li>
 </ul>
-<h3 class="rubric" id="file-searching-and-manipulation">File Searching and Manipulation</h3>
+<p class="rubric" id="file-searching-and-manipulation">File Searching and Manipulation</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">find</span></code>: Search for files in a directory hierarchy.</p>
 <ul>
@@ -512,7 +512,7 @@
 </li>
 <li><p><a class="reference external" href="https://github.com/junegunn/fzf"><code class="docutils literal notranslate"><span class="pre">fzf</span></code></a>: A command-line fuzzy finder that allows you to search and filter items interactively, providing a fast and efficient way to locate files, commands, or history entries.</p></li>
 </ul>
-<h3 class="rubric" id="text-processing">Text Processing</h3>
+<p class="rubric" id="text-processing">Text Processing</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">sed</span></code>: Stream editor for filtering and transforming text.</p>
 <ul>
@@ -520,9 +520,9 @@
 </ul>
 </li>
 </ul>
-<h3 class="rubric" id="aliases">Aliases</h3>
+<p class="rubric" id="aliases">Aliases</p>
 <p>Aliases are shortcuts for longer commands or sequences of commands, making it easier and quicker to execute frequently used commands. You can create aliases in your shell configuration file (like <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> for Bash or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code> for Zsh).</p>
-<h4 class="rubric" id="how-to-create-aliases">How to Create Aliases:</h4>
+<p class="rubric" id="how-to-create-aliases">How to Create Aliases:</p>
 <ul>
 <li><p>Open your shell configuration file:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nano<span class="w"> </span>~/.bashrc<span class="w">  </span><span class="c1"># For Bash users</span>
@@ -549,7 +549,7 @@ nano<span class="w"> </span>~/.zshrc<span class="w">   </span><span class="c1">#
 </div>
 </li>
 </ul>
-<h3 class="rubric" id="fsl-commands-for-nifti-files-nii-gz-extension">FSL Commands for NIfTI files (.nii.gz extension)</h3>
+<p class="rubric" id="fsl-commands-for-nifti-files-nii-gz-extension">FSL Commands for NIfTI files (.nii.gz extension)</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">fslmaths</span></code>: Perform mathematical operations on images.</p>
 <ul>
@@ -656,8 +656,9 @@ Registration</label><div class="sd-tab-content docutils">
 <label class="sd-tab-label" for="sd-tab-item-1">
 Warping</label><div class="sd-tab-content docutils">
 <ul class="simple">
-<li><p><a class="reference internal" href="unravel/warp/to_atlas.html#unravel-warp-to-atlas"><span class="std std-ref"><strong>warp_to_atlas</strong></span></a>: Warp images to atlas space.</p></li>
+<li><p><a class="reference internal" href="unravel/warp/to_atlas.html#unravel-warp-to-atlas"><span class="std std-ref"><strong>warp_to_atlas</strong></span></a>: Warp full res tissue space images to atlas space.</p></li>
 <li><p><a class="reference internal" href="unravel/warp/to_native.html#unravel-warp-to-native"><span class="std std-ref"><strong>warp_to_native</strong></span></a>: Warp images to native img space, unpad, and scale to full res.</p></li>
+<li><p><a class="reference internal" href="unravel/warp/to_fixed.html#unravel-warp-to-fixed"><span class="std std-ref"><strong>warp_to_fixed</strong></span></a>: Warp full res tissue space images to fixed img space and unpad.</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-2" name="sd-tab-set-0" type="radio">
@@ -686,8 +687,8 @@ Cluster-wise stats</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/cluster_stats/fdr_range.html#unravel-cluster-stats-fdr-range"><span class="std std-ref"><strong>cstats_fdr_range</strong></span></a>: Get FDR q value range yielding clusters.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/fdr.html#unravel-cluster-stats-fdr"><span class="std std-ref"><strong>cstats_fdr</strong></span></a>: FDR-correct 1-p value map → cluster map.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/recursively_mirror_rev_cluster_indices.html#unravel-cluster-stats-recursively-mirror-rev-cluster-indices"><span class="std std-ref"><strong>cstats_mirror_indices</strong></span></a>: Recursively mirror cluster maps for validating clusters in left and right hemispheres.</p></li>
-<li><p><a class="reference internal" href="#unravel.cluster_stats.cluster_validation"><span class="xref myst"><strong>cstats_validation</strong></span></a>: Validate clusters w/ cell/label density measurements.</p></li>
-<li><p><a class="reference internal" href="#unravel.cluster_stats.cluster_summary"><span class="xref myst"><strong>cstats_summary</strong></span></a>: Summarize info on valid clusters (run after cluster_validation).</p></li>
+<li><p><a class="reference internal" href="unravel/cluster_stats/validation.html#unravel-cluster-stats-validation"><span class="std std-ref"><strong>cstats_validation</strong></span></a>: Validate clusters w/ cell/label density measurements.</p></li>
+<li><p><a class="reference internal" href="unravel/cluster_stats/summary.html#unravel-cluster-stats-summary"><span class="std std-ref"><strong>cstats_summary</strong></span></a>: Summarize info on valid clusters (run after cluster_validation).</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-5" name="sd-tab-set-0" type="radio">
@@ -745,9 +746,10 @@ Registration</label><div class="sd-tab-content docutils">
 <label class="sd-tab-label" for="sd-tab-item-10">
 Warping</label><div class="sd-tab-content docutils">
 <ul class="simple">
-<li><p><a class="reference internal" href="unravel/warp/to_atlas.html#unravel-warp-to-atlas"><span class="std std-ref"><strong>warp_to_atlas</strong></span></a>: Warp images to atlas space.</p></li>
-<li><p><a class="reference internal" href="unravel/warp/to_fixed.html#unravel-warp-to-fixed"><span class="std std-ref"><strong>warp_to_fixed</strong></span></a>: Warp images to fixed img space and unpad.</p></li>
+<li><p><a class="reference internal" href="unravel/warp/to_atlas.html#unravel-warp-to-atlas"><span class="std std-ref"><strong>warp_to_atlas</strong></span></a>: Warp full res tissue space images to atlas space.</p></li>
+<li><p><a class="reference internal" href="unravel/warp/to_fixed.html#unravel-warp-to-fixed"><span class="std std-ref"><strong>warp_to_fixed</strong></span></a>: Warp full res tissue space images to fixed img space and unpad.</p></li>
 <li><p><a class="reference internal" href="unravel/warp/to_native.html#unravel-warp-to-native"><span class="std std-ref"><strong>warp_to_native</strong></span></a>: Warp images to native img space, unpad, and scale to full res.</p></li>
+<li><p><a class="reference internal" href="#unravel.warp.points_to_atlas"><span class="xref myst"><strong>warp_points_to_atlas</strong></span></a>: Warp cell centroids in tissue space to atlas space.</p></li>
 <li><p><a class="reference internal" href="unravel/warp/warp.html#unravel-warp-warp"><span class="std std-ref"><strong>warp</strong></span></a>: Warp between moving and fixed images (these have 15% padding from reg)</p></li>
 </ul>
 </div>
@@ -781,8 +783,8 @@ Cluster-wise stats</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/cluster_stats/fdr_range.html#unravel-cluster-stats-fdr-range"><span class="std std-ref"><strong>cstats_fdr_range</strong></span></a>: Get FDR q value range yielding clusters.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/fdr.html#unravel-cluster-stats-fdr"><span class="std std-ref"><strong>cstats_fdr</strong></span></a>: FDR-correct 1-p value map → cluster map.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/recursively_mirror_rev_cluster_indices.html#unravel-cluster-stats-recursively-mirror-rev-cluster-indices"><span class="std std-ref"><strong>cstats_mirror_indices</strong></span></a>: Recursively mirror cluster maps for validating clusters in left and right hemispheres.</p></li>
-<li><p><a class="reference internal" href="#unravel.cluster_stats.cluster_validation"><span class="xref myst"><strong>cstats_validation</strong></span></a>: Validate clusters w/ cell/label density measurements.</p></li>
-<li><p><a class="reference internal" href="#unravel.cluster_stats.cluster_summary"><span class="xref myst"><strong>cstats_summary</strong></span></a>: Summarize info on valid clusters (run after cluster_validation).</p></li>
+<li><p><a class="reference internal" href="unravel/cluster_stats/validation.html#unravel-cluster-stats-validation"><span class="std std-ref"><strong>cstats_validation</strong></span></a>: Validate clusters w/ cell/label density measurements.</p></li>
+<li><p><a class="reference internal" href="unravel/cluster_stats/summary.html#unravel-cluster-stats-summary"><span class="std std-ref"><strong>cstats_summary</strong></span></a>: Summarize info on valid clusters (run after cluster_validation).</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/org_data.html#unravel-cluster-stats-org-data"><span class="std std-ref"><strong>cstats_org_data</strong></span></a>: Organize CSVs from cluster_validation.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/group_bilateral_data.html#unravel-cluster-stats-group-bilateral-data"><span class="std std-ref"><strong>cstats_group_data</strong></span></a>: Group bilateral cluster data.</p></li>
 <li><p><a class="reference internal" href="unravel/cluster_stats/cstats.html#unravel-cluster-stats-cstats"><span class="std std-ref"><strong>cstats</strong></span></a>: Compute cluster validation statistics.</p></li>
@@ -1285,7 +1287,7 @@ Select Features… -&gt; select all features (<code class="docutils literal notr
 </ul>
 </li>
 </ol>
-<h4 class="rubric" id="vstats-outputs">Vstats outputs</h4>
+<p class="rubric" id="vstats-outputs">Vstats outputs</p>
 <ul class="simple">
 <li><p><strong>T-test outputs</strong>:</p>
 <ul>
@@ -1301,7 +1303,7 @@ Select Features… -&gt; select all features (<code class="docutils literal notr
 </ul>
 </li>
 </ul>
-<h4 class="rubric" id="example-preparing-for-an-anova">Example: Preparing for an ANOVA</h4>
+<p class="rubric" id="example-preparing-for-an-anova">Example: Preparing for an ANOVA</p>
 <ol class="arabic simple">
 <li><p><strong>Setup Design Matrix</strong>:</p>
 <ul class="simple">
@@ -1359,7 +1361,7 @@ Select Features… -&gt; select all features (<code class="docutils literal notr
 </ul>
 </li>
 </ol>
-<h4 class="rubric" id="background">Background</h4>
+<p class="rubric" id="background">Background</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/GLM">FSL GLM Guide</a></p></li>
 <li><p><a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide">FSL Randomise User Guide</a></p></li>
@@ -1533,7 +1535,7 @@ cluster_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span 
 <h3>Cluster validation<a class="headerlink" href="#cluster-validation" title="Link to this heading">#</a></h3>
 <section id="cstats-validation">
 <h4><code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code><a class="headerlink" href="#cstats-validation" title="Link to this heading">#</a></h4>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.cluster_validation</span></code></p>
+<p><a class="reference internal" href="unravel/cluster_stats/validation.html#module-unravel.cluster_stats.validation" title="unravel.cluster_stats.validation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.validation</span></code></a></p>
 <ul class="simple">
 <li><p>Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or    label densities</p></li>
 </ul>
@@ -1547,7 +1549,7 @@ cluster_validation<span class="w"> </span>-e<span class="w"> </span>&lt;experime
 </section>
 <section id="cstats-summary">
 <h4><code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code><a class="headerlink" href="#cstats-summary" title="Link to this heading">#</a></h4>
-<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.cluster_summary</span></code></p>
+<p><a class="reference internal" href="unravel/cluster_stats/summary.html#module-unravel.cluster_stats.summary" title="unravel.cluster_stats.summary"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.summary</span></code></a></p>
 <ul class="simple">
 <li><p>Aggregates and analyzes cluster validation data from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code></p></li>
 <li><p>Update parameters in /UNRAVEL/unravel/cstats/cluster_summary.ini and save it with the experiment</p></li>
@@ -1826,7 +1828,7 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.4.7.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
     <br/>
   </p>
 </div>
