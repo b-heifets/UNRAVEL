@@ -27,7 +27,7 @@ from rich.traceback import install
 from unravel.core.argparse_utils import SM, SuppressMetavar
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_image_metadata_from_txt
-from unravel.core.img_tools import pad, reorient_for_raw_to_nii_conv
+from unravel.core.img_tools import pad, reorient_for_raw_to_nii_conv, reverse_reorient_for_raw_to_nii_conv
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
 from unravel.warp.to_atlas import to_atlas
 
@@ -139,10 +139,18 @@ def main():
             # This can result in multiple nearby points being grouped into the same voxel, reducing the apparent density of data points.
             centroids_ndarray_resampled = centroids_ndarray_physical / args.reg_res
 
+            # Optionally reorient the coordinates for compatibility with MIRACL
+            if args.miracl:
+                centroids_ndarray_resampled = reorient_for_raw_to_nii_conv(centroids_ndarray_resampled)
+
             # Load output image from ``reg_prep`` (e.g., reg_inputs/autofl_50um.nii.gz) to get shape
             nii = nib.load(sample_path / args.autofl_img)
             autofl_img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
-            img_shape = autofl_img.shape
+            if args.miracl:
+                autofl_img_orig_orient = reverse_reorient_for_raw_to_nii_conv(autofl_img)  # clar_allen_reg/clar_res0.05.nii.gz
+                img_shape = autofl_img_orig_orient.shape
+            else:
+                img_shape = autofl_img.shape
 
             # Create an image with the same shape as reg_inputs/autofl_50um.nii.gz
             resampled_coords_img = centroids_to_img(centroids_ndarray_resampled, img_shape)
