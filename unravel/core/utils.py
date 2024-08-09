@@ -50,6 +50,9 @@ from rich.text import Text
 
 from unravel.core.config import Configuration, Config
 
+# TODO: Also output commands with default args to .verbose_command_log.txt or .command_log.txt.
+
+
 # Configuration loading
 def load_config(config_path):
     """Load settings from the config file and return a Config object."""
