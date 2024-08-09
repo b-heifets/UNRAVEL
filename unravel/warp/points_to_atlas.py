@@ -55,8 +55,6 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: Add commands to .toml, guide, and toctree. 
-
 
 @print_func_name_args_times()
 def centroids_to_img(centroids_ndarray, img_shape):
@@ -73,13 +71,6 @@ def centroids_to_img(centroids_ndarray, img_shape):
 
     return coords_img
 
-def pad(ndarray, pad_width=0.15):
-    """Pads ndarray by 15% of voxels on all sides"""
-    pad_factor = 1 + 2 * pad_width
-    pad_width_x = round(((ndarray.shape[0] * pad_factor) - ndarray.shape[0]) / 2)
-    pad_width_y = round(((ndarray.shape[1] * pad_factor) - ndarray.shape[1]) / 2)
-    pad_width_z = round(((ndarray.shape[2] * pad_factor) - ndarray.shape[2]) / 2)
-    return np.pad(ndarray, ((pad_width_x, pad_width_x), (pad_width_y, pad_width_y), (pad_width_z, pad_width_z)), mode='constant')
 
 @log_command
 def main():
