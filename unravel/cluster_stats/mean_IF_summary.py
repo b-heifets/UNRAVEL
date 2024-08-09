@@ -62,6 +62,7 @@ def parse_args():
 # TODO: Perhaps functions in this script could be made more generic and used in rstats_mean_IF_summary.py as well.
 # TODO: Save a CSV with the results for each cluster.
 # TODO: Check that this works for other test types (tested with t-tests).
+# TODO: UserWarning: 28.6% of the points cannot be placed; you may want to decrease the size of the markers or use stripplot
 
 
 # Set Arial as the font
