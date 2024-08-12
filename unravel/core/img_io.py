@@ -715,8 +715,8 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
         The z resolution in microns for a NIFTI image output. Default is 1000.
     data_type : data-type, optional
         Data type for a NIFTI image output. Default is np.float32.
-    reference_img : NIfTI1Image from nibabel, optional
-        Either an affine matrix or a path to a .nii.gz file to retain its orientation. Default is None. If provided, xy_res and z_res are ignored.
+    reference_img : str, Path, or a nib.Nifti1Image object, optional
+        Either path to a .nii.gz file or a Nifti1Image object to set orientation and resolution. Default is None. If provided, xy_res and z_res are ignored.
     """
     output = Path(output_path)
     output.parent.mkdir(exist_ok=True, parents=True)
