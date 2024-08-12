@@ -727,5 +727,38 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
         save_as_zarr(img, output_path, ndarray_axis_order=ndarray_axis_order)
     elif output_path.endswith('.h5'):
         save_as_h5(img, output_path, ndarray_axis_order=ndarray_axis_order)
-    else: 
+    elif output_path.endswith('.tif'): 
         save_as_tifs(img, output_path, ndarray_axis_order=ndarray_axis_order)
+    else:
+        raise ValueError(f"Unsupported file type for save_3D_img(): {output_path.suffix}. Use: .nii.gz, .zarr, .h5, .tif")
+
+# Other functions
+def nii_voxel_size(nii_path, use_um=True):
+    """Get the resolution (voxel size) of a NIfTI image.
+    
+    Parameters:
+    -----------
+    nii_path : str
+        Path to the NIfTI image file.
+
+    use_um : bool, optional. Default is True.
+        If True, return the resolution in micrometers (um). If False, return the resolution in millimeters (mm).
+
+    Returns:
+    --------
+    res : tuple of float or float
+        If anisotropic, returns (x_res, y_res, z_res) in micrometers (um) or millimeters (mm).
+        If isotropic, returns a single float value for the resolution in micrometers (um) or millimeters (mm).
+    """
+
+    # Check if input file exists
+    if not Path(nii_path).exists():
+        raise FileNotFoundError(f"\n    [red1]Input file not found: {nii_path}\n")
+
+    nii = nib.load(nii_path)
+    res = nii.header.get_zooms() # (x, y, z) in mm
+    if use_um:
+        res = tuple([r * 1000 for r in res])  # Convert to micrometers
+
+    # Return as a single value if isotropic, else as a tuple
+    return res[0] if res[0] == res[1] == res[2] else res
