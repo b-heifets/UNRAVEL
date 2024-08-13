@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use `io_points_to_img` from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for voxel intensity (e.g., number of detections).
+Use `io_points_to_img` from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.
 
 Usage: 
 ------
-    io_points_to_img  -i path/points.csv -o path/image.nii.gz
+    io_points_to_img  -i path/points.csv -ri path/ref_image.nii.gz -o path/image.nii.gz [-thr 20000 or -uthr 20000] [-v]
 
 Input:
     A CSV file where each row represents a point corresponding to a detection in the 3D image. 
@@ -30,18 +30,17 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Populate a 3D image with points based on their coordinates, summing the number of points at each voxel.", formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='CSV w/ columns: x, y, z, Region_ID (e.g., from ``rstats``)', required=True, action=SM)
+    parser.add_argument('-ri', '--ref_img', help='Path to a reference image for output image shape and saving.', required=True, action=SM)
     parser.add_argument('-o', '--output', help="Path to save the output image.", required=True, action=SM)
-    parser.add_argument('-r', '--ref_img', help='Path to a reference image for the output shape [and saving if .nii.gz output]. Use -r or -s.', action=SM)
-    parser.add_argument('-s', '--img_shape', help='Shape of the output image (e.g., 100, 100, 100 for x, y, z).', nargs=3, type=int, action=SM)
     parser.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
-    parser.add_argument('-uthr', '--upper_thresh', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
+    parser.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
-@print_func_name_args_times()
+
 def threshold_points_by_region_id(points_df, thresh=None, upper_thresh=None):
     """
     Filter the points (i.e., coordinates) based on the 'Region_ID' column. This function removes points that are outside the brain (i.e., 'Region_ID' == 0) and optionally filters points based on a threshold or upper threshold.
@@ -77,13 +76,13 @@ def threshold_points_by_region_id(points_df, thresh=None, upper_thresh=None):
     return points_df
 
 @print_func_name_args_times()
-def load_and_prepare_points(input_path, thresh=None, upper_thresh=None):
+def load_and_prepare_points(points_csv_path, thresh=None, upper_thresh=None):
     """
     Load points from a CSV file and prepare them by filtering based on Region_ID and adjusting coordinates.
 
     Parameters:
     -----------
-    input_path : str or Path
+    points_csv_path : str or Path
         Path to the input CSV file containing the points.
 
     thresh : float, optional
@@ -97,7 +96,7 @@ def load_and_prepare_points(input_path, thresh=None, upper_thresh=None):
     points_ndarray : numpy.ndarray
         A 2D array of shape (n, 3) containing the prepared points.
     """
-    points_df = pd.read_csv(input_path)
+    points_df = pd.read_csv(points_csv_path)
     points_df = threshold_points_by_region_id(points_df, thresh=thresh, upper_thresh=upper_thresh)
     points_ndarray = points_df.to_numpy()
 
@@ -106,7 +105,7 @@ def load_and_prepare_points(input_path, thresh=None, upper_thresh=None):
     return points_ndarray
 
 @print_func_name_args_times()
-def create_image_from_points(points_ndarray, ref_img_path=None, img_shape=None):
+def points_to_img(points_ndarray, ref_img=None):
     """
     Create a 3D image from a set of point coordinates, using a reference image for shape if provided.
     If multiple points fall within the same voxel, the voxel's value is incremented accordingly.
@@ -116,11 +115,8 @@ def create_image_from_points(points_ndarray, ref_img_path=None, img_shape=None):
     points_ndarray : numpy.ndarray
         A 2D array of shape (n, 3) where each row represents the (x, y, z) coordinates of a point.
 
-    ref_img : nib.Nifti1Image, optional
+    ref_img : numpy.ndarray
         A reference image from which to derive the output shape.
-
-    img_shape : tuple of int, optional
-        Shape of the output image if no reference image is provided. The order is (x, y, z).
 
     Returns:
     --------
@@ -136,19 +132,15 @@ def create_image_from_points(points_ndarray, ref_img_path=None, img_shape=None):
 
     Example:
     --------
-    >>> points = np.array([[10, 20, 30], [10, 20, 30], [15, 25, 35]])
-    >>> img_shape = (50, 50, 50)
-    >>> img = create_image_from_points(points, img_shape=img_shape)
+    >>> points_ndarray = np.array([[10, 20, 30], [10, 20, 30], [15, 25, 35]])
+    >>> ref_img = np.zeros((50, 50, 50), dtype='uint8')
+    >>> img = points_to_img(points_ndarray, ref_img)
     >>> print(img[10, 20, 30])  # Output will be 2, since two points are at this coordinate.
     >>> print(img[15, 25, 35])  # Output will be 1, since one point is at this coordinate.
     """
-    if ref_img_path:
-        ref_img = load_3D_img(ref_img_path)
-        img_shape = ref_img.shape
-    elif img_shape is None:
-        raise ValueError("Either ref_img or img_shape must be provided.")
 
     # Create an empty image
+    img_shape = ref_img.shape
     img = np.zeros(img_shape, dtype='uint8')
 
     # Increment the voxel value for each point's coordinates
@@ -162,40 +154,6 @@ def create_image_from_points(points_ndarray, ref_img_path=None, img_shape=None):
 
     return img
 
-@print_func_name_args_times()
-def points_to_img(points_csv_path, output_img_path, ref_img_path=None, img_shape=None, thresh=None, upper_thresh=None):
-    """
-    Convert a set of points to a 3D image, accounting for voxel intensity.
-
-    Parameters:
-    -----------
-    points_csv_path : str or Path
-        Path to the CSV file containing the points.
-
-    output_img_path : str or Path
-        Path to save the output image.
-
-    ref_img_path : str or Path, optional
-        Path to a reference image for the output shape.
-
-    img_shape : tuple of int, optional
-        Shape of the output image if no reference image is provided. The order is (x, y, z).
-
-    thresh : float, optional
-        Exclude region IDs below this threshold.
-
-    upper_thresh : float, optional
-        Exclude region IDs above this threshold.
-    """
-    # Load and prepare points
-    points_ndarray = load_and_prepare_points(points_csv_path, thresh=thresh, upper_thresh=upper_thresh)
-
-    # Create an image from the points using the specified shape or reference image
-    img = create_image_from_points(points_ndarray, ref_img_path=ref_img_path, img_shape=tuple(img_shape) if img_shape else None)
-
-    # Save the image
-    save_3D_img(img, output_img_path, reference_img=ref_img_path)
-
 
 @log_command
 def main():
@@ -204,7 +162,16 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    points_to_img(args.input, args.output, args.ref_img, args.img_shape, args.thresh, args.upper_thresh)
+    ref_img = load_3D_img(args.ref_img)
+
+    # Load and prepare points
+    points_ndarray = load_and_prepare_points(points_csv_path=args.input, thresh=args.thresh, upper_thresh=args.upper_thr)
+
+    # Create an image from the points using a reference image to determine the shape
+    img = points_to_img(points_ndarray, ref_img)
+
+    # Save the image
+    save_3D_img(img, args.output, reference_img=args.ref_img)
 
     verbose_end_msg()
 

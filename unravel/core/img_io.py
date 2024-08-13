@@ -301,6 +301,26 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
 
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
+def nii_path_or_nii(nii):
+    """Helper function to load a NIfTI image if it's a path. Returns the NIfTI image object.
+    
+    Parameters:
+    -----------
+    nii : str, Path, or nib.Nifti1Image
+        Path to the NIfTI image file or a Nifti1Image object.
+
+    Returns:
+    --------
+    nib.Nifti1Image
+        The NIfTI image object.
+    """
+    if isinstance(nii, nib.Nifti1Image):
+        return nii
+    elif isinstance(nii, (str, Path)) and Path(nii).exists():
+        return nib.load(nii)
+    else:
+        raise FileNotFoundError(f"\n    [red1]Input file not found: {nii}\n")
+
 @print_func_name_args_times()
 def nii_to_ndarray(nii):
     """Load a NIfTI image and return as a 3D ndarray.
@@ -315,10 +335,7 @@ def nii_to_ndarray(nii):
     ndarray : ndarray
         The 3D image array.
     """
-    if not Path(nii).exists() and not isinstance(nii, nib.Nifti1Image):
-        raise FileNotFoundError(f"\n    [red1]Input file not found for nii_to_ndarray(): {nii}\n")
-    if isinstance(nii, (str, Path)) and Path(nii).exists():
-        nii = nib.load(nii)
+    nii = nii_path_or_nii(nii)
     ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
     return ndarray
 
@@ -756,13 +773,13 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
     print(f"\n    Image saved to: {output_path}\n")
 
 # Other functions
-def nii_voxel_size(nii_path, use_um=True):
+def nii_voxel_size(nii, use_um=True):
     """Get the resolution (voxel size) of a NIfTI image.
     
     Parameters:
     -----------
-    nii_path : str
-        Path to the NIfTI image file.
+    nii : str, Path, or nib.Nifti1Image
+        Path to the NIfTI image file or a Nifti1Image object.
 
     use_um : bool, optional. Default is True.
         If True, return the resolution in micrometers (um). If False, return the resolution in millimeters (mm).
@@ -773,16 +790,10 @@ def nii_voxel_size(nii_path, use_um=True):
         If anisotropic, returns (x_res, y_res, z_res) in micrometers (um) or millimeters (mm).
         If isotropic, returns a single float value for the resolution in micrometers (um) or millimeters (mm).
     """
-
-    # Check if input file exists
-    if not Path(nii_path).exists():
-        raise FileNotFoundError(f"\n    [red1]Input file not found: {nii_path}\n")
-
-    nii = nib.load(nii_path)
-    res = nii.header.get_zooms() # (x, y, z) in mm
+    nii = nii_path_or_nii(nii)
+    res = nii.header.get_zooms()  # (x, y, z) in mm
     if use_um:
         res = tuple([r * 1000 for r in res])  # Convert to micrometers
 
     # Return as a single value if isotropic, else as a tuple
     return res[0] if res[0] == res[1] == res[2] else res
-

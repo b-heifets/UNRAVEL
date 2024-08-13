@@ -106,6 +106,11 @@ def main():
                 "description": "Warp images to native space.",
                 "common": True
             },
+            "warp_points_to_atlas": {
+                "module": "unravel.warp.points_to_atlas",
+                "description": "Warp cell centroids in tissue space to atlas space.",
+                "common": True
+            },
             "warp": {
                 "module": "unravel.warp.warp",
                 "description": "Warp between moving and fixed images.",
@@ -365,6 +370,16 @@ def main():
                 "module": "unravel.image_io.img_to_npy",
                 "description": "Convert images to Numpy arrays.",
                 "common": False
+            },
+            "io_img_to_points": {
+                "module": "unravel.image_io.img_to_points",
+                "description": "Convert and image into points coordinates.",
+                "common": False
+            },
+            "io_points_to_img": {
+                "module": "unravel.image_io.points_to_img",
+                "description": "Populate an empty image with point coordinates.",
+                "common": False
             }
         },
         "Image tools": {
@@ -411,6 +426,11 @@ def main():
             "img_resample": {
                 "module": "unravel.image_tools.resample",
                 "description": "Resample image.nii.gz.",
+                "common": False
+            },
+            "img_resample_points": {
+                "module": "unravel.image_tools.resample_points",
+                "description": "Resample a set of points [and save as an image].",
                 "common": False
             },
             "img_extend": {
