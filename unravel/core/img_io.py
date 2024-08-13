@@ -763,8 +763,8 @@ def nii_voxel_size(nii_path, use_um=True):
     # Return as a single value if isotropic, else as a tuple
     return res[0] if res[0] == res[1] == res[2] else res
 
-def nii_to_ndarray(nii):
-    """Load a NIfTI image and return the ndarray.
+def nii_to_img(nii):
+    """Load a NIfTI image and return as a 3D ndarray.
 
     Parameters:
     -----------
