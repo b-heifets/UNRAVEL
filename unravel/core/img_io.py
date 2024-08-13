@@ -279,6 +279,10 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
         If return_res is True, returns (ndarray, xy_res, z_res).
     tuple, optional
         If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
+
+    Notes
+    -----
+    - If xy_res and z_res are provided, they will be used instead of the values from the metadata.
     """
     nii = nib.load(nii_path)
     ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
@@ -296,6 +300,27 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
         z_res = original_z_res
 
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
+
+@print_func_name_args_times()
+def nii_to_ndarray(nii):
+    """Load a NIfTI image and return as a 3D ndarray.
+
+    Parameters:
+    -----------
+    nii : str, Path, or nib.Nifti1Image
+        Path to the NIfTI image file or a Nifti1Image object.
+
+    Returns:
+    --------
+    ndarray : ndarray
+        The 3D image array.
+    """
+    if not Path(nii).exists() and not isinstance(nii, nib.Nifti1Image):
+        raise FileNotFoundError(f"\n    [red1]Input file not found for nii_to_ndarray(): {nii}\n")
+    if isinstance(nii, (str, Path)) and Path(nii).exists():
+        nii = nib.load(nii)
+    ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
+    return ndarray
 
 @print_func_name_args_times()
 def load_nii_subset(nii_path, xmin, xmax, ymin, ymax, zmin, zmax):
@@ -533,7 +558,7 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
             img_path = next(iter(sorted_files), None) 
 
     if not img_path.exists():
-        raise FileNotFoundError(f"No compatible image files found in {img_path}. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
+        raise FileNotFoundError(f"No compatible image files found in {img_path} for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
     
     if str(img_path).endswith('.czi'):
         print(f"\n    [default]Loading channel {channel} from {img_path} (channel 0 is the first channel)")
@@ -580,7 +605,6 @@ def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=None, refere
     reference : str, Path, or nib.Nifti1Image, optional
         Either a path to a reference .nii.gz file or a Nifti1Image object
         to set orientation and resolution. If provided, `xy_res` and `z_res` are ignored. Default is None.
-
 
     Notes
     -----
@@ -762,20 +786,3 @@ def nii_voxel_size(nii_path, use_um=True):
     # Return as a single value if isotropic, else as a tuple
     return res[0] if res[0] == res[1] == res[2] else res
 
-def nii_to_ndarray(nii):
-    """Load a NIfTI image and return as a 3D ndarray.
-
-    Parameters:
-    -----------
-    nii : str, Path, or nib.Nifti1Image
-        Path to the NIfTI image file or a Nifti1Image object.
-
-    Returns:
-    --------
-    ndarray : ndarray
-        The 3D image array.
-    """
-    if isinstance(nii, (str, Path)):
-        nii = nib.load(nii)
-    ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
-    return ndarray
