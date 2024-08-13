@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Merge densities and sex information from CSVs.
+"""
+
 import argparse
 import os
 import pandas as pd
@@ -12,9 +16,10 @@ def parse_args():
     """
     Parse command line arguments.
     """
-    parser = argparse.ArgumentParser(description='Merge densities and sex information from CSVs.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input_csv', help='CSV with cell or fiber densities.', action=SM)
     parser.add_argument('-s', '--sex_info_csv', help='CSV with "Samples" and "Sex" columns.', action=SM)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def add_sexes_to_input_csv(input_csv, sex_info_csv):

@@ -20,7 +20,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/img.czi, path/img.nii.gz, or path/tif_dir', action=SM, required=True)
     parser.add_argument('-o', '--output', help='path to output dir. Default: bounding_boxes', action=SM)
     parser.add_argument('-ob', '--outer_bbox', help='path/outer_bbox.txt (bbox for voxels > 0)', action=SM)

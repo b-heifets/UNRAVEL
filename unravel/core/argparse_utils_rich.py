@@ -19,7 +19,7 @@ Example:
     from rich_argparse import RichHelpFormatter
     from path.to.this.script import SuppressMetavar, SM
 
-    parser = argparse.ArgumentParser(description="A script example.", formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--example', help='Example argument', action=SM)
     args = parser.parse_args()
 

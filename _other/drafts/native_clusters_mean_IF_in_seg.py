@@ -1,5 +1,20 @@
 #!/usr/bin/env python3
 
+"""
+For each cluster, load cropped <ochann>, cluster mask, and <*_seg_ilastik_1> and mul together to measure mean IF in segmented voxels
+
+Usage:
+------
+native_clusters_mean_IF_in_seg.py -c clusters/output_folder -i iba1_rb20_cropped -s iba1_seg_ilastik_1/sample03_iba1_seg_ilastik_1.nii.gz_cropped -o th_seg_ilastik_3 -v
+
+-o glm_iba1_rb20_cbsMeth_v_meth_18000p_vox_p_tstat1_FDR0.2_MinCluster100 -cn iba1_rb20 -s iba1_seg_ilastik_1 -v
+
+Run native_clusters_mean_IF_in_seg.py from the experiment directory containing sample?? folders or a sample?? folder.
+
+Version 2 allows for more flexibility (e.g., use seg from one label as a mask for another label), but paths in args more complex.
+
+"""
+
 import argparse
 from glob import glob
 from pathlib import Path
@@ -16,7 +31,7 @@ from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='For each cluster, load cropped <ochann>, cluster mask, and <*_seg_ilastik_1> and mul together to measure mean IF in segmented voxels', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
     parser.add_argument('-c', '--clusters_dir', help='Path relative to sample?? with cluster data: clusters/<output_dir>', action=SM)
@@ -24,15 +39,7 @@ def parse_args():
     parser.add_argument('-s', '--seg_dir', help='Dir in <output_dir> with cropped segmentation image', action=SM)
     parser.add_argument('-o', '--out_dir', help='Output dir prefix (e.g., th_seg_ilastik_3)', action=SM)
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = """
-Example usage: native_clusters_mean_IF_in_seg.py -c clusters/output_folder -i iba1_rb20_cropped -s iba1_seg_ilastik_1/sample03_iba1_seg_ilastik_1.nii.gz_cropped -o th_seg_ilastik_3 -v
-
--o glm_iba1_rb20_cbsMeth_v_meth_18000p_vox_p_tstat1_FDR0.2_MinCluster100 -cn iba1_rb20 -s iba1_seg_ilastik_1 -v
-
-Run native_clusters_mean_IF_in_seg.py from the experiment directory containing sample?? folders or a sample?? folder.
-
-Version 2 allows for more flexibility (e.g., use seg from one label as a mask for another label), but paths in args more complex.
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def binarize(array, threshold=0.5):

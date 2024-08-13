@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 
+"""
+Crop native image based on cluster bounding boxes.
+
+Currently, inputs are from native_clusters.sh
+Run native_cluster_crop.py from the experiment directory containing sample?? folders or a sample?? folder.
+Example usage: native_cluster_crop.py -o clusters_output_folder_name -cn ochann -x 3.5232 -z 5 -v
+inputs: ./sample??/clusters/output_folder/bounding_boxes/outer_bounds.txt and ./sample??/clusters/output_folder/bounding_boxes/bounding_box_sample??_cluster_*.txt
+outputs: ./sample??/clusters/output_folder/<chann_name>_cropped/<sample>_cluster_*.nii.gz
+"""
+
 import argparse
 from glob import glob
 from pathlib import Path
@@ -17,7 +27,7 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, 
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Crop native image based on cluster bounding boxes', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
     parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='If if inputs is .czi or .nii.gz: path/raw_image (otherwise the tif dir mattching -cn is used)', default=None, action=SM)
@@ -26,12 +36,7 @@ def parse_args():
     parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = """
-Currently, inputs are from native_clusters.sh
-Run native_cluster_crop.py from the experiment directory containing sample?? folders or a sample?? folder.
-Example usage: native_cluster_crop.py -o clusters_output_folder_name -cn ochann -x 3.5232 -z 5 -v
-inputs: ./sample??/clusters/output_folder/bounding_boxes/outer_bounds.txt and ./sample??/clusters/output_folder/bounding_boxes/bounding_box_sample??_cluster_*.txt
-outputs: ./sample??/clusters/output_folder/<chann_name>_cropped/<sample>_cluster_*.nii.gz"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

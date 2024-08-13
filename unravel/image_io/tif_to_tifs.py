@@ -34,7 +34,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads 3D .tif image, saves as tifs. Also, saves xy and z voxel size in microns', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/image.tif', action=SM)
     parser.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)

@@ -1,5 +1,9 @@
 #!/usr/local/fsl/fslpython/envs/fslpython/bin/python
 
+"""
+Run fsleyes with given display range and files.
+"""
+
 import argparse
 import os
 import subprocess
@@ -8,11 +12,12 @@ from glob import glob
 from unravel.core.argparse_utils import SuppressMetavar, SM
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Run fsleyes with given display range and files.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--inputs', help='List of .nii.gz files to view or if empty all .nii.gz files in the current directory.', nargs='*', default=None)
     parser.add_argument('-min', '--display_range_min', help='Minimum display range value.', default=0, type=float)
     parser.add_argument('-max', '--display_range_max', help='Maximum display range value.', required=True, type=float)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def main():

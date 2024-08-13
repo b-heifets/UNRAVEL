@@ -20,7 +20,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Resample a 3D image and save it', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/input_image.nii.gz', required=True, action=SM)
     parser.add_argument('-xy', '--xy_res', help='Original x/y voxel size in microns', required=True, type=float, action=SM)
     parser.add_argument('-z', '--z_res', help='Original z voxel size in microns', required=True, type=float, action=SM)

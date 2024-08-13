@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 """
+Script description
+
 [dark_green]Example of forward warping atlas to tissue space: [/]
 [bold bright_magenta]warp.py[/] [cyan bold]-m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -o warp/atlas_in_tissue_space.nii.gz[/] [purple4]-ro reg_outputs -inp multiLabel -v [/]
 
@@ -9,6 +11,11 @@
 
 [dark_green]Prereq:[/]
 reg.py
+
+Usage:
+------
+warp.py -m path/moving_image.nii.gz -f path/fixed_image.nii.gz -o path/output.nii.gz -ro path/reg_outputs -v
+
 """
 
 import argparse
@@ -24,7 +31,7 @@ cfg = Config(Path(__file__).parent / 'test.ini')
 print(type(cfg.test.a))
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Script description',formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     pre_parser = argparse.ArgumentParser(add_help=False)
     pre_parser.add_argument('-info', '--info', help='Print extended help information and exit.', action='store_true')
     args, _ = pre_parser.parse_known_args()
@@ -47,7 +54,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from reg.py)', default=False, action='store_true')
     opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
-    parser.epilog = """Usage: warp.py -m path/moving_image.nii.gz -f path/fixed_image.nii.gz -o path/output.nii.gz -ro path/reg_outputs -v"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+"""Load subset of 3D image.czi"""
+
 import argparse
 import czifile
 import numpy as np
@@ -9,7 +11,7 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load subset of 3D image.czi', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='<./img.czi>', action=SM)
     parser.add_argument('-c', '--channel', type=int, help='Channel number (e.g., 0 for 1st channel, 1 for 2nd channel, ...)', action=SM)
     parser.add_argument('-x', '--x_start', type=int, default=0, action=SM, help='Pixel where slicing starts in x')
@@ -18,6 +20,7 @@ def parse_args():
     parser.add_argument('-Y', '--y_end', type=int, default=None, action=SM)
     parser.add_argument('-z', '--z_start', type=int, default=0, action=SM)
     parser.add_argument('-Z', '--z_end', type=int, default=None, action=SM)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def load_czi_subset(input, channel, x_start, x_end, y_start, y_end, z_start, z_end):

@@ -29,7 +29,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Generate a thin wireframe image from an atlas NIfTI file.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/atlas_img.nii.gz', required=True, action=SM)
     parser.add_argument('-wo', '--wire_output', help='Wireframe image output path. Default: path/atlas_img_W.nii.gz', action=SM)
     parser.add_argument('-id', '--id_output', help='Wireframe image with atlas IDs output path. Default: path/atlas_img_W_IDs.nii.gz', action=SM)

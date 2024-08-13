@@ -34,7 +34,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Convert the data type of a .nii.gz image', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
     parser.add_argument('-d', '--data_type', help='Data type of output. For example: uint16 (numpy conventions)', required=True, action=SM)
     parser.add_argument('-o', '--output', help='path/new_img.nii.gz. Default: path/img_dtype.nii.gz', action=SM)
