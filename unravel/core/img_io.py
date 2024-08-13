@@ -144,10 +144,10 @@ def extract_resolution(img_path):
             xy_res = float(pixels_element.get('PhysicalSizeX'))
             z_res = float(pixels_element.get('PhysicalSizeZ'))
     elif str(img_path).endswith('.nii.gz'):
-        img = nib.load(img_path)
-        affine = img.affine
-        xy_res = abs(affine[0, 0] * 1e3) # Convert from mm to um
-        z_res = abs(affine[2, 2] * 1e3)
+        nii = nib.load(img_path)
+        res = nii.header.get_zooms() # (x, y, z) in mm
+        xy_res = res[0] * 1000 # Convert from mm to um
+        z_res = res[2] * 1000
     elif str(img_path).endswith('.h5'):
         with h5py.File(h5py, 'r') as f:
             full_res_dataset_name = next(iter(f.keys())) # Assumes that full res data is 1st in the dataset list
@@ -281,9 +281,7 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
         If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
     """
     nii = nib.load(nii_path)
-    data_type = nii.header.get_data_dtype()
-    ndarray = np.asanyarray(nii.dataobj).astype(data_type)
-    ndarray = np.squeeze(ndarray)
+    ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
 
     res_specified = True if xy_res is not None else False
@@ -731,6 +729,7 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
         save_as_tifs(img, output_path, ndarray_axis_order=ndarray_axis_order)
     else:
         raise ValueError(f"Unsupported file type for save_3D_img(): {output_path.suffix}. Use: .nii.gz, .zarr, .h5, .tif")
+    print(f"\n    Image saved to: {output_path}\n")
 
 # Other functions
 def nii_voxel_size(nii_path, use_um=True):
@@ -763,7 +762,7 @@ def nii_voxel_size(nii_path, use_um=True):
     # Return as a single value if isotropic, else as a tuple
     return res[0] if res[0] == res[1] == res[2] else res
 
-def nii_to_img(nii):
+def nii_to_ndarray(nii):
     """Load a NIfTI image and return as a 3D ndarray.
 
     Parameters:
