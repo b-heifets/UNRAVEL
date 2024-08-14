@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>unravel.utilities.clean_tif_dirs module &#8212; UNRAVEL docs</title>
+    <title>unravel.utilities.points_compressor module &#8212; UNRAVEL docs</title>
   
   
   
@@ -48,12 +48,11 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/utilities/clean_tif_dirs';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/utilities/points_compressor';</script>
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="unravel.utilities.prepend_conditions module" href="prepend_conditions.html" />
-    <link rel="prev" title="unravel.utilities.aggregate_files_recursively module" href="aggregate_files_recursively.html" />
+    <link rel="prev" title="unravel.utilities.toggle_samples module" href="toggle_samples.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -431,11 +430,11 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.utilities package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.utilities.clean_tif_dirs module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rename.html">unravel.utilities.rename module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="toggle_samples.html">unravel.utilities.toggle_samples module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="points_compressor.html">unravel.utilities.points_compressor module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.utilities.points_compressor module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -498,55 +497,119 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.utilities.clean_tif_dirs">
-<span id="unravel-utilities-clean-tif-dirs-module"></span><span id="unravel-utilities-clean-tif-dirs"></span><h1>unravel.utilities.clean_tif_dirs module<a class="headerlink" href="#module-unravel.utilities.clean_tif_dirs" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">utils_clean_tifs</span></code> from UNRAVEL to clean directories w/ tif series.</p>
-<p>Run command from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.</p>
+  <section id="module-unravel.utilities.points_compressor">
+<span id="unravel-utilities-points-compressor-module"></span><span id="unravel-utilities-points-compressor"></span><h1>unravel.utilities.points_compressor module<a class="headerlink" href="#module-unravel.utilities.points_compressor" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">utils_points_compressor</span></code> from UNRAVEL to pack or unpack point data in a CSV file or summarize the number of points per region.</p>
+<p>Packing: Group points with the same coordinates and <cite>Region_ID</cite>, adding a <cite>count</cite> column.
+Unpacking: Expand packed points back to individual rows based on the <cite>count</cite> column.
+Summary: Output a CSV summarizing the number of points per region.</p>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>utils_clean_tifs -t &lt;tif_folder_name&gt; -m -v</p>
+<div><p>utils_points_compressor -i path/&lt;asterisk&gt;_points.csv [-p or -u or -s] [-v]</p>
 </div></blockquote>
 <dl class="simple">
-<dt>Tif directory clean up involves:</dt><dd><ul class="simple">
-<li><p>Moving subdirectories to parent dir</p></li>
-<li><p>Moving non-TIF files to parent dir</p></li>
-<li><p>Replacing spaces in TIF file names</p></li>
-</ul>
+<dt>Input:</dt><dd><p>CSV file with either unpacked (<cite>x, y, z, Region_ID</cite>) or packed (<cite>x, y, z, Region_ID, count</cite>) format.</p>
+</dd>
+<dt>Output:</dt><dd><p>CSV file with the desired packed or unpacked format.
+Optionally, a summary CSV with the number of points per region.</p>
 </dd>
 </dl>
-<p>Assumes that the extension of the TIF files is .tif or .ome.tif.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Use only one of the following options: -p, -u, -s.</p></li>
+<li><p>The summary option can be used with either packed or unpacked data.</p></li>
+</ul>
+</div>
 </section>
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.utilities.clean_tif_dirs.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.utilities.clean_tif_dirs.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/clean_tif_dirs.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.clean_tif_dirs.parse_args" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.utilities.points_compressor.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.points_compressor.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/points_compressor.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.points_compressor.parse_args" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.utilities.clean_tif_dirs.clean_tifs_dir">
-<span class="sig-prename descclassname"><span class="pre">unravel.utilities.clean_tif_dirs.</span></span><span class="sig-name descname"><span class="pre">clean_tifs_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path_to_tif_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">move</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/clean_tif_dirs.html#clean_tifs_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.clean_tif_dirs.clean_tifs_dir" title="Link to this definition">#</a></dt>
-<dd><dl class="simple">
-<dt>Clean up a directory containing TIF files:</dt><dd><ul class="simple">
-<li><p>Move subdirs to parent dir</p></li>
-<li><p>Move non-TIF files to parent dir.</p></li>
-<li><p>Replace spaces in TIF file names with underscores.</p></li>
-</ul>
+<dt class="sig sig-object py" id="unravel.utilities.points_compressor.pack_points">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.points_compressor.</span></span><span class="sig-name descname"><span class="pre">pack_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/points_compressor.html#pack_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.points_compressor.pack_points" title="Link to this definition">#</a></dt>
+<dd><p>Pack points by grouping identical coordinates and summing their occurrences.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>df<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame with columns [‘x’, ‘y’, ‘z’, ‘Region_ID’]</p>
 </dd>
 </dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>path_to_tif_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Path to the directory containing the TIF files.</p></li>
-<li><p><strong>move</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Enable moving of subdirs and non-TIF files to parent dir.</p></li>
-<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a>) – Increase verbosity.</p></li>
-</ul>
+</section>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>packed_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame with columns [‘x’, ‘y’, ‘z’, ‘Region_ID’, ‘count’]</p>
 </dd>
 </dl>
+</section>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.utilities.clean_tif_dirs.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.utilities.clean_tif_dirs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/clean_tif_dirs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.clean_tif_dirs.main" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.utilities.points_compressor.unpack_points">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.points_compressor.</span></span><span class="sig-name descname"><span class="pre">unpack_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/points_compressor.html#unpack_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.points_compressor.unpack_points" title="Link to this definition">#</a></dt>
+<dd><p>Unpack points by expanding them based on the <cite>count</cite> column.</p>
+<section id="id1">
+<h2>Parameters:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>df<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame with columns [‘x’, ‘y’, ‘z’, ‘Region_ID’, ‘count’]</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Returns:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>unpacked_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame with columns [‘x’, ‘y’, ‘z’, ‘Region_ID’]</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.points_compressor.summarize_points">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.points_compressor.</span></span><span class="sig-name descname"><span class="pre">summarize_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/points_compressor.html#summarize_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.points_compressor.summarize_points" title="Link to this definition">#</a></dt>
+<dd><p>Summarize points by counting the number of points per <cite>Region_ID</cite>.</p>
+<section id="id3">
+<h2>Parameters:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>df<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame with columns [‘x’, ‘y’, ‘z’, ‘Region_ID’] or [‘x’, ‘y’, ‘z’, ‘Region_ID’, ‘count’]</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h2>Returns:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>summary_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>DataFrame with columns [‘Region_ID’, ‘count’] summarizing the number of points per region.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.points_compressor.points_compressor">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.points_compressor.</span></span><span class="sig-name descname"><span class="pre">points_compressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unpack</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">summary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/points_compressor.html#points_compressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.points_compressor.points_compressor" title="Link to this definition">#</a></dt>
+<dd><p>Pack, unpack, or summarize points in a CSV file.</p>
+<section id="id5">
+<h2>Parameters:<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>file_path<span class="classifier">str</span></dt><dd><p>Path to the input CSV file.</p>
+</dd>
+<dt>pack<span class="classifier">bool, optional</span></dt><dd><p>Pack the points by grouping them.</p>
+</dd>
+<dt>unpack<span class="classifier">bool, optional</span></dt><dd><p>Unpack the points by expanding them based on the <cite>count</cite> column.</p>
+</dd>
+<dt>summary<span class="classifier">bool, optional</span></dt><dd><p>Output a CSV summarizing the number of points per region.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.utilities.points_compressor.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.utilities.points_compressor.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/utilities/points_compressor.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.utilities.points_compressor.main" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -562,22 +625,13 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="aggregate_files_recursively.html"
+       href="toggle_samples.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">unravel.utilities.aggregate_files_recursively module</p>
+        <p class="prev-next-title">unravel.utilities.toggle_samples module</p>
       </div>
-    </a>
-    <a class="right-next"
-       href="prepend_conditions.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.utilities.prepend_conditions module</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -598,16 +652,19 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.clean_tif_dirs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.clean_tif_dirs.clean_tifs_dir"><code class="docutils literal notranslate"><span class="pre">clean_tifs_dir()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.clean_tif_dirs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.points_compressor.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.points_compressor.pack_points"><code class="docutils literal notranslate"><span class="pre">pack_points()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.points_compressor.unpack_points"><code class="docutils literal notranslate"><span class="pre">unpack_points()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.points_compressor.summarize_points"><code class="docutils literal notranslate"><span class="pre">summarize_points()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.points_compressor.points_compressor"><code class="docutils literal notranslate"><span class="pre">points_compressor()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.points_compressor.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../_sources/unravel/utilities/clean_tif_dirs.rst.txt">
+    <a href="../../_sources/unravel/utilities/points_compressor.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>
