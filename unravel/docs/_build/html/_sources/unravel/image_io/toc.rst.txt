@@ -16,6 +16,8 @@ unravel.image_io package
    reorient_nii
    tif_to_tifs
    zarr_to_nii
+   points_to_img
+   img_to_points
 
 .. automodule:: unravel.image_io
    :members:

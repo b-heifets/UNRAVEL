@@ -383,7 +383,7 @@
 <div class="viewcode-block" id="resample">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.resample">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">resample</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">resample</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">target_res</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample a 3D ndarray</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters:</span>
@@ -392,8 +392,8 @@
 <span class="sd">        z_res: z voxel size in microns</span>
 <span class="sd">        res: resolution in microns for the resampled image</span>
 <span class="sd">        zoom_order: SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)&quot;&quot;&quot;</span>
-    <span class="n">zf_xy</span> <span class="o">=</span> <span class="n">xy_res</span> <span class="o">/</span> <span class="n">res</span> <span class="c1"># Zoom factor</span>
-    <span class="n">zf_z</span> <span class="o">=</span> <span class="n">z_res</span> <span class="o">/</span> <span class="n">res</span>
+    <span class="n">zf_xy</span> <span class="o">=</span> <span class="n">xy_res</span> <span class="o">/</span> <span class="n">target_res</span> <span class="c1"># Zoom factor</span>
+    <span class="n">zf_z</span> <span class="o">=</span> <span class="n">z_res</span> <span class="o">/</span> <span class="n">target_res</span>
     <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="n">zf_xy</span><span class="p">,</span> <span class="n">zf_xy</span><span class="p">,</span> <span class="n">zf_z</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="n">zoom_order</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">img_resampled</span></div>
 

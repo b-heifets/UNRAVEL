@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``unravel_commands`` to print a list of commands available in the unravel package. </span>
+<span class="sd">Use ``unravel_commands`` or ``uc`` to print a list of commands available in the unravel package. </span>
 
 <span class="sd">Usage to print common commands and descriptions:</span>
 <span class="sd">------------------------------------------------</span>
@@ -362,45 +362,51 @@
 <span class="sd">---------------------------------------------</span>
 <span class="sd">    unravel_commands -m</span>
 
+<span class="sd">Usage to print commands matching a specific string:</span>
+<span class="sd">---------------------------------------------------</span>
+<span class="sd">    unravel_commands -f &lt;string&gt;</span>
+
 <span class="sd">For help on a command, run: </span>
 <span class="sd">    &lt;command&gt; -h</span>
 
 <span class="sd">Note: </span>
-<span class="sd">    Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.</span>
-
-<span class="sd">GitHub repo: </span>
-<span class="sd">    https://github.com/b-heifets/UNRAVEL/tree/dev</span>
+<span class="sd">    - Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.</span>
+<span class="sd">    - Filtering is case-insensitive and matches substrings in the printed lines (regex).</span>
+<span class="sd">    - For example, use of -f with -d will find matches in the command name and/or description, presering those lines.</span>
 
 <span class="sd">Documentation:</span>
 <span class="sd">    https://b-heifets.github.io/UNRAVEL/</span>
-
-<span class="sd">If you encounter a situation where a command from the UNRAVEL package has the same name as a command from another package or system command, follow these steps to diagnose and fix the issue:</span>
-
-<span class="sd">1. Check the conflicting command:</span>
-<span class="sd">    - Use the `which` command to determine the location of the executable being called: which &lt;command&gt;</span>
-<span class="sd">    - This will show the path to the executable that is being invoked when you run the command.</span>
-
-<span class="sd">2. Diagnose the conflict:</span>
-<span class="sd">    - If the path does not point to the UNRAVEL package&#39;s command, it means there is a conflict with another package or system command.</span>
-<span class="sd">    - For example, if you run `which reg` and it points to `/usr/bin/reg` instead of the expected path in your UNRAVEL package&#39;s environment, you have identified the conflict.</span>
-
-<span class="sd">3. Resolve the conflict:</span>
-<span class="sd">    - Rename the UNRAVEL command: One way to resolve the conflict is to rename the conflicting command in the `pyproject.toml` file of your UNRAVEL package by adding a unique prefix or suffix.</span>
-<span class="sd">    - For instance, rename `reg` to `unravel_reg` in the `[project.scripts]` section (i.e., reg = &quot;unravel.register.unravel_reg:main&quot;)</span>
-<span class="sd">    - After making this change, reinstall the package (cd &lt;path/to/clone/of/repo&gt; ; pip install -e .)</span>
-
-<span class="sd">4. Re-run the renamed command:</span>
-<span class="sd">    - Use the new command name to avoid the conflict: unravel_reg -h</span>
-
-<span class="sd">5. Create aliases (optional):</span>
-<span class="sd">    - If you prefer to keep using the original command names, you can create shell aliases in your `.bashrc` or `.zshrc` file to point to the UNRAVEL commands: alias reg=&quot;path/to/unravel_env/bin/reg&quot;</span>
-<span class="sd">    - Reload your shell configuration: source ~/.bashrc  # or source ~/.zshrc</span>
-
-<span class="sd">6. Verify the fix:</span>
-<span class="sd">    - Use the `which` command again to verify that the correct command is being invoked: which unravel_reg  # or which reg if using an alias</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="n">extended_help</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">If you encounter a situation where a command from the UNRAVEL package has the same name as a command from another package or system command, follow these steps to diagnose and fix the issue:</span>
+
+<span class="s2">1. Check the conflicting command:</span>
+<span class="s2">    - Use the `which` command to determine the location of the executable being called: which &lt;command&gt;</span>
+<span class="s2">    - This will show the path to the executable that is being invoked when you run the command.</span>
+
+<span class="s2">2. Diagnose the conflict:</span>
+<span class="s2">    - If the path does not point to the UNRAVEL package&#39;s command, it means there is a conflict with another package or system command.</span>
+<span class="s2">    - For example, if you run `which reg` and it points to `/usr/bin/reg` instead of the expected path in your UNRAVEL package&#39;s environment, you have identified the conflict.</span>
+
+<span class="s2">3. Resolve the conflict:</span>
+<span class="s2">    - Rename the UNRAVEL command: One way to resolve the conflict is to rename the conflicting command in the `pyproject.toml` file of your UNRAVEL package by adding a unique prefix or suffix.</span>
+<span class="s2">    - For instance, rename `reg` to `unravel_reg` in the `[project.scripts]` section (i.e., reg = &quot;unravel.register.unravel_reg:main&quot;)</span>
+<span class="s2">    - After making this change, reinstall the package (cd &lt;path/to/clone/of/repo&gt; ; pip install -e .)</span>
+
+<span class="s2">4. Re-run the renamed command:</span>
+<span class="s2">    - Use the new command name to avoid the conflict: unravel_reg -h</span>
+
+<span class="s2">5. Create aliases (optional):</span>
+<span class="s2">    - If you prefer to keep using the original command names, you can create shell aliases in your `.bashrc` or `.zshrc` file to point to the UNRAVEL commands: alias reg=&quot;path/to/unravel_env/bin/reg&quot;</span>
+<span class="s2">    - Reload your shell configuration: source ~/.bashrc  # or source ~/.zshrc</span>
+
+<span class="s2">6. Verify the fix:</span>
+<span class="s2">    - Use the `which` command again to verify that the correct command is being invoked: which unravel_reg  # or which reg if using an alias</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
@@ -410,10 +416,15 @@
 <a class="viewcode-back" href="../../unravel/unravel_commands.html#unravel.unravel_commands.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--common&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provide flag to only print common commands&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--module&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Provide flag to print the module (script name and location in the unravel package) run by each command&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--description&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Provide flag to print the description of the module&#39;s purpose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--common&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Only print common commands&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--module&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Print the module (script name and location in the unravel package) for each command&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--description&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print the description of each command&#39;s purpose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--filter&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Filter commands by a string (e.g, -f reg)&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--extended-help&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Help on diagnosing and fixing command conflicts&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
+    <span class="k">if</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_known_args</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">extended_help</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">extended_help</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
@@ -460,6 +471,11 @@
             <span class="s2">&quot;warp_to_native&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.warp.to_native&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Warp images to native space.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;warp_points_to_atlas&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.warp.points_to_atlas&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Warp cell centroids in tissue space to atlas space.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
             <span class="p">},</span>
             <span class="s2">&quot;warp&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -721,6 +737,16 @@
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.img_to_npy&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert images to Numpy arrays.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;io_img_to_points&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.img_to_points&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert and image into points coordinates.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;io_points_to_img&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.points_to_img&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Populate an empty image with point coordinates.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Image tools&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -767,6 +793,11 @@
             <span class="s2">&quot;img_resample&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.resample&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Resample image.nii.gz.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;img_resample_points&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.resample_points&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Resample a set of points [and save as an image].&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_extend&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -826,11 +857,25 @@
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[magenta bold]Category[/], [cyan bold]Command[/], [purple3]Module[/], [grey50]Description</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[magenta bold]Category[/], [cyan bold]Command[/], [purple3]Module (-m)[/], [grey50]Description (-d)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">category</span><span class="p">,</span> <span class="n">cmds</span> <span class="ow">in</span> <span class="n">commands</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">common</span><span class="p">:</span>
             <span class="n">cmds</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cmds</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;common&quot;</span><span class="p">)}</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">filter</span><span class="p">:</span>
+            <span class="c1"># Construct the output string for each command</span>
+            <span class="n">filtered_cmds</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">details</span> <span class="ow">in</span> <span class="n">cmds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">module</span><span class="p">:</span>
+                    <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
+                    <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                
+                <span class="c1"># Perform the filtering on the constructed output string</span>
+                <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">filter</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
+                    <span class="n">filtered_cmds</span><span class="p">[</span><span class="n">cmd</span><span class="p">]</span> <span class="o">=</span> <span class="n">details</span>
+            <span class="n">cmds</span> <span class="o">=</span> <span class="n">filtered_cmds</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">cmds</span><span class="p">:</span>
             <span class="k">continue</span>
 

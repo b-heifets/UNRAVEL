@@ -53,7 +53,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="unravel.image_tools.avg module" href="avg.html" />
-    <link rel="prev" title="unravel.image_io.zarr_to_nii module" href="../image_io/zarr_to_nii.html" />
+    <link rel="prev" title="unravel.image_io.img_to_points module" href="../image_io/img_to_points.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -402,6 +402,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/points_to_img.html">unravel.image_io.points_to_img module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_points.html">unravel.image_io.img_to_points module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">unravel.image_tools package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -416,6 +418,7 @@
 <li class="toctree-l2"><a class="reference internal" href="rb.html">unravel.image_tools.rb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="transpose_axes.html">unravel.image_tools.transpose_axes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
@@ -527,6 +530,7 @@
 <li class="toctree-l1"><a class="reference internal" href="resample.html">unravel.image_tools.resample module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="resample.html#usage">Usage:</a></li>
 <li class="toctree-l2"><a class="reference internal" href="resample.html#unravel.image_tools.resample.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="resample.html#unravel.image_tools.resample.create_resampled_nii"><code class="docutils literal notranslate"><span class="pre">create_resampled_nii()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="resample.html#unravel.image_tools.resample.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
@@ -573,6 +577,13 @@
 <li class="toctree-l2"><a class="reference internal" href="unique_intensities.html#unravel.image_tools.unique_intensities.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="resample_points.html">unravel.image_tools.resample_points module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="resample_points.html#usage">Usage:</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resample_points.html#unravel.image_tools.resample_points.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="resample_points.html#unravel.image_tools.resample_points.resample_and_convert_points"><code class="docutils literal notranslate"><span class="pre">resample_and_convert_points()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="resample_points.html#unravel.image_tools.resample_points.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="atlas/toc.html">unravel.image_tools.atlas package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="atlas/relabel_nii.html#usage">Usage:</a></li>
@@ -605,12 +616,12 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="../image_io/zarr_to_nii.html"
+       href="../image_io/img_to_points.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">unravel.image_io.zarr_to_nii module</p>
+        <p class="prev-next-title">unravel.image_io.img_to_points module</p>
       </div>
     </a>
     <a class="right-next"

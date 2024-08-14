@@ -828,6 +828,8 @@ Image I/O</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/image_io/h5_to_tifs.html#unravel-image-io-h5-to-tifs"><span class="std std-ref"><strong>io_h5_to_tifs</strong></span></a>: Convert H5 files to TIFFs.</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/tif_to_tifs.html#unravel-image-io-tif-to-tifs"><span class="std std-ref"><strong>io_tif_to_tifs</strong></span></a>: Convert TIF to TIFF series.</p></li>
 <li><p><a class="reference internal" href="unravel/image_io/img_to_npy.html#unravel-image-io-img-to-npy"><span class="std std-ref"><strong>io_img_to_npy</strong></span></a>: Convert images to Numpy arrays.</p></li>
+<li><p><a class="reference internal" href="unravel/image_io/points_to_img.html#unravel-image-io-points-to-img"><span class="std std-ref"><strong>io_points_to_img</strong></span></a>: Populate an empty image with point coordinates</p></li>
+<li><p><a class="reference internal" href="unravel/image_io/img_to_points.html#unravel-image-io-img-to-points"><span class="std std-ref"><strong>io_img_to_points</strong></span></a>: Convert and image into points coordinates</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-16" name="sd-tab-set-1" type="radio">
@@ -845,6 +847,7 @@ Image tools</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/image_tools/resample.html#unravel-image-tools-resample"><span class="std std-ref"><strong>img_resample</strong></span></a>: Resample images.</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/extend.html#unravel-image-tools-extend"><span class="std std-ref"><strong>img_extend</strong></span></a>: Extend images (add padding to one side).</p></li>
 <li><p><a class="reference internal" href="unravel/image_tools/transpose_axes.html#unravel-image-tools-transpose-axes"><span class="std std-ref"><strong>img_transpose</strong></span></a>: Transpose image axes.</p></li>
+<li><p><a class="reference internal" href="unravel/image_tools/resample_points.html#unravel-image-tools-resample-points"><span class="std std-ref"><strong>img_resample_points</strong></span></a>: Resample a set of points [and save as an image].</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-17" name="sd-tab-set-1" type="radio">
@@ -898,11 +901,11 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </ul>
 <div class="note dropdown admonition">
 <p class="admonition-title">Batch stitching settings</p>
-<figure class="align-center" id="id5">
+<figure class="align-center" id="id4">
 <a class="reference internal image-reference" href="_images/batch_stitching_1.JPG"><img alt="Batch stitching settings" src="_images/batch_stitching_1.JPG" style="height: 500px;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Select a mid-stack reference slice. Ideally, tissue will be present in each tile of the reference slice.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
+<p><span class="caption-text">Select a mid-stack reference slice. Ideally, tissue will be present in each tile of the reference slice.</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </div>
@@ -1003,10 +1006,6 @@ cat<span class="w"> </span>.command_log.txt<span class="w">  </span>
 cat<span class="w"> </span>.command_log.txt<span class="w"> </span><span class="p">|</span><span class="w"> </span>tail<span class="w"> </span>-10<span class="w">  </span>
 </pre></div>
 </div>
-</div>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>Log commands instead of scripts</p>
 </div>
 </section>
 <section id="make-a-sample-key-csv">
@@ -1143,7 +1142,7 @@ Select Features… -&gt; select all features (<code class="docutils literal notr
 <p>If non-zero voxles outside the brain remain and are affecting reg quality, use 3D slicer to zero them out by painting in 3D (segmentation module).</p>
 <p>If there is missing tissue, use 3D slicer to fill in gaps.</p>
 </div>
-<div class="admonition-todo admonition" id="id2">
+<div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
 <p>Add tutorial for 3D slicer</p>
 </div>
@@ -1220,8 +1219,8 @@ Select Features… -&gt; select all features (<code class="docutils literal notr
 <section id="segmentation">
 <h3>Segmentation<a class="headerlink" href="#segmentation" title="Link to this heading">#</a></h3>
 <p>For detailed instructions on training Ilastik, see <strong>Train an Ilastik project</strong> in the <a class="reference internal" href="#registration"><strong>Registration</strong></a> section.</p>
-<section id="id3">
-<h4><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code><a class="headerlink" href="#id3" title="Link to this heading">#</a></h4>
+<section id="id2">
+<h4><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code><a class="headerlink" href="#id2" title="Link to this heading">#</a></h4>
 <p><a class="reference internal" href="unravel/segment/copy_tifs.html#module-unravel.segment.copy_tifs" title="unravel.segment.copy_tifs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.copy_tifs</span></code></a></p>
 <ul class="simple">
 <li><p>Copy full res tif files to a target dir for training Ilastik to segment labels of interest</p></li>
@@ -1663,7 +1662,7 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 <span class="w">    </span>└──<span class="w"> </span>Treatment_sample04_regional_cell_densities.csv
 </pre></div>
 </div>
-<div class="admonition-todo admonition" id="id4">
+<div class="admonition-todo admonition" id="id3">
 <p class="admonition-title">Todo</p>
 <p>Add notes here on ploting sunbursts and viewing clusters in 3D. Prompt us when you get to this step (notes on Slack)</p>
 <p>Also show the structure of data from cluster_validation and rstats_summary</p>
@@ -1746,7 +1745,7 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#segmentation">Segmentation</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id3"><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#id2"><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#seg-ilastik"><code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code></a></li>
 </ul>
 </li>

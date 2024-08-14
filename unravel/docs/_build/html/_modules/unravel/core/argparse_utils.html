@@ -369,7 +369,7 @@
 <span class="sd">    import argparse</span>
 <span class="sd">    from path.to.this.script import SuppressMetavar, SM</span>
 
-<span class="sd">    parser = argparse.ArgumentParser(description=&quot;A script example.&quot;, formatter_class=SuppressMetavar)</span>
+<span class="sd">    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)</span>
 <span class="sd">    parser.add_argument(&#39;-e&#39;, &#39;--example&#39;, help=&#39;Example argument&#39;, action=SM)</span>
 <span class="sd">    args = parser.parse_args()</span>
 

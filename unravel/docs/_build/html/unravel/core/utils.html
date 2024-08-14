@@ -402,6 +402,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/points_to_img.html">unravel.image_io.points_to_img module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_points.html">unravel.image_io.img_to_points module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../image_tools/toc.html">unravel.image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -416,6 +418,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/rb.html">unravel.image_tools.rb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/transpose_axes.html">unravel.image_tools.transpose_axes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_tools/resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../image_tools/atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
@@ -514,6 +517,7 @@ and enhancing command-line scripts with progress bars and detailed function exec
 <li><p>print_func_name_args_times: Decorator to print function execution details.</p></li>
 <li><p>load_text_from_file: Load text content from a file.</p></li>
 <li><p>copy_files: Copy specified files from source to target directory.</p></li>
+<li><p>process_files_with_glob: Process files matching a glob pattern using a processing function.</p></li>
 </ul>
 </dd>
 <dt>Usage:</dt><dd><p>Import the functions and decorators to enhance your scripts.</p>
@@ -707,6 +711,23 @@ and returns a string based on the name of the file or directory.</p>
 </dl>
 </dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.utils.process_files_with_glob">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">process_files_with_glob</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glob_pattern</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">processing_func</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/utils.html#process_files_with_glob"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.process_files_with_glob" title="Link to this definition">#</a></dt>
+<dd><p>Process all files matching a glob pattern using the provided processing function.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>glob_pattern<span class="classifier">str</span></dt><dd><p>The glob pattern to match files (e.g., ‘<a href="#id1"><span class="problematic" id="id2">*</span></a>.csv’).</p>
+</dd>
+<dt>processing_func<span class="classifier">function</span></dt><dd><p>The function to process each file. Should accept a file path as the first argument.</p>
+</dd>
+<dt><a href="#id3"><span class="problematic" id="id4">*</span></a>args, <a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs :</dt><dd><p>Additional arguments and keyword arguments to pass to the processing function.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
 </section>
 
 
@@ -781,6 +802,7 @@ and returns a string based on the name of the file or directory.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.print_func_name_args_times"><code class="docutils literal notranslate"><span class="pre">print_func_name_args_times()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.load_text_from_file"><code class="docutils literal notranslate"><span class="pre">load_text_from_file()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.copy_files"><code class="docutils literal notranslate"><span class="pre">copy_files()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.utils.process_files_with_glob"><code class="docutils literal notranslate"><span class="pre">process_files_with_glob()</span></code></a></li>
 </ul>
   </nav></div>
 
