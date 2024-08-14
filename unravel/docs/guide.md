@@ -559,11 +559,6 @@ cat .command_log.txt | tail -10
 ```
 :::
 
-```{todo}
-Log commands instead of scripts
-```
-
-
 ### Make a sample_key.csv: 
 
 It should have these columns:
