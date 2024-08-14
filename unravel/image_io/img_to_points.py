@@ -54,8 +54,7 @@ def img_to_points(img, atlas_img=None):
     Returns:
     --------
     points : numpy.ndarray
-        An array of points where each row corresponds to the (x, y, z) coordinates of a detection.
-        If atlas_img is provided, each point will have an additional 'Region_ID' column.
+        An array of points where each row corresponds to the (x, y, z) coordinates of a detection. If atlas_img is provided, each point will have an additional 'Region_ID' column.
 
     Note:
     Convert the points to a DataFrame using:
