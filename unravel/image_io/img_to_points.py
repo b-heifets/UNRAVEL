@@ -55,14 +55,19 @@ def img_to_points(img, atlas_img=None):
     --------
     points : numpy.ndarray
         An array of points where each row corresponds to the (x, y, z) coordinates of a detection.
-        If `atlas_img` is provided, each point will have an additional 'Region_ID' column.
+        If atlas_img is provided, each point will have an additional 'Region_ID' column.
 
-    Notes:
-    ------
+    Note:
     Convert the points to a DataFrame using:
+    ```
     points_df = pd.DataFrame(points_ndarray, columns=['x', 'y', 'z'])
+    ```
+
     or
+
+    ```
     points_df = pd.DataFrame(points_ndarray, columns=['x', 'y', 'z', 'Region_ID'])  # With atlas_img
+    ```
     """
     points = []
     # Find the coordinates of non-zero voxels
