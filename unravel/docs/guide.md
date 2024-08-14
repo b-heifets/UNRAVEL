@@ -410,6 +410,7 @@ unravel_commands -m
 - [**utils_rename**](unravel.utilities.rename): Rename files.
 - [**utils_toggle**](unravel.utilities.toggle_samples): Toggle sample?? folders for select batch processing.
 - [**utils_clean_tifs**](unravel.utilities.clean_tif_dirs): Clean TIF directories (no spaces, move non-tifs).
+- [**utils_points_compressor**](unravel.utilities.points_compressor): Pack or unpack point data in a CSV file or summarize the number of points per region.
 :::
 
 ::::
