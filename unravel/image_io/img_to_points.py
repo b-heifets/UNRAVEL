@@ -5,15 +5,16 @@ Use `io_img_to_points` from UNRAVEL to convert non-zero voxels in a 3D image to 
 
 Usage: 
 ------
-    io_img_to_points -i path/image -o path/points.csv
+    io_img_to_points -i path/image -o path/points.csv [-a path/atlas_image.nii.gz] [-v]
 
 Input image types:
     .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
 Output:
-    A CSV file where each row represents a point corresponding to a detection in the 3D image. 
-    The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple 
+    - A CSV file where each row represents a point corresponding to a detection in the 3D image. 
+    - The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple 
     points generated for voxels with intensities greater than 1.
+    - An optional 'Region_ID' column is added based on the corresponding atlas image.
 """
 
 import argparse
@@ -30,8 +31,8 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help="Path to the input 3D image (NIfTI format).", required=True, action=SM)
-    parser.add_argument('-a', '--atlas', help="Path to the atlas image (NIfTI format) for adding a 'Region_ID' column to the output points.", action=SM)
+    parser.add_argument('-i', '--input', help="Path to the input 3D image.", required=True, action=SM)
+    parser.add_argument('-a', '--atlas_img', help="Path to the atlas image matching -i for adding a 'Region_ID' column to the CSV.", action=SM)
     parser.add_argument('-o', '--output', help="Path to save the output points (CSV format).", required=True, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     return parser.parse_args()
@@ -90,14 +91,15 @@ def main():
     verbose_start_msg()
 
     img = load_3D_img(args.input)
+    atlas_img = load_3D_img(args.atlas_img) if args.atlas_img else None
 
-    if args.atlas:
-        atlas_img = load_3D_img(args.atlas)
-        points_ndarray = img_to_points(img, atlas_img)
-        points_df = pd.DataFrame(points_ndarray, columns=['x', 'y', 'z', 'Region_ID'])
-    else:
-        points_ndarray = img_to_points(img)
+    # Convert the image to points
+    points_ndarray = img_to_points(img, atlas_img=atlas_img)
+
+    if int(points_ndarray.shape[1]) == 3:
         points_df = pd.DataFrame(points_ndarray, columns=['x', 'y', 'z'])
+    elif int(points_ndarray.shape[1]) == 4:
+        points_df = pd.DataFrame(points_ndarray, columns=['x', 'y', 'z', 'Region_ID'])
 
     # Save the points to a CSV file
     csv_output_path = Path(args.output)
