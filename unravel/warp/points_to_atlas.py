@@ -14,6 +14,8 @@ Outputs:
     - ./sample??/atlas_space/<args.input name>
     - ./sample??/atlas_space/<args.input name --> .nii.gz>
 
+Notes:
+    - If the input CSV has a 'count' column, use ``utils_points_compressor`` to unpack the points before running this script.
 """
 
 import argparse
@@ -114,7 +116,7 @@ def main():
             points_resampled_df = pd.DataFrame(points_resampled_ndarray, columns=['x', 'y', 'z'])
 
             # Save the resampled points to a CSV file
-            csv_output_path = sample_path / "atlas_space" / str(csv_path.name)
+            csv_output_path = autofl_path.parent / "points" / str(csv_path.name)
             csv_output_path.parent.mkdir(exist_ok=True, parents=True)
             points_resampled_df.to_csv(csv_output_path, index=False)
             print(f"\n    Points saved to: {csv_output_path}\n")
