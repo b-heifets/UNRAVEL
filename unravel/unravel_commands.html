@@ -404,6 +404,8 @@
 <li class="toctree-l2"><a class="reference internal" href="image_io/reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image_io/points_to_img.html">unravel.image_io.points_to_img module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image_io/img_to_points.html">unravel.image_io.img_to_points module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="image_tools/toc.html">unravel.image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -418,6 +420,7 @@
 <li class="toctree-l2"><a class="reference internal" href="image_tools/rb.html">unravel.image_tools.rb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_tools/transpose_axes.html">unravel.image_tools.transpose_axes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_tools/unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="image_tools/resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="image_tools/atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="image_tools/atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="image_tools/atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
@@ -493,7 +496,7 @@
                   
   <section id="module-unravel.unravel_commands">
 <span id="unravel-unravel-commands-module"></span><span id="unravel-unravel-commands"></span><h1>unravel.unravel_commands module<a class="headerlink" href="#module-unravel.unravel_commands" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">unravel_commands</span></code> to print a list of commands available in the unravel package.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">unravel_commands</span></code> or <code class="docutils literal notranslate"><span class="pre">uc</span></code> to print a list of commands available in the unravel package.</p>
 <section id="usage-to-print-common-commands-and-descriptions">
 <h2>Usage to print common commands and descriptions:<a class="headerlink" href="#usage-to-print-common-commands-and-descriptions" title="Link to this heading">#</a></h2>
 <blockquote>
@@ -505,70 +508,28 @@
 <blockquote>
 <div><p>unravel_commands -m</p>
 </div></blockquote>
+</section>
+<section id="usage-to-print-commands-matching-a-specific-string">
+<h2>Usage to print commands matching a specific string:<a class="headerlink" href="#usage-to-print-commands-matching-a-specific-string" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>unravel_commands -f &lt;string&gt;</p>
+</div></blockquote>
 <dl class="simple">
 <dt>For help on a command, run:</dt><dd><p>&lt;command&gt; -h</p>
 </dd>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.</p>
+<ul class="simple">
+<li><p>Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.</p></li>
+<li><p>Filtering is case-insensitive and matches substrings in the printed lines (regex).</p></li>
+<li><p>For example, use of -f with -d will find matches in the command name and/or description, presering those lines.</p></li>
+</ul>
 </div>
 <dl class="simple">
-<dt>GitHub repo:</dt><dd><p><a class="github reference external" href="https://github.com/b-heifets/UNRAVEL/tree/dev">b-heifets/UNRAVEL</a></p>
-</dd>
 <dt>Documentation:</dt><dd><p><a class="reference external" href="https://b-heifets.github.io/UNRAVEL/">https://b-heifets.github.io/UNRAVEL/</a></p>
 </dd>
 </dl>
-<p>If you encounter a situation where a command from the UNRAVEL package has the same name as a command from another package or system command, follow these steps to diagnose and fix the issue:</p>
-<ol class="arabic simple">
-<li><dl class="simple">
-<dt>Check the conflicting command:</dt><dd><ul class="simple">
-<li><p>Use the <cite>which</cite> command to determine the location of the executable being called: which &lt;command&gt;</p></li>
-<li><p>This will show the path to the executable that is being invoked when you run the command.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Diagnose the conflict:</dt><dd><ul class="simple">
-<li><p>If the path does not point to the UNRAVEL package’s command, it means there is a conflict with another package or system command.</p></li>
-<li><p>For example, if you run <cite>which reg</cite> and it points to <cite>/usr/bin/reg</cite> instead of the expected path in your UNRAVEL package’s environment, you have identified the conflict.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Resolve the conflict:</dt><dd><ul class="simple">
-<li><p>Rename the UNRAVEL command: One way to resolve the conflict is to rename the conflicting command in the <cite>pyproject.toml</cite> file of your UNRAVEL package by adding a unique prefix or suffix.</p></li>
-<li><p>For instance, rename <cite>reg</cite> to <cite>unravel_reg</cite> in the <cite>[project.scripts]</cite> section (i.e., reg = “unravel.register.unravel_reg:main”)</p></li>
-<li><p>After making this change, reinstall the package (cd &lt;path/to/clone/of/repo&gt; ; pip install -e .)</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Re-run the renamed command:</dt><dd><ul class="simple">
-<li><p>Use the new command name to avoid the conflict: unravel_reg -h</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Create aliases (optional):</dt><dd><ul class="simple">
-<li><p>If you prefer to keep using the original command names, you can create shell aliases in your <cite>.bashrc</cite> or <cite>.zshrc</cite> file to point to the UNRAVEL commands: alias reg=”path/to/unravel_env/bin/reg”</p></li>
-<li><p>Reload your shell configuration: source ~/.bashrc  # or source ~/.zshrc</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>Verify the fix:</dt><dd><ul class="simple">
-<li><p>Use the <cite>which</cite> command again to verify that the correct command is being invoked: which unravel_reg  # or which reg if using an alias</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ol>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.unravel_commands.parse_args">
@@ -630,6 +591,7 @@
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-print-common-commands-and-descriptions">Usage to print common commands and descriptions:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-print-all-commands-and-module-names">Usage to print all commands and module names:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-print-commands-matching-a-specific-string">Usage to print commands matching a specific string:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.unravel_commands.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.unravel_commands.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>

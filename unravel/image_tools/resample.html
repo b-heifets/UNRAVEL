@@ -404,6 +404,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/points_to_img.html">unravel.image_io.points_to_img module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_points.html">unravel.image_io.img_to_points module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.image_tools package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
@@ -418,6 +420,7 @@
 <li class="toctree-l2"><a class="reference internal" href="rb.html">unravel.image_tools.rb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="transpose_axes.html">unravel.image_tools.transpose_axes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
@@ -500,13 +503,41 @@
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>img_resample -i input_image.nii.gz -xy xy_res -z z_res -res target_res [-zo zoom_order] [-o output_image.nii.gz]</p>
+<div><p>img_resample -i input_image.nii.gz -res target_res [-zo zoom_order] [-o output_image.nii.gz] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_tools.resample.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.image_tools.resample.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/resample.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.resample.parse_args" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.image_tools.resample.create_resampled_nii">
+<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.resample.</span></span><span class="sig-name descname"><span class="pre">create_resampled_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">original_res_in_um</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/resample.html#create_resampled_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.resample.create_resampled_nii" title="Link to this definition">#</a></dt>
+<dd><p>Resample the image and create a new NIfTI image with updated affine and header.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>img<span class="classifier">numpy.ndarray</span></dt><dd><p>Image data as a numpy array.</p>
+</dd>
+<dt>nii<span class="classifier">nibabel.nifti1.Nifti1Image</span></dt><dd><p>NIfTI image object.</p>
+</dd>
+<dt>original_res_in_um<span class="classifier">float</span></dt><dd><p>Original resolution of the image in micrometers.</p>
+</dd>
+<dt>target_res<span class="classifier">float</span></dt><dd><p>Target resolution in micrometers for resampling.</p>
+</dd>
+<dt>zoom_order<span class="classifier">int</span></dt><dd><p>SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>resampled_nii<span class="classifier">nibabel.nifti1.Nifti1Image</span></dt><dd><p>Resampled NIfTI image object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_tools.resample.main">
@@ -563,6 +594,7 @@
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.resample.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.resample.create_resampled_nii"><code class="docutils literal notranslate"><span class="pre">create_resampled_nii()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.resample.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
   </nav></div>

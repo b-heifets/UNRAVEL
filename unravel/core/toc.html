@@ -404,6 +404,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/points_to_img.html">unravel.image_io.points_to_img module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_points.html">unravel.image_io.img_to_points module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../image_tools/toc.html">unravel.image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -418,6 +420,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/rb.html">unravel.image_tools.rb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/transpose_axes.html">unravel.image_tools.transpose_axes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_tools/resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../image_tools/atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
@@ -520,6 +523,8 @@
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.load_czi"><code class="docutils literal notranslate"><span class="pre">load_czi()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.load_tifs"><code class="docutils literal notranslate"><span class="pre">load_tifs()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.load_nii"><code class="docutils literal notranslate"><span class="pre">load_nii()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.nii_path_or_nii"><code class="docutils literal notranslate"><span class="pre">nii_path_or_nii()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.nii_to_ndarray"><code class="docutils literal notranslate"><span class="pre">nii_to_ndarray()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.load_nii_subset"><code class="docutils literal notranslate"><span class="pre">load_nii_subset()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.load_h5"><code class="docutils literal notranslate"><span class="pre">load_h5()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.load_zarr"><code class="docutils literal notranslate"><span class="pre">load_zarr()</span></code></a></li>
@@ -527,11 +532,12 @@
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.save_metadata_to_file"><code class="docutils literal notranslate"><span class="pre">save_metadata_to_file()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.load_image_metadata_from_txt"><code class="docutils literal notranslate"><span class="pre">load_image_metadata_from_txt()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.load_3D_img"><code class="docutils literal notranslate"><span class="pre">load_3D_img()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.load_nii_orientation"><code class="docutils literal notranslate"><span class="pre">load_nii_orientation()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.save_as_nii"><code class="docutils literal notranslate"><span class="pre">save_as_nii()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.save_as_tifs"><code class="docutils literal notranslate"><span class="pre">save_as_tifs()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.save_as_zarr"><code class="docutils literal notranslate"><span class="pre">save_as_zarr()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.save_as_h5"><code class="docutils literal notranslate"><span class="pre">save_as_h5()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.save_3D_img"><code class="docutils literal notranslate"><span class="pre">save_3D_img()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="img_io.html#unravel.core.img_io.nii_voxel_size"><code class="docutils literal notranslate"><span class="pre">nii_voxel_size()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="img_tools.html">unravel.core.img_tools module</a><ul>
@@ -564,6 +570,7 @@
 <li class="toctree-l2"><a class="reference internal" href="utils.html#unravel.core.utils.print_func_name_args_times"><code class="docutils literal notranslate"><span class="pre">print_func_name_args_times()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html#unravel.core.utils.load_text_from_file"><code class="docutils literal notranslate"><span class="pre">load_text_from_file()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="utils.html#unravel.core.utils.copy_files"><code class="docutils literal notranslate"><span class="pre">copy_files()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="utils.html#unravel.core.utils.process_files_with_glob"><code class="docutils literal notranslate"><span class="pre">process_files_with_glob()</span></code></a></li>
 </ul>
 </li>
 </ul>

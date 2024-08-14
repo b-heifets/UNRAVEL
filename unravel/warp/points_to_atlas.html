@@ -404,6 +404,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/points_to_img.html">unravel.image_io.points_to_img module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_points.html">unravel.image_io.img_to_points module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../image_tools/toc.html">unravel.image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -418,6 +420,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/rb.html">unravel.image_tools.rb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/transpose_axes.html">unravel.image_tools.transpose_axes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_tools/resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../image_tools/atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
@@ -500,33 +503,26 @@
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>warp_points_to_atlas -i regional_stats/&lt;condition&gt;_sample??_cell_centroids.csv -o points_in_atlas_space.csv [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-r 50] [-af reg_inputs/autofl_50um.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-thr 20000] [-uthr 20000] [-md parameters/metadata.txt] [-mi -v]</p>
+<div><p>warp_points_to_atlas -i regional_stats/&lt;asterisk&gt;_sample??_cell_centroids.csv [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-r 50] [-af reg_inputs/autofl_50um.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-thr 20000] [-uthr 20000] [-md parameters/metadata.txt] [-mi -v]</p>
 </div></blockquote>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg</span></code> and <code class="docutils literal notranslate"><span class="pre">rstats</span></code></p>
 </dd>
-<dt>Output:</dt><dd><ul class="simple">
-<li><p>./sample??/atlas_space/next(glob(args.input)).replace(“.csv”, “.nii.gz”)</p></li>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>./sample??/atlas_space/&lt;args.input name&gt;</p></li>
+<li><p>./sample??/atlas_space/&lt;args.input name –&gt; .nii.gz&gt;</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If the input CSV has a ‘count’ column, use <code class="docutils literal notranslate"><span class="pre">utils_points_compressor</span></code> to unpack the points before running this script.</p></li>
+</ul>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.warp.points_to_atlas.parse_args">
 <span class="sig-prename descclassname"><span class="pre">unravel.warp.points_to_atlas.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/points_to_atlas.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.points_to_atlas.parse_args" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.points_to_atlas.centroids_to_img">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.points_to_atlas.</span></span><span class="sig-name descname"><span class="pre">centroids_to_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">centroids_ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/points_to_atlas.html#centroids_to_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.points_to_atlas.centroids_to_img" title="Link to this definition">#</a></dt>
-<dd><p>Convert x, y, z centroids (voxel, physical, or resampled coordinates) to a ndarray with the same shape as the input image.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.points_to_atlas.pad">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.points_to_atlas.</span></span><span class="sig-name descname"><span class="pre">pad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/points_to_atlas.html#pad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.points_to_atlas.pad" title="Link to this definition">#</a></dt>
-<dd><p>Pads ndarray by 15% of voxels on all sides</p>
-</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.warp.points_to_atlas.main">
@@ -583,8 +579,6 @@
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.points_to_atlas.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.points_to_atlas.centroids_to_img"><code class="docutils literal notranslate"><span class="pre">centroids_to_img()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.points_to_atlas.pad"><code class="docutils literal notranslate"><span class="pre">pad()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.points_to_atlas.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
   </nav></div>

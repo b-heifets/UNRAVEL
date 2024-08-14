@@ -404,6 +404,8 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/points_to_img.html">unravel.image_io.points_to_img module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_points.html">unravel.image_io.img_to_points module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../image_tools/toc.html">unravel.image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -418,6 +420,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/rb.html">unravel.image_tools.rb module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/transpose_axes.html">unravel.image_tools.transpose_axes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/unique_intensities.html">unravel.image_tools.unique_intensities module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_tools/resample_points.html">unravel.image_tools.resample_points module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../image_tools/atlas/toc.html">unravel.image_tools.atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/relabel_nii.html">unravel.image_tools.atlas.relabel_nii module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../image_tools/atlas/wireframe.html">unravel.image_tools.atlas.wireframe module</a></li>
@@ -501,8 +504,7 @@
 <h2>Main Functions:<a class="headerlink" href="#main-functions" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>load_3D_img: Load a 3D image from a .czi, .nii.gz, or .tif series and return the ndarray.</p></li>
-<li><p>save_as_nii: Save a numpy array as a .nii.gz image.</p></li>
-<li><p>save_as_tifs: Save a 3D ndarray as a series of tif images.</p></li>
+<li><p>save_3D_img: Save a 3D image as a .nii.gz, .tif series, .h5, or .zarr file.</p></li>
 </ul>
 </section>
 <section id="helper-functions">
@@ -666,6 +668,50 @@
 </p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If xy_res and z_res are provided, they will be used instead of the values from the metadata.</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.img_io.nii_path_or_nii">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">nii_path_or_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#nii_path_or_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.nii_path_or_nii" title="Link to this definition">#</a></dt>
+<dd><p>Helper function to load a NIfTI image if it’s a path. Returns the NIfTI image object.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>nii<span class="classifier">str, Path, or nib.Nifti1Image</span></dt><dd><p>Path to the NIfTI image file or a Nifti1Image object.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>nib.Nifti1Image</dt><dd><p>The NIfTI image object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.img_io.nii_to_ndarray">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">nii_to_ndarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#nii_to_ndarray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.nii_to_ndarray" title="Link to this definition">#</a></dt>
+<dd><p>Load a NIfTI image and return as a 3D ndarray.</p>
+<section id="id1">
+<h2>Parameters:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>nii<span class="classifier">str, Path, or nib.Nifti1Image</span></dt><dd><p>Path to the NIfTI image file or a Nifti1Image object.</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Returns:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>ndarray<span class="classifier">ndarray</span></dt><dd><p>The 3D image array.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 <dl class="py function">
@@ -826,41 +872,27 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_io.load_nii_orientation">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">load_nii_orientation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_nii_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#load_nii_orientation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.load_nii_orientation" title="Link to this definition">#</a></dt>
-<dd><p>Load a .nii.gz file and return its orientation (affine matrix).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>input_nii_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The path to the .nii.gz file.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The affine matrix of the .nii.gz file.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>ndarray</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_io.save_as_nii">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type=&lt;class</span> <span class="pre">'numpy.float32'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#save_as_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_nii" title="Link to this definition">#</a></dt>
-<dd><p>Save a numpy array as a .nii.gz image with the option to retain the orientation of an input .nii.gz file.</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_as_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#save_as_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_as_nii" title="Link to this definition">#</a></dt>
+<dd><p>Save a numpy array as a .nii.gz image with the specified resolution and orientation, using a reference image if provided.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ndarray</strong> (<em>ndarray</em>) – The numpy array to save.</p></li>
-<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – Output file path.</p></li>
-<li><p><strong>xy_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – XY resolution in microns. Default is 1000.</p></li>
-<li><p><strong>z_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Z resolution in microns. Default is 1000.</p></li>
+<li><p><strong>ndarray</strong> (<em>ndarray</em>) – The numpy array to save as a NIFTI image.</p></li>
+<li><p><strong>output</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>Path</em>) – The file path to save the output image. ‘.nii.gz’ is appended if not present.</p></li>
+<li><p><strong>xy_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – XY-plane resolution in microns. Default is 1000.</p></li>
+<li><p><strong>z_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – Z-axis resolution in microns. Default is 1000.</p></li>
 <li><p><strong>data_type</strong> (<em>data-type</em><em>, </em><em>optional</em>) – Data type for the NIFTI image. Default is np.float32.</p></li>
-<li><p><strong>reference</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em> or </em><em>ndarray</em><em>, </em><em>optional</em>) – Either an affine matrix or a path to a .nii.gz file to retain its orientation. Default is None.</p></li>
+<li><p><strong>reference</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>Path</em><em>, or </em><em>nib.Nifti1Image</em><em>, </em><em>optional</em>) – Either a path to a reference .nii.gz file or a Nifti1Image object
+to set orientation and resolution. If provided, <cite>xy_res</cite> and <cite>z_res</cite> are ignored. Default is None.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>The function will automatically create parent directories if they do not exist.</p></li>
+<li><p>The affine transformation is constructed assuming RAS orientation if no reference is provided.</p></li>
+</ul>
 </dd></dl>
 
 <dl class="py function">
@@ -915,6 +947,48 @@
 <dd class="field-even"><p>None</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.img_io.save_3D_img">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">save_3D_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ndarray_axis_order='xyz'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res=1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type=&lt;class</span> <span class="pre">'numpy.float32'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference_img=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#save_3D_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.save_3D_img" title="Link to this definition">#</a></dt>
+<dd><p>Save a 3D image in various formats.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> (<em>ndarray</em>) – The 3D image array to save.</p></li>
+<li><p><strong>output_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The path to save the image.</p></li>
+<li><p><strong>ndarray_axis_order</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – The order of the ndarray axes. Default is ‘xyz’.</p></li>
+<li><p><strong>xy_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The x/y resolution in microns for a NIFTI image output. Default is 1000.</p></li>
+<li><p><strong>z_res</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.12)"><em>float</em></a><em>, </em><em>optional</em>) – The z resolution in microns for a NIFTI image output. Default is 1000.</p></li>
+<li><p><strong>data_type</strong> (<em>data-type</em><em>, </em><em>optional</em>) – Data type for a NIFTI image output. Default is np.float32.</p></li>
+<li><p><strong>reference_img</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>Path</em><em>, or </em><em>a nib.Nifti1Image object</em><em>, </em><em>optional</em>) – Either path to a .nii.gz file or a Nifti1Image object to set orientation and resolution. Default is None. If provided, xy_res and z_res are ignored.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.img_io.nii_voxel_size">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_io.</span></span><span class="sig-name descname"><span class="pre">nii_voxel_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_um</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_io.html#nii_voxel_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_io.nii_voxel_size" title="Link to this definition">#</a></dt>
+<dd><p>Get the resolution (voxel size) of a NIfTI image.</p>
+<section id="id3">
+<h2>Parameters:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>nii<span class="classifier">str, Path, or nib.Nifti1Image</span></dt><dd><p>Path to the NIfTI image file or a Nifti1Image object.</p>
+</dd>
+<dt>use_um<span class="classifier">bool, optional. Default is True.</span></dt><dd><p>If True, return the resolution in micrometers (um). If False, return the resolution in millimeters (mm).</p>
+</dd>
+</dl>
+</section>
+<section id="id4">
+<h2>Returns:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>res<span class="classifier">tuple of float or float</span></dt><dd><p>If anisotropic, returns (x_res, y_res, z_res) in micrometers (um) or millimeters (mm).
+If isotropic, returns a single float value for the resolution in micrometers (um) or millimeters (mm).</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 </section>
@@ -973,6 +1047,8 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_czi"><code class="docutils literal notranslate"><span class="pre">load_czi()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_tifs"><code class="docutils literal notranslate"><span class="pre">load_tifs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_nii"><code class="docutils literal notranslate"><span class="pre">load_nii()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.nii_path_or_nii"><code class="docutils literal notranslate"><span class="pre">nii_path_or_nii()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.nii_to_ndarray"><code class="docutils literal notranslate"><span class="pre">nii_to_ndarray()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_nii_subset"><code class="docutils literal notranslate"><span class="pre">load_nii_subset()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_h5"><code class="docutils literal notranslate"><span class="pre">load_h5()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_zarr"><code class="docutils literal notranslate"><span class="pre">load_zarr()</span></code></a></li>
@@ -980,11 +1056,12 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.save_metadata_to_file"><code class="docutils literal notranslate"><span class="pre">save_metadata_to_file()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_image_metadata_from_txt"><code class="docutils literal notranslate"><span class="pre">load_image_metadata_from_txt()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_3D_img"><code class="docutils literal notranslate"><span class="pre">load_3D_img()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.load_nii_orientation"><code class="docutils literal notranslate"><span class="pre">load_nii_orientation()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.save_as_nii"><code class="docutils literal notranslate"><span class="pre">save_as_nii()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.save_as_tifs"><code class="docutils literal notranslate"><span class="pre">save_as_tifs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.save_as_zarr"><code class="docutils literal notranslate"><span class="pre">save_as_zarr()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.save_as_h5"><code class="docutils literal notranslate"><span class="pre">save_as_h5()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.save_3D_img"><code class="docutils literal notranslate"><span class="pre">save_3D_img()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_io.nii_voxel_size"><code class="docutils literal notranslate"><span class="pre">nii_voxel_size()</span></code></a></li>
 </ul>
   </nav></div>
 

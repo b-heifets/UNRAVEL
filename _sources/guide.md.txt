@@ -379,6 +379,8 @@ unravel_commands -m
 - [**io_h5_to_tifs**](unravel.image_io.h5_to_tifs): Convert H5 files to TIFFs.
 - [**io_tif_to_tifs**](unravel.image_io.tif_to_tifs): Convert TIF to TIFF series.
 - [**io_img_to_npy**](unravel.image_io.img_to_npy): Convert images to Numpy arrays.
+- [**io_points_to_img**](unravel.image_io.points_to_img): Populate an empty image with point coordinates
+- [**io_img_to_points**](unravel.image_io.img_to_points): Convert and image into points coordinates
 :::
 
 :::{tab-item} Image tools
@@ -393,6 +395,7 @@ unravel_commands -m
 - [**img_resample**](unravel.image_tools.resample): Resample images.
 - [**img_extend**](unravel.image_tools.extend): Extend images (add padding to one side).
 - [**img_transpose**](unravel.image_tools.transpose_axes): Transpose image axes.
+- [**img_resample_points**](unravel.image_tools.resample_points): Resample a set of points [and save as an image].
 :::
 
 :::{tab-item} Atlas tools
@@ -555,11 +558,6 @@ cat .command_log.txt
 cat .command_log.txt | tail -10  
 ```
 :::
-
-```{todo}
-Log commands instead of scripts
-```
-
 
 ### Make a sample_key.csv: 
 
