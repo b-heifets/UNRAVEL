@@ -17,12 +17,22 @@ For help on a command, run:
 Note: 
     Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.
 
-GitHub repo: 
-    https://github.com/b-heifets/UNRAVEL/tree/dev
-
 Documentation:
     https://b-heifets.github.io/UNRAVEL/
 
+
+"""
+
+import argparse
+import re
+from rich import print
+
+from unravel.core.argparse_utils import SuppressMetavar, SM
+
+
+
+
+extended_help = """
 If you encounter a situation where a command from the UNRAVEL package has the same name as a command from another package or system command, follow these steps to diagnose and fix the issue:
 
 1. Check the conflicting command:
@@ -49,18 +59,17 @@ If you encounter a situation where a command from the UNRAVEL package has the sa
     - Use the `which` command again to verify that the correct command is being invoked: which unravel_reg  # or which reg if using an alias
 """
 
-import argparse
-from rich import print
-
-from unravel.core.argparse_utils import SuppressMetavar, SM
-
-
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-c', '--common', help='Provide flag to only print common commands', action='store_true', default=False)
-    parser.add_argument('-m', '--module', help='Provide flag to print the module (script name and location in the unravel package) run by each command', action='store_true', default=False)
-    parser.add_argument('-d', '--description', help="Provide flag to print the description of the module's purpose", action='store_true', default=False)
+    parser.add_argument('-c', '--common', help='Only print common commands', action='store_true', default=False)
+    parser.add_argument('-m', '--module', help='Print the module (script name and location in the unravel package) for each command', action='store_true', default=False)
+    parser.add_argument('-d', '--description', help="Print the description of each command's purpose", action='store_true', default=False)
+    parser.add_argument('-f', '--filter', help='Filter commands by a string', type=str, action=SM)
+    parser.add_argument('--extended-help', help='Help on diagnosing and fixing command conflicts', action='store_true', default=False)
     parser.epilog = __doc__
+    if parser.parse_known_args()[0].extended_help:
+        print(extended_help)
+        import sys ; sys.exit()
     return parser.parse_args()
 
 
@@ -495,6 +504,8 @@ def main():
     for category, cmds in commands.items():
         if args.common:
             cmds = {k: v for k, v in cmds.items() if v.get("common")}
+        if args.filter:
+            cmds = {k: v for k, v in cmds.items() if re.search(args.filter, k, re.IGNORECASE) or re.search(args.filter, v['description'], re.IGNORECASE)}
         if not cmds:
             continue
 
