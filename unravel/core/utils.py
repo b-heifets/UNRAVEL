@@ -363,6 +363,9 @@ def process_files_with_glob(glob_pattern, processing_func, *args, **kwargs):
 
     processing_func : function
         The function to process each file. Should accept a file path as the first argument.
+
+    ``*args``, ``**kwargs`` :
+        Additional arguments and keyword arguments to pass to the processing function.
     """
     files = glob(glob_pattern)
     if not files:
