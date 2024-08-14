@@ -62,6 +62,8 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Dunnett's test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.
+# TODO: Add to help info about the csv inputs (e.g., what columns they have)
+# TODO: Make sure this works for cell counts as well as densities or adapt it to work for both
 
 
 def get_region_details(region_id, df):
