@@ -20,6 +20,7 @@ Functions:
     - print_func_name_args_times: Decorator to print function execution details.
     - load_text_from_file: Load text content from a file.
     - copy_files: Copy specified files from source to target directory.
+    - process_files_with_glob: Process files matching a glob pattern using a processing function.
 
 Usage:
     Import the functions and decorators to enhance your scripts.
@@ -32,7 +33,6 @@ Examples:
 
 """
 
-import argparse
 import functools
 import shutil
 import numpy as np
@@ -42,6 +42,7 @@ import threading
 import time
 from datetime import datetime
 from fnmatch import fnmatch
+from glob import glob
 from pathlib import Path
 from rich import print
 from rich.console import Console
@@ -350,3 +351,27 @@ def copy_files(source_dir, target_dir, filename, sample_path=None, verbose=False
     else:
         if verbose:
             print(f"File {src_file} does not exist and was not copied.")
+
+def process_files_with_glob(glob_pattern, processing_func, *args, **kwargs):
+    """
+    Process all files matching a glob pattern using the provided processing function.
+
+    Parameters:
+    -----------
+    glob_pattern : str
+        The glob pattern to match files (e.g., '*.csv').
+
+    processing_func : function
+        The function to process each file. Should accept a file path as the first argument.
+
+    *args, **kwargs :
+        Additional arguments and keyword arguments to pass to the processing function.
+    """
+    files = glob(glob_pattern)
+    if not files:
+        print(f"\n    [red1]No files found matching the pattern: {glob_pattern}\n")
+        return
+
+    for file_path in files:
+        file_path = Path(file_path).resolve()
+        processing_func(file_path, *args, **kwargs)
