@@ -506,15 +506,14 @@
 <blockquote>
 <div><p>io_img_to_points -i path/image -o path/points.csv [-a path/atlas_image.nii.gz] [-v]</p>
 </div></blockquote>
-<dl>
+<dl class="simple">
 <dt>Input image types:</dt><dd><p>.czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
 <li><p>A CSV file where each row represents a point corresponding to a detection in the 3D image.</p></li>
-<li><p>The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple</p></li>
+<li><p>The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple points generated for voxels with intensities greater than 1.</p></li>
+<li><p>An optional ‘Region_ID’ column is added based on the corresponding atlas image.</p></li>
 </ul>
-<p>points generated for voxels with intensities greater than 1.
-- An optional ‘Region_ID’ column is added based on the corresponding atlas image.</p>
 </dd>
 </dl>
 </section>
@@ -544,15 +543,13 @@ Optionally adds a ‘Region_ID’ based on the corresponding atlas image.</p>
 If atlas_img is provided, each point will have an additional ‘Region_ID’ column.</p>
 </dd>
 </dl>
-<p>Note:
-Convert the points to a DataFrame using:
-<code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">points_df</span> <span class="pre">=</span> <span class="pre">pd.DataFrame(points_ndarray,</span> <span class="pre">columns=['x',</span> <span class="pre">'y',</span> <span class="pre">'z'])</span>
-<span class="pre">`</span></code></p>
-<p>or</p>
-<p><code class="docutils literal notranslate"><span class="pre">`</span>
-<span class="pre">points_df</span> <span class="pre">=</span> <span class="pre">pd.DataFrame(points_ndarray,</span> <span class="pre">columns=['x',</span> <span class="pre">'y',</span> <span class="pre">'z',</span> <span class="pre">'Region_ID'])</span>&#160; <span class="pre">#</span> <span class="pre">With</span> <span class="pre">atlas_img</span>
-<span class="pre">`</span></code></p>
+</section>
+<section id="note">
+<h2>Note:<a class="headerlink" href="#note" title="Link to this heading">#</a></h2>
+<p>Convert the points to a DataFrame using:
+&gt;&gt;&gt; points_df = pd.DataFrame(points_ndarray, columns=[‘x’, ‘y’, ‘z’])
+or
+&gt;&gt;&gt; points_df = pd.DataFrame(points_ndarray, columns=[‘x’, ‘y’, ‘z’, ‘Region_ID’])  # With atlas_img</p>
 </section>
 </dd></dl>
 

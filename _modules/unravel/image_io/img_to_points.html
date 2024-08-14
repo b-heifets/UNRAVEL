@@ -365,8 +365,7 @@
 
 <span class="sd">Output:</span>
 <span class="sd">    - A CSV file where each row represents a point corresponding to a detection in the 3D image. </span>
-<span class="sd">    - The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple </span>
-<span class="sd">    points generated for voxels with intensities greater than 1.</span>
+<span class="sd">    - The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple points generated for voxels with intensities greater than 1.</span>
 <span class="sd">    - An optional &#39;Region_ID&#39; column is added based on the corresponding atlas image.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -416,16 +415,11 @@
 <span class="sd">        If atlas_img is provided, each point will have an additional &#39;Region_ID&#39; column.</span>
 
 <span class="sd">    Note:</span>
+<span class="sd">    -----</span>
 <span class="sd">    Convert the points to a DataFrame using:</span>
-<span class="sd">    ```</span>
-<span class="sd">    points_df = pd.DataFrame(points_ndarray, columns=[&#39;x&#39;, &#39;y&#39;, &#39;z&#39;])</span>
-<span class="sd">    ```</span>
-
+<span class="sd">    &gt;&gt;&gt; points_df = pd.DataFrame(points_ndarray, columns=[&#39;x&#39;, &#39;y&#39;, &#39;z&#39;])</span>
 <span class="sd">    or</span>
-
-<span class="sd">    ```</span>
-<span class="sd">    points_df = pd.DataFrame(points_ndarray, columns=[&#39;x&#39;, &#39;y&#39;, &#39;z&#39;, &#39;Region_ID&#39;])  # With atlas_img</span>
-<span class="sd">    ```</span>
+<span class="sd">    &gt;&gt;&gt; points_df = pd.DataFrame(points_ndarray, columns=[&#39;x&#39;, &#39;y&#39;, &#39;z&#39;, &#39;Region_ID&#39;])  # With atlas_img</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># Find the coordinates of non-zero voxels</span>
