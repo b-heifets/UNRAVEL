@@ -497,6 +497,11 @@ def main():
                 "module": "unravel.utilities.clean_tif_dirs",
                 "description": "Clean TIF directories (no spaces, move non-tifs).",
                 "common": False
+            },
+            "utils_points_compressor": {
+                "module": "unravel.utilities.points_compressor",
+                "description": "Pack or unpack point data in a CSV file or summarize the number of points per region.",
+                "common": False
             }
         }
     }

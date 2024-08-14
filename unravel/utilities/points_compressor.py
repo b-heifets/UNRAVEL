@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``utils_points_compressor`` from UNRAVEL to pack or unpack point data in a CSV file.
+Use ``utils_points_compressor`` from UNRAVEL to pack or unpack point data in a CSV file or summarize the number of points per region.
 
 Packing: Group points with the same coordinates and `Region_ID`, adding a `count` column.
 Unpacking: Expand packed points back to individual rows based on the `count` column.
