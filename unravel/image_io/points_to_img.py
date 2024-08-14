@@ -8,13 +8,15 @@ Usage:
     io_points_to_img  -i path/points.csv -ri path/ref_image.nii.gz -o path/image.nii.gz [-thr 20000 or -uthr 20000] [-v]
 
 Input:
-    A CSV file where each row represents a point corresponding to a detection in the 3D image. 
-    The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple 
-    points generated for voxels with intensities greater than 1.
+    - A CSV file where each row represents a point corresponding to a detection in the 3D image. 
+    - The columns should include 'x', 'y', 'z', and 'Region_ID' (e.g., from ``rstats`` or ``io_img_to_points``).
 
 Output image types:
     .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
+Notes:
+    - Points outside the brain (i.e., 'Region_ID' == 0) are excluded.
+    - If the input CSV has a 'count' column, use ``utils_points_compressor`` to unpack the points before running this script.
 """
 
 import argparse
@@ -31,9 +33,9 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='CSV w/ columns: x, y, z, Region_ID (e.g., from ``rstats``)', required=True, action=SM)
+    parser.add_argument('-i', '--input', help='path/input.csv w/ columns: x, y, z, Region_ID', required=True, action=SM)
     parser.add_argument('-ri', '--ref_img', help='Path to a reference image for output image shape and saving.', required=True, action=SM)
-    parser.add_argument('-o', '--output', help="Path to save the output image.", required=True, action=SM)
+    parser.add_argument('-o', '--output', help='Path to save the output image.', required=True, action=SM)
     parser.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
     parser.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
@@ -67,7 +69,7 @@ def threshold_points_by_region_id(points_df, thresh=None, upper_thresh=None):
     # Filter points based on thresholding the 'Region_ID' column
     if thresh:
         points_df = points_df[points_df['Region_ID'] >= thresh]
-    elif upper_thresh:
+    if upper_thresh:
         points_df = points_df[points_df['Region_ID'] <= upper_thresh]
 
     # Drop the 'Region_ID' column
@@ -97,11 +99,14 @@ def load_and_prepare_points(points_csv_path, thresh=None, upper_thresh=None):
         A 2D array of shape (n, 3) containing the prepared points.
     """
     points_df = pd.read_csv(points_csv_path)
-    points_df = threshold_points_by_region_id(points_df, thresh=thresh, upper_thresh=upper_thresh)
-    points_ndarray = points_df.to_numpy()
 
-    # Add a 1 voxel offset since the coordinates are 0-based
-    points_ndarray += 1
+    # Check if the DataFrame has a count column
+    if 'count' in points_df.columns:
+        print("\n    [red1]The input CSV file contains a 'count' column. Please use `utils_points_compressor` to unpack the points before rerunning this script.\n")
+        import sys ; sys.exit()
+
+    points_df = threshold_points_by_region_id(points_df, thresh=thresh, upper_thresh=upper_thresh)
+    points_ndarray = points_df[['x', 'y', 'z']].values
     return points_ndarray
 
 @print_func_name_args_times()
@@ -162,12 +167,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    ref_img = load_3D_img(args.ref_img)
-
     # Load and prepare points
     points_ndarray = load_and_prepare_points(points_csv_path=args.input, thresh=args.thresh, upper_thresh=args.upper_thr)
 
     # Create an image from the points using a reference image to determine the shape
+    ref_img = load_3D_img(args.ref_img)
     img = points_to_img(points_ndarray, ref_img)
 
     # Save the image
