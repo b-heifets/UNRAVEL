@@ -31,9 +31,9 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help="Path to the input 3D image.", required=True, action=SM)
+    parser.add_argument('-i', '--input', help='Path to the input 3D image.', required=True, action=SM)
     parser.add_argument('-a', '--atlas_img', help="Path to the atlas image matching -i for adding a 'Region_ID' column to the CSV.", action=SM)
-    parser.add_argument('-o', '--output', help="Path to save the output points (CSV format).", required=True, action=SM)
+    parser.add_argument('-o', '--output', help='Path to save the output points (CSV format).', required=True, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     return parser.parse_args()
 
