@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_summary`` from UNRAVEL to plot cell densensities for each region and summarize results.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...
+Use ``rstats_summary`` from UNRAVEL to plot cell densensities for each region and summarize results.
 
 Usage:
 ------
@@ -16,7 +16,8 @@ Inputs:
     - The <OneWordCondition>_sample?? column has the cell densities for each region.
 
 Outputs:
-    Plots and a summary CSV to the current directory.    
+    - Plots and a summary CSV to the current directory.
+    - regional_cell_densities_all.csv (Columns: columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...)
 
 Example hex code list (flank arg w/ double quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']
 
@@ -67,7 +68,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Dunnett's test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.
-# TODO: Make sure this works for cell counts as well as densities or adapt it to work for both
+# TODO: Adapt this to work for cell counts and label densities. This could also be used for mean IF intensities.
 
 
 def get_region_details(region_id, df):
