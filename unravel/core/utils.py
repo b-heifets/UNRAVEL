@@ -372,6 +372,8 @@ def process_files_with_glob(glob_pattern, processing_func, *args, **kwargs):
         print(f"\n    [red1]No files found matching the pattern: {glob_pattern}\n")
         return
 
+    print(f"\n    Processing {len(files)} files matching the pattern: {glob_pattern}\n")
+
     for file_path in files:
         file_path = Path(file_path).resolve()
         processing_func(file_path, *args, **kwargs)
