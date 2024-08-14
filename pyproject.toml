@@ -79,6 +79,7 @@ build-backend = "setuptools.build_meta"
 
 [project.scripts]
 unravel_commands = "unravel.unravel_commands:main"
+uc = "unravel.unravel_commands:main"
 atlas_relabel = "unravel.image_tools.atlas.relabel_nii:main"
 atlas_wireframe = "unravel.image_tools.atlas.wireframe:main"
 cstats_fdr_range = "unravel.cluster_stats.fdr_range:main"
