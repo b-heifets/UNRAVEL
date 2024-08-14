@@ -12,8 +12,7 @@ Input image types:
 
 Output:
     - A CSV file where each row represents a point corresponding to a detection in the 3D image. 
-    - The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple 
-    points generated for voxels with intensities greater than 1.
+    - The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple points generated for voxels with intensities greater than 1.
     - An optional 'Region_ID' column is added based on the corresponding atlas image.
 """
 
@@ -54,19 +53,15 @@ def img_to_points(img, atlas_img=None):
     Returns:
     --------
     points : numpy.ndarray
-        An array of points where each row corresponds to the (x, y, z) coordinates of a detection. If atlas_img is provided, each point will have an additional 'Region_ID' column.
+        An array of points where each row corresponds to the (x, y, z) coordinates of a detection.
+        If atlas_img is provided, each point will have an additional 'Region_ID' column.
 
     Note:
+    -----
     Convert the points to a DataFrame using:
-    ```
-    points_df = pd.DataFrame(points_ndarray, columns=['x', 'y', 'z'])
-    ```
-
+    >>> points_df = pd.DataFrame(points_ndarray, columns=['x', 'y', 'z'])
     or
-
-    ```
-    points_df = pd.DataFrame(points_ndarray, columns=['x', 'y', 'z', 'Region_ID'])  # With atlas_img
-    ```
+    >>> points_df = pd.DataFrame(points_ndarray, columns=['x', 'y', 'z', 'Region_ID'])  # With atlas_img
     """
     points = []
     # Find the coordinates of non-zero voxels
