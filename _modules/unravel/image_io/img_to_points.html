@@ -413,14 +413,19 @@
 <span class="sd">    --------</span>
 <span class="sd">    points : numpy.ndarray</span>
 <span class="sd">        An array of points where each row corresponds to the (x, y, z) coordinates of a detection.</span>
-<span class="sd">        If `atlas_img` is provided, each point will have an additional &#39;Region_ID&#39; column.</span>
+<span class="sd">        If atlas_img is provided, each point will have an additional &#39;Region_ID&#39; column.</span>
 
-<span class="sd">    Notes:</span>
-<span class="sd">    ------</span>
+<span class="sd">    Note:</span>
 <span class="sd">    Convert the points to a DataFrame using:</span>
+<span class="sd">    ```</span>
 <span class="sd">    points_df = pd.DataFrame(points_ndarray, columns=[&#39;x&#39;, &#39;y&#39;, &#39;z&#39;])</span>
+<span class="sd">    ```</span>
+
 <span class="sd">    or</span>
+
+<span class="sd">    ```</span>
 <span class="sd">    points_df = pd.DataFrame(points_ndarray, columns=[&#39;x&#39;, &#39;y&#39;, &#39;z&#39;, &#39;Region_ID&#39;])  # With atlas_img</span>
+<span class="sd">    ```</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="c1"># Find the coordinates of non-zero voxels</span>
