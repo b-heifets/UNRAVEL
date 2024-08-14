@@ -22,7 +22,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Adds 15 percent of padding to an image and saves it', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
     parser.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     parser.add_argument('-r', '--ref_nii', help='Reference image for setting the orientation code', action=SM)

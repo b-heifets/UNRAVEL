@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_summary`` from UNRAVEL to plot cell densensities for each region and summarize results.\n CSV columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...
+Use ``rstats_summary`` from UNRAVEL to plot cell densensities for each region and summarize results.
 
 Usage:
 ------
@@ -10,8 +10,14 @@ Usage:
 To do: 
     Add module for Dunnett's tests (don't use this option for now)
 
+Inputs:
+    - CSVs with cell densities for each region (e.g., regional_stats/<condition>_sample??_cell_densities.csv)
+    - Input CSV columns: Region_ID, Side, ID_Path, Region, Abbr, <OneWordCondition>_sample??
+    - The <OneWordCondition>_sample?? column has the cell densities for each region.
+
 Outputs:
-    Plots and a summary CSV to the current directory.    
+    - Plots and a summary CSV to the current directory.
+    - regional_cell_densities_all.csv (Columns: columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...)
 
 Example hex code list (flank arg w/ double quotes): ['#2D67C8', '#27AF2E', '#D32525', '#7F25D3']
 
@@ -53,7 +59,7 @@ def parse_args():
     parser.add_argument('-y', '--ylabel', help='Y-axis label (Default: cell_density)', default='cell_density', action=SM)
     parser.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
     parser.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', action=SM)
-    parser.add_argument('-s', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups", default='light:white', action=SM)
+    parser.add_argument('-s', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code lis t matching # of groups", default='light:white', action=SM)
     parser.add_argument('-o', '--output', help='Output directory for plots (Default: <args.test_type>_plots)', action=SM)
     parser.add_argument('-alt', "--alternate", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
     parser.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], action=SM)
@@ -62,6 +68,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Dunnett's test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.
+# TODO: Adapt this to work for cell counts and label densities. This could also be used for mean IF intensities.
 
 
 def get_region_details(region_id, df):

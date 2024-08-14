@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Convert images to HDF5 format for ilastik processing.
+"""
+
 import argparse
 import h5py
 from rich import print
@@ -11,10 +15,11 @@ from unravel.core.img_io import load_3D_img
 from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Convert images to HDF5 format for ilastik processing.', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', required=True, help='Input image file path (.czi, .nii.gz, .tif)', action=SM)
     parser.add_argument('-o', '--output', required=True, help='Output HDF5 file path', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 @print_func_name_args_times()

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Crop native image based on cluster bounding boxes.
+"""
+
 import argparse
 from pathlib import Path
 import numpy as np
@@ -14,7 +18,7 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, 
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Crop native image based on cluster bounding boxes', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help="Path to the image or it's dir", action=SM)
     parser.add_argument('-ob', '--outer_bbox', help='Path to the text file containing the outer bounding box (outer_bounds.txt)', action=SM)
     parser.add_argument('-ib', '--inner_bbox', help='Path to the text file containing the inner bounding box (bounding_box_sample??_cluster_*.txt)', action=SM)
@@ -24,7 +28,7 @@ def parse_args():
     parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)
     parser.add_argument('-o', '--output', help='path/img.nii.gz.', default=None, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = "Bounding box text files are from native_clusters.py."
+    parser.epilog = __doc__
     return parser.parse_args()
 
 

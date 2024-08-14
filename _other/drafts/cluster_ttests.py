@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Load CSV w/ cluster densities and conduct t-tests
+"""
+
 import argparse
 import matplotlib as mpl    
 import matplotlib.pyplot as plt
@@ -19,7 +23,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 mpl.rcParams['font.family'] = 'Arial'
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Load CSV w/ cluster densities and conduct t-tests', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input_csv', help='Path to CSV with cluster densities', required=True, action=SM)
     parser.add_argument('-ord', '--order', help='Group Order for plotting (must match condition in CSV)', required=True, nargs=2, action=SM)
     parser.add_argument('-l', '--labels', help='Group Labels in same order', nargs=2, default=None, action=SM)
@@ -27,6 +31,7 @@ def parse_args():
     parser.add_argument('--symbol_color', help='Color (<color> or <hexcode>) for the symbols in swarmplot (Default: #bababa #abface)', nargs=2, default=['#bababa', '#abcdef'], action=SM)
     parser.add_argument('-ort', '--orient', help='Orientation of bar graphs (h: horizontal, v: vertical; Default: h)', choices=['h', 'v'], default='h',  action=SM)
     parser.add_argument('--output_type', choices=['pdf', 'png', 'svg'], default='pdf', help='Output file type (pdf, png, or svg)', action=SM)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def get_significance(p_val):

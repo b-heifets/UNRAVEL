@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``unravel_commands`` to print a list of commands available in the unravel package. 
+Use ``unravel_commands`` or ``uc`` to print a list of commands available in the unravel package. 
 
 Usage to print common commands and descriptions:
 ------------------------------------------------
@@ -11,18 +11,23 @@ Usage to print all commands and module names:
 ---------------------------------------------
     unravel_commands -m
 
+Usage to print commands matching a specific string:
+---------------------------------------------------
+    unravel_commands -f <string>
+
 For help on a command, run: 
     <command> -h
 
 Note: 
-    Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.
-
-GitHub repo: 
-    https://github.com/b-heifets/UNRAVEL/tree/dev
+    - Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.
+    - Filtering is case-insensitive and matches substrings in the printed lines (regex).
+    - For example, use of -f with -d will find matches in the command name and/or description, presering those lines.
 
 Documentation:
     https://b-heifets.github.io/UNRAVEL/
+"""
 
+extended_help = """
 If you encounter a situation where a command from the UNRAVEL package has the same name as a command from another package or system command, follow these steps to diagnose and fix the issue:
 
 1. Check the conflicting command:
@@ -50,6 +55,7 @@ If you encounter a situation where a command from the UNRAVEL package has the sa
 """
 
 import argparse
+import re
 from rich import print
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
@@ -57,10 +63,15 @@ from unravel.core.argparse_utils import SuppressMetavar, SM
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-c', '--common', help='Provide flag to only print common commands', action='store_true', default=False)
-    parser.add_argument('-m', '--module', help='Provide flag to print the module (script name and location in the unravel package) run by each command', action='store_true', default=False)
-    parser.add_argument('-d', '--description', help="Provide flag to print the description of the module's purpose", action='store_true', default=False)
+    parser.add_argument('-c', '--common', help='Only print common commands', action='store_true', default=False)
+    parser.add_argument('-m', '--module', help='Print the module (script name and location in the unravel package) for each command', action='store_true', default=False)
+    parser.add_argument('-d', '--description', help="Print the description of each command's purpose", action='store_true', default=False)
+    parser.add_argument('-f', '--filter', help='Filter commands by a string (e.g, -f reg)', type=str, action=SM)
+    parser.add_argument('--extended-help', help='Help on diagnosing and fixing command conflicts', action='store_true', default=False)
     parser.epilog = __doc__
+    if parser.parse_known_args()[0].extended_help:
+        print(extended_help)
+        import sys ; sys.exit()
     return parser.parse_args()
 
 
@@ -104,6 +115,11 @@ def main():
             "warp_to_native": {
                 "module": "unravel.warp.to_native",
                 "description": "Warp images to native space.",
+                "common": True
+            },
+            "warp_points_to_atlas": {
+                "module": "unravel.warp.points_to_atlas",
+                "description": "Warp cell centroids in tissue space to atlas space.",
                 "common": True
             },
             "warp": {
@@ -365,6 +381,16 @@ def main():
                 "module": "unravel.image_io.img_to_npy",
                 "description": "Convert images to Numpy arrays.",
                 "common": False
+            },
+            "io_img_to_points": {
+                "module": "unravel.image_io.img_to_points",
+                "description": "Convert and image into points coordinates.",
+                "common": False
+            },
+            "io_points_to_img": {
+                "module": "unravel.image_io.points_to_img",
+                "description": "Populate an empty image with point coordinates.",
+                "common": False
             }
         },
         "Image tools": {
@@ -411,6 +437,11 @@ def main():
             "img_resample": {
                 "module": "unravel.image_tools.resample",
                 "description": "Resample image.nii.gz.",
+                "common": False
+            },
+            "img_resample_points": {
+                "module": "unravel.image_tools.resample_points",
+                "description": "Resample a set of points [and save as an image].",
                 "common": False
             },
             "img_extend": {
@@ -470,11 +501,25 @@ def main():
         }
     }
 
-    print("\n[magenta bold]Category[/], [cyan bold]Command[/], [purple3]Module[/], [grey50]Description\n")
+    print("\n[magenta bold]Category[/], [cyan bold]Command[/], [purple3]Module (-m)[/], [grey50]Description (-d)\n")
 
     for category, cmds in commands.items():
         if args.common:
             cmds = {k: v for k, v in cmds.items() if v.get("common")}
+        if args.filter:
+            # Construct the output string for each command
+            filtered_cmds = {}
+            for cmd, details in cmds.items():
+                output = f"{cmd}"
+                if args.module:
+                    output += f" {details['module']}"
+                if args.description:
+                    output += f" {details['description']}"
+                
+                # Perform the filtering on the constructed output string
+                if re.search(args.filter, output, re.IGNORECASE):
+                    filtered_cmds[cmd] = details
+            cmds = filtered_cmds
         if not cmds:
             continue
 

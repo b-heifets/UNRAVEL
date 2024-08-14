@@ -6,8 +6,7 @@ This module contains functions for loading and saving 3D images.
 Main Functions:
 ---------------
 - load_3D_img: Load a 3D image from a .czi, .nii.gz, or .tif series and return the ndarray.
-- save_as_nii: Save a numpy array as a .nii.gz image.
-- save_as_tifs: Save a 3D ndarray as a series of tif images.
+- save_3D_img: Save a 3D image as a .nii.gz, .tif series, .h5, or .zarr file.
 
 Helper Functions:
 -----------------
@@ -38,6 +37,8 @@ from unravel.core.utils import print_func_name_args_times
 
 
 # Load 3D image (load_3D_img()), get/save metadata, and return ndarray [with metadata]
+# TODO: Create save_3D_img() function for saving 3D images in various formats. 
+# TODO: save_as_nii() add logic for using the reference image for dtype (e.g., if reference is provided and dtype is None, use reference dtype)
 
 def return_3D_img(ndarray, return_metadata=False, return_res=False, xy_res=None, z_res=None, x_dim=None, y_dim=None, z_dim=None):
     """
@@ -143,10 +144,10 @@ def extract_resolution(img_path):
             xy_res = float(pixels_element.get('PhysicalSizeX'))
             z_res = float(pixels_element.get('PhysicalSizeZ'))
     elif str(img_path).endswith('.nii.gz'):
-        img = nib.load(img_path)
-        affine = img.affine
-        xy_res = abs(affine[0, 0] * 1e3) # Convert from mm to um
-        z_res = abs(affine[2, 2] * 1e3)
+        nii = nib.load(img_path)
+        res = nii.header.get_zooms() # (x, y, z) in mm
+        xy_res = res[0] * 1000 # Convert from mm to um
+        z_res = res[2] * 1000
     elif str(img_path).endswith('.h5'):
         with h5py.File(h5py, 'r') as f:
             full_res_dataset_name = next(iter(f.keys())) # Assumes that full res data is 1st in the dataset list
@@ -278,11 +279,13 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
         If return_res is True, returns (ndarray, xy_res, z_res).
     tuple, optional
         If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
+
+    Notes
+    -----
+    - If xy_res and z_res are provided, they will be used instead of the values from the metadata.
     """
     nii = nib.load(nii_path)
-    data_type = nii.header.get_data_dtype()
-    ndarray = np.asanyarray(nii.dataobj).astype(data_type)
-    ndarray = np.squeeze(ndarray)
+    ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
 
     res_specified = True if xy_res is not None else False
@@ -297,6 +300,44 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
         z_res = original_z_res
 
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
+
+def nii_path_or_nii(nii):
+    """Helper function to load a NIfTI image if it's a path. Returns the NIfTI image object.
+    
+    Parameters:
+    -----------
+    nii : str, Path, or nib.Nifti1Image
+        Path to the NIfTI image file or a Nifti1Image object.
+
+    Returns:
+    --------
+    nib.Nifti1Image
+        The NIfTI image object.
+    """
+    if isinstance(nii, nib.Nifti1Image):
+        return nii
+    elif isinstance(nii, (str, Path)) and Path(nii).exists():
+        return nib.load(nii)
+    else:
+        raise FileNotFoundError(f"\n    [red1]Input file not found: {nii}\n")
+
+@print_func_name_args_times()
+def nii_to_ndarray(nii):
+    """Load a NIfTI image and return as a 3D ndarray.
+
+    Parameters:
+    -----------
+    nii : str, Path, or nib.Nifti1Image
+        Path to the NIfTI image file or a Nifti1Image object.
+
+    Returns:
+    --------
+    ndarray : ndarray
+        The 3D image array.
+    """
+    nii = nii_path_or_nii(nii)
+    ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
+    return ndarray
 
 @print_func_name_args_times()
 def load_nii_subset(nii_path, xmin, xmax, ymin, ymax, zmin, zmax):
@@ -534,7 +575,7 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
             img_path = next(iter(sorted_files), None) 
 
     if not img_path.exists():
-        raise FileNotFoundError(f"No compatible image files found in {img_path}. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
+        raise FileNotFoundError(f"No compatible image files found in {img_path} for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
     
     if str(img_path).endswith('.czi'):
         print(f"\n    [default]Loading channel {channel} from {img_path} (channel 0 is the first channel)")
@@ -561,66 +602,59 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
 
 
 # Save images
-def load_nii_orientation(input_nii_path):
-    """
-    Load a .nii.gz file and return its orientation (affine matrix).
-
-    Parameters
-    ----------
-    input_nii_path : str
-        The path to the .nii.gz file.
-
-    Returns
-    -------
-    ndarray
-        The affine matrix of the .nii.gz file.
-    """
-    nii = nib.load(str(input_nii_path))
-    return nii.affine
-
 @print_func_name_args_times()
-def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=np.float32, reference=None):
+def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=None, reference=None):
     """
-    Save a numpy array as a .nii.gz image with the option to retain the orientation of an input .nii.gz file.
+    Save a numpy array as a .nii.gz image with the specified resolution and orientation, using a reference image if provided.
 
     Parameters
     ----------
     ndarray : ndarray
-        The numpy array to save.
-    output : str
-        Output file path.
+        The numpy array to save as a NIFTI image.
+    output : str or Path
+        The file path to save the output image. '.nii.gz' is appended if not present.
     xy_res : float, optional
-        XY resolution in microns. Default is 1000.
+        XY-plane resolution in microns. Default is 1000.
     z_res : float, optional
-        Z resolution in microns. Default is 1000.
+        Z-axis resolution in microns. Default is 1000.
     data_type : data-type, optional
         Data type for the NIFTI image. Default is np.float32.
-    reference : str or ndarray, optional
-        Either an affine matrix or a path to a .nii.gz file to retain its orientation. Default is None.
+    reference : str, Path, or nib.Nifti1Image, optional
+        Either a path to a reference .nii.gz file or a Nifti1Image object
+        to set orientation and resolution. If provided, `xy_res` and `z_res` are ignored. Default is None.
 
-    Returns
-    -------
-    None
+    Notes
+    -----
+    - The function will automatically create parent directories if they do not exist.
+    - The affine transformation is constructed assuming RAS orientation if no reference is provided.
     """
     output = Path(output).resolve()
     output.parent.mkdir(parents=True, exist_ok=True)
+    if not str(output).endswith('.nii.gz'):
+        output = output.with_suffix('.nii.gz')
     
-    # Check if reference is an affine matrix or a path
     if reference is not None:
-        if isinstance(reference, np.ndarray):
-            affine = reference
-        elif isinstance(reference, (str, Path)):
-            affine = load_nii_orientation(reference)
+        if isinstance(reference, (str, Path)):
+            ref_nii = nib.load(str(reference))
+        elif isinstance(reference, nib.Nifti1Image):
+            ref_nii = reference
         else:
-            raise ValueError("Reference must be either an affine matrix or a file path.")
+            raise ValueError("\n    [red1]Reference for save_as_nii() must be a path to a .nii.gz file or a Nifti1Image object.\n")
+        
+        affine = ref_nii.affine
+        header = ref_nii.header.copy()
+        if data_type is None:
+            data_type = header.get_data_dtype()
     else:
         # Create the affine matrix with the appropriate resolutions (converting microns to mm)
         affine = np.diag([xy_res / 1000, xy_res / 1000, z_res / 1000, 1]) # RAS orientation
-    
+        header = nib.Nifti1Header()
+
     # Create and save the NIFTI image
-    nifti_img = nib.Nifti1Image(ndarray, affine)
-    nifti_img.header.set_data_dtype(data_type)
-    nib.save(nifti_img, str(output))    
+    nii = nib.Nifti1Image(ndarray, affine, header)
+    nii.header.set_data_dtype(data_type or np.float32)
+    
+    nib.save(nii, output)    
     print(f"\n    Output: [default bold]{output}")
 
 @print_func_name_args_times()
@@ -700,3 +734,66 @@ def save_as_h5(ndarray, output_path, ndarray_axis_order="xyz"):
         ndarray = np.transpose(ndarray, (2, 1, 0))
     with h5py.File(output_path, 'w') as f:
         f.create_dataset('data', data=ndarray, compression="lzf")
+
+@print_func_name_args_times()
+def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1000, data_type=np.float32, reference_img=None):
+    """
+    Save a 3D image in various formats.
+
+    Parameters
+    ----------
+    img : ndarray
+        The 3D image array to save.
+    output_path : str
+        The path to save the image.
+    ndarray_axis_order : str, optional
+        The order of the ndarray axes. Default is 'xyz'.
+    xy_res : float, optional
+        The x/y resolution in microns for a NIFTI image output. Default is 1000.
+    z_res : float, optional
+        The z resolution in microns for a NIFTI image output. Default is 1000.
+    data_type : data-type, optional
+        Data type for a NIFTI image output. Default is np.float32.
+    reference_img : str, Path, or a nib.Nifti1Image object, optional
+        Either path to a .nii.gz file or a Nifti1Image object to set orientation and resolution. Default is None. If provided, xy_res and z_res are ignored.
+    """
+    output = Path(output_path)
+    output.parent.mkdir(exist_ok=True, parents=True)
+    
+    if output_path.endswith('.nii.gz'):
+        save_as_nii(img, output_path, xy_res, z_res, data_type=data_type, reference=reference_img)
+    elif output_path.endswith('.zarr'):
+        save_as_zarr(img, output_path, ndarray_axis_order=ndarray_axis_order)
+    elif output_path.endswith('.h5'):
+        save_as_h5(img, output_path, ndarray_axis_order=ndarray_axis_order)
+    elif output_path.endswith('.tif'): 
+        save_as_tifs(img, output_path, ndarray_axis_order=ndarray_axis_order)
+    else:
+        raise ValueError(f"Unsupported file type for save_3D_img(): {output_path.suffix}. Use: .nii.gz, .zarr, .h5, .tif")
+    print(f"\n    Image saved to: {output_path}\n")
+
+# Other functions
+def nii_voxel_size(nii, use_um=True):
+    """Get the resolution (voxel size) of a NIfTI image.
+    
+    Parameters:
+    -----------
+    nii : str, Path, or nib.Nifti1Image
+        Path to the NIfTI image file or a Nifti1Image object.
+
+    use_um : bool, optional. Default is True.
+        If True, return the resolution in micrometers (um). If False, return the resolution in millimeters (mm).
+
+    Returns:
+    --------
+    res : tuple of float or float
+        If anisotropic, returns (x_res, y_res, z_res) in micrometers (um) or millimeters (mm).
+        If isotropic, returns a single float value for the resolution in micrometers (um) or millimeters (mm).
+    """
+    nii = nii_path_or_nii(nii)
+    res = nii.header.get_zooms()  # (x, y, z) in mm
+    if use_um:
+        res = tuple([r * 1000 for r in res])  # Convert to micrometers
+
+    # Return as a single value if isotropic, else as a tuple
+    return res[0] if res[0] == res[1] == res[2] else res

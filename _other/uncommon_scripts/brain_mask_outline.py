@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+
+"""
+Create and dilate the outline of a brain mask from a .nii.gz file.
+
+"""
+
 import argparse
 import numpy as np
 import nibabel as nib
@@ -13,7 +19,7 @@ from unravel.core.config import Configuration
 from unravel.core.utils import get_samples, initialize_progress_bar, print_cmd_and_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Create and dilate the outline of a brain mask from a .nii.gz file.", formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
@@ -21,6 +27,7 @@ def parse_args():
     parser.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on the outline. Default: 0", default=0, type=int, action=SM)
     parser.add_argument("-o", "--output", help="Default: reg_inputs/autofl_50um_brain_mask_outline.nii.gz", default="reg_inputs/autofl_50um_brain_mask_outline.nii.gz", action=SM)
     parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
+    parser.epilog = __doc__
     return parser.parse_args()
 
 def create_outline(mask):

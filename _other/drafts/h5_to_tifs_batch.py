@@ -1,5 +1,27 @@
 #!/usr/bin/env python3
 
+"""
+Loads h5/hdf5 image, saves as tifs. Also, saves xy and z voxel size in microns
+
+Usage:
+------
+h5_to_tifs.py -i <path/image.h5> -t 488
+
+Inputs: 
+Largest *.h5 in sample?? folder
+This script assumes that the first dataset in the hdf5 file has the highest resolution.
+
+Outputs:
+./<tif_dir_out>/slice_????.tif series
+./parameters/metadata (text file)
+
+Next script: 
+prep_reg.sh
+
+Notes: 
+    Run script from experiment folder w/ sample?? folders or a sample?? folder.
+"""
+
 import argparse
 import glob
 import os
@@ -16,28 +38,13 @@ from unravel.core.utils import print_cmd_and_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Loads h5/hdf5 image, saves as tifs. Also, saves xy and z voxel size in microns', formatter_class=SuppressMetavar)
+    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
     parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='path/image.h5', action=SM)
     parser.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = """Run script from experiment folder w/ sample?? folders or a sample?? folder.
-
-Example usage: 
-h5_to_tifs.py -i <path/image.h5> -t 488
-
-Inputs: 
-Largest *.h5 in sample?? folder
-This script assumes that the first dataset in the hdf5 file has the highest resolution.
-
-Outputs:
-./<tif_dir_out>/slice_????.tif series
-./parameters/metadata (text file)
-
-Next script: 
-prep_reg.sh
-"""
+    parser.epilog = __doc__
     return parser.parse_args()
 
 # TODO: Add logic for processing all sample folders

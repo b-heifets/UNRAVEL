@@ -30,7 +30,7 @@ from unravel.core.utils import print_func_name_args_times
 
 
 @print_func_name_args_times()
-def resample(ndarray, xy_res, z_res, res, zoom_order=1):
+def resample(ndarray, xy_res, z_res, target_res, zoom_order=1):
     """Resample a 3D ndarray
     
     Parameters:
@@ -39,8 +39,8 @@ def resample(ndarray, xy_res, z_res, res, zoom_order=1):
         z_res: z voxel size in microns
         res: resolution in microns for the resampled image
         zoom_order: SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)"""
-    zf_xy = xy_res / res # Zoom factor
-    zf_z = z_res / res
+    zf_xy = xy_res / target_res # Zoom factor
+    zf_z = z_res / target_res
     img_resampled = ndimage.zoom(ndarray, (zf_xy, zf_xy, zf_z), order=zoom_order)
     return img_resampled
 
