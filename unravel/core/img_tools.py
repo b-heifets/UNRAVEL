@@ -65,12 +65,12 @@ def resample_nii(nii, target_res, zoom_order):
     resampled_nii : nibabel.nifti1.Nifti1Image
         Resampled NIfTI image object.
     """
+    # Load the image data and resample it
     img = nii_to_ndarray(nii)
-    img_resampled = resample(img, original_res_in_um, original_res_in_um, target_res, zoom_order=zoom_order)
-    
     zooms = nii.header.get_zooms()
     original_res_in_mm = zooms[0]
     original_res_in_um = original_res_in_mm * 1000
+    img_resampled = resample(img, original_res_in_um, original_res_in_um, target_res, zoom_order=zoom_order)
 
     # Update the affine matrix
     affine_ndarray = np.array(nii.affine)
