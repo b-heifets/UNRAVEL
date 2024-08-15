@@ -103,3 +103,6 @@ venv.bak/
 
 # Pickle file from Sphinx 
 unravel/docs/_build/doctrees/environment.pickle
+
+# Log from UNRAVEL
+.command_log.txt
