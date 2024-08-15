@@ -62,7 +62,7 @@ def threshold_points_by_region_id(points_df, thresh=None, upper_thresh=None):
     Returns:
     --------
     points_df : pandas.DataFrame
-        The filtered DataFrame containing the points with columns 'x', 'y', and 'z'.
+        The filtered DataFrame containing the points with columns 'x', 'y', 'z', and 'Region_ID'.
     """
     # Remove points that are outside the brain (i.e., 'Region_ID' == 0)
     points_df = points_df[points_df['Region_ID'] != 0]
@@ -72,9 +72,6 @@ def threshold_points_by_region_id(points_df, thresh=None, upper_thresh=None):
         points_df = points_df[points_df['Region_ID'] >= thresh]
     if upper_thresh:
         points_df = points_df[points_df['Region_ID'] <= upper_thresh]
-
-    # Drop the 'Region_ID' column
-    points_df = points_df.drop(columns=['Region_ID'])
 
     return points_df
 
@@ -96,8 +93,8 @@ def load_and_prepare_points(points_csv_path, thresh=None, upper_thresh=None):
 
     Returns:
     --------
-    points_ndarray : numpy.ndarray
-        A 2D array of shape (n, 3) containing the prepared points.
+    points_df : pandas.DataFrame
+        A DataFrame containing the prepared points with columns 'x', 'y', 'z', and 'Region_ID'.
     """
     points_df = pd.read_csv(points_csv_path)
 
@@ -107,8 +104,7 @@ def load_and_prepare_points(points_csv_path, thresh=None, upper_thresh=None):
         import sys ; sys.exit()
 
     points_df = threshold_points_by_region_id(points_df, thresh=thresh, upper_thresh=upper_thresh)
-    points_ndarray = points_df[['x', 'y', 'z']].values
-    return points_ndarray
+    return points_df
 
 @print_func_name_args_times()
 def points_to_img(points_ndarray, ref_img=None):
@@ -169,7 +165,10 @@ def main():
     verbose_start_msg()
 
     # Load and prepare points
-    points_ndarray = load_and_prepare_points(points_csv_path=args.input, thresh=args.thresh, upper_thresh=args.upper_thr)
+    points_df = load_and_prepare_points(points_csv_path=args.input, thresh=args.thresh, upper_thresh=args.upper_thr)
+
+    # Extract the ndarray of coordinates from the DataFrame
+    points_ndarray = points_df[['x', 'y', 'z']].values
 
     # Create an image from the points using a reference image to determine the shape
     ref_img = load_3D_img(args.ref_img)

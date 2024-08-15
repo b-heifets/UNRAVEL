@@ -15,7 +15,7 @@ Output image types:
 
 Outputs:
     - A CSV file where each row represents a resampled point corresponding to a detection in the 3D image.
-    - A 3D image where each voxel contains the number of detections at that location. 
+    - A 3D image where each voxel contains the number of detections at that location.
 """
 
 import argparse
@@ -49,7 +49,7 @@ def parse_args():
 
 
 def resample_and_convert_points(points_csv_input_path, current_res, target_res, ref_img, thresh=None, upper_thresh=None):
-    """Resample a set of points and optionally convert them to an image. 
+    """Resample a set of points and optionally convert them to an image.
 
     Parameters:
     -----------
@@ -74,7 +74,7 @@ def resample_and_convert_points(points_csv_input_path, current_res, target_res, 
     Returns:
     --------
     points_resampled_df : pandas.DataFrame
-        The resampled points with columns 'x', 'y', and 'z'.
+        The resampled points with columns 'x', 'y', 'z', and 'Region_ID'
 
     points_resampled_img : numpy.ndarray or None
         The resampled image where each voxel contains the number of detections at that location. 
@@ -100,16 +100,18 @@ def resample_and_convert_points(points_csv_input_path, current_res, target_res, 
         raise ValueError("\n    [red1]target_res must be a single float or a tuple/list of 3 floats (x_res, y_res, z_res).\n")
 
     # Load and prepare points
-    points_ndarray = load_and_prepare_points(points_csv_input_path, thresh=thresh, upper_thresh=upper_thresh)
+    points_df = load_and_prepare_points(points_csv_input_path, thresh=thresh, upper_thresh=upper_thresh)
 
     # Convert voxel coordinates to physical space
-    points_ndarray_physical = points_ndarray * np.array(current_res)
+    points_ndarray_physical = points_df[['x', 'y', 'z']].values * np.array(current_res)
 
     # Resample the points to the target resolution
     points_ndarray_resampled = points_ndarray_physical / np.array(target_res)
 
     # Convert the resampled points to a DataFrame
     points_resampled_df = pd.DataFrame(points_ndarray_resampled, columns=['x', 'y', 'z'])
+    if 'Region_ID' in points_df.columns:
+        points_resampled_df['Region_ID'] = points_df['Region_ID'].values
 
     # Create an image from the points using the reference image
     points_resampled_img = points_to_img(points_ndarray_resampled, ref_img=ref_img)
