@@ -33,7 +33,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-ci', '--cluster_idx', help='Path to the reverse cluster index NIfTI file.', required=True, action=SM)
-    parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs.', nargs='+', type=int, required=True, action=SM)
+    parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs.', nargs='*', type=int, required=True, action=SM)
     parser.add_argument('-vcd', '--valid_clusters_dir', help='path/name_of_the_output_directory. Default: valid_clusters', default='_valid_clusters', action=SM)
     parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
     parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')

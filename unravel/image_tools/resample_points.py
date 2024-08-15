@@ -37,7 +37,7 @@ def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='CSV w/ columns: x, y, z, Region_ID (e.g., from ``rstats``)', required=True, action=SM)
     parser.add_argument('-ri', '--ref_img', help='Path to a reference image .nii.gz for setting the output image resolution and shape [and saving if .nii.gz output].', required=True, action=SM)
-    parser.add_argument('-cr', '--current_res', help="Current resolution in micrometers (e.g., 3.52 3.52 6 for anisotropic or 10 for isotropic).", nargs='+', required=True, type=float, action=SM)
+    parser.add_argument('-cr', '--current_res', help="Current resolution in micrometers (e.g., 3.52 3.52 6 for anisotropic or 10 for isotropic).", nargs='*', required=True, type=float, action=SM)
     parser.add_argument('-tr', '--target_res', help="Target resolution in micrometers (e.g., 50 for isotropic).", required=True, type=float, action=SM)
     parser.add_argument('-co', '--csv_output', help="Optional: Path to save resampled points in a CSV.", action=SM)
     parser.add_argument('-io', '--img_output', help="Optional: Path to save resampled points as an image.", action=SM)

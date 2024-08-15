@@ -74,7 +74,7 @@ def parse_args():
     parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions (for utils_prepend)', action=SM)
 
     # cstats --groups <group1> <group2>
-    parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cstats)',  nargs='+')
+    parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cstats)',  nargs='*', action=SM)
     parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for cstats)',  nargs='*', default=None, action=SM)
     parser.add_argument('-hg', '--higher_group', help='Specify the group that is expected to have a higher mean based on the direction of the p value map', required=True)
 
