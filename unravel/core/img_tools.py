@@ -26,6 +26,7 @@ from rich import print
 from scipy import ndimage
 from scipy.ndimage import rotate
 
+from unravel.core.img_io import nii_to_ndarray
 from unravel.core.utils import print_func_name_args_times
 
 
@@ -43,6 +44,46 @@ def resample(ndarray, xy_res, z_res, target_res, zoom_order=1):
     zf_z = z_res / target_res
     img_resampled = ndimage.zoom(ndarray, (zf_xy, zf_xy, zf_z), order=zoom_order)
     return img_resampled
+
+@print_func_name_args_times()
+def resample_nii(nii, target_res, zoom_order):
+    """Resample the input NIfTI image to the target resolution.
+    
+    Parameters:
+    -----------
+    nii : nibabel.nifti1.Nifti1Image
+        NIfTI image object to resample.
+        
+    target_res : float
+        Target resolution in micrometers for resampling.
+        
+    zoom_order : int
+        SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.
+        
+    Returns:
+    --------
+    resampled_nii : nibabel.nifti1.Nifti1Image
+        Resampled NIfTI image object.
+    """
+    img = nii_to_ndarray(nii)
+    img_resampled = resample(img, original_res_in_um, original_res_in_um, target_res, zoom_order=zoom_order)
+    
+    zooms = nii.header.get_zooms()
+    original_res_in_mm = zooms[0]
+    original_res_in_um = original_res_in_mm * 1000
+
+    # Update the affine matrix
+    affine_ndarray = np.array(nii.affine)
+    new_affine = affine_ndarray.copy()
+    new_affine[0:3, 0:3] *= (target_res / original_res_in_um)
+
+    # Update the header
+    new_header = nii.header.copy()
+    new_header.set_zooms((target_res, target_res, target_res))
+
+    # Create the resampled NIfTI image
+    resampled_nii = nib.Nifti1Image(img_resampled, new_affine, new_header)
+    return resampled_nii
 
 @print_func_name_args_times()
 def reorient_for_raw_to_nii_conv(ndarray):
