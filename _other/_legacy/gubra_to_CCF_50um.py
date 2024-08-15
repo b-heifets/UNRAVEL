@@ -38,7 +38,7 @@ def parse_args():
     parser.add_argument('-f', '--fixed_img', help='Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/CCFv3-2017_ano_50um_w_fixes.nii.gz', default="/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/CCFv3-2017_ano_50um_w_fixes.nii.gz", action=SM)
     parser.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel, linear, bSpline)', default="nearestNeighbor", action=SM)
     parser.add_argument('-ro', '--reg_outputs', help="Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/reg_outputs", default="/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/reg_outputs", action=SM)
-    parser.add_argument('-fri', '--fixed_reg_in', help='Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/reg_outputs/CCFv3-2017_ano_50um_w_fixes__fixed_reg_input.nii.gz', default='/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/reg_outputs/CCFv3-2017_ano_50um_w_fixes__fixed_reg_input.nii.gz', action=SM)
+    parser.add_argument('-fri', '--fixed_reg_in', help='Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/reg_outputs/CCFv3-2017_ano_50um_w_fixes_fixed_reg_input.nii.gz', default='/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/reg_outputs/CCFv3-2017_ano_50um_w_fixes_fixed_reg_input.nii.gz', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
