@@ -83,6 +83,10 @@ def resample_and_convert_points(points_csv_input_path, current_res, target_res, 
     # Check if input file exists
     if not Path(points_csv_input_path).exists():
         raise FileNotFoundError(f"\n    [red1]Input file not found: {points_csv_input_path}\n")
+
+    # Handle the case where current_res is passed as a single-element list
+    if isinstance(current_res, list) and len(current_res) == 1:
+        current_res = current_res[0]
     
     # Ensure that the current_res and target_res are either a single float or a tuple/list of 3 floats
     if isinstance(current_res, (int, float)):
