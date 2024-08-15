@@ -5,14 +5,14 @@ Use `io_points_to_img` from UNRAVEL to convert a set of points (coordinates) to 
 
 Usage: 
 ------
-    io_points_to_img  -i path/points.csv -ri path/ref_image.nii.gz -o path/image.nii.gz [-thr 20000 or -uthr 20000] [-v]
+    io_points_to_img  -i path/points.csv -ri path/ref_image [-o path/image] [-thr 20000 or -uthr 20000] [-v]
 
 Input:
     - A CSV file where each row represents a point corresponding to a detection in the 3D image. 
     - The columns should include 'x', 'y', 'z', and 'Region_ID' (e.g., from ``rstats`` or ``io_img_to_points``).
 
 Output image types:
-    .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
+    .nii.gz, .tif series, .h5, .zarr
 
 Notes:
     - Points outside the brain (i.e., 'Region_ID' == 0) are excluded.
@@ -20,6 +20,7 @@ Notes:
 """
 
 import argparse
+from pathlib import Path
 import numpy as np
 import pandas as pd
 from rich import print
@@ -35,7 +36,7 @@ def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-i', '--input', help='path/input.csv w/ columns: x, y, z, Region_ID', required=True, action=SM)
     parser.add_argument('-ri', '--ref_img', help='Path to a reference image for output image shape and saving.', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='Path to save the output image.', required=True, action=SM)
+    parser.add_argument('-o', '--output', help='Path to save the output image. Default: path/input.nii.gz', default=None, action=SM)
     parser.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
     parser.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
@@ -175,6 +176,11 @@ def main():
     img = points_to_img(points_ndarray, ref_img)
 
     # Save the image
+    if args.output:
+        output_img_path = Path(args.output)
+        output_img_path.parent.mkdir(exist_ok=True, parents=True)
+    else:
+        output_img_path = args.input.replace('.csv', '.nii.gz')
     save_3D_img(img, args.output, reference_img=args.ref_img)
 
     verbose_end_msg()
