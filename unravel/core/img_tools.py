@@ -15,8 +15,8 @@ This module contains functions processing 3D images:
 
 
 import os
-import shutil
 import cv2 
+import nibabel as nib
 import numpy as np
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
