@@ -6,11 +6,11 @@ Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directorie
 
 Usage for when sample?? is already in the name of files being copied:
 ---------------------------------------------------------------------
-    utils_agg_files -i atlas_space/sample??_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz -e $DIRS -v
+    utils_agg_files -g 'atlas_space/*_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -e $DIRS -v
 
 Usage to prepend sample?? to the name of files being copied:
 ------------------------------------------------------------
-    utils_agg_files -i atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz -e $DIRS -v -a
+    utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -e $DIRS -v -a
 """
 
 import argparse
@@ -30,30 +30,28 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-g', '--glob_pattern', help='Glob pattern to match files within sample?? directories', required=True, action=SM)
     parser.add_argument('-td', '--target_dir', help='path/target_dir name for gathering files. Default: current working dir', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='relative path to the source file to copy (if sample?? )', required=True, action=SM)
     parser.add_argument('-a', '--add_prefix', help='Add "sample??_" prefix to the output files', action='store_true')
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
 
-def aggregate_files_from_sample_dirs(sample_path, pattern, rel_path_to_src_file, target_dir, add_prefix=False, verbose=False):
-    if f"{pattern}_" in rel_path_to_src_file:
-        src_path = sample_path / rel_path_to_src_file.replace(f"{pattern}_", f"{sample_path.name}_")
-    else:
-        src_path = sample_path / rel_path_to_src_file
+def aggregate_files_from_sample_dirs(sample_path, glob_pattern, target_dir, add_prefix=False, verbose=False):
+    # Use glob to find files matching the pattern
+    for src_path in sample_path.glob(glob_pattern):
+        if add_prefix: 
+            target_output = target_dir / f"{sample_path.name}_{src_path.name}"
+            if verbose:
+                print(f"Copying {src_path.name} as {target_output.name}")
+        else:
+            target_output = target_dir / src_path.name
+            if verbose:
+                print(f"Copying {src_path}")
 
-    if add_prefix: 
-        target_output = target_dir / f"{sample_path.name}_{src_path.name}"
-        if verbose and src_path.exists():
-            print(f"Copying {src_path.name} as {target_output.name}")
-    else:
-        target_output = target_dir / src_path.name
-        if verbose and src_path.exists():
-            print(f"Copying {src_path}")
-    if src_path.exists():
-        shutil.copy(src_path, target_output)
+        if src_path.exists():
+            shutil.copy(src_path, target_output)
 
 
 @log_command
@@ -80,7 +78,7 @@ def main():
 
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            aggregate_files_from_sample_dirs(sample_path, args.pattern, args.input, target_dir, args.add_prefix, args.verbose)
+            aggregate_files_from_sample_dirs(sample_path, args.glob_pattern, target_dir, args.add_prefix, args.verbose)
 
             progress.update(task_id, advance=1)
 
