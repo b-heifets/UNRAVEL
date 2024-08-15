@@ -41,7 +41,7 @@ def parse_args():
 def aggregate_files_from_sample_dirs(sample_path, glob_pattern, target_dir, add_prefix=False, verbose=False):
     # Use glob to find files matching the pattern
     if len(list(sample_path.glob(glob_pattern))) == 0:
-        print(f"\n    [red1]No files found matching the pattern: {glob_pattern} in {sample_path}\n")
+        print(f"\n    [red1]No files found matching the pattern:[/] [bold]{glob_pattern}[/] in {sample_path}\n")
         return
 
     for src_path in sample_path.glob(glob_pattern):
