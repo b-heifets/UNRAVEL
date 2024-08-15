@@ -107,8 +107,8 @@ def main():
         csv_output_path.parent.mkdir(parents=True, exist_ok=True)
     else:
         csv_output_path = args.input.replace('.nii.gz', '_points.csv')
-    points_df.to_csv(args.output, index=False)
-    print(f"\n    Points saved to {args.output}\n")
+    points_df.to_csv(csv_output_path, index=False)
+    print(f"\n    Points saved to {csv_output_path}\n")
 
     verbose_end_msg()
 
