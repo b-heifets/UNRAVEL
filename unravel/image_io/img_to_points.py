@@ -102,7 +102,7 @@ def main():
         points_df = pd.DataFrame(points_ndarray, columns=['x', 'y', 'z', 'Region_ID'])
 
     # Save the points to a CSV file
-    if args.output.endswith('.csv'):
+    if args.output:
         csv_output_path = Path(args.output)
         csv_output_path.parent.mkdir(parents=True, exist_ok=True)
     else:
