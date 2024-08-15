@@ -71,12 +71,6 @@ def resample_and_convert_points(points_csv_input_path, current_res, target_res, 
     upper_thresh : float, optional
         Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data).
 
-    points_csv_output_path : str, optional
-        Path to save the resampled points in a CSV file.
-
-    output_img_path : str, optional
-        Path to save the resampled points as an image.
-
     Returns:
     --------
     points_resampled_df : pandas.DataFrame
@@ -90,18 +84,17 @@ def resample_and_convert_points(points_csv_input_path, current_res, target_res, 
     if not Path(points_csv_input_path).exists():
         raise FileNotFoundError(f"\n    [red1]Input file not found: {points_csv_input_path}\n")
     
-    # Ensure that the current_res and targe_res are either a single float or a tuple/list of 3 floats
-    if not isinstance(current_res, (float, list, tuple)) or (isinstance(current_res, (list, tuple)) and len(current_res) != 3):
+    # Ensure that the current_res and target_res are either a single float or a tuple/list of 3 floats
+    if isinstance(current_res, (int, float)):
+        current_res = (current_res, current_res, current_res)
+    elif isinstance(current_res, (list, tuple)) and len(current_res) != 3:
         raise ValueError("\n    [red1]current_res must be a single float or a tuple/list of 3 floats (x_res, y_res, z_res).\n")
-    if not isinstance(target_res, (float, list, tuple)) or (isinstance(target_res, (list, tuple)) and len(target_res) != 3):
+
+    if isinstance(target_res, (int, float)):
+        target_res = (target_res, target_res, target_res)
+    elif isinstance(target_res, (list, tuple)) and len(target_res) != 3:
         raise ValueError("\n    [red1]target_res must be a single float or a tuple/list of 3 floats (x_res, y_res, z_res).\n")
 
-    # Convert a single float to a tuple
-    if isinstance(current_res, (float, int)):
-        current_res = (current_res, current_res, current_res)
-    if isinstance(target_res, (float, int)):
-        target_res = (target_res, target_res, target_res)
-    
     # Load and prepare points
     points_ndarray = load_and_prepare_points(points_csv_input_path, thresh=thresh, upper_thresh=upper_thresh)
 
