@@ -34,6 +34,7 @@ def parse_args():
     parser.add_argument('-a', '--atlas_img', help="Path to the atlas image matching -i for adding a 'Region_ID' column to the CSV.", action=SM)
     parser.add_argument('-o', '--output', help='Path to save the output points (CSV format).', required=True, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
+    parser.epilog = __doc__
     return parser.parse_args()
 
 
