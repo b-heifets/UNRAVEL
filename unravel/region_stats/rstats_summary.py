@@ -69,7 +69,7 @@ def parse_args():
 
 # TODO: Dunnett's test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.
 # TODO: Adapt this to work for cell counts and label densities. This could also be used for mean IF intensities.
-
+# TODO: Need a way to handle cases when some data from some samples is from one hemisphere and some from the other. (see filter_csv.py)
 
 def get_region_details(region_id, df):
     # Adjust to account for the unique region IDs.
@@ -162,7 +162,8 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     symbol_color = parse_color_argument(args.symbol_color, num_groups, region_id, args.csv_path)
 
     # Coloring the bars and symbols
-    ax = sns.barplot(x='group', y='density', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black')
+    # ax = sns.barplot(x='group', y='density', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black')
+    ax = sns.barplot(x='group', y='density', hue='group', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black', legend=False)
     sns.stripplot(x='group', y='density', hue='group', data=reshaped_df, palette=symbol_color, alpha=0.5, size=8, linewidth=0.75, edgecolor='black')
 
     # Calculate y_max and y_min based on the actual plot
@@ -264,6 +265,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         ax.set_ylabel(r'Cells*10$^{4} $/mm$^{3}$', weight='bold')
     else:
         ax.set_ylabel(args.ylabel, weight='bold')
+    ax.set_xticks(range(len(ax.get_xticklabels())))  # Set ticks based on current tick labels
     ax.set_xticklabels(ax.get_xticklabels(), weight='bold')
     ax.tick_params(axis='both', which='major', width=2)
     ax.spines['top'].set_visible(False)
