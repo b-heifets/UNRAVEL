@@ -39,8 +39,15 @@ def find_and_copy_files(pattern, src_dir, dest_dir, move=False):
     if len(src_dir.rglob(pattern)) == 0:
         print(f"\n    [red1]No files found matching the pattern:[/] [bold]{pattern}[/] in {src_dir}\n")
         return
+    
+    # Use rglob for recursive globbing
+    matched_files = list(src_dir.rglob(pattern))  # Convert the generator to a list
 
-    for file_path in src_dir.rglob(pattern): # Use rglob for recursive globbing
+    if len(matched_files) == 0:
+        print(f"\n    [red1]No files found matching the pattern:[/] [bold]{pattern}[/] in {src_dir}\n")
+        import sys ; sys.exit()
+
+    for file_path in matched_files: 
         if dest_dir not in file_path.parents:
             if move:
                 shutil.move(str(file_path), dest_dir)
