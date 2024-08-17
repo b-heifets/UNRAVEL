@@ -381,6 +381,10 @@
 <li><p><strong>Viewing the Directory</strong>: Use <code class="docutils literal notranslate"><span class="pre">pwd</span></code> to display the current working directory.</p></li>
 <li><p><strong>Importance</strong>: Knowing your working directory is often crucial for executing commands and managing files as intended.</p></li>
 </ul>
+<h3 class="rubric" id="stopping-a-command">Stopping a command</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">C</span></code>: Interrupt the command</p></li>
+</ul>
 <h3 class="rubric" id="learning-about-commands">Learning About Commands</h3>
 <ul class="simple">
 <li><p><strong>Help Option</strong>: Many commands offer a <code class="docutils literal notranslate"><span class="pre">--help</span></code> option to provide a quick overview of usage. For example, <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">--help</span></code> or <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-h</span></code>.</p></li>
@@ -572,6 +576,22 @@ nano<span class="w"> </span>~/.zshrc<span class="w">   </span><span class="c1">#
 <li><p><code class="docutils literal notranslate"><span class="pre">fslstats</span></code>: Compute statistics on images (-R, -V, -M)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">fslroi</span></code>: Crop or expand images.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">fslcpgeom</span></code>: Copy header info (e.g., resolution and position in global space for viewing) from one image to another.</p></li>
+</ul>
+<h3 class="rubric" id="killing-a-process">Killing a Process</h3>
+<p>If <code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">C</span></code> doesn’t stop the command, you can kill the process:</p>
+<ul class="simple">
+<li><p><strong>Find the Process ID (PID)</strong>:</p>
+<ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">ps</span> <span class="pre">aux</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">&lt;process_name&gt;</span></code> to find the PID of the process. Replace <code class="docutils literal notranslate"><span class="pre">&lt;process_name&gt;</span></code> with the name of the command or process you want to stop.</p></li>
+<li><p>Alternatively, use <code class="docutils literal notranslate"><span class="pre">pgrep</span> <span class="pre">&lt;process_name&gt;</span></code> to directly get the PID.</p></li>
+</ul>
+</li>
+<li><p><strong>Kill the Process</strong>:</p>
+<ul>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">kill</span> <span class="pre">&lt;PID&gt;</span></code> to send a termination signal to the process. Replace <code class="docutils literal notranslate"><span class="pre">&lt;PID&gt;</span></code> with the actual process ID.</p></li>
+<li><p>If the process doesn’t stop, force it with <code class="docutils literal notranslate"><span class="pre">kill</span> <span class="pre">-9</span> <span class="pre">&lt;PID&gt;</span></code>.</p></li>
+</ul>
+</li>
 </ul>
 </div>
 <hr class="docutils" />

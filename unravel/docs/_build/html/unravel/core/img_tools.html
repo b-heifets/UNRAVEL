@@ -530,6 +530,30 @@
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.img_tools.resample_nii">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">resample_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#resample_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.resample_nii" title="Link to this definition">#</a></dt>
+<dd><p>Resample the input NIfTI image to the target resolution.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>nii<span class="classifier">nibabel.nifti1.Nifti1Image</span></dt><dd><p>NIfTI image object to resample.</p>
+</dd>
+<dt>target_res<span class="classifier">float</span></dt><dd><p>Target resolution in micrometers for resampling.</p>
+</dd>
+<dt>zoom_order<span class="classifier">int</span></dt><dd><p>SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.</p>
+</dd>
+</dl>
+</section>
+<section id="returns">
+<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>resampled_nii<span class="classifier">nibabel.nifti1.Nifti1Image</span></dt><dd><p>Resampled NIfTI image object.</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.reorient_for_raw_to_nii_conv">
 <span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_for_raw_to_nii_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#reorient_for_raw_to_nii_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_for_raw_to_nii_conv" title="Link to this definition">#</a></dt>
 <dd><p>Reorient resampled ndarray for registration or warping to atlas space
@@ -678,6 +702,7 @@ Returns ndarray with background subtracted.</p>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.resample"><code class="docutils literal notranslate"><span class="pre">resample()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.resample_nii"><code class="docutils literal notranslate"><span class="pre">resample_nii()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reorient_for_raw_to_nii_conv"><code class="docutils literal notranslate"><span class="pre">reorient_for_raw_to_nii_conv()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv"><code class="docutils literal notranslate"><span class="pre">reverse_reorient_for_raw_to_nii_conv()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.pixel_classification"><code class="docutils literal notranslate"><span class="pre">pixel_classification()</span></code></a></li>

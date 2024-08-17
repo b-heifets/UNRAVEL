@@ -387,9 +387,14 @@
 <span class="sd">            - __init__: Initializes the custom action and sets the metavar to an empty string or tuple.</span>
 <span class="sd">            - __call__: Sets the argument values in the namespace, handling both single and multiple values.</span>
 
-<span class="sd">Notes:</span>
+<span class="sd">Note:</span>
 <span class="sd">    - This script relies on the rich and argparse libraries for enhanced help message formatting.</span>
 <span class="sd">    - The SuppressMetavar class is specifically designed to work with Rich&#39;s RichHelpFormatter for styled terminal output.</span>
+<span class="sd">    - nargs=&#39;``+``&#39; with action=SM: This combination causes issues when the terminal window is small. </span>
+<span class="sd">    - Use nargs=&#39;``*``&#39; with action=SM if zero arguments are acceptable, or drop action=SM to avoid conflicts.</span>
+<span class="sd">    - Difference:</span>
+<span class="sd">    - nargs=&#39;``+``&#39; requires at least one argument.</span>
+<span class="sd">    - nargs=&#39;``*``&#39; allows zero or more arguments, providing more flexibility but no guarantee of input.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>

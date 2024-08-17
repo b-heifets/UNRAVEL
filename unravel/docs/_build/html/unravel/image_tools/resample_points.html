@@ -540,16 +540,12 @@
 </dd>
 <dt>upper_thresh<span class="classifier">float, optional</span></dt><dd><p>Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data).</p>
 </dd>
-<dt>points_csv_output_path<span class="classifier">str, optional</span></dt><dd><p>Path to save the resampled points in a CSV file.</p>
-</dd>
-<dt>output_img_path<span class="classifier">str, optional</span></dt><dd><p>Path to save the resampled points as an image.</p>
-</dd>
 </dl>
 </section>
 <section id="returns">
 <h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
 <dl class="simple">
-<dt>points_resampled_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>The resampled points with columns ‘x’, ‘y’, and ‘z’.</p>
+<dt>points_resampled_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>The resampled points with columns ‘x’, ‘y’, ‘z’, and ‘Region_ID’</p>
 </dd>
 <dt>points_resampled_img<span class="classifier">numpy.ndarray or None</span></dt><dd><p>The resampled image where each voxel contains the number of detections at that location.
 Returns <cite>None</cite> if <cite>output_img_path</cite> is not provided.</p>
