@@ -8,7 +8,7 @@ Usage:
     for s in sample?? ; do <path>/gubra_to_CCF.py -m ${s}/CCF_space/${s}_consensus_cell_centroids.nii.gz -o ${s}/CCF_space/${s}_consensus_cell_centroids.nii.gz ; done
 
 Note: 
-    We will use CCFv3 space for future analyses, so this script is used for older data in gubra space.
+    We will use CCFv3 space for future analyses, so this script is used for converting gubra 25 um space to CCFv3 30 um space.
 
     Update default values for fixed_img, reg_outputs, fixed_reg_in, and interpol as needed.
 """

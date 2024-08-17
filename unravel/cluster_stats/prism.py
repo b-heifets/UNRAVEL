@@ -53,7 +53,7 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs to include in the summary.', nargs='+', type=int, default=None, action=SM)
+    parser.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs to include in the summary.', nargs='*', type=int, default=None, action=SM)
     parser.add_argument('-p', '--path', help='Path to the directory containing the CSV files from ``cstats_validation`` or ``cstats_mean_IF``. Default: current directory', action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__

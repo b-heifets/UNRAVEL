@@ -36,9 +36,14 @@ Classes:
             - __init__: Initializes the custom action and sets the metavar to an empty string or tuple.
             - __call__: Sets the argument values in the namespace, handling both single and multiple values.
 
-Notes:
+Note:
     - This script relies on the rich and argparse libraries for enhanced help message formatting.
     - The SuppressMetavar class is specifically designed to work with Rich's RichHelpFormatter for styled terminal output.
+    - nargs='``+``' with action=SM: This combination causes issues when the terminal window is small. 
+    - Use nargs='``*``' with action=SM if zero arguments are acceptable, or drop action=SM to avoid conflicts.
+    - Difference:
+    - nargs='``+``' requires at least one argument.
+    - nargs='``*``' allows zero or more arguments, providing more flexibility but no guarantee of input.
 """
 
 import argparse

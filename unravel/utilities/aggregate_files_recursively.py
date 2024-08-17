@@ -23,22 +23,36 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help="The pattern to match files, e.g., '*.txt'", required=True, action=SM)
     parser.add_argument('-s', '--source', help='The source directory to search files in. Default: current working dir', default='.', action=SM)
     parser.add_argument('-d', '--destination', help='The destination directory to copy files to. Default: current working dir', default='.', action=SM)
+    parser.add_argument('-m', '--move', help='Move files instead of copying. Default: False', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
 
-def find_and_copy_files(pattern, src_dir, dest_dir):
+def find_and_copy_files(pattern, src_dir, dest_dir, move=False):
     src_dir = Path(src_dir)
     dest_dir = Path(dest_dir)
     if not dest_dir.is_absolute():
         dest_dir = src_dir.joinpath(dest_dir)
     dest_dir.mkdir(parents=True, exist_ok=True)
 
-    for file_path in src_dir.rglob(pattern): # Use rglob for recursive globbing
+    if len(src_dir.rglob(pattern)) == 0:
+        print(f"\n    [red1]No files found matching the pattern:[/] [bold]{pattern}[/] in {src_dir}\n")
+        return
+    
+    # Use rglob for recursive globbing
+    matched_files = list(src_dir.rglob(pattern))  # Convert the generator to a list
+
+    if len(matched_files) == 0:
+        print(f"\n    [red1]No files found matching the pattern:[/] [bold]{pattern}[/] in {src_dir}\n")
+        import sys ; sys.exit()
+
+    for file_path in matched_files: 
         if dest_dir not in file_path.parents:
-            shutil.copy(str(file_path), dest_dir)
-            # print(f"Copied: {file_path} to {dest_dir}")
+            if move:
+                shutil.move(str(file_path), dest_dir)
+            else:
+                shutil.copy(str(file_path), dest_dir)
 
 
 @log_command
@@ -48,7 +62,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    find_and_copy_files(args.pattern, args.source, args.destination)
+    find_and_copy_files(args.pattern, args.source, args.destination, args.move)
 
     verbose_end_msg()
 

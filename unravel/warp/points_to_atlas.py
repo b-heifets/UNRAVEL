@@ -105,7 +105,7 @@ def main():
                 ref_img = reverse_reorient_for_raw_to_nii_conv(ref_img)
 
             # Resample and convert points to an image matching reg_inputs/autofl_50um.nii.gz
-            _, points_resampled_img = resample_and_convert_points(args.input, current_res, target_res, ref_img, args.thresh, args.upper_thr)
+            _, points_resampled_img = resample_and_convert_points(csv_path, current_res, target_res, ref_img, args.thresh, args.upper_thr)
 
             # Optionally reorient autofluo image (mimics MIRACL's tif to .nii.gz conversion)
             if args.miracl: 

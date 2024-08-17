@@ -31,7 +31,7 @@ def parse_args():
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='rel_path/image (can be glob pattern [e.g., to tif dir or 1st tif])', required=True, action=SM)
     parser.add_argument('-o', '--output', help='NIfTI output file name (no extension)', required=True, action=SM)
-    parser.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', default=1, nargs='+', type=int, action=SM)
+    parser.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', default=1, nargs='*', type=int, action=SM)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()

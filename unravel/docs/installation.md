@@ -33,6 +33,7 @@ unravel_commands -c  # This should print common commands
 * Download atlas/template files: [Google Drive Link](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)
 * Install [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation)
 * Install [Ilastik](https://www.ilastik.org/download.html)
+* Recommended: Install [3D Slicer](https://download.slicer.org/)
 
 
 ## Setting Up Windows Subsystem for Linux (WSL)
@@ -168,6 +169,7 @@ To enable copy/paste in the PowerShell or WSL, click the icon in the upper left 
 
 5. **Install Ilastik:**
     - [Ilastik installation website](https://www.ilastik.org/download.html).
+    - This is used for making a brain mask and segmenting features of interest (e.g., c-Fos+ cells)
 
 6. **Install FSL:**
     - Follow the installation instructions from the [FSL website](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation).
@@ -176,13 +178,20 @@ To enable copy/paste in the PowerShell or WSL, click the icon in the upper left 
         sudo apt-get update
         sudo apt-get install -y fsl
         ```
+    - This installation includes FSLeyes, which is useful for visualizing data in atlas space and with colored wireframe atlas. 
+    - Some scripts depend on FSL.
+    - FSL has several command line tools (e.g., fslmaths, fslstats, fslroi, fslcpgeom) that are useful for working with .nii.gz images. 
 
-7. **Confirm that the installation worked**
+7. **Optional: Install 3D Slicer**
+    - [3D Slicer installation](https://download.slicer.org/)
+    - This is useful for improving registration by making the autofluo tissue better match the average template (e.g., digitally trimming or adding tissue)
+
+8. **Confirm that the installation worked**
     ```bash
     unravel_commands -c 
     ```
 
-8. **Edit .bashrc or .zshrc to set up dependencies**
+9. **Edit .bashrc or .zshrc to set up dependencies**
 
     - Add the following to your `.bashrc` or `.zshrc` shell configuration file, and change `/usr/local/` to the path where FSL and Ilastik are installed:
 
@@ -200,7 +209,7 @@ To enable copy/paste in the PowerShell or WSL, click the icon in the upper left 
     . ~/.bashrc
     ```
 
-9. **Update scripts periodically:**
+10. **Update scripts periodically:**
     :::{hint}
     Note the release/version and/or backup code before updating for reproducibility
     :::

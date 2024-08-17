@@ -18,6 +18,9 @@ The working directory, or current directory, is the folder in the file system th
 - **Viewing the Directory**: Use `pwd` to display the current working directory.
 - **Importance**: Knowing your working directory is often crucial for executing commands and managing files as intended.
 
+### Stopping a command
+- `Ctrl + C`: Interrupt the command
+
 ### Learning About Commands
 - **Help Option**: Many commands offer a `--help` option to provide a quick overview of usage. For example, `ls --help` or `ls -h`.
 - **Manual Pages**: Use `man <command>` to access the manual page for detailed information about a command. For example, `man ls` provides options and descriptions for the `ls` command.
@@ -166,6 +169,17 @@ Aliases are shortcuts for longer commands or sequences of commands, making it ea
 - `fslstats`: Compute statistics on images (-R, -V, -M)
 - `fslroi`: Crop or expand images. 
 - `fslcpgeom`: Copy header info (e.g., resolution and position in global space for viewing) from one image to another.
+
+### Killing a Process
+If `Ctrl + C` doesn't stop the command, you can kill the process:
+
+- **Find the Process ID (PID)**:
+  - Use `ps aux | grep <process_name>` to find the PID of the process. Replace `<process_name>` with the name of the command or process you want to stop.
+  - Alternatively, use `pgrep <process_name>` to directly get the PID.
+
+- **Kill the Process**:
+  - Use `kill <PID>` to send a termination signal to the process. Replace `<PID>` with the actual process ID.
+  - If the process doesn’t stop, force it with `kill -9 <PID>`.
 :::
 
 ---
