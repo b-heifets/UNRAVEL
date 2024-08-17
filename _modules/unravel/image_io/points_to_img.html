@@ -358,14 +358,14 @@
 
 <span class="sd">Usage: </span>
 <span class="sd">------</span>
-<span class="sd">    io_points_to_img  -i path/points.csv -ri path/ref_image.nii.gz -o path/image.nii.gz [-thr 20000 or -uthr 20000] [-v]</span>
+<span class="sd">    io_points_to_img  -i path/points.csv -ri path/ref_image [-o path/image] [-thr 20000 or -uthr 20000] [-v]</span>
 
 <span class="sd">Input:</span>
 <span class="sd">    - A CSV file where each row represents a point corresponding to a detection in the 3D image. </span>
 <span class="sd">    - The columns should include &#39;x&#39;, &#39;y&#39;, &#39;z&#39;, and &#39;Region_ID&#39; (e.g., from ``rstats`` or ``io_img_to_points``).</span>
 
 <span class="sd">Output image types:</span>
-<span class="sd">    .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</span>
+<span class="sd">    .nii.gz, .tif series, .h5, .zarr</span>
 
 <span class="sd">Notes:</span>
 <span class="sd">    - Points outside the brain (i.e., &#39;Region_ID&#39; == 0) are excluded.</span>
@@ -373,6 +373,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
@@ -390,7 +391,7 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/input.csv w/ columns: x, y, z, Region_ID&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ri&#39;</span><span class="p">,</span> <span class="s1">&#39;--ref_img&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to a reference image for output image shape and saving.&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to save the output image.&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to save the output image. Default: path/input.nii.gz&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-thr&#39;</span><span class="p">,</span> <span class="s1">&#39;--thresh&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-uthr&#39;</span><span class="p">,</span> <span class="s1">&#39;--upper_thr&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -419,7 +420,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
 <span class="sd">    points_df : pandas.DataFrame</span>
-<span class="sd">        The filtered DataFrame containing the points with columns &#39;x&#39;, &#39;y&#39;, and &#39;z&#39;.</span>
+<span class="sd">        The filtered DataFrame containing the points with columns &#39;x&#39;, &#39;y&#39;, &#39;z&#39;, and &#39;Region_ID&#39;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Remove points that are outside the brain (i.e., &#39;Region_ID&#39; == 0)</span>
     <span class="n">points_df</span> <span class="o">=</span> <span class="n">points_df</span><span class="p">[</span><span class="n">points_df</span><span class="p">[</span><span class="s1">&#39;Region_ID&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
@@ -429,9 +430,6 @@
         <span class="n">points_df</span> <span class="o">=</span> <span class="n">points_df</span><span class="p">[</span><span class="n">points_df</span><span class="p">[</span><span class="s1">&#39;Region_ID&#39;</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">thresh</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">upper_thresh</span><span class="p">:</span>
         <span class="n">points_df</span> <span class="o">=</span> <span class="n">points_df</span><span class="p">[</span><span class="n">points_df</span><span class="p">[</span><span class="s1">&#39;Region_ID&#39;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">upper_thresh</span><span class="p">]</span>
-
-    <span class="c1"># Drop the &#39;Region_ID&#39; column</span>
-    <span class="n">points_df</span> <span class="o">=</span> <span class="n">points_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Region_ID&#39;</span><span class="p">])</span>
 
     <span class="k">return</span> <span class="n">points_df</span></div>
 
@@ -456,8 +454,8 @@
 
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
-<span class="sd">    points_ndarray : numpy.ndarray</span>
-<span class="sd">        A 2D array of shape (n, 3) containing the prepared points.</span>
+<span class="sd">    points_df : pandas.DataFrame</span>
+<span class="sd">        A DataFrame containing the prepared points with columns &#39;x&#39;, &#39;y&#39;, &#39;z&#39;, and &#39;Region_ID&#39;.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">points_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">points_csv_path</span><span class="p">)</span>
 
@@ -467,8 +465,7 @@
         <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
     <span class="n">points_df</span> <span class="o">=</span> <span class="n">threshold_points_by_region_id</span><span class="p">(</span><span class="n">points_df</span><span class="p">,</span> <span class="n">thresh</span><span class="o">=</span><span class="n">thresh</span><span class="p">,</span> <span class="n">upper_thresh</span><span class="o">=</span><span class="n">upper_thresh</span><span class="p">)</span>
-    <span class="n">points_ndarray</span> <span class="o">=</span> <span class="n">points_df</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
-    <span class="k">return</span> <span class="n">points_ndarray</span></div>
+    <span class="k">return</span> <span class="n">points_df</span></div>
 
 
 <div class="viewcode-block" id="points_to_img">
@@ -535,14 +532,22 @@
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
     <span class="c1"># Load and prepare points</span>
-    <span class="n">points_ndarray</span> <span class="o">=</span> <span class="n">load_and_prepare_points</span><span class="p">(</span><span class="n">points_csv_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">thresh</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">thresh</span><span class="p">,</span> <span class="n">upper_thresh</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">upper_thr</span><span class="p">)</span>
+    <span class="n">points_df</span> <span class="o">=</span> <span class="n">load_and_prepare_points</span><span class="p">(</span><span class="n">points_csv_path</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">thresh</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">thresh</span><span class="p">,</span> <span class="n">upper_thresh</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">upper_thr</span><span class="p">)</span>
+
+    <span class="c1"># Extract the ndarray of coordinates from the DataFrame</span>
+    <span class="n">points_ndarray</span> <span class="o">=</span> <span class="n">points_df</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
 
     <span class="c1"># Create an image from the points using a reference image to determine the shape</span>
     <span class="n">ref_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ref_img</span><span class="p">)</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">points_to_img</span><span class="p">(</span><span class="n">points_ndarray</span><span class="p">,</span> <span class="n">ref_img</span><span class="p">)</span>
 
     <span class="c1"># Save the image</span>
-    <span class="n">save_3D_img</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">,</span> <span class="n">reference_img</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">ref_img</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+        <span class="n">output_img_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output_img_path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output_img_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.csv&#39;</span><span class="p">,</span> <span class="s1">&#39;.nii.gz&#39;</span><span class="p">)</span>
+    <span class="n">save_3D_img</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output_img_path</span><span class="p">,</span> <span class="n">reference_img</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">ref_img</span><span class="p">)</span>
 
     <span class="n">verbose_end_msg</span><span class="p">()</span></div>
 

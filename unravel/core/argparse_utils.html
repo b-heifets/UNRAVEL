@@ -555,12 +555,19 @@ args = parser.parse_args()</p>
 </dl>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>This script relies on the argparse library for command-line argument parsing.</p></li>
 <li><p>The SuppressMetavar class is designed to improve the readability of help messages by suppressing
 metavar display and customizing the formatting of epilog text.</p></li>
+<li><p>nargs=’<code class="docutils literal notranslate"><span class="pre">+</span></code>’ with action=SM: This combination causes issues when the terminal window is small.</p></li>
+<li><p>Use nargs=’<code class="docutils literal notranslate"><span class="pre">*</span></code>’ with action=SM if zero arguments are acceptable, or drop action=SM to avoid conflicts.</p></li>
+<li><p>Difference:</p></li>
+<li><p>nargs=’<code class="docutils literal notranslate"><span class="pre">+</span></code>’ requires at least one argument.</p></li>
+<li><p>nargs=’<code class="docutils literal notranslate"><span class="pre">*</span></code>’ allows zero or more arguments, providing more flexibility but no guarantee of input.</p></li>
 </ul>
+</div>
 <dl class="py class">
 <dt class="sig sig-object py" id="unravel.core.argparse_utils.SuppressMetavar">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils.</span></span><span class="sig-name descname"><span class="pre">SuppressMetavar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/argparse_utils.html#SuppressMetavar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils.SuppressMetavar" title="Link to this definition">#</a></dt>

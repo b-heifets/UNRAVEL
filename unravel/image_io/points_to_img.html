@@ -504,7 +504,7 @@
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>io_points_to_img  -i path/points.csv -ri path/ref_image.nii.gz -o path/image.nii.gz [-thr 20000 or -uthr 20000] [-v]</p>
+<div><p>io_points_to_img  -i path/points.csv -ri path/ref_image [-o path/image] [-thr 20000 or -uthr 20000] [-v]</p>
 </div></blockquote>
 <dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
@@ -512,7 +512,7 @@
 <li><p>The columns should include ‘x’, ‘y’, ‘z’, and ‘Region_ID’ (e.g., from <code class="docutils literal notranslate"><span class="pre">rstats</span></code> or <code class="docutils literal notranslate"><span class="pre">io_img_to_points</span></code>).</p></li>
 </ul>
 </dd>
-<dt>Output image types:</dt><dd><p>.czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p>
+<dt>Output image types:</dt><dd><p>.nii.gz, .tif series, .h5, .zarr</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
@@ -544,7 +544,7 @@
 <section id="returns">
 <h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
 <dl class="simple">
-<dt>points_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>The filtered DataFrame containing the points with columns ‘x’, ‘y’, and ‘z’.</p>
+<dt>points_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>The filtered DataFrame containing the points with columns ‘x’, ‘y’, ‘z’, and ‘Region_ID’.</p>
 </dd>
 </dl>
 </section>
@@ -568,7 +568,7 @@
 <section id="id2">
 <h2>Returns:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
 <dl class="simple">
-<dt>points_ndarray<span class="classifier">numpy.ndarray</span></dt><dd><p>A 2D array of shape (n, 3) containing the prepared points.</p>
+<dt>points_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>A DataFrame containing the prepared points with columns ‘x’, ‘y’, ‘z’, and ‘Region_ID’.</p>
 </dd>
 </dl>
 </section>

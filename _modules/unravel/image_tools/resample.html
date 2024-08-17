@@ -363,13 +363,11 @@
 
 <span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SM</span><span class="p">,</span> <span class="n">SuppressMetavar</span>
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">nii_to_ndarray</span>
-<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">resample</span>
+<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">resample_nii</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
 
 
@@ -388,46 +386,6 @@
 
 <span class="c1"># TODO: Add support for anisotropic resampling. Add support for other image formats.</span>
 
-<div class="viewcode-block" id="create_resampled_nii">
-<a class="viewcode-back" href="../../../unravel/image_tools/resample.html#unravel.image_tools.resample.create_resampled_nii">[docs]</a>
-<span class="k">def</span> <span class="nf">create_resampled_nii</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">nii</span><span class="p">,</span> <span class="n">original_res_in_um</span><span class="p">,</span> <span class="n">target_res</span><span class="p">,</span> <span class="n">zoom_order</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample the image and create a new NIfTI image with updated affine and header.</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
-<span class="sd">    img : numpy.ndarray</span>
-<span class="sd">        Image data as a numpy array.</span>
-<span class="sd">        </span>
-<span class="sd">    nii : nibabel.nifti1.Nifti1Image</span>
-<span class="sd">        NIfTI image object.</span>
-<span class="sd">        </span>
-<span class="sd">    original_res_in_um : float</span>
-<span class="sd">        Original resolution of the image in micrometers.</span>
-<span class="sd">        </span>
-<span class="sd">    target_res : float</span>
-<span class="sd">        Target resolution in micrometers for resampling.</span>
-<span class="sd">        </span>
-<span class="sd">    zoom_order : int</span>
-<span class="sd">        SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.</span>
-<span class="sd">        </span>
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    resampled_nii : nibabel.nifti1.Nifti1Image</span>
-<span class="sd">        Resampled NIfTI image object.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-    <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">original_res_in_um</span><span class="p">,</span> <span class="n">original_res_in_um</span><span class="p">,</span> <span class="n">target_res</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="n">zoom_order</span><span class="p">)</span>
-
-    <span class="c1"># Update the affine and header</span>
-    <span class="n">affine_ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nii</span><span class="o">.</span><span class="n">affine</span><span class="p">)</span>
-    <span class="n">new_affine</span> <span class="o">=</span> <span class="n">affine_ndarray</span> <span class="o">*</span> <span class="p">(</span><span class="n">target_res</span> <span class="o">/</span> <span class="n">original_res_in_um</span><span class="p">)</span>
-    <span class="n">new_header</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">new_header</span><span class="o">.</span><span class="n">set_zooms</span><span class="p">((</span><span class="n">target_res</span><span class="p">,</span> <span class="n">target_res</span><span class="p">,</span> <span class="n">target_res</span><span class="p">))</span>
-
-    <span class="c1"># Create the resampled NIfTI image</span>
-    <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">img_resampled</span><span class="p">,</span> <span class="n">new_affine</span><span class="p">,</span> <span class="n">new_header</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">resampled_nii</span></div>
-
-
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../unravel/image_tools/resample.html#unravel.image_tools.resample.main">[docs]</a>
@@ -439,13 +397,9 @@
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
     <span class="n">nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
-    <span class="n">img</span> <span class="o">=</span> <span class="n">nii_to_ndarray</span><span class="p">(</span><span class="n">nii</span><span class="p">)</span>
-    <span class="n">data_type</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_data_dtype</span><span class="p">()</span>
-    <span class="n">zooms</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()</span>
-    <span class="n">original_res_in_mm</span> <span class="o">=</span> <span class="n">zooms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">original_res_in_um</span> <span class="o">=</span> <span class="n">original_res_in_mm</span> <span class="o">*</span> <span class="mi">1000</span>
+    <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">resample_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">target_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">)</span>
 
-    <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">create_resampled_nii</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">nii</span><span class="p">,</span> <span class="n">original_res_in_um</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">target_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">)</span>
+    <span class="n">data_type</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_data_dtype</span><span class="p">()</span>
     <span class="n">resampled_nii</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
