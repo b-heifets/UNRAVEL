@@ -22,7 +22,6 @@ from rich.traceback import install
 
 from unravel.core.argparse_utils import SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.img_io import resolve_path
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 
 def parse_args():
@@ -31,7 +30,7 @@ def parse_args():
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
     parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um_tifs (from ``reg_prep``) or name of directory with raw tifs', default=None, action=SM)
-    parser.add_argument('-o', '--output', help='path/dir to copy TIF files. (e.g., brain_mask or ilastik_segmentation)', required=True, action=SM)
+    parser.add_argument('-o', '--output', help='rel_path/target_dir to copy TIF files to. (e.g., brain_mask or ilastik_segmentation)', required=True, action=SM)
     parser.add_argument('-s', '--slices', help='List of slice numbers to copy (4 digits each; space separated)', nargs='*', type=str, default=[])
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
@@ -39,20 +38,34 @@ def parse_args():
 
 
 def copy_specific_slices(sample_path, source_dir, target_dir, slice_numbers, verbose=False):
-    """Copy the specified slices to the target directory.
+    """Copy the specified tif slices from the source directory to the target directory.
     
-    Args:
-        - sample_path (Path): Path to the sample directory.
-        - source_dir (Path): Path to the source directory containing the .tif files.
-        - target_dir (Path): Path to the target directory where the selected slices will be copied.
-        - slice_numbers (list): List of slice numbers to copy."""
+    Parameters:
+    -----------
+    sample_path : Path or str
+        Path to the sample directory.
+    source_dir : Path or str
+        Path (relative to sample_path) to the source directory containing the .tif files to copy.
+    target_dir : Path or str
+        Path to the target directory where the selected slices will be copied.
+    slice_numbers : list
+        List of slice numbers to copy (4 digits each).
+    verbose : bool
+        Print verbose output.
+    """
+    if len(Path(source_dir).glob('*.tif')) == 0:
+        print(f"\n    [red1]No .tif files found in {Path(source_dir)}\n")
+        return
     
-    for file_path in source_dir.glob('*.tif'):
+    target_dir = Path(target_dir)
+    target_dir.mkdir(exist_ok=True, parents=True)
+
+    for file_path in Path(source_dir).glob('*.tif'):
         if any(file_path.stem.endswith(f"{slice:04}") for slice in map(int, slice_numbers)):
-            dest_file = target_dir / f'{sample_path.name}_{file_path.name}'
+            dest_file = target_dir / f'{Path(sample_path).name}_{file_path.name}'
             shutil.copy(file_path, dest_file)
             if verbose:
-                print(f"Copied {file_path} to {dest_file}")
+                print(f"    Copied {file_path} to {dest_file}")
 
 
 @log_command
@@ -62,24 +75,17 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    # Create the target directory for copying the selected slices
-    target_dir = Path(args.output)
-    target_dir.mkdir(exist_ok=True, parents=True)
-
     samples = get_samples(args.dirs, args.pattern, args.exp_paths)
     
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
 
-            # Resolve path to sample folder
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            # Define input paths
-            source_path = resolve_path(sample_path, args.input)
+            source_path = sample_path / args.input
 
-            # Copy the selected slices to the target directory
-            copy_specific_slices(sample_path, source_path, target_dir, args.slices, args.verbose)
+            copy_specific_slices(sample_path, source_path, args.output, args.slices, args.verbose)
 
             progress.update(task_id, advance=1)
 
