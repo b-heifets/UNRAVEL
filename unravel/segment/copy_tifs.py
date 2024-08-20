@@ -9,7 +9,7 @@ Usage to prep for ``seg_brain_mask``:
 
 Usage to prep for ``seg_ilastik`` to segment full resolution immunofluorescence images:
 ---------------------------------------------------------------------------------------
-    seg_copy_tifs -i raw_tif_dir -s 0100 0500 1000 -o ilastik_segmentation
+    seg_copy_tifs -i <raw_tif_dir> -s 0100 0500 1000 -o ilastik_segmentation
 """
 
 import argparse
@@ -29,7 +29,7 @@ def parse_args():
     parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
     parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
     parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um_tifs (from ``reg_prep``) or name of directory with raw tifs', default=None, action=SM)
+    parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um_tifs (from ``reg_prep``) or rel_path to dir w/ raw tifs', default=None, action=SM)
     parser.add_argument('-o', '--output', help='rel_path/target_dir to copy TIF files to. (e.g., brain_mask or ilastik_segmentation)', required=True, action=SM)
     parser.add_argument('-s', '--slices', help='List of slice numbers to copy (4 digits each; space separated)', nargs='*', type=str, default=[])
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
@@ -53,16 +53,19 @@ def copy_specific_slices(sample_path, source_dir, target_dir, slice_numbers, ver
     verbose : bool
         Print verbose output.
     """
-    if len(Path(source_dir).glob('*.tif')) == 0:
-        print(f"\n    [red1]No .tif files found in {Path(source_dir)}\n")
+    source_path = Path(sample_path) / source_dir
+    target_path = Path(sample_path) / target_dir
+
+    tif_files = list(source_path.glob('*.tif'))
+    if not tif_files:
+        print(f"\n    [red1]No .tif files found in {source_path}\n")
         return
     
-    target_dir = Path(target_dir)
-    target_dir.mkdir(exist_ok=True, parents=True)
+    target_path.mkdir(exist_ok=True, parents=True)
 
     for file_path in Path(source_dir).glob('*.tif'):
         if any(file_path.stem.endswith(f"{slice:04}") for slice in map(int, slice_numbers)):
-            dest_file = target_dir / f'{Path(sample_path).name}_{file_path.name}'
+            dest_file = target_path / f'{Path(sample_path).name}_{file_path.name}'
             shutil.copy(file_path, dest_file)
             if verbose:
                 print(f"    Copied {file_path} to {dest_file}")
@@ -83,9 +86,7 @@ def main():
 
             sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
 
-            source_path = sample_path / args.input
-
-            copy_specific_slices(sample_path, source_path, args.output, args.slices, args.verbose)
+            copy_specific_slices(sample_path, args.input, args.output, args.slices, args.verbose)
 
             progress.update(task_id, advance=1)
 
