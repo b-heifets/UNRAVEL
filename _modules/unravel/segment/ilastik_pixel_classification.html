@@ -360,10 +360,19 @@
 <span class="sd">------</span>
 <span class="sd">    seg_ilastik -ie &lt;path/ilastik_executable&gt; -t cfos -o cfos_seg -ilp path/ilastik_project.ilp</span>
 <span class="sd">    seg_ilastik -ie &lt;path/ilastik_executable&gt; -i &lt;asterisk&gt;.czi -o cfos_seg -ilp path/ilastik_project.ilp</span>
-
+<span class="sd">    </span>
 <span class="sd">To train an Ilastik project, organize training slices into folder (e.g., 3 slices from 3 samples per condition; ``seg_copy_tifs`` can help).</span>
 
-<span class="sd">For info on training, see: https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project  </span>
+<span class="sd">Note:</span>
+<span class="sd">    - This module uses tifs for processing.</span>
+<span class="sd">    - If your raw images are not tifs, use -i to make them from a .czi or another image format.</span>
+
+<span class="sd">Ilastik executable files for each OS:</span>
+<span class="sd">    - Linux: /usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh</span>
+<span class="sd">    - Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh</span>
+<span class="sd">    - Windows: C:\Program Files\ilastik-1.3.3post3\run_ilastik.bat</span>
+
+<span class="sd">For info on training, see: https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
