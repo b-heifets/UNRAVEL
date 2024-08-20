@@ -3,23 +3,28 @@
 """
 Use ``seg_ilastik`` from UNRAVEL to run a trained ilastik project (pixel classification) to segment features in images.
 
-Usage:
-------
+Usage if input tifs exist:
+--------------------------
     seg_ilastik -ie <path/ilastik_executable> -t cfos -o cfos_seg -ilp path/ilastik_project.ilp
-    seg_ilastik -ie <path/ilastik_executable> -i <asterisk>.czi -o cfos_seg -ilp path/ilastik_project.ilp
-    
-To train an Ilastik project, organize training slices into folder (e.g., 3 slices from 3 samples per condition; ``seg_copy_tifs`` can help).
 
 Note:
-    - This module uses tifs for processing.
+    - This module uses tifs for processing with Ilastik.
     - If your raw images are not tifs, use -i to make them from a .czi or another image format.
+
+Usage if input tifs need to be created:
+-----------------------------------------------------------------
+    seg_ilastik -ie <path/ilastik_executable> -i <asterisk>.czi -o cfos_seg -ilp path/ilastik_project.ilp
+
+Prereqs: 
+    - To train an Ilastik project, organize training slices (tifs) into folder (e.g., 3 slices from 3 samples per condition).
+    - ``seg_copy_tifs`` can aggregate these slices into a single folder for training.
 
 Ilastik executable files for each OS:
     - Linux: /usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh
     - Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh
     - Windows: C:\\Program Files\\ilastik-1.3.3post3\\run_ilastik.bat
 
-For info on training, see: 
+For a guide on training Ilastik, see: 
     - https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project
 """
 
