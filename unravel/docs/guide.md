@@ -138,7 +138,7 @@ Aliases are shortcuts for longer commands or sequences of commands, making it ea
     For example:
     ```bash
     alias ll='ls -l'
-    alias ilastik='path/to/ilastik_executable'
+    alias ilastik='path/to/ilastik_executable'  # For launching Ilastik via the terminal by running: ilastik
     alias i="io_nii_info -i "
     alias gs='git status'
     ```
@@ -773,7 +773,7 @@ reg_check -e $DIRS -td $BASE/reg_results
 
 ### Segmentation
 
-For detailed instructions on training Ilastik, see **Train an Ilastik project** in the [**Registration**](#registration) section.
+**[Guide on training Ilastik](https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project)**
 
 #### `seg_copy_tifs`
 {py:mod}`unravel.segment.copy_tifs`
