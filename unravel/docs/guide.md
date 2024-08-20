@@ -647,28 +647,27 @@ reg_prep -i *.czi -x $XY -z $Z -v  # -i options: tif_dir, .h5, .zarr, .tif
 seg_copy_tifs -i reg_inputs/autofl_??um_tifs -s 0000 0005 0050 -o $(dirname $BRAIN_MASK_ILP) -e $DIRS
 ```  
 
-#### Train an Ilastik project (pixel classification)
-:::{admonition} Train an Ilastik project
+#### Train an Ilastik project
+:::{admonition} Guide on training an Ilastik project (pixel classification)
 :class: note dropdown
 
 **Set up Ilastik for batch processing**
-
+* [Install Ilastik](https://www.ilastik.org/download)
 ```bash
-# Add this to .bashrc or .zshrc
+# Add this to your ~/.bashrc or ~/.zshrc terminal config file:
 export PATH=/usr/local/ilastik-1.4.0.post1-Linux:$PATH   # Update the path and version
 
-# Optional: add a shortcut command for launching Ilastik
+# Optional: add a shortcut command for launching Ilastik via the terminal
 alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if needed)
 
-# Close and reopen the terminal
-```
+# Ilastik executable files for each OS:
+#     - Linux: /usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh
+#     - Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh
+#     - Windows: C:\Program Files\ilastik-1.3.3post3\run_ilastik.bat
 
-:::{note}
-Ilastik executable files for each OS:
-* Linux: /usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh
-* Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh
-* Windows: C:\Program Files\ilastik-1.3.3post3\run_ilastik.bat
-:::
+# Source your terminal config file for these edits to take effect: 
+. ~/.bashrc  # Or close and reopen the terminal
+```
 
 **Launch Ilastik** 
    - Either double click on the application or run: `ilastik`
@@ -679,27 +678,27 @@ Ilastik executable files for each OS:
 
 2. **Feature Selection**  
    Select Features... -> select all features (`control+a`) or an optimized subset (faster but less accurate).
-   Optional: to find an optimal subset of features, select all features, train Ilastik, turn off Live Updates, click Suggest Features, select a subset, and train again.
+   Optional: to find an optimal subset of features, select all features, train Ilastik, turn off Live Updates, click Suggest Features, select a subset, and refine training.
 
 3. **Training**  
    - ***Brightness/contrast***: select the gradient button and click and drag in the image (faster if zoomed in)
-   - ***Zoom***: `control/command + mouse wheel scroll`, `control/command + 2 finger scroll`, or `-` and `+` (`shift + =`)
+   - ***Zoom***: `control/command + mouse wheel scroll`, `control/command + 2 finger scroll`, or `-` and `+` (i.e., `shift + =`)
    - ***Pan***: `shift` + `left click and drag` or `click mouse wheel and drag`
-   - With `label 1` and the `brush tool` selected, paint on c-Fos+ cells or features of interest
+   - With `label 1` and the `brush tool` selected, paint on c-Fos+ cells or another feature of interest
    - With `label 2` and the `brush tool` selected, paint on the background (e.g., any pixel that is not a cell)
    - Turn on `Live Update` to preview pixel classification (faster if zoomed in) and refine training (e.g., if some cells are classified as background, paint more cells with label 1).
      - `s` will toggle the segmentation on and off.
      - `p` will toggle the prediction on and off.
      - Toggle eyes to show/hide layers and/or adjust transparency of layers. 
-     - If you want to go back to steps 1 & 2, turn off Live Updates off
+
    - Change `Current View` to see other training slices. Check segmentation for these and refine as needed.
    - Save the project in the experiment summary folder and close if using this script to run ilastik in headless mode for segmenting all images.
 
-:::{note}
+**Notes**
+- If you want to go back to steps 1 & 2, turn Live Updates off
 - It is possible at add extra labels with `a` (e.g., if you want to segment somata with one label and axons with another label)
 - If you accidentally press `a`, turn off Live Updates and press `x` next to the extra label to delete it.
-- If label 1 fuses neighboring cells, draw a thin line in between them with label 2. 
-:::
+- If the segmentation for label 1 fuses neighboring cells, draw a thin line in between them with label 2. 
   
 [Pixel Classification Video](https://www.ilastik.org/documentation/pixelclassification/pixelclassification)
 
