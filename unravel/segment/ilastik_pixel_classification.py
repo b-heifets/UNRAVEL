@@ -15,9 +15,9 @@ Note:
     - If your raw images are not tifs, use -i to make them from a .czi or another image format.
 
 Ilastik executable files for each OS:
-    - Linux: /usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh
-    - Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh
-    - Windows: C:\Program Files\ilastik-1.3.3post3\run_ilastik.bat
+    - Linux: `/usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh`
+    - Mac: `/Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh`
+    - Windows: `C:\Program Files\ilastik-1.3.3post3\run_ilastik.bat`
 
 For info on training, see: 
     - https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project
