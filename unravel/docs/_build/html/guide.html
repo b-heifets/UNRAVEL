@@ -980,8 +980,8 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </pre></div>
 </div>
 </section>
-<section id="add-images-to-sample-dirs">
-<h3>Add images to sample?? dirs<a class="headerlink" href="#add-images-to-sample-dirs" title="Link to this heading">#</a></h3>
+<section id="add-images-to-sample-directories">
+<h3>Add images to sample?? directories<a class="headerlink" href="#add-images-to-sample-directories" title="Link to this heading">#</a></h3>
 <ul class="simple">
 <li><p>For example, image.czi, image.h5, or folder(s) with tif series</p></li>
 </ul>
@@ -1066,7 +1066,7 @@ exp
 <ul class="simple">
 <li><p>If raw data is in the form of a tif series, consider running:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utils_clean_tifs<span class="w"> </span>-t<span class="w"> </span>&lt;dir_name&gt;<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utils_clean_tifs<span class="w"> </span>-t<span class="w"> </span>&lt;dir_name&gt;<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w">  </span><span class="c1">#DIRS can be set as a global variable (e.g., with env_var.sh). It should have a list of directories with sample?? dirs to process. </span>
 </pre></div>
 </div>
 <div class="tip dropdown admonition">
@@ -1111,48 +1111,75 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<spa
 </pre></div>
 </div>
 </section>
-<section id="train-an-ilastik-project">
-<h4>Train an Ilastik project<a class="headerlink" href="#train-an-ilastik-project" title="Link to this heading">#</a></h4>
+<section id="train-an-ilastik-project-pixel-classification">
+<h4>Train an Ilastik project (pixel classification)<a class="headerlink" href="#train-an-ilastik-project-pixel-classification" title="Link to this heading">#</a></h4>
 <div class="note dropdown admonition">
 <p class="admonition-title">Train an Ilastik project</p>
-<p>Launch ilastik (e.g., by running: <code class="docutils literal notranslate"><span class="pre">ilastik</span></code> if an alias was added to the shell profile) and follow these steps:</p>
+<p><strong>Set up Ilastik for batch processing</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Add this to .bashrc or .zshrc</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">PATH</span><span class="o">=</span>/usr/local/ilastik-1.4.0.post1-Linux:<span class="nv">$PATH</span><span class="w">   </span><span class="c1"># Update the path and version</span>
+
+<span class="c1"># Optional: add a shortcut command for launching Ilastik</span>
+<span class="nb">alias</span><span class="w"> </span><span class="nv">ilastik</span><span class="o">=</span>run_ilastik.sh<span class="w">  </span><span class="c1"># This is for Linux (update the relative path if needed)</span>
+
+<span class="c1"># Close and reopen the terminal</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Ilastik executable files for each OS:</p>
+<ul class="simple">
+<li><p>Linux: /usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh</p></li>
+<li><p>Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh</p></li>
+<li><p>Windows: C:\Program Files\ilastik-1.3.3post3\run_ilastik.bat</p></li>
+</ul>
+</div>
+</div>
+<p><strong>Launch Ilastik</strong></p>
+<ul class="simple">
+<li><p>Either double click on the application or run: <code class="docutils literal notranslate"><span class="pre">ilastik</span></code></p></li>
+</ul>
 <ol class="arabic simple">
 <li><p><strong>Input Data</strong><br />
 Drag training slices into the ilastik GUI<br />
 <code class="docutils literal notranslate"><span class="pre">ctrl+A</span></code> -&gt; right-click -&gt; Edit shared properties -&gt; Storage: Copy into project file -&gt; Ok</p></li>
 <li><p><strong>Feature Selection</strong><br />
-Select Features… -&gt; select all features (<code class="docutils literal notranslate"><span class="pre">control+a</span></code>) or an optimized subset (faster but less accurate)<br />
-(To choose a subset of features, initially select all (<code class="docutils literal notranslate"><span class="pre">control+a</span></code>), train, turn off Live Updates, click Suggest Features, select a subset, and train again)</p></li>
+Select Features… -&gt; select all features (<code class="docutils literal notranslate"><span class="pre">control+a</span></code>) or an optimized subset (faster but less accurate).
+Optional: to find an optimal subset of features, select all features, train Ilastik, turn off Live Updates, click Suggest Features, select a subset, and train again.</p></li>
 <li><p><strong>Training</strong></p>
 <ul class="simple">
-<li><p>Double click yellow square -&gt; click yellow rectangle (Color for drawing) -&gt; click in triangle and drag to the right to change color to red -&gt; ok</p></li>
-<li><p>Adjust brightness and contrast as needed (select gradient button and click and drag slowly in the image as needed; faster if zoomed in)</p></li>
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">control</span></code> + mouse wheel scroll to zoom, press mouse wheel and drag image to pan</p></li>
-<li><p>With label 1 selected, paint on cells</p></li>
-<li><p>With label 2 selected, paint on the background</p></li>
-<li><p>Turn on Live Update to preview pixel classification (faster if zoomed in) and refine training.</p>
+<li><p><em><strong>Brightness/contrast</strong></em>: select the gradient button and click and drag in the image (faster if zoomed in)</p></li>
+<li><p><em><strong>Zoom</strong></em>: <code class="docutils literal notranslate"><span class="pre">control/command</span> <span class="pre">+</span> <span class="pre">mouse</span> <span class="pre">wheel</span> <span class="pre">scroll</span></code>, <code class="docutils literal notranslate"><span class="pre">control/command</span> <span class="pre">+</span> <span class="pre">2</span> <span class="pre">finger</span> <span class="pre">scroll</span></code>, or <code class="docutils literal notranslate"><span class="pre">-</span></code> and <code class="docutils literal notranslate"><span class="pre">+</span></code> (<code class="docutils literal notranslate"><span class="pre">shift</span> <span class="pre">+</span> <span class="pre">=</span></code>)</p></li>
+<li><p><em><strong>Pan</strong></em>: <code class="docutils literal notranslate"><span class="pre">shift</span></code> + <code class="docutils literal notranslate"><span class="pre">left</span> <span class="pre">click</span> <span class="pre">and</span> <span class="pre">drag</span></code> or <code class="docutils literal notranslate"><span class="pre">click</span> <span class="pre">mouse</span> <span class="pre">wheel</span> <span class="pre">and</span> <span class="pre">drag</span></code></p></li>
+<li><p>With <code class="docutils literal notranslate"><span class="pre">label</span> <span class="pre">1</span></code> and the <code class="docutils literal notranslate"><span class="pre">brush</span> <span class="pre">tool</span></code> selected, paint on c-Fos+ cells or features of interest</p></li>
+<li><p>With <code class="docutils literal notranslate"><span class="pre">label</span> <span class="pre">2</span></code> and the <code class="docutils literal notranslate"><span class="pre">brush</span> <span class="pre">tool</span></code> selected, paint on the background (e.g., any pixel that is not a cell)</p></li>
+<li><p>Turn on <code class="docutils literal notranslate"><span class="pre">Live</span> <span class="pre">Update</span></code> to preview pixel classification (faster if zoomed in) and refine training (e.g., if some cells are classified as background, paint more cells with label 1).</p>
 <ul>
-<li><p>If label 1 fuses neighboring cells, draw a thin line in between them with label 2.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code> will toggle the segmentation on and off.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code> will toggle the prediction on and off.</p></li>
 <li><p>Toggle eyes to show/hide layers and/or adjust transparency of layers.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">s</span></code> will toggle segmentation on and off.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code> will toggle prediction on and off.</p></li>
-<li><p>If you accidentally press <code class="docutils literal notranslate"><span class="pre">a</span></code> and add an extra label, turn off Live Updates and press X next to the extra label to delete it.</p></li>
 <li><p>If you want to go back to steps 1 &amp; 2, turn off Live Updates off</p></li>
 </ul>
 </li>
-<li><p>Change Current view to see other training slices. Check segmentation for these and refine as needed.</p></li>
+<li><p>Change <code class="docutils literal notranslate"><span class="pre">Current</span> <span class="pre">View</span></code> to see other training slices. Check segmentation for these and refine as needed.</p></li>
 <li><p>Save the project in the experiment summary folder and close if using this script to run ilastik in headless mode for segmenting all images.</p></li>
 </ul>
 </li>
 </ol>
-<p><a class="reference external" href="https://www.ilastik.org/documentation/pixelclassification/pixelclassification">Pixel Classification Video</a></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>It is possible at add extra labels with <code class="docutils literal notranslate"><span class="pre">a</span></code> (e.g., if you want to segment somata with one label and axons with another label)</p></li>
+<li><p>If you accidentally press <code class="docutils literal notranslate"><span class="pre">a</span></code>, turn off Live Updates and press <code class="docutils literal notranslate"><span class="pre">x</span></code> next to the extra label to delete it.</p></li>
+<li><p>If label 1 fuses neighboring cells, draw a thin line in between them with label 2.</p></li>
+</ul>
 </div>
-</section>
-<section id="seg-brain-mask">
-<h4><code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code><a class="headerlink" href="#seg-brain-mask" title="Link to this heading">#</a></h4>
+<p><a class="reference external" href="https://www.ilastik.org/documentation/pixelclassification/pixelclassification">Pixel Classification Video</a></p>
+<div class="docutils">
+<h4 class="rubric" id="seg-brain-mask"><code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code></h4>
 <p><a class="reference internal" href="unravel/segment/brain_mask.html#module-unravel.segment.brain_mask" title="unravel.segment.brain_mask"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.brain_mask</span></code></a></p>
 <ul class="simple">
-<li><p>Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz for reg</p></li>
+<li><p>Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz for <code class="docutils literal notranslate"><span class="pre">reg</span></code></p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_brain_mask<span class="w"> </span>-ilp<span class="w"> </span><span class="nv">$BRAIN_MASK_ILP</span><span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
 </pre></div>
@@ -1162,6 +1189,7 @@ Select Features… -&gt; select all features (<code class="docutils literal notr
 <p>seg_brain_mask zeros out voxels outside of the brain. This prevents the average template (moving image) from being pulled outward during registration (reg).</p>
 <p>If non-zero voxles outside the brain remain and are affecting reg quality, use 3D slicer to zero them out by painting in 3D (segmentation module).</p>
 <p>If there is missing tissue, use 3D slicer to fill in gaps.</p>
+</div>
 </div>
 <div class="admonition-todo admonition" id="id1">
 <p class="admonition-title">Todo</p>
@@ -1203,12 +1231,6 @@ Select Features… -&gt; select all features (<code class="docutils literal notr
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span>d<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$d</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>s<span class="w"> </span><span class="k">in</span><span class="w"> </span>sample??<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE</span><span class="w"> </span>-bc<span class="w"> </span>-pad<span class="w"> </span>-sm<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>-ort<span class="w"> </span><span class="k">$(</span>cat<span class="w"> </span><span class="nv">$s</span>/parameters/ort.txt<span class="k">)</span><span class="w"> </span>-a<span class="w"> </span><span class="nv">$ATLAS</span><span class="w"> </span>-v<span class="w"> </span>-d<span class="w"> </span><span class="nv">$PWD</span>/<span class="nv">$s</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span>
 </pre></div>
 </div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>We use an adapted version of a <code class="docutils literal notranslate"><span class="pre">iDISCO/LSFM-specific</span> <span class="pre">atlas</span> <span class="pre">&lt;https://pubmed.ncbi.nlm.nih.gov/33063286/&gt;</span></code>_</p></li>
-</ul>
 </div>
 </section>
 <section id="reg-check">
@@ -1747,7 +1769,7 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#back-up-raw-data">Back up raw data</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stitch-z-stacks">Stitch z-stacks</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-sample-folders">Make sample folders</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-images-to-sample-dirs">Add images to sample?? dirs</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#add-images-to-sample-directories">Add images to sample?? directories</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#log-exp-paths-commands-etc">Log exp paths, commands, etc.</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#make-a-sample-key-csv">Make a sample_key.csv:</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#define-common-variables-in-a-shell-script">Define common variables in a shell script</a></li>
@@ -1759,8 +1781,7 @@ rstats<span class="w"> </span>-s<span class="w"> </span>rel_path/segmentation_im
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#registration">Registration</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reg-prep"><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#seg-copy-tifs"><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#train-an-ilastik-project">Train an Ilastik project</a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#seg-brain-mask"><code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#train-an-ilastik-project-pixel-classification">Train an Ilastik project (pixel classification)</a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reg"><code class="docutils literal notranslate"><span class="pre">reg</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reg-check"><code class="docutils literal notranslate"><span class="pre">reg_check</span></code></a></li>
 </ul>

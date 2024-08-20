@@ -28,12 +28,17 @@ pip install -e .
 ```
 * Confirm that the installation worked: 
 ```bash
-unravel_commands -c  # This should print common commands
+unravel_commands -c  # or: uc -c
 ```
-* Download atlas/template files: [Google Drive Link](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)
-* Install [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation)
-* Install [Ilastik](https://www.ilastik.org/download.html)
-* Recommended: Install [3D Slicer](https://download.slicer.org/)
+* **[Download atlas/template files](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)**
+    * This has an [iDISCO/LSFM-specific template](https://pubmed.ncbi.nlm.nih.gov/33063286/) that we warped to 30 µm CCFv3 space
+* **Required software:**
+    * [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation) for voxel-wise stats and CLI tools
+    * [Ilastik](https://www.ilastik.org/download.html) for segmenting features of interest
+* **Recommended software:**
+    * [3D Slicer](https://download.slicer.org/) for 3D painting to make brains more like the average template (improves registration)
+    * [DSI Studio](https://dsi-studio.labsolver.org/download.html) for 3D brain models
+    * [Flourish](https://app.flourish.studio/login) for sunburst plots (free web app)
 
 
 ## Setting Up Windows Subsystem for Linux (WSL)
@@ -201,7 +206,8 @@ To enable copy/paste in the PowerShell or WSL, click the icon in the upper left 
     PATH=${FSLDIR}/bin:${PATH}
     . ${FSLDIR}/etc/fslconf/fsl.sh
     export FSLDIR PATH
-    export PATH=/usr/local/ilastik-1.3.3post3-Linux:$PATH # Update the path and version
+    
+    export PATH=/usr/local/ilastik-1.4.0.post1-Linux:$PATH  # Update the path and version
     ```
 
     - Apply the changes by restarting the terminal or source your shell configuration file: 
