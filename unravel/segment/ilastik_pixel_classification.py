@@ -17,6 +17,7 @@ Note:
 Ilastik executable files for each OS:
     - Linux: /usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh
     - Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh
+    - Windows: C:\Program Files\ilastik-1.3.3post3\run_ilastik.bat
 
 For info on training, see: 
     - https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project
