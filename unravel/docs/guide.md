@@ -520,7 +520,7 @@ Other patterns (e.g., sample???) may be used (commands have a -p option for that
     └── sample04
 ```
 
-### Add images to sample?? dirs
+### Add images to sample?? directories 
 
    * For example, image.czi, image.h5, or folder(s) with tif series
 
@@ -607,7 +607,7 @@ exp
 ### Optional: clean tifs
    * If raw data is in the form of a tif series, consider running: 
 ```bash
-utils_clean_tifs -t <dir_name> -v -m -e $DIRS
+utils_clean_tifs -t <dir_name> -v -m -e $DIRS  #DIRS can be set as a global variable (e.g., with env_var.sh). It should have a list of directories with sample?? dirs to process. 
 ```
 ```{admonition} utils_clean_tifs
 :class: tip dropdown
@@ -647,42 +647,67 @@ reg_prep -i *.czi -x $XY -z $Z -v  # -i options: tif_dir, .h5, .zarr, .tif
 seg_copy_tifs -i reg_inputs/autofl_??um_tifs -s 0000 0005 0050 -o $(dirname $BRAIN_MASK_ILP) -e $DIRS
 ```  
 
-#### Train an Ilastik project
+#### Train an Ilastik project (pixel classification)
 :::{admonition} Train an Ilastik project
 :class: note dropdown
-Launch ilastik (e.g., by running: `ilastik` if an alias was added to the shell profile) and follow these steps:
+
+**Set up Ilastik for batch processing**
+
+```bash
+# Add this to .bashrc or .zshrc
+export PATH=/usr/local/ilastik-1.4.0.post1-Linux:$PATH   # Update the path and version
+
+# Optional: add a shortcut command for launching Ilastik
+alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if needed)
+
+# Close and reopen the terminal
+```
+
+:::{note}
+Ilastik executable files for each OS:
+* Linux: /usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh
+* Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh
+* Windows: C:\Program Files\ilastik-1.3.3post3\run_ilastik.bat
+:::
+
+**Launch Ilastik** 
+   - Either double click on the application or run: `ilastik`
 
 1. **Input Data**  
    Drag training slices into the ilastik GUI  
    `ctrl+A` -> right-click -> Edit shared properties -> Storage: Copy into project file -> Ok  
 
 2. **Feature Selection**  
-   Select Features... -> select all features (`control+a`) or an optimized subset (faster but less accurate)  
-   (To choose a subset of features, initially select all (`control+a`), train, turn off Live Updates, click Suggest Features, select a subset, and train again)  
+   Select Features... -> select all features (`control+a`) or an optimized subset (faster but less accurate).
+   Optional: to find an optimal subset of features, select all features, train Ilastik, turn off Live Updates, click Suggest Features, select a subset, and train again.
 
 3. **Training**  
-   - Double click yellow square -> click yellow rectangle (Color for drawing) -> click in triangle and drag to the right to change color to red -> ok
-   - Adjust brightness and contrast as needed (select gradient button and click and drag slowly in the image as needed; faster if zoomed in)
-   - Use `control` + mouse wheel scroll to zoom, press mouse wheel and drag image to pan
-   - With label 1 selected, paint on cells
-   - With label 2 selected, paint on the background
-   - Turn on Live Update to preview pixel classification (faster if zoomed in) and refine training. 
-     - If label 1 fuses neighboring cells, draw a thin line in between them with label 2. 
+   - ***Brightness/contrast***: select the gradient button and click and drag in the image (faster if zoomed in)
+   - ***Zoom***: `control/command + mouse wheel scroll`, `control/command + 2 finger scroll`, or `-` and `+` (`shift + =`)
+   - ***Pan***: `shift` + `left click and drag` or `click mouse wheel and drag`
+   - With `label 1` and the `brush tool` selected, paint on c-Fos+ cells or features of interest
+   - With `label 2` and the `brush tool` selected, paint on the background (e.g., any pixel that is not a cell)
+   - Turn on `Live Update` to preview pixel classification (faster if zoomed in) and refine training (e.g., if some cells are classified as background, paint more cells with label 1).
+     - `s` will toggle the segmentation on and off.
+     - `p` will toggle the prediction on and off.
      - Toggle eyes to show/hide layers and/or adjust transparency of layers. 
-     - `s` will toggle segmentation on and off.
-     - `p` will toggle prediction on and off.
-     - If you accidentally press `a` and add an extra label, turn off Live Updates and press X next to the extra label to delete it.
      - If you want to go back to steps 1 & 2, turn off Live Updates off
-   - Change Current view to see other training slices. Check segmentation for these and refine as needed.
+   - Change `Current View` to see other training slices. Check segmentation for these and refine as needed.
    - Save the project in the experiment summary folder and close if using this script to run ilastik in headless mode for segmenting all images.
 
+:::{note}
+- It is possible at add extra labels with `a` (e.g., if you want to segment somata with one label and axons with another label)
+- If you accidentally press `a`, turn off Live Updates and press `x` next to the extra label to delete it.
+- If label 1 fuses neighboring cells, draw a thin line in between them with label 2. 
+:::
+  
 [Pixel Classification Video](https://www.ilastik.org/documentation/pixelclassification/pixelclassification)
 
 :::
 
 #### `seg_brain_mask`
 {py:mod}`unravel.segment.brain_mask`
-* Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz for reg
+* Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz for ``reg``
 ```bash
 seg_brain_mask -ilp $BRAIN_MASK_ILP -v -e $DIRS
 ```
@@ -726,10 +751,6 @@ Make a ./sample??/parameters/ort.txt with the 3 letter orientation for each samp
 ```bash
 for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m $TEMPLATE -bc -pad -sm 0.4 -ort $(cat $s/parameters/ort.txt) -a $ATLAS -v -d $PWD/$s ; done ; done 
 ```
-:::
-
-:::{note}
-* We use an adapted version of a `iDISCO/LSFM-specific atlas <https://pubmed.ncbi.nlm.nih.gov/33063286/>`_ 
 :::
 
 
