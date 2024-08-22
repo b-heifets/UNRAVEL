@@ -65,59 +65,98 @@ def load_config(config_path):
     return cfg
 
 # Sample list 
-def get_samples(sample_dir_list=None, sample_dir_pattern="sample??", exp_dir_paths=None):
+def get_samples(dir_list=None, dir_pattern="sample??", verbose=False):
     """
-    Return a list of full paths to sample directories (dirs) based on the dir list, pattern, and/or experiment dirs.
+    Finds and returns paths to directories matching a specified pattern within given directories 
+    or, if none are provided, the current working directory.
 
-    This function searches for dirs matching a specific pattern (default "sample??") within the given experiment dirs.
-    If a sample_dir_list is provided, it uses the full paths from the list or resolves them if necessary.
-    If an exp_dir_paths list is provided, it searches for sample dirs within each experiment directory.
-    If both sample_dir_list and exp_dir_paths are provided, paths are added to the list from both sources.    
+    Parameters
+    ----------
+    dir_list : list of Path or str, or Path or str, optional
+        A list of paths (as Path objects or strings) to sample?? directories
+        or directories that may contain subdirectories matching the `dir_pattern`. 
 
-    Parameters:
-    - sample_dir_list (list of str or None): Explicit list of dirs to include. Can be dir names or absolute paths.
-    - sample_dir_pattern (str): Pattern to match dirs within experiment dirs. Defaults to "sample??".
-    - exp_dir_paths (list of str or None): List of paths to experiment dirs where subdirs matching the sample_dir_pattern will be searched for.
+    dir_pattern : str, optional
+        A pattern to match directory names, default is "sample??", where "?" is a wildcard matching a 
+        single character. This pattern is used to identify directories of interest.
 
-    Returns:
-    - list of pathlib.Path: Full paths to all found sample dirs.
+    dir_pattern : str, optional
+        A Unix shell-style wildcard pattern used by `fnmatch` to match directory names. 
+        Default is "sample??", where each "?" matches a single character. 
+
+    verbose : bool, optional
+        If True, prints the found directories, grouped by their parent directories.
+        Default is False.
+
+    Returns
+    -------
+    samples : list of Path
+        A list of resolved Path objects pointing to directories that match the `dir_pattern`.
+
+    Notes
+    -----
+    - If no directories are provided via `dir_list`, the function searches the current working directory.
+    - If a directory (e.g., the current dir) matches the `dir_pattern`, 
+      it is included in the results and not searched for subdirectories.
+
+    Examples
+    --------
+    >>> sample_paths = get_samples()  # Search the current working directory for sample?? directories
+    >>> sample_paths = get_samples([path1, path2], dir_pattern="sample???")  # Search path1 and path2 for sample??? directories
     """
     samples = []
 
-    # Ensure sample_dir_list is a list
-    if isinstance(sample_dir_list, str):
-        sample_dir_list = [sample_dir_list]  # Convert string to list
+    if isinstance(dir_list, (str, Path)):
+        dir_list = [Path(dir_list)]
 
-    # Add full paths of dirs from sample_dir_list that exist
-    if sample_dir_list:
-        for dir_name in sample_dir_list:
-            dir_path = Path(dir_name)
-            dir_path = dir_path if dir_path.is_absolute() else dir_path.resolve()
+    if dir_list:
+        for dir_name in dir_list:
+            dir_path = Path(dir_name).resolve()
+
             if dir_path.is_dir():
-                samples.append(dir_path)
+                # Check if the provided path itself matches the pattern
+                if fnmatch(dir_path.name, dir_pattern):
+                    samples.append(dir_path)
+                else:
+                    # Search for subdirectories matching the pattern
+                    sample_dirs = sorted([d.resolve() for d in dir_path.iterdir() if d.is_dir() and fnmatch(d.name, dir_pattern)])
+                    samples.extend(sample_dirs)
+            else:
+                print(f"\n    [red1]Directory {dir_path} does not exist or is not a directory\n")
+    else:
+        # If the cwd matches the pattern, add it to the list of samples
+        cwd = Path.cwd()
+        if fnmatch(cwd.name, dir_pattern):
+            samples.append(cwd.resolve())
+        else:
+            # Search the current working directory for matching dirs
+            cwd_samples = sorted([d.resolve() for d in cwd.iterdir() if d.is_dir() and fnmatch(d.name, dir_pattern)])
+            samples.extend(cwd_samples)
 
-    # Search for sample folders within each experiment directory in exp_dir_paths and add their full paths
-    if exp_dir_paths:
-        for exp_dir in exp_dir_paths:
-            exp_path = Path(exp_dir).resolve()
-            if exp_path.is_dir():
-                found_samples = [
-                    d.resolve() for d in exp_path.iterdir()
-                    if d.is_dir() and fnmatch(d.name, sample_dir_pattern)
-                ]
-                samples.extend(found_samples)
+        # Final fallback to add the CWD if nothing else was found
+        if not samples:
+            samples.append(cwd.resolve())
 
-    # If no dirs have been added yet, search the current working directory for dirs matching the pattern
-    if not samples:
-        cwd_samples = [
-            d.resolve() for d in Path.cwd().iterdir()
-            if d.is_dir() and fnmatch(d.name, sample_dir_pattern)
-        ]
-        samples.extend(cwd_samples)
+    if verbose:
+        # Create an ordered list of unique parent directories
+        uniq_parent_dirs = []
+        for dir_name in dir_list or [Path.cwd()]:
+            dir_path = Path(dir_name).resolve()
+            parent_dir = dir_path.parent if fnmatch(dir_path.name, dir_pattern) else dir_path
+            if parent_dir not in uniq_parent_dirs:
+                uniq_parent_dirs.append(parent_dir)
 
-    # Use the current working directory as the fallback if no samples found
-    if not samples:
-        samples.append(Path.cwd())
+            for sample_dir in samples:
+                sample_parent = sample_dir.parent if sample_dir.parent != parent_dir else parent_dir
+                if sample_parent not in uniq_parent_dirs:
+                    uniq_parent_dirs.append(sample_parent)
+
+        # Print the found directories grouped by their parent directories in order
+        for parent_dir in uniq_parent_dirs:
+            print(f"\n    [bold gold1]get_samples[/]() found these directories in [bright_black bold]{parent_dir}[/]:\n")
+            for sample_dir in samples:
+                if sample_dir.parent == parent_dir:
+                    print(f"        [bold orange_red1]{sample_dir.name}")
 
     return samples
 
