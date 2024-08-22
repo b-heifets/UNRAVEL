@@ -40,9 +40,8 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     parser.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable.', required=True, action=SM)
     parser.add_argument('-ilp', '--ilastik_prj', help='path/brain_mask.ilp. Default: brain_mask.ilp', default='brain_mask.ilp', action=SM)
     parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
@@ -58,13 +57,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
-        for sample in samples:
-            # Resolve path to sample folder
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+        for sample_path in sample_paths:
 
             # Define input and output paths
             autofl_img_path = resolve_path(sample_path, path_or_pattern=args.input)

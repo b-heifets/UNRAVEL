@@ -5,8 +5,8 @@ Use ``reg_check`` from UNRAVEL to check registration QC, copies autofl_<asterisk
 
 Usage:
 ------
-    reg_check -e <list of experiment directories> # copies to the current working directory
-    reg_check -e <list of experiment directories> -td <target_output_dir
+    reg_check -d <list of paths> # copies to the current working directory
+    reg_check -d <list of paths> -td <target_output_dir
 """
 
 import argparse
@@ -22,9 +22,8 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     parser.add_argument('-td', '--target_dir', help='path/target_output_dir name for aggregating outputs from all samples (cwd if omitted).', default=None, action=SM)
     parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from ``reg``. Default: reg_outputs", default="reg_outputs", action=SM)
     parser.add_argument('-fri', '--fixed_reg_in', help='Fixed image from registration ``reg``. Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
@@ -45,14 +44,11 @@ def main():
     target_dir = Path(args.target_dir) if args.target_dir is not None else Path.cwd()
     target_dir.mkdir(exist_ok=True, parents=True)
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
-    
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
-    with Live(progress):
-        for sample in samples:
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-            # Resolve path to sample folder
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
+    with Live(progress):
+        for sample_path in sample_paths:
 
             # Define input paths
             source_path = sample_path / args.reg_outputs

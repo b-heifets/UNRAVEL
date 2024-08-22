@@ -5,7 +5,7 @@ Use ``vstats_prep`` from UNRAVEL to load an immunofluo image, subtract its backg
 
 Usage:
 ------
-    vstats_prep -i <asterisk>.czi -rb 4 -o cfos_rb4_30um_CCF_space.nii.gz -e [$DIRS] [-v]
+    vstats_prep -i <asterisk>.czi -rb 4 -o cfos_rb4_30um_CCF_space.nii.gz [-d <list of paths>] [-p pattern] [-sa 3] [-c 1] [-r 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-mi] [-md parameters/metadata.txt] [-th 8] [-v]
 
 Prereqs: 
     ``reg``
@@ -39,9 +39,8 @@ from unravel.warp.to_atlas import to_atlas
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
 
     # Required arguments:
     parser.add_argument('-i', '--input', help='path to full res image', required=True, action=SM)
@@ -71,13 +70,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
-        for sample in samples:
-
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+        for sample_path in sample_paths:
 
             output_name = f"{sample_path.name}_{Path(args.output).name}"
             output = sample_path / "atlas_space" / output_name

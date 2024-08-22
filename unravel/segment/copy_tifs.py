@@ -26,9 +26,8 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     parser.add_argument('-i', '--input', help='reg_inputs/autofl_50um_tifs (from ``reg_prep``) or rel_path to dir w/ raw tifs', default=None, action=SM)
     parser.add_argument('-o', '--output', help='rel_path/target_dir to copy TIF files to. (e.g., brain_mask or ilastik_segmentation)', required=True, action=SM)
     parser.add_argument('-s', '--slices', help='List of slice numbers to copy (4 digits each; space separated)', nargs='*', type=str, default=[])
@@ -78,13 +77,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
-    
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
-    with Live(progress):
-        for sample in samples:
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
+    with Live(progress):
+        for sample_path in sample_paths:
 
             copy_specific_slices(sample_path, args.input, args.output, args.slices, args.verbose)
 

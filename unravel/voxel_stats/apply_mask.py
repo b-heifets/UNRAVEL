@@ -36,9 +36,8 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? folders', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern (sample??) for dirs to process. Else: use cwd', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     parser.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', required=True, action=SM)
     parser.add_argument('-mas', '--seg_mask', help='rel_path/mask_to_apply.nii.gz (in full res tissue space)', required=True, action=SM)
     parser.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on seg_mask. Default: 0", default=0, type=int, action=SM)
@@ -119,14 +118,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
-    
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
-    with Live(progress):
-        for sample in samples:
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-            # Resolve path to sample folder
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
+    with Live(progress):
+        for sample_path in sample_paths:
 
             # Define output
             output = resolve_path(sample_path, args.output, make_parents=True)

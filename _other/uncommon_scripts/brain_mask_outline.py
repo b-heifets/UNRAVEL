@@ -20,9 +20,8 @@ from unravel.core.utils import get_samples, initialize_progress_bar, print_cmd_a
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     parser.add_argument('-i', '--input', help='Default mask: reg_inputs/autofl_50um_brain_mask.nii.gz (from brain_mask.py)', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
     parser.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on the outline. Default: 0", default=0, type=int, action=SM)
     parser.add_argument("-o", "--output", help="Default: reg_inputs/autofl_50um_brain_mask_outline.nii.gz", default="reg_inputs/autofl_50um_brain_mask_outline.nii.gz", action=SM)
@@ -43,13 +42,11 @@ def dilate_outline(outline_mask, iterations):
 
 def main():
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
-        for sample in samples:
-            
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+        for sample_path in sample_paths:
 
             if Path(args.input).is_absolute():
                 input_path = Path(args.input)

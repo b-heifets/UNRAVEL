@@ -5,7 +5,7 @@ Use ``cstats_validation`` from UNRAVEL to warp a cluster index from atlas space 
 
 Usage:
 ------
-    cstats_validation -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
+    cstats_validation -d <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
 
 cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
 
@@ -42,9 +42,8 @@ from unravel.warp.to_native import to_native
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
 
     # Key args
     parser.add_argument('-m', '--moving_img', help='path/*_rev_cluster_index.nii.gz to warp from atlas space', required=True, action=SM)
@@ -70,7 +69,7 @@ def parse_args():
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: QC. Aggregate .csv results for all samples if args.exp_dirs, script to load image subset.
+# TODO: QC. Aggregate .csv results for all samples if args.dirs, script to load image subset.
 # TODO: Make config file for defaults or a command_generator.py script
 # TODO: Consider adding an option to quantify mean IF intensity in each cluster in segmented voxels. Also make a script for mean IF intensity in clusters in atlas space. 
 
@@ -202,13 +201,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
-    
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
-    with Live(progress):
-        for sample in samples:
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
+    with Live(progress):
+        for sample_path in sample_paths:
             
             # Define final output and check if it exists
             cluster_index_dir = str(Path(args.moving_img).name).replace(".nii.gz", "").replace("_rev_cluster_index_", "_")

@@ -5,9 +5,13 @@ Use ``reg_prep`` from UNRAVEL to load a full resolution autofluo image and resam
 
 Usage:
 ------
-    reg_prep -i <asterisk>.czi [-e <list of paths to exp dirs>] [-v]
+    reg_prep -i <asterisk>.czi [-d <space-separated list of paths>] [-v]
 
-Run command from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
+Note:
+    - If -d is not provided, the current directory is used to search for sample?? dirs to process. 
+    - If the current dir is a sample?? dir, it will be processed.
+    - If -d is provided, the specified dirs and/or dirs containing sample?? dirs will be processed.
+    - If -p is not provided, the default pattern for dirs to process is 'sample??'.
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
     <asterisk>.czi, autofluo/<asterisk>.tif series, autofluo, <asterisk>.tif, or <asterisk>.h5 
@@ -36,9 +40,8 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     parser.add_argument('-i', '--input', help='Full res image input path relative (rel_path) to ./sample??', required=True, action=SM)
     parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
@@ -83,14 +86,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
-    
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
-    with Live(progress):
-        for sample in samples:
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-            # Resolve path to sample folder
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
+    with Live(progress):
+        for sample_path in sample_paths:
 
             # Define output
             output = resolve_path(sample_path, args.output, make_parents=True)

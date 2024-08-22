@@ -3,11 +3,15 @@
 """
 Use ``utils_clean_tifs`` from UNRAVEL to clean directories w/ tif series.
 
-Run command from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
-
 Usage:
 ------
-    utils_clean_tifs -t <tif_folder_name> -m -v
+    utils_clean_tifs -t <tif_folder_name> -m [-d <space-separated list of paths>] [-p <pattern>] [-v]
+
+Note:
+    - If -d is not provided, the current directory is used to search for sample?? dirs to process. 
+    - If the current dir is a sample?? dir, it will be processed.
+    - If -d is provided, the specified dirs and/or dirs containing sample?? dirs will be processed.
+    - If -p is not provided, the default pattern for dirs to process is 'sample??'.
 
 Tif directory clean up involves:
     - Moving subdirectories to parent dir
@@ -32,9 +36,8 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     parser.add_argument('-t', '--tif_dirs', help='List of tif series dirs to check.', nargs='*', required=True, action=SM)
     parser.add_argument('-m', '--move', help='Enable moving of subdirs and non-TIF files to parent dir.', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
@@ -96,15 +99,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
-    
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
-        for sample in samples:
-
-            # Resolve path to sample folder
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+        for sample_path in sample_paths:
 
             # Clean TIF directories
             tif_dirs = [sample_path / tif_dir for tif_dir in args.tif_dirs]            

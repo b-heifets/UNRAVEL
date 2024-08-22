@@ -55,6 +55,8 @@ def main():
     
     nii_to_tifs(args.input, args.output_dir)
 
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
     main()

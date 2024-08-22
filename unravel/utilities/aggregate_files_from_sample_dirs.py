@@ -6,11 +6,11 @@ Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directorie
 
 Usage for when sample?? is already in the name of files being copied:
 ---------------------------------------------------------------------
-    utils_agg_files -g 'atlas_space/*_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -e $DIRS -v
+    utils_agg_files -g 'atlas_space/*_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -d $DIRS -v
 
 Usage to prepend sample?? to the name of files being copied:
 ------------------------------------------------------------
-    utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -e $DIRS -v -a
+    utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -d $DIRS -v -a
 """
 
 import argparse
@@ -27,9 +27,8 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     parser.add_argument('-g', '--glob_pattern', help='Glob pattern to match files within sample?? directories', required=True, action=SM)
     parser.add_argument('-td', '--target_dir', help='path/target_dir name for gathering files. Default: current working dir', default=None, action=SM)
     parser.add_argument('-a', '--add_prefix', help='Add "sample??_" prefix to the output files', action='store_true')
@@ -75,13 +74,11 @@ def main():
     if args.verbose: 
         print(f'\nCopying files to: {target_dir}\n')
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
-        for sample in samples:
-
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+        for sample_path in sample_paths:
 
             aggregate_files_from_sample_dirs(sample_path, args.glob_pattern, target_dir, args.add_prefix, args.verbose)
 

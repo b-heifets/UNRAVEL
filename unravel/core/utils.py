@@ -26,10 +26,17 @@ Usage:
     Import the functions and decorators to enhance your scripts.
 
 Examples:
-    - from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_func_name_args_times, load_text_from_file copy_files
-    - config = load_config("path/to/config.ini")
-    - samples = get_samples(exp_dir_paths=["/path/to/exp1", "/path/to/exp2"])
-    - progress, task_id = initialize_progress_bar(len(samples), task_message="[red]Processing samples...")
+    >>> # Import the functions and decorators
+    >>> from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_func_name_args_times, load_text_from_file, copy_files
+
+    >>> # Load the configuration from a file
+    >>> config = load_config("path/to/config.ini")
+
+    >>> # Get a list of sample directories
+    >>> samples = get_samples(["path/to/dir1", "path/to/dir2"], dir_pattern="sample??", verbose=True)
+    
+    >>> # Initialize a progress bar
+    >>> progress, task_id = initialize_progress_bar(len(samples), task_message="[red]Processing samples...")
 
 """
 
@@ -157,9 +164,9 @@ def get_samples(dir_list=None, dir_pattern="sample??", verbose=False):
             for sample_dir in samples:
                 if sample_dir.parent == parent_dir:
                     print(f"        [bold orange_red1]{sample_dir.name}")
+            print()
 
     return samples
-
 
 # Progress bar functions
 class CustomMofNCompleteColumn(MofNCompleteColumn):

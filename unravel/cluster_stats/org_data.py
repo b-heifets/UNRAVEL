@@ -5,7 +5,7 @@ Use ``cstats_org_data`` from UNRAVEL to aggregate and organize csv outputs from 
 
 Usage
 -----
-    cstats_org_data -e <list of experiment directories> -cvd '<asterisk>' -td <target_dir> -vd <path/vstats_dir> -v
+    cstats_org_data -d <list of experiment directories> -cvd '<asterisk>' -td <target_dir> -vd <path/vstats_dir> -v
 """
 
 import argparse
@@ -24,9 +24,8 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 
 def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     parser.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/)', required=True, action=SM)
     parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir (the dir ``vstats`` was run from) to copy p val, info, and index files if provided', default=None, action=SM)
     parser.add_argument('-dt', '--density_type', help='Type of density data to aggregate (cell [default] or label).', default='cell', action=SM)
@@ -175,11 +174,9 @@ def main():
     target_dir = Path(args.target_dir).resolve() if args.target_dir else Path.cwd()
     target_dir.mkdir(exist_ok=True, parents=True)
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
-    
-    for sample in samples:
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-        sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+    for sample_path in sample_paths:
 
         clusters_path = sample_path / 'clusters'
         if clusters_path.exists():

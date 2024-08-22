@@ -5,7 +5,7 @@ Use ``cstats_summary`` from UNRAVEL to aggregate and analyze cluster validation 
 
 Usage if running directly after ``cstats_validation``:
 ------------------------------------------------------
-    cstats_summary -c <path/config.ini> -e <exp dir paths> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
+    cstats_summary -c <path/config.ini> -d <exp dir paths> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
 
 Note: 
     - The current working directory should not have other directories when running this script for the first time. Directories from ``cstats_org_data`` are ok though.
@@ -15,7 +15,7 @@ Usage if running after ``cstats_validation`` and ``cstats_org_data``:
     cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
 
 Note:
-    - For the second usage, the ``-e``, ``-cvd``, and ``-vd`` arguments are not needed because the data is already in the working directory.
+    - For the second usage, the ``-d``, ``-cvd``, and ``-vd`` arguments are not needed because the data is already in the working directory.
     - Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.
     - Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run ``cstats_legend``).
 
@@ -65,8 +65,8 @@ def parse_args():
     parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
     parser.add_argument('-c', '--config', help='Path to the config.ini file. Default: unravel/cluster_stats/summary.ini', default=Path(__file__).parent / 'summary.ini', action=SM)
 
-    # cstats_org_data -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process. (needed for cstats_org_data)', nargs='*', action=SM)
+    # cstats_org_data -d <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
+    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
     parser.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for cstats_org_data', action=SM) 
     parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cstats_org_data)', action=SM)
 
@@ -108,9 +108,9 @@ def main():
     cfg = load_config(args.config)
     
     # Run cstats_org_data
-    if args.exp_paths and args.cluster_val_dirs and args.vstats_path:
+    if args.dirs and args.cluster_val_dirs and args.vstats_path:
         org_data_args = [
-            '-e', *args.exp_paths,
+            '-d', *args.dirs,
             '-p', cfg.org_data.pattern,
             '-cvd', args.cluster_val_dirs,
             '-vd', args.vstats_path,
