@@ -27,7 +27,7 @@ from rich.traceback import install
 from unravel.core.argparse_utils_rich import SuppressMetavar, SM
 from unravel.core.config import Config
         
-cfg = Config(Path(__file__).parent / 'test.ini')
+cfg = Config(Path(__file__).parent / '_test.ini')
 print(type(cfg.test.a))
 
 def parse_args():
