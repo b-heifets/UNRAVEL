@@ -54,17 +54,18 @@ def parse_args():
     parser.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
     parser.add_argument('-t', '--tifs_dir', help='path/input_dir_w_tifs', required=True, action=SM)
     parser.add_argument('-i', '--input', help='If path/input_dir_w_tifs does not exist, provide a rel_path/image to make it', action=SM)
-    parser.add_argument('-c', '--channel', help='.czi channel number. Default: 1', default=1, type=int, metavar='')
+    parser.add_argument('-c', '--channel', help='.czi channel number (if this is the input image type). Default: 1', default=1, type=int, metavar='')
     parser.add_argument('-o', '--output', help='output dir name', default=None, action=SM)
     parser.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', default=1, nargs='*', type=int, action=SM)
     parser.add_argument('-rmi', '--rm_in_tifs', help='Delete the dir w/ the input tifs (e.g., if a *.czi was the input)', action='store_true', default=False)
-    parser.add_argument('-rmo', '--rm_out_tifs', help='Delete the dir w/ the output tifs', action='store_true', default=False)
-    parser.add_argument('-log', '--ilastik_log', help='Show Ilastik log', action='store_true')
+    parser.add_argument('-rmo', '--rm_out_tifs', help='Delete the dir w/ the output tifs. These have all labels. .nii.gz output(s) are smaller.', action='store_true', default=False)
     parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
     parser.epilog = __doc__
     return parser.parse_args()
 
-# TODO: Consolidate pixel_segmentation() in unravel/core/img_tools.py
+# TODO: Consolidate -d and -e
+# TODO: Group args
+# TODO: Test rich formating for help messages
 
 
 def count_files(directory):
@@ -75,7 +76,8 @@ def count_files(directory):
 def save_labels_as_masks(tif_dir, labels, segmentation_dir, output_name):
     img = load_3D_img(tif_dir) 
     for label in labels:
-        print(f"\n    Converting label {label} to mask and saving as .nii.gz in {segmentation_dir}\n")
+        print(f"\n    Converting label {label} to binary mask and saving as .nii.gz in {segmentation_dir}\n")
+        # img == label creates a boolean array where pixels equal to label are True (1) and all others are False (0).
         label_img = (img == label).astype(np.uint8)
         nifti_img = nib.Nifti1Image(label_img, np.eye(4))
         nib.save(nifti_img, segmentation_dir.joinpath(f"{output_name}_{label}.nii.gz"))
