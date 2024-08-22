@@ -47,9 +47,13 @@ Note:
 """
 
 import argparse
+import re
+from rich import print
+from rich.text import Text
 from rich_argparse import RichHelpFormatter
 import textwrap
 
+# Custom RichHelpFormatter class to suppress metavar display
 class SuppressMetavar(RichHelpFormatter):
     def _format_action_invocation(self, action):
         if not action.option_strings:
@@ -93,3 +97,181 @@ class SM(argparse.Action):
                 current_values = [current_values]  # Ensure it is a list
             current_values.append(values)
             setattr(namespace, self.dest, current_values)  # Append new values
+
+# Function to apply rich formatting based on rules
+def format_docstring_for_terminal(docstring):
+    """
+    Apply rich formatting to a docstring for enhanced terminal display.
+
+    This function processes a docstring by applying various formatting styles
+    using the Rich library. It handles sections like script descriptions,
+    usage examples, command arguments, and specific keywords like "Inputs:",
+    "Outputs:", "Note:", "Prereqs:", and "Next steps:". Additionally, it applies
+    special styles to text enclosed in double backticks and command-line flags.
+
+    Parameters
+    ----------
+    docstring : str
+        The original docstring to be formatted.
+
+    Returns
+    -------
+    Text
+        A `rich.text.Text` object containing the formatted text.
+
+    Notes
+    -----
+    The function applies the following styles:
+    - "UNRAVEL" is styled with a custom multi-colored format.
+    - Script description lines (before "Usage:") are styled as bold.
+    - Lines starting with "Usage:" are styled as bold cyan.
+    - Command names enclosed in double backticks are styled as bold bright magenta.
+    - Required arguments (before the first optional argument) are styled as purple3.
+    - Optional arguments (within square brackets) are styled as bright blue.
+    - Command-line flags (e.g., `-m`, `--input`) are styled as bold.
+    - Section headers "Inputs:", "Outputs:", "Note:", "Prereqs:", and "Next steps:" 
+      are styled in green, gold1, dark_orange, red, and grey50, respectively.
+    
+    Examples
+    --------
+    >>> docstring = '''
+    ... Script description.
+    ...
+    ... Usage:
+    ... ```
+    ... command -i input_file -o output_file [-v]
+    ... ```
+    ...
+    ... Inputs:
+    ...     - path/to/input_file
+    ...
+    ... Outputs:
+    ...     - path/to/output_file
+    ...
+    ... Note:
+    ...     - Use the `-v` flag for verbose output.
+    ...
+    ... Prereqs:
+    ...     - Commands that need to be run beforehand.
+    ... '''
+    >>> formatted_text = format_docstring_for_terminal(docstring)
+    >>> print(formatted_text)
+    """
+
+
+    # Regex to find text enclosed in double backticks
+    command_pattern = r"``(.*?)``"
+    
+    # Regex to find flags (like -m or --input)
+    flag_pattern = r"(\s-\w|\s--\w[\w-]*)"
+
+    # Prepare the final formatted text
+    final_text = Text()
+
+    # Split the docstring into lines for processing
+    lines = docstring.splitlines()
+
+    # Flags to manage the sections
+    in_description = True
+    command = None
+
+    for line in lines:
+        # Replace text between double backticks with bold bright_magenta
+        line = re.sub(command_pattern, r"[bold bright_magenta]\1[/]", line)
+
+        if in_description:
+            # Style "UNRAVEL" with custom formatting
+            line = line.replace("UNRAVEL", "[red1]U[/][dark_orange]N[/][bold gold1]R[/][green]A[/][bright_blue]V[/][purple3]E[/][bright_magenta]L[/]")
+
+            if line.strip().startswith("Usage"):
+                in_description = False
+                # Apply bold cyan style to the Usage line
+                styled_line = Text(line, style="bold cyan")
+            else:
+                # Apply bold style to the script description
+                styled_line = Text.from_markup(line, style="bold")
+
+            final_text.append(styled_line)
+            final_text.append("\n")
+            continue  # Skip the rest of the loop to avoid adding the line twice
+
+        if line.strip().startswith("Usage"):
+            # Apply bold cyan style to subsequent Usage lines
+            styled_line = Text(line, style="bold cyan")
+            final_text.append(styled_line)
+            final_text.append("\n")
+            continue
+
+        # Skip lines that start with "---"
+        if line.strip().startswith("---"):
+            continue
+
+        # Apply specific colors for section headers
+        if line.strip().startswith("Inputs:"):
+            styled_line = Text(line, style="green")
+        elif line.strip().startswith("Outputs:"):
+            styled_line = Text(line, style="gold1")
+        elif line.strip().startswith("Note:"):
+            styled_line = Text(line, style="dark_orange")
+        elif line.strip().startswith("Prereqs:"):
+            styled_line = Text(line, style="red")
+        elif line.strip().startswith("Next steps:"):
+            styled_line = Text(line, style="grey50")
+        else:
+            # Extract the command from the line
+            if not command and " " in line:
+                command = line.split(" ")[0]
+
+            if command and line.startswith(command):
+                # Find the first occurrence of ' [' and split the line there
+                index = line.find(' [')
+                if index != -1:  # If the pattern is found
+                    parts = [line[:index], line[index:]]
+                    required_part = parts[0]
+                    optional_part = parts[1]
+
+                    # Style the flags as bold
+                    required_part = re.sub(flag_pattern, r"[bold]\1[/]", required_part)
+                    optional_part = re.sub(flag_pattern, r"[bold]\1[/]", optional_part)
+
+                    # Style the required arguments (before the bracket) as purple3
+                    styled_required = Text.from_markup(f"[purple3]{required_part}[/]")
+
+                    # Style the optional arguments (within the bracket) as bright_blue
+                    styled_optional = Text.from_markup(f"[bright_blue]{optional_part}[/]")
+
+                    # Combine the styled parts together
+                    styled_line = Text()
+                    styled_line.append(styled_required)
+                    styled_line.append(styled_optional)
+                else:
+                    # If no optional arguments are found, treat the whole line as required
+                    required_part = re.sub(flag_pattern, r"[bold]\1[/]", line)
+                    styled_line = Text.from_markup(f"[purple3]{required_part}[/]")
+
+                final_text.append(styled_line)
+                final_text.append("\n")
+                continue
+
+            # Revert to default styling for lines after the usage section
+            styled_line = Text(line)
+
+        final_text.append(styled_line)
+        final_text.append("\n")
+
+    return final_text
+
+
+# Custom help action to print formatted __doc__ and the argument help
+class CustomHelpAction(argparse.Action):
+    def __init__(self, option_strings, dest=argparse.SUPPRESS, default=argparse.SUPPRESS, help=None, docstring=None):
+        self.docstring = docstring
+        super(CustomHelpAction, self).__init__(option_strings=option_strings, dest=dest, default=default, nargs=0, help=help)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if self.docstring:
+            print(format_docstring_for_terminal(self.docstring))
+        else:
+            print(format_docstring_for_terminal(__doc__))
+        parser.print_help()
+        parser.exit()
