@@ -99,27 +99,6 @@ def reverse_reorient_for_raw_to_nii_conv(ndarray):
     flipped_img = np.fliplr(rotated_img) # Flip horizontally
     return flipped_img
 
-# @print_func_name_args_times()
-# def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_log=None):
-#     """Segment tif series with Ilastik."""
-#     tif_dir = str(tif_dir)
-#     tif_list = sorted(glob(f"{tif_dir}/*.tif"))
-#     ilastik_project = str(ilastik_project)
-#     output_dir_ = str(output_dir)
-#     cmd = [
-#         'run_ilastik.sh',
-#         '--headless',
-#         '--project', ilastik_project,
-#         '--export_source', 'Simple Segmentation',
-#         '--output_format', 'tif',
-#         '--output_filename_format', f'{output_dir}/{{nickname}}.tif',
-#     ] + tif_list
-#     if not Path(output_dir_).exists():
-#         if ilastik_log == None:
-#             subprocess.run(cmd)
-#         else:
-#             subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
 @print_func_name_args_times()
 def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executable=None):
     """Segment tif series with Ilastik using pixel classification."""
@@ -141,14 +120,12 @@ def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executabl
         '--output_format', 'tif',
         '--output_filename_format', f'{str(output_dir)}/{{nickname}}.tif'
     ] + tif_list
-
-    print("\n    Running Ilastik with command:\n", ' '.join(cmd))
-    # result = subprocess.run(cmd, capture_output=True, text=True)
+    print("\n    Running Ilastik with command:\n", ' '.join(cmd[:10]), ' '.join(tif_list[:3]), f'[default bold]...\n')
     result = subprocess.run(cmd, capture_output=True, text=True, shell=(os.name == 'nt'))
     if result.returncode != 0:
         print("\n    Ilastik failed with error:\n", result.stderr)
     else:
-        print("\n    Ilastik completed successfully.\n")
+        print("    Ilastik completed successfully.")
 
 @print_func_name_args_times()
 def pad(ndarray, pad_width=0.15):
