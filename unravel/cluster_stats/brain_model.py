@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_brain_model`` from UNRAVEL to prep .nii.gz and RGBA .txt for vizualization in dsi_studio.
 
-Usage:
-------
-    cstats_brain_model -i input.nii.gz -sa atlas/atlas_CCFv3_2020_30um_split.nii.gz -m -v 
+Use ``cstats_brain_model`` from UNRAVEL to prep an img.nii.gz and RGBA.txt LUT for vizualization in dsi_studio.
+
+Prereqs:
+    - Use ``cstats_summary`` or ``cstats_index`` to generate a valid cluster index.
+
+Inputs:
+    - input.nii.gz (e.g., a valid cluster index, but can be any binary or labeled image)
 
 Outputs: 
     - img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
@@ -18,9 +21,12 @@ Note:
     - It has columns: Region_ID, ID_Path, Region, Abbr, General_Region, R, G, B
     - Alternatively, use CCFv3-2017_regional_summary.csv or provide a custom CSV with the same columns.
     - Use DSI Studio to visualize the cluster index with the RGBA values.
+
+Usage:
+------
+    cstats_brain_model -i input.nii.gz [-m] [-ax 2] [-s 0] [-sa atlas/atlas_CCFv3_2020_30um_split.nii.gz] [-csv CCFv3-2020_regional_summary.csv] [-v]
 """
 
-import argparse
 import nibabel as nib
 import numpy as np
 import pandas as pd
@@ -28,22 +34,31 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM 
+from unravel.core.argparse_rich_formatter import SuppressMetavar, SM, RichArgumentParser
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 from unravel.voxel_stats.mirror import mirror
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help="path/img.nii.gz (e.g., valid cluster index)", required=True, action=SM)
-    parser.add_argument('-m', '--mirror', help='Mirror the image in the x-axis for a bilateral representation. Default: False', action='store_true', default=False)
-    parser.add_argument('-ax', '--axis', help='Axis to flip the image along if mirroing. Default: 2', default=2, type=int, action=SM)
-    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
-    parser.add_argument('-sa', '--split_atlas', help='path/split_atlas.nii.gz. Default: atlas/atlas_CCFv3_2020_30um_split.nii.gz', default='atlas/atlas_CCFv3_2020_30um_split.nii.gz', action=SM)
-    parser.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help="path/img.nii.gz (e.g., a valid cluster map)", required=True, action=SM)
+
+    opts_mirror = parser.add_argument_group('Optional args for mirroring the input')
+    opts_mirror.add_argument('-m', '--mirror', help='Provide flag to mirror the input image for a bilateral representation.', action='store_true', default=False)
+    opts_mirror.add_argument('-ax', '--axis', help='Axis to flip the image along if mirroing. Default: 2', default=2, type=int, action=SM)
+    opts_mirror.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
+
+    opts_coloring = parser.add_argument_group('Optional args for region coloring')
+    opts_coloring.add_argument('-sa', '--split_atlas', help='path/split_atlas.nii.gz. Default: atlas/atlas_CCFv3_2020_30um_split.nii.gz', default='atlas/atlas_CCFv3_2020_30um_split.nii.gz', action=SM)
+    opts_coloring.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 # TODO: Consider consolidating regional_summary.csv (regional_summary_CCFv3-2017.csv) and CCFv3-2020_regional_summary.csv and ideally add logic to match usage automatic (i.e., no extra arg needed)

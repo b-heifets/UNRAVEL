@@ -6,11 +6,11 @@ Testing script description line 2.
 
 Usage for forward warping atlas to tissue space:
 ------------------------------------------------
-``test`` -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -o warp/atlas_in_tissue_space.nii.gz [-ro reg_outputs] [-inp multiLabel] [-v]
+    test -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -o warp/atlas_in_tissue_space.nii.gz [-ro reg_outputs] [-inp multiLabel] [-v]
 
 Usage for inverse warping tissue to atlas space:
 ------------------------------------------------
-``test`` -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -o warp/tissue_in_atlas_space.nii.gz [-ro reg_outputs] [-inv] [-v]
+    test -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -o warp/tissue_in_atlas_space.nii.gz [-ro reg_outputs] [-inv] [-v]
 
 Inputs:
     - path/moving_image.nii.gz

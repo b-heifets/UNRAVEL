@@ -67,12 +67,6 @@ class SuppressMetavar(RichHelpFormatter):
                 for option_string in action.option_strings:
                     parts.append(option_string)
             return ', '.join(parts)
-    
-    def _fill_text(self, text, width, indent):
-        # This method formats the epilog. Override it to split the text into lines and format each line individually.
-        text_lines = text.splitlines()
-        formatted_lines = [textwrap.fill(line, width, initial_indent=indent, subsequent_indent=indent) for line in text_lines]
-        return '\n'.join(formatted_lines)
 
 # Custom action class to suppress metavar across all nargs configurations
 class SM(argparse.Action):
@@ -98,7 +92,6 @@ class SM(argparse.Action):
             current_values.append(values)
             setattr(namespace, self.dest, current_values)  # Append new values
 
-# Function to apply rich formatting based on rules
 def format_docstring_for_terminal(docstring):
     """
     Apply rich formatting to a docstring for enhanced terminal display.
@@ -125,39 +118,13 @@ def format_docstring_for_terminal(docstring):
     - "UNRAVEL" is styled with a custom multi-colored format.
     - Script description lines (before "Usage:") are styled as bold.
     - Lines starting with "Usage:" are styled as bold cyan.
-    - Command names enclosed in double backticks are styled as bold bright magenta.
+    - Command names enclosed in double backticks or appearing in usage examples are styled as bold bright magenta.
     - Required arguments (before the first optional argument) are styled as purple3.
     - Optional arguments (within square brackets) are styled as bright blue.
     - Command-line flags (e.g., `-m`, `--input`) are styled as bold.
     - Section headers "Inputs:", "Outputs:", "Note:", "Prereqs:", and "Next steps:" 
       are styled in green, gold1, dark_orange, red, and grey50, respectively.
-    
-    Examples
-    --------
-    >>> docstring = '''
-    ... Script description.
-    ...
-    ... Usage:
-    ... ```
-    ... command -i input_file -o output_file [-v]
-    ... ```
-    ...
-    ... Inputs:
-    ...     - path/to/input_file
-    ...
-    ... Outputs:
-    ...     - path/to/output_file
-    ...
-    ... Note:
-    ...     - Use the `-v` flag for verbose output.
-    ...
-    ... Prereqs:
-    ...     - Commands that need to be run beforehand.
-    ... '''
-    >>> formatted_text = format_docstring_for_terminal(docstring)
-    >>> print(formatted_text)
     """
-
 
     # Regex to find text enclosed in double backticks
     command_pattern = r"``(.*?)``"
@@ -220,44 +187,60 @@ def format_docstring_for_terminal(docstring):
         else:
             # Extract the command from the line
             if not command and " " in line:
-                command = line.split(" ")[0]
+                command = line.strip().split(" ")[0]
 
-            if command and line.startswith(command):
-                # Find the first occurrence of ' [' and split the line there
+            if command and line.strip().startswith(command):
+                # Ensure the command is styled as bold bright magenta (e.g., when it is not in backticks)
+                line = line.replace(command, f"[bold bright_magenta]{command}[/]", 1)
+
+                # Remove tabs from the line
+                line = line.replace("\t", "")
+                line = line.replace("    ", "")
+
+                # Check if there are optional arguments in the line
                 index = line.find(' [')
-                if index != -1:  # If the pattern is found
-                    parts = [line[:index], line[index:]]
-                    required_part = parts[0]
-                    optional_part = parts[1]
 
-                    # Style the flags as bold
-                    required_part = re.sub(flag_pattern, r"[bold]\1[/]", required_part)
-                    optional_part = re.sub(flag_pattern, r"[bold]\1[/]", optional_part)
-
-                    # Style the required arguments (before the bracket) as purple3
-                    styled_required = Text.from_markup(f"[purple3]{required_part}[/]")
-
-                    # Style the optional arguments (within the bracket) as bright_blue
-                    styled_optional = Text.from_markup(f"[bright_blue]{optional_part}[/]")
-
-                    # Combine the styled parts together
-                    styled_line = Text()
-                    styled_line.append(styled_required)
-                    styled_line.append(styled_optional)
+                # Split the line into required and optional parts
+                if index != -1:  # If there are optional arguments
+                    required_part = line[:index].strip()
+                    optional_part = line[index:].strip()
                 else:
-                    # If no optional arguments are found, treat the whole line as required
-                    required_part = re.sub(flag_pattern, r"[bold]\1[/]", line)
-                    styled_line = Text.from_markup(f"[purple3]{required_part}[/]")
+                    required_part = line.strip()
+                    optional_part = ""
 
-                final_text.append(styled_line)
-                final_text.append("\n")
-                continue
+                # Style the flags as bold
+                required_part = re.sub(flag_pattern, r"[bold]\1[/]", required_part)
+                optional_part = re.sub(flag_pattern, r"[bold]\1[/]", optional_part)
 
-            # Revert to default styling for lines after the usage section
-            styled_line = Text(line)
+                # Style the required arguments (before the bracket) as purple3
+                styled_required = Text.from_markup(f"[purple3]{required_part}[/]") if required_part else Text()
+
+                # Style the optional arguments (within the bracket) as bright_blue
+                styled_optional = Text.from_markup(f"[bright_blue]{optional_part}[/]") if optional_part else Text()
+
+                # Combine the styled parts together
+                styled_line = Text()
+                styled_line.append(styled_required)
+                if optional_part:  # Adding space between required and optional parts only if there are optional parts
+                    styled_line.append(" ")
+                styled_line.append(styled_optional)
+            else:
+                # Revert to default styling for lines after the usage section
+                styled_line = Text.from_markup(line)
 
         final_text.append(styled_line)
         final_text.append("\n")
+
+    # Add a separator line to visually separate the docstring from argparse help
+    
+    # initialize console
+    from rich.console import Console
+
+
+    console_width = Console().size.width
+    separator = Text("─" * console_width, style="dim")
+    final_text.append(separator)
+    final_text.append("\n")
 
     return final_text
 
