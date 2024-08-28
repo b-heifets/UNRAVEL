@@ -24,25 +24,31 @@ Files will be renamed as follows:
 If needed, files and/or folders can be renamed with ``utils_rename``.
 """ 
 
-import argparse
 import pandas as pd
 from glob import glob
 from pathlib import Path
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions', required=True, action=SM)
-    parser.add_argument('-f', '--file', help='Rename matching files', action='store_true', default=False)
-    parser.add_argument('-d', '--dirs', help='Rename matching dirs', action='store_true', default=False)
-    parser.add_argument('-r', '--recursive', help='Recursively rename files/dirs', action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-f', '--file', help='Rename matching files', action='store_true', default=False)
+    opts.add_argument('-d', '--dirs', help='Rename matching dirs', action='store_true', default=False)
+    opts.add_argument('-r', '--recursive', help='Recursively rename files/dirs', action='store_true', default=False)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

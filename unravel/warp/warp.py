@@ -19,28 +19,33 @@ Note:
 """
 
 import ants
-import argparse
 import numpy as np
 import nibabel as nib
 from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-ro', '--reg_outputs', help='path/reg_outputs', required=True, action=SM)
-    parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz', required=True, action=SM)
-    parser.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='path/output.nii.gz', required=True, action=SM)
-    parser.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from ``reg``)', default=False, action='store_true')
-    parser.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-ro', '--reg_outputs', help='path/reg_outputs', required=True, action=SM)
+    reqs.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz', required=True, action=SM)
+    reqs.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='path/output.nii.gz', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from ``reg``)', default=False, action='store_true')
+    opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

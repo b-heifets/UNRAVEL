@@ -24,14 +24,15 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils_rich import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Config
         
 # cfg = Config(Path(__file__).parent / '_test.ini')
 # print(type(cfg.test.a))
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
     pre_parser = argparse.ArgumentParser(add_help=False)
     pre_parser.add_argument('-info', '--info', help='Print extended help information and exit.', action='store_true')
     args, _ = pre_parser.parse_known_args()
@@ -39,10 +40,6 @@ def parse_args():
     if args.info:
         print(__doc__)
         sys.exit()
-
-    reqs = parser.add_argument_group('Required arguments')
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM) # Offload to config file
-    parser.add_argument('-d', '--dirs', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/input', required=True, action=SM)
@@ -54,7 +51,11 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from reg.py)', default=False, action='store_true')
     opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
-    parser.epilog = __doc__
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM) # Offload to config file
+    general.add_argument('-d', '--dirs', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
+
     return parser.parse_args()
 
 

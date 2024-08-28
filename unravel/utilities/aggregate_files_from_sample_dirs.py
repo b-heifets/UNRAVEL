@@ -13,27 +13,33 @@ Usage to prepend sample?? to the name of files being copied:
     utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -d $DIRS -v -a
 """
 
-import argparse
 import shutil
 from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('-g', '--glob_pattern', help='Glob pattern to match files within sample?? directories', required=True, action=SM)
-    parser.add_argument('-td', '--target_dir', help='path/target_dir name for gathering files. Default: current working dir', default=None, action=SM)
-    parser.add_argument('-a', '--add_prefix', help='Add "sample??_" prefix to the output files', action='store_true')
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-g', '--glob_pattern', help='Glob pattern to match files within sample?? directories', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-td', '--target_dir', help='path/target_dir name for gathering files. Default: current working dir', default=None, action=SM)
+    opts.add_argument('-a', '--add_prefix', help='Add "sample??_" prefix to the output files', action='store_true')
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

@@ -16,25 +16,31 @@ Output:
     - An optional 'Region_ID' column is added based on the corresponding atlas image.
 """
 
-import argparse
 from pathlib import Path
 import numpy as np
 import pandas as pd
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='Path to the input 3D image.', required=True, action=SM)
-    parser.add_argument('-a', '--atlas_img', help="Path to the atlas image matching -i for adding a 'Region_ID' column to the CSV.", action=SM)
-    parser.add_argument('-o', '--output', help='Path to save the output points (CSV format). Default: path/input_points.csv', default=None, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='Path to the input 3D image.', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-a', '--atlas_img', help="Path to the atlas image matching -i for adding a 'Region_ID' column to the CSV.", action=SM)
+    opts.add_argument('-o', '--output', help='Path to save the output points (CSV format). Default: path/input_points.csv', default=None, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

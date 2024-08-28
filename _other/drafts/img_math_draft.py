@@ -31,28 +31,34 @@ Operations:
 
 """
 
-import argparse
 import numpy as np
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii, save_as_tifs, save_as_zarr
 from unravel.core.utils import print_cmd_and_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--images', help="Paths to the input images. (path/image1 path/image2)", nargs=2, required=True, action=SM)
-    parser.add_argument('-n', '--operation', help="Numpy operation to perform (+, -, *, /, etc.).", required=True, action=SM)
-    parser.add_argument('-o', '--output', help='Path to the output image', required=True, action=SM)
-    parser.add_argument('-t', '--threshold', help='Threshold the output image.', default=None, type=float, action=SM)
-    parser.add_argument('-ut', '--upper_thres', help='Upper threshold for thresholding.', default=None, type=float, action=SM)
-    parser.add_argument('-T', '--True_val', help='Value to assign when threshold condition is true.', default=1, type=float, action=SM)
-    parser.add_argument('-F', '--False_val', help='Value to assign when threshold condition is false.', default=0, type=float, action=SM)
-    parser.add_argument('-d', '--dtype', help='Numpy array data type', default=None, action=SM)
-    parser.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata.', default=None, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--images', help="Paths to the input images. (path/image1 path/image2)", nargs=2, required=True, action=SM)
+    reqs.add_argument('-n', '--operation', help="Numpy operation to perform (+, -, *, /, etc.).", required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='Path to the output image', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-t', '--threshold', help='Threshold the output image.', default=None, type=float, action=SM)
+    opts.add_argument('-ut', '--upper_thres', help='Upper threshold for thresholding.', default=None, type=float, action=SM)
+    opts.add_argument('-T', '--True_val', help='Value to assign when threshold condition is true.', default=1, type=float, action=SM)
+    opts.add_argument('-F', '--False_val', help='Value to assign when threshold condition is false.', default=0, type=float, action=SM)
+    opts.add_argument('-d', '--dtype', help='Numpy array data type', default=None, action=SM)
+    opts.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata.', default=None, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args() 
 
 # TODO: Add support for chaining operations

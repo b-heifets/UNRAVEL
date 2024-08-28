@@ -27,22 +27,15 @@ Prereqs:
 
 """
 
-import argparse
 from rich import print
 from rich.text import Text
 
-from unravel.core.argparse_utils_rich import SuppressMetavar, SM, CustomHelpAction
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 
 # "[red1]U[/][dark_orange]N[/][bold gold1]R[/][green]A[/][bright_blue]V[/][purple3]E[/][bright_magenta]L[/]"
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar, add_help=False)
-    parser.add_argument('-h', '--help', action=CustomHelpAction, help='Show this help message and exit.', docstring=__doc__)
-
-    general = parser.add_argument_group('General arguments')
-    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
-    general.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/input', required=True, action=SM)
@@ -54,6 +47,11 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from reg.py)', default=False, action='store_true')
     opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 

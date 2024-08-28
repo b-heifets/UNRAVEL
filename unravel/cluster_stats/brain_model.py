@@ -11,7 +11,7 @@ Inputs:
     - input.nii.gz (e.g., a valid cluster index, but can be any binary or labeled image)
 
 Outputs: 
-    - img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)
+    - img_ABA.nii.gz (Allen brain atlas labels were applied) or img_ABA_WB.nii.gz if -m was used (WB = Whole Brain)
     - rgba.txt (RGBA values for each region in the cluster index)
 
 Note: 
@@ -20,7 +20,10 @@ Note:
     - CCFv3-2020_regional_summary.csv is in UNRAVEL/unravel/core/csvs/
     - It has columns: Region_ID, ID_Path, Region, Abbr, General_Region, R, G, B
     - Alternatively, use CCFv3-2017_regional_summary.csv or provide a custom CSV with the same columns.
-    - Use DSI Studio to visualize the cluster index with the RGBA values.
+
+Next steps:
+    - Use DSI Studio to visualize img_WB.nii.gz with the RGBA values.
+
 
 Usage:
 ------
@@ -34,14 +37,13 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_rich_formatter import SuppressMetavar, SM, RichArgumentParser
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 from unravel.voxel_stats.mirror import mirror
 
 
 def parse_args():
-
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
@@ -113,7 +115,7 @@ def main():
     histogram = histogram[1:]
 
     # Determine what regions are present based on the histogram
-    present_regions = np.where(histogram > 0)[0] + 1 # Add 1 to account for the background
+    present_regions = np.where(histogram > 0)[0] + 1  # Add 1 to account for the background
 
     # Get R, G, B values for each region
     if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv': 

@@ -4,7 +4,6 @@
 Load CSV w/ cluster densities and conduct t-tests
 """
 
-import argparse
 import matplotlib as mpl    
 import matplotlib.pyplot as plt
 import os
@@ -14,7 +13,8 @@ import warnings
 from matplotlib.ticker import MaxNLocator
 from scipy.stats import ttest_ind
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -23,15 +23,19 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 mpl.rcParams['font.family'] = 'Arial'
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input_csv', help='Path to CSV with cluster densities', required=True, action=SM)
-    parser.add_argument('-ord', '--order', help='Group Order for plotting (must match condition in CSV)', required=True, nargs=2, action=SM)
-    parser.add_argument('-l', '--labels', help='Group Labels in same order', nargs=2, default=None, action=SM)
-    parser.add_argument('-c', '--colors', help="Colors (<color> or <hexcode>) for the bars in the same order as groups (Default: #dadada #ddeeff)", nargs=2, default=['#dadada', '#ddeeff'], action=SM)
-    parser.add_argument('--symbol_color', help='Color (<color> or <hexcode>) for the symbols in swarmplot (Default: #bababa #abface)', nargs=2, default=['#bababa', '#abcdef'], action=SM)
-    parser.add_argument('-ort', '--orient', help='Orientation of bar graphs (h: horizontal, v: vertical; Default: h)', choices=['h', 'v'], default='h',  action=SM)
-    parser.add_argument('--output_type', choices=['pdf', 'png', 'svg'], default='pdf', help='Output file type (pdf, png, or svg)', action=SM)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input_csv', help='Path to CSV with cluster densities', required=True, action=SM)
+    reqs.add_argument('-ord', '--order', help='Group Order for plotting (must match condition in CSV)', required=True, nargs=2, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-l', '--labels', help='Group Labels in same order', nargs=2, default=None, action=SM)
+    opts.add_argument('-c', '--colors', help="Colors (<color> or <hexcode>) for the bars in the same order as groups (Default: #dadada #ddeeff)", nargs=2, default=['#dadada', '#ddeeff'], action=SM)
+    opts.add_argument('--symbol_color', help='Color (<color> or <hexcode>) for the symbols in swarmplot (Default: #bababa #abface)', nargs=2, default=['#bababa', '#abcdef'], action=SM)
+    opts.add_argument('-ort', '--orient', help='Orientation of bar graphs (h: horizontal, v: vertical; Default: h)', choices=['h', 'v'], default='h',  action=SM)
+    opts.add_argument('--output_type', choices=['pdf', 'png', 'svg'], default='pdf', help='Output file type (pdf, png, or svg)', action=SM)
+    opts.epilog = __doc__
     return parser.parse_args()
 
 def get_significance(p_val):

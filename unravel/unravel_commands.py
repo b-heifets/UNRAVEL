@@ -1,7 +1,16 @@
 #!/usr/bin/env python3
 
 """
-Use ``unravel_commands`` or ``uc`` to print a list of commands available in the unravel package. 
+Use ``unravel_commands`` or ``uc`` to print a list of commands available in the UNRAVEL package. 
+
+For help on a ``command``, run: 
+<command> -h
+
+Note: 
+    - Documentation: https://b-heifets.github.io/UNRAVEL/
+    - Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.
+    - Filtering is case-insensitive and matches substrings in the printed lines (regex).
+    - For example, use of -f with -d will find matches in the command name and/or description, preserving those lines.
 
 Usage to print common commands and descriptions:
 ------------------------------------------------
@@ -14,17 +23,6 @@ Usage to print all commands and module names:
 Usage to print commands matching a specific string:
 ---------------------------------------------------
     unravel_commands -f <string>
-
-For help on a command, run: 
-    <command> -h
-
-Note: 
-    - Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.
-    - Filtering is case-insensitive and matches substrings in the printed lines (regex).
-    - For example, use of -f with -d will find matches in the command name and/or description, presering those lines.
-
-Documentation:
-    https://b-heifets.github.io/UNRAVEL/
 """
 
 extended_help = """
@@ -54,21 +52,23 @@ If you encounter a situation where a command from the UNRAVEL package has the sa
     - Use the `which` command again to verify that the correct command is being invoked: which unravel_reg  # or which reg if using an alias
 """
 
-import argparse
 import re
 from rich import print
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-c', '--common', help='Only print common commands', action='store_true', default=False)
-    parser.add_argument('-m', '--module', help='Print the module (script name and location in the unravel package) for each command', action='store_true', default=False)
-    parser.add_argument('-d', '--description', help="Print the description of each command's purpose", action='store_true', default=False)
-    parser.add_argument('-f', '--filter', help='Filter commands by a string (e.g, -f reg)', type=str, action=SM)
-    parser.add_argument('--extended-help', help='Help on diagnosing and fixing command conflicts', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-c', '--common', help='Only print common commands', action='store_true', default=False)
+    opts.add_argument('-m', '--module', help='Print the module (script name and location in the unravel package) for each command', action='store_true', default=False)
+    opts.add_argument('-d', '--description', help="Print the description of each command's purpose", action='store_true', default=False)
+    opts.add_argument('-f', '--filter', help='Filter commands by a string (e.g, -f reg)', type=str, action=SM)
+    opts.add_argument('--extended-help', help='Help on diagnosing and fixing command conflicts', action='store_true', default=False)
+
     if parser.parse_known_args()[0].extended_help:
         print(extended_help)
         import sys ; sys.exit()

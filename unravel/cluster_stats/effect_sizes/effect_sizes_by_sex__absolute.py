@@ -25,26 +25,32 @@ The effect size is calculated as the unbiased Hedge\'s g effect sizes (corrected
     0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large
 """
 
-import argparse
 import os
 import pandas as pd
 from rich.traceback import install
 from scipy.stats import t
 from termcolor import colored
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input_csv', help='CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, ...)', action=SM)
-    parser.add_argument('-c1', '--condition_1', help='First condition of interest from csv (e.g., saline [data matching prefix pooled])', action=SM)
-    parser.add_argument('-c2', '--condition_2', help='Second condition (e.g, psilocybin [data matching prefix pooled])', action=SM)
-    parser.add_argument('-c', '--clusters', help='Space separated list of valid cluster IDs (default: process all clusters)', default=None, nargs='*', type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input_csv', help='CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, ...)', required=True, action=SM)
+    reqs.add_argument('-c1', '--condition_1', help='First condition of interest from csv (e.g., saline [data matching prefix pooled])', required=True, action=SM)
+    reqs.add_argument('-c2', '--condition_2', help='Second condition (e.g, psilocybin [data matching prefix pooled])', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-c', '--clusters', help='Space separated list of valid cluster IDs (default: process all clusters)', default=None, nargs='*', type=int, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

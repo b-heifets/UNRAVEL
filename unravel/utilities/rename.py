@@ -12,24 +12,30 @@ Usage for renaming directories:
     utils_rename -o old_text -n new_text -r -t dirs
 """
 
-import argparse
 from pathlib import Path
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-o', '--old_text', type=str, help='Text to be replaced in the filenames', action=SM)
-    parser.add_argument('-n', '--new_text', type=str, help='Text to replace with in the filenames', action=SM)
-    parser.add_argument('-t', '--type', help='Specify what to rename: "files", "dirs", or "both" (default: both)', choices=['files', 'dirs', 'both'], default='both', action=SM)
-    parser.add_argument('-r', '--recursive', help='Perform the renaming recursively', action='store_true', default=False)
-    parser.add_argument('-d', '--dry_run', help='Print old and new names without performing the renaming', action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-o', '--old_text', type=str, help='Text to be replaced in the filenames', action=SM)
+    reqs.add_argument('-n', '--new_text', type=str, help='Text to replace with in the filenames', action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-t', '--type', help='Specify what to rename: "files", "dirs", or "both" (default: both)', choices=['files', 'dirs', 'both'], default='both', action=SM)
+    opts.add_argument('-r', '--recursive', help='Perform the renaming recursively', action='store_true', default=False)
+    opts.add_argument('-d', '--dry_run', help='Print old and new names without performing the renaming', action='store_true', default=False)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

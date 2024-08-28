@@ -19,7 +19,6 @@ Next command:
     - ``reg_prep`` for registration
 """
 
-import argparse
 import glob
 import os
 import h5py
@@ -29,17 +28,22 @@ from rich import print
 from rich.traceback import install
 from tifffile import imwrite 
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/image.h5', action=SM)
-    parser.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/image.h5', required=True, action=SM)
+    reqs.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', required=True, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

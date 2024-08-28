@@ -8,7 +8,6 @@ Usage:
     atlas_relabel -i path/old_image.nii.gz -o path/new_image.nii.gz -ic path/input.csv -oc volume_summary -odt uint16
 """
 
-import argparse
 import numpy as np
 import nibabel as nib
 import pandas as pd
@@ -17,19 +16,26 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.config import Configuration
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/old_image.nii.gz', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='path/new_image.nii.gz', required=True, action=SM)
-    parser.add_argument('-ic', '--csv_input', help='path/input.csv w/ old IDs in column 1 and new IDs in column 2', required=True, action=SM)
-    parser.add_argument('-oc', '--csv_output', help='Optionally provide prefix to output label volume summaries (e.g., volume_summary)', default=None, action=SM)
-    parser.add_argument('-odt', '--data_type', help='Output data type. Default: uint16', default="uint16", action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/old_image.nii.gz', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='path/new_image.nii.gz', required=True, action=SM)
+    reqs.add_argument('-ic', '--csv_input', help='path/input.csv w/ old IDs in column 1 and new IDs in column 2', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-oc', '--csv_output', help='Optionally provide prefix to output label volume summaries (e.g., volume_summary)', default=None, action=SM)
+    opts.add_argument('-odt', '--data_type', help='Output data type. Default: uint16', default="uint16", action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

@@ -62,28 +62,34 @@ For PIR:
         -Since the value is positive, the 3rd letter is R
 """
 
-import argparse
 import nibabel as nib
 import numpy as np
 from nibabel.orientations import axcodes2ornt, ornt_transform, io_orientation, aff2axcodes, apply_orientation
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='path/img.nii.gz', required=True, action=SM)
-    parser.add_argument('-t', '--target_ort', help='Target orientation axis codes (e.g., RAS)', required=True, action=SM)
-    parser.add_argument('-z', '--zero_origin', help='Provide flag to zero the origin of the affine matrix.', action='store_true', default=False)
-    parser.add_argument('-a', '--apply', help='Provide flag to apply the new orientation to the ndarray data.', action='store_true', default=False)
-    parser.add_argument('-fc', '--form_code', help='Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned)', type=int, default=None)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='path/img.nii.gz', required=True, action=SM)
+    reqs.add_argument('-t', '--target_ort', help='Target orientation axis codes (e.g., RAS)', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-z', '--zero_origin', help='Provide flag to zero the origin of the affine matrix.', action='store_true', default=False)
+    opts.add_argument('-a', '--apply', help='Provide flag to apply the new orientation to the ndarray data.', action='store_true', default=False)
+    opts.add_argument('-fc', '--form_code', help='Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned)', type=int, default=None)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

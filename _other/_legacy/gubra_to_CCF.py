@@ -12,22 +12,18 @@ Note:
 
 """
 
-import argparse
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils_rich import SuppressMetavar, SM, CustomHelpAction
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 from unravel.warp.to_fixed import forward_warp
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar, add_help=False)
-    parser.add_argument('-h', '--help', action=CustomHelpAction, help='Show this help message and exit.', docstring=__doc__)
-
-    general = parser.add_argument_group('General arguments')
-    general.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+    
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from 25 um Gubra atlas space', required=True, action=SM)
@@ -39,6 +35,9 @@ def parse_args():
     opts.add_argument('-ro', '--reg_outputs', help="Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/reg_outputs", default="/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/reg_outputs", action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/reg_outputs/CCFv3-2017_ano_30um_w_fixes__fixed_reg_input.nii.gz', default='/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/reg_outputs/CCFv3-2017_ano_30um_w_fixes__fixed_reg_input.nii.gz', action=SM)
 
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    
     return parser.parse_args()
 
 

@@ -18,7 +18,6 @@ Next command:
     ``reg_prep`` for registration
 """
 
-import argparse
 import glob
 import os
 import numpy as np
@@ -28,17 +27,22 @@ from rich.traceback import install
 from tifffile import imwrite
 import tifffile 
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/image.tif', action=SM)
-    parser.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/image.tif', required=True, action=SM)
+    reqs.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', required=True, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
@@ -141,11 +145,7 @@ def main():
         file.write(f"Voxel size: {xy_res:.4f}x{xy_res:.4f}x{z_res:.4f} µm^3")
 
     # Save as tifs 
-    if args.tif_dir is None:
-        print("    [red1]The tif_dir argument was not provided. Please specify the directory.")
-        import sys ; sys.exit()
-    else:
-        tifs_output_path = Path(".", args.tif_dir)
+    tifs_output_path = Path(args.tif_dir)
     
     save_as_tifs(img, tifs_output_path)
 

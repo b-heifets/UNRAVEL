@@ -8,18 +8,16 @@ Usage:
 ``check_reg_fsleyes.py``
 """
 
-import argparse
 import subprocess
 from glob import glob
 from rich.traceback import install
 
-from unravel.core.argparse_utils_rich import SuppressMetavar, SM, CustomHelpAction
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar, add_help=False)
-    parser.add_argument('-h', '--help', action=CustomHelpAction, help='Show this help message and exit.', docstring=__doc__)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-fri', '--fixed_reg_in', help='Pattern for fixed image from registration. Default: *autofl_50um_masked_fixed_reg_input.nii.gz', default="*autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)

@@ -5,7 +5,6 @@ Create and dilate the outline of a brain mask from a .nii.gz file.
 
 """
 
-import argparse
 import numpy as np
 import nibabel as nib
 from pathlib import Path
@@ -14,19 +13,24 @@ from rich.live import Live
 from rich.traceback import install
 from scipy.ndimage import binary_erosion, binary_dilation
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import get_samples, initialize_progress_bar, print_cmd_and_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('-i', '--input', help='Default mask: reg_inputs/autofl_50um_brain_mask.nii.gz (from brain_mask.py)', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
-    parser.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on the outline. Default: 0", default=0, type=int, action=SM)
-    parser.add_argument("-o", "--output", help="Default: reg_inputs/autofl_50um_brain_mask_outline.nii.gz", default="reg_inputs/autofl_50um_brain_mask_outline.nii.gz", action=SM)
-    parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-i', '--input', help='Default mask: reg_inputs/autofl_50um_brain_mask.nii.gz (from brain_mask.py)', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
+    opts.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on the outline. Default: 0", default=0, type=int, action=SM)
+    opts.add_argument("-o", "--output", help="Default: reg_inputs/autofl_50um_brain_mask_outline.nii.gz", default="reg_inputs/autofl_50um_brain_mask_outline.nii.gz", action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
+
+
     return parser.parse_args()
 
 def create_outline(mask):

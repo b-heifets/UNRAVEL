@@ -17,12 +17,11 @@ Prereq:
 """
 
 import argparse
-import sys
 from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils_rich import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Config
 
 # Custom help action to print __doc__ and the argument help
@@ -36,14 +35,7 @@ class CustomHelpAction(argparse.Action):
         parser.exit()
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar, add_help=False)
-    parser.add_argument('-h', '--help', action=CustomHelpAction, help='Show this help message and exit.')
-
-
-    general = parser.add_argument_group('General arguments')
-    general.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM) # Offload to config file
-    general.add_argument('-d', '--dirs', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    general.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/input', required=True, action=SM)
@@ -55,7 +47,12 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from reg.py)', default=False, action='store_true')
     opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
-    # parser.epilog = __doc__
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM) # Offload to config file
+    general.add_argument('-d', '--dirs', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

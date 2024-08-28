@@ -22,14 +22,16 @@ Functions:
                                      by highlighting sections, command names, and other key elements.
 
 Usage:
-    The custom classes and functions can be used in any argpa           rse-based script to suppress metavar display, 
+    The custom classes and functions can be used in any argparse-based script to suppress metavar display, 
     format help messages with Rich's styled output, and enhance the overall user experience.
 
 Example:
     import argparse
-    from argparse_utils_rich import SuppressMetavar, SM, CustomArgumentRich
+    from argparse_rich_formatter import SuppressMetavar, SM, CustomArgumentRich
 
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
     parser.add_argument('-e', '--example', help='Example argument', action=SM)
     args = parser.parse_args()
 
@@ -156,7 +158,7 @@ def format_argparse_help(help_text):
         A `rich.text.Text` object containing the formatted help text.
     """
     # Regex to find flags (like -i, --input)
-    flag_pattern = r"(\s-\w[\w-]*,\s--\w[\w-]*|\s-\w[\w-]*)"
+    flag_pattern = r"(\s--[\w-]+|\s-\w+)"
 
     # Split the help text into lines
     lines = help_text.splitlines()
@@ -180,8 +182,8 @@ def format_argparse_help(help_text):
         elif "Default:" in line:
             # Apply grey50 style to lines with "Default:"
             line = re.sub(flag_pattern, fr"[{current_style}]\1[/]", line)
-            # Make "Default:" and the following text bold
-            line = re.sub(r"(Default:\s*\S*)", r"[bold]\1[/]", line)
+            # Make "Default:" and the entire following text bold
+            line = re.sub(r"(Default:\s*.*)", r"[bold]\1[/]", line)
             styled_line = Text.from_markup(line, style="grey50")
         else:
             # Apply the current style to the flags using regex
@@ -221,8 +223,7 @@ def format_docstring_for_terminal(docstring):
     The function applies the following styles:
     - "UNRAVEL" is styled with a custom multi-colored format.
     - Script description lines are styled as bold.
-    - Section headers "Inputs:", "Outputs:", "Note:", "Prereqs:", "Next steps:, and "Usage:" are styled in specific colors.
-      are styled in green, gold1, dark_orange, red, grey50, and bold cyan, respectively.
+    - Section headers starting with "Prereqs", "Inputs", "Outputs", "Note", "Next steps", and "Usage" are colored.
     - Command names enclosed in double backticks or appearing in usage examples are styled as bold bright magenta.
     - Required arguments (before the first optional argument) are styled as purple3.
     - Optional arguments (within square brackets) are styled as bright blue.
@@ -242,7 +243,7 @@ def format_docstring_for_terminal(docstring):
             return Text(line, style="green")
         elif line.strip().startswith("Next steps:"):
             return Text(line, style="grey50")
-        elif line.strip().startswith("Usage:"):
+        elif line.strip().startswith("Usage"):
             return Text(line, style="bold cyan")
         return Text(line)  # Return the line as is if no match is found
 
@@ -289,7 +290,7 @@ def format_docstring_for_terminal(docstring):
                 in_description = False
                 # Process the section header
                 styled_line = apply_section_style(line)
-                if line.strip().startswith("Usage:"):
+                if line.strip().startswith("Usage"):
                     processing_usage = True
                     if not separator_added:
                         # Add a separator line before the first Usage section
@@ -303,7 +304,7 @@ def format_docstring_for_terminal(docstring):
             # Apply section styles to headers
             if line.strip().startswith(("Inputs", "Outputs", "Note", "Prereqs", "Next steps")):
                 styled_line = apply_section_style(line)
-            elif line.strip().startswith("Usage:"):
+            elif line.strip().startswith("Usage"):
                 processing_usage = True
                 styled_line = apply_section_style(line)
                 if not separator_added:

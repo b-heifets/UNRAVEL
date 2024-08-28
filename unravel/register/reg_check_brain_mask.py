@@ -1,32 +1,39 @@
 #!/usr/bin/env python3
 
 """
-Use ``reg_check_brain_mask`` from UNRAVEL for masking QC, copies autofluo_50um.nii.gz and autofluo_50_masked.nii.gz for each sampled to a target dir
+Use ``reg_check_brain_mask`` from UNRAVEL for masking QC, copies autofluo_50um.nii.gz and autofluo_50_masked.nii.gz for each sample to a target directory.
 
-Usage:
-------
-    reg_check_brain_mask -d <list of paths>  # copies to the current working directory
+Usage for copying to the current working directory:
+---------------------------------------------------
+    reg_check_brain_mask -d <list of paths>
+
+Usage for copying to a target directory:
+----------------------------------------
     reg_check_brain_mask -d <list of paths> -td <target_output_dir>
 """
 
-import argparse
 from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, copy_files
 
+
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('-td', '--target_dir', help='path/target_output_dir name for aggregating outputs from all samples. If omitted, uses cwd', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='Output path. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-td', '--target_dir', help='path/target_output_dir name for aggregating outputs from all samples. If omitted, uses cwd', default=None, action=SM)
+    opts.add_argument('-i', '--input', help='Input path relative to sample??/. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    
     return parser.parse_args()
 
 

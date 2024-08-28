@@ -34,33 +34,39 @@ Outputs:
     - .nii.gz, .tif series, or .zarr depending on the output path extension.
 """
 
-import argparse
 import cv2
 import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from rich.traceback import install
 from scipy.ndimage import uniform_filter
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii, save_as_tifs, save_as_zarr
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/image .czi, path/img.nii.gz, or path/tif_dir', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='Output path. Default: None', required=True, action=SM)
-    parser.add_argument('-d', '--dimensions', help='2D or 3D spatial averaging. (2 or 3)', required=True, type=int, action=SM)
-    parser.add_argument('-k', '--kernel_size', help='Size of the kernel for spatial averaging. Default: 3', default=3, type=int, action=SM)
-    parser.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
-    parser.add_argument('-x', '--xy_res', help='xy resolution in um', default=None, type=float, action=SM)
-    parser.add_argument('-z', '--z_res', help='z resolution in um', default=None, type=float, action=SM)
-    parser.add_argument('-dt', '--dtype', help='Output data type. Default: uint16', default='uint16', action=SM)
-    parser.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata. Default: None', default=None, action=SM)
-    parser.add_argument('-ao', '--axis_order', help='Default: xyz. (other option: zyx)', default='xyz', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/image .czi, path/img.nii.gz, or path/tif_dir', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='Output path. Default: None', required=True, action=SM)
+    reqs.add_argument('-d', '--dimensions', help='2D or 3D spatial averaging. (2 or 3)', required=True, type=int, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-k', '--kernel_size', help='Size of the kernel for spatial averaging. Default: 3', default=3, type=int, action=SM)
+    opts.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
+    opts.add_argument('-x', '--xy_res', help='xy resolution in um', default=None, type=float, action=SM)
+    opts.add_argument('-z', '--z_res', help='z resolution in um', default=None, type=float, action=SM)
+    opts.add_argument('-dt', '--dtype', help='Output data type. Default: uint16', default='uint16', action=SM)
+    opts.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata. Default: None', default=None, action=SM)
+    opts.add_argument('-ao', '--axis_order', help='Default: xyz. (other option: zyx)', default='xyz', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

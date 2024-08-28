@@ -22,28 +22,34 @@ With --zscore, the range of z-scored data from -3 to 3 is converted to 0 to 255.
 With --fixed_scale, the data is scaled using the provided min and max values.
 """
 
-import argparse
 import nibabel as nib
 import numpy as np
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
-    parser.add_argument('-d', '--data_type', help='Data type of output. For example: uint16 (numpy conventions)', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='path/new_img.nii.gz. Default: path/img_dtype.nii.gz', action=SM)
-    parser.add_argument('-f', '--fixed_scale', help='Scale data using fixed min and max values. Supply as "min,max"', default=None)
-    parser.add_argument('-s', '--scale', help='Scale the data to the range of the new data type', action='store_true', default=False)
-    parser.add_argument('-b', '--binary', help='Convert to binary image.', action='store_true', default=False)
-    parser.add_argument('-z', '--zscore', help='Convert the range of z-scored data (use uint8 data type).', action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
+    reqs.add_argument('-d', '--data_type', help='Data type of output. For example: uint16 (numpy conventions)', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-o', '--output', help='path/new_img.nii.gz. Default: path/img_dtype.nii.gz', action=SM)
+    opts.add_argument('-f', '--fixed_scale', help='Scale data using fixed min and max values. Supply as "min,max"', default=None)
+    opts.add_argument('-s', '--scale', help='Scale the data to the range of the new data type', action='store_true', default=False)
+    opts.add_argument('-b', '--binary', help='Convert to binary image.', action='store_true', default=False)
+    opts.add_argument('-z', '--zscore', help='Convert the range of z-scored data (use uint8 data type).', action='store_true', default=False)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

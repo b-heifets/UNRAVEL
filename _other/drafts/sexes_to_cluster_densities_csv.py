@@ -4,22 +4,24 @@
 Merge densities and sex information from CSVs.
 """
 
-import argparse
 import os
 import pandas as pd
 from termcolor import colored
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.utils import print_cmd
 
 def parse_args():
     """
     Parse command line arguments.
     """
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input_csv', help='CSV with cell or fiber densities.', action=SM)
-    parser.add_argument('-s', '--sex_info_csv', help='CSV with "Samples" and "Sex" columns.', action=SM)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input_csv', help='CSV with cell or fiber densities.', action=SM)
+    reqs.add_argument('-s', '--sex_info_csv', help='CSV with "Samples" and "Sex" columns.', action=SM)
+
     return parser.parse_args()
 
 def add_sexes_to_input_csv(input_csv, sex_info_csv):

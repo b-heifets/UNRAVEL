@@ -18,7 +18,6 @@ Notes:
     - If the input CSV has a 'count' column, use ``utils_points_compressor`` to unpack the points before running this script.
 """
 
-import argparse
 import nibabel as nib
 import numpy as np
 import pandas as pd
@@ -27,7 +26,7 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_image_metadata_from_txt, nii_to_ndarray, nii_voxel_size
 from unravel.core.img_tools import reorient_for_raw_to_nii_conv, reverse_reorient_for_raw_to_nii_conv
@@ -38,25 +37,28 @@ from unravel.warp.to_atlas import to_atlas
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    # Arguments for batch processing sample directories:
-    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
-    # Required arguments:
-    parser.add_argument('-i', '--input', help='regional_stats/<Condition>_sample??_cell_centroids.csv (w/ columns: x, y, z, Region_ID) from ``rstats`` (first glob match processed)', required=True, action=SM)
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='regional_stats/<Condition>_sample??_cell_centroids.csv (w/ columns: x, y, z, Region_ID) from ``rstats`` (first glob match processed)', required=True, action=SM)
 
-    # Optional arguments:
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz or template matching moving image (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
-    parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    parser.add_argument('-inp', '--interpol', help='Type of interpolation (e.g., nearestNeighbor [default] or linear).', default='nearestNeighbor', action=SM)
-    parser.add_argument('-af', '--autofl_img', help='reg_inputs/autofl_50um.nii.gz from ``reg_prep`` (reference for `resample_and_convert_points()`)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
-    parser.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
-    parser.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
-    parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
-    parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz or template matching moving image (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
+    opts.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
+    opts.add_argument('-inp', '--interpol', help='Type of interpolation (e.g., nearestNeighbor [default] or linear).', default='nearestNeighbor', action=SM)
+    opts.add_argument('-af', '--autofl_img', help='reg_inputs/autofl_50um.nii.gz from ``reg_prep`` (reference for `resample_and_convert_points()`)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
+    opts.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
+    opts.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
+    opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
+    
+    compatability = parser.add_argument_group('Compatability options')
+    compatability.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

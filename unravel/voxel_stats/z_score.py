@@ -31,7 +31,6 @@ Prereqs:
     ``vstats_prep`` for inputs [& ``seg_brain_mask`` for tissue masks]
 """
 
-import argparse
 import shutil
 import nibabel as nib
 import numpy as np
@@ -40,7 +39,7 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times
@@ -48,19 +47,25 @@ from unravel.warp.to_atlas import to_atlas
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('-i', '--input', help='full_path/img.nii.gz or rel_path/img.nii.gz ("sample??" works for batch processing)', required=True, action=SM)
-    parser.add_argument('-s', '--suffix', help='Output suffix. Default: z (.nii.gz replaced w/ _z.nii.gz)', default='z', action=SM)
-    parser.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
-    parser.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
-    parser.add_argument('-n', '--no_tmask', help='Provide flag to avoid use of tmas', action='store_true')
-    parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a fixed image for warping a brain mask to atlas space (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
-    parser.add_argument('-inp', '--interpol', help='Type of interpolation (nearestNeighbor, multiLabel [default]).', default='multiLabel', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='full_path/img.nii.gz or rel_path/img.nii.gz ("sample??" works for batch processing)', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-s', '--suffix', help='Output suffix. Default: z (.nii.gz replaced w/ _z.nii.gz)', default='z', action=SM)
+    opts.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
+    opts.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
+    opts.add_argument('-n', '--no_tmask', help='Provide flag to avoid use of tmas', action='store_true')
+    opts.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
+    opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a fixed image for warping a brain mask to atlas space (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
+    opts.add_argument('-inp', '--interpol', help='Type of interpolation (nearestNeighbor, multiLabel [default]).', default='multiLabel', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
+
     return parser.parse_args()
 
 # TODO: Set voxels outside the mask(s) to zero

@@ -23,25 +23,30 @@ Note:
     - The summary option can be used with either packed or unpacked data.
 """
 
-import argparse
 import pandas as pd
 from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, process_files_with_glob
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help="Path to the input CSV file or a glob pattern.", required=True, action=SM)
-    parser.add_argument('-p', '--pack', help="Pack the points by grouping them.", action='store_true')
-    parser.add_argument('-u', '--unpack', help="Unpack the points by expanding them based on the `count` column.", action='store_true')
-    parser.add_argument('-s', '--summary', help='Output a CSV summarizing the number of points per region.', action='store_true')
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help="Path to the input CSV file or a glob pattern.", required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-p', '--pack', help="Pack the points by grouping them.", action='store_true')
+    opts.add_argument('-u', '--unpack', help="Unpack the points by expanding them based on the `count` column.", action='store_true')
+    opts.add_argument('-s', '--summary', help='Output a CSV summarizing the number of points per region.', action='store_true')
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 @print_func_name_args_times()

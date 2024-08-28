@@ -2,25 +2,27 @@
 
 """Load subset of 3D image.czi"""
 
-import argparse
 import czifile
 import numpy as np
 from datetime import datetime
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='<./img.czi>', action=SM)
-    parser.add_argument('-c', '--channel', type=int, help='Channel number (e.g., 0 for 1st channel, 1 for 2nd channel, ...)', action=SM)
-    parser.add_argument('-x', '--x_start', type=int, default=0, action=SM, help='Pixel where slicing starts in x')
-    parser.add_argument('-X', '--x_end', type=int, default=None, action=SM, help='Pixel where slicing ends in x')
-    parser.add_argument('-y', '--y_start', type=int, default=0, action=SM)
-    parser.add_argument('-Y', '--y_end', type=int, default=None, action=SM)
-    parser.add_argument('-z', '--z_start', type=int, default=0, action=SM)
-    parser.add_argument('-Z', '--z_end', type=int, default=None, action=SM)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='<./img.czi>', required=True, action=SM)
+    reqs.add_argument('-c', '--channel', type=int, help='Channel number (e.g., 0 for 1st channel, 1 for 2nd channel, ...)', required=True, action=SM)
+    reqs.add_argument('-x', '--x_start', type=int, default=0, required=True, action=SM, help='Pixel where slicing starts in x')
+    reqs.add_argument('-X', '--x_end', type=int, default=None, required=True, action=SM, help='Pixel where slicing ends in x')
+    reqs.add_argument('-y', '--y_start', type=int, default=0, required=True, action=SM)
+    reqs.add_argument('-Y', '--y_end', type=int, default=None, required=True, action=SM)
+    reqs.add_argument('-z', '--z_start', type=int, default=0, required=True, action=SM)
+    reqs.add_argument('-Z', '--z_end', type=int, default=None, required=True, action=SM)
+
     return parser.parse_args()
 
 def load_czi_subset(input, channel, x_start, x_end, y_start, y_end, z_start, z_end):

@@ -18,7 +18,6 @@ Usage to replace voxels in image with the mean intensity in the brain where mask
 This version allows for dilatation of the full res seg_mask (slow, but precise)
 """
 
-import argparse
 import nibabel as nib
 import numpy as np
 from pathlib import Path
@@ -28,29 +27,38 @@ from rich.traceback import install
 from scipy.ndimage import binary_dilation, zoom
 
 from unravel.register.reg_prep import reg_prep
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration 
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii, save_as_zarr
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', required=True, action=SM)
-    parser.add_argument('-mas', '--seg_mask', help='rel_path/mask_to_apply.nii.gz (in full res tissue space)', required=True, action=SM)
-    parser.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on seg_mask. Default: 0", default=0, type=int, action=SM)
-    parser.add_argument('-m', '--mean', help='If provided, conditionally replace values w/ the mean intensity in the brain', action='store_true', default=False)
-    parser.add_argument('-tmas', '--tissue_mask', help='For the mean itensity. rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
-    parser.add_argument('-omas', '--other_mask', help='For restricting application of -mas. E.g., reg_inputs/autofl_50um_brain_mask_outline.nii.gz (from ./UNRAVEL/_other/uncommon_scripts/brain_mask_outline.py)', default=None, action=SM)
-    parser.add_argument('-di', '--direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 1', default='less', choices=['greater', 'less'], action=SM)
-    parser.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', action=SM)
-    parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
-    parser.add_argument('-r', '--reg_res', help='Resample input to this res in microns for ``reg``. Default: 50', default=50, type=int, action=SM)
-    parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', required=True, action=SM)
+    reqs.add_argument('-mas', '--seg_mask', help='rel_path/mask_to_apply.nii.gz (in full res tissue space)', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on seg_mask. Default: 0", default=0, type=int, action=SM)
+    opts.add_argument('-m', '--mean', help='If provided, conditionally replace values w/ the mean intensity in the brain', action='store_true', default=False)
+    opts.add_argument('-tmas', '--tissue_mask', help='For the mean itensity. rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
+    opts.add_argument('-omas', '--other_mask', help='For restricting application of -mas. E.g., reg_inputs/autofl_50um_brain_mask_outline.nii.gz (from ./UNRAVEL/_other/uncommon_scripts/brain_mask_outline.py)', default=None, action=SM)
+    opts.add_argument('-di', '--direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 1', default='less', choices=['greater', 'less'], action=SM)
+    opts.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', action=SM)
+    opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
+    opts.add_argument('-r', '--reg_res', help='Resample input to this res in microns for ``reg``. Default: 50', default=50, type=int, action=SM)
+
+    compatability = parser.add_argument_group('Compatability options')
+    compatability.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

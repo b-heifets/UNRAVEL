@@ -3,10 +3,6 @@
 """
 Run ``reg_affine_initializer`` from UNRAVEL as a seperate process to kill it after a time out. This also allows for suppressing error messages.
 
-Usage:
-------
-    reg_affine_initializer -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m atlas/average_template_CCFv3_30um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10
-
 Python usage:
 -------------
 >>> import subprocess
@@ -14,9 +10,12 @@ Python usage:
 >>> command = ['python', 'reg_affine_initializer', '-f', 'reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', '-m', 'atlas/average_template_CCFv3_30um.nii.gz', '-o', 'reg_outputs/ANTsPy_init_tform.nii.gz', '-t', '10' ]
 >>> with open(os.devnull, 'w') as devnull:
 >>>    subprocess.run(command, stderr=devnull)
+
+Usage:
+------
+    reg_affine_initializer -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m atlas/average_template_CCFv3_30um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz -t 10
 """
 
-import argparse
 import os
 import ants
 from contextlib import redirect_stderr
@@ -25,19 +24,25 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., autofl_50um_masked_fixed_reg_input.nii.gz)', required=True, action=SM)
-    parser.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz (e.g., template)', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='path/init_tform_py.nii.gz', required=True, action=SM)
-    parser.add_argument('-t', '--time_out', help='Duration in seconds to allow this command/module to run. Default: 10', default=10, type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-f', '--fixed_img', help='path/fixed_image.nii.gz (e.g., autofl_50um_masked_fixed_reg_input.nii.gz)', required=True, action=SM)
+    reqs.add_argument('-m', '--moving_img', help='path/moving_image.nii.gz (e.g., template)', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='path/init_tform_py.nii.gz', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-t', '--time_out', help='Duration in seconds to allow this command/module to run. Default: 10', default=10, type=int, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 def affine_initializer_wrapper(fixed_image_path, moving_image_path, reg_outputs_path, queue):

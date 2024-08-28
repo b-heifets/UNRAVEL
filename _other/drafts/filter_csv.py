@@ -1,26 +1,29 @@
 #!/usr/bin/env python3
 
 
-import argparse
 import glob
 import pandas as pd
 from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-g', '--glob_pattern', help="Glob pattern to match CSV files", required=True, action=SM)
-    parser.add_argument('-col', '--column', help="Column to filter", required=True, action=SM)
-    parser.add_argument('-vals', '--values', nargs='*', help="Values to filter by", required=True, action=SM)
-    parser.add_argument('-od', '--output_dir', help="Directory to save filtered CSVs", default="filtered_csvs", action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-g', '--glob_pattern', help="Glob pattern to match CSV files", required=True, action=SM)
+    reqs.add_argument('-col', '--column', help="Column to filter", required=True, action=SM)
+    reqs.add_argument('-vals', '--values', nargs='*', help="Values to filter by", required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-od', '--output_dir', help="Directory to save filtered CSVs", default="filtered_csvs", action=SM)
+    opts.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
     return parser.parse_args()
 
 

@@ -10,12 +10,12 @@ outputs: ...
 
 
 # library imports in alphabetical order (can use the pythong library black to format scripts automatically)
-import argparse
 from pathlib import Path
 from rich import print
 from rich.live import Live
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
@@ -23,11 +23,12 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, 
 from time import sleep # for example_function
 
 def parse_args(): # This function defines the arguments that can be passed to the script
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar) # formatter_class allows for multiline epilog
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM) # SM is a custom action that suppresses the metavar in the help message
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False) # action='store_true' means that if the flag is provided, the value is set to True
-    parser.epilog = __doc__ # This sets the epilog to the docstring at the top of the script
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
+    general.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM) # SM is a custom action that suppresses the metavar in the help message
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False) # action='store_true' means that if the flag is provided, the value is set to True
     return parser.parse_args()
 
 

@@ -35,7 +35,6 @@ Outputs:
     
 """
 
-import argparse
 import pandas as pd
 import statsmodels.api as sm
 from pathlib import Path
@@ -46,15 +45,11 @@ from statsmodels.stats.anova import anova_lm
 
 from unravel.cluster_stats.cstats import cluster_validation_data_df
 from unravel.cluster_stats.stats_table import cluster_summary
-from unravel.core.argparse_utils_rich import SuppressMetavar, SM, CustomHelpAction
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar, add_help=False)
-    parser.add_argument('-h', '--help', action=CustomHelpAction, help='Show this help message and exit.', docstring=__doc__)
-
-    general = parser.add_argument_group('General arguments')
-    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('--factors', help='Names of the two factors and their levels, e.g., Treatment Saline Psilocybin Environment HC EE', nargs=6, required=True)
@@ -63,6 +58,9 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from fdr.py). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
     
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 # TODO: test script. Test w/ label densities data

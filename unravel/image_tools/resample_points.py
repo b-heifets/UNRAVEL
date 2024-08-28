@@ -18,7 +18,6 @@ Outputs:
     - A 3D image where each voxel contains the number of detections at that location.
 """
 
-import argparse
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -26,7 +25,8 @@ from rich import print
 from rich.traceback import install
 
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_3D_img
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -34,17 +34,23 @@ from unravel.image_io.points_to_img import points_to_img, load_and_prepare_point
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='CSV w/ columns: x, y, z, Region_ID (e.g., from ``rstats``)', required=True, action=SM)
-    parser.add_argument('-ri', '--ref_img', help='Path to a reference image .nii.gz for setting the output image resolution and shape [and saving if .nii.gz output].', required=True, action=SM)
-    parser.add_argument('-cr', '--current_res', help="Current resolution in micrometers (e.g., 3.52 3.52 6 for anisotropic or 10 for isotropic).", nargs='*', required=True, type=float, action=SM)
-    parser.add_argument('-tr', '--target_res', help="Target resolution in micrometers (e.g., 50 for isotropic).", required=True, type=float, action=SM)
-    parser.add_argument('-co', '--csv_output', help="Optional: Path to save resampled points in a CSV.", action=SM)
-    parser.add_argument('-io', '--img_output', help="Optional: Path to save resampled points as an image.", action=SM)
-    parser.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
-    parser.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='CSV w/ columns: x, y, z, Region_ID (e.g., from ``rstats``)', required=True, action=SM)
+    reqs.add_argument('-ri', '--ref_img', help='Path to a reference image .nii.gz for setting the output image resolution and shape [and saving if .nii.gz output].', required=True, action=SM)
+    reqs.add_argument('-cr', '--current_res', help="Current resolution in micrometers (e.g., 3.52 3.52 6 for anisotropic or 10 for isotropic).", nargs='*', required=True, type=float, action=SM)
+    reqs.add_argument('-tr', '--target_res', help="Target resolution in micrometers (e.g., 50 for isotropic).", required=True, type=float, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-co', '--csv_output', help="Optional: Path to save resampled points in a CSV.", action=SM)
+    opts.add_argument('-io', '--img_output', help="Optional: Path to save resampled points as an image.", action=SM)
+    opts.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
+    opts.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

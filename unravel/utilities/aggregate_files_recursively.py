@@ -8,24 +8,30 @@ Usage:
     utils_agg_files_rec -p '<asterisk>.txt' -s /path/to/source -d /path/to/destination
 """
 
-import argparse
 import shutil
 from pathlib import Path
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--pattern', help="The pattern to match files, e.g., '*.txt'", required=True, action=SM)
-    parser.add_argument('-s', '--source', help='The source directory to search files in. Default: current working dir', default='.', action=SM)
-    parser.add_argument('-d', '--destination', help='The destination directory to copy files to. Default: current working dir', default='.', action=SM)
-    parser.add_argument('-m', '--move', help='Move files instead of copying. Default: False', action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-p', '--pattern', help="The pattern to match files, e.g., '*.txt'", required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-s', '--source', help='The source directory to search files in. Default: current working dir', default='.', action=SM)
+    opts.add_argument('-d', '--destination', help='The destination directory to copy files to. Default: current working dir', default='.', action=SM)
+    opts.add_argument('-m', '--move', help='Move files instead of copying. Default: False', action='store_true', default=False)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
