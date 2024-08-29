@@ -14,7 +14,7 @@ reg.py
 
 Usage:
 ------
-warp.py -m path/moving_image.nii.gz -f path/fixed_image.nii.gz -o path/output.nii.gz -ro path/reg_outputs -v
+warp.py -m path/moving_image.nii.gz -f path/fixed_image.nii.gz -o path/output.nii.gz -ro path/reg_outputs [-inv] [-inp bSpline] [-d list of paths] [-p sample??] [-v]
 """
 
 import argparse
@@ -52,8 +52,8 @@ def parse_args():
     opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM) # Offload to config file
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM) # Offload to config file
 
     return parser.parse_args()
 

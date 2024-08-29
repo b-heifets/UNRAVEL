@@ -61,7 +61,7 @@ def parse_args():
     opts.add_argument('-th', '--threads', help='Number of threads. Default: 10', default=10, type=int, action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
 
     return parser.parse_args()
 

@@ -5,7 +5,7 @@ Use save_labels_as_masks.py from UNRAVEL to convert an ilastik segmentation tif 
 
 Usage:
 ------
-    save_labels_as_masks.py -i seg_ilastik_1/IlastikSegmentation -o Ai14_seg_ilasik_1 [-l 1 2 3] [-d dirs] [-p pattern] [-v]
+    save_labels_as_masks.py -i seg_ilastik_1/IlastikSegmentation -o Ai14_seg_ilasik_1 [-l 1 2 3] [-d list of paths] [-p sample??] [-v]
 """
 
 import nibabel as nib

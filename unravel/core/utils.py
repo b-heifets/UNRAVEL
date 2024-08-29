@@ -58,7 +58,7 @@ from rich.text import Text
 
 from unravel.core.config import Configuration, Config
 
-# TODO: Also output commands with default args to .verbose_command_log.txt or .command_log.txt.
+# TODO: Also output commands with default args to .verbose_command_log.txt or .command_log.txt. Rename to unravel_command_log.txt
 
 
 # Configuration loading

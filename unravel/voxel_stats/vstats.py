@@ -63,7 +63,7 @@ def parse_args():
     opts.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--seed=1 -T"', nargs=argparse.REMAINDER, default=[])
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
 
     return parser.parse_args()
 

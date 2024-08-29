@@ -38,8 +38,8 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='Path to the input TIFF file.', required=True, action=SM)
-    opts.add_argument('-g1', '--sigma1', help='Sigma for the first Gaussian blur in DoG (targets noise)', default=None, required=True, type=float)
-    opts.add_argument('-g2', '--sigma2', help='Sigma for the second Gaussian blur in DoG (targets signal).', default=None, required=True, type=float)
+    reqs.add_argument('-g1', '--sigma1', help='Sigma for the first Gaussian blur in DoG (targets noise)', default=None, required=True, type=float)
+    reqs.add_argument('-g2', '--sigma2', help='Sigma for the second Gaussian blur in DoG (targets signal).', default=None, required=True, type=float)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='Path to save the output TIFF file.', default=None, action=SM)

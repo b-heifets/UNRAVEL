@@ -45,7 +45,7 @@ def parse_args():
     opts.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
 
     return parser.parse_args()
 

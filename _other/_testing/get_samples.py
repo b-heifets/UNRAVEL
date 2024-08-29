@@ -5,7 +5,7 @@ Use ``path/get_samples.py`` from UNRAVEL to test the get_samples() function in u
 
 Usage:
 ------
-``path/get_samples.py`` [-d dirs] [-p pattern] [-v]
+``path/get_samples.py`` [-d list of paths] [-p sample??] [-v]
 """
 
 from rich import print

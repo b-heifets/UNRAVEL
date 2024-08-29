@@ -137,7 +137,6 @@ class SM(argparse.Action):
                 current_values.append(values)
                 setattr(namespace, self.dest, current_values)
 
-# TODO: Could format these as green: [-d list of paths] [-p sample??] [-v]
 def format_argparse_help(help_text):
     """
     Apply rich formatting to the argparse help message.
@@ -161,6 +160,9 @@ def format_argparse_help(help_text):
     # Regex to find flags (like -i, --input)
     flag_pattern = r"(\s--[\w-]+|\s-\w+)"
 
+    # Regex to identify lines with unwanted patterns
+    unwanted_pattern = r"\[-\w+|\[-\w+"
+
     # Split the help text into lines
     lines = help_text.splitlines()
 
@@ -170,6 +172,10 @@ def format_argparse_help(help_text):
     current_style = None
 
     for line in lines:
+        # Skip unwanted lines
+        if re.search(unwanted_pattern, line):
+            continue
+
         # Style "Required arguments:" with purple3
         if line.strip().startswith("Required arguments:"):
             current_style = "purple3"
@@ -228,7 +234,8 @@ def format_docstring_for_terminal(docstring):
     - Command names enclosed in double backticks or appearing in usage examples are styled as bold bright magenta.
     - Required arguments (before the first optional argument) are styled as purple3.
     - Optional arguments (within square brackets) are styled as bright blue.
-    - Command-line flags (e.g., `-m`, `--input`) are styled as bold in the required arg section.
+    - Required command-line flags (e.g., `-m`, `--input`) are styled as bold in the required arg section.
+    - General arguments like `[-d list of paths]`, `[-p sample??]`, and `[-v]` in the Usage section are styled as green.
     - The Usage section should be last and is separated by a horizontal line.
     """
 
@@ -253,6 +260,9 @@ def format_docstring_for_terminal(docstring):
     
     # Regex to find flags (like -m, --input, -abc)
     flag_pattern = r"(\s-\w[\w-]*|\s--\w[\w-]*)"
+
+    # Regex to find general arguments in usage
+    general_arg_pattern = r"(\[-d list of paths\]|\[-p sample\?\?\]|\[-v\])"
 
     # Prepare the final formatted text
     final_text = Text()
@@ -318,8 +328,8 @@ def format_docstring_for_terminal(docstring):
             elif processing_usage:
                 # We're in a Usage section and processing subsequent lines
 
-                # Ensure the command name is styled correctly
-                line = line.replace(command, f"[bold bright_magenta]{command}[/]")
+                # Ensure the command name is styled correctly at the start of the line
+                line = line.replace(f"  {command}", f"[bold bright_magenta]{command}[/]")
 
                 # Identify the start of optional arguments
                 tuple_parts = re.split(r'(\s\[-\w|\s\[--\w)', line, 1)
@@ -335,18 +345,31 @@ def format_docstring_for_terminal(docstring):
                 required_part = re.sub(flag_pattern, r"[bold]\1[/]", required_part)
                 optional_part = re.sub(flag_pattern, r"[bold]\1[/]", optional_part)
 
+                # Split the optional part into general arguments and others
+                general_args = re.findall(general_arg_pattern, optional_part)
+                non_general_args = re.sub(general_arg_pattern, '', optional_part).strip()
+
                 # Style the required arguments (before the bracket) as purple3
                 styled_required = Text.from_markup(f"[purple3]{required_part}[/]") if required_part else Text()
 
-                # Style the optional arguments as bright_blue
-                styled_optional = Text.from_markup(f"[bright_blue]{optional_part}[/]") if optional_part else Text()
+                # Style the non-general optional arguments as bright_blue
+                styled_optional = Text.from_markup(f"[bright_blue]{non_general_args}[/]") if non_general_args else Text()
+
+                # Style the general arguments as green
+                styled_general = Text()
+                for arg in general_args:
+                    styled_general.append(Text.from_markup(f"[green]{arg}[/] "))
+                styled_general.rstrip()  # Remove the trailing space
 
                 # Combine the styled parts together
                 styled_line = Text()
                 styled_line.append(styled_required)
-                if optional_part:  # Adding space between required and optional parts only if there are optional parts
+                if styled_optional:
                     styled_line.append(" ")
-                styled_line.append(styled_optional)
+                    styled_line.append(styled_optional)
+                if styled_general:
+                    styled_line.append(" ")
+                    styled_line.append(styled_general)
             else:
                 # Apply command formatting within the section
                 line = re.sub(command_pattern, r"[bold bright_magenta]\1[/]", line)

@@ -20,11 +20,11 @@ Next command:
 
 Usage for when metadata is extractable:
 ---------------------------------------
-    io_metadata -i rel_path/full_res_img [-m parameters/metadata.txt] [-d space-separated list of paths] [-p pattern] [-v]
+    io_metadata -i rel_path/full_res_img [-m parameters/metadata.txt] [-d space-separated list of paths] [-p sample??] [-v]
 
 Usage for when metadata is not extractable:
 -------------------------------------------
-    io_metadata -i tif_dir -x 3.5232 -z 6 [-m parameters/metadata.txt] [-d space-separated list of paths] [-p pattern] [-v]
+    io_metadata -i tif_dir -x 3.5232 -z 6 [-m parameters/metadata.txt] [-d space-separated list of paths] [-p sample??] [-v]
 """
 
 from pathlib import Path

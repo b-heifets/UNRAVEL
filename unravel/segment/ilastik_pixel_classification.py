@@ -51,7 +51,7 @@ def parse_args():
     reqs.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable.', required=True, action=SM)
     reqs.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
     reqs.add_argument('-t', '--tifs_dir', help='path/input_dir_w_tifs', required=True, action=SM)
-    opts.add_argument('-o', '--output', help='output dir name', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='output dir name', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help='If path/input_dir_w_tifs does not exist, provide a rel_path/image to make it', action=SM)
