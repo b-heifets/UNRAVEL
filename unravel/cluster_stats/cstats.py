@@ -4,7 +4,7 @@
 Use ``cstats`` from UNRAVEL to validate clusters based on differences in cell/object or label density w/ t-tests.    
 
 Input files: 
-    - <asterisk>_density_data.csv from ``cstats_validation`` (e.g., in each subdir named after the rev_cluster_index.nii.gz file)
+    - `*`_density_data.csv from ``cstats_validation`` (e.g., in each subdir named after the rev_cluster_index.nii.gz file)
 
 Outputs:
     - ./_valid_clusters_stats/
