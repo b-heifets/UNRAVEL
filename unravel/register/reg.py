@@ -63,6 +63,10 @@ from unravel.warp.warp import warp
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
+    import sys
+    if 'sphinx-build' in sys.argv[0]:
+        return None
+
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-m', '--moving_img', help='path/moving_img.nii.gz (e.g., average template optimally matching tissue)', required=True, action=SM)
 
