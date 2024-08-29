@@ -19,7 +19,7 @@ Note:
 
 Next steps:
     - Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (https://app.flourish.studio/)
-    - It can be pasted into the Data tab (categories columns = Depth_<asterisk> columns, Size by = Volumes column)
+    - It can be pasted into the Data tab (categories columns = Depth_`*` columns, Size by = Volumes column)
     - Preview tab: Hierarchy -> Depth to 10, Colors -> paste RGB codes from sunburst_RGBs.csv into Custom overrides
 
 Usage:

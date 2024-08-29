@@ -4,7 +4,7 @@
 Use ``rstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in brain regions in atlas space.
 
 Inputs:
-    - <asterisk>.nii.gz
+    - `*`.nii.gz
     - path/atlas.nii.gz
 
 Outputs: 

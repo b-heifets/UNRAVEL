@@ -21,7 +21,7 @@ Notes:
 
 Usage:
 ------
-    warp_points_to_atlas -i regional_stats/<asterisk>_sample??_cell_centroids.csv [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-af reg_inputs/autofl_50um.nii.gz] [-thr 20000 or -uthr 20000] [-md parameters/metadata.txt] [-mi] [-d list of paths] [-p sample??] [-v]
+    warp_points_to_atlas -i regional_stats/`*`_sample??_cell_centroids.csv [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-af reg_inputs/autofl_50um.nii.gz] [-thr 20000 or -uthr 20000] [-md parameters/metadata.txt] [-mi] [-d list of paths] [-p sample??] [-v]
 """
 
 import nibabel as nib

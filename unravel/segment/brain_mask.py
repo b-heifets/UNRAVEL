@@ -6,17 +6,17 @@ Use ``seg_brain_mask`` from UNRAVEL to use a trained ilastik project (pixel clas
 Prereqs: 
     - Organize training tif slices (from ``seg_copy_tifs``) into a single folder.
     - Train an Ilastik project to segment the brain (https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project).
-    - Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif (from ``reg_prep``)
+    - Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_`*`um_tifs/`*`.tif (from ``reg_prep``)
     - Save brain_mask.ilp in experiment directory of use -ilp
 
 Inputs: 
-    - reg_inputs/autofl_<asterisk>um.nii.gz
+    - reg_inputs/autofl_`*`um.nii.gz
     - brain_mask.ilp # in exp dir
 
 Outputs: 
-    - reg_inputs/autofl_<asterisk>um_tifs_ilastik_brain_seg/slice_<asterisk>.tif series
-    - reg_inputs/autofl_<asterisk>um_brain_mask.nii.gz (can be used for ``reg`` and ``vstats_z_score``)
-    - reg_inputs/autofl_<asterisk>um_masked.nii.gz
+    - reg_inputs/autofl_`*`um_tifs_ilastik_brain_seg/slice_`*`.tif series
+    - reg_inputs/autofl_`*`um_brain_mask.nii.gz (can be used for ``reg`` and ``vstats_z_score``)
+    - reg_inputs/autofl_`*`um_masked.nii.gz
 
 Next command: 
     - ``reg``

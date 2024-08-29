@@ -4,10 +4,10 @@
 Use ``io_tif_to_tifs`` from UNRAVEL to load a 3D .tif image and save it as tifs.
 
 Input: 
-    - image.tif (either from -i path/image.tif or largest <asterisk>.tif in cwd)
+    - image.tif (either from -i path/image.tif or largest `*`.tif in cwd)
 
 Outputs:
-    - ./<tif_dir_out>/slice_<asterisk>.tif series
+    - ./<tif_dir_out>/slice_`*`.tif series
     - ./parameters/metadata (text file)
 
 Next command: 

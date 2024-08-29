@@ -20,7 +20,7 @@ Next steps:
 
 Usage
 -----
-    rstats_mean_IF_in_seg -i <asterisk>.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz [-o seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv] [--region_ids 1 2 3] [-c 1] [Optional output: -n rel_path/native_image.zarr] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-ro reg_outputs] [-r 50] [-md parameters/metadata.txt] [-zo 0] [-mi] [-v]
+    rstats_mean_IF_in_seg -i `*`.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz [-o seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv] [--region_ids 1 2 3] [-c 1] [Optional output: -n rel_path/native_image.zarr] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-ro reg_outputs] [-r 50] [-md parameters/metadata.txt] [-zo 0] [-mi] [-v]
 """
 
 import csv

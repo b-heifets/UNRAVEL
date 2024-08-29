@@ -4,7 +4,7 @@
 Use ``cstats_fdr`` from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.
 
 Inputs: 
-    - p value map (e.g., <asterisk>vox_p_<asterisk>stat<asterisk>.nii.gz from vstats)    
+    - p value map (e.g., `*`vox_p_`*`stat`*`.nii.gz from vstats)    
 
 Outputs saved in the output directory:
     - FDR-adjusted p value map
