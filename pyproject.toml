@@ -61,7 +61,7 @@ dev = [
     "sphinx-togglebutton", 
     "sphinx-design",
     "sphinxcontrib-mermaid",
-    "sphinx-argparse",
+    # "sphinx-argparse",
     "build",
     "twine"
 ]
