@@ -23,7 +23,7 @@ Next steps:
 
 Usage:
 ------
-    cstats_mean_IF -ci path/rev_cluster_index.nii.gz [-ip '*.nii.gz'] [-c 1 2 3] [-v]
+    cstats_mean_IF -ci path/rev_cluster_index.nii.gz [-ip '`*`.nii.gz'] [-c 1 2 3] [-v]
 """
 
 import csv
