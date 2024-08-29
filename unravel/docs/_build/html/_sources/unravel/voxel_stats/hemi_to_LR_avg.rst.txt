@@ -1,0 +1,9 @@
+.. _unravel.voxel_stats.hemi_to_LR_avg:
+
+unravel.voxel_stats.hemi_to_LR_avg module
+=========================================
+
+.. automodule:: unravel.voxel_stats.hemi_to_LR_avg
+   :members:
+   :undoc-members:
+   :show-inheritance:
