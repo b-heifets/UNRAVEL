@@ -243,6 +243,9 @@ def format_docstring_for_terminal(docstring):
     docstring = re.sub(r'``\*``', '*', docstring)
     docstring = re.sub(r'`\*`', '*', docstring)
 
+    # Replace <asterisk> with a plain asterisk *
+    docstring = docstring.replace('<asterisk>', '*')
+
     def apply_section_style(line):
         """Apply the appropriate style based on the section header."""
         if line.strip().startswith("Prereqs:"):
