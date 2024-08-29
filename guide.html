@@ -643,13 +643,13 @@ nano<span class="w"> </span>~/.zshrc<span class="w">   </span><span class="c1">#
 unravel_commands<span class="w"> </span>-c
 
 <span class="c1"># List common commands and filter results</span>
-unravel_commands<span class="w"> </span>-c<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>vstats<span class="w">  </span><span class="c1"># Just print commands related to voxel-wise statistics</span>
+uc<span class="w"> </span>-f<span class="w"> </span>vstats<span class="w">  </span><span class="c1"># Just print commands related to voxel-wise statistics</span>
 
 <span class="c1"># List common commands and their descriptions</span>
-unravel_commands<span class="w"> </span>-c<span class="w"> </span>-d
+uc<span class="w"> </span>-c<span class="w"> </span>-d
 
 <span class="c1"># List all commands and the modules that they run</span>
-unravel_commands<span class="w"> </span>-m
+uc<span class="w"> </span>-m
 </pre></div>
 </div>
 <div class="admonition hint">
@@ -1002,7 +1002,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </div>
 <div class="tip dropdown admonition">
 <p class="admonition-title">Data can be distributed across multiple drives</p>
-<p>Paths to each experiment directory may be passed into scripts using the -e flag for batch processing</p>
+<p>Paths to each experiment directory may be passed into scripts using the -d flag for batch processing</p>
 <p>This is useful if there is not enough storage on a single drive.</p>
 <p>Also, spreading data across ~2-4 external drives allows for faster parallel processing (minimizes i/o botlenecks)</p>
 <p>If SSDs are used, distrubuting data may not speed up processing as much.</p>
@@ -1013,7 +1013,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <div class="tip dropdown admonition">
 <p class="admonition-title">Make an exp_notes.txt</p>
 <p>This helps with keeping track of paths, commands, etc..</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path/exp_dir&gt;<span class="w">  </span><span class="c1"># Change the current working directory to an exp dir</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path/to/dir/with/sample??<span class="w"> </span>folders&gt;
 touch<span class="w"> </span>exp_notes.txt<span class="w">  </span><span class="c1"># Make the .txt file</span>
 </pre></div>
 </div>
@@ -1068,7 +1068,7 @@ exp
 <ul class="simple">
 <li><p>If raw data is in the form of a tif series, consider running:</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utils_clean_tifs<span class="w"> </span>-t<span class="w"> </span>&lt;dir_name&gt;<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w">  </span><span class="c1">#DIRS can be set as a global variable (e.g., with env_var.sh). It should have a list of directories with sample?? dirs to process. </span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utils_clean_tifs<span class="w"> </span>-t<span class="w"> </span>&lt;dir_name&gt;<span class="w"> </span>-v<span class="w"> </span>-m<span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="w">  </span><span class="c1">#DIRS can be set as a global variable (e.g., with env_var.sh). It should have a list of directories with sample?? dirs to process. </span>
 </pre></div>
 </div>
 <div class="tip dropdown admonition">
@@ -1109,7 +1109,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<spa
 <ul class="simple">
 <li><p>Copy resampled autofluo .tif files for making a brain mask with ilastik</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_copy_tifs<span class="w"> </span>-i<span class="w"> </span>reg_inputs/autofl_??um_tifs<span class="w"> </span>-s<span class="w"> </span><span class="m">0000</span><span class="w"> </span><span class="m">0005</span><span class="w"> </span><span class="m">0050</span><span class="w"> </span>-o<span class="w"> </span><span class="k">$(</span>dirname<span class="w"> </span><span class="nv">$BRAIN_MASK_ILP</span><span class="k">)</span><span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_copy_tifs<span class="w"> </span>-i<span class="w"> </span>reg_inputs/autofl_??um_tifs<span class="w"> </span>-s<span class="w"> </span><span class="m">0000</span><span class="w"> </span><span class="m">0005</span><span class="w"> </span><span class="m">0050</span><span class="w"> </span>-o<span class="w"> </span><span class="k">$(</span>dirname<span class="w"> </span><span class="nv">$BRAIN_MASK_ILP</span><span class="k">)</span><span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span>
 </pre></div>
 </div>
 </section>
@@ -1142,7 +1142,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;tif_dir&gt;<spa
 </ul>
 <ol class="arabic simple">
 <li><p><strong>Input Data</strong><br />
-Drag training slices into the ilastik GUI<br />
+Drag training slices into the ilastik GUI (e.g., from a dir w/ 3 slices per sample and &gt; 2 samples per condition)
 <code class="docutils literal notranslate"><span class="pre">ctrl+A</span></code> -&gt; right-click -&gt; Edit shared properties -&gt; Storage: Copy into project file -&gt; Ok</p></li>
 <li><p><strong>Feature Selection</strong><br />
 Select Features… -&gt; select all features (<code class="docutils literal notranslate"><span class="pre">control+a</span></code>) or an optimized subset (faster but less accurate).
@@ -1182,7 +1182,7 @@ Optional: to find an optimal subset of features, select all features, train Ilas
 <ul class="simple">
 <li><p>Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz for <code class="docutils literal notranslate"><span class="pre">reg</span></code></p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_brain_mask<span class="w"> </span>-ilp<span class="w"> </span><span class="nv">$BRAIN_MASK_ILP</span><span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_brain_mask<span class="w"> </span>-ilp<span class="w"> </span><span class="nv">$BRAIN_MASK_ILP</span><span class="w"> </span>-v<span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span>
 </pre></div>
 </div>
 <div class="admonition hint">
@@ -1222,7 +1222,7 @@ Optional: to find an optimal subset of features, select all features, train Ilas
 </li>
 </ul>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE</span><span class="w"> </span>-bc<span class="w"> </span>-pad<span class="w"> </span>-sm<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>-ort<span class="w"> </span>RPS<span class="w"> </span>-a<span class="w"> </span><span class="nv">$ATLAS</span><span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w">  </span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE</span><span class="w"> </span>-bc<span class="w"> </span>-pad<span class="w"> </span>-sm<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>-ort<span class="w"> </span>RPS<span class="w"> </span>-a<span class="w"> </span><span class="nv">$ATLAS</span><span class="w"> </span>-v<span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="w">  </span>
 </pre></div>
 </div>
 <div class="tip dropdown admonition">
@@ -1244,7 +1244,7 @@ Optional: to find an optimal subset of features, select all features, train Ilas
 </ul>
 </li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg_check<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-td<span class="w"> </span><span class="nv">$BASE</span>/reg_results
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg_check<span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-td<span class="w"> </span><span class="nv">$BASE</span>/reg_results
 </pre></div>
 </div>
 <ul class="simple">
@@ -1272,7 +1272,7 @@ Optional: to find an optimal subset of features, select all features, train Ilas
 <p class="admonition-title">Tip</p>
 <p>Copy 3 tifs from each sample or 3 tifs from 3 samples / condition</p>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_copy_tifs<span class="w"> </span>-i<span class="w"> </span>&lt;raw_tif_dir&gt;<span class="w"> </span>-s<span class="w"> </span><span class="m">0100</span><span class="w"> </span><span class="m">0500</span><span class="w"> </span><span class="m">1000</span><span class="w"> </span>-o<span class="w"> </span>ilastik_segmentation<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-v
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_copy_tifs<span class="w"> </span>-i<span class="w"> </span>&lt;raw_tif_dir&gt;<span class="w"> </span>-s<span class="w"> </span><span class="m">0100</span><span class="w"> </span><span class="m">0500</span><span class="w"> </span><span class="m">1000</span><span class="w"> </span>-o<span class="w"> </span>ilastik_segmentation<span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-v
 </pre></div>
 </div>
 </section>
@@ -1282,7 +1282,7 @@ Optional: to find an optimal subset of features, select all features, train Ilas
 <ul class="simple">
 <li><p>Perform pixel classification using a trained Ilastik project</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_ilastik<span class="w"> </span>-i<span class="w"> </span>&lt;*.czi,<span class="w"> </span>*.h5,<span class="w"> </span>or<span class="w"> </span>dir<span class="w"> </span>w/<span class="w"> </span>tifs&gt;<span class="w"> </span>-o<span class="w"> </span>seg_dir<span class="w"> </span>-ilp<span class="w"> </span><span class="nv">$BASE</span>/ilastik_segmentation/trained_ilastik_project.ilp<span class="w"> </span>-l<span class="w"> </span><span class="m">1</span><span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>seg_ilastik<span class="w"> </span>-i<span class="w"> </span>&lt;*.czi,<span class="w"> </span>*.h5,<span class="w"> </span>or<span class="w"> </span>dir<span class="w"> </span>w/<span class="w"> </span>tifs&gt;<span class="w"> </span>-o<span class="w"> </span>seg_dir<span class="w"> </span>-ilp<span class="w"> </span><span class="nv">$BASE</span>/ilastik_segmentation/trained_ilastik_project.ilp<span class="w"> </span>-l<span class="w"> </span><span class="m">1</span><span class="w"> </span>-v<span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>
 </pre></div>
 </div>
 </section>
@@ -1413,7 +1413,7 @@ Optional: to find an optimal subset of features, select all features, train Ilas
 <ul class="simple">
 <li><p>Preprocess immunofluo images and warp them to atlas space for voxel-wise statistics.</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vstats_prep<span class="w"> </span>-i<span class="w"> </span>cFos<span class="w"> </span>-rb<span class="w"> </span><span class="m">4</span><span class="w"> </span>-x<span class="w"> </span><span class="nv">$XY</span><span class="w"> </span>-z<span class="w"> </span><span class="nv">$Z</span><span class="w"> </span>-o<span class="w"> </span>cFos_rb4_atlas_space.nii.gz<span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vstats_prep<span class="w"> </span>-i<span class="w"> </span>cFos<span class="w"> </span>-rb<span class="w"> </span><span class="m">4</span><span class="w"> </span>-x<span class="w"> </span><span class="nv">$XY</span><span class="w"> </span>-z<span class="w"> </span><span class="nv">$Z</span><span class="w"> </span>-o<span class="w"> </span>cFos_rb4_atlas_space.nii.gz<span class="w"> </span>-v<span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span>
 </pre></div>
 </div>
 <div class="tip dropdown admonition">
@@ -1441,7 +1441,7 @@ Optional: to find an optimal subset of features, select all features, train Ilas
 <ul class="simple">
 <li><p>Z-score atlas space images using tissue masks (from brain_mask) and/or an atlas mask.</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vstats_z_score<span class="w"> </span>-i<span class="w"> </span>atlas_space/sample??_cFos_rb4_atlas_space.nii.gz<span class="w"> </span>-v<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vstats_z_score<span class="w"> </span>-i<span class="w"> </span>atlas_space/sample??_cFos_rb4_atlas_space.nii.gz<span class="w"> </span>-v<span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span>
 </pre></div>
 </div>
 <div class="admonition hint">
@@ -1457,7 +1457,7 @@ Optional: to find an optimal subset of features, select all features, train Ilas
 <ul class="simple">
 <li><p>Aggregate pre-processed immunofluorescence (IF) images for voxel-wise stats</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utils_agg_files<span class="w"> </span>-i<span class="w"> </span>atlas_space/sample??_cFos_rb4_atlas_space_z.nii.gz<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-v
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utils_agg_files<span class="w"> </span>-i<span class="w"> </span>atlas_space/sample??_cFos_rb4_atlas_space_z.nii.gz<span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-v
 </pre></div>
 </div>
 </section>
@@ -1580,10 +1580,10 @@ cluster_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span 
 <li><p>Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or    label densities</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic usage:</span>
-cluster_validation<span class="w"> </span>-e<span class="w"> </span>&lt;experiment<span class="w"> </span>paths&gt;<span class="w"> </span>-m<span class="w"> </span>&lt;path/rev_cluster_index_to_warp_from_atlas_space.nii.gz&gt;<span class="w"> </span>-s<span class="w"> </span>seg_dir<span class="w"> </span>-v
+cluster_validation<span class="w"> </span>-d<span class="w"> </span>&lt;paths<span class="w"> </span>to<span class="w"> </span>sample??<span class="w"> </span><span class="nb">dirs</span><span class="w"> </span>and/or<span class="w"> </span><span class="nb">dirs</span><span class="w"> </span>that<span class="w"> </span>contain<span class="w"> </span>them&gt;<span class="w"> </span>-m<span class="w"> </span>&lt;path/rev_cluster_index_to_warp_from_atlas_space.nii.gz&gt;<span class="w"> </span>-s<span class="w"> </span>seg_dir<span class="w"> </span>-v
 
 <span class="c1"># Processing multiple FDR q value thresholds and both hemispheres:</span>
-<span class="k">for</span><span class="w"> </span>q<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.005<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.05<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>side<span class="w"> </span><span class="k">in</span><span class="w"> </span>LH<span class="w"> </span>RH<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>cluster_validation<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-m<span class="w"> </span>path/vstats/contrast/stats/contrast_vox_p_tstat1_q<span class="si">${</span><span class="nv">q</span><span class="si">}</span>/contrast_vox_p_tstat1_q<span class="si">${</span><span class="nv">q</span><span class="si">}</span>_rev_cluster_index_<span class="si">${</span><span class="nv">side</span><span class="si">}</span>.nii.gz<span class="w"> </span>-s<span class="w"> </span>seg_dir/sample??_seg_dir_1.nii.gz<span class="w"> </span>-v<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+<span class="k">for</span><span class="w"> </span>q<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">0</span>.005<span class="w"> </span><span class="m">0</span>.01<span class="w"> </span><span class="m">0</span>.05<span class="w"> </span><span class="m">0</span>.1<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>side<span class="w"> </span><span class="k">in</span><span class="w"> </span>LH<span class="w"> </span>RH<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>cluster_validation<span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-m<span class="w"> </span>path/vstats/contrast/stats/contrast_vox_p_tstat1_q<span class="si">${</span><span class="nv">q</span><span class="si">}</span>/contrast_vox_p_tstat1_q<span class="si">${</span><span class="nv">q</span><span class="si">}</span>_rev_cluster_index_<span class="si">${</span><span class="nv">side</span><span class="si">}</span>.nii.gz<span class="w"> </span>-s<span class="w"> </span>seg_dir/sample??_seg_dir_1.nii.gz<span class="w"> </span>-v<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
 </pre></div>
 </div>
 </section>
@@ -1594,7 +1594,7 @@ cluster_validation<span class="w"> </span>-e<span class="w"> </span>&lt;experime
 <li><p>Aggregates and analyzes cluster validation data from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code></p></li>
 <li><p>Update parameters in /UNRAVEL/unravel/cstats/cluster_summary.ini and save it with the experiment</p></li>
 </ul>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cluster_summary<span class="w"> </span>-c<span class="w"> </span>path/cluster_summary.ini<span class="w"> </span>-e<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-cvd<span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="w"> </span>-vd<span class="w"> </span>path/vstats_dir<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$SAMPLE_KEY</span><span class="w"> </span>--groups<span class="w"> </span>group1<span class="w"> </span>group2<span class="w"> </span>-v
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cluster_summary<span class="w"> </span>-c<span class="w"> </span>path/cluster_summary.ini<span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span>-cvd<span class="w"> </span><span class="s1">&#39;*&#39;</span><span class="w"> </span>-vd<span class="w"> </span>path/vstats_dir<span class="w"> </span>-sk<span class="w"> </span><span class="nv">$SAMPLE_KEY</span><span class="w"> </span>--groups<span class="w"> </span>group1<span class="w"> </span>group2<span class="w"> </span>-v
 </pre></div>
 </div>
 <p>group1 and group2 must match conditions in the sample_key.csv</p>

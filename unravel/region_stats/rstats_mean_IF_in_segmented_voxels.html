@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,25 +500,32 @@
   <section id="module-unravel.region_stats.rstats_mean_IF_in_segmented_voxels">
 <span id="unravel-region-stats-rstats-mean-if-in-segmented-voxels-module"></span><span id="unravel-region-stats-rstats-mean-if-in-segmented-voxels"></span><h1>unravel.region_stats.rstats_mean_IF_in_segmented_voxels module<a class="headerlink" href="#module-unravel.region_stats.rstats_mean_IF_in_segmented_voxels" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">rstats_mean_IF_in_seg</span></code> from UNRAVEL to measure mean intensity of immunofluorescence (IF) staining in brain regions in segmented voxels.</p>
-<p>Run from experiment folder containing sample?? folders.</p>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>rstats_mean_IF_in_seg -i &lt;asterisk&gt;.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz</p>
-</div></blockquote>
+<dl class="simple">
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>rel_path/fluo_image or rel_path/fluo_img_dir</p></li>
+<li><p>rel_path/seg_img.nii.gz in tissue space (1st glob match processed)</p></li>
+<li><p>path/atlas.nii.gz to warp to tissue space</p></li>
+</ul>
+</dd>
+<dt>Output:</dt><dd><ul class="simple">
+<li><p>./sample??/seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv</p></li>
+</ul>
+</dd>
+</dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>This uses full resolution images (i.e., the raw IF image and a segmentation from <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code>)</p>
 </div>
 <dl class="simple">
-<dt>Default output:</dt><dd><ul class="simple">
-<li><p>./sample??/seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv</p></li>
-</ul>
-</dd>
 <dt>Next steps:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code> -i seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv
 <code class="docutils literal notranslate"><span class="pre">rstats_mean_IF_summary</span></code></p>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>rstats_mean_IF_in_seg -i <cite>*</cite>.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz [-o seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv] [–region_ids 1 2 3] [-c 1] [Optional output: -n rel_path/native_image.zarr] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-ro reg_outputs] [-r 50] [-md parameters/metadata.txt] [-zo 0] [-mi] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.region_stats.rstats_mean_IF_in_segmented_voxels.parse_args">

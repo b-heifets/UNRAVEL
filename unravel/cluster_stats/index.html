@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,11 +500,6 @@
   <section id="module-unravel.cluster_stats.mean_IF">
 <span id="unravel-cluster-stats-mean-if-module"></span><span id="unravel-cluster-stats-mean-if"></span><h1>unravel.cluster_stats.mean_IF module<a class="headerlink" href="#module-unravel.cluster_stats.mean_IF" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_mean_IF</span></code> from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_mean_IF -ci path/rev_cluster_index.nii.gz</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><ul class="simple">
 <li><p>vstats</p></li>
@@ -521,7 +515,7 @@
 <li><p>Columns: sample, cluster_ID, mean_IF_intensity</p></li>
 </ul>
 </dd>
-<dt>Next:</dt><dd><ul class="simple">
+<dt>Next steps:</dt><dd><ul class="simple">
 <li><p>cd cluster_mean_IF…</p></li>
 <li><p>utils_prepend -sk &lt;path/sample_key.csv&gt; -f  # If needed</p></li>
 <li><p>[<code class="docutils literal notranslate"><span class="pre">cstats_index</span></code> and <code class="docutils literal notranslate"><span class="pre">cstats_table</span></code>]  # for an xlsx table and anatomically ordered clusters that can be used with <code class="docutils literal notranslate"><span class="pre">cstats_prism</span></code></p></li>
@@ -530,6 +524,11 @@
 </ul>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_mean_IF -ci path/rev_cluster_index.nii.gz [-ip ‘<cite>*</cite>.nii.gz’] [-c 1 2 3] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.parse_args">

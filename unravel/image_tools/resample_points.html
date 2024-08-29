@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,22 +500,21 @@
   <section id="module-unravel.image_tools.resample_points">
 <span id="unravel-image-tools-resample-points-module"></span><span id="unravel-image-tools-resample-points"></span><h1>unravel.image_tools.resample_points module<a class="headerlink" href="#module-unravel.image_tools.resample_points" title="Link to this heading">#</a></h1>
 <p>Use <cite>img_resample_points</cite> from UNRAVEL to resample a set of points (coordinates) and optionally convert them to an image, accounting for the number of detections at each voxel.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>img_resample_points -i path/points.csv -ri path/ref_image.nii.gz -cr 3.52 3.52 6 -tr 50 [-co path/resampled_points.csv] [-io path/resampled_image.nii.gz] [-thr 20000 or -uthr 20000] [-v]</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Input image types:</dt><dd><p>.czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p>
 </dd>
-<dt>Output image types:</dt><dd><p>.nii.gz, .tif series, .h5, .zarr</p>
-</dd>
 <dt>Outputs:</dt><dd><ul class="simple">
+<li><p>Output image types: .nii.gz, .tif series, .h5, .zarr</p></li>
 <li><p>A CSV file where each row represents a resampled point corresponding to a detection in the 3D image.</p></li>
 <li><p>A 3D image where each voxel contains the number of detections at that location.</p></li>
 </ul>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>img_resample_points -i path/points.csv -ri path/ref_image.nii.gz -cr 3.52 3.52 6 -tr 50 [-co path/resampled_points.csv] [-io path/resampled_image.nii.gz] [-thr 20000 or -uthr 20000] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_tools.resample_points.parse_args">

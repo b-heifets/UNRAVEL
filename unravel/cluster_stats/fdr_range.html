@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,17 +500,17 @@
   <section id="module-unravel.cluster_stats.fdr_range">
 <span id="unravel-cluster-stats-fdr-range-module"></span><span id="unravel-cluster-stats-fdr-range"></span><h1>unravel.cluster_stats.fdr_range module<a class="headerlink" href="#module-unravel.cluster_stats.fdr_range" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_fdr_range</span></code> from UNRAVEL to output a list of FDR q values that yeild clusters.</p>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_fdr_range -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Inputs:</dt><dd><ul class="simple">
 <li><p>p value map (e.g., <em>vox_p_*stat</em>.nii.gz from vstats)</p></li>
 </ul>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_fdr_range -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz [-q 0.00001 0.00005 0.0001 0.0005 0.001 0.005 0.01 0.05 0.1 0.15 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.95 0.99 0.999 0.9999] [-th 22] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.fdr_range.parse_args">
@@ -592,7 +591,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr_range.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr_range.smart_float_format"><code class="docutils literal notranslate"><span class="pre">smart_float_format()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.fdr_range.fdr_range"><code class="docutils literal notranslate"><span class="pre">fdr_range()</span></code></a></li>

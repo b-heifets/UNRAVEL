@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,12 +500,12 @@
   <section id="module-unravel.warp.to_native">
 <span id="unravel-warp-to-native-module"></span><span id="unravel-warp-to-native"></span><h1>unravel.warp.to_native module<a class="headerlink" href="#module-unravel.warp.to_native" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code> from UNRAVEL to warp an atlas space image to tissue space and scale to full resolution.</p>
-<section id="cli-usage">
-<h2>CLI usage:<a class="headerlink" href="#cli-usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>warp_to_native -m &lt;path/image_to_warp_from_atlas_space.nii.gz&gt; -o &lt;native&gt;/native_&lt;img&gt;.zarr</p>
-</div></blockquote>
-</section>
+<dl class="simple">
+<dt>Prereq:</dt><dd><ul class="simple">
+<li><p>./parameters/metadata.txt (from io_metadata)</p></li>
+</ul>
+</dd>
+</dl>
 <section id="python-usage">
 <h2>Python usage:<a class="headerlink" href="#python-usage" title="Link to this heading">#</a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">unravel.warp.to_native</span> <span class="k">as</span> <span class="nn">to_native</span>
@@ -514,10 +513,12 @@
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># native_img is an np.ndarray</span>
 </pre></div>
 </div>
-<dl class="simple">
-<dt>Prereq:</dt><dd><p>./parameters/metadata.txt (from io_metadata)</p>
-</dd>
-</dl>
+</section>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>warp_to_native -m &lt;path/image_to_warp_from_atlas_space.nii.gz&gt; [-o &lt;path/native_image.zarr&gt;] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-i multiLabel] [-md parameters/metadata.txt] [-ro reg_outputs] [–reg_res 50] [-zo 0] [-mi] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.warp.to_native.parse_args">
@@ -594,8 +595,8 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cli-usage">CLI usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-usage">Python usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.calculate_resampled_padded_dimensions"><code class="docutils literal notranslate"><span class="pre">calculate_resampled_padded_dimensions()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.scale_to_full_res"><code class="docutils literal notranslate"><span class="pre">scale_to_full_res()</span></code></a></li>

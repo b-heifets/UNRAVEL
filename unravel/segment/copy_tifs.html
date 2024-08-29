@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -504,13 +503,13 @@
 <section id="usage-to-prep-for-seg-brain-mask">
 <h2>Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>:<a class="headerlink" href="#usage-to-prep-for-seg-brain-mask" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0000 0005 0050 -o brain_mask</p>
+<div><p>seg_copy_tifs -s 0000 0005 0050 [-td brain_mask] [-i reg_inputs/autofl_50um_tifs] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <section id="usage-to-prep-for-seg-ilastik-to-segment-full-resolution-immunofluorescence-images">
 <h2>Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code> to segment full resolution immunofluorescence images:<a class="headerlink" href="#usage-to-prep-for-seg-ilastik-to-segment-full-resolution-immunofluorescence-images" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>seg_copy_tifs -i raw_tif_dir -s 0100 0500 1000 -o ilastik_segmentation</p>
+<div><p>seg_copy_tifs -i &lt;raw_tif_dir&gt; -s 0100 0500 1000 -td ilastik_segmentation [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -521,17 +520,22 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.segment.copy_tifs.copy_specific_slices">
 <span class="sig-prename descclassname"><span class="pre">unravel.segment.copy_tifs.</span></span><span class="sig-name descname"><span class="pre">copy_specific_slices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_numbers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/copy_tifs.html#copy_specific_slices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.copy_tifs.copy_specific_slices" title="Link to this definition">#</a></dt>
-<dd><p>Copy the specified slices to the target directory.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sample_path</strong> (<em>-</em>) – Path to the sample directory.</p></li>
-<li><p><strong>source_dir</strong> (<em>-</em>) – Path to the source directory containing the .tif files.</p></li>
-<li><p><strong>target_dir</strong> (<em>-</em>) – Path to the target directory where the selected slices will be copied.</p></li>
-<li><p><strong>slice_numbers</strong> (<em>-</em>) – List of slice numbers to copy.</p></li>
-</ul>
+<dd><p>Copy the specified tif slices from the source directory to the target directory.</p>
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>sample_path<span class="classifier">Path or str</span></dt><dd><p>Path to the sample directory.</p>
+</dd>
+<dt>source_dir<span class="classifier">Path or str</span></dt><dd><p>Path (relative to sample_path) to the source directory containing the .tif files to copy.</p>
+</dd>
+<dt>target_dir<span class="classifier">Path or str</span></dt><dd><p>Path to the target directory where the selected slices will be copied.</p>
+</dd>
+<dt>slice_numbers<span class="classifier">list</span></dt><dd><p>List of slice numbers to copy (4 digits each).</p>
+</dd>
+<dt>verbose<span class="classifier">bool</span></dt><dd><p>Print verbose output.</p>
 </dd>
 </dl>
+</section>
 </dd></dl>
 
 <dl class="py function">

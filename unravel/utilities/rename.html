@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,16 +500,10 @@
   <section id="module-unravel.utilities.rename">
 <span id="unravel-utilities-rename-module"></span><span id="unravel-utilities-rename"></span><h1>unravel.utilities.rename module<a class="headerlink" href="#module-unravel.utilities.rename" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">utils_rename</span></code> from UNRAVEL to recursively rename files and/or directories by replacing text in filenames.</p>
-<section id="usage-for-renaming-files">
-<h2>Usage for renaming files:<a class="headerlink" href="#usage-for-renaming-files" title="Link to this heading">#</a></h2>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>utils_rename -o old_text -n new_text -r -t files</p>
-</div></blockquote>
-</section>
-<section id="usage-for-renaming-directories">
-<h2>Usage for renaming directories:<a class="headerlink" href="#usage-for-renaming-directories" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>utils_rename -o old_text -n new_text -r -t dirs</p>
+<div><p>utils_rename -o old_text -n new_text [-t files or dirs or both] [–recursive] [–dry_run] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -591,8 +584,7 @@ on type.</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-renaming-files">Usage for renaming files:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-renaming-directories">Usage for renaming directories:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.rename.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.rename.rename_files"><code class="docutils literal notranslate"><span class="pre">rename_files()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.rename.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,55 +500,60 @@
   <section id="module-unravel.cluster_stats.summary">
 <span id="unravel-cluster-stats-summary-module"></span><span id="unravel-cluster-stats-summary"></span><h1>unravel.cluster_stats.summary module<a class="headerlink" href="#module-unravel.cluster_stats.summary" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code> from UNRAVEL to aggregate and analyze cluster validation data from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>.</p>
-<section id="usage-if-running-directly-after-cstats-validation">
-<h2>Usage if running directly after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>:<a class="headerlink" href="#usage-if-running-directly-after-cstats-validation" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd ‘psilocybin_v_saline_tstat1_q&lt;asterisk&gt;’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; -v</p>
-</div></blockquote>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>The current working directory should not have other directories when running this script for the first time. Directories from <code class="docutils literal notranslate"><span class="pre">cstats_org_data</span></code> are ok though.</p></li>
-</ul>
-</div>
-</section>
-<section id="usage-if-running-after-cstats-validation-and-cstats-org-data">
-<h2>Usage if running after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> and <code class="docutils literal notranslate"><span class="pre">cstats_org_data</span></code>:<a class="headerlink" href="#usage-if-running-after-cstats-validation-and-cstats-org-data" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; -v</p>
-</div></blockquote>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>For the second usage, the <code class="docutils literal notranslate"><span class="pre">-e</span></code>, <code class="docutils literal notranslate"><span class="pre">-cvd</span></code>, and <code class="docutils literal notranslate"><span class="pre">-vd</span></code> arguments are not needed because the data is already in the working directory.</p></li>
-<li><p>Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.</p></li>
-<li><p>Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run <code class="docutils literal notranslate"><span class="pre">cstats_legend</span></code>).</p></li>
-</ul>
-</div>
-<p>The current working directory should not have other directories when running this script for the first time. Directories from cstats_org_data are ok though.</p>
 <dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code> runs commands in this order:</dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_org_data</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_group_data</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_index</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_brain_model</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_table</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_prism</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_legend</span></code></p></li>
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code></p></li>
 </ul>
 </dd>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>Cell/label density CSVs from from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code></p></li>
+<li><p>The current directory should not have other folders when running this script for the first time.</p></li>
+<li><p>Directories from <code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code> or <code class="docutils literal notranslate"><span class="pre">cstats_org_data</span></code> are ok though.</p></li>
+<li><dl class="simple">
 <dt>The sample_key.csv file should have the following format:</dt><dd><p>dir_name,condition
 sample01,control
 sample02,treatment</p>
 </dd>
 </dl>
+</li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>Files for 3D brain models of valid clusters</p></li>
+<li><p>CSVs with valid cluster data (e.g., aggregated data for Prism)</p></li>
+<li><p>CSVs for sunburst plots</p></li>
+<li><p>Excel files with tables summarizing top regions and defining region abbreviations</p></li>
+</ul>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code> runs these commands:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cstats_org_data</span></code>, <code class="docutils literal notranslate"><span class="pre">cstats_group_data</span></code>, <code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code>, <code class="docutils literal notranslate"><span class="pre">cstats</span></code>, <code class="docutils literal notranslate"><span class="pre">cstats_index</span></code>, <code class="docutils literal notranslate"><span class="pre">cstats_brain_model</span></code>, <code class="docutils literal notranslate"><span class="pre">cstats_table</span></code>, <code class="docutils literal notranslate"><span class="pre">cstats_prism</span></code>, <code class="docutils literal notranslate"><span class="pre">cstats_legend</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.</p></li>
+<li><p>Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run <code class="docutils literal notranslate"><span class="pre">cstats_legend</span></code>).</p></li>
+<li><p>See <code class="docutils literal notranslate"><span class="pre">cstats</span></code> for more information on -cp and -hg.</p></li>
+</ul>
+</div>
 <p>If you need to rerun this script, delete the following directories and files in the current working directory:
 find . -name _valid_clusters -exec rm -rf {} ; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} ; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} ; -o -name 3D_brains -exec rm -rf {} ; -o -name valid_clusters_tables_and_legend -exec rm -rf {} ; -o -name _valid_clusters_stats -exec rm -rf {} ;</p>
 <p>If you want to aggregate CSVs for sunburst plots of valid clusters, run this in a root directory:
 find . -name “valid_clusters_sunburst.csv” -exec sh -c ‘cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})’ ;</p>
 <p>Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv).</p>
+<section id="usage-if-running-directly-after-cstats-validation">
+<h2>Usage if running directly after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>:<a class="headerlink" href="#usage-if-running-directly-after-cstats-validation" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_summary -c &lt;path/config.ini&gt; -d &lt;list of paths&gt; -cvd ‘psilocybin_v_saline_tstat1_q&lt;asterisk&gt;’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-if-running-after-cstats-validation-and-cstats-org-data">
+<h2>Usage if running after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> and <code class="docutils literal notranslate"><span class="pre">cstats_org_data</span></code>:<a class="headerlink" href="#usage-if-running-after-cstats-validation-and-cstats-org-data" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.summary.parse_args">

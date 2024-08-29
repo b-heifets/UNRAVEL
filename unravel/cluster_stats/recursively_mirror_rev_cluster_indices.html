@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,19 +500,19 @@
   <section id="module-unravel.cluster_stats.recursively_mirror_rev_cluster_indices">
 <span id="unravel-cluster-stats-recursively-mirror-rev-cluster-indices-module"></span><span id="unravel-cluster-stats-recursively-mirror-rev-cluster-indices"></span><h1>unravel.cluster_stats.recursively_mirror_rev_cluster_indices module<a class="headerlink" href="#module-unravel.cluster_stats.recursively_mirror_rev_cluster_indices" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_mirror_indices</span></code> from UNRAVEL to recursively process img.nii.gz files, apply mirroring, and save new files.</p>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_mirror_indices -m RH -v</p>
-</div></blockquote>
-<p>Use this command after <code class="docutils literal notranslate"><span class="pre">cstats_fdr</span></code> to mirror the cluster indices for the other side of the brain before running <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
+<li><p>Use this command after <code class="docutils literal notranslate"><span class="pre">cstats_fdr</span></code> to mirror the cluster indices for the other side of the brain before running <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>.</p></li>
 <li><p>Use -ax 2 and -s 0 for the CCFv3 2020 atlas.</p></li>
-<li><p>Use -ax 0 and -s 2 for the 25 um Gubra atlas.</p></li>
+<li><p>Use -ax 0 and -s 2 for the 25 um Gubra atlas (deprecated).</p></li>
 </ul>
 </div>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_mirror_indices -m &lt;RH or LH&gt; [-p glob_pattern] [-ax 2] [-s 0] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.recursively_mirror_rev_cluster_indices.parse_args">
@@ -578,7 +577,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.process_file"><code class="docutils literal notranslate"><span class="pre">process_file()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>unravel.core.argparse_utils_rich module &#8212; UNRAVEL docs</title>
+    <title>unravel.core.help_formatter module &#8212; UNRAVEL docs</title>
   
   
   
@@ -48,12 +48,12 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/core/argparse_utils_rich';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'unravel/core/help_formatter';</script>
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="unravel.core.config module" href="config.html" />
-    <link rel="prev" title="unravel.core.argparse_utils module" href="argparse_utils.html" />
+    <link rel="prev" title="unravel.core package" href="toc.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.core package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_tools.html">unravel.core.img_tools module</a></li>
@@ -498,97 +497,161 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.core.argparse_utils_rich">
-<span id="unravel-core-argparse-utils-rich-module"></span><span id="unravel-core-argparse-utils-rich"></span><h1>unravel.core.argparse_utils_rich module<a class="headerlink" href="#module-unravel.core.argparse_utils_rich" title="Link to this heading">#</a></h1>
-<p>This script defines custom classes to enhance the formatting and handling of argparse arguments
-using the Rich library for beautiful terminal output.</p>
+  <section id="module-unravel.core.help_formatter">
+<span id="unravel-core-help-formatter-module"></span><span id="unravel-core-help-formatter"></span><h1>unravel.core.help_formatter module<a class="headerlink" href="#module-unravel.core.help_formatter" title="Link to this heading">#</a></h1>
+<p>This script enhances the formatting and handling of argparse arguments by defining custom classes that improve
+the readability and usability of help messages, with a focus on suppressing metavar display and leveraging
+the Rich library for styled terminal output.</p>
 <dl class="simple">
 <dt>Classes:</dt><dd><ul class="simple">
 <li><dl class="simple">
-<dt>SuppressMetavar: A custom RichHelpFormatter class that suppresses the display of metavar for</dt><dd><p>arguments and customizes the epilog formatting.</p>
+<dt>SuppressMetavar: A custom HelpFormatter class that suppresses the display of metavar for arguments and</dt><dd><p>customizes the formatting of action invocations and epilog text.</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>SM: A custom argparse.Action class that suppresses the display of metavar across all nargs</dt><dd><p>configurations and manages argument values.</p>
+<dt>SM: A custom argparse.Action class that manages argument values while suppressing metavar display across</dt><dd><p>all nargs configurations.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>RichArgumentParser: An enhanced ArgumentParser that integrates custom help message formatting and</dt><dd><p>handling, including filtering and styling of argparse help text.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>CustomHelpAction: An argparse Action that displays a richly formatted help message, integrating the script’s</dt><dd><p>docstring.</p>
 </dd>
 </dl>
 </li>
 </ul>
 </dd>
-<dt>Usage:</dt><dd><p>Import the classes and use them in an argparse-based script to suppress metavar and format help
-messages with Rich’s styled output.</p>
+<dt>Functions:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>format_argparse_help: Processes and applies custom styles to argparse help text, highlighting flags,</dt><dd><p>default values, and section headers with specific colors and styles.</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>format_docstring_for_terminal: Formats the script’s docstring with Rich’s styled output, improving readability</dt><dd><p>by highlighting sections, command names, and other key elements.</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+<dt>Usage:</dt><dd><p>The custom classes and functions can be used in any argparse-based script to suppress metavar display,
+format help messages with Rich’s styled output, and enhance the overall user experience.</p>
 </dd>
 </dl>
 <p class="rubric">Example</p>
 <p>import argparse
-from rich_argparse import RichHelpFormatter
-from path.to.this.script import SuppressMetavar, SM</p>
-<p>parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
+from unravel.core.help_formatter import SuppressMetavar, SM, CustomArgumentRich</p>
+<p>parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)</p>
+<p>reqs = parser.add_argument_group(‘Required arguments’)
 parser.add_argument(‘-e’, ‘–example’, help=’Example argument’, action=SM)
 args = parser.parse_args()</p>
-<dl class="simple">
-<dt>Classes:</dt><dd><dl class="simple">
-<dt>SuppressMetavar</dt><dd><ul class="simple">
-<li><p>Inherits from RichHelpFormatter to modify the formatting of action invocations and epilog text.</p></li>
-<li><dl class="simple">
-<dt>Methods:</dt><dd><ul>
-<li><p>_format_action_invocation: Customizes the formatting of argument options.</p></li>
-<li><p>_fill_text: Formats the epilog text with specified indentation and width.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-<dt>SM</dt><dd><ul class="simple">
-<li><p>Inherits from argparse.Action to suppress metavar display and manage argument values.</p></li>
-<li><dl class="simple">
-<dt>Methods:</dt><dd><ul>
-<li><p>__init__: Initializes the custom action and sets the metavar to an empty string or tuple.</p></li>
-<li><p>__call__: Sets the argument values in the namespace, handling both single and multiple values.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</dd>
-</dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>This script relies on the rich and argparse libraries for enhanced help message formatting.</p></li>
-<li><p>The SuppressMetavar class is specifically designed to work with Rich’s RichHelpFormatter for styled terminal output.</p></li>
+<li><p>The <cite>SuppressMetavar</cite> class is designed to suppress metavar display and improve the formatting of epilog text.</p></li>
+<li><p>The <cite>SM</cite> action ensures that metavar is consistently suppressed across different nargs configurations.</p></li>
+<li><p>The <cite>CustomArgumentRich</cite> and <cite>CustomHelpAction</cite> provide enhanced help message handling, integrating
+formatted docstrings and filtering out unwanted lines.</p></li>
 <li><p>nargs=’<code class="docutils literal notranslate"><span class="pre">+</span></code>’ with action=SM: This combination causes issues when the terminal window is small.</p></li>
 <li><p>Use nargs=’<code class="docutils literal notranslate"><span class="pre">*</span></code>’ with action=SM if zero arguments are acceptable, or drop action=SM to avoid conflicts.</p></li>
-<li><p>Difference:</p></li>
-<li><p>nargs=’<code class="docutils literal notranslate"><span class="pre">+</span></code>’ requires at least one argument.</p></li>
-<li><p>nargs=’<code class="docutils literal notranslate"><span class="pre">*</span></code>’ allows zero or more arguments, providing more flexibility but no guarantee of input.</p></li>
 </ul>
 </div>
 <dl class="py class">
-<dt class="sig sig-object py" id="unravel.core.argparse_utils_rich.SuppressMetavar">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils_rich.</span></span><span class="sig-name descname"><span class="pre">SuppressMetavar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">console</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/argparse_utils_rich.html#SuppressMetavar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils_rich.SuppressMetavar" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">RichHelpFormatter</span></code></p>
+<dt class="sig sig-object py" id="unravel.core.help_formatter.SuppressMetavar">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.help_formatter.</span></span><span class="sig-name descname"><span class="pre">SuppressMetavar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/help_formatter.html#SuppressMetavar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.help_formatter.SuppressMetavar" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HelpFormatter</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unravel.core.help_formatter.CustomHelpAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.help_formatter.</span></span><span class="sig-name descname"><span class="pre">CustomHelpAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'==SUPPRESS=='</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'==SUPPRESS=='</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docstring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/help_formatter.html#CustomHelpAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.help_formatter.CustomHelpAction" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Action" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unravel.core.help_formatter.RichArgumentParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.help_formatter.</span></span><span class="sig-name descname"><span class="pre">RichArgumentParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">docstring</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/help_formatter.html#RichArgumentParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.help_formatter.RichArgumentParser" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unravel.core.help_formatter.RichArgumentParser.print_help">
+<span class="sig-name descname"><span class="pre">print_help</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/help_formatter.html#RichArgumentParser.print_help"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.help_formatter.RichArgumentParser.print_help" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unravel.core.help_formatter.RichArgumentParser.filter_help_output">
+<span class="sig-name descname"><span class="pre">filter_help_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">help_output</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/help_formatter.html#RichArgumentParser.filter_help_output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.help_formatter.RichArgumentParser.filter_help_output" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unravel.core.help_formatter.RichArgumentParser.format_usage">
+<span class="sig-name descname"><span class="pre">format_usage</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/help_formatter.html#RichArgumentParser.format_usage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.help_formatter.RichArgumentParser.format_usage" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unravel.core.help_formatter.SM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.help_formatter.</span></span><span class="sig-name descname"><span class="pre">SM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/help_formatter.html#SM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.help_formatter.SM" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Action" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code></a></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.help_formatter.format_argparse_help">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.help_formatter.</span></span><span class="sig-name descname"><span class="pre">format_argparse_help</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">help_text</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/help_formatter.html#format_argparse_help"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.help_formatter.format_argparse_help" title="Link to this definition">#</a></dt>
+<dd><p>Apply rich formatting to the argparse help message.</p>
+<p>This function processes the help text generated by argparse and applies
+custom styles using the Rich library. It colors the flags according to the
+section they belong to (e.g., purple3 for “Required arguments:”).</p>
+<p>grey50 style is applied to lines containing “Default:” to make them less prominent.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>prog</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p></li>
-<li><p><strong>indent_increment</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>max_help_position</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>)</p></li>
-<li><p><strong>width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em> | </em><em>None</em>)</p></li>
-<li><p><strong>console</strong> (<em>r.Console</em><em> | </em><em>None</em>)</p></li>
-</ul>
+<dd class="field-odd"><p><strong>help_text</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The help text generated by argparse.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <cite>rich.text.Text</cite> object containing the formatted help text.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Text</p>
 </dd>
 </dl>
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="unravel.core.argparse_utils_rich.SM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils_rich.</span></span><span class="sig-name descname"><span class="pre">SM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/argparse_utils_rich.html#SM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils_rich.SM" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Action" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code></a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.core.help_formatter.format_docstring_for_terminal">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.help_formatter.</span></span><span class="sig-name descname"><span class="pre">format_docstring_for_terminal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docstring</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/help_formatter.html#format_docstring_for_terminal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.help_formatter.format_docstring_for_terminal" title="Link to this definition">#</a></dt>
+<dd><p>Apply rich formatting to a docstring for enhanced terminal display.</p>
+<p>This function processes a docstring by applying various formatting styles
+using the Rich library. It handles sections like script descriptions,
+usage examples, command arguments, and specific keywords like “Input:”,
+“Output”, “Note”, “Prereq”, and “Next”. Additionally, it applies
+special styles to text enclosed in double backticks and command-line flags.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>docstring</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – The original docstring to be formatted.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <cite>rich.text.Text</cite> object containing the formatted text.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Text</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<p>The function applies the following styles:
+- “UNRAVEL” is styled with a custom multi-colored format.
+- Script description lines are styled as bold.
+- Section headers starting with “Prereq”, “Input”, “Output”, “Note”, “Next”, and “Usage” are colored.
+- Command names enclosed in double backticks or appearing in usage examples are styled as bold bright magenta.
+- Required arguments (before the first optional argument) are styled as purple3.
+- Optional arguments (within square brackets) are styled as bright blue.
+- Required command-line flags (e.g., <cite>-m</cite>, <cite>–input</cite>) are styled as bold in the required arg section.
+- General arguments like <cite>[-d list of paths]</cite>, <cite>[-p sample??]</cite>, and <cite>[-v]</cite> in the Usage section are styled as green.
+- The Usage section should be last and is separated by a horizontal line.</p>
 </dd></dl>
 
 </section>
@@ -604,12 +667,12 @@ args = parser.parse_args()</p>
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="argparse_utils.html"
+       href="toc.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">unravel.core.argparse_utils module</p>
+        <p class="prev-next-title">unravel.core package</p>
       </div>
     </a>
     <a class="right-next"
@@ -639,15 +702,24 @@ args = parser.parse_args()</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.argparse_utils_rich.SuppressMetavar"><code class="docutils literal notranslate"><span class="pre">SuppressMetavar</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.argparse_utils_rich.SM"><code class="docutils literal notranslate"><span class="pre">SM</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.help_formatter.SuppressMetavar"><code class="docutils literal notranslate"><span class="pre">SuppressMetavar</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.help_formatter.CustomHelpAction"><code class="docutils literal notranslate"><span class="pre">CustomHelpAction</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.help_formatter.RichArgumentParser"><code class="docutils literal notranslate"><span class="pre">RichArgumentParser</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.help_formatter.RichArgumentParser.print_help"><code class="docutils literal notranslate"><span class="pre">RichArgumentParser.print_help()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.help_formatter.RichArgumentParser.filter_help_output"><code class="docutils literal notranslate"><span class="pre">RichArgumentParser.filter_help_output()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.help_formatter.RichArgumentParser.format_usage"><code class="docutils literal notranslate"><span class="pre">RichArgumentParser.format_usage()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.help_formatter.SM"><code class="docutils literal notranslate"><span class="pre">SM</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.help_formatter.format_argparse_help"><code class="docutils literal notranslate"><span class="pre">format_argparse_help()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.help_formatter.format_docstring_for_terminal"><code class="docutils literal notranslate"><span class="pre">format_docstring_for_terminal()</span></code></a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../_sources/unravel/core/argparse_utils_rich.rst.txt">
+    <a href="../../_sources/unravel/core/help_formatter.rst.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

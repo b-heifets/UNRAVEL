@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,18 +500,6 @@
   <section id="module-unravel.image_io.metadata">
 <span id="unravel-image-io-metadata-module"></span><span id="unravel-image-io-metadata"></span><h1>unravel.image_io.metadata module<a class="headerlink" href="#module-unravel.image_io.metadata" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">io_metadata</span></code> from UNRAVEL to save x/y and z voxel sizes in microns as well as image dimensions to a metadata file in each sample directory.</p>
-<p>Run this command from an experiment, sample?? folder, or provide -e/–exp_paths and -d/–dirs arguments to specify the experiment and sample directories.</p>
-<section id="usage-for-when-metadata-is-extractable">
-<h2>Usage for when metadata is extractable:<a class="headerlink" href="#usage-for-when-metadata-is-extractable" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>io_metadata -i rel_path/full_res_img (can use glob patterns)</p>
-</div></blockquote>
-</section>
-<section id="usage-for-when-metadata-is-not-extractable">
-<h2>Usage for when metadata is not extractable:<a class="headerlink" href="#usage-for-when-metadata-is-not-extractable" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>io_metadata -i tif_dir -x 3.5232 -z 6  # Use if metadata not extractable</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Inputs:</dt><dd><ul class="simple">
 <li><p>.czi, .nii.gz, .h5, or TIF series (path should be relative to ./sample??)</p></li>
@@ -522,11 +509,33 @@
 <li><p>./parameters/metadata.txt (path should be relative to ./sample??)</p></li>
 </ul>
 </dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>If -d is not provided, the current directory is used to search for sample?? dirs to process.</p></li>
+<li><p>If the current dir is a sample?? dir, it will be processed.</p></li>
+<li><p>If -d is provided, the specified dirs and/or dirs containing sample?? dirs will be processed.</p></li>
+<li><p>If -p is not provided, the default pattern for dirs to process is ‘sample??’.</p></li>
+</ul>
+</div>
+<dl class="simple">
 <dt>Next command:</dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code> for registration</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code> for prepping autofluo images for registration</p></li>
 </ul>
 </dd>
 </dl>
+<section id="usage-for-when-metadata-is-extractable">
+<h2>Usage for when metadata is extractable:<a class="headerlink" href="#usage-for-when-metadata-is-extractable" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_metadata -i rel_path/full_res_img [-m parameters/metadata.txt] [-d space-separated list of paths] [-p pattern] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-when-metadata-is-not-extractable">
+<h2>Usage for when metadata is not extractable:<a class="headerlink" href="#usage-for-when-metadata-is-not-extractable" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_metadata -i tif_dir -x 3.5232 -z 6 [-m parameters/metadata.txt] [-d space-separated list of paths] [-p pattern] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_io.metadata.parse_args">

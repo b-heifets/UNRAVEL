@@ -377,10 +377,17 @@
 <span class="sd">    Import the functions and decorators to enhance your scripts.</span>
 
 <span class="sd">Examples:</span>
-<span class="sd">    - from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_func_name_args_times, load_text_from_file copy_files</span>
-<span class="sd">    - config = load_config(&quot;path/to/config.ini&quot;)</span>
-<span class="sd">    - samples = get_samples(exp_dir_paths=[&quot;/path/to/exp1&quot;, &quot;/path/to/exp2&quot;])</span>
-<span class="sd">    - progress, task_id = initialize_progress_bar(len(samples), task_message=&quot;[red]Processing samples...&quot;)</span>
+<span class="sd">    &gt;&gt;&gt; # Import the functions and decorators</span>
+<span class="sd">    &gt;&gt;&gt; from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_func_name_args_times, load_text_from_file, copy_files</span>
+
+<span class="sd">    &gt;&gt;&gt; # Load the configuration from a file</span>
+<span class="sd">    &gt;&gt;&gt; config = load_config(&quot;path/to/config.ini&quot;)</span>
+
+<span class="sd">    &gt;&gt;&gt; # Get a list of sample directories</span>
+<span class="sd">    &gt;&gt;&gt; samples = get_samples([&quot;path/to/dir1&quot;, &quot;path/to/dir2&quot;], dir_pattern=&quot;sample??&quot;, verbose=True)</span>
+<span class="sd">    </span>
+<span class="sd">    &gt;&gt;&gt; # Initialize a progress bar</span>
+<span class="sd">    &gt;&gt;&gt; progress, task_id = initialize_progress_bar(len(samples), task_message=&quot;[red]Processing samples...&quot;)</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -402,7 +409,7 @@
 
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">Config</span>
 
-<span class="c1"># TODO: Also output commands with default args to .verbose_command_log.txt or .command_log.txt.</span>
+<span class="c1"># TODO: Also output commands with default args to .verbose_command_log.txt or .command_log.txt. Rename to unravel_command_log.txt</span>
 
 
 <span class="c1"># Configuration loading</span>
@@ -421,62 +428,101 @@
 <span class="c1"># Sample list </span>
 <div class="viewcode-block" id="get_samples">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.get_samples">[docs]</a>
-<span class="k">def</span> <span class="nf">get_samples</span><span class="p">(</span><span class="n">sample_dir_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_dir_pattern</span><span class="o">=</span><span class="s2">&quot;sample??&quot;</span><span class="p">,</span> <span class="n">exp_dir_paths</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_samples</span><span class="p">(</span><span class="n">dir_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dir_pattern</span><span class="o">=</span><span class="s2">&quot;sample??&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Return a list of full paths to sample directories (dirs) based on the dir list, pattern, and/or experiment dirs.</span>
+<span class="sd">    Finds and returns paths to directories matching a specified pattern within given directories </span>
+<span class="sd">    or, if none are provided, the current working directory.</span>
 
-<span class="sd">    This function searches for dirs matching a specific pattern (default &quot;sample??&quot;) within the given experiment dirs.</span>
-<span class="sd">    If a sample_dir_list is provided, it uses the full paths from the list or resolves them if necessary.</span>
-<span class="sd">    If an exp_dir_paths list is provided, it searches for sample dirs within each experiment directory.</span>
-<span class="sd">    If both sample_dir_list and exp_dir_paths are provided, paths are added to the list from both sources.    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    dir_list : list of Path or str, or Path or str, optional</span>
+<span class="sd">        A list of paths (as Path objects or strings) to sample?? directories</span>
+<span class="sd">        or directories that may contain subdirectories matching the `dir_pattern`. </span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    - sample_dir_list (list of str or None): Explicit list of dirs to include. Can be dir names or absolute paths.</span>
-<span class="sd">    - sample_dir_pattern (str): Pattern to match dirs within experiment dirs. Defaults to &quot;sample??&quot;.</span>
-<span class="sd">    - exp_dir_paths (list of str or None): List of paths to experiment dirs where subdirs matching the sample_dir_pattern will be searched for.</span>
+<span class="sd">    dir_pattern : str, optional</span>
+<span class="sd">        A pattern to match directory names, default is &quot;sample??&quot;, where &quot;?&quot; is a wildcard matching a </span>
+<span class="sd">        single character. This pattern is used to identify directories of interest.</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">    - list of pathlib.Path: Full paths to all found sample dirs.</span>
+<span class="sd">    dir_pattern : str, optional</span>
+<span class="sd">        A Unix shell-style wildcard pattern used by `fnmatch` to match directory names. </span>
+<span class="sd">        Default is &quot;sample??&quot;, where each &quot;?&quot; matches a single character. </span>
+
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        If True, prints the found directories, grouped by their parent directories.</span>
+<span class="sd">        Default is False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    samples : list of Path</span>
+<span class="sd">        A list of resolved Path objects pointing to directories that match the `dir_pattern`.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    - If no directories are provided via `dir_list`, the function searches the current working directory.</span>
+<span class="sd">    - If a directory (e.g., the current dir) matches the `dir_pattern`, </span>
+<span class="sd">      it is included in the results and not searched for subdirectories.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; sample_paths = get_samples()  # Search the current working directory for sample?? directories</span>
+<span class="sd">    &gt;&gt;&gt; sample_paths = get_samples([path1, path2], dir_pattern=&quot;sample???&quot;)  # Search path1 and path2 for sample??? directories</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="c1"># Ensure sample_dir_list is a list</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sample_dir_list</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="n">sample_dir_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">sample_dir_list</span><span class="p">]</span>  <span class="c1"># Convert string to list</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dir_list</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
+        <span class="n">dir_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">Path</span><span class="p">(</span><span class="n">dir_list</span><span class="p">)]</span>
 
-    <span class="c1"># Add full paths of dirs from sample_dir_list that exist</span>
-    <span class="k">if</span> <span class="n">sample_dir_list</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">dir_name</span> <span class="ow">in</span> <span class="n">sample_dir_list</span><span class="p">:</span>
-            <span class="n">dir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dir_name</span><span class="p">)</span>
-            <span class="n">dir_path</span> <span class="o">=</span> <span class="n">dir_path</span> <span class="k">if</span> <span class="n">dir_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="k">else</span> <span class="n">dir_path</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">dir_list</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">dir_name</span> <span class="ow">in</span> <span class="n">dir_list</span><span class="p">:</span>
+            <span class="n">dir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dir_name</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+
             <span class="k">if</span> <span class="n">dir_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-                <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+                <span class="c1"># Check if the provided path itself matches the pattern</span>
+                <span class="k">if</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">dir_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">dir_pattern</span><span class="p">):</span>
+                    <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dir_path</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># Search for subdirectories matching the pattern</span>
+                    <span class="n">sample_dirs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">d</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dir_path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">dir_pattern</span><span class="p">)])</span>
+                    <span class="n">samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sample_dirs</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]Directory </span><span class="si">{</span><span class="n">dir_path</span><span class="si">}</span><span class="s2"> does not exist or is not a directory</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># If the cwd matches the pattern, add it to the list of samples</span>
+        <span class="n">cwd</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">cwd</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">dir_pattern</span><span class="p">):</span>
+            <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cwd</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Search the current working directory for matching dirs</span>
+            <span class="n">cwd_samples</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="n">d</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">cwd</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">dir_pattern</span><span class="p">)])</span>
+            <span class="n">samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">cwd_samples</span><span class="p">)</span>
 
-    <span class="c1"># Search for sample folders within each experiment directory in exp_dir_paths and add their full paths</span>
-    <span class="k">if</span> <span class="n">exp_dir_paths</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">exp_dir</span> <span class="ow">in</span> <span class="n">exp_dir_paths</span><span class="p">:</span>
-            <span class="n">exp_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">exp_dir</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">exp_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-                <span class="n">found_samples</span> <span class="o">=</span> <span class="p">[</span>
-                    <span class="n">d</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">exp_path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
-                    <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sample_dir_pattern</span><span class="p">)</span>
-                <span class="p">]</span>
-                <span class="n">samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">found_samples</span><span class="p">)</span>
+        <span class="c1"># Final fallback to add the CWD if nothing else was found</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">samples</span><span class="p">:</span>
+            <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cwd</span><span class="o">.</span><span class="n">resolve</span><span class="p">())</span>
 
-    <span class="c1"># If no dirs have been added yet, search the current working directory for dirs matching the pattern</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">samples</span><span class="p">:</span>
-        <span class="n">cwd_samples</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="n">d</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">sample_dir_pattern</span><span class="p">)</span>
-        <span class="p">]</span>
-        <span class="n">samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">cwd_samples</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="c1"># Create an ordered list of unique parent directories</span>
+        <span class="n">uniq_parent_dirs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">dir_name</span> <span class="ow">in</span> <span class="n">dir_list</span> <span class="ow">or</span> <span class="p">[</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()]:</span>
+            <span class="n">dir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dir_name</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+            <span class="n">parent_dir</span> <span class="o">=</span> <span class="n">dir_path</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="n">fnmatch</span><span class="p">(</span><span class="n">dir_path</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">dir_pattern</span><span class="p">)</span> <span class="k">else</span> <span class="n">dir_path</span>
+            <span class="k">if</span> <span class="n">parent_dir</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">uniq_parent_dirs</span><span class="p">:</span>
+                <span class="n">uniq_parent_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parent_dir</span><span class="p">)</span>
 
-    <span class="c1"># Use the current working directory as the fallback if no samples found</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">samples</span><span class="p">:</span>
-        <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">())</span>
+            <span class="k">for</span> <span class="n">sample_dir</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
+                <span class="n">sample_parent</span> <span class="o">=</span> <span class="n">sample_dir</span><span class="o">.</span><span class="n">parent</span> <span class="k">if</span> <span class="n">sample_dir</span><span class="o">.</span><span class="n">parent</span> <span class="o">!=</span> <span class="n">parent_dir</span> <span class="k">else</span> <span class="n">parent_dir</span>
+                <span class="k">if</span> <span class="n">sample_parent</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">uniq_parent_dirs</span><span class="p">:</span>
+                    <span class="n">uniq_parent_dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample_parent</span><span class="p">)</span>
+
+        <span class="c1"># Print the found directories grouped by their parent directories in order</span>
+        <span class="k">for</span> <span class="n">parent_dir</span> <span class="ow">in</span> <span class="n">uniq_parent_dirs</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [bold gold1]get_samples[/]() found these directories in [bright_black bold]</span><span class="si">{</span><span class="n">parent_dir</span><span class="si">}</span><span class="s2">[/]:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">sample_dir</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">sample_dir</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">parent_dir</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;        [bold orange_red1]</span><span class="si">{</span><span class="n">sample_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">samples</span></div>
-
 
 
 <span class="c1"># Progress bar functions</span>

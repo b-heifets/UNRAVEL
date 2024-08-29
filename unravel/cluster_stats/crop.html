@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,10 +500,29 @@
   <section id="module-unravel.cluster_stats.crop">
 <span id="unravel-cluster-stats-crop-module"></span><span id="unravel-cluster-stats-crop"></span><h1>unravel.cluster_stats.crop module<a class="headerlink" href="#module-unravel.cluster_stats.crop" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_crop</span></code> from UNRAVEL to load image, load bounding box, crop cluster, and save as .nii.gz.</p>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>-x and -z need to be provided if the resolution is not extracted from the image metadata.</p></li>
+<li><p>Use -a, -b, or -c to specify the crop method.</p></li>
+</ul>
+</div>
+<section id="usage-with-all-clusters">
+<h2>Usage with all clusters:<a class="headerlink" href="#usage-with-all-clusters" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cstats_crop -i path/img.nii.gz -b path/bbox.txt -o path/output_img.nii.gz -a -x $XY -z $Z -v</p>
+<div><p>cstats_crop -i path/img.nii.gz -o path/output_img.nii.gz -a [-x $XY] [-z $Z] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-with-a-bounding-box">
+<h2>Usage with a bounding box:<a class="headerlink" href="#usage-with-a-bounding-box" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_crop -i path/img.nii.gz -o path/output_img.nii.gz -b path/bbox.txt [-x $XY] [-z $Z] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-with-a-cluster-id">
+<h2>Usage with a cluster ID:<a class="headerlink" href="#usage-with-a-cluster-id" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_crop -i path/img.nii.gz -o path/output_img.nii.gz -c 1 [-x $XY] [-z $Z] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -570,7 +588,9 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-with-all-clusters">Usage with all clusters:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-with-a-bounding-box">Usage with a bounding box:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-with-a-cluster-id">Usage with a cluster ID:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.crop.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.crop.save_cropped_img"><code class="docutils literal notranslate"><span class="pre">save_cropped_img()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.crop.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

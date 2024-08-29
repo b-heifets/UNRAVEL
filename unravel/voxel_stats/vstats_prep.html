@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,21 +500,27 @@
   <section id="module-unravel.voxel_stats.vstats_prep">
 <span id="unravel-voxel-stats-vstats-prep-module"></span><span id="unravel-voxel-stats-vstats-prep"></span><h1>unravel.voxel_stats.vstats_prep module<a class="headerlink" href="#module-unravel.voxel_stats.vstats_prep" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> from UNRAVEL to load an immunofluo image, subtract its background, and warp it to atlas space.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats_prep -i &lt;asterisk&gt;.czi -rb 4 -o cfos_rb4_30um_CCF_space.nii.gz -e [$DIRS] [-v]</p>
-</div></blockquote>
 <dl class="simple">
-<dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p></li>
+</ul>
 </dd>
-<dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p>&lt;asterisk&gt;.czi, ochann/&lt;asterisk&gt;.tif, ochann, &lt;asterisk&gt;.tif, &lt;asterisk&gt;.h5, or &lt;asterisk&gt;.zarr</p>
+<dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><ul class="simple">
+<li><p><cite>*</cite>.czi, ochann/<cite>*</cite>.tif, ochann, <cite>*</cite>.tif, <cite>*</cite>.h5, or <cite>*</cite>.zarr</p></li>
+</ul>
 </dd>
-<dt>Example output:</dt><dd><p>./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz</p>
+<dt>Output example:</dt><dd><ul class="simple">
+<li><p>./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz</p></li>
+</ul>
 </dd>
 <dt>Next steps:</dt><dd><p>Aggregate outputs with <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code> and run <code class="docutils literal notranslate"><span class="pre">vstats</span></code>.</p>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>vstats_prep -i <cite>*</cite>.czi -o cfos_rb4_30um_CCF_space.nii.gz [-sa 3] [-rb 4] [–chann_idx 1] [–reg_res 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-md parameters/metadata.txt] [–threads 8] [-mi] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.voxel_stats.vstats_prep.parse_args">

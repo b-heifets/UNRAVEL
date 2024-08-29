@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,11 +500,6 @@
   <section id="module-unravel.image_tools.DoG">
 <span id="unravel-image-tools-dog-module"></span><span id="unravel-image-tools-dog"></span><h1>unravel.image_tools.DoG module<a class="headerlink" href="#module-unravel.image_tools.DoG" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">img_DoG</span></code> from UNRAVEL to apply Difference of Gaussians to a single image.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>img_DoG -i input.tif -g1 1.0 -g2 2.0</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Difference of Gaussians:</dt><dd><ul class="simple">
 <li><p>Sigma1 and sigma2 are the standard deviations for the first and second Gaussian blurs</p></li>
@@ -536,6 +530,11 @@
 <li><p>3D spatial averaging and 2D rolling ball background subtraction are used in vstats_prep instead.</p></li>
 </ul>
 </div>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>img_DoG -i input.tif -g1 1.0 -g2 2.0 [-o output.tif] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_tools.DoG.parse_args">

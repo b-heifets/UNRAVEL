@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,17 +500,17 @@
   <section id="module-unravel.warp.to_atlas">
 <span id="unravel-warp-to-atlas-module"></span><span id="unravel-warp-to-atlas"></span><h1>unravel.warp.to_atlas module<a class="headerlink" href="#module-unravel.warp.to_atlas" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">warp_to_atlas</span></code> from UNRAVEL to warp a native image to atlas space.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>warp_to_atlas -i cfos -o img_in_atlas_space.nii.gz -x 3.5232 -z 6 [-mi -v]</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
 </dd>
-<dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p>&lt;asterisk&gt;.czi, cfos/&lt;asterisk&gt;.tif, cfos, &lt;asterisk&gt;.tif, &lt;asterisk&gt;.h5, or &lt;asterisk&gt;.zarr</p>
+<dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p><cite>*</cite>.czi, cfos/<cite>*</cite>.tif, cfos, <cite>*</cite>.tif, <cite>*</cite>.h5, or <cite>*</cite>.zarr</p>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>warp_to_atlas -i cfos -o img_in_atlas_space.nii.gz [–channel 1] [-md path/metadata.txt] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [–reg_res 50] [-inp bSpline] [-zo 1] [-mi] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.warp.to_atlas.parse_args">

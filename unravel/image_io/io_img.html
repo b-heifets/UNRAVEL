@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,17 +500,17 @@
   <section id="module-unravel.image_io.io_img">
 <span id="unravel-image-io-io-img-module"></span><span id="unravel-image-io-io-img"></span><h1>unravel.image_io.io_img module<a class="headerlink" href="#module-unravel.image_io.io_img" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">io_img</span></code> from UNRAVEL to load a 3D image, [get metadata], and save as the specified image type.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>io_img -i path/to/image.czi -o path/to/tif_dir</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Input image types:</dt><dd><p>.czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p>
 </dd>
 <dt>Output image types:</dt><dd><p>.nii.gz, .tif series, .zarr, .h5</p>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_img -i path/to/image.czi -x 3.5232 -z 6 [-c 0] [-o path/to/tif_dir] [-d np.uint8] [-r path/to/reference.nii.gz] [-ao zyx] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_io.io_img.parse_args">

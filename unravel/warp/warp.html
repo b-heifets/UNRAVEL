@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,25 +500,29 @@
   <section id="module-unravel.warp.warp">
 <span id="unravel-warp-warp-module"></span><span id="unravel-warp-warp"></span><h1>unravel.warp.warp module<a class="headerlink" href="#module-unravel.warp.warp" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">warp</span></code> from UNRAVEL to warp to/from atlas space and registration input space</p>
+<dl class="simple">
+<dt>Prereq:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>This warps padded images in ./reg_outputs (i.e., images that match the padded fixed reg input). For unpadded final images, use <code class="docutils literal notranslate"><span class="pre">warp_to_fixed</span></code> and <code class="docutils literal notranslate"><span class="pre">warp_to_atlas</span></code>.</p></li>
+</ul>
+</div>
 <section id="usage-for-forward-warping-atlas-to-tissue-space">
 <h2>Usage for forward warping atlas to tissue space:<a class="headerlink" href="#usage-for-forward-warping-atlas-to-tissue-space" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>warp -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -ro reg_outputs -o native_space/atlas_in_tissue_space.nii.gz -inp multiLabel -v</p>
+<div><p>warp -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -o native_space/atlas_in_tissue_space.nii.gz -inp multiLabel [-ro reg_outputs] [-v]</p>
 </div></blockquote>
 </section>
 <section id="usage-for-inverse-warping-tissue-to-atlas-space">
 <h2>Usage for inverse warping tissue to atlas space:<a class="headerlink" href="#usage-for-inverse-warping-tissue-to-atlas-space" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>warp -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -ro reg_outputs -o atlas_space/tissue_in_atlas_space.nii.gz -inv -v</p>
+<div><p>warp -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -o atlas_space/tissue_in_atlas_space.nii.gz -inv [–inp bSpline] [-ro reg_outputs] [-v]</p>
 </div></blockquote>
-<dl class="simple">
-<dt>Prereq:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>This warps padded images in ./reg_outputs (i.e., images that match the padded fixed reg input). For unpadded final images, use <code class="docutils literal notranslate"><span class="pre">warp_to_fixed</span></code> and <code class="docutils literal notranslate"><span class="pre">warp_to_atlas</span></code>.</p>
-</div>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.warp.warp.parse_args">

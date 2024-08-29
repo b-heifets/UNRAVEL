@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,24 +500,29 @@
   <section id="module-unravel.voxel_stats.apply_mask">
 <span id="unravel-voxel-stats-apply-mask-module"></span><span id="unravel-voxel-stats-apply-mask"></span><h1>unravel.voxel_stats.apply_mask module<a class="headerlink" href="#module-unravel.voxel_stats.apply_mask" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">vstats_apply_mask</span></code> from UNRAVEL to zeros out voxels in image based on a mask and direction args.</p>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>vstats_apply_mask -i input_image.nii.gz -mas mask.nii.gz [-dil 0] [–mean] [-tmas brain_mask.nii.gz] [-omas other_mask.nii.gz] [-di less | greater] [-o output_image.nii.gz] [-md parameters/metadata.txt] [–reg_res 50] [-mi] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
+</section>
 <section id="usage-to-zero-out-voxels-in-image-where-mask-0-e-g-to-exclude-voxels-representing-artifacts">
 <h2>Usage to zero out voxels in image where mask &gt; 0 (e.g., to exclude voxels representing artifacts):<a class="headerlink" href="#usage-to-zero-out-voxels-in-image-where-mask-0-e-g-to-exclude-voxels-representing-artifacts" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>vstats_apply_mask -mas 6e10_seg_ilastik_2/sample??_6e10_seg_ilastik_2.nii.gz -i 6e10_rb20 -o 6e10_rb20_wo_artifacts -di greater -v</p>
+<div><p>vstats_apply_mask -mas 6e10_seg_ilastik_2/sample??_6e10_seg_ilastik_2.nii.gz -i 6e10_rb20 -o 6e10_rb20_wo_artifacts -di greater</p>
 </div></blockquote>
 </section>
 <section id="usage-to-zero-out-voxels-in-image-where-mask-1-e-g-to-preserve-signal-from-segmented-microglia-clusters">
 <h2>Usage to zero out voxels in image where mask &lt; 1 (e.g., to preserve signal from segmented microglia clusters):<a class="headerlink" href="#usage-to-zero-out-voxels-in-image-where-mask-1-e-g-to-preserve-signal-from-segmented-microglia-clusters" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>vstats_apply_mask -mas iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters -v</p>
+<div><p>vstats_apply_mask -mas iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters</p>
 </div></blockquote>
 </section>
 <section id="usage-to-replace-voxels-in-image-with-the-mean-intensity-in-the-brain-where-mask-0">
 <h2>Usage to replace voxels in image with the mean intensity in the brain where mask &gt; 0:<a class="headerlink" href="#usage-to-replace-voxels-in-image-with-the-mean-intensity-in-the-brain-where-mask-0" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>vstats_apply_mask -mas FOS_seg_ilastik/FOS_seg_ilastik_2.nii.gz -i FOS -o FOS_wo_halo.zarr -di greater -m -v</p>
+<div><p>vstats_apply_mask -mas FOS_seg_ilastik/FOS_seg_ilastik_2.nii.gz -i FOS -o FOS_wo_halo.zarr -di greater -m</p>
 </div></blockquote>
-<p>This version allows for dilatation of the full res seg_mask (slow, but precise)</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.voxel_stats.apply_mask.parse_args">
@@ -616,6 +620,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-zero-out-voxels-in-image-where-mask-0-e-g-to-exclude-voxels-representing-artifacts">Usage to zero out voxels in image where mask &gt; 0 (e.g., to exclude voxels representing artifacts):</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-zero-out-voxels-in-image-where-mask-1-e-g-to-preserve-signal-from-segmented-microglia-clusters">Usage to zero out voxels in image where mask &lt; 1 (e.g., to preserve signal from segmented microglia clusters):</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-replace-voxels-in-image-with-the-mean-intensity-in-the-brain-where-mask-0">Usage to replace voxels in image with the mean intensity in the brain where mask &gt; 0:</a></li>

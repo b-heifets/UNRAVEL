@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,18 +500,16 @@
   <section id="module-unravel.region_stats.rstats">
 <span id="unravel-region-stats-rstats-module"></span><span id="unravel-region-stats-rstats"></span><h1>unravel.region_stats.rstats module<a class="headerlink" href="#module-unravel.region_stats.rstats" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">rstats</span></code> from UNRAVEL to quantify cell or label densities for all regions in an atlas.</p>
-<section id="usage-if-the-atlas-is-already-in-native-space-from-warp-to-native">
-<h2>Usage if the atlas is already in native space from <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code>:<a class="headerlink" href="#usage-if-the-atlas-is-already-in-native-space-from-warp-to-native" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>rstats -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline –dirs sample14 sample36</p>
-</div></blockquote>
-</section>
-<section id="usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster">
-<h2>Usage if the native atlas is not available; it is not saved (faster):<a class="headerlink" href="#usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>rstats -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline –dirs sample14 sample36</p>
-</div></blockquote>
 <dl class="simple">
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>, <code class="docutils literal notranslate"><span class="pre">reg</span></code>, and <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code></p></li>
+</ul>
+</dd>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>rel_path/segmentation_image.nii.gz (can be glob pattern)</p></li>
+<li><p>rel_path/native_atlas_split.nii.gz (use this -a if this exists from <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code>; otherwise, use -m to warp atlas to native space)</p></li>
+</ul>
+</dd>
 <dt>Outputs:</dt><dd><ul class="simple">
 <li><p>CSV files in ./sample??/regional_stats/ with cell counts or volumes of segmented voxels, region volumes, and cell or label densities for each region</p></li>
 <li><p>For cell counts, a CSV with cell centroids is also saved</p></li>
@@ -528,16 +525,23 @@
 </ul>
 </div>
 <dl class="simple">
-<dt>Prereqs:</dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>, <code class="docutils literal notranslate"><span class="pre">reg</span></code>, and <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code></p></li>
-</ul>
-</dd>
 <dt>Next steps:</dt><dd><ul class="simple">
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code> to aggregate the CSVs from sample directories to the current directory</p></li>
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code> to summarize the results</p></li>
 </ul>
 </dd>
 </dl>
+<section id="usage-if-the-atlas-is-already-in-native-space-from-warp-to-native">
+<h2>Usage if the atlas is already in native space from <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code>:<a class="headerlink" href="#usage-if-the-atlas-is-already-in-native-space-from-warp-to-native" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>rstats -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline –dirs sample14 sample36 [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster">
+<h2>Usage if the native atlas is not available; it is not saved (faster):<a class="headerlink" href="#usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>rstats -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline –dirs sample14 sample36 [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.region_stats.rstats.parse_args">

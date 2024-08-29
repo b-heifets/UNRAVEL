@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,16 +500,18 @@
   <section id="module-unravel.image_io.zarr_to_nii">
 <span id="unravel-image-io-zarr-to-nii-module"></span><span id="unravel-image-io-zarr-to-nii"></span><h1>unravel.image_io.zarr_to_nii module<a class="headerlink" href="#module-unravel.image_io.zarr_to_nii" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">io_zarr_to_nii</span></code> from UNRAVEL to convert an image.zarr to an image.nii.gz.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Outputs RAS orientation w/o respect to anatomical orientation</p></li>
+<li><p>Scaling not preserved</p></li>
+</ul>
+</div>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>io_zarr_to_nii -i path/img.zarr -o path/img.nii.gz</p>
+<div><p>io_zarr_to_nii -i path/img.zarr -o path/img.nii.gz [-v]</p>
 </div></blockquote>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>Outputs RAS orientation</p></li>
-<li><p>Scaling not preserved</p></li>
-</ul>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_io.zarr_to_nii.parse_args">

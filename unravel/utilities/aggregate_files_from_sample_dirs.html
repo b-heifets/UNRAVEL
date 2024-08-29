@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,16 +500,16 @@
   <section id="module-unravel.utilities.aggregate_files_from_sample_dirs">
 <span id="unravel-utilities-aggregate-files-from-sample-dirs-module"></span><span id="unravel-utilities-aggregate-files-from-sample-dirs"></span><h1>unravel.utilities.aggregate_files_from_sample_dirs module<a class="headerlink" href="#module-unravel.utilities.aggregate_files_from_sample_dirs" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code> from UNRAVEL to aggregate files from sample?? directories to a target directory.</p>
-<section id="usage-for-when-sample-is-already-in-the-name-of-files-being-copied">
-<h2>Usage for when sample?? is already in the name of files being copied:<a class="headerlink" href="#usage-for-when-sample-is-already-in-the-name-of-files-being-copied" title="Link to this heading">#</a></h2>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>utils_agg_files -g ‘atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ -e $DIRS -v</p>
+<div><p>utils_agg_files -g ‘atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
-<section id="usage-to-prepend-sample-to-the-name-of-files-being-copied">
-<h2>Usage to prepend sample?? to the name of files being copied:<a class="headerlink" href="#usage-to-prepend-sample-to-the-name-of-files-being-copied" title="Link to this heading">#</a></h2>
+<section id="usage-to-prepend-sample-folder-name-to-the-name-of-files-being-copied">
+<h2>Usage to prepend sample folder name to the name of files being copied:<a class="headerlink" href="#usage-to-prepend-sample-folder-name-to-the-name-of-files-being-copied" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>utils_agg_files -g ‘atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ -e $DIRS -v -a</p>
+<div><p>utils_agg_files -g ‘atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -576,8 +575,8 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-when-sample-is-already-in-the-name-of-files-being-copied">Usage for when sample?? is already in the name of files being copied:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prepend-sample-to-the-name-of-files-being-copied">Usage to prepend sample?? to the name of files being copied:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prepend-sample-folder-name-to-the-name-of-files-being-copied">Usage to prepend sample folder name to the name of files being copied:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_from_sample_dirs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_from_sample_dirs.aggregate_files_from_sample_dirs"><code class="docutils literal notranslate"><span class="pre">aggregate_files_from_sample_dirs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.aggregate_files_from_sample_dirs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

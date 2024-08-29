@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -501,11 +500,6 @@
   <section id="module-unravel.image_io.points_to_img">
 <span id="unravel-image-io-points-to-img-module"></span><span id="unravel-image-io-points-to-img"></span><h1>unravel.image_io.points_to_img module<a class="headerlink" href="#module-unravel.image_io.points_to_img" title="Link to this heading">#</a></h1>
 <p>Use <cite>io_points_to_img</cite> from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>io_points_to_img  -i path/points.csv -ri path/ref_image [-o path/image] [-thr 20000 or -uthr 20000] [-v]</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Input:</dt><dd><ul class="simple">
 <li><p>A CSV file where each row represents a point corresponding to a detection in the 3D image.</p></li>
@@ -515,11 +509,18 @@
 <dt>Output image types:</dt><dd><p>.nii.gz, .tif series, .h5, .zarr</p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>Points outside the brain (i.e., ‘Region_ID’ == 0) are excluded.</p></li>
 <li><p>If the input CSV has a ‘count’ column, use <code class="docutils literal notranslate"><span class="pre">utils_points_compressor</span></code> to unpack the points before running this script.</p></li>
 </ul>
+</div>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_points_to_img  -i path/points.csv -ri path/ref_image [-o path/image] [-thr 20000 or -uthr 20000] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_io.points_to_img.parse_args">
@@ -595,8 +596,8 @@ If multiple points fall within the same voxel, the voxel’s value is incremente
 </dd>
 </dl>
 </section>
-<section id="notes">
-<h2>Notes:<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
+<section id="note">
+<h2>Note:<a class="headerlink" href="#note" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>If the point coordinates are in physical or resampled space, ensure that they are appropriately
 scaled and aligned with the desired image grid before calling this function.</p></li>

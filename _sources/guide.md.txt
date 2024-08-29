@@ -232,13 +232,13 @@ To view help on arguments for each script (a.k.a. module) in the online document
 unravel_commands -c
 
 # List common commands and filter results
-unravel_commands -c | grep vstats  # Just print commands related to voxel-wise statistics
+uc -f vstats  # Just print commands related to voxel-wise statistics
 
 # List common commands and their descriptions
-unravel_commands -c -d
+uc -c -d
 
 # List all commands and the modules that they run
-unravel_commands -m
+uc -m
 ```
 
 :::{hint}
@@ -541,7 +541,7 @@ Other patterns (e.g., sample???) may be used (commands have a -p option for that
 ```{admonition} Data can be distributed across multiple drives 
 :class: tip dropdown
 
-Paths to each experiment directory may be passed into scripts using the -e flag for batch processing
+Paths to each experiment directory may be passed into scripts using the -d flag for batch processing
 
 This is useful if there is not enough storage on a single drive. 
 
@@ -555,7 +555,7 @@ If SSDs are used, distrubuting data may not speed up processing as much.
 :class: tip dropdown
 This helps with keeping track of paths, commands, etc..
 ```bash
-cd <path/exp_dir>  # Change the current working directory to an exp dir
+cd <path/to/dir/with/sample?? folders>
 touch exp_notes.txt  # Make the .txt file
 ```
 :::
@@ -607,7 +607,7 @@ exp
 ### Optional: clean tifs
    * If raw data is in the form of a tif series, consider running: 
 ```bash
-utils_clean_tifs -t <dir_name> -v -m -e $DIRS  #DIRS can be set as a global variable (e.g., with env_var.sh). It should have a list of directories with sample?? dirs to process. 
+utils_clean_tifs -t <dir_name> -v -m -d $DIRS  #DIRS can be set as a global variable (e.g., with env_var.sh). It should have a list of directories with sample?? dirs to process. 
 ```
 ```{admonition} utils_clean_tifs
 :class: tip dropdown
@@ -644,7 +644,7 @@ reg_prep -i *.czi -x $XY -z $Z -v  # -i options: tif_dir, .h5, .zarr, .tif
 {py:mod}`unravel.segment.copy_tifs`
 * Copy resampled autofluo .tif files for making a brain mask with ilastik
 ```bash
-seg_copy_tifs -i reg_inputs/autofl_??um_tifs -s 0000 0005 0050 -o $(dirname $BRAIN_MASK_ILP) -e $DIRS
+seg_copy_tifs -i reg_inputs/autofl_??um_tifs -s 0000 0005 0050 -o $(dirname $BRAIN_MASK_ILP) -d $DIRS
 ```  
 
 #### Train an Ilastik project
@@ -673,7 +673,7 @@ alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if n
    - Either double click on the application or run: `ilastik`
 
 1. **Input Data**  
-   Drag training slices into the ilastik GUI  
+   Drag training slices into the ilastik GUI (e.g., from a dir w/ 3 slices per sample and > 2 samples per condition)
    `ctrl+A` -> right-click -> Edit shared properties -> Storage: Copy into project file -> Ok  
 
 2. **Feature Selection**  
@@ -708,7 +708,7 @@ alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if n
 {py:mod}`unravel.segment.brain_mask`
 * Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz for ``reg``
 ```bash
-seg_brain_mask -ilp $BRAIN_MASK_ILP -v -e $DIRS
+seg_brain_mask -ilp $BRAIN_MASK_ILP -v -d $DIRS
 ```
 
 :::{hint} 
@@ -741,7 +741,7 @@ Add tutorial for 3D slicer
 ```
 
 ```bash
-reg -m $TEMPLATE -bc -pad -sm 0.4 -ort RPS -a $ATLAS -v -e $DIRS  
+reg -m $TEMPLATE -bc -pad -sm 0.4 -ort RPS -a $ATLAS -v -d $DIRS  
 ```
 
 :::{admonition} If sample orientations vary
@@ -759,7 +759,7 @@ for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m $TEMPLATE -bc -pad -sm
     * sample??/reg_outputs/autofl_??um_masked_fixed_reg_input.nii.gz
     * sample??/reg_outputs/atlas_in_tissue_space.nii.gz
 ```bash
-reg_check -e $DIRS -td $BASE/reg_results
+reg_check -d $DIRS -td $BASE/reg_results
 ```
 * View these images with [FSLeyes](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes) [docs](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html)
 
@@ -782,14 +782,14 @@ reg_check -e $DIRS -td $BASE/reg_results
 Copy 3 tifs from each sample or 3 tifs from 3 samples / condition
 :::
 ```bash
-seg_copy_tifs -i <raw_tif_dir> -s 0100 0500 1000 -o ilastik_segmentation -e $DIRS -v
+seg_copy_tifs -i <raw_tif_dir> -s 0100 0500 1000 -o ilastik_segmentation -d $DIRS -v
 ```
 
 #### `seg_ilastik`
 {py:mod}`unravel.segment.ilastik_pixel_classification`
 * Perform pixel classification using a trained Ilastik project
 ```bash
-seg_ilastik -i <*.czi, *.h5, or dir w/ tifs> -o seg_dir -ilp $BASE/ilastik_segmentation/trained_ilastik_project.ilp -l 1 -v -e $DIRS 
+seg_ilastik -i <*.czi, *.h5, or dir w/ tifs> -o seg_dir -ilp $BASE/ilastik_segmentation/trained_ilastik_project.ilp -l 1 -v -d $DIRS 
 ```
 
 
@@ -872,7 +872,7 @@ seg_ilastik -i <*.czi, *.h5, or dir w/ tifs> -o seg_dir -ilp $BASE/ilastik_segme
 {py:mod}`unravel.voxel_stats.vstats_prep`
 * Preprocess immunofluo images and warp them to atlas space for voxel-wise statistics.
 ```bash
-vstats_prep -i cFos -rb 4 -x $XY -z $Z -o cFos_rb4_atlas_space.nii.gz -v -e $DIRS
+vstats_prep -i cFos -rb 4 -x $XY -z $Z -o cFos_rb4_atlas_space.nii.gz -v -d $DIRS
 ```
 :::{admonition} Background subtraction
 :class: tip dropdown
@@ -898,7 +898,7 @@ You can test parameters for background subtraction with:
 * Z-score atlas space images using tissue masks (from brain_mask) and/or an atlas mask.
 
 ```bash
-vstats_z_score -i atlas_space/sample??_cFos_rb4_atlas_space.nii.gz -v -e $DIRS
+vstats_z_score -i atlas_space/sample??_cFos_rb4_atlas_space.nii.gz -v -d $DIRS
 ```
 :::{hint}
 * atlas_space is a folder in ./sample??/ with outputs from vstats_prep
@@ -908,7 +908,7 @@ vstats_z_score -i atlas_space/sample??_cFos_rb4_atlas_space.nii.gz -v -e $DIRS
 {py:mod}`unravel.utilities.aggregate_files_from_sample_dirs`
 * Aggregate pre-processed immunofluorescence (IF) images for voxel-wise stats
 ```bash
-utils_agg_files -i atlas_space/sample??_cFos_rb4_atlas_space_z.nii.gz -e $DIRS -v
+utils_agg_files -i atlas_space/sample??_cFos_rb4_atlas_space_z.nii.gz -d $DIRS -v
 ```
 
 #### `vstats_whole_to_avg`
@@ -1002,10 +1002,10 @@ cluster_mirror_indices -m RH -v
 * Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell/object or    label densities
 ```bash
 # Basic usage:
-cluster_validation -e <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s seg_dir -v
+cluster_validation -d <paths to sample?? dirs and/or dirs that contain them> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s seg_dir -v
 
 # Processing multiple FDR q value thresholds and both hemispheres:
-for q in 0.005 0.01 0.05 0.1 ; do for side in LH RH ; do cluster_validation -e $DIRS -m path/vstats/contrast/stats/contrast_vox_p_tstat1_q${q}/contrast_vox_p_tstat1_q${q}_rev_cluster_index_${side}.nii.gz -s seg_dir/sample??_seg_dir_1.nii.gz -v ; done ; done
+for q in 0.005 0.01 0.05 0.1 ; do for side in LH RH ; do cluster_validation -d $DIRS -m path/vstats/contrast/stats/contrast_vox_p_tstat1_q${q}/contrast_vox_p_tstat1_q${q}_rev_cluster_index_${side}.nii.gz -s seg_dir/sample??_seg_dir_1.nii.gz -v ; done ; done
 ```
 
 #### `cstats_summary`
@@ -1013,7 +1013,7 @@ for q in 0.005 0.01 0.05 0.1 ; do for side in LH RH ; do cluster_validation -e $
 * Aggregates and analyzes cluster validation data from `cstats_validation`
 * Update parameters in /UNRAVEL/unravel/cstats/cluster_summary.ini and save it with the experiment
 ```bash
-cluster_summary -c path/cluster_summary.ini -e $DIRS -cvd '*' -vd path/vstats_dir -sk $SAMPLE_KEY --groups group1 group2 -v
+cluster_summary -c path/cluster_summary.ini -d $DIRS -cvd '*' -vd path/vstats_dir -sk $SAMPLE_KEY --groups group1 group2 -v
 ```
 group1 and group2 must match conditions in the sample_key.csv
 

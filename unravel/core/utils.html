@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.core package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="img_tools.html">unravel.core.img_tools module</a></li>
@@ -527,12 +526,22 @@ and enhancing command-line scripts with progress bars and detailed function exec
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<ul class="simple">
-<li><p>from unravel.core.utils import load_config, get_samples, initialize_progress_bar, print_func_name_args_times, load_text_from_file copy_files</p></li>
-<li><p>config = load_config(“path/to/config.ini”)</p></li>
-<li><p>samples = get_samples(exp_dir_paths=[“/path/to/exp1”, “/path/to/exp2”])</p></li>
-<li><p>progress, task_id = initialize_progress_bar(len(samples), task_message=”[red]Processing samples…”)</p></li>
-</ul>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Import the functions and decorators</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">get_samples</span><span class="p">,</span> <span class="n">initialize_progress_bar</span><span class="p">,</span> <span class="n">print_func_name_args_times</span><span class="p">,</span> <span class="n">load_text_from_file</span><span class="p">,</span> <span class="n">copy_files</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Load the configuration from a file</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">&quot;path/to/config.ini&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Get a list of sample directories</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">samples</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">([</span><span class="s2">&quot;path/to/dir1&quot;</span><span class="p">,</span> <span class="s2">&quot;path/to/dir2&quot;</span><span class="p">],</span> <span class="n">dir_pattern</span><span class="o">=</span><span class="s2">&quot;sample??&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Initialize a progress bar</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">progress</span><span class="p">,</span> <span class="n">task_id</span> <span class="o">=</span> <span class="n">initialize_progress_bar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">),</span> <span class="n">task_message</span><span class="o">=</span><span class="s2">&quot;[red]Processing samples...&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.utils.load_config">
 <span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/utils.html#load_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.load_config" title="Link to this definition">#</a></dt>
@@ -541,18 +550,40 @@ and enhancing command-line scripts with progress bars and detailed function exec
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.utils.get_samples">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">get_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_dir_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_dir_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sample??'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_dir_paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/utils.html#get_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.get_samples" title="Link to this definition">#</a></dt>
-<dd><p>Return a list of full paths to sample directories (dirs) based on the dir list, pattern, and/or experiment dirs.</p>
-<p>This function searches for dirs matching a specific pattern (default “sample??”) within the given experiment dirs.
-If a sample_dir_list is provided, it uses the full paths from the list or resolves them if necessary.
-If an exp_dir_paths list is provided, it searches for sample dirs within each experiment directory.
-If both sample_dir_list and exp_dir_paths are provided, paths are added to the list from both sources.</p>
-<p>Parameters:
-- sample_dir_list (list of str or None): Explicit list of dirs to include. Can be dir names or absolute paths.
-- sample_dir_pattern (str): Pattern to match dirs within experiment dirs. Defaults to “sample??”.
-- exp_dir_paths (list of str or None): List of paths to experiment dirs where subdirs matching the sample_dir_pattern will be searched for.</p>
-<p>Returns:
-- list of pathlib.Path: Full paths to all found sample dirs.</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.utils.</span></span><span class="sig-name descname"><span class="pre">get_samples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dir_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir_pattern</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sample??'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/utils.html#get_samples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.utils.get_samples" title="Link to this definition">#</a></dt>
+<dd><p>Finds and returns paths to directories matching a specified pattern within given directories
+or, if none are provided, the current working directory.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dir_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)"><em>list</em></a><em> of </em><em>Path</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, or </em><em>Path</em><em> or </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – A list of paths (as Path objects or strings) to sample?? directories
+or directories that may contain subdirectories matching the <cite>dir_pattern</cite>.</p></li>
+<li><p><strong>dir_pattern</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a><em>, </em><em>optional</em>) – A pattern to match directory names, default is “sample??”, where “?” is a wildcard matching a
+single character. This pattern is used to identify directories of interest.</p></li>
+<li><p><strong>dir_pattern</strong> – A Unix shell-style wildcard pattern used by <cite>fnmatch</cite> to match directory names.
+Default is “sample??”, where each “?” matches a single character.</p></li>
+<li><p><strong>verbose</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, prints the found directories, grouped by their parent directories.
+Default is False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>samples</strong> – A list of resolved Path objects pointing to directories that match the <cite>dir_pattern</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a> of Path</p>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If no directories are provided via <cite>dir_list</cite>, the function searches the current working directory.</p></li>
+<li><p>If a directory (e.g., the current dir) matches the <cite>dir_pattern</cite>,
+it is included in the results and not searched for subdirectories.</p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample_paths</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">()</span>  <span class="c1"># Search the current working directory for sample?? directories</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sample_paths</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">([</span><span class="n">path1</span><span class="p">,</span> <span class="n">path2</span><span class="p">],</span> <span class="n">dir_pattern</span><span class="o">=</span><span class="s2">&quot;sample???&quot;</span><span class="p">)</span>  <span class="c1"># Search path1 and path2 for sample??? directories</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py class">

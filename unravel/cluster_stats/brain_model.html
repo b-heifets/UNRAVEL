@@ -383,8 +383,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -500,15 +499,18 @@
                   
   <section id="module-unravel.cluster_stats.brain_model">
 <span id="unravel-cluster-stats-brain-model-module"></span><span id="unravel-cscluster-statstats-brain-model"></span><h1>unravel.cluster_stats.brain_model module<a class="headerlink" href="#module-unravel.cluster_stats.brain_model" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">cstats_brain_model</span></code> from UNRAVEL to prep .nii.gz and RGBA .txt for vizualization in dsi_studio.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_brain_model -i input.nii.gz -sa atlas/atlas_CCFv3_2020_30um_split.nii.gz -m -v</p>
-</div></blockquote>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cstats_brain_model</span></code> from UNRAVEL to prep an img.nii.gz and RGBA.txt LUT for vizualization in dsi_studio.</p>
 <dl class="simple">
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code> or <code class="docutils literal notranslate"><span class="pre">cstats_index</span></code> to generate a valid cluster index.</p></li>
+</ul>
+</dd>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>input.nii.gz (e.g., a valid cluster index, but can be any binary or labeled image)</p></li>
+</ul>
+</dd>
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>img_WB.nii.gz (bilateral version of cluster index w/ ABA colors)</p></li>
+<li><p>img_ABA.nii.gz (Allen brain atlas labels were applied) or img_ABA_WB.nii.gz if -m was used (WB = Whole Brain)</p></li>
 <li><p>rgba.txt (RGBA values for each region in the cluster index)</p></li>
 </ul>
 </dd>
@@ -521,9 +523,19 @@
 <li><p>CCFv3-2020_regional_summary.csv is in UNRAVEL/unravel/core/csvs/</p></li>
 <li><p>It has columns: Region_ID, ID_Path, Region, Abbr, General_Region, R, G, B</p></li>
 <li><p>Alternatively, use CCFv3-2017_regional_summary.csv or provide a custom CSV with the same columns.</p></li>
-<li><p>Use DSI Studio to visualize the cluster index with the RGBA values.</p></li>
 </ul>
 </div>
+<dl class="simple">
+<dt>Next steps:</dt><dd><ul class="simple">
+<li><p>Use DSI Studio to visualize img_WB.nii.gz with the RGBA values.</p></li>
+</ul>
+</dd>
+</dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_brain_model -i input.nii.gz [-m] [-ax 2] [-s 0] [-sa atlas/atlas_CCFv3_2020_30um_split.nii.gz] [-csv CCFv3-2020_regional_summary.csv] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.brain_model.parse_args">

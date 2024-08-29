@@ -356,22 +356,21 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Use ``io_tif_to_tifs`` from UNRAVEL to load a 3D .tif image and save it as tifs.</span>
 
-<span class="sd">Usage:</span>
-<span class="sd">------</span>
-<span class="sd">    io_tif_to_tifs -i &lt;path/image.tif&gt; -t 488</span>
-
-<span class="sd">Inputs: </span>
-<span class="sd">    - image.tif # either from -i path/image.tif or largest &lt;asterisk&gt;.tif in cwd</span>
+<span class="sd">Input: </span>
+<span class="sd">    - image.tif (either from -i path/image.tif or largest `*`.tif in cwd)</span>
 
 <span class="sd">Outputs:</span>
-<span class="sd">    - ./&lt;tif_dir_out&gt;/slice_&lt;asterisk&gt;.tif series</span>
+<span class="sd">    - ./&lt;tif_dir_out&gt;/slice_`*`.tif series</span>
 <span class="sd">    - ./parameters/metadata (text file)</span>
 
 <span class="sd">Next command: </span>
-<span class="sd">    ``reg_prep`` for registration</span>
+<span class="sd">    ``reg_prep`` to prep autofluo images registration</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    io_tif_to_tifs -i &lt;path/image.tif&gt; -t 488 [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">glob</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -381,7 +380,8 @@
 <span class="kn">from</span> <span class="nn">tifffile</span> <span class="kn">import</span> <span class="n">imwrite</span>
 <span class="kn">import</span> <span class="nn">tifffile</span> 
 
-<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
 
@@ -389,14 +389,20 @@
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/image_io/tif_to_tifs.html#unravel.image_io.tif_to_tifs.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image.tif&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--tif_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of output folder for outputting tifs&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
+
+    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image.tif&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--tif_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of output folder for outputting tifs&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
+<span class="c1"># TODO: Could remove find_largest_tif_file() and use glob matching only. </span>
+<span class="c1"># TODO: Could keep metadata functions specific to io_metadata and the img_io module.</span>
 
 <div class="viewcode-block" id="find_largest_tif_file">
 <a class="viewcode-back" href="../../../unravel/image_io/tif_to_tifs.html#unravel.image_io.tif_to_tifs.find_largest_tif_file">[docs]</a>
@@ -511,11 +517,7 @@
         <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Voxel size: </span><span class="si">{</span><span class="n">xy_res</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">xy_res</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">z_res</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> µm^3&quot;</span><span class="p">)</span>
 
     <span class="c1"># Save as tifs </span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">tif_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    [red1]The tif_dir argument was not provided. Please specify the directory.&quot;</span><span class="p">)</span>
-        <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">tifs_output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">tif_dir</span><span class="p">)</span>
+    <span class="n">tifs_output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">tif_dir</span><span class="p">)</span>
     
     <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">tifs_output_path</span><span class="p">)</span>
 
