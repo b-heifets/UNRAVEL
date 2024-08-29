@@ -248,6 +248,13 @@ For more detailed information, you can view the commit history:
 * [Dev branch commits](https://github.com/b-heifets/UNRAVEL/commits/dev)
 :::
 
+## Viewing images:
+
+* .nii.gz images are commonly created during analysis. 
+* They compress well when small or if there are many voxels with an intensity of zero. 
+* They can be viewed with [Fiji](https://imagej.net/software/fiji/downloads), [napari](https://napari.org/stable/), or neuroimaging viewers (e.g., FSLeyes)
+* Fiji needs the [nifti_io plugin](https://imagej.net/ij/plugins/nifti.html)
+* Napari needs the [napari-nifti plugin](https://www.napari-hub.org/plugins/napari-nifti)
 
 
 ## Get started with analysis 

@@ -497,39 +497,37 @@
                   
   <section id="module-unravel.segment.ilastik_pixel_classification">
 <span id="unravel-segment-ilastik-pixel-classification-module"></span><span id="unravel-segment-ilastik-pixel-classification"></span><h1>unravel.segment.ilastik_pixel_classification module<a class="headerlink" href="#module-unravel.segment.ilastik_pixel_classification" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code> from UNRAVEL to use a trained ilastik project (pixel classification) to segment features (e.g., c-Fos+ cells) in images.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code> from UNRAVEL to use segment features of interest using Ilastik.</p>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><ul class="simple">
-<li><p>Organize training tif slices (from <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code>) into a single folder.</p></li>
-<li><p>Train an Ilastik project with the desired features (<a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project">https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project</a>).</p></li>
-<li><p>Add training slices (tifs) into folder (e.g., 3 slices from 3 samples per condition).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> can aggregate these slices into a single folder for training.</p></li>
+<li><p>Organize training tifs into a folder (e.g., w/ <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code>) .</p></li>
+<li><p>Train Ilastik (<a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project">https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project</a>).</p></li>
 </ul>
 </dd>
-<dt>Ilastik executable files for each OS:</dt><dd><ul class="simple">
-<li><p>Linux: /usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh</p></li>
-<li><p>Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh</p></li>
-<li><p>Windows: C:Program Filesilastik-1.3.3post3run_ilastik.bat</p></li>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>ilastik_project: path/ilastik_project.ilp</p></li>
+<li><p>input: path/tif_dir or path/image (relative to current dir or sample??/)</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>seg_dir/seg_dir/<cite>*</cite>.tif series (segmented images; delete w/ –rm_out_tifs)</p></li>
+<li><p>seg_dir/seg_dir_&lt;label&gt;.nii.gz (binary masks for each label specified w/ –labels)</p></li>
 </ul>
 </dd>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>This module uses tifs for processing with Ilastik.</p></li>
-<li><p>If your raw images are not tifs, use -i to make them from a .czi or another image format.</p></li>
+<li><p>Ilastik executable files for each OS (update path and version as needed):</p></li>
+<li><p>Linux: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh</p></li>
+<li><p>Mac: /Applications/ilastik-1.4.0.post1-OSX.app/Contents/ilastik-release/run_ilastik.sh</p></li>
+<li><p>Windows: C:Program Filesilastik-1.4.0.post1run_ilastik.bat</p></li>
 </ul>
 </div>
-<section id="usage-if-input-tifs-exist">
-<h2>Usage if input tifs exist:<a class="headerlink" href="#usage-if-input-tifs-exist" title="Link to this heading">#</a></h2>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -t cfos -o cfos_seg [-l 1 2 3] [-rmo] [-d path/to/sample??] [-p sample??] [-v]</p>
-</div></blockquote>
-</section>
-<section id="usage-if-input-tifs-need-to-be-created">
-<h2>Usage if input tifs need to be created:<a class="headerlink" href="#usage-if-input-tifs-need-to-be-created" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i <cite>*</cite>.czi -o cfos_seg [-l 1 2 3] [-rmi] [-rmo] [-d path/to/sample??] [-p sample??] [-v]</p>
+<div><p>seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i &lt;tif_dir or image&gt; -o seg_dir [–labels 1 2 3] [–rm_out_tifs] [For .czi: –channel 1] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -601,8 +599,7 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-if-input-tifs-exist">Usage if input tifs exist:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-if-input-tifs-need-to-be-created">Usage if input tifs need to be created:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.ilastik_pixel_classification.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.ilastik_pixel_classification.count_files"><code class="docutils literal notranslate"><span class="pre">count_files()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.ilastik_pixel_classification.save_labels_as_masks"><code class="docutils literal notranslate"><span class="pre">save_labels_as_masks()</span></code></a></li>
