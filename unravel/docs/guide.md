@@ -651,6 +651,8 @@ seg_copy_tifs -i reg_inputs/autofl_??um_tifs -s 0000 0005 0050 -o $(dirname $BRA
 :::{admonition} Guide on training an Ilastik project (pixel classification)
 :class: note dropdown
 
+[Pixel classification documentation](https://www.ilastik.org/documentation/pixelclassification/pixelclassification)
+
 **Set up Ilastik for batch processing**
 * [Install Ilastik](https://www.ilastik.org/download)
 ```bash
@@ -699,8 +701,6 @@ alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if n
 - It is possible at add extra labels with `a` (e.g., if you want to segment somata with one label and axons with another label)
 - If you accidentally press `a`, turn off Live Updates and press `x` next to the extra label to delete it.
 - If the segmentation for label 1 fuses neighboring cells, draw a thin line in between them with label 2. 
-  
-[Pixel Classification Video](https://www.ilastik.org/documentation/pixelclassification/pixelclassification)
 
 :::
 
