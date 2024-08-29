@@ -354,30 +354,29 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``seg_ilastik`` from UNRAVEL to use a trained ilastik project (pixel classification) to segment features (e.g., c-Fos+ cells) in images.</span>
+<span class="sd">Use ``seg_ilastik`` from UNRAVEL to use segment features of interest using Ilastik.</span>
 
 <span class="sd">Prereqs: </span>
-<span class="sd">    - Organize training tif slices (from ``seg_copy_tifs``) into a single folder.</span>
-<span class="sd">    - Train an Ilastik project with the desired features (https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project).</span>
-<span class="sd">    - Add training slices (tifs) into folder (e.g., 3 slices from 3 samples per condition).</span>
-<span class="sd">    - ``seg_copy_tifs`` can aggregate these slices into a single folder for training.</span>
+<span class="sd">    - Organize training tifs into a folder (e.g., w/ ``seg_copy_tifs``) .</span>
+<span class="sd">    - Train Ilastik (https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project).</span>
 
-<span class="sd">Ilastik executable files for each OS:</span>
-<span class="sd">    - Linux: /usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh</span>
-<span class="sd">    - Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh</span>
-<span class="sd">    - Windows: C:\\Program Files\\ilastik-1.3.3post3\\run_ilastik.bat</span>
+<span class="sd">Inputs:</span>
+<span class="sd">    - ilastik_project: path/ilastik_project.ilp</span>
+<span class="sd">    - input: path/tif_dir or path/image (relative to current dir or sample??/)</span>
+
+<span class="sd">Outputs:</span>
+<span class="sd">    - seg_dir/seg_dir/`*`.tif series (segmented images; delete w/ --rm_out_tifs)</span>
+<span class="sd">    - seg_dir/seg_dir_&lt;label&gt;.nii.gz (binary masks for each label specified w/ --labels)</span>
 
 <span class="sd">Note:</span>
-<span class="sd">    - This module uses tifs for processing with Ilastik.</span>
-<span class="sd">    - If your raw images are not tifs, use -i to make them from a .czi or another image format.</span>
+<span class="sd">    - Ilastik executable files for each OS (update path and version as needed):</span>
+<span class="sd">    - Linux: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh</span>
+<span class="sd">    - Mac: /Applications/ilastik-1.4.0.post1-OSX.app/Contents/ilastik-release/run_ilastik.sh</span>
+<span class="sd">    - Windows: C:\\Program Files\\ilastik-1.4.0.post1\\run_ilastik.bat</span>
 
-<span class="sd">Usage if input tifs exist:</span>
-<span class="sd">--------------------------</span>
-<span class="sd">    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -t cfos -o cfos_seg [-l 1 2 3] [-rmo] [-d path/to/sample??] [-p sample??] [-v]</span>
-
-<span class="sd">Usage if input tifs need to be created:</span>
-<span class="sd">-----------------------------------------------------------------</span>
-<span class="sd">    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i `*`.czi -o cfos_seg [-l 1 2 3] [-rmi] [-rmo] [-d path/to/sample??] [-p sample??] [-v]</span>
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i &lt;tif_dir or image&gt; -o seg_dir [--labels 1 2 3] [--rm_out_tifs] [For .czi: --channel 1] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
@@ -405,15 +404,13 @@
     <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
     <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ie&#39;</span><span class="p">,</span> <span class="s1">&#39;--ilastik_exe&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/ilastik_executable.&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ilp&#39;</span><span class="p">,</span> <span class="s1">&#39;--ilastik_prj&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/ilastik_project.ilp&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--tifs_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/input_dir_w_tifs&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;output dir name&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Relative path to dir with tifs or an image (.nii.gz, .h5, .zarr)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output dir name&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;If path/input_dir_w_tifs does not exist, provide a rel_path/image to make it&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--channel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;.czi channel number (if this is the input image type). Default: 1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;--labels&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of segmetation label IDs to save as binary .nii.gz images. Default: 1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-rmi&#39;</span><span class="p">,</span> <span class="s1">&#39;--rm_in_tifs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Delete the dir w/ the input tifs (e.g., if a *.czi was the input)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-l&#39;</span><span class="p">,</span> <span class="s1">&#39;--labels&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Space-separated ist of segmetation label IDs to save as 3D binary .nii.gz images&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-rmo&#39;</span><span class="p">,</span> <span class="s1">&#39;--rm_out_tifs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Delete the dir w/ the output tifs. These have all labels. .nii.gz output(s) are smaller.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--channel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;.czi channel number (if this is the input image type). Default: 1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
 
     <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
     <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -422,10 +419,6 @@
 
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
-
-<span class="c1"># TODO: Group args</span>
-<span class="c1"># TODO: Test rich formating for help messages</span>
-<span class="c1"># TODO: Consolidate -i and -t into one arg</span>
 
 
 <div class="viewcode-block" id="count_files">
@@ -466,31 +459,37 @@
 
             <span class="c1"># Define output and skip processing if it already exists</span>
             <span class="n">segmentation_dir</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span>
-            <span class="n">output_tif_dir</span> <span class="o">=</span> <span class="n">segmentation_dir</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
                 <span class="n">args</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">]</span>
             <span class="n">last_label</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">final_output</span> <span class="o">=</span> <span class="n">segmentation_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">last_label</span><span class="si">}</span><span class="s2">.nii.gz&quot;</span><span class="p">)</span>
+            <span class="n">final_output</span> <span class="o">=</span> <span class="n">segmentation_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">last_label</span><span class="si">}</span><span class="s2">.nii.gz&quot;</span>
             <span class="k">if</span> <span class="n">final_output</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">    </span><span class="si">{</span><span class="n">final_output</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> already exists. Skipping.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">continue</span>
             
-            <span class="c1"># Define path to input tifs and create them if they don&#39;t exist</span>
-            <span class="n">input_tif_dir</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">tifs_dir</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">input_tif_dir</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                <span class="n">img_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">sample_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span> 
+            <span class="c1"># If input tifs do not exist, create them from another image format</span>
+            <span class="n">input_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span>
+            <span class="k">if</span> <span class="n">input_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">input_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.tif&quot;</span><span class="p">)):</span>
+                <span class="n">input_tif_dir</span> <span class="o">=</span> <span class="n">input_path</span>
+                <span class="n">remove_tmp_tifs</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">remove_tmp_tifs</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span>
+                <span class="n">input_tif_dir</span> <span class="o">=</span> <span class="n">segmentation_dir</span> <span class="o">/</span> <span class="nb">str</span><span class="p">(</span><span class="n">input_path</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s2">&quot;.czi&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s2">&quot;.nii.gz&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s2">&quot;.zarr&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">removesuffix</span><span class="p">(</span><span class="s2">&quot;.h5&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_tifs&quot;</span>
                 <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">input_tif_dir</span><span class="p">)</span>
 
             <span class="c1"># Perform pixel classification and output segmented tifs to output dir</span>
+            <span class="n">output_tif_dir</span> <span class="o">=</span> <span class="n">segmentation_dir</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span>
             <span class="n">output_tif_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="n">pixel_classification</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">input_tif_dir</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ilastik_prj</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_tif_dir</span><span class="p">),</span> <span class="n">args</span><span class="o">.</span><span class="n">ilastik_exe</span><span class="p">)</span>
 
             <span class="c1"># Convert each label to a binary mask and save as .nii.gz</span>
-            <span class="n">save_labels_as_masks</span><span class="p">(</span><span class="n">output_tif_dir</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">segmentation_dir</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+            <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">label</span> <span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">labels</span> <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">labels</span><span class="p">:</span>
+                <span class="n">save_labels_as_masks</span><span class="p">(</span><span class="n">output_tif_dir</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">labels</span><span class="p">,</span> <span class="n">segmentation_dir</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
 
-            <span class="c1"># Remove input tifs if requested</span>
-            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">rm_in_tifs</span><span class="p">:</span> 
+            <span class="c1"># Remove input tifs if they were created just for pixel_classification()</span>
+            <span class="k">if</span> <span class="n">remove_tmp_tifs</span><span class="p">:</span> 
                 <span class="n">Path</span><span class="p">(</span><span class="n">input_tif_dir</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
 
             <span class="c1"># Remove output tifs if requested</span>
