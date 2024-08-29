@@ -239,6 +239,10 @@ def format_docstring_for_terminal(docstring):
     - The Usage section should be last and is separated by a horizontal line.
     """
 
+    # Replace ``*`` or `*` with a plain asterisk *
+    docstring = re.sub(r'``\*``', '*', docstring)
+    docstring = re.sub(r'`\*`', '*', docstring)
+
     def apply_section_style(line):
         """Apply the appropriate style based on the section header."""
         if line.strip().startswith("Prereqs:"):

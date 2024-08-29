@@ -5,7 +5,7 @@ Use ``cstats_index`` from UNRAVEL to create a cluster index with valid clusters 
 
 Outputs:
     - path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz
-    - path/valid_clusters/cluster_<asterisk>_sunburst.csv
+    - path/valid_clusters/cluster_``*``_sunburst.csv
 
 Note:
     - Default csv: UNRAVEL/unravel/core/csvs/sunburst_IDPath_Abbrv.csv
