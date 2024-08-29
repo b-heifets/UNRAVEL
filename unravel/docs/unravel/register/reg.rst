@@ -7,3 +7,11 @@ unravel.register.reg module
    :members:
    :undoc-members:
    :show-inheritance:
+
+Command-Line Arguments
+-----------------------
+
+.. argparse::
+   :module: unravel.register.reg
+   :func: parse_args
+   :prog: reg.py
