@@ -40,6 +40,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Consolidate save_labels_as_masks() here and the one from unravel/segment/ilastik_pixel_classification.py
 
 @print_func_name_args_times()
 def save_labels_as_masks(ndarray, label, segmentation_dir, output_name):
