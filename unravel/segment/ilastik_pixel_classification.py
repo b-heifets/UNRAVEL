@@ -1,30 +1,29 @@
 #!/usr/bin/env python3
 
 """
-Use ``seg_ilastik`` from UNRAVEL to use a trained ilastik project (pixel classification) to segment features (e.g., c-Fos+ cells) in images.
+Use ``seg_ilastik`` from UNRAVEL to use segment features of interest using Ilastik.
 
 Prereqs: 
-    - Organize training tif slices (from ``seg_copy_tifs``) into a single folder.
-    - Train an Ilastik project with the desired features (https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project).
-    - Add training slices (tifs) into folder (e.g., 3 slices from 3 samples per condition).
-    - ``seg_copy_tifs`` can aggregate these slices into a single folder for training.
+    - Organize training tifs into a folder (e.g., w/ ``seg_copy_tifs``) .
+    - Train Ilastik (https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project).
 
-Ilastik executable files for each OS:
-    - Linux: /usr/local/ilastik-1.3.3post3-Linux/run_ilastik.sh
-    - Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh
-    - Windows: C:\\Program Files\\ilastik-1.3.3post3\\run_ilastik.bat
+Inputs:
+    - ilastik_project: path/ilastik_project.ilp
+    - input: path/tif_dir or path/image (relative to current dir or sample??/)
+
+Outputs:
+    - seg_dir/seg_dir/`*`.tif series (segmented images; delete w/ --rm_out_tifs)
+    - seg_dir/seg_dir_<label>.nii.gz (binary masks for each label specified w/ --labels)
 
 Note:
-    - This module uses tifs for processing with Ilastik.
-    - If your raw images are not tifs, use -i to make them from a .czi or another image format.
+    - Ilastik executable files for each OS (update path and version as needed):
+    - Linux: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh
+    - Mac: /Applications/ilastik-1.4.0.post1-OSX.app/Contents/ilastik-release/run_ilastik.sh
+    - Windows: C:\\Program Files\\ilastik-1.4.0.post1\\run_ilastik.bat
 
-Usage if input tifs exist:
---------------------------
-    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -t cfos -o cfos_seg [-l 1 2 3] [-rmo] [-d path/to/sample??] [-p sample??] [-v]
-
-Usage if input tifs need to be created:
------------------------------------------------------------------
-    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i `*`.czi -o cfos_seg [-l 1 2 3] [-rmi] [-rmo] [-d path/to/sample??] [-p sample??] [-v]
+Usage:
+------
+    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i <tif_dir or image> -o seg_dir [--labels 1 2 3] [--rm_out_tifs] [For .czi: --channel 1] [-d list of paths] [-p sample??] [-v]
 """
 
 import os
@@ -50,15 +49,13 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable.', required=True, action=SM)
     reqs.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
-    reqs.add_argument('-t', '--tifs_dir', help='path/input_dir_w_tifs', required=True, action=SM)
-    reqs.add_argument('-o', '--output', help='output dir name', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Relative path to dir with tifs or an image (.nii.gz, .h5, .zarr)', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='Output dir name', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='If path/input_dir_w_tifs does not exist, provide a rel_path/image to make it', action=SM)
-    opts.add_argument('-c', '--channel', help='.czi channel number (if this is the input image type). Default: 1', default=1, type=int, metavar='')
-    opts.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', default=1, nargs='*', type=int, action=SM)
-    opts.add_argument('-rmi', '--rm_in_tifs', help='Delete the dir w/ the input tifs (e.g., if a *.czi was the input)', action='store_true', default=False)
+    opts.add_argument('-l', '--labels', help='Space-separated ist of segmetation label IDs to save as 3D binary .nii.gz images', nargs='*', type=int, action=SM)
     opts.add_argument('-rmo', '--rm_out_tifs', help='Delete the dir w/ the output tifs. These have all labels. .nii.gz output(s) are smaller.', action='store_true', default=False)
+    opts.add_argument('-c', '--channel', help='.czi channel number (if this is the input image type). Default: 1', default=1, type=int, metavar='')
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
@@ -66,10 +63,6 @@ def parse_args():
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
-
-# TODO: Group args
-# TODO: Test rich formating for help messages
-# TODO: Consolidate -i and -t into one arg
 
 
 def count_files(directory):
@@ -102,31 +95,37 @@ def main():
 
             # Define output and skip processing if it already exists
             segmentation_dir = sample_path / args.output
-            output_tif_dir = segmentation_dir / args.output
             if not isinstance(args.labels, list):
                 args.labels = [args.labels]
             last_label = args.labels[-1]
-            final_output = segmentation_dir.joinpath(f"{args.output}_{last_label}.nii.gz")
+            final_output = segmentation_dir / f"{args.output}_{last_label}.nii.gz"
             if final_output.exists():
                 print(f"\n\n    {final_output.name} already exists. Skipping.\n")
                 continue
             
-            # Define path to input tifs and create them if they don't exist
-            input_tif_dir = sample_path / args.tifs_dir
-            if not input_tif_dir.exists():
-                img_path = next(sample_path.glob(str(args.input)), None)
-                img = load_3D_img(img_path, channel=args.channel) 
+            # If input tifs do not exist, create them from another image format
+            input_path = sample_path / args.input
+            if input_path.is_dir() and any(input_path.glob("*.tif")):
+                input_tif_dir = input_path
+                remove_tmp_tifs = False
+            else:
+                remove_tmp_tifs = True
+                img = load_3D_img(input_path, channel=args.channel)
+                input_tif_dir = segmentation_dir / str(input_path.name).removesuffix(".czi").removesuffix(".nii.gz").removesuffix(".zarr").removesuffix(".h5") + "_tifs"
                 save_as_tifs(img, input_tif_dir)
 
             # Perform pixel classification and output segmented tifs to output dir
+            output_tif_dir = segmentation_dir / args.output
             output_tif_dir.mkdir(exist_ok=True, parents=True)
             pixel_classification(str(input_tif_dir), str(args.ilastik_prj), str(output_tif_dir), args.ilastik_exe)
 
             # Convert each label to a binary mask and save as .nii.gz
-            save_labels_as_masks(output_tif_dir, args.labels, segmentation_dir, args.output)
+            labels = [label for label in args.labels if label is not None]
+            if labels:
+                save_labels_as_masks(output_tif_dir, args.labels, segmentation_dir, args.output)
 
-            # Remove input tifs if requested
-            if args.rm_in_tifs: 
+            # Remove input tifs if they were created just for pixel_classification()
+            if remove_tmp_tifs: 
                 Path(input_tif_dir).unlink()
 
             # Remove output tifs if requested
