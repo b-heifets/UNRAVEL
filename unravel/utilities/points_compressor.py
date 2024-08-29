@@ -19,7 +19,7 @@ Note:
 
 Usage:
 ------
-    utils_points_compressor -i path/<asterisk>_points.csv [-p or -u or -s] [-v]
+    utils_points_compressor -i path/`*`_points.csv [-p or -u or -s] [-v]
 """
 
 import pandas as pd

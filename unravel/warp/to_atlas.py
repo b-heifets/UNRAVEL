@@ -7,7 +7,7 @@ Prereqs:
     ``reg``
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
-    <asterisk>.czi, cfos/<asterisk>.tif, cfos, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr 
+    `*`.czi, cfos/`*`.tif, cfos, `*`.tif, `*`.h5, or `*`.zarr 
 
 Usage:
 ------

@@ -7,7 +7,7 @@ Prereqs:
     - ``reg``
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
-    - <asterisk>.czi, ochann/<asterisk>.tif, ochann, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr
+    - `*`.czi, ochann/`*`.tif, ochann, `*`.tif, `*`.h5, or `*`.zarr
 
 Output example:
     - ./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz
@@ -17,7 +17,7 @@ Next steps:
 
 Usage:
 ------
-    vstats_prep -i <asterisk>.czi -o cfos_rb4_30um_CCF_space.nii.gz [-sa 3] [-rb 4] [--chann_idx 1] [--reg_res 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-md parameters/metadata.txt] [--threads 8] [-mi] [-d list of paths] [-p sample??] [-v]
+    vstats_prep -i `*`.czi -o cfos_rb4_30um_CCF_space.nii.gz [-sa 3] [-rb 4] [--chann_idx 1] [--reg_res 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-md parameters/metadata.txt] [--threads 8] [-mi] [-d list of paths] [-p sample??] [-v]
 """
 
 import shutil

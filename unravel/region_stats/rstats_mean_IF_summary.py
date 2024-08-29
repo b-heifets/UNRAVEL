@@ -9,7 +9,7 @@ Prereqs:
     - If needed, add conditions to input CSV file names: ``utils_prepend`` -sk $SAMPLE_KEY -f
 
 Inputs: 
-    - <asterisk>.csv in the working dir with these columns: 'Region_Intensity', 'Mean_IF_Intensity'
+    - `*`.csv in the working dir with these columns: 'Region_Intensity', 'Mean_IF_Intensity'
 
 Outputs:
     - rstats_mean_IF_summary/region_<region_id>_<region_abbr>.pdf for each region

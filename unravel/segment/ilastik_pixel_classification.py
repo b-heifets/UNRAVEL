@@ -24,7 +24,7 @@ Usage if input tifs exist:
 
 Usage if input tifs need to be created:
 -----------------------------------------------------------------
-    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i <asterisk>.czi -o cfos_seg [-l 1 2 3] [-rmi] [-rmo] [-d path/to/sample??] [-p sample??] [-v]
+    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i `*`.czi -o cfos_seg [-l 1 2 3] [-rmi] [-rmo] [-d path/to/sample??] [-p sample??] [-v]
 """
 
 import os

@@ -4,7 +4,7 @@
 Use ``cstats_prism`` from UNRAVEL to organize data for clusters for plotting in Prism.
 
 Inputs:
-    <asterisk>.csv from ``cstats_org_data`` (in working dir) or ``cstats_mean_IF``
+    `*`.csv from ``cstats_org_data`` (in working dir) or ``cstats_mean_IF``
 
 CSV naming conventions:
     - Condition: first word before '_' in the file name (use ``utils_prepend`` if needed)

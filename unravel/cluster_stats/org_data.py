@@ -4,13 +4,13 @@
 Use ``cstats_org_data`` from UNRAVEL to aggregate and organize csv outputs from ``cstats_validation``.
 
 Inputs: 
-    - clusters/cluster_validation_results_<asterisk> (glob pattern matching ``cstats_validation`` output dirs)
+    - clusters/cluster_validation_results_`*` (glob pattern matching ``cstats_validation`` output dirs)
     - CSVs with the density data (e.g., cell_density_data.csv or label_density_data.csv from ``cstats_validation``)
     - Optional: path/vstats to copy p val, info, and index files
 
 Outputs:
-    - target_dir/sample??__cell_density_data__<cluster_validation_results_<asterisk>>.csv
-    - target_dir/sample??__label_density_data__<cluster_validation_results_<asterisk>>.csv
+    - target_dir/sample??__cell_density_data__<cluster_validation_results_`*`>.csv
+    - target_dir/sample??__label_density_data__<cluster_validation_results_`*`>.csv
 
 Usage
 -----

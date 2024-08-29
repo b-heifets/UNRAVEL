@@ -8,7 +8,7 @@ Prereqs:
         - These may be z-scored with ``vstats_z_score``.
 
 Inputs:
-    - <asterisk>.nii.gz images in the current directory.
+    - `*`.nii.gz images in the current directory.
     
 Output:
     - input_img_LRavg.nii.gz for each input image.

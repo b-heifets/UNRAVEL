@@ -8,7 +8,7 @@ Prereqs:
     - Add conditions to input CSV file names: ``utils_prepend`` -sk $SAMPLE_KEY -f
 
 Inputs: 
-    - <asterisk>.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity
+    - `*`.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity
 
 Outputs:
     - cluster_mean_IF_summary/cluster_<cluster_id>.pdf for each cluster

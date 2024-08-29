@@ -4,11 +4,11 @@
 Use ``reg_prep`` from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
-    <asterisk>.czi, autofluo/<asterisk>.tif series, autofluo, <asterisk>.tif, or <asterisk>.h5 
+    `*`.czi, autofluo/`*`.tif series, autofluo, `*`.tif, or `*`.h5 
 
 Outputs: 
-    ./sample??/reg_inputs/autofl_<asterisk>um.nii.gz
-    ./sample??/reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif series (used for training ilastik for ``seg_brain_mask``)
+    ./sample??/reg_inputs/autofl_`*`um.nii.gz
+    ./sample??/reg_inputs/autofl_`*`um_tifs/`*`.tif series (used for training ilastik for ``seg_brain_mask``)
 
 Note:
     - If -d is not provided, the current directory is used to search for sample?? dirs to process. 
@@ -21,7 +21,7 @@ Next command:
 
 Usage:
 ------
-    reg_prep -i <asterisk>.czi [-md path/metadata.txt] [For .czi: --channel 0] [-o reg_inputs/autofl_50um.nii.gz] [--reg_res 50] [--zoom_order 0] [--miracl] [-d list of paths] [-p sample??] [-v]
+    reg_prep -i `*`.czi [-md path/metadata.txt] [For .czi: --channel 0] [-o reg_inputs/autofl_50um.nii.gz] [--reg_res 50] [--zoom_order 0] [--miracl] [-d list of paths] [-p sample??] [-v]
 """
 
 import numpy as np

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``reg_check`` from UNRAVEL to check registration QC, copies autofl_<asterisk>um_masked_fixed_reg_input.nii.gz and atlas_in_tissue_space.nii.gz for each sample to a target dir.
+Use ``reg_check`` from UNRAVEL to check registration QC, copies autofl_`*`um_masked_fixed_reg_input.nii.gz and atlas_in_tissue_space.nii.gz for each sample to a target dir.
 
 Usage for copying to the current working directory:
 ---------------------------------------------------

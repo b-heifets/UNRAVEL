@@ -7,8 +7,8 @@ Prereqs:
     - This command is usually run via ``cstats_summary``.
 
 Inputs:
-    - CSVs with sunburst data for each cluster (e.g., cluster_<asterisk>_sunburst.csv).
-    - <asterisk>cluster_info.txt in the parent dir (made by ``cstats_fdr`` and copied by ``cstats_org_data``).
+    - CSVs with sunburst data for each cluster (e.g., cluster_`*`_sunburst.csv).
+    - `*`cluster_info.txt in the parent dir (made by ``cstats_fdr`` and copied by ``cstats_org_data``).
 
 Outputs:
     - A color-coded xlsx table summarizing the top regions and their volumes for each cluster.
