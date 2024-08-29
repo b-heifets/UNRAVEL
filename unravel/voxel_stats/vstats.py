@@ -8,7 +8,7 @@ Prereqs:
 
 Inputs:
     - mask.nii.gz (e.g., stats/mask.nii.gz)
-    - *.nii.gz files in the current directory with conditions as prefixes (e.g., saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz)
+    - `*`.nii.gz files in the current directory with conditions as prefixes (e.g., saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz)
 
 Outputs:
     - stats/ directory with randomise_parallel outputs (e.g., uncorrected 1-p value maps [vox_p])
