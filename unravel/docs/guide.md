@@ -232,13 +232,13 @@ To view help on arguments for each script (a.k.a. module) in the online document
 unravel_commands -c
 
 # List common commands and filter results
-unravel_commands -c | grep vstats  # Just print commands related to voxel-wise statistics
+uc -f vstats  # Just print commands related to voxel-wise statistics
 
 # List common commands and their descriptions
-unravel_commands -c -d
+uc -c -d
 
 # List all commands and the modules that they run
-unravel_commands -m
+uc -m
 ```
 
 :::{hint}
@@ -673,7 +673,7 @@ alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if n
    - Either double click on the application or run: `ilastik`
 
 1. **Input Data**  
-   Drag training slices into the ilastik GUI  
+   Drag training slices into the ilastik GUI (e.g., from a dir w/ 3 slices per sample and > 2 samples per condition)
    `ctrl+A` -> right-click -> Edit shared properties -> Storage: Copy into project file -> Ok  
 
 2. **Feature Selection**  

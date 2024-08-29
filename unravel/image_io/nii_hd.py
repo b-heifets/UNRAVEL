@@ -5,7 +5,7 @@ Use ``io_nii_hd`` from UNRAVEL to load a .nii.gz and print its header using niba
 
 Usage:
 ------
-    io_nii_hd -i path/img.nii.gz
+    io_nii_hd -i path/img.nii.gz [-v]
 """
 
 import nibabel as nib

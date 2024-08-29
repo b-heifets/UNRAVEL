@@ -3,9 +3,21 @@
 """
 Use ``cstats_crop`` from UNRAVEL to load image, load bounding box, crop cluster, and save as .nii.gz.
 
-Usage
------
-    cstats_crop -i path/img.nii.gz -b path/bbox.txt -o path/output_img.nii.gz -a -x $XY -z $Z -v
+Note:
+    - -x and -z need to be provided if the resolution is not extracted from the image metadata.
+    - Use -a, -b, or -c to specify the crop method.
+
+Usage with all clusters:
+------------------------
+    cstats_crop -i path/img.nii.gz -o path/output_img.nii.gz -a [-x $XY] [-z $Z] [-v]
+
+Usage with a bounding box:
+--------------------------
+    cstats_crop -i path/img.nii.gz -o path/output_img.nii.gz -b path/bbox.txt [-x $XY] [-z $Z] [-v]
+    
+Usage with a cluster ID:
+------------------------
+    cstats_crop -i path/img.nii.gz -o path/output_img.nii.gz -c 1 [-x $XY] [-z $Z] [-v]
 """
 
 from rich.traceback import install
@@ -28,7 +40,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-o', '--output', help='path/output_img.nii.gz', action=SM)
     opts.add_argument('-b', '--bbox', help='path/bbox.txt', action=SM)
-    opts.add_argument('-c', '--cluster', help='Cluster intensity to get bbox and crop', action=SM)
+    opts.add_argument('-c', '--cluster', help='Cluster ID/intensity to get bbox and crop', action=SM)
     opts.add_argument('-a', '--all_clusters', help='Crop each cluster. Default: False', action='store_true', default=False)
     opts.add_argument('-x', '--xy_res', help='xy voxel size in microns for the raw data', type=float, action=SM)
     opts.add_argument('-z', '--z_res', help='z voxel size in microns for the raw data', type=float, action=SM)

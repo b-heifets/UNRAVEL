@@ -5,7 +5,7 @@ Use ``io_img_to_npy`` from UNRAVEL to convert a 3D image to an ndarray and save 
 
 Usage: 
 ------
-    io_img_to_npy -i path/to/image.czi -o path/to/image.npy
+    io_img_to_npy -i path/to/image.czi -o path/to/image.npy [-ao zyx] [-v]
 """
 
 import numpy as np

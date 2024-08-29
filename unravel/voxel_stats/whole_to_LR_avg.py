@@ -3,19 +3,22 @@
 """
 Use ``vstats_whole_to_avg`` from UNRAVEL to average an image with its mirrored version for voxel-wise stats. This can also smooth the image with a kernel and apply a mask.
 
-Usage:
-------
-    vstats_whole_to_avg -k 0.1 -v -tp
-    
-Output:
-    input_img_LRavg.nii.gz
-
 Prereqs:
     - Input images from ``vstats_prep``.
         - These may be z-scored with ``vstats_z_score``.
 
+Inputs:
+    - <asterisk>.nii.gz images in the current directory.
+    
+Output:
+    - input_img_LRavg.nii.gz for each input image.
+
 Next steps:
     - Run ``vstats`` to perform voxel-wise stats.
+
+Usage:
+------
+    vstats_whole_to_avg [--pattern '<asterisk>.nii.gz'] [--kernel 0] [--axis 2] [--shift 2] [--parallel] [--atlas_mask path/atlas_mask.nii.gz] [-v]
 """
 
 import numpy as np
@@ -43,7 +46,7 @@ def parse_args():
     opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
     opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping (if atlas is asym.). Default: 0', default=0, type=int, action=SM)
     opts.add_argument('-tp', '--parallel', help='Enable parallel processing with thread pools', default=False, action='store_true')
-    opts.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz', default=None, action=SM)
+    opts.add_argument('-amas', '--atlas_mask', help='path/atlas_space_mask.nii.gz', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')

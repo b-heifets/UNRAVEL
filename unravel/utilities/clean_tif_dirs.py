@@ -3,9 +3,11 @@
 """
 Use ``utils_clean_tifs`` from UNRAVEL to clean directories w/ tif series.
 
-Usage:
-------
-    utils_clean_tifs -t <tif_folder_name> -m [-d <space-separated list of paths>] [-p <pattern>] [-v]
+Tif directory clean up involves:
+    - Finding .tif or .ome.tif files in the tif directory
+    - Moving subdirectories to parent dir
+    - Moving non-TIF files to parent dir
+    - Replacing spaces in TIF file names
 
 Note:
     - If -d is not provided, the current directory is used to search for sample?? dirs to process. 
@@ -13,12 +15,9 @@ Note:
     - If -d is provided, the specified dirs and/or dirs containing sample?? dirs will be processed.
     - If -p is not provided, the default pattern for dirs to process is 'sample??'.
 
-Tif directory clean up involves:
-    - Moving subdirectories to parent dir
-    - Moving non-TIF files to parent dir
-    - Replacing spaces in TIF file names
-
-Assumes that the extension of the TIF files is .tif or .ome.tif.
+Usage:
+------
+    utils_clean_tifs -t <list of tif dir> --move [-d list of paths] [-p sample??] [-v]
 """
 
 import shutil
@@ -38,13 +37,13 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-t', '--tif_dirs', help='List of tif series dirs to check.', nargs='*', required=True, action=SM)
+    reqs.add_argument('-t', '--tif_dirs', help='List names of folders with tif series to check (or paths relative to sample??/)', nargs='*', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-m', '--move', help='Enable moving of subdirs and non-TIF files to parent dir.', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

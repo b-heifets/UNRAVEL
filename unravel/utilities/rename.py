@@ -3,13 +3,9 @@
 """
 Use ``utils_rename`` from UNRAVEL to recursively rename files and/or directories by replacing text in filenames.
 
-Usage for renaming files: 
--------------------------
-    utils_rename -o old_text -n new_text -r -t files
-
-Usage for renaming directories:
--------------------------------
-    utils_rename -o old_text -n new_text -r -t dirs
+Usage: 
+------
+    utils_rename -o old_text -n new_text [-t files or dirs or both] [--recursive] [--dry_run] [-v]
 """
 
 from pathlib import Path

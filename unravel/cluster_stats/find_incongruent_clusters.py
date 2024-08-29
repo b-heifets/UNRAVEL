@@ -3,23 +3,21 @@
 """
 Use ``cstats_find_incongruent`` from UNRAVEL if ``cstats_fdr`` was used to convert non-directional p value maps into directional cluster indices. This helps to find clusters where the direction of the mean intensity difference between groups does not match direction of the difference in cell/label density between groups.
 
-Usage
------
-    cstats_find_incongruent -c tukey_results.csv -l groupA -g groupB
-    
-This is useful to find clusters where z-scoring introduces incongruencies between the mean intensity difference and the density difference.
-    
-For example, if group A has increased IF in region A and not B, z-scoring may decrease the relative intensity of region B. 
-This decrease for region B for one group, may introduce a difference in the mean intensity between groups that is not reflected in the density difference.
-
-Input csv: 
-    ./_cluster_validation_info/tukey_results.csv  or ttest_results.csv from ``cstats``
-
-Columns: 
-    'cluster_ID', 'comparison', 'higher_mean_group', 'p-value', 'significance'
+Input:
+    - ./_cluster_validation_info/tukey_results.csv  or ttest_results.csv from ``cstats``
+    - Columns: 'cluster_ID', 'comparison', 'higher_mean_group', 'p-value', 'significance'
 
 Output:
-    Cluster IDs where the mean intensity difference does not match the density difference between groups A and B.
+    - Cluster IDs where the mean intensity difference does not match the density difference between groups A and B.
+
+Note: 
+    - This is modules is useful to find clusters where z-scoring introduces incongruencies between the mean intensity difference and the density difference.
+    - For example, if group A has increased IF in region A and not B, z-scoring may decrease the relative intensity of region B. 
+    - This decrease for region B for one group, may introduce a difference in the mean intensity between groups that is not reflected in the density difference.
+
+Usage:
+------
+    cstats_find_incongruent -c tukey_results.csv -l groupA -g groupB [-v]
 """
 
 from pathlib import Path

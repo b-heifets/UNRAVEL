@@ -5,8 +5,7 @@ Use ``io_nii_to_tifs`` from UNRAVEL to convert an image.nii.gz to tif series in 
 
 Usage:
 ------
-    io_nii_to_tifs -i path/image.nii.gz -o path/output_dir
-
+    io_nii_to_tifs -i path/image.nii.gz -o path/output_dir [-v]
 """
 
 import os

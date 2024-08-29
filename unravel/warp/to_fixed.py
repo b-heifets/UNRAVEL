@@ -3,14 +3,13 @@
 """
 Use ``warp_to_fixed`` from UNRAVEL to forward warp a moving image (e.g., from atlas space) to fixed image space (e.g., tissue space). The input/output do not need padding.
 
+Note: 
+    - Run this from the folder containing reg_outputs.
+    - This script is for warping between different atlas spaces. For warping from atlas space to tissue space, use ``to_native``.
+
 Usage:
 ------
-    warp_to_fixed -f reg_inputs/autofl_50um_masked.nii.gz -m path/moving_img.nii.gz -o path/warped_img.nii.gz -ro reg_outputs -fri autofl_50um_masked_fixed_reg_input.nii.gz [-i multiLabel] [-r 50] [-v]
-
-Note: 
-    Run this from the folder containing reg_outputs.
-
-    This script is for warping between different atlas spaces. For warping from atlas space to tissue space, use ``to_native``.
+    warp_to_fixed -f reg_inputs/autofl_50um_masked.nii.gz -m path/moving_img.nii.gz -o path/warped_img.nii.gz [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-i multiLabel] [-v]
 """
 
 import nibabel as nib
@@ -38,7 +37,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``) w/ padding in <reg_outputs>. E.g., autofl_50um_masked_fixed_reg_input.nii.gz', required=True, action=SM)
-    opts.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor, multiLabel [default], linear, bSpline)', default="multiLabel", action=SM)
+    opts.add_argument('-i', '--interpol', help='Interpolator warping with ants.apply_transforms (nearestNeighbor, multiLabel [default], linear, bSpline)', default="multiLabel", action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)

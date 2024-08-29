@@ -3,13 +3,11 @@
 """
 Use ``io_metadata`` from UNRAVEL to save x/y and z voxel sizes in microns as well as image dimensions to a metadata file in each sample directory.
 
-Usage for when metadata is extractable:
----------------------------------------
-    io_metadata -i rel_path/full_res_img [-d space-separated list of paths] [-p pattern] [-m rel_path/metadata.txt] [-v]
+Inputs:
+    - .czi, .nii.gz, .h5, or TIF series (path should be relative to ./sample??)
 
-Usage for when metadata is not extractable:
--------------------------------------------
-    io_metadata -i tif_dir -x 3.5232 -z 6 [-d space-separated list of paths] [-p pattern] [-m rel_path/metadata.txt] [-v]
+Outputs:
+    - ./parameters/metadata.txt (path should be relative to ./sample??)
 
 Note:
     - If -d is not provided, the current directory is used to search for sample?? dirs to process. 
@@ -17,14 +15,16 @@ Note:
     - If -d is provided, the specified dirs and/or dirs containing sample?? dirs will be processed.
     - If -p is not provided, the default pattern for dirs to process is 'sample??'.
 
-Inputs:
-    - .czi, .nii.gz, .h5, or TIF series (path should be relative to ./sample??)
-
-Outputs:
-    - ./parameters/metadata.txt (path should be relative to ./sample??)
-
 Next command:
-    - ``reg_prep`` for registration
+    - ``reg_prep`` for prepping autofluo images for registration
+
+Usage for when metadata is extractable:
+---------------------------------------
+    io_metadata -i rel_path/full_res_img [-m parameters/metadata.txt] [-d space-separated list of paths] [-p pattern] [-v]
+
+Usage for when metadata is not extractable:
+-------------------------------------------
+    io_metadata -i tif_dir -x 3.5232 -z 6 [-m parameters/metadata.txt] [-d space-separated list of paths] [-p pattern] [-v]
 """
 
 from pathlib import Path
@@ -51,7 +51,7 @@ def parse_args():
     opts.add_argument('-z', '--z_res', help='z resolution in um', type=float, default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
    

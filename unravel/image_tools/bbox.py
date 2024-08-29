@@ -5,7 +5,7 @@ Use ``img_bbox`` from UNRAVEL to load an image (.czi, .nii.gz, or tif series) an
 
 Usage:
 ------
-    img_bbox -i path/img -o path/bounding_boxes
+    img_bbox -i path/img [-o path/outer_bbox.txt] [-c cluster_ID] [-v]
 """
 
 from pathlib import Path

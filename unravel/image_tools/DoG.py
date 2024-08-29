@@ -3,10 +3,6 @@
 """
 Use ``img_DoG`` from UNRAVEL to apply Difference of Gaussians to a single image.
 
-Usage: 
-------
-    img_DoG -i input.tif -g1 1.0 -g2 2.0
-
 Difference of Gaussians:
     - Sigma1 and sigma2 are the standard deviations for the first and second Gaussian blurs
     - Simga2 (the larger blur) should be ~ 1.0 to 1.5 times the radius of these features of interest
@@ -20,6 +16,10 @@ Note:
     - 2D DoG is not implemented in vstats_prep. 
     - DoG could be added to vstats_prep in the future if needed. 
     - 3D spatial averaging and 2D rolling ball background subtraction are used in vstats_prep instead.
+
+Usage: 
+------
+    img_DoG -i input.tif -g1 1.0 -g2 2.0 [-o output.tif] [-v]
 """
 
 import cv2
@@ -38,11 +38,11 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='Path to the input TIFF file.', required=True, action=SM)
+    opts.add_argument('-g1', '--sigma1', help='Sigma for the first Gaussian blur in DoG (targets noise)', default=None, required=True, type=float)
+    opts.add_argument('-g2', '--sigma2', help='Sigma for the second Gaussian blur in DoG (targets signal).', default=None, required=True, type=float)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='Path to save the output TIFF file.', default=None, action=SM)
-    opts.add_argument('-g1', '--sigma1', help='Sigma for the first Gaussian blur in DoG (targets noise)', default=None, required=True, type=float)
-    opts.add_argument('-g2', '--sigma2', help='Sigma for the second Gaussian blur in DoG (targets signal).', default=None, required=True, type=float)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)

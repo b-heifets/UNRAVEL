@@ -3,37 +3,35 @@
 """
 Use ``rstats_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each region intensity ID.
 
-Usage for t-tests:
-------------------
-    rstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
-
-Usage for Tukey's tests w/ reordering and renaming of conditions:
------------------------------------------------------------------
-    rstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1
-
-Usage with a custom atlas:
---------------------------
-    atlas=path/custom_atlas.nii.gz ; rstats_mean_IF_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest
-
-Note:
-    - The first word of the csv inputs is used for the the group names (e.g. Control from Control_sample01_cFos_rb4_atlas_space_z.csv)
-    - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv
-    - Alternatively, use CCFv3-2017__regionID_side_IDpath_region_abbr.csv or provide a custom CSV with the same columns.
-
-Inputs: 
-    - <asterisk>.csv in the working dir with these columns: 'Region_Intensity', 'Mean_IF_Intensity'
-
 Prereqs:
     - Generate CSV inputs withs ``rstats_IF_mean`` or ``rstats_IF_mean_in_seg``
     - After ``rstats_IF_mean_in_seg``, aggregate CSV inputs with ``utils_agg_files``
     - If needed, add conditions to input CSV file names: ``utils_prepend`` -sk $SAMPLE_KEY -f
 
+Inputs: 
+    - <asterisk>.csv in the working dir with these columns: 'Region_Intensity', 'Mean_IF_Intensity'
+
 Outputs:
     - rstats_mean_IF_summary/region_<region_id>_<region_abbr>.pdf for each region
     - If significant differences are found, a prefix '_' is added to the filename to sort the files
 
-The look up table (LUT) csv has these columns: 
-    'Region_ID', 'Side', 'Name', 'Abbr'
+Note:
+    - The first word of the csv inputs is used for the the group names (e.g. Control from Control_sample01_cFos_rb4_atlas_space_z.csv)
+    - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv
+    - Alternatively, use CCFv3-2017__regionID_side_IDpath_region_abbr.csv or provide a custom CSV with the same columns.
+    - The look up table (LUT) csv has these columns: 'Region_ID', 'Side', 'Name', 'Abbr'
+
+Usage for t-tests:
+------------------
+    rstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest [-alt two-sided] [--lut CCFv3-2017__regionID_side_IDpath_region_abbr.csv] [-v]
+
+Usage for Tukey's tests w/ reordering and renaming of conditions:
+-----------------------------------------------------------------
+    rstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1 [--lut CCFv3-2017__regionID_side_IDpath_region_abbr.csv] [-v]
+
+Usage with a custom atlas:
+--------------------------
+    atlas=path/custom_atlas.nii.gz ; rstats_mean_IF_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest [-alt two-sided] [--lut CCFv3-2017__regionID_side_IDpath_region_abbr.csv] [-v]
 """
 
 import matplotlib as mpl

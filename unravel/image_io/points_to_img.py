@@ -3,10 +3,6 @@
 """
 Use `io_points_to_img` from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.
 
-Usage: 
-------
-    io_points_to_img  -i path/points.csv -ri path/ref_image [-o path/image] [-thr 20000 or -uthr 20000] [-v]
-
 Input:
     - A CSV file where each row represents a point corresponding to a detection in the 3D image. 
     - The columns should include 'x', 'y', 'z', and 'Region_ID' (e.g., from ``rstats`` or ``io_img_to_points``).
@@ -14,9 +10,13 @@ Input:
 Output image types:
     .nii.gz, .tif series, .h5, .zarr
 
-Notes:
+Note:
     - Points outside the brain (i.e., 'Region_ID' == 0) are excluded.
     - If the input CSV has a 'count' column, use ``utils_points_compressor`` to unpack the points before running this script.
+
+Usage: 
+------
+    io_points_to_img  -i path/points.csv -ri path/ref_image [-o path/image] [-thr 20000 or -uthr 20000] [-v]
 """
 
 from pathlib import Path
@@ -130,8 +130,8 @@ def points_to_img(points_ndarray, ref_img=None):
     img : numpy.ndarray
         A 3D image created from the input points. Each voxel's value represents the number of points that fall within that voxel.
 
-    Notes:
-    ------
+    Note:
+    -----
     - If the point coordinates are in physical or resampled space, ensure that they are appropriately 
       scaled and aligned with the desired image grid before calling this function.
     - If the count in a voxel exceeds the maximum value for `uint8` (255), the image's data type is 

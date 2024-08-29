@@ -3,19 +3,17 @@
 """
 Use `img_resample_points` from UNRAVEL to resample a set of points (coordinates) and optionally convert them to an image, accounting for the number of detections at each voxel.
 
-Usage: 
-------
-    img_resample_points -i path/points.csv -ri path/ref_image.nii.gz -cr 3.52 3.52 6 -tr 50 [-co path/resampled_points.csv] [-io path/resampled_image.nii.gz] [-thr 20000 or -uthr 20000] [-v]
-
 Input image types:
     .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
-Output image types:
-    .nii.gz, .tif series, .h5, .zarr
-
 Outputs:
+    - Output image types: .nii.gz, .tif series, .h5, .zarr
     - A CSV file where each row represents a resampled point corresponding to a detection in the 3D image.
     - A 3D image where each voxel contains the number of detections at that location.
+
+Usage: 
+------
+    img_resample_points -i path/points.csv -ri path/ref_image.nii.gz -cr 3.52 3.52 6 -tr 50 [-co path/resampled_points.csv] [-io path/resampled_image.nii.gz] [-thr 20000 or -uthr 20000] [-v]
 """
 
 import numpy as np

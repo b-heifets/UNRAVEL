@@ -3,13 +3,11 @@
 """
 Use ``cstats`` from UNRAVEL to validate clusters based on differences in cell/object or label density w/ t-tests.    
 
-T-test usage:  
-------------- 
-    cstats --groups <group1> <group2> -hg <group1|group2>
+Input files: 
+    - <asterisk>_density_data.csv from ``cstats_validation`` (e.g., in each subdir named after the rev_cluster_index.nii.gz file)
 
-Tukey's test usage: 
--------------------
-    cstats --groups <group1> <group2> <group3> <group4> ... -hg <group1|group2>
+Outputs:
+    - ./_valid_clusters_stats/
 
 Note: 
     - Organize data in directories for each comparison (e.g., psilocybin > saline, etc.)
@@ -17,9 +15,6 @@ Note:
     - Each subdir should contain .csv files with the density data for each cluster.
     - The first 2 groups reflect the main comparison for validation rates.
     - Clusters are not considered valid if the effect direction does not match the expected direction.
-
-Input files: 
-    <asterisk>_density_data.csv from ``cstats_validation`` (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
 
 CSV naming conventions:
     - Condition: first word before '_' in the file name
@@ -44,8 +39,13 @@ Examples:
 Columns in the .csv files:
     sample, cluster_ID, <cell_count|label_volume>, cluster_volume, <cell_density|label_density>, ...
 
-Outputs:
-    - ./_valid_clusters_stats/
+Usage for t-tests:
+------------------
+    cstats --groups <group1> <group2> -hg <group1|group2> [-cp <condition_prefixes>] [-alt <two-sided|less|greater>] [-pvt <p_value_threshold.txt>] [-v]
+
+Usage for Tukey's tests:
+------------------------
+    cstats --groups <group1> <group2> <group3> <group4> ... -hg <group1|group2> [-cp <condition_prefixes>] [-alt <two-sided|less|greater>] [-pvt <p_value_threshold.txt>] [-v]
 """
 
 import numpy as np

@@ -3,10 +3,6 @@
 """
 Use ``io_h5_to_tifs`` from UNRAVEL to load a h5/hdf5 image and save it as tifs.
 
-Usage:
-------
-    io_h5_to_tifs -i path/image.h5 -t autofl
-
 Inputs:
     - image.h5 either from -i path/image.h5 or largest <asterisk>.h5 in cwd
     - This assumes that the first dataset in the hdf5 file has the highest resolution.
@@ -15,8 +11,9 @@ Outputs:
     - ./<tif_dir_out>/slice_<asterisk>.tif series
     - ./parameters/metadata (text file)
 
-Next command:
-    - ``reg_prep`` for registration
+Usage:
+------
+    io_h5_to_tifs -i path/image.h5 -t autofl [-v]
 """
 
 import glob

@@ -5,7 +5,7 @@ Use ``utils_agg_files_rec`` from UNRAVEL to recusively copy files matching a glo
 
 Usage:
 ------
-    utils_agg_files_rec -p '<asterisk>.txt' -s /path/to/source -d /path/to/destination
+    utils_agg_files_rec -p '<asterisk>.txt' [-s /path/to/source] [-d /path/to/destination] [--move] [-v]
 """
 
 import shutil

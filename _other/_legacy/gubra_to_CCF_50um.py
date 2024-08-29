@@ -4,10 +4,6 @@
 Use ``gubra_to_CCF.py`` from UNRAVEL to warp an image from gubra 50 um space to Allen CCFv3 50 um space. 
 This is useful for warping cell centroids from gubra space to CCFv3 space.
 
-Usage:
-------
-``gubra_to_CCF.py`` -m path/image.nii.gz -o path/image_CCF50.nii.gz [-f path/CCFv3-2017_ano_50um_w_fixes.nii.gz] [-i interpol] [-ro path/reg_outputs] [-fri path/fixed_reg_input.nii.gz] [-v]
-
 Note: 
     - This script is used for converting gubra 50 um space to CCFv3 50 um space.
 
@@ -15,6 +11,9 @@ Next steps:
     ``io_img_to_points``
     ``img_resample_points``
 
+Usage:
+------
+``gubra_to_CCF.py`` -m path/image.nii.gz -o path/image_CCF50.nii.gz [-f path/CCFv3-2017_ano_50um_w_fixes.nii.gz] [-i interpol] [-ro path/reg_outputs] [-fri path/fixed_reg_input.nii.gz] [-v]
 """
 
 from rich import print

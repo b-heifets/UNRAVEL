@@ -3,13 +3,13 @@
 """
 Use ``io_zarr_to_nii`` from UNRAVEL to convert an image.zarr to an image.nii.gz.
 
+Note:
+    - Outputs RAS orientation w/o respect to anatomical orientation
+    - Scaling not preserved
+
 Usage:
 ------
-    io_zarr_to_nii -i path/img.zarr -o path/img.nii.gz
-
-Notes:
-    - Outputs RAS orientation
-    - Scaling not preserved
+    io_zarr_to_nii -i path/img.zarr -o path/img.nii.gz [-v]    
 """
 
 import nibabel as nib

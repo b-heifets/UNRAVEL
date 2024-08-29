@@ -2,28 +2,30 @@
 
 """
 Use ``effect_sizes_sex_rel`` from UNRAVEL to calculate the relative effect size for (comparing sexes) for a comparison between two groups for each cluster [or a valid cluster list].
-    
-Usage
------
-    effect_sizes_sex_rel -i densities.csv -c1 saline -c2 psilocybin
+
+Prereqs:
+    - ``cstats_validation`` to generate the input CSVs with densities.
 
 Inputs:
     - CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, ...)
     - Enter M or F in the Sex column.
 
-Arguments:
+Outputs:
+    - CSV w/ relative effect sizes and upper and lower limits of the confidence interval (CI) for each cluster
+    - <input>_Hedges_g_<condition_1>_<condition_2>_F_gt_M.csv (F > M)
+
+Note:
     - -c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.
-    
-Outputs CSV w/ the relative effect size (F>M) and CI for each cluster:
-    <input>_Hedges_g_<condition_1>_<condition_2>_F_gt_M.csv
+    - The effect size is calculated as the unbiased Hedge\'s g effect sizes (corrected for sample size).
+    - Hedges' g = ((c2-c1)/spooled*corr_factor)
+    - CI = Hedges' g +/- t * SE
+    - 0.2-0.5 = small effect; 0.5-0.8 = medium; 0.8+ = large
+    - The CI is based on a two-tailed t-test with alpha = 0.05.
+    - More more info, see: https://pubmed.ncbi.nlm.nih.gov/37248402/
 
-If -c is used, outputs a CSV with the effect sizes and CI for valid clusters:
-    <input>_Hedges_g_<condition_1>_<condition_2>_F_gt_M_valid_clusters.csv
-
-The effect size is calculated as the unbiased Hedge\'s g effect sizes (corrected for sample size): 
-    Hedges' g = ((c2-c1)/spooled*corr_factor)
-    CI = Hedges' g +/- t * SE
-    0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large
+Usage
+-----
+    effect_sizes_sex_rel -i densities.csv -c1 saline -c2 psilocybin [-c 1 2 3 4 5] [-v]
 """
 
 import os
@@ -54,6 +56,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: explain in the help how the input CSVs are prepared. 
 
 def condition_selector(df, condition, unique_conditions, condition_column='Conditions'):
     """Create a condition selector to handle pooling of data in a DataFrame based on specified conditions.

@@ -1,22 +1,12 @@
 #!/usr/bin/env python3
 
 """
-Use ``seg_ilastik`` from UNRAVEL to run a trained ilastik project (pixel classification) to segment features in images.
-
-Usage if input tifs exist:
---------------------------
-    seg_ilastik -ie <path/ilastik_executable> -t cfos -o cfos_seg -ilp path/ilastik_project.ilp
-
-Note:
-    - This module uses tifs for processing with Ilastik.
-    - If your raw images are not tifs, use -i to make them from a .czi or another image format.
-
-Usage if input tifs need to be created:
------------------------------------------------------------------
-    seg_ilastik -ie <path/ilastik_executable> -i <asterisk>.czi -o cfos_seg -ilp path/ilastik_project.ilp
+Use ``seg_ilastik`` from UNRAVEL to use a trained ilastik project (pixel classification) to segment features (e.g., c-Fos+ cells) in images.
 
 Prereqs: 
-    - To train an Ilastik project, organize training slices (tifs) into folder (e.g., 3 slices from 3 samples per condition).
+    - Organize training tif slices (from ``seg_copy_tifs``) into a single folder.
+    - Train an Ilastik project with the desired features (https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project).
+    - Add training slices (tifs) into folder (e.g., 3 slices from 3 samples per condition).
     - ``seg_copy_tifs`` can aggregate these slices into a single folder for training.
 
 Ilastik executable files for each OS:
@@ -24,8 +14,17 @@ Ilastik executable files for each OS:
     - Mac: /Applications/Ilastik.app/Contents/ilastik-release/run_ilastik.sh
     - Windows: C:\\Program Files\\ilastik-1.3.3post3\\run_ilastik.bat
 
-For a guide on training Ilastik, see: 
-    - https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project
+Note:
+    - This module uses tifs for processing with Ilastik.
+    - If your raw images are not tifs, use -i to make them from a .czi or another image format.
+
+Usage if input tifs exist:
+--------------------------
+    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -t cfos -o cfos_seg [-l 1 2 3] [-rmo] [-d path/to/sample??] [-p sample??] [-v]
+
+Usage if input tifs need to be created:
+-----------------------------------------------------------------
+    seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i <asterisk>.czi -o cfos_seg [-l 1 2 3] [-rmi] [-rmo] [-d path/to/sample??] [-p sample??] [-v]
 """
 
 import os
@@ -52,17 +51,17 @@ def parse_args():
     reqs.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable.', required=True, action=SM)
     reqs.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
     reqs.add_argument('-t', '--tifs_dir', help='path/input_dir_w_tifs', required=True, action=SM)
+    opts.add_argument('-o', '--output', help='output dir name', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help='If path/input_dir_w_tifs does not exist, provide a rel_path/image to make it', action=SM)
     opts.add_argument('-c', '--channel', help='.czi channel number (if this is the input image type). Default: 1', default=1, type=int, metavar='')
-    opts.add_argument('-o', '--output', help='output dir name', default=None, action=SM)
     opts.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', default=1, nargs='*', type=int, action=SM)
     opts.add_argument('-rmi', '--rm_in_tifs', help='Delete the dir w/ the input tifs (e.g., if a *.czi was the input)', action='store_true', default=False)
     opts.add_argument('-rmo', '--rm_out_tifs', help='Delete the dir w/ the output tifs. These have all labels. .nii.gz output(s) are smaller.', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

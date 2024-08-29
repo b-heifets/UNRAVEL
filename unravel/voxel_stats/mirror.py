@@ -4,13 +4,13 @@
 """
 Use ``vstats_mirror`` from UNRAVEL to load a <asterisk>.nii.gz, flip a copy [and shift content], average original and copy together, and save as .nii.gz.
 
-Usage:
-------
-    vstats_mirror -v
-
 Note:
     - Use -ax 2 and -s 0 for the CCFv3 2020 atlas.
     - Use -ax 0 and -s 2 for the 25 um Gubra atlas.
+
+Usage:
+------
+    vstats_mirror [-p '<asterisk>.nii.gz'] [-ax 2] [-s 0] [-v]
 """
 
 import os

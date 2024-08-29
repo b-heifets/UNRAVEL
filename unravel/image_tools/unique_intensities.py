@@ -5,15 +5,15 @@ Use ``img_unique`` from UNRAVEL to print a list of unique intensities greater th
 
 Usage for printing all non-zero intensities:
 --------------------------------------------
-    img_unique -i path/input_img.nii.gz
+    img_unique -i path/input_img.nii.gz [-v]
 
 Usage for printing the number of voxels for each intensity that is present:
 ---------------------------------------------------------------------------
-    img_unique -i path/input_img.nii.gz -s
+    img_unique -i path/input_img.nii.gz -s [-v]
 
 Usage for printing unique intensities w/ a min cluster size > 100 voxels:
 -------------------------------------------------------------------------
-    img_unique -i path/input_img.nii.gz -m 100
+    img_unique -i path/input_img.nii.gz -m 100 [-v]
 """
 
 import nibabel as nib

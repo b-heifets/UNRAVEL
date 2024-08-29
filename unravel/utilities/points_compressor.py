@@ -3,24 +3,23 @@
 """
 Use ``utils_points_compressor`` from UNRAVEL to pack or unpack point data in a CSV file or summarize the number of points per region.
 
-Packing: Group points with the same coordinates and `Region_ID`, adding a `count` column.
-Unpacking: Expand packed points back to individual rows based on the `count` column.
-Summary: Output a CSV summarizing the number of points per region.
+Input:
+    - CSV file with either unpacked (`x, y, z, Region_ID`) or packed (`x, y, z, Region_ID, count`) format.
+
+Output:
+    - CSV file with the desired packed or unpacked format.
+    - Or save a summary CSV with the number of points per region.
+
+Note:
+    - Packing: Group points with the same coordinates and `Region_ID`, adding a `count` column.
+    - Unpacking: Expand packed points back to individual rows based on the `count` column.
+    - Summary: Output a CSV summarizing the number of points per region.
+    - Use only one of the following options: -p, -u, -s.
+    - The summary option can be used with either packed or unpacked data.
 
 Usage:
 ------
     utils_points_compressor -i path/<asterisk>_points.csv [-p or -u or -s] [-v]
-
-Input:
-    CSV file with either unpacked (`x, y, z, Region_ID`) or packed (`x, y, z, Region_ID, count`) format.
-
-Output:
-    CSV file with the desired packed or unpacked format.
-    Optionally, a summary CSV with the number of points per region.
-
-Note:
-    - Use only one of the following options: -p, -u, -s.
-    - The summary option can be used with either packed or unpacked data.
 """
 
 import pandas as pd

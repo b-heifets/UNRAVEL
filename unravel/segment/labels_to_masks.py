@@ -5,8 +5,7 @@ Use save_labels_as_masks.py from UNRAVEL to convert an ilastik segmentation tif 
 
 Usage:
 ------
-    save_labels_as_masks.py -t seg_ilastik_1/IlastikSegmentation -o Ai14_seg_ilasik_1 -v
-
+    save_labels_as_masks.py -i seg_ilastik_1/IlastikSegmentation -o Ai14_seg_ilasik_1 [-l 1 2 3] [-d dirs] [-p pattern] [-v]
 """
 
 import nibabel as nib
@@ -35,7 +34,7 @@ def parse_args():
     opts.add_argument('-l', '--labels', help='List of segmetation label IDs to save as binary .nii.gz images. Default: 1', default=1, nargs='*', type=int, action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

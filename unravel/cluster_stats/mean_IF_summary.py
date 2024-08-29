@@ -3,27 +3,27 @@
 """
 Use ``cstats_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each cluster in atlas space.
 
-Usage for t-tests:
-------------------
-    cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
-
-Usage for Tukey's tests w/ reordering and renaming of conditions:
------------------------------------------------------------------
-    cstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1
-
-Note:
-    - The first word of the csv inputs is used for the the group names (underscore separated).
-
-Inputs: 
-    - <asterisk>.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity
-
 Prereqs:
     - Generate CSV inputs withs ``cstats_IF_mean``
     - Add conditions to input CSV file names: ``utils_prepend`` -sk $SAMPLE_KEY -f
 
+Inputs: 
+    - <asterisk>.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity
+
 Outputs:
     - cluster_mean_IF_summary/cluster_<cluster_id>.pdf for each cluster
     - If significant differences are found, a prefix '_' is added to the filename to sort the files
+
+Note:
+    - The first word of the csv inputs is used for the the group names (underscore separated).
+
+Usage for t-tests:
+------------------
+    cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest [--cluster_ids 1 2 3] [-alt two-sided] [-v]
+
+Usage for Tukey's tests w/ reordering and renaming of conditions:
+-----------------------------------------------------------------
+    cstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1 [--cluster_ids 1 2 3] [-v]
 """
 
 import matplotlib as mpl

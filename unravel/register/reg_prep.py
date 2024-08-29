@@ -3,9 +3,12 @@
 """
 Use ``reg_prep`` from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.
 
-Usage:
-------
-    reg_prep -i <asterisk>.czi [-d <space-separated list of paths>] [-v]
+Input examples (path is relative to ./sample??; 1st glob match processed): 
+    <asterisk>.czi, autofluo/<asterisk>.tif series, autofluo, <asterisk>.tif, or <asterisk>.h5 
+
+Outputs: 
+    ./sample??/reg_inputs/autofl_<asterisk>um.nii.gz
+    ./sample??/reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif series (used for training ilastik for ``seg_brain_mask``)
 
 Note:
     - If -d is not provided, the current directory is used to search for sample?? dirs to process. 
@@ -13,15 +16,12 @@ Note:
     - If -d is provided, the specified dirs and/or dirs containing sample?? dirs will be processed.
     - If -p is not provided, the default pattern for dirs to process is 'sample??'.
 
-Input examples (path is relative to ./sample??; 1st glob match processed): 
-    <asterisk>.czi, autofluo/<asterisk>.tif series, autofluo, <asterisk>.tif, or <asterisk>.h5 
-
-Outputs: 
-    ./sample??/reg_inputs/autofl_<asterisk>um.nii.gz
-    ./sample??/reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif series (used for training ilastik for ``seg_brain_mask``) 
-
 Next command: 
     ``seg_copy_tifs`` for ``seg_brain_mask`` or ``reg``
+
+Usage:
+------
+    reg_prep -i <asterisk>.czi [-md path/metadata.txt] [For .czi: --channel 0] [-o reg_inputs/autofl_50um.nii.gz] [--reg_res 50] [--zoom_order 0] [--miracl] [-d list of paths] [-p sample??] [-v]
 """
 
 import numpy as np
@@ -55,7 +55,7 @@ def parse_args():
     compatability.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

@@ -3,14 +3,17 @@
 """
 Converts correlation map to z-score, p value, and FDR p value maps.
 
-Usage:
-------
-    path/r_to_p.py -i sample01_cfos_correlation_map.nii.gz -x 25 -z 25 -v
+Input:
+    - <image>_correlation_map.nii.gz
 
 Outputs: 
     - <image>_z_score_map.nii.gz
     - <image>_p_value_map.nii.gz
     - <image>_p_value_map_fdr_corrected.nii.gz
+
+Usage:
+------
+    path/r_to_p.py -i sample01_cfos_correlation_map.nii.gz -x 25 -z 25 -v
 """
 
 from pathlib import Path
@@ -40,7 +43,7 @@ def parse_args():
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    
+
     return parser.parse_args()
 
 

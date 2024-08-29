@@ -38,7 +38,7 @@ Classes:
         - Attributes:
             - verbose: A boolean flag to control verbosity of the application.
 
-Notes:
+Note:
     - The Config class uses the RawConfigParser from the configparser module to parse the configuration file.
     - The AttrDict class allows for convenient attribute access to dictionary keys.
     - The Configuration class can be extended to hold additional global settings as needed.

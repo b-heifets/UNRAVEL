@@ -3,12 +3,11 @@
 """
 Use ``img_spatial_avg`` from UNRAVEL to load an image and apply 3D spatial averaging.
 
-Usage:
-------
-    img_spatial_avg -i <tif_dir> -o spatial_avg.zarr -d 2 -v 
-    
 Input image types:
     - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
+
+Outputs: 
+    - .nii.gz, .tif series, or .zarr depending on the output path extension.
 
 3D spatial averaging:
     - Apply a 3D spatial averaging filter to a 3D numpy array.
@@ -30,8 +29,9 @@ Input image types:
     - The xy and z resolutions are required for saving the output as .nii.gz.
     - The output is saved as .nii.gz, .tif series, or .zarr.
 
-Outputs: 
-    - .nii.gz, .tif series, or .zarr depending on the output path extension.
+Usage:
+------
+    img_spatial_avg -i <tif_dir> -o spatial_avg.zarr -d 2 [-k 3] [-c 0] [-x 3.5232] [-z 6] [-dt uint16] [-r metadata_referenece.nii.gz] [-ao xyz] [-v]
 """
 
 import cv2

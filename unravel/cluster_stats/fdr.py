@@ -3,10 +3,6 @@
 """
 Use ``cstats_fdr`` from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.
 
-Usage
------
-    cstats_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05
-
 Inputs: 
     - p value map (e.g., <asterisk>vox_p_<asterisk>stat<asterisk>.nii.gz from vstats)    
 
@@ -18,7 +14,10 @@ Outputs saved in the output directory:
     - p_value_threshold.txt
     - 1-p_value_threshold.txt
 
-Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.
+Note:
+    - Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.
+    - For bilateral data processed with a hemispheric mask, next run ``cstats_mirror_indices`` to mirror the cluster indices to the other hemisphere.
+    - For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cstats_validation``.
 
 Making directional cluster indices from non-directional p value maps output from ANOVAs: 
     - Provide the average immunostaining intensity images for each group being contrasted (``img_avg``)
@@ -27,9 +26,9 @@ Making directional cluster indices from non-directional p value maps output from
     - The cluster index will be split accoding to the effect directions
     - ``cstats_fdr`` -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v
 
-For bilateral data processed with a hemispheric mask, next run ``cstats_mirror_indices`` to mirror the cluster indices to the other hemisphere.
-
-For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cstats_validation``.
+Usage
+-----
+    cstats_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 0.01 0.001 [-ms 100] [-o output_dir] [-a1 path/avg_img1.nii.gz] [-a2 path/avg_img2.nii.gz] [-th 10] [-v]
 """
 
 import concurrent.futures

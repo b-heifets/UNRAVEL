@@ -3,13 +3,6 @@
 """
 Use ``cstats_prism`` from UNRAVEL to organize data for clusters for plotting in Prism.
 
-Usage
------
-    cstats_prism -ids 1 2 3
-
-Note:
-    - cstats_table saves valid_clusters_dir/valid_cluster_IDs_sorted_by_anatomy.txt
-
 Inputs:
     <asterisk>.csv from ``cstats_org_data`` (in working dir) or ``cstats_mean_IF``
 
@@ -37,6 +30,13 @@ Outputs:
     - [<cell_density|label_density>_summary.csv]
     - [<cell_density|label_density>_summary_across_clusters.csv]
     - [cluster_volume_summary.csv]
+
+Note:
+    - cstats_table saves valid_clusters_dir/valid_cluster_IDs_sorted_by_anatomy.txt
+
+Usage:
+------
+    cstats_prism [-ids 1 2 3] [-p /path/to/csv/files/from/cstats_validation_or_cstats_mean_IF] [-v]
 """
 
 import pandas as pd

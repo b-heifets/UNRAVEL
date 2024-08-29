@@ -3,12 +3,16 @@
 """
 Use ``cstats_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
 
-Usage:
-------
-    cstats_table
-
 Prereqs:
-    ``cstats_index`` has been run. Run this command from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
+    - This command is usually run via ``cstats_summary``.
+
+Inputs:
+    - CSVs with sunburst data for each cluster (e.g., cluster_<asterisk>_sunburst.csv).
+    - <asterisk>cluster_info.txt in the parent dir (made by ``cstats_fdr`` and copied by ``cstats_org_data``).
+
+Outputs:
+    - A color-coded xlsx table summarizing the top regions and their volumes for each cluster.
+    - A hierarchically sorted CSV with regional volumes for each cluster.
 
 Sorting by hierarchy and volume:
 --------------------------------
@@ -25,7 +29,11 @@ Maintain Grouping Order:
 Note: 
     - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/
     - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst
-    - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.   
+    - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.
+
+Usage:
+------
+    cstats_table [-vcd <val_clusters_dir>] [-t <number of top regions>] [-pv <perecent volume criterion>] [-csv CCFv3-2020_info.csv] [-rgb sunburst_RGBs.csv] [-v]
 """
 
 

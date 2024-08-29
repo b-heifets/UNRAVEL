@@ -3,15 +3,15 @@
 """
 Use ``io_img`` from UNRAVEL to load a 3D image, [get metadata], and save as the specified image type.
 
-Usage: 
-------
-    io_img -i path/to/image.czi -o path/to/tif_dir
-
 Input image types:
     .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
 Output image types: 
     .nii.gz, .tif series, .zarr, .h5
+
+Usage: 
+------
+    io_img -i path/to/image.czi -x 3.5232 -z 6 [-c 0] [-o path/to/tif_dir] [-d np.uint8] [-r path/to/reference.nii.gz] [-ao zyx] [-v]
 """
 
 from rich.traceback import install

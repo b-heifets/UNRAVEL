@@ -3,17 +3,13 @@
 """
 Use ``cstats_group_data`` from UNRAVEL to organize bilateral csv outputs from ``cstats_validation``
 
-Run this command in the target_dir from ``cstats_org_data``
-        
-Usage
------
-    cstats_group_data
+Note: 
+    - Run this command in the target_dir from ``cstats_org_data``
+    - It consolidates CSV files into pooled directories based on hemisphere.
 
-It consolidates CSV files into pooled directories based on hemisphere.
-
-Folder naming convention: 
-    - <cluster_validation_dir>_LH for left hemisphere files
-    - <cluster_validation_dir>_RH for right hemisphere files
+Input folder naming convention: 
+    - <cluster_validation_dir>_LH for left hemisphere folders
+    - <cluster_validation_dir>_RH for right hemisphere folders
 
 For example, if the command is run in a directory containing the following directories:
     - cluster_valid_results_1_LH
@@ -21,12 +17,15 @@ For example, if the command is run in a directory containing the following direc
     - cluster_valid_results_2_LH
     - cluster_valid_results_2_RH
 
-The command will create a new directory for each cluster and move the corresponding left and right hemisphere files into it. 
-The original directories will be removed.
-
-The resulting directory structure will be:
+Output directory structure:
     - cluster_valid_results_1
     - cluster_valid_results_2
+    - These directories will contain the left and right hemisphere files from the original directories.
+    - The original directories will be removed.
+
+Usage:
+------
+    cstats_group_data [-v]
 """
 
 import shutil

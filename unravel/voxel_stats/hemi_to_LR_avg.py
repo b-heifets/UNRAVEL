@@ -3,10 +3,6 @@
 """
 Use ``vstats_hemi_to_avg`` from UNRAVEL to automatically average hemisphere images with their mirrored counterparts. This can also smooth the images with a kernel and apply a mask.
 
-Usage:
-------
-    vstats_hemi_to_avg -k 0.1 -tp -v
-
 Inputs: 
     - input_img_LH.nii.gz
     - input_img_RH.nii.gz
@@ -15,6 +11,9 @@ Outputs:
     - input_img_LRavg.nii.gz
     - input_img_s100_LRavg.nii.gz
 
+Usage:
+------
+    vstats_hemi_to_avg [--kernel 0.1] [--axis 0] [--shift 2] [--parallel] [--atlas_mask path/atlas_mask.nii.gz] [-v]
 """
 
 

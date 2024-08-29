@@ -3,9 +3,18 @@
 """
 Use ``cstats_org_data`` from UNRAVEL to aggregate and organize csv outputs from ``cstats_validation``.
 
+Inputs: 
+    - clusters/cluster_validation_results_<asterisk> (glob pattern matching ``cstats_validation`` output dirs)
+    - CSVs with the density data (e.g., cell_density_data.csv or label_density_data.csv from ``cstats_validation``)
+    - Optional: path/vstats to copy p val, info, and index files
+
+Outputs:
+    - target_dir/sample??__cell_density_data__<cluster_validation_results_<asterisk>>.csv
+    - target_dir/sample??__label_density_data__<cluster_validation_results_<asterisk>>.csv
+
 Usage
 -----
-    cstats_org_data -d <list of experiment directories> -cvd '<asterisk>' -td <target_dir> -vd <path/vstats_dir> -v
+    cstats_org_data -cvd '<asterisk>' [-dt <cell/label>] [-vd <path/vstats_dir>] [-td <target_dir>] [-pvt <p_value_threshold.txt>] [-d <list of paths>] [-p <pattern>] [-v]
 """
 
 import re
@@ -29,13 +38,13 @@ def parse_args():
     reqs.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/)', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-vd', '--vstats_path', help='path/vstats_dir (the dir ``vstats`` was run from) to copy p val, info, and index files if provided', default=None, action=SM)
     opts.add_argument('-dt', '--density_type', help='Type of density data to aggregate (cell [default] or label).', default='cell', action=SM)
+    opts.add_argument('-vd', '--vstats_path', help='path/vstats_dir (the dir ``vstats`` was run from) to copy p val, info, and index files if provided', default=None, action=SM)
     opts.add_argument('-td', '--target_dir', help='path/dir to copy results. If omitted, copy data to the cwd', default=None, action=SM)
     opts.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from ``cstats_fdr``). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

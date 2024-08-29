@@ -3,33 +3,40 @@
 """
 Use ``reg`` from UNRAVEL to register an average template brain/atlas to a resampled autofl brain. 
 
-Usage for tissue registration:
-------------------------------
-    reg -m <path/template.nii.gz> -bc -sm 0.4 -ort <3 letter orientation code> -m2 atlas/atlas_CCFv3_2020_30um.nii.gz
-
-Usage for atlas to atlas registration:
---------------------------------------
-    reg -m <path/atlas1.nii.gz> -f <path/atlas2.nii.gz> -m2 <path/atlas2.nii.gz>
-
-Usage for template to template registration:
---------------------------------------------
-    reg -m <path/template1.nii.gz> -f <path/template2.nii.gz> -m2 <path/template2.nii.gz> -inp linear
-
-ort_code letter options: 
-    - A/P=Anterior/Posterior
-    - L/R=Left/Right
-    - S/I=Superior/Interior
-    - The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)
-
 Prereqs: 
     ``reg_prep``, [``seg_copy_tifs``], & [``seg_brain_mask``]
 
-Next steps: 
-    ``reg_check`` and ``vstats_prep``
+Inputs:
+    - template to register (e.g., gubra_template_CCFv3_30um.nii.gz, an iDISCO/LSFM template in CCFv3 space)
+    - reg_inputs/autofl_50um_masked.nii.gz (from ``reg_prep``)
+    - atlas/atlas_CCFv3_2020_30um.nii.gz (default; from Allen Brain Institute)
+
+Outputs:
+    - reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz (padded fixed image used for registration with ANTsPy)
+    - reg_outputs/<atlas>_in_tissue_space.nii.gz (warped atlas to tissue space for checking reg)
+    - transformation matrices and deformation fields in reg_outputs
 
 Note:
     - Images in reg_inputs are not padded.
     - Images in reg_outputs have 15% padding.
+    - ort_code is a 3 letter orientation code of the fixed image if not set in fixed_img (e.g., RAS)
+    - Letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Inferior
+    - The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)
+
+Next steps: 
+    ``reg_check`` and ``vstats_prep``
+
+Usage for tissue registration:
+------------------------------
+    reg -m <path/template.nii.gz> -bc -sm 0.4 -ort <3 letter orientation code> -m2 atlas/atlas_CCFv3_2020_30um.nii.gz [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-bc] [-sm 0.4] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-d list of paths] [-p sample??] [-v]
+
+Usage for atlas to atlas registration:
+--------------------------------------
+    reg -m <path/atlas1.nii.gz> -f <path/atlas2.nii.gz> -m2 <path/atlas2.nii.gz> [-d list of paths] [-p sample??] [-v]
+
+Usage for template to template registration:
+--------------------------------------------
+    reg -m <path/template1.nii.gz> -f <path/template2.nii.gz> -m2 <path/template2.nii.gz> -inp linear [-d list of paths] [-p sample??] [-v]
 """
 
 import os
@@ -67,11 +74,11 @@ def parse_args():
     opts.add_argument('-sm', '--smooth', help='Sigma value for smoothing the fixed image. Default: 0 for no smoothing. Use 0.4 for autofl', default=0, type=float, action=SM)
     opts.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     opts.add_argument('-m2', '--moving_img2', help='path/atlas.nii.gz (outputs <reg_outputs>/<atlas>_in_tissue_space.nii.gz for checking reg; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
-    opts.add_argument('-inp', '--interpol', help='Interpolation method for warping -m2 to padded fixed img space (nearestNeighbor, multiLabel [default], linear, bSpline)', default="multiLabel", action=SM)
+    opts.add_argument('-inp', '--interpol', help='Interpolation method for warping -m2 to padded fixed img space (nearestNeighbor, multiLabel \[default], linear, bSpline)', default="multiLabel", action=SM)
     opts.add_argument('-it', '--init_time', help='Time in seconds allowed for ``reg_affine_initializer`` to run. Default: 30' , default='30', type=str, action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

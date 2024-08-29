@@ -3,39 +3,31 @@
 """ 
 Use ``cstats_summary`` from UNRAVEL to aggregate and analyze cluster validation data from ``cstats_validation``.
 
-Usage if running directly after ``cstats_validation``:
-------------------------------------------------------
-    cstats_summary -c <path/config.ini> -d <exp dir paths> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
+Prereqs:
+    - ``cstats_validation``
+
+Inputs:
+    - Cell/label density CSVs from from ``cstats_validation``
+    - The current directory should not have other folders when running this script for the first time. 
+    - Directories from ``cstats_summary`` or ``cstats_org_data`` are ok though.
+    - The sample_key.csv file should have the following format:
+        dir_name,condition
+        sample01,control
+        sample02,treatment
+
+Outputs:
+    - Files for 3D brain models of valid clusters
+    - CSVs with valid cluster data (e.g., aggregated data for Prism)
+    - CSVs for sunburst plots
+    - Excel files with tables summarizing top regions and defining region abbreviations
+
+``cstats_summary`` runs these commands:
+    - ``cstats_org_data``, ``cstats_group_data``, ``utils_prepend``, ``cstats``, ``cstats_index``, ``cstats_brain_model``, ``cstats_table``, ``cstats_prism``, ``cstats_legend``
 
 Note: 
-    - The current working directory should not have other directories when running this script for the first time. Directories from ``cstats_org_data`` are ok though.
-
-Usage if running after ``cstats_validation`` and ``cstats_org_data``:
----------------------------------------------------------------------
-    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
-
-Note:
-    - For the second usage, the ``-d``, ``-cvd``, and ``-vd`` arguments are not needed because the data is already in the working directory.
     - Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.
     - Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run ``cstats_legend``).
-
-The current working directory should not have other directories when running this script for the first time. Directories from cstats_org_data are ok though.
-
-``cstats_summary`` runs commands in this order:
-    - ``cstats_org_data``
-    - ``cstats_group_data``
-    - ``utils_prepend``
-    - ``cstats``
-    - ``cstats_index``
-    - ``cstats_brain_model``
-    - ``cstats_table``
-    - ``cstats_prism``
-    - ``cstats_legend``
-
-The sample_key.csv file should have the following format:
-    dir_name,condition
-    sample01,control
-    sample02,treatment
+    - See ``cstats`` for more information on -cp and -hg.
 
 If you need to rerun this script, delete the following directories and files in the current working directory:
 find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} \; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} \; -o -name 3D_brains -exec rm -rf {} \; -o -name valid_clusters_tables_and_legend -exec rm -rf {} \; -o -name _valid_clusters_stats -exec rm -rf {} \;
@@ -43,7 +35,15 @@ find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summ
 If you want to aggregate CSVs for sunburst plots of valid clusters, run this in a root directory:
 find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})' \;
 
-Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv). 
+Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv).
+
+Usage if running directly after ``cstats_validation``:
+------------------------------------------------------
+    cstats_summary -c <path/config.ini> -d <list of paths> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-v]
+
+Usage if running after ``cstats_validation`` and ``cstats_org_data``:
+---------------------------------------------------------------------
+    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-v]
 """
 
 import nibabel as nib
@@ -94,6 +94,8 @@ def parse_args():
 # TODO: Add a reset option to delete all output files and directories from the current working directory
 # TODO: Aggregate CSVs for valid cluster sunburst plots
 # TODO: Sort the overall valid cluster sunburst csv 
+# TODO: Check if irrelevant directories are present in the current working directory and warn the user
+# TODO: Replace this (find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})' \;) w/ example of utils_agg_files_rec
 
 
 def run_script(script_name, script_args):

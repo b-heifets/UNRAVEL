@@ -3,21 +3,24 @@
 """
 Use ``rstats_mean_IF_in_seg`` from UNRAVEL to measure mean intensity of immunofluorescence (IF) staining in brain regions in segmented voxels.
 
-Run from experiment folder containing sample?? folders.
+Inputs:
+    - rel_path/fluo_image or rel_path/fluo_img_dir
+    - rel_path/seg_img.nii.gz in tissue space (1st glob match processed)
+    - path/atlas.nii.gz to warp to tissue space
 
-Usage
------
-    rstats_mean_IF_in_seg -i <asterisk>.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz
+Output:
+    - ./sample??/seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv
 
 Note:
     This uses full resolution images (i.e., the raw IF image and a segmentation from ``seg_ilastik``)
 
-Default output:
-    - ./sample??/seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv
-
 Next steps:
     ``utils_agg_files`` -i seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv
     ``rstats_mean_IF_summary``
+
+Usage
+-----
+    rstats_mean_IF_in_seg -i <asterisk>.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz [-o seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv] [--region_ids 1 2 3] [-c 1] [Optional output: -n rel_path/native_image.zarr] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-ro reg_outputs] [-r 50] [-md parameters/metadata.txt] [-zo 0] [-mi] [-v]
 """
 
 import csv
@@ -63,7 +66,7 @@ def parse_args():
     compatability.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

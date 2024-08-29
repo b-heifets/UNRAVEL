@@ -5,7 +5,7 @@ Use ``img_resample`` from UNRAVEL to resample an image.nii.gz and save it.
 
 Usage:
 ------
-    img_resample -i input_image.nii.gz -res target_res [-zo zoom_order] [-o output_image.nii.gz] [-v]
+    img_resample -i image.nii.gz -tr 50 [-zo 0] [-o image_resampled.nii.gz] [-v]
 """
 
 import nibabel as nib

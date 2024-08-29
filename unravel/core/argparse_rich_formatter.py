@@ -137,6 +137,7 @@ class SM(argparse.Action):
                 current_values.append(values)
                 setattr(namespace, self.dest, current_values)
 
+# TODO: Could format these as green: [-d list of paths] [-p sample??] [-v]
 def format_argparse_help(help_text):
     """
     Apply rich formatting to the argparse help message.
@@ -204,8 +205,8 @@ def format_docstring_for_terminal(docstring):
 
     This function processes a docstring by applying various formatting styles
     using the Rich library. It handles sections like script descriptions,
-    usage examples, command arguments, and specific keywords like "Inputs:",
-    "Outputs:", "Note:", "Prereqs:", and "Next steps:". Additionally, it applies
+    usage examples, command arguments, and specific keywords like "Input:",
+    "Output", "Note", "Prereq", and "Next". Additionally, it applies
     special styles to text enclosed in double backticks and command-line flags.
 
     Parameters
@@ -223,7 +224,7 @@ def format_docstring_for_terminal(docstring):
     The function applies the following styles:
     - "UNRAVEL" is styled with a custom multi-colored format.
     - Script description lines are styled as bold.
-    - Section headers starting with "Prereqs", "Inputs", "Outputs", "Note", "Next steps", and "Usage" are colored.
+    - Section headers starting with "Prereq", "Input", "Output", "Note", "Next", and "Usage" are colored.
     - Command names enclosed in double backticks or appearing in usage examples are styled as bold bright magenta.
     - Required arguments (before the first optional argument) are styled as purple3.
     - Optional arguments (within square brackets) are styled as bright blue.
@@ -235,13 +236,13 @@ def format_docstring_for_terminal(docstring):
         """Apply the appropriate style based on the section header."""
         if line.strip().startswith("Prereqs:"):
             return Text(line, style="red")
-        elif line.strip().startswith("Inputs:"):
+        elif line.strip().startswith("Input"):
             return Text(line, style="dark_orange")
-        elif line.strip().startswith("Outputs:"):
+        elif line.strip().startswith("Output"):
             return Text(line, style="gold1")
-        elif line.strip().startswith("Note:"):
+        elif line.strip().startswith("Note"):
             return Text(line, style="green")
-        elif line.strip().startswith("Next steps:"):
+        elif line.strip().startswith("Next"):
             return Text(line, style="grey50")
         elif line.strip().startswith("Usage"):
             return Text(line, style="bold cyan")
@@ -286,7 +287,7 @@ def format_docstring_for_terminal(docstring):
             styled_line = Text.from_markup(line, style="bold")
 
             # Check if this line is the start of a section
-            if line.strip().startswith(("Usage", "Inputs", "Outputs", "Note", "Prereqs", "Next steps")):
+            if line.strip().startswith(("Usage", "Input", "Output", "Note", "Prereq", "Next")):
                 in_description = False
                 # Process the section header
                 styled_line = apply_section_style(line)
@@ -302,7 +303,7 @@ def format_docstring_for_terminal(docstring):
 
         else:
             # Apply section styles to headers
-            if line.strip().startswith(("Inputs", "Outputs", "Note", "Prereqs", "Next steps")):
+            if line.strip().startswith(("Input", "Output", "Note", "Prereq", "Next")):
                 styled_line = apply_section_style(line)
             elif line.strip().startswith("Usage"):
                 processing_usage = True

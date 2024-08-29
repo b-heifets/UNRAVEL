@@ -3,15 +3,14 @@
 """
 Use ``cstats_mirror_indices`` from UNRAVEL to recursively process img.nii.gz files, apply mirroring, and save new files.
 
-Usage
------
-    cstats_mirror_indices -m RH -v
-    
-Use this command after ``cstats_fdr`` to mirror the cluster indices for the other side of the brain before running ``cstats_validation``.  
-
 Note:
+    - Use this command after ``cstats_fdr`` to mirror the cluster indices for the other side of the brain before running ``cstats_validation``.  
     - Use -ax 2 and -s 0 for the CCFv3 2020 atlas.
-    - Use -ax 0 and -s 2 for the 25 um Gubra atlas.
+    - Use -ax 0 and -s 2 for the 25 um Gubra atlas (deprecated).
+
+Usage:
+------
+    cstats_mirror_indices -m <RH or LH> [-p **/*rev_cluster_index.nii.gz] [-ax 2] [-s 0] [-v]
 """
 
 import numpy as np

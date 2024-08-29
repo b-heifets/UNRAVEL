@@ -3,10 +3,6 @@
 """
 Use ``cstats_index`` from UNRAVEL to create a cluster index with valid clusters from a given NIfTI image.
 
-Usage
------
-    cstats_index -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3
-    
 Outputs:
     - path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz
     - path/valid_clusters/cluster_<asterisk>_sunburst.csv
@@ -14,6 +10,10 @@ Outputs:
 Note:
     - Default csv: UNRAVEL/unravel/core/csvs/sunburst_IDPath_Abbrv.csv
     - CCFv3-2020_info.csv or CCFv3-2017_info.csv
+
+Usage
+-----
+    cstats_index -ci path/rev_cluster_index.nii.gz -ids 1 2 3 [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-vcd valid_clusters_dir] [-rgb] [-scsv sunburst_IDPath_Abbrv.csv] [-in CCFv3-2020_info.csv] [-v]
 """
 
 from pathlib import Path

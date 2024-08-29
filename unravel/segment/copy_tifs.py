@@ -5,11 +5,11 @@ Use ``seg_copy_tifs`` from UNRAVEL to copy a subset of .tif files to a target di
 
 Usage to prep for ``seg_brain_mask``:
 -------------------------------------
-    seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0000 0005 0050 -o brain_mask
+    seg_copy_tifs -s 0000 0005 0050 [-td brain_mask] [-i reg_inputs/autofl_50um_tifs] [-d list of paths] [-p sample??] [-v]
 
 Usage to prep for ``seg_ilastik`` to segment full resolution immunofluorescence images:
 ---------------------------------------------------------------------------------------
-    seg_copy_tifs -i <raw_tif_dir> -s 0100 0500 1000 -o ilastik_segmentation
+    seg_copy_tifs -i <raw_tif_dir> -s 0100 0500 1000 -td ilastik_segmentation [-d list of paths] [-p sample??] [-v]
 """
 
 import shutil
@@ -28,14 +28,14 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-o', '--output', help='rel_path/target_dir to copy TIF files to. (e.g., brain_mask or ilastik_segmentation)', required=True, action=SM)
     reqs.add_argument('-s', '--slices', help='List of slice numbers to copy (4 digits each; space separated)', nargs='*', type=str, required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    reqs.add_argument('-td', '--target_dir', help='path/target_dir to copy TIF files to. (e.g., brain_mask or ilastik_segmentation). Default: current dir', action=SM)
     opts.add_argument('-i', '--input', help='reg_inputs/autofl_50um_tifs (from ``reg_prep``) or rel_path to dir w/ raw tifs', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
@@ -89,7 +89,9 @@ def main():
     with Live(progress):
         for sample_path in sample_paths:
 
-            copy_specific_slices(sample_path, args.input, args.output, args.slices, args.verbose)
+            target_dir = Path(sample_path) / args.target_dir if args.target_dir else Path.cwd()
+
+            copy_specific_slices(sample_path, args.input, target_dir, args.slices, args.verbose)
 
             progress.update(task_id, advance=1)
 

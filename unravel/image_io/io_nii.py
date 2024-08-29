@@ -3,23 +3,26 @@
 """
 Use ``io_nii`` from UNRAVEL to convert the data type of a .nii.gz image and optionally scale the data.
 
-Usage:
-------
-    io_nii -i path/img.nii.gz -d float32
+Inputs:
+    - .nii.gz image
 
-Usage for z-score scaling (if 8 bit is needed):
------------------------------------------------
-    io_nii -i path/img.nii.gz -d uint8 -z
+Outputs:
+    - .nii.gz image with the specified data type and scaling.
 
 Possible numpy data types: 
     - Unsigned Integer: uint8, uint16, uint32, uint64
     - Signed Integer: int8, int16, int32, int64
     - Floating Point: float32, float64
 
-With --scale, the min intensity becomes dtype min and max intensity becomes dtype max. Every other intensity is scaled accordingly.
-With --binary, the image is binarized (0 or 1).
-With --zscore, the range of z-scored data from -3 to 3 is converted to 0 to 255.
-With --fixed_scale, the data is scaled using the provided min and max values.
+Note:
+    - With --scale, the min intensity becomes dtype min and max intensity becomes dtype max. Every other intensity is scaled accordingly.
+    - With --binary, the image is binarized (0 or 1).
+    - With --zscore, the range of z-scored data from -3 to 3 is converted to 0 to 255.
+    - With --fixed_scale, the data is scaled using the provided min and max values.
+
+Usage:
+------
+    io_nii -i path/img.nii.gz -d float32 [-o path/new_img.nii.gz] [-f min,max | -s | -b | -z] [-v]
 """
 
 import nibabel as nib

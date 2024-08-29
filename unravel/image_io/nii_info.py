@@ -5,7 +5,7 @@ Use ``io_nii_info`` from UNRAVEL to load an .nii.gz image and print its data typ
 
 Usage:
 ------
-    io_nii_info -i path/img.nii.gz
+    io_nii_info -i path/img.nii.gz [-v]
 """
 
 import nibabel as nib

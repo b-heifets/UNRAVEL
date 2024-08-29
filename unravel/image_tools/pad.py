@@ -5,7 +5,7 @@ Use ``img_pad`` from UNRAVEL to add 15 percent of padding to an image.nii.gz and
 
 Usage:
 ------
-    img_pad -i reg_inputs/autofl_50um.nii.gz
+    img_pad -i reg_inputs/autofl_50um.nii.gz [-ort RAS] [-r reg_inputs/autofl_50um.nii.gz] [-o reg_inputs/autofl_50um_pad.nii.gz] [-zero] [-v]
 """
 
 import nibabel as nib

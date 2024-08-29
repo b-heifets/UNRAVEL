@@ -4,7 +4,7 @@
 Use ``img_extend`` from UNRAVEL to load a 3D image, extend one side, and save it as tifs
 
 Usage:
-    img_extend -i ochann -o ochann_extended -e 100 -s back -v
+    img_extend -i ochann -o ochann_extended -s front -e 100 [-d <list of paths>] [-p sample??] [-v]
 """
 
 from pathlib import Path
@@ -30,7 +30,7 @@ def parse_args():
     reqs.add_argument('-e', '--extension', help="Number of voxels to extend", type=int, required=True, action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

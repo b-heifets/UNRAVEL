@@ -15,7 +15,6 @@ reg.py
 Usage:
 ------
 warp.py -m path/moving_image.nii.gz -f path/fixed_image.nii.gz -o path/output.nii.gz -ro path/reg_outputs -v
-
 """
 
 import argparse
@@ -54,7 +53,7 @@ def parse_args():
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM) # Offload to config file
-    general.add_argument('-d', '--dirs', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
 
     return parser.parse_args()
 

@@ -3,20 +3,20 @@
 """
 Use ``cstats_legend`` from UNRAVEL to summarize regional abbreviations from <asterisk>_valid_clusters_table.xlsx files.
 
-Usage:
-------
-    cstats_legend
-
 Inputs:
-    <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cstats_table``
+    - <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cstats_table``
 
 Outputs:
-    legend.xlsx
+    - legend.xlsx
 
 Note: 
     - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/
     - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst
     - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.
+
+Usage:
+------
+    cstats_legend [-p path/dir/with/xlsx_files] [-csv CCFv3-2020_info.csv] [-v]
 """
 
 from glob import glob

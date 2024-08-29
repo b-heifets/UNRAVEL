@@ -3,14 +3,15 @@
 """
 Use ``ANOVA.py`` to validate clusters based on a 2x2 ANOVA for main effects and interactions
 
-Usage:
-------
-``ANOVA.py`` -f1 <group1_prefix> <group2_prefix> -f2 <group3_prefix> <group4_prefix> -vc <valid_criterion> -v
+Inputs:
+    - Subdirs: * 
+    - Files: *_density_data.csv from validate_clusters.py (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
 
-For post hoc comparisons, use the stats.py
+Outputs:
+    - ./cluster_validation_summary.py and ./subdir/cluster_validation_info/
 
-Input subdirs: * 
-Input files: *_density_data.csv from validate_clusters.py (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
+Note:
+    - For post hoc comparisons, use stats.py
 
 CSV naming conventions:
     - Condition: first word before '_' in the file name
@@ -30,8 +31,10 @@ Example bilateral inputs (if any file has _LH.csv or _RH.csv, the script will at
 Columns in the .csv files:
 sample, cluster_ID, <cell_count|label_volume>, cluster_volume, <cell_density|label_density>, ...
 
-Outputs:
-    - ./cluster_validation_summary.py and ./subdir/cluster_validation_info/
+
+Usage:
+------
+``ANOVA.py`` -f1 <group1_prefix> <group2_prefix> -f2 <group3_prefix> <group4_prefix> -vc <valid_criterion> -v
     
 """
 

@@ -3,21 +3,29 @@
 """
 Use ``cstats_validation`` from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify cell/label densities.
 
-Usage:
-------
-    cstats_validation -d <experiment paths> -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s cfos_seg_ilastik_1 -v
+Prereqs:
+    - ``cstats_fdr`` to generate a cluster index in atlas space (a map of clusters of significant voxels)
+    - ``seg_ilastik`` to generate a segmentation mask in tissue space (e.g., to label c-Fos+ cells)
 
-cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
+Inputs:
+    - path/rev_cluster_index.nii.gz to warp from atlas space (rev = reverse, i.e., cluster IDs are from large to small)
+    - rel_path/seg_img.nii.gz. 1st glob match processed
 
 Outputs:
     - ./sample??/clusters/<cluster_index_dir>/outer_bounds.txt
     - ./sample??/clusters/<cluster_index_dir>/<args.density>_data.csv
+    - cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
 
-For -s, if a dir name is provided, the command will load ./sample??/seg_dir/sample??_seg_dir.nii.gz. 
-If a relative path is provided, the command will load the image at the specified path.
+Note:
+    - For -s, if a dir name is provided, the command will load ./sample??/seg_dir/sample??_seg_dir.nii.gz. 
+    - If a relative path is provided, the command will load the image at the specified path.
 
 Next command:
     ``cstats_summary``
+
+Usage:
+------
+    cstats_validation -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s <rel_path/seg_img.nii.gz> [-de cell_density or label_density] [-o rel_path/cluster_data.csv] [-c 1 3 4] [optionally save: -n rel_path/native_cluster_index.zarr] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-ro reg_outputs] [-r 50] [-md path/metadata.txt] [-zo 0] [-mi] [-cc 6] [-d <list of paths>] [-p sample??] [-v]
 """
 
 
@@ -71,7 +79,7 @@ def parse_args():
     opts_cell_counts.add_argument('-cc', '--connect', help='Connected component connectivity (6, 18, or 26). Default: 6', type=int, default=6, action=SM)
     
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
@@ -79,7 +87,8 @@ def parse_args():
 
 # TODO: QC. Aggregate .csv results for all samples if args.dirs, script to load image subset.
 # TODO: Make config file for defaults or a command_generator.py script
-# TODO: Consider adding an option to quantify mean IF intensity in each cluster in segmented voxels. Also make a script for mean IF intensity in clusters in atlas space. 
+# TODO: Consider adding an option to quantify mean IF intensity in each cluster in segmented voxels. Also make a script for mean IF intensity in clusters in atlas space.
+# TODO: Use glob for -s to load the first match. If no match, print a message and continue to the next sample. Afterwards, update in help: "For -s, if a dir name is provided, the command will load ./sample??/seg_dir/sample??_seg_dir.nii.gz."
 
 @print_func_name_args_times()
 def crop_outer_space(native_cluster_index, output_path):

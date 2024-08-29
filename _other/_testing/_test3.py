@@ -4,13 +4,8 @@
 Use ``test`` from UNRAVEL to ...
 Testing script description line 2.
 
-Usage for forward warping atlas to tissue space:
-------------------------------------------------
-    test -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -o warp/atlas_in_tissue_space.nii.gz [-ro reg_outputs] [-inp multiLabel] [-v]
-
-Usage for inverse warping tissue to atlas space:
-------------------------------------------------
-    test -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -o warp/tissue_in_atlas_space.nii.gz [-ro reg_outputs] [-inv] [-v]
+Prereqs:
+    reg.py
 
 Inputs:
     - path/moving_image.nii.gz
@@ -21,10 +16,14 @@ Outputs:
 
 Note:
     - Use the flag -inv if the -f and -m inputs are opposite from reg.py.
-    
-Prereqs:
-    reg.py
 
+Usage for forward warping atlas to tissue space:
+------------------------------------------------
+    test -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -o warp/atlas_in_tissue_space.nii.gz [-ro reg_outputs] [-inp multiLabel] [-v]
+
+Usage for inverse warping tissue to atlas space:
+------------------------------------------------
+    test -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -o warp/tissue_in_atlas_space.nii.gz [-ro reg_outputs] [-inv] [-v]
 """
 
 from rich import print
@@ -49,7 +48,7 @@ def parse_args():
     opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

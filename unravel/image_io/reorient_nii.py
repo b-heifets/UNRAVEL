@@ -3,12 +3,11 @@
 """
 Use ``io_reorient_nii`` from UNRAVEL to set the orientation of a .nii.gz or its affine matrix.
 
-Usage:
-------
-    io_reorient_nii -i image.nii.gz -t PIR -a -z
+Input:
+    - path/input_image.nii.gz
 
 Output:
-    - The new .nii.gz file with the new orientation (e.g., image_PIR.nii.gz or image_PIR_applied.nii.gz)
+    - A .nii.gz images with the new orientation (e.g., image_PIR.nii.gz or image_PIR_applied.nii.gz)
 
 The axis codes are:
     R: Right / L: Left 
@@ -60,6 +59,10 @@ For PIR:
     Third letter determination:
         -The 3rd column has a non-zero value at the 1st row, so the 3rd letter is either R or L (1st letter of the default 'RAS' orientation code).
         -Since the value is positive, the 3rd letter is R
+
+Usage:
+------
+    io_reorient_nii -i image.nii.gz -t PIR [-o image_PIR.nii.gz] [-z] [-a] [-fc 2] [-v]
 """
 
 import nibabel as nib
@@ -79,10 +82,10 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
-    reqs.add_argument('-o', '--output', help='path/img.nii.gz', required=True, action=SM)
     reqs.add_argument('-t', '--target_ort', help='Target orientation axis codes (e.g., RAS)', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
+    reqs.add_argument('-o', '--output', help='path/img.nii.gz', required=True, action=SM)
     opts.add_argument('-z', '--zero_origin', help='Provide flag to zero the origin of the affine matrix.', action='store_true', default=False)
     opts.add_argument('-a', '--apply', help='Provide flag to apply the new orientation to the ndarray data.', action='store_true', default=False)
     opts.add_argument('-fc', '--form_code', help='Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned)', type=int, default=None)

@@ -5,7 +5,7 @@ Use ``img_avg`` from UNRAVEL to average NIfTI images.
 
 Usage:
 ------
-    img_avg -i "<asterisk>.nii.gz" -o avg.nii.gz
+    img_avg -i "<asterisk>.nii.gz" -o avg.nii.gz [-v]
 """
 
 import numpy as np

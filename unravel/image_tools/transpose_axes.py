@@ -5,7 +5,7 @@ Use ``img_transpose`` from UNRAVEL to run ndarray.transpose(axis_1, axis_2, axis
 
 Usage: 
 ------
-    img_transpose -i path/img
+    img_transpose -i path/img [-xa 0] [-ya 1] [-za 2] [-o path/img_transposed.nii.gz] [-c 0] [-ao xyz] [-rr]
 """
 
 from pathlib import Path

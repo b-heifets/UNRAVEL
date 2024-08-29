@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 """
-
 This script performs element-wise mathematical operations on two images and saves the result.
 
-Input image types: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
-Output image types: .nii.gz, .tif series, .zarr
-
-Example usage: img_math.py -i image1.nii.gz image2.nii.gz -n + -o result.nii.gz -b 0.5 -d float32
+Inputs: 
+    - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
+    
+Outputs:
+    - .nii.gz, .tif series, .zarr
 
 Operations:
     +: Add
@@ -29,6 +29,9 @@ Operations:
     not: Logical NOT
     abs_diff: Absolute difference
 
+Usage:
+------
+    img_math.py -i image1.nii.gz image2.nii.gz -n + -o result.nii.gz -b 0.5 -d float32
 """
 
 import numpy as np

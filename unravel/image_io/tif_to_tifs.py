@@ -3,19 +3,19 @@
 """
 Use ``io_tif_to_tifs`` from UNRAVEL to load a 3D .tif image and save it as tifs.
 
-Usage:
-------
-    io_tif_to_tifs -i <path/image.tif> -t 488
-
-Inputs: 
-    - image.tif # either from -i path/image.tif or largest <asterisk>.tif in cwd
+Input: 
+    - image.tif (either from -i path/image.tif or largest <asterisk>.tif in cwd)
 
 Outputs:
     - ./<tif_dir_out>/slice_<asterisk>.tif series
     - ./parameters/metadata (text file)
 
 Next command: 
-    ``reg_prep`` for registration
+    ``reg_prep`` to prep autofluo images registration
+
+Usage:
+------
+    io_tif_to_tifs -i <path/image.tif> -t 488 [-v]
 """
 
 import glob
@@ -45,6 +45,8 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Could remove find_largest_tif_file() and use glob matching only. 
+# TODO: Could keep metadata functions specific to io_metadata and the img_io module.
 
 def find_largest_tif_file():
     """ Find and return the path to the largest .tif file in the current directory """

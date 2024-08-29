@@ -5,7 +5,7 @@ Use ``io_nii_to_zarr`` from UNRAVEL to convert an image.nii.gz to an image.zarr
 
 Usage:
 ------
-    io_nii_to_zarr -i path/img.nii.gz -o path/img.zarr
+    io_nii_to_zarr -i path/img.nii.gz -o path/img.zarr [-v]
 """
 
 import dask.array as da

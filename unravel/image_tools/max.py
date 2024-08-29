@@ -5,7 +5,7 @@ Use ``img_max`` from UNRAVEL to load an image.nii.gz and print its max intensity
 
 Usage: 
 ------
-    img_max -i path/image.nii.gz
+    img_max -i path/image.nii.gz [-v]
 """
 
 import nibabel as nib
@@ -27,7 +27,7 @@ def parse_args():
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    
+
     return parser.parse_args()
 
 

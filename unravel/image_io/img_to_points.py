@@ -3,17 +3,17 @@
 """
 Use `io_img_to_points` from UNRAVEL to convert non-zero voxels in a 3D image to a set of points, accounting for voxel intensity (e.g., number of detections).
 
-Usage: 
-------
-    io_img_to_points -i path/image [-o path/points.csv] [-a path/atlas_image.nii.gz] [-v]
-
 Input image types:
-    .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
+    - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
 Output:
     - A CSV file where each row represents a point corresponding to a detection in the 3D image. 
     - The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple points generated for voxels with intensities greater than 1.
     - An optional 'Region_ID' column is added based on the corresponding atlas image.
+
+Usage: 
+------
+    io_img_to_points -i path/image [-a path/atlas_image.nii.gz] [-o path/points.csv] [-v]
 """
 
 from pathlib import Path

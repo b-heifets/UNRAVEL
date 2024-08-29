@@ -5,11 +5,11 @@ Use ``reg_check_brain_mask`` from UNRAVEL for masking QC, copies autofluo_50um.n
 
 Usage for copying to the current working directory:
 ---------------------------------------------------
-    reg_check_brain_mask -d <list of paths>
+    reg_check_brain_mask [-d list of paths] [-p sample??] [-v]
 
 Usage for copying to a target directory:
 ----------------------------------------
-    reg_check_brain_mask -d <list of paths> -td <target_output_dir>
+    reg_check_brain_mask -td <target_output_dir> [-d list of paths] [-p sample??] [-v]
 """
 
 from pathlib import Path
@@ -30,10 +30,10 @@ def parse_args():
     opts.add_argument('-i', '--input', help='Input path relative to sample??/. Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    
+
     return parser.parse_args()
 
 

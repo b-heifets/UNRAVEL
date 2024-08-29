@@ -6,11 +6,11 @@ Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directorie
 
 Usage for when sample?? is already in the name of files being copied:
 ---------------------------------------------------------------------
-    utils_agg_files -g 'atlas_space/*_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -d $DIRS -v
+    utils_agg_files -g 'atlas_space/<asterisk>_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td <target_output_dir>] [-d list of paths] [-p sample??] [-v]
 
 Usage to prepend sample?? to the name of files being copied:
 ------------------------------------------------------------
-    utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -d $DIRS -v -a
+    utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -a [-td <target_output_dir>] [-d list of paths] [-p sample??] [-v]
 """
 
 import shutil
@@ -36,7 +36,7 @@ def parse_args():
     opts.add_argument('-a', '--add_prefix', help='Add "sample??_" prefix to the output files', action='store_true')
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

@@ -3,13 +3,12 @@
 """
 Use ``gubra_to_CCF.py`` from UNRAVEL to warp an image from gubra 25 um space to Allen CCFv3 30 um space.
 
-Usage:
-------
-``gubra_to_CCF.py`` -m path/image.nii.gz -o path/image_CCF30.nii.gz [-f path/CCFv3-2017_ano_30um_w_fixes.nii.gz] [-i interpol] [-ro path/reg_outputs] [-fri path/fixed_reg_input.nii.gz] [-v]
-
 Note: 
     - We will use CCFv3 space for future analyses, so this script is used for converting gubra 25 um space to CCFv3 30 um space.
 
+Usage:
+------
+``gubra_to_CCF.py`` -m path/image.nii.gz -o path/image_CCF30.nii.gz [-f path/CCFv3-2017_ano_30um_w_fixes.nii.gz] [-i interpol] [-ro path/reg_outputs] [-fri path/fixed_reg_input.nii.gz] [-v]
 """
 
 from rich import print
@@ -24,7 +23,6 @@ from unravel.warp.to_fixed import forward_warp
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
     
-
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from 25 um Gubra atlas space', required=True, action=SM)
     reqs.add_argument('-o', '--output', help='path/image_CCF30.nii.gz', required=True, action=SM)
@@ -37,7 +35,7 @@ def parse_args():
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    
+
     return parser.parse_args()
 
 

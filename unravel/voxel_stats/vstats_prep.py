@@ -3,21 +3,21 @@
 """
 Use ``vstats_prep`` from UNRAVEL to load an immunofluo image, subtract its background, and warp it to atlas space.
 
-Usage:
-------
-    vstats_prep -i <asterisk>.czi -rb 4 -o cfos_rb4_30um_CCF_space.nii.gz [-d <list of paths>] [-p pattern] [-sa 3] [-c 1] [-r 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-mi] [-md parameters/metadata.txt] [-th 8] [-v]
-
 Prereqs: 
-    ``reg``
+    - ``reg``
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
-    <asterisk>.czi, ochann/<asterisk>.tif, ochann, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr
+    - <asterisk>.czi, ochann/<asterisk>.tif, ochann, <asterisk>.tif, <asterisk>.h5, or <asterisk>.zarr
 
-Example output:
-    ./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz
+Output example:
+    - ./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz
 
 Next steps: 
     Aggregate outputs with ``utils_agg_files`` and run ``vstats``.
+
+Usage:
+------
+    vstats_prep -i <asterisk>.czi -o cfos_rb4_30um_CCF_space.nii.gz [-sa 3] [-rb 4] [--chann_idx 1] [--reg_res 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-md parameters/metadata.txt] [--threads 8] [-mi] [-d list of paths] [-p sample??] [-v]
 """
 
 import shutil
@@ -61,7 +61,7 @@ def parse_args():
     compatability.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

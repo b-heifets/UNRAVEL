@@ -3,14 +3,6 @@
 """
 Use ``utils_toggle`` from UNRAVEL to inactivate/activate sample?? dirs for batch processing (i.e., prepend/remove "_" from dir name).
 
-Usage for toggling all sample?? dirs to active:
------------------------------------------------
-    utils_toggle -d <list of paths to sample?? dirs and/or dirs containing them> [-p <pattern>] [-v]
-    
-Usage for activating sample?? dirs for certain conditions:
-----------------------------------------------------------
-    utils_toggle -sk <path/sample_key.csv> -a <Saline MDMA> -d <list of paths to sample?? dirs and/or dirs containing them> [-p <pattern>] [-v] 
-
 Note: 
     - For samples matching conditions in -c, "_" will be removed from the sample?? dir name.
     - For sampled not matching conditions in -c, "_" will be prepended to the sample?? dir name.
@@ -19,6 +11,14 @@ The sample_key.csv file should have the following format:
     dir_name,condition
     sample01,control
     sample02,treatment
+
+Usage for toggling all sample?? dirs to active:
+-----------------------------------------------
+    utils_toggle [-d list of paths] [-p sample??] [-v]
+    
+Usage for activating sample?? dirs for certain conditions:
+----------------------------------------------------------
+    utils_toggle -sk <path/sample_key.csv> -c <Saline MDMA> [-d list of paths] [-p sample??] [-v]
 """    
 
 import pandas as pd
@@ -41,7 +41,7 @@ def parse_args():
     opts.add_argument('-c', '--conditions', help='Space separated list of conditions to activate for processing (must match sample_key.csv)', default=None, nargs='*', action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

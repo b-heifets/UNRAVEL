@@ -3,28 +3,28 @@
 """
 Use ``cstats_sunburst`` from UNRAVEL to generate a sunburst plot of regional volumes across all levels of the ABA hierarchy.
 
-Usage:
------- 
-    cstats_sunburst -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v
-
 Prereqs: 
-    - ``cstats_validation`` generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them. 
-    - Optional: ``cstats_index`` generates a rev_cluster_index.nii.gz w/ valid clusters.
+    - ``cstats_summary`` generates a valid rev_cluster_index.nii.gz (clusters of significant voxels) via ``cstats_index``.
+
+Inputs:
+    - path/rev_cluster_index.nii.gz (e.g., with valid clusters or a labeled image)
+    - path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz) for applying region IDs to the input image
     
 Outputs:
-    path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]
-
-Plot region volumes (https://app.flourish.studio/)
-
-Data tab: 
-    Paste in data from csv, categories columns = Depth_<asterisk> columns, Size by = Volumes column
-    
-Preview tab:
-    Hierarchy -> Depth to 10, Colors -> paste RGB codes into Custom overrides
+    - path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]
 
 Note:
-    - Default csv: UNRAVEL/unravel/core/csvs/sunburst_IDPath_Abbrv.csv
-    - CCFv3-2020_info.csv or CCFv3-2017_info.csv
+    - Default sunburst csv location: UNRAVEL/unravel/core/csvs/sunburst_IDPath_Abbrv.csv
+    - Region info csv: CCFv3-2020_info.csv (or use CCFv3-2017_info.csv or provide a custom CSV with the same columns)
+
+Next steps:
+    - Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (https://app.flourish.studio/)
+    - It can be pasted into the Data tab (categories columns = Depth_<asterisk> columns, Size by = Volumes column)
+    - Preview tab: Hierarchy -> Depth to 10, Colors -> paste RGB codes from sunburst_RGBs.csv into Custom overrides
+
+Usage:
+------ 
+    cstats_sunburst -i path/rev_cluster_index.nii.gz [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-rgb] [-scsv sunburst_IDPath_Abbrv.csv] [-icsv CCFv3-2020_info.csv] [-v]
 """
 
 import nibabel as nib
@@ -54,7 +54,7 @@ def parse_args():
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    
+
     return parser.parse_args()
 
 # TODO: Look into consolidating csvs

@@ -3,16 +3,17 @@
 """
 Use ``atlas_wireframe`` from UNRAVEL to generate a thin wireframe image from an atlas NIfTI file.
 
+Outputs: 
+    - path/atlas_img_W.nii.gz (Wireframe image)
+    - path/atlas_img_W_IDs.nii.gz (Wireframe image with region IDs)
+
+Note:
+    - Outlines are generated outside the regions and not inside smaller regions. 
+    - For regions at the surface of the brain, the outlines are internalized.
+
 Usage: 
 ------
-    atlas_wireframe -i path.atlas.nii.gz 
-
-Outlines are generated outside the regions and not inside smaller regions. 
-For regions at the surface of the brain, the outlines are internalized.
-
-Outputs: 
-    - path/atlas_img_W.nii.gz # Wireframe image
-    - path/atlas_img_W_IDs.nii.gz # Wireframe image with region IDs
+    atlas_wireframe -i path.atlas.nii.gz [-wo path/atlas_img_W.nii.gz] [-id path/atlas_img_W_IDs.nii.gz] [-v]
 """
 
 import nibabel as nib

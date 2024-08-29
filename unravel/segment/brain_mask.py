@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``seg_brain_mask`` from UNRAVEL to run a trained ilastik project (pixel classification) to mask the brain (often better registration).
-
-Usage:
-------
-    seg_brain_mask -ie <path/ilastik_executable> -ilp <path/brain_mask.ilp> [-i reg_inputs/autofl_50um.nii.gz] [-r 50] [-v] 
+Use ``seg_brain_mask`` from UNRAVEL to use a trained ilastik project (pixel classification) to mask the brain in resampled autofluo images (often improves registration).
 
 Prereqs: 
+    - Organize training tif slices (from ``seg_copy_tifs``) into a single folder.
+    - Train an Ilastik project to segment the brain (https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project).
     - Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_<asterisk>um_tifs/<asterisk>.tif (from ``reg_prep``)
     - Save brain_mask.ilp in experiment directory of use -ilp
 
@@ -22,6 +20,10 @@ Outputs:
 
 Next command: 
     - ``reg``
+
+Usage:
+------
+    seg_brain_mask -ie <path/ilastik_executable> -ilp <path/brain_mask.ilp> [-i reg_inputs/autofl_50um.nii.gz] [-d list of paths] [-p sample??] [-v]
 """
 
 import numpy as np
@@ -49,7 +51,7 @@ def parse_args():
     opts.add_argument('-i', '--input', help='Resampled autofluo image. Default: reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them. Default: use current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 

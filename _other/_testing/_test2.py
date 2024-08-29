@@ -3,6 +3,9 @@
 """
 Script description
 
+Prereqs:
+    reg.py
+
 Usage for forward warping atlas to tissue space:
 ------------------------------------------------
 ``warp`` -m atlas_img.nii.gz -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -o warp/atlas_in_tissue_space.nii.gz [-ro reg_outputs] [-inp multiLabel] [-v]
@@ -10,10 +13,6 @@ Usage for forward warping atlas to tissue space:
 Usage for inverse warping tissue to atlas space:
 ------------------------------------------------
 ``warp`` -m reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -f atlas_img.nii.gz -o warp/tissue_in_atlas_space.nii.gz [-ro reg_outputs] [-inv] [-v]
-
-Prereq:
-    reg.py
-
 """
 
 import argparse
@@ -50,7 +49,7 @@ def parse_args():
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM) # Offload to config file
-    general.add_argument('-d', '--dirs', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
