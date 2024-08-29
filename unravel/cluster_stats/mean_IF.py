@@ -32,7 +32,7 @@ import numpy as np
 from pathlib import Path 
 from rich.traceback import install
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg

@@ -23,7 +23,7 @@ from concurrent.futures import ThreadPoolExecutor
 from rich.traceback import install
 from scipy.ndimage import binary_dilation, binary_erosion
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg

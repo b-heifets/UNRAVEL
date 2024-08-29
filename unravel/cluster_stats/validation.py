@@ -25,7 +25,7 @@ Next command:
 
 Usage:
 ------
-    cstats_validation -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s <rel_path/seg_img.nii.gz> [-de cell_density or label_density] [-o rel_path/cluster_data.csv] [-c 1 3 4] [optionally save: -n rel_path/native_cluster_index.zarr] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-ro reg_outputs] [-r 50] [-md path/metadata.txt] [-zo 0] [-mi] [-cc 6] [-d <list of paths>] [-p sample??] [-v]
+    cstats_validation -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s <rel_path/seg_img.nii.gz> [-de cell_density | label_density] [-o rel_path/cluster_data.csv] [-c 1 3 4] [optional output: -n rel_path/native_cluster_index.zarr] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-ro reg_outputs] [-r 50] [-md parameters/metadata.txt] [-zo 0] [-mi] [-cc 6] [-d list of paths] [-p sample??] [-v]
 """
 
 
@@ -39,7 +39,7 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration 
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, load_nii_subset, resolve_path

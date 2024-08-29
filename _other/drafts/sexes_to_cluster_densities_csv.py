@@ -8,7 +8,7 @@ import os
 import pandas as pd
 from termcolor import colored
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.utils import print_cmd
 

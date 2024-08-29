@@ -27,7 +27,7 @@ from rich.live import Live
 from rich.traceback import install
 
 from unravel.image_tools.spatial_averaging import apply_2D_mean_filter, spatial_average_2D, spatial_average_3D
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt

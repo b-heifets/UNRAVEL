@@ -23,7 +23,7 @@ Usage with a cluster ID:
 from rich.traceback import install
 from rich import print
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii

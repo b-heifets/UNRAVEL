@@ -22,7 +22,7 @@ from rich.live import Live
 from rich.traceback import install
 
 from unravel.image_io.io_nii import convert_dtype
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt
 from unravel.core.img_tools import pad

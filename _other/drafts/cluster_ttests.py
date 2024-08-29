@@ -13,7 +13,7 @@ import warnings
 from matplotlib.ticker import MaxNLocator
 from scipy.stats import ttest_ind
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 
 

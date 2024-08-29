@@ -10,7 +10,7 @@ Note:
 
 Usage:
 ------
-    cstats_mirror_indices -m <RH or LH> [-p **/*rev_cluster_index.nii.gz] [-ax 2] [-s 0] [-v]
+    cstats_mirror_indices -m <RH or LH> [-p `*``*`/`*`rev_cluster_index.nii.gz] [-ax 2] [-s 0] [-v]
 """
 
 import numpy as np
@@ -20,7 +20,7 @@ from pathlib import Path
 from rich.traceback import install
 from concurrent.futures import ThreadPoolExecutor
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 from unravel.voxel_stats.mirror import mirror

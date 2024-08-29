@@ -25,9 +25,9 @@ from rich.live import Live
 from rich.traceback import install
 from scipy.ndimage import zoom
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_image_metadata_from_txt, save_as_zarr, save_as_nii
 from unravel.core.img_tools import reverse_reorient_for_raw_to_nii_conv
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times

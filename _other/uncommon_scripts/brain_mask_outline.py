@@ -3,6 +3,10 @@
 """
 Create and dilate the outline of a brain mask from a .nii.gz file.
 
+
+Usage:
+------
+    brain_mask_outline [-i path/image.nii.gz] [-dil <dilation>] [-o <output>] [-d list of paths] [-p sample??] [-v]
 """
 
 import numpy as np
@@ -13,7 +17,7 @@ from rich.live import Live
 from rich.traceback import install
 from scipy.ndimage import binary_erosion, binary_dilation
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import get_samples, initialize_progress_bar, print_cmd_and_times
 

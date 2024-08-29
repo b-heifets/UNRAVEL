@@ -29,7 +29,7 @@ from rich.traceback import install
 from scipy.ndimage import binary_dilation, zoom
 
 from unravel.register.reg_prep import reg_prep
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration 
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii, save_as_zarr
