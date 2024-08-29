@@ -27,7 +27,7 @@ Usage:
 
 Example:
     import argparse
-    from argparse_rich_formatter import SuppressMetavar, SM, CustomArgumentRich
+    from unravel.core.help_formatter import SuppressMetavar, SM, CustomArgumentRich
 
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 

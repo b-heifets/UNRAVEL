@@ -6,11 +6,11 @@ Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directorie
 
 Usage for when sample?? is already in the name of files being copied:
 ---------------------------------------------------------------------
-    utils_agg_files -g 'atlas_space/<asterisk>_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td <target_output_dir>] [-d list of paths] [-p sample??] [-v]
+    utils_agg_files -g 'atlas_space/<asterisk>_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
 
 Usage to prepend sample?? to the name of files being copied:
 ------------------------------------------------------------
-    utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -a [-td <target_output_dir>] [-d list of paths] [-p sample??] [-v]
+    utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
 """
 
 import shutil
