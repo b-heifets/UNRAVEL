@@ -47,7 +47,8 @@ extensions = [
     'sphinx_togglebutton',
     'sphinx.ext.intersphinx', 
     'sphinx_design', 
-    'sphinxcontrib.mermaid'
+    'sphinxcontrib.mermaid',
+    'sphinxarg.ext'
 ]
 
 intersphinx_mapping = {
