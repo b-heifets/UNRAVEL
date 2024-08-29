@@ -10,7 +10,7 @@ Note:
 
 Usage:
 ------
-    cstats_mirror_indices -m <RH or LH> [-p `*``*`/`*`rev_cluster_index.nii.gz] [-ax 2] [-s 0] [-v]
+    cstats_mirror_indices -m <RH or LH> [-p ``*````*``/``*``rev_cluster_index.nii.gz] [-ax 2] [-s 0] [-v]
 """
 
 import numpy as np
