@@ -355,6 +355,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directories to a target directory.</span>
 
+<span class="sd">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
 <span class="sd">Usage for when sample?? is already in the name of files being copied:</span>
 <span class="sd">---------------------------------------------------------------------</span>
 <span class="sd">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
@@ -370,9 +371,14 @@
 <span class="sd">=======</span>
 <span class="sd">    utils_agg_files -g &#39;atlas_space/`*`_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&gt;&gt;&gt;&gt;&gt;&gt;&gt; dev</span>
+<span class="sd">=======</span>
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    utils_agg_files -g &#39;atlas_space/``*``_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">&gt;&gt;&gt;&gt;&gt;&gt;&gt; dev</span>
 
-<span class="sd">Usage to prepend sample?? to the name of files being copied:</span>
-<span class="sd">------------------------------------------------------------</span>
+<span class="sd">Usage to prepend sample folder name to the name of files being copied:</span>
+<span class="sd">-----------------------------------------------------------------------</span>
 <span class="sd">    utils_agg_files -g &#39;atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
