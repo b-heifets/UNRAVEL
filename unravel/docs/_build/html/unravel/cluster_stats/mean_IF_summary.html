@@ -499,31 +499,14 @@
   <section id="module-unravel.cluster_stats.mean_IF_summary">
 <span id="unravel-cluster-stats-mean-if-summary-module"></span><span id="unravel-cluster-stats-mean-if-summary"></span><h1>unravel.cluster_stats.mean_IF_summary module<a class="headerlink" href="#module-unravel.cluster_stats.mean_IF_summary" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_mean_IF_summary</span></code> from UNRAVEL to output plots of mean IF intensities for each cluster in atlas space.</p>
-<section id="usage-for-t-tests">
-<h2>Usage for t-tests:<a class="headerlink" href="#usage-for-t-tests" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_mean_IF_summary –order Control Treatment –labels Control Treatment -t ttest</p>
-</div></blockquote>
-</section>
-<section id="usage-for-tukey-s-tests-w-reordering-and-renaming-of-conditions">
-<h2>Usage for Tukey’s tests w/ reordering and renaming of conditions:<a class="headerlink" href="#usage-for-tukey-s-tests-w-reordering-and-renaming-of-conditions" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_mean_IF_summary –order group3 group2 group1 –labels Group_3 Group_2 Group_1</p>
-</div></blockquote>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>The first word of the csv inputs is used for the the group names (underscore separated).</p></li>
-</ul>
-</div>
 <dl class="simple">
-<dt>Inputs:</dt><dd><ul class="simple">
-<li><p>&lt;asterisk&gt;.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity</p></li>
-</ul>
-</dd>
 <dt>Prereqs:</dt><dd><ul class="simple">
 <li><p>Generate CSV inputs withs <code class="docutils literal notranslate"><span class="pre">cstats_IF_mean</span></code></p></li>
 <li><p>Add conditions to input CSV file names: <code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code> -sk $SAMPLE_KEY -f</p></li>
+</ul>
+</dd>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>&lt;asterisk&gt;.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity</p></li>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
@@ -532,6 +515,23 @@
 </ul>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The first word of the csv inputs is used for the the group names (underscore separated).</p></li>
+</ul>
+</div>
+<section id="usage-for-t-tests">
+<h2>Usage for t-tests:<a class="headerlink" href="#usage-for-t-tests" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_mean_IF_summary –order Control Treatment –labels Control Treatment -t ttest [–cluster_ids 1 2 3] [-alt two-sided] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-tukey-s-tests-w-reordering-and-renaming-of-conditions">
+<h2>Usage for Tukey’s tests w/ reordering and renaming of conditions:<a class="headerlink" href="#usage-for-tukey-s-tests-w-reordering-and-renaming-of-conditions" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_mean_IF_summary –order group3 group2 group1 –labels Group_3 Group_2 Group_1 [–cluster_ids 1 2 3] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF_summary.parse_args">

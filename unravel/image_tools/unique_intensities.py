@@ -5,24 +5,24 @@ Use ``img_unique`` from UNRAVEL to print a list of unique intensities greater th
 
 Usage for printing all non-zero intensities:
 --------------------------------------------
-    img_unique -i path/input_img.nii.gz
+    img_unique -i path/input_img.nii.gz [-v]
 
 Usage for printing the number of voxels for each intensity that is present:
 ---------------------------------------------------------------------------
-    img_unique -i path/input_img.nii.gz -s
+    img_unique -i path/input_img.nii.gz -s [-v]
 
 Usage for printing unique intensities w/ a min cluster size > 100 voxels:
 -------------------------------------------------------------------------
-    img_unique -i path/input_img.nii.gz -m 100
+    img_unique -i path/input_img.nii.gz -m 100 [-v]
 """
 
-import argparse
 import nibabel as nib
 import numpy as np
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.img_tools import cluster_IDs
@@ -30,12 +30,18 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/input_img.nii.gz', required=True, action=SM)
-    parser.add_argument('-m', '--min_extent', help='Min cluster size in voxels (Default: 1)', default=1, action=SM, type=int)
-    parser.add_argument('-s', '--print_sizes', help='Print cluster IDs and sizes. Default: False', default=False, action='store_true')
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/input_img.nii.gz', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-m', '--min_extent', help='Min cluster size in voxels (Default: 1)', default=1, action=SM, type=int)
+    opts.add_argument('-s', '--print_sizes', help='Print cluster IDs and sizes. Default: False', default=False, action='store_true')
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

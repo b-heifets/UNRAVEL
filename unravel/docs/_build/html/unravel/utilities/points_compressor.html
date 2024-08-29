@@ -498,28 +498,32 @@
   <section id="module-unravel.utilities.points_compressor">
 <span id="unravel-utilities-points-compressor-module"></span><span id="unravel-utilities-points-compressor"></span><h1>unravel.utilities.points_compressor module<a class="headerlink" href="#module-unravel.utilities.points_compressor" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">utils_points_compressor</span></code> from UNRAVEL to pack or unpack point data in a CSV file or summarize the number of points per region.</p>
-<p>Packing: Group points with the same coordinates and <cite>Region_ID</cite>, adding a <cite>count</cite> column.
-Unpacking: Expand packed points back to individual rows based on the <cite>count</cite> column.
-Summary: Output a CSV summarizing the number of points per region.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>utils_points_compressor -i path/&lt;asterisk&gt;_points.csv [-p or -u or -s] [-v]</p>
-</div></blockquote>
 <dl class="simple">
-<dt>Input:</dt><dd><p>CSV file with either unpacked (<cite>x, y, z, Region_ID</cite>) or packed (<cite>x, y, z, Region_ID, count</cite>) format.</p>
+<dt>Input:</dt><dd><ul class="simple">
+<li><p>CSV file with either unpacked (<cite>x, y, z, Region_ID</cite>) or packed (<cite>x, y, z, Region_ID, count</cite>) format.</p></li>
+</ul>
 </dd>
-<dt>Output:</dt><dd><p>CSV file with the desired packed or unpacked format.
-Optionally, a summary CSV with the number of points per region.</p>
+<dt>Output:</dt><dd><ul class="simple">
+<li><p>CSV file with the desired packed or unpacked format.</p></li>
+<li><p>Or save a summary CSV with the number of points per region.</p></li>
+</ul>
 </dd>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
+<li><p>Packing: Group points with the same coordinates and <cite>Region_ID</cite>, adding a <cite>count</cite> column.</p></li>
+<li><p>Unpacking: Expand packed points back to individual rows based on the <cite>count</cite> column.</p></li>
+<li><p>Summary: Output a CSV summarizing the number of points per region.</p></li>
 <li><p>Use only one of the following options: -p, -u, -s.</p></li>
 <li><p>The summary option can be used with either packed or unpacked data.</p></li>
 </ul>
 </div>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>utils_points_compressor -i path/&lt;asterisk&gt;_points.csv [-p or -u or -s] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.utilities.points_compressor.parse_args">

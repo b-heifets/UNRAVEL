@@ -499,23 +499,19 @@
   <section id="module-unravel.image_tools.rb">
 <span id="unravel-image-tools-rb-module"></span><span id="unravel-image-tools-rb"></span><h1>unravel.image_tools.rb module<a class="headerlink" href="#module-unravel.image_tools.rb" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">img_rb</span></code> from UNRAVEL to perform rolling ball background subtraction on a TIFF file.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>img_rb -i input.tif -rb 4</p>
-</div></blockquote>
-<dl class="simple">
-<dt>Rolling ball subtraction:</dt><dd><ul class="simple">
-<li><p>Radius should be ~ 1.0 to 2.0 times the size of the features of interest</p></li>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Radius for rolling ball subtraction should be ~ 1.0 to 2.0 times the size of the features of interest</p></li>
 <li><p>Larger radii will remove more background, but may also remove some of the features of interest</p></li>
 <li><p>Smaller radii will remove less background, but may leave some background noise</p></li>
 </ul>
-</dd>
-<dt>To do:</dt><dd><ul class="simple">
-<li><p>Add support for other image types and 3D images</p></li>
-</ul>
-</dd>
-</dl>
+</div>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>img_rb -i input.tif -rb 4 [-o output.tif] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_tools.rb.parse_args">

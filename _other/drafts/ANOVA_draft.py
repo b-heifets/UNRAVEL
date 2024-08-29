@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
 """
-Validate clusters based on a 2x2 ANOVA for main effects and interactions
+Use ``ANOVA.py`` to validate clusters based on a 2x2 ANOVA for main effects and interactions
 
-Usage:   ANOVA.py -f1 <group1_prefix> <group2_prefix> -f2 <group3_prefix> <group4_prefix> -vc <valid_criterion> -v
+Inputs:
+    - Subdirs: * 
+    - Files: *_density_data.csv from validate_clusters.py (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
 
-For post hoc comparisons, use the stats.py
+Outputs:
+    - ./cluster_validation_summary.py and ./subdir/cluster_validation_info/
 
-Input subdirs: * 
-Input files: *_density_data.csv from validate_clusters.py (e.g., in each subdir named after the rev_cluster_index.nii.gz file)    
+Note:
+    - For post hoc comparisons, use stats.py
 
 CSV naming conventions:
     - Condition: first word before '_' in the file name
@@ -28,11 +31,13 @@ Example bilateral inputs (if any file has _LH.csv or _RH.csv, the script will at
 Columns in the .csv files:
 sample, cluster_ID, <cell_count|label_volume>, cluster_volume, <cell_density|label_density>, ...
 
-Outputs:
-    - ./cluster_validation_summary.py and ./subdir/cluster_validation_info/
+
+Usage:
+------
+``ANOVA.py`` -f1 <group1_prefix> <group2_prefix> -f2 <group3_prefix> <group4_prefix> -vc <valid_criterion> -v
+    
 """
 
-import argparse
 import pandas as pd
 import statsmodels.api as sm
 from pathlib import Path
@@ -43,16 +48,22 @@ from statsmodels.stats.anova import anova_lm
 
 from unravel.cluster_stats.cstats import cluster_validation_data_df
 from unravel.cluster_stats.stats_table import cluster_summary
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('--factors', help='Names of the two factors and their levels, e.g., Treatment Saline Psilocybin Environment HC EE', nargs=6, required=True)
-    parser.add_argument('--valid_criterion', help='Criterion for cluster validity, corresponding to one of the factors or "interaction"', required=True)
-    parser.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from fdr.py). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('--factors', help='Names of the two factors and their levels, e.g., Treatment Saline Psilocybin Environment HC EE', nargs=6, required=True)
+    reqs.add_argument('--valid_criterion', help='Criterion for cluster validity, corresponding to one of the factors or "interaction"', required=True)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-pvt', '--p_val_txt', help='Name of the file w/ the corrected p value thresh (e.g., from fdr.py). Default: p_value_threshold.txt', default='p_value_threshold.txt', action=SM)
+    
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 # TODO: test script. Test w/ label densities data

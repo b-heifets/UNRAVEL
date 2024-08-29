@@ -499,15 +499,10 @@
   <section id="module-unravel.cluster_stats.index">
 <span id="unravel-cluster-stats-index-module"></span><span id="unravel-cluster-stats-index"></span><h1>unravel.cluster_stats.index module<a class="headerlink" href="#module-unravel.cluster_stats.index" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_index</span></code> from UNRAVEL to create a cluster index with valid clusters from a given NIfTI image.</p>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_index -ci path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -ids 1 2 3</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Outputs:</dt><dd><ul class="simple">
 <li><p>path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz</p></li>
-<li><p>path/valid_clusters/cluster_&lt;asterisk&gt;_sunburst.csv</p></li>
+<li><p>path/valid_clusters/cluster_``*``_sunburst.csv</p></li>
 </ul>
 </dd>
 </dl>
@@ -518,6 +513,11 @@
 <li><p>CCFv3-2020_info.csv or CCFv3-2017_info.csv</p></li>
 </ul>
 </div>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_index -ci path/rev_cluster_index.nii.gz -ids 1 2 3 [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-vcd valid_clusters_dir] [-rgb] [-scsv sunburst_IDPath_Abbrv.csv] [-in CCFv3-2020_info.csv] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.index.parse_args">

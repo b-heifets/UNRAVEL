@@ -499,11 +499,6 @@
   <section id="module-unravel.voxel_stats.mirror">
 <span id="unravel-voxel-stats-mirror-module"></span><span id="unravel-voxel-stats-mirror"></span><h1>unravel.voxel_stats.mirror module<a class="headerlink" href="#module-unravel.voxel_stats.mirror" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">vstats_mirror</span></code> from UNRAVEL to load a &lt;asterisk&gt;.nii.gz, flip a copy [and shift content], average original and copy together, and save as .nii.gz.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats_mirror -v</p>
-</div></blockquote>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -511,6 +506,11 @@
 <li><p>Use -ax 0 and -s 2 for the 25 um Gubra atlas.</p></li>
 </ul>
 </div>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>vstats_mirror [-p ‘&lt;asterisk&gt;.nii.gz’] [-ax 2] [-s 0] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.voxel_stats.mirror.parse_args">

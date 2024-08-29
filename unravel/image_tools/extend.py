@@ -4,32 +4,36 @@
 Use ``img_extend`` from UNRAVEL to load a 3D image, extend one side, and save it as tifs
 
 Usage:
-    img_extend -i ochann -o ochann_extended -e 100 -s back -v
+    img_extend -i ochann -o ochann_extended -s front -e 100 [-d <list of paths>] [-p sample??] [-v]
 """
 
-import argparse
 from pathlib import Path
 import numpy as np
 from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_tifs
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='path/image or path/image_dir', default=None, action=SM)
-    parser.add_argument('-o', '--out_dir_name', help="Output folder name.", required=True, action=SM)
-    parser.add_argument('-s', '--side', help="Side to extend. Options: 'front', 'back', 'left', 'right', 'top', 'bottom'. Default: 'front'", default='front', action=SM)
-    parser.add_argument('-e', '--extension', help="Number of voxels to extend", type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/image or path/image_dir', required=True, action=SM)
+    reqs.add_argument('-o', '--out_dir_name', help="Output folder name.", required=True, action=SM)
+    reqs.add_argument('-s', '--side', help="Side to extend. Options: 'front', 'back', 'left', 'right', 'top', 'bottom'.", required=True, action=SM)
+    reqs.add_argument('-e', '--extension', help="Number of voxels to extend", type=int, required=True, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
@@ -75,24 +79,13 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    samples = get_samples(args.dirs, args.pattern)
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-    if samples == ['.']:
-        samples[0] = Path.cwd().name
-
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
-        for sample in samples:
+        for sample_path in sample_paths:
 
-            # Resolve path to tif directory
-            cwd = Path(".").resolve()
-
-            sample_path = Path(sample).resolve() if sample != cwd.name else Path().resolve()
-
-            if args.input:
-                input_path = Path(args.input).resolve()
-            else:
-                input_path = Path(sample_path, args.chann_name).resolve()
+            input_path = Path(args.input).resolve()
 
             # Load image
             img = load_3D_img(input_path, return_res=False)

@@ -353,38 +353,40 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Use ``effect_sizes_sex_rel`` from UNRAVEL to calculate the relative effect size for (comparing sexes) for a comparison between two groups for each cluster [or a valid cluster list].</span>
-<span class="sd">    </span>
-<span class="sd">Usage</span>
-<span class="sd">-----</span>
-<span class="sd">    effect_sizes_sex_rel -i densities.csv -c1 saline -c2 psilocybin</span>
+
+<span class="sd">Prereqs:</span>
+<span class="sd">    - ``cstats_validation`` to generate the input CSVs with densities.</span>
 
 <span class="sd">Inputs:</span>
 <span class="sd">    - CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, ...)</span>
 <span class="sd">    - Enter M or F in the Sex column.</span>
 
-<span class="sd">Arguments:</span>
+<span class="sd">Outputs:</span>
+<span class="sd">    - CSV w/ relative effect sizes and upper and lower limits of the confidence interval (CI) for each cluster</span>
+<span class="sd">    - &lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;_F_gt_M.csv (F &gt; M)</span>
+
+<span class="sd">Note:</span>
 <span class="sd">    - -c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.</span>
-<span class="sd">    </span>
-<span class="sd">Outputs CSV w/ the relative effect size (F&gt;M) and CI for each cluster:</span>
-<span class="sd">    &lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;_F_gt_M.csv</span>
+<span class="sd">    - The effect size is calculated as the unbiased Hedge\&#39;s g effect sizes (corrected for sample size).</span>
+<span class="sd">    - Hedges&#39; g = ((c2-c1)/spooled*corr_factor)</span>
+<span class="sd">    - CI = Hedges&#39; g +/- t * SE</span>
+<span class="sd">    - 0.2-0.5 = small effect; 0.5-0.8 = medium; 0.8+ = large</span>
+<span class="sd">    - The CI is based on a two-tailed t-test with alpha = 0.05.</span>
+<span class="sd">    - More more info, see: https://pubmed.ncbi.nlm.nih.gov/37248402/</span>
 
-<span class="sd">If -c is used, outputs a CSV with the effect sizes and CI for valid clusters:</span>
-<span class="sd">    &lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;_F_gt_M_valid_clusters.csv</span>
-
-<span class="sd">The effect size is calculated as the unbiased Hedge\&#39;s g effect sizes (corrected for sample size): </span>
-<span class="sd">    Hedges&#39; g = ((c2-c1)/spooled*corr_factor)</span>
-<span class="sd">    CI = Hedges&#39; g +/- t * SE</span>
-<span class="sd">    0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large</span>
+<span class="sd">Usage</span>
+<span class="sd">-----</span>
+<span class="sd">    effect_sizes_sex_rel -i densities.csv -c1 saline -c2 psilocybin [-c 1 2 3 4 5] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">t</span>
 <span class="kn">from</span> <span class="nn">termcolor</span> <span class="kn">import</span> <span class="n">colored</span>
 
-<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.argparse_rich_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
 
@@ -392,16 +394,23 @@
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../../unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input_csv&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, ...)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c1&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_1&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;First condition of interest from csv (e.g., saline [data matching prefix pooled])&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c2&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_2&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Second condition (e.g, psilocybin [data matching prefix pooled])&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--clusters&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Space separated list of valid cluster IDs (default: process all clusters)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
+
+    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input_csv&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, ...)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c1&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_1&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;First condition of interest from csv (e.g., saline [data matching prefix pooled])&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c2&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_2&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Second condition (e.g, psilocybin [data matching prefix pooled])&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args&#39;</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--clusters&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Space separated list of valid cluster IDs (default: process all clusters)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
+<span class="c1"># TODO: explain in the help how the input CSVs are prepared. </span>
 
 <div class="viewcode-block" id="condition_selector">
 <a class="viewcode-back" href="../../../../unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.condition_selector">[docs]</a>

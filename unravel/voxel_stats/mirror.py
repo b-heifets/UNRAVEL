@@ -4,33 +4,36 @@
 """
 Use ``vstats_mirror`` from UNRAVEL to load a <asterisk>.nii.gz, flip a copy [and shift content], average original and copy together, and save as .nii.gz.
 
-Usage:
-------
-    vstats_mirror -v
-
 Note:
     - Use -ax 2 and -s 0 for the CCFv3 2020 atlas.
     - Use -ax 0 and -s 2 for the 25 um Gubra atlas.
+
+Usage:
+------
+    vstats_mirror [-p '<asterisk>.nii.gz'] [-ax 2] [-s 0] [-v]
 """
 
-import argparse
 import os
 import numpy as np
 import nibabel as nib
 from pathlib import Path
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--pattern', help='Pattern to match files. Default: *.nii.gz', default='*.nii.gz', action=SM)
-    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
-    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-p', '--pattern', help='Pattern to match files. Default: *.nii.gz', default='*.nii.gz', action=SM)
+    opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
+    opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
+
     return parser.parse_args()
 
 

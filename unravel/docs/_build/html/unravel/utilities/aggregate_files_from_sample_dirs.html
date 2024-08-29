@@ -501,14 +501,15 @@
 <p>Use <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code> from UNRAVEL to aggregate files from sample?? directories to a target directory.</p>
 <section id="usage-for-when-sample-is-already-in-the-name-of-files-being-copied">
 <h2>Usage for when sample?? is already in the name of files being copied:<a class="headerlink" href="#usage-for-when-sample-is-already-in-the-name-of-files-being-copied" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>utils_agg_files -g ‘atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ -e $DIRS -v</p>
-</div></blockquote>
+<dl class="simple">
+<dt>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</dt><dd><p>utils_agg_files -g ‘atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ -e $DIRS -v</p>
+</dd>
+</dl>
 </section>
 <section id="usage-to-prepend-sample-to-the-name-of-files-being-copied">
 <h2>Usage to prepend sample?? to the name of files being copied:<a class="headerlink" href="#usage-to-prepend-sample-to-the-name-of-files-being-copied" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>utils_agg_files -g ‘atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ -e $DIRS -v -a</p>
+<div><p>utils_agg_files -g ‘atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ -a [-td &lt;target_output_dir&gt;] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">

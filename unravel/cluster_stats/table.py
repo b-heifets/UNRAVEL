@@ -3,12 +3,16 @@
 """
 Use ``cstats_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
 
-Usage:
-------
-    cstats_table
-
 Prereqs:
-    ``cstats_index`` has been run. Run this command from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
+    - This command is usually run via ``cstats_summary``.
+
+Inputs:
+    - CSVs with sunburst data for each cluster (e.g., cluster_<asterisk>_sunburst.csv).
+    - <asterisk>cluster_info.txt in the parent dir (made by ``cstats_fdr`` and copied by ``cstats_org_data``).
+
+Outputs:
+    - A color-coded xlsx table summarizing the top regions and their volumes for each cluster.
+    - A hierarchically sorted CSV with regional volumes for each cluster.
 
 Sorting by hierarchy and volume:
 --------------------------------
@@ -25,11 +29,14 @@ Maintain Grouping Order:
 Note: 
     - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/
     - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst
-    - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.   
+    - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.
+
+Usage:
+------
+    cstats_table [-vcd <val_clusters_dir>] [-t <number of top regions>] [-pv <perecent volume criterion>] [-csv CCFv3-2020_info.csv] [-rgb sunburst_RGBs.csv] [-v]
 """
 
 
-import argparse
 import openpyxl
 import math
 import numpy as np
@@ -43,20 +50,25 @@ from openpyxl.styles import Border, Side, Font, Alignment
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from unravel.cluster_stats.index (else cwd)', action=SM)
-    parser.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
-    parser.add_argument('-pv', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
-    parser.add_argument('-csv', '--info_csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
-    parser.add_argument('-rgb', '--sunburst_rgbs', help='CSV name or path/name.csv. Default: sunburst_RGBs.csv', default='sunburst_RGBs.csv', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from unravel.cluster_stats.index (else cwd)', action=SM)
+    opts.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
+    opts.add_argument('-pv', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
+    opts.add_argument('-csv', '--info_csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
+    opts.add_argument('-rgb', '--sunburst_rgbs', help='CSV name or path/name.csv. Default: sunburst_RGBs.csv', default='sunburst_RGBs.csv', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 # TODO: Correct font color for the volumes column. 'fiber tracts' is filled with white rather than the color of the fiber tracts

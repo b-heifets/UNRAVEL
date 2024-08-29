@@ -8,20 +8,21 @@ Usage:
     path/stats_table.py -cp cluster_validation_info.csv -o cluster_validation_summary.csv
 """
 
-import argparse
 import pandas as pd
 from pathlib import Path
 from glob import glob
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-cp', '--csv_pattern', help="Pattern to match csv files. Default: cluster_validation_results.csv", default='cluster_validation_info.csv', action=SM)
-    parser.add_argument('-o', '--output', help='path/output.csv. Default: cluster_validation_summary.csv', default='cluster_validation_summary.csv', action=SM)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-cp', '--csv_pattern', help="Pattern to match csv files. Default: cluster_validation_results.csv", default='cluster_validation_info.csv', action=SM)
+    opts.add_argument('-o', '--output', help='path/output.csv. Default: cluster_validation_summary.csv', default='cluster_validation_summary.csv', action=SM)
+
     return parser.parse_args()
 
 def cluster_summary(csv_pattern, output):

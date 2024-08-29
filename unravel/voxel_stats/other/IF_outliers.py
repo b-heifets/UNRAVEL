@@ -8,7 +8,6 @@ Usage:
     path/IF_outliers.py -p '<asterisk>.nii.gz' -m path/mask.nii.gz -o means_in_mask_plot.pdf -v
 """
 
-import argparse
 import glob
 import os
 import numpy as np
@@ -16,19 +15,26 @@ import matplotlib.pyplot as plt
 from rich import print
 from rich.live import Live
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--pattern', help='Regex pattern in quotes for matching .nii.gz images', default=None, action=SM)
-    parser.add_argument('-m', '--mask', help='path/mask.nii.gz', default=None, action=SM)
-    parser.add_argument('-o', '--output', help='path/name.[pdf/png]. Default: means_in_mask.pdf ', default='means_in_mask.pdf', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-p', '--pattern', help='Regex pattern in quotes for matching .nii.gz images', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-m', '--mask', help='path/mask.nii.gz', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='path/name.[pdf/png]. Default: means_in_mask.pdf ', default='means_in_mask.pdf', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

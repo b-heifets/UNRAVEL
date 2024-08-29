@@ -499,16 +499,18 @@
   <section id="module-unravel.warp.to_fixed">
 <span id="unravel-warp-to-fixed-module"></span><span id="unravel-warp-to-fixed"></span><h1>unravel.warp.to_fixed module<a class="headerlink" href="#module-unravel.warp.to_fixed" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">warp_to_fixed</span></code> from UNRAVEL to forward warp a moving image (e.g., from atlas space) to fixed image space (e.g., tissue space). The input/output do not need padding.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Run this from the folder containing reg_outputs.</p></li>
+<li><p>This script is for warping between different atlas spaces. For warping from atlas space to tissue space, use <code class="docutils literal notranslate"><span class="pre">to_native</span></code>.</p></li>
+</ul>
+</div>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>warp_to_fixed -f reg_inputs/autofl_50um_masked.nii.gz -m path/moving_img.nii.gz -o path/warped_img.nii.gz -ro reg_outputs -fri autofl_50um_masked_fixed_reg_input.nii.gz [-i multiLabel] [-r 50] [-v]</p>
+<div><p>warp_to_fixed -f reg_inputs/autofl_50um_masked.nii.gz -m path/moving_img.nii.gz -o path/warped_img.nii.gz [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-i multiLabel] [-v]</p>
 </div></blockquote>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Run this from the folder containing reg_outputs.</p>
-<p>This script is for warping between different atlas spaces. For warping from atlas space to tissue space, use <code class="docutils literal notranslate"><span class="pre">to_native</span></code>.</p>
-</div>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.warp.to_fixed.parse_args">

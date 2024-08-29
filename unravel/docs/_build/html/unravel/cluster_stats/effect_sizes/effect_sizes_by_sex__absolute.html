@@ -505,26 +505,35 @@
 <span id="unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-absolute-module"></span><span id="unravel-cluster-stats-effect-sizes-effect-sizes-by-sex-absolute"></span><h1>unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute module<a class="headerlink" href="#module-unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">effect_sizes_sex_abs</span></code> from UNRAVEL to calculate the effect size for a comparison between two groups for each cluster [or a valid cluster list].</p>
 <dl class="simple">
-<dt>Usage:</dt><dd><p>effect_sizes_sex_abs -i densities.csv -c1 saline -c2 psilocybin</p>
+<dt>Prereqs:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> to generate the input CSVs with densities.</p></li>
+</ul>
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
 <li><p>CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, …)</p></li>
 <li><p>Enter M or F in the Sex column.</p></li>
 </ul>
 </dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>CSV w/ absolute effect sizes and upper and lower limits of the confidence interval (CI) for each cluster</p></li>
+<li><p>&lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;_&lt;M/F&gt;.csv for males and females</p></li>
+</ul>
+</dd>
 </dl>
-<dl class="field-list simple">
-<dt class="field-odd">param - -c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.<span class="colon">:</span></dt>
-<dd class="field-odd"><p></p></dd>
-</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>-c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.</p></li>
+<li><p>The effect size is calculated as the unbiased Hedge’s g effect sizes (corrected for sample size).</p></li>
+<li><p>Hedges’ g = ((c2-c1)/spooled*corr_factor)</p></li>
+<li><p>CI = Hedges’ g +/- t * SE</p></li>
+<li><p>0.2-0.5 = small effect; 0.5-0.8 = medium; 0.8+ = large</p></li>
+<li><p>The CI is based on a two-tailed t-test with alpha = 0.05.</p></li>
+<li><p>More more info, see: <a class="reference external" href="https://pubmed.ncbi.nlm.nih.gov/37248402/">https://pubmed.ncbi.nlm.nih.gov/37248402/</a></p></li>
+</ul>
+</div>
 <dl class="simple">
-<dt>Outputs CSV w/ the effect size and CI for each cluster:</dt><dd><p>&lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;.csv</p>
-</dd>
-<dt>If -c is used, outputs a CSV with the effect sizes and CI for valid clusters:</dt><dd><p>&lt;input&gt;_Hedges_g_&lt;condition_1&gt;_&lt;condition_2&gt;_valid_clusters.csv</p>
-</dd>
-<dt>The effect size is calculated as the unbiased Hedge’s g effect sizes (corrected for sample size):</dt><dd><p>Hedges’ g = ((c2-c1)/spooled*corr_factor)
-CI = Hedges’ g +/- t * SE
-0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large</p>
+<dt>Usage:</dt><dd><p>effect_sizes_sex_abs -i densities.csv -c1 saline -c2 psilocybin [-c 1 2 3 4 5] [-v]</p>
 </dd>
 </dl>
 <dl class="py function">

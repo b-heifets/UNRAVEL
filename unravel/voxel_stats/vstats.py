@@ -3,26 +3,35 @@
 """
 Use ``vstats`` from UNRAVEL to run voxel-wise stats using FSL's randomise_parallel command.
 
+Prereqs: 
+    - Input images from ``vstats_prep``, ``vstats_z_score``, or ``vstats_whole_to_avg``.
+
+Inputs:
+    - mask.nii.gz (e.g., stats/mask.nii.gz)
+    - *.nii.gz files in the current directory with conditions as prefixes (e.g., saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz)
+
+Outputs:
+    - stats/ directory with randomise_parallel outputs (e.g., uncorrected 1-p value maps [vox_p])
+
+Next steps:
+    - Run ``cstats_fdr_range`` and ``cstats_fdr`` to correct for multiple comparisons.
+
+Note:
+    - 1 minus p (1-p) value maps are made for visualization (e.g., in FSLeyes), so use 0.95 as the uncorrect threshold for alpha = 0.05.
+    - The --options flag is used to pass additional options to the randomise command.
+    - It should be the last flag specified in the command.
+    - The options should be specified as separate strings, e.g., --options --seed=1 -T
+    - For info on how to set up and run voxel-wise analyses, see: https://b-heifets.github.io/UNRAVEL/guide.html#voxel-wise-stats
+    - For a t-test design, tstat1 is group1 > group2 and tstat2 is group2 > group1 (conditions are sorted alphabetically)
+    - For an ANOVA design, fstat1 is the first contrast, fstat2 is the second contrast, and so on (these are 1-p value maps are non-directional)
+
 Usage:
 ------
     vstats -mas mask.nii.gz -v
 
 Usage w/ additional options:
 ----------------------------
-    vstats -mas mask.nii.gz -p 12000 -k 0 -op output_prefix -a atlas.nii.gz -v --options --seed=1
-
-Note:
-    - The --options flag is used to pass additional options to the randomise command.
-    - It should be the last flag specified in the command.
-    - The options should be specified as separate strings, e.g., --options --seed=1 -T
-    
-Prereqs: 
-    - Input images from ``vstats_prep``, ``vstats_z_score``, or ``vstats_whole_to_avg``.
-
-Next steps:
-    - Run ``cstats_fdr_range`` and ``cstats_fdr`` to correct for multiple comparisons.
-
-For info on how to set up and run voxel-wise analyses, see: https://b-heifets.github.io/UNRAVEL/guide.html#voxel-wise-stats
+    vstats -mas mask.nii.gz [-p 18000] [--kernel 0] [-op output_prefix from current dir] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-v] [--options --seed=1]
 """
 
 import argparse
@@ -35,25 +44,31 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
-    parser.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300). Default: 18000', type=int, default=18000, action=SM)
-    parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
-    parser.add_argument('-op', '--output_prefix', help='Prefix of output files. Default: current working dir name.', action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (copied to stats/ for viewing; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--seed=1 -T"', nargs=argparse.REMAINDER, default=[])
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300). Default: 18000', type=int, default=18000, action=SM)
+    opts.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
+    opts.add_argument('-op', '--output_prefix', help='Prefix of output files. Default: current working dir name.', action=SM)
+    opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz (copied to stats/ for viewing; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
+    opts.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--seed=1 -T"', nargs=argparse.REMAINDER, default=[])
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
+
     return parser.parse_args()
 
 # TODO: Add an email option to send a message when the processing is complete. Add progress bar. See if fragments can be generated in parallel. Could make avg and avg diff maps in this script (e.g., before merge since this is fast)
-
+# TODO: Test nargs=argparse.REMAINDER with options
 
 def check_fdr_command():
     """Check if the 'fdr' command is available in the system's path."""

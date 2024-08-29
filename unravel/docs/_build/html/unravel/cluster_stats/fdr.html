@@ -499,11 +499,6 @@
   <section id="module-unravel.cluster_stats.fdr">
 <span id="unravel-cluster-stats-fdr-module"></span><span id="unravel-cluster-stats-fdr"></span><h1>unravel.cluster_stats.fdr module<a class="headerlink" href="#module-unravel.cluster_stats.fdr" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_fdr</span></code> from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.</p>
-<section id="usage">
-<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Inputs:</dt><dd><ul class="simple">
 <li><p>p value map (e.g., &lt;asterisk&gt;vox_p_&lt;asterisk&gt;stat&lt;asterisk&gt;.nii.gz from vstats)</p></li>
@@ -519,7 +514,14 @@
 </ul>
 </dd>
 </dl>
-<p>Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.</p></li>
+<li><p>For bilateral data processed with a hemispheric mask, next run <code class="docutils literal notranslate"><span class="pre">cstats_mirror_indices</span></code> to mirror the cluster indices to the other hemisphere.</p></li>
+<li><p>For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>.</p></li>
+</ul>
+</div>
 <dl class="simple">
 <dt>Making directional cluster indices from non-directional p value maps output from ANOVAs:</dt><dd><ul class="simple">
 <li><p>Provide the average immunostaining intensity images for each group being contrasted (<code class="docutils literal notranslate"><span class="pre">img_avg</span></code>)</p></li>
@@ -530,8 +532,11 @@
 </ul>
 </dd>
 </dl>
-<p>For bilateral data processed with a hemispheric mask, next run <code class="docutils literal notranslate"><span class="pre">cstats_mirror_indices</span></code> to mirror the cluster indices to the other hemisphere.</p>
-<p>For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 0.01 0.001 [-ms 100] [-o output_dir] [-a1 path/avg_img1.nii.gz] [-a2 path/avg_img2.nii.gz] [-th 10] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.fdr.parse_args">

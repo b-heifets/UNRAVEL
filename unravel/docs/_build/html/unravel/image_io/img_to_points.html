@@ -499,13 +499,10 @@
   <section id="module-unravel.image_io.img_to_points">
 <span id="unravel-image-io-img-to-points-module"></span><span id="unravel-image-io-img-to-points"></span><h1>unravel.image_io.img_to_points module<a class="headerlink" href="#module-unravel.image_io.img_to_points" title="Link to this heading">#</a></h1>
 <p>Use <cite>io_img_to_points</cite> from UNRAVEL to convert non-zero voxels in a 3D image to a set of points, accounting for voxel intensity (e.g., number of detections).</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>io_img_to_points -i path/image [-o path/points.csv] [-a path/atlas_image.nii.gz] [-v]</p>
-</div></blockquote>
 <dl class="simple">
-<dt>Input image types:</dt><dd><p>.czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p>
+<dt>Input image types:</dt><dd><ul class="simple">
+<li><p>.czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p></li>
+</ul>
 </dd>
 <dt>Output:</dt><dd><ul class="simple">
 <li><p>A CSV file where each row represents a point corresponding to a detection in the 3D image.</p></li>
@@ -514,6 +511,11 @@
 </ul>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>io_img_to_points -i path/image [-a path/atlas_image.nii.gz] [-o path/points.csv] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_io.img_to_points.parse_args">

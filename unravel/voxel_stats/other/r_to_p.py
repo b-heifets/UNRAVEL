@@ -3,17 +3,19 @@
 """
 Converts correlation map to z-score, p value, and FDR p value maps.
 
-Usage:
-------
-    path/r_to_p.py -i sample01_cfos_correlation_map.nii.gz -x 25 -z 25 -v
+Input:
+    - <image>_correlation_map.nii.gz
 
 Outputs: 
     - <image>_z_score_map.nii.gz
     - <image>_p_value_map.nii.gz
     - <image>_p_value_map_fdr_corrected.nii.gz
+
+Usage:
+------
+    path/r_to_p.py -i sample01_cfos_correlation_map.nii.gz -x 25 -z 25 -v
 """
 
-import argparse
 from pathlib import Path
 import numpy as np
 from rich import print
@@ -21,19 +23,27 @@ from rich.traceback import install
 from scipy.stats import norm
 from statsmodels.stats.multitest import multipletests
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='[path/]image.nii.gz', required=True, action=SM)
-    parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
-    parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
-    parser.add_argument('-a', '--alpha', help='FDR alpha. Default: 0.05', default=0.05, type=float, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='[path/]image.nii.gz', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
+    opts.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
+    opts.add_argument('-a', '--alpha', help='FDR alpha. Default: 0.05', default=0.05, type=float, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

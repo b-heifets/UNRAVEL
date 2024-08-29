@@ -3,38 +3,48 @@
 """
 Use ``rstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in brain regions in atlas space.
 
-Usage:
-------
-    rstats_mean_IF -i '<asterisk>.nii.gz' -a path/atlas
+Inputs:
+    - <asterisk>.nii.gz
+    - path/atlas.nii.gz
 
 Outputs: 
-    - ./rstats_mean_IF/image_name.csv for each image
+    - ./rstats_mean_IF/image_name.csv with regional mean intensity values for each image
 
 Next: 
     - cd rstats_mean_IF
     - ``rstats_mean_IF_summary``
+
+Usage:
+------
+    rstats_mean_IF -i '<asterisk>.nii.gz' -a path/atlas [--regions 1 2 3] [-v]
 """
 
-import argparse
 import csv
 import nibabel as nib
 import numpy as np
 from pathlib import Path 
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 from unravel.image_tools.unique_intensities import uniq_intensities
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", required=True, action=SM)
-    parser.add_argument('-a', '--atlas', help='Path/atlas.nii.gz', required=True, action=SM)
-    parser.add_argument('-r', '--regions', help='Space-separated list of region intensities to process', nargs='*', type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", required=True, action=SM)
+    reqs.add_argument('-a', '--atlas', help='Path/atlas.nii.gz', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-r', '--regions', help='Space-separated list of region intensities to process. Default: process all IDs', nargs='*', type=int, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

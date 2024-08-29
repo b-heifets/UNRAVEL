@@ -3,10 +3,6 @@
 """
 Use `io_points_to_img` from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.
 
-Usage: 
-------
-    io_points_to_img  -i path/points.csv -ri path/ref_image [-o path/image] [-thr 20000 or -uthr 20000] [-v]
-
 Input:
     - A CSV file where each row represents a point corresponding to a detection in the 3D image. 
     - The columns should include 'x', 'y', 'z', and 'Region_ID' (e.g., from ``rstats`` or ``io_img_to_points``).
@@ -14,33 +10,42 @@ Input:
 Output image types:
     .nii.gz, .tif series, .h5, .zarr
 
-Notes:
+Note:
     - Points outside the brain (i.e., 'Region_ID' == 0) are excluded.
     - If the input CSV has a 'count' column, use ``utils_points_compressor`` to unpack the points before running this script.
+
+Usage: 
+------
+    io_points_to_img  -i path/points.csv -ri path/ref_image [-o path/image] [-thr 20000 or -uthr 20000] [-v]
 """
 
-import argparse
 from pathlib import Path
 import numpy as np
 import pandas as pd
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_3D_img
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/input.csv w/ columns: x, y, z, Region_ID', required=True, action=SM)
-    parser.add_argument('-ri', '--ref_img', help='Path to a reference image for output image shape and saving.', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='Path to save the output image. Default: path/input.nii.gz', default=None, action=SM)
-    parser.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
-    parser.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/input.csv w/ columns: x, y, z, Region_ID', required=True, action=SM)
+    reqs.add_argument('-ri', '--ref_img', help='Path to a reference image for output image shape and saving.', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-o', '--output', help='Path to save the output image. Default: path/input.nii.gz', default=None, action=SM)
+    opts.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
+    opts.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
@@ -125,8 +130,8 @@ def points_to_img(points_ndarray, ref_img=None):
     img : numpy.ndarray
         A 3D image created from the input points. Each voxel's value represents the number of points that fall within that voxel.
 
-    Notes:
-    ------
+    Note:
+    -----
     - If the point coordinates are in physical or resampled space, ensure that they are appropriately 
       scaled and aligned with the desired image grid before calling this function.
     - If the count in a voxel exceeds the maximum value for `uint8` (255), the image's data type is 

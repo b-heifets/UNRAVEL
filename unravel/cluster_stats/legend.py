@@ -3,23 +3,22 @@
 """
 Use ``cstats_legend`` from UNRAVEL to summarize regional abbreviations from <asterisk>_valid_clusters_table.xlsx files.
 
-Usage:
-------
-    cstats_legend
-
 Inputs:
-    <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cstats_table``
+    - <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cstats_table``
 
 Outputs:
-    legend.xlsx
+    - legend.xlsx
 
 Note: 
     - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/
     - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst
     - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.
+
+Usage:
+------
+    cstats_legend [-p path/dir/with/xlsx_files] [-csv CCFv3-2020_info.csv] [-v]
 """
 
-import argparse
 from glob import glob
 from pathlib import Path
 import openpyxl
@@ -31,17 +30,22 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Border, Side, Font
 from openpyxl.styles import Alignment
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--path', help='Path to the directory containing the *_valid_clusters_table.xlsx files. Default: current working directory', action=SM)
-    parser.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-p', '--path', help='Path to the directory containing the *_valid_clusters_table.xlsx files. Default: current working directory', action=SM)
+    opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

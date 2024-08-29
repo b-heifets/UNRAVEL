@@ -3,26 +3,25 @@
 """
 Loads h5/hdf5 image, saves as tifs. Also, saves xy and z voxel size in microns
 
-Usage:
-------
-h5_to_tifs.py -i <path/image.h5> -t 488
-
 Inputs: 
-Largest *.h5 in sample?? folder
-This script assumes that the first dataset in the hdf5 file has the highest resolution.
+    - Largest *.h5 in sample?? folder
+    - This script assumes that the first dataset in the hdf5 file has the highest resolution.
 
 Outputs:
-./<tif_dir_out>/slice_????.tif series
-./parameters/metadata (text file)
+    - ./<tif_dir_out>/slice_????.tif series
+    - ./parameters/metadata (text file)
 
-Next script: 
-prep_reg.sh
+Note: 
+    - Run script from experiment folder w/ sample?? folders or a sample?? folder.
 
-Notes: 
-    Run script from experiment folder w/ sample?? folders or a sample?? folder.
+Next steps: 
+    - ``reg_prep``
+
+Usage:
+------
+    h5_to_tifs.py -i <path/image.h5> -t 488
 """
 
-import argparse
 import glob
 import os
 import numpy as np
@@ -32,19 +31,23 @@ from rich.traceback import install
 from tifffile import imwrite 
 
 from unravel.image_io.h5_to_tifs import load_h5
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times
 
-
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('--dirs', help='List of folders to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='path/image.h5', action=SM)
-    parser.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/image.h5', required=True, action=SM)
+    reqs.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', required=True, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 # TODO: Add logic for processing all sample folders
@@ -62,10 +65,6 @@ def find_largest_h5_file():
             largest_file = file
 
     return largest_file
-
-
-    
-
 
 def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
     """Save <ndarray> as tifs in <Path(tif_dir_out)>"""

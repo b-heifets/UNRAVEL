@@ -499,10 +499,23 @@
   <section id="module-unravel.cluster_stats.org_data">
 <span id="unravel-cluster-stats-org-data-module"></span><span id="unravel-cluster-stats-org-data"></span><h1>unravel.cluster_stats.org_data module<a class="headerlink" href="#module-unravel.cluster_stats.org_data" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_org_data</span></code> from UNRAVEL to aggregate and organize csv outputs from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>.</p>
+<dl class="simple">
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>clusters/cluster_validation_results_&lt;asterisk&gt; (glob pattern matching <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> output dirs)</p></li>
+<li><p>CSVs with the density data (e.g., cell_density_data.csv or label_density_data.csv from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>)</p></li>
+<li><p>Optional: path/vstats to copy p val, info, and index files</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>target_dir/sample??__cell_density_data__&lt;cluster_validation_results_&lt;asterisk&gt;&gt;.csv</p></li>
+<li><p>target_dir/sample??__label_density_data__&lt;cluster_validation_results_&lt;asterisk&gt;&gt;.csv</p></li>
+</ul>
+</dd>
+</dl>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cstats_org_data -e &lt;list of experiment directories&gt; -cvd ‘&lt;asterisk&gt;’ -td &lt;target_dir&gt; -vd &lt;path/vstats_dir&gt; -v</p>
+<div><p>cstats_org_data -cvd ‘&lt;asterisk&gt;’ [-dt &lt;cell/label&gt;] [-vd &lt;path/vstats_dir&gt;] [-td &lt;target_dir&gt;] [-pvt &lt;p_value_threshold.txt&gt;] [-d &lt;list of paths&gt;] [-p &lt;pattern&gt;] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">

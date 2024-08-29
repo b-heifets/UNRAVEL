@@ -3,10 +3,6 @@
 """
 Use ``cstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.
 
-Usage:
-------
-    cstats_mean_IF -ci path/rev_cluster_index.nii.gz
-
 Prereqs: 
     - vstats
     - cstats_fdr
@@ -18,34 +14,44 @@ Outputs:
     - ./cluster_mean_IF_{cluster_index}/image_name.csv for each image
     - Columns: sample, cluster_ID, mean_IF_intensity
 
-Next: 
+Next steps:
     - cd cluster_mean_IF...
     - utils_prepend -sk <path/sample_key.csv> -f  # If needed
     - [``cstats_index`` and ``cstats_table``]  # for an xlsx table and anatomically ordered clusters that can be used with ``cstats_prism``
     - cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats
     - cstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests
+
+Usage:
+------
+    cstats_mean_IF -ci path/rev_cluster_index.nii.gz [-ip '*.nii.gz'] [-c 1 2 3] [-v]
 """
 
-import argparse
 import csv
 import nibabel as nib
 import numpy as np
 from pathlib import Path 
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 from unravel.image_tools.unique_intensities import uniq_intensities
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-ip', '--input_pattern', help="Pattern for NIfTI images to process relative to cwd. Default: '*.nii.gz'", default='*.nii.gz', action=SM)
-    parser.add_argument('-ci', '--cluster_index', help='Path/rev_cluster_index.nii.gz from ``cstats_fdr``', required=True, action=SM)
-    parser.add_argument('-c', '--clusters', help='Space-separated list of cluster IDs to process. Default: all clusters', nargs='*', type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-ci', '--cluster_index', help='Path/rev_cluster_index.nii.gz from ``cstats_fdr``', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-ip', '--input_pattern', help="Pattern for NIfTI images to process relative to cwd. Default: '*.nii.gz'", default='*.nii.gz', action=SM)
+    opts.add_argument('-c', '--clusters', help='Space-separated list of cluster IDs to process. Default: all clusters', nargs='*', type=int, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
+
     return parser.parse_args()
 
 # TODO: process each cluster in parallel

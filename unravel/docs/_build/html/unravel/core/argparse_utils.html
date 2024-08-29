@@ -496,88 +496,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.core.argparse_utils">
-<span id="unravel-core-argparse-utils-module"></span><span id="unravel-core-argparse-utils"></span><h1>unravel.core.argparse_utils module<a class="headerlink" href="#module-unravel.core.argparse_utils" title="Link to this heading">#</a></h1>
-<p>This script defines custom classes to enhance the formatting and handling of argparse arguments,
-with a focus on suppressing metavar display and improving help message readability.</p>
-<dl class="simple">
-<dt>Classes:</dt><dd><ul class="simple">
-<li><dl class="simple">
-<dt>SuppressMetavar: A custom HelpFormatter class that suppresses the display of metavar for</dt><dd><p>arguments and customizes the epilog formatting.</p>
-</dd>
-</dl>
-</li>
-<li><dl class="simple">
-<dt>SM: A custom argparse.Action class that suppresses the display of metavar and manages</dt><dd><p>argument values.</p>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-<dt>Usage:</dt><dd><p>Import the classes and use them in an argparse-based script to suppress metavar and format help
-messages for improved readability.</p>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<p>import argparse
-from path.to.this.script import SuppressMetavar, SM</p>
-<p>parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-parser.add_argument(‘-e’, ‘–example’, help=’Example argument’, action=SM)
-args = parser.parse_args()</p>
-<dl class="simple">
-<dt>Classes:</dt><dd><dl class="simple">
-<dt>SuppressMetavar</dt><dd><ul class="simple">
-<li><p>Inherits from argparse.HelpFormatter to modify the formatting of action invocations and epilog text.</p></li>
-<li><dl class="simple">
-<dt>Methods:</dt><dd><ul>
-<li><p>_format_action_invocation: Customizes the formatting of argument options.</p></li>
-<li><p>_fill_text: Formats the epilog text with specified indentation and width.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-<dt>SM</dt><dd><ul class="simple">
-<li><p>Inherits from argparse.Action to suppress metavar display and manage argument values.</p></li>
-<li><dl class="simple">
-<dt>Methods:</dt><dd><ul>
-<li><p>__init__: Initializes the custom action and sets the metavar to an empty string or tuple.</p></li>
-<li><p>__call__: Sets the argument values in the namespace, handling both single and multiple values.</p></li>
-</ul>
-</dd>
-</dl>
-</li>
-</ul>
-</dd>
-</dl>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>This script relies on the argparse library for command-line argument parsing.</p></li>
-<li><p>The SuppressMetavar class is designed to improve the readability of help messages by suppressing
-metavar display and customizing the formatting of epilog text.</p></li>
-<li><p>nargs=’<code class="docutils literal notranslate"><span class="pre">+</span></code>’ with action=SM: This combination causes issues when the terminal window is small.</p></li>
-<li><p>Use nargs=’<code class="docutils literal notranslate"><span class="pre">*</span></code>’ with action=SM if zero arguments are acceptable, or drop action=SM to avoid conflicts.</p></li>
-<li><p>Difference:</p></li>
-<li><p>nargs=’<code class="docutils literal notranslate"><span class="pre">+</span></code>’ requires at least one argument.</p></li>
-<li><p>nargs=’<code class="docutils literal notranslate"><span class="pre">*</span></code>’ allows zero or more arguments, providing more flexibility but no guarantee of input.</p></li>
-</ul>
-</div>
-<dl class="py class">
-<dt class="sig sig-object py" id="unravel.core.argparse_utils.SuppressMetavar">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils.</span></span><span class="sig-name descname"><span class="pre">SuppressMetavar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent_increment</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_help_position</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">24</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/argparse_utils.html#SuppressMetavar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils.SuppressMetavar" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">HelpFormatter</span></code></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="unravel.core.argparse_utils.SM">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unravel.core.argparse_utils.</span></span><span class="sig-name descname"><span class="pre">SM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/argparse_utils.html#SM"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.argparse_utils.SM" title="Link to this definition">#</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Action" title="(in Python v3.12)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Action</span></code></a></p>
-</dd></dl>
-
+  <section id="unravel-core-argparse-utils-module">
+<span id="unravel-core-argparse-utils"></span><h1>unravel.core.argparse_utils module<a class="headerlink" href="#unravel-core-argparse-utils-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -617,19 +537,6 @@ metavar display and customizing the formatting of epilog text.</p></li>
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.argparse_utils.SuppressMetavar"><code class="docutils literal notranslate"><span class="pre">SuppressMetavar</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.argparse_utils.SM"><code class="docutils literal notranslate"><span class="pre">SM</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

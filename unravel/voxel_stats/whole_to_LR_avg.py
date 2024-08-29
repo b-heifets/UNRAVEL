@@ -3,22 +3,24 @@
 """
 Use ``vstats_whole_to_avg`` from UNRAVEL to average an image with its mirrored version for voxel-wise stats. This can also smooth the image with a kernel and apply a mask.
 
-Usage:
-------
-    vstats_whole_to_avg -k 0.1 -v -tp
-    
-Output:
-    input_img_LRavg.nii.gz
-
 Prereqs:
     - Input images from ``vstats_prep``.
         - These may be z-scored with ``vstats_z_score``.
 
+Inputs:
+    - <asterisk>.nii.gz images in the current directory.
+    
+Output:
+    - input_img_LRavg.nii.gz for each input image.
+
 Next steps:
     - Run ``vstats`` to perform voxel-wise stats.
+
+Usage:
+------
+    vstats_whole_to_avg [--pattern '<asterisk>.nii.gz'] [--kernel 0] [--axis 2] [--shift 2] [--parallel] [--atlas_mask path/atlas_mask.nii.gz] [-v]
 """
 
-import argparse
 import numpy as np
 import nibabel as nib
 from glob import glob
@@ -28,7 +30,7 @@ from rich import print
 from rich.traceback import install
 from concurrent.futures import ThreadPoolExecutor
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 from unravel.voxel_stats.apply_mask import load_mask
@@ -36,15 +38,19 @@ from unravel.voxel_stats.mirror import mirror
         
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--pattern', help='Pattern to match atlas space input images in the working dir. Default: *.nii.gz', default='*.nii.gz', action=SM)
-    parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0', default=0, type=float, action=SM)
-    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
-    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping (if atlas is asym.). Default: 0', default=0, type=int, action=SM)
-    parser.add_argument('-tp', '--parallel', help='Enable parallel processing with thread pools', default=False, action='store_true')
-    parser.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz', default=None, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-p', '--pattern', help='Pattern to match atlas space input images in the working dir. Default: *.nii.gz', default='*.nii.gz', action=SM)
+    opts.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0', default=0, type=float, action=SM)
+    opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
+    opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping (if atlas is asym.). Default: 0', default=0, type=int, action=SM)
+    opts.add_argument('-tp', '--parallel', help='Enable parallel processing with thread pools', default=False, action='store_true')
+    opts.add_argument('-amas', '--atlas_mask', help='path/atlas_space_mask.nii.gz', default=None, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
+
     return parser.parse_args()
 
 

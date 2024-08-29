@@ -495,7 +495,18 @@
                   
   <section id="module-unravel.unravel_commands">
 <span id="unravel-unravel-commands-module"></span><span id="unravel-unravel-commands"></span><h1>unravel.unravel_commands module<a class="headerlink" href="#module-unravel.unravel_commands" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">unravel_commands</span></code> or <code class="docutils literal notranslate"><span class="pre">uc</span></code> to print a list of commands available in the unravel package.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">unravel_commands</span></code> or <code class="docutils literal notranslate"><span class="pre">uc</span></code> to print a list of commands available in the UNRAVEL package.</p>
+<p>For help on a <code class="docutils literal notranslate"><span class="pre">command</span></code>, run:
+&lt;command&gt; -h</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Documentation: <a class="reference external" href="https://b-heifets.github.io/UNRAVEL/">https://b-heifets.github.io/UNRAVEL/</a></p></li>
+<li><p>Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.</p></li>
+<li><p>Filtering is case-insensitive and matches substrings in the printed lines (regex).</p></li>
+<li><p>For example, use of -f with -d will find matches in the command name and/or description, preserving those lines.</p></li>
+</ul>
+</div>
 <section id="usage-to-print-common-commands-and-descriptions">
 <h2>Usage to print common commands and descriptions:<a class="headerlink" href="#usage-to-print-common-commands-and-descriptions" title="Link to this heading">#</a></h2>
 <blockquote>
@@ -513,22 +524,6 @@
 <blockquote>
 <div><p>unravel_commands -f &lt;string&gt;</p>
 </div></blockquote>
-<dl class="simple">
-<dt>For help on a command, run:</dt><dd><p>&lt;command&gt; -h</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.</p></li>
-<li><p>Filtering is case-insensitive and matches substrings in the printed lines (regex).</p></li>
-<li><p>For example, use of -f with -d will find matches in the command name and/or description, presering those lines.</p></li>
-</ul>
-</div>
-<dl class="simple">
-<dt>Documentation:</dt><dd><p><a class="reference external" href="https://b-heifets.github.io/UNRAVEL/">https://b-heifets.github.io/UNRAVEL/</a></p>
-</dd>
-</dl>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.unravel_commands.parse_args">

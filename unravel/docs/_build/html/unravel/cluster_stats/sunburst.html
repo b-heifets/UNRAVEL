@@ -499,34 +499,41 @@
   <section id="module-unravel.cluster_stats.sunburst">
 <span id="unravel-cluster-stats-sunburst-module"></span><span id="unravel-cluster-stats-sunburst"></span><h1>unravel.cluster_stats.sunburst module<a class="headerlink" href="#module-unravel.cluster_stats.sunburst" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_sunburst</span></code> from UNRAVEL to generate a sunburst plot of regional volumes across all levels of the ABA hierarchy.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_sunburst -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them.</p></li>
-<li><p>Optional: <code class="docutils literal notranslate"><span class="pre">cstats_index</span></code> generates a rev_cluster_index.nii.gz w/ valid clusters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code> generates a valid rev_cluster_index.nii.gz (clusters of significant voxels) via <code class="docutils literal notranslate"><span class="pre">cstats_index</span></code>.</p></li>
 </ul>
 </dd>
-<dt>Outputs:</dt><dd><p>path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]</p>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>path/rev_cluster_index.nii.gz (e.g., with valid clusters or a labeled image)</p></li>
+<li><p>path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz) for applying region IDs to the input image</p></li>
+</ul>
 </dd>
-</dl>
-<p>Plot region volumes (<a class="reference external" href="https://app.flourish.studio/">https://app.flourish.studio/</a>)</p>
-<dl class="simple">
-<dt>Data tab:</dt><dd><p>Paste in data from csv, categories columns = Depth_&lt;asterisk&gt; columns, Size by = Volumes column</p>
-</dd>
-<dt>Preview tab:</dt><dd><p>Hierarchy -&gt; Depth to 10, Colors -&gt; paste RGB codes into Custom overrides</p>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]</p></li>
+</ul>
 </dd>
 </dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
-<li><p>Default csv: UNRAVEL/unravel/core/csvs/sunburst_IDPath_Abbrv.csv</p></li>
-<li><p>CCFv3-2020_info.csv or CCFv3-2017_info.csv</p></li>
+<li><p>Default sunburst csv location: UNRAVEL/unravel/core/csvs/sunburst_IDPath_Abbrv.csv</p></li>
+<li><p>Region info csv: CCFv3-2020_info.csv (or use CCFv3-2017_info.csv or provide a custom CSV with the same columns)</p></li>
 </ul>
 </div>
+<dl class="simple">
+<dt>Next steps:</dt><dd><ul class="simple">
+<li><p>Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (<a class="reference external" href="https://app.flourish.studio/">https://app.flourish.studio/</a>)</p></li>
+<li><p>It can be pasted into the Data tab (categories columns = Depth_&lt;asterisk&gt; columns, Size by = Volumes column)</p></li>
+<li><p>Preview tab: Hierarchy -&gt; Depth to 10, Colors -&gt; paste RGB codes from sunburst_RGBs.csv into Custom overrides</p></li>
+</ul>
+</dd>
+</dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_sunburst -i path/rev_cluster_index.nii.gz [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-rgb] [-scsv sunburst_IDPath_Abbrv.csv] [-icsv CCFv3-2020_info.csv] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.sunburst.parse_args">

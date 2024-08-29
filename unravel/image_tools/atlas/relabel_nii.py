@@ -3,12 +3,20 @@
 """
 Use ``atlas_relabel`` from UNRAVEL to convert intensities (e.g., atlas label IDs) based on a CSV.
 
+Inputs:
+    - old_image.nii.gz: Lable image with original intensities.
+    - input.csv: CSV with old IDs in column 1 and new IDs in column 2.
+
+Outputs:
+    - new_image.nii.gz: Image with relabeled intensities.
+    - relabel_nii_volume_summary_old_labels.csv: Summary of the volume for each label before the replacement.
+    - relabel_nii_volume_summary_new_labels.csv: Summary of the volume for each label after the replacement.
+
 Usage: 
 ------
-    atlas_relabel -i path/old_image.nii.gz -o path/new_image.nii.gz -ic path/input.csv -oc volume_summary -odt uint16
+    atlas_relabel -i path/old_image.nii.gz -o path/new_image.nii.gz -ci path/input.csv [-vols] [-odt uint16] [-v]
 """
 
-import argparse
 import numpy as np
 import nibabel as nib
 import pandas as pd
@@ -17,19 +25,26 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.config import Configuration
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/old_image.nii.gz', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='path/new_image.nii.gz', required=True, action=SM)
-    parser.add_argument('-ic', '--csv_input', help='path/input.csv w/ old IDs in column 1 and new IDs in column 2', required=True, action=SM)
-    parser.add_argument('-oc', '--csv_output', help='Optionally provide prefix to output label volume summaries (e.g., volume_summary)', default=None, action=SM)
-    parser.add_argument('-odt', '--data_type', help='Output data type. Default: uint16', default="uint16", action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/old_image.nii.gz', required=True, action=SM)
+    reqs.add_argument('-ci', '--csv_input', help='path/input.csv w/ old IDs in column 1 and new IDs in column 2', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='path/new_image.nii.gz', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-vols', '--volumes', help='Provide flag to output label volume summaries', default=None, action=SM)
+    opts.add_argument('-odt', '--data_type', help='Output data type. Default: uint16', default="uint16", action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
@@ -77,8 +92,8 @@ def main():
         new_labels, counts_new_labels = np.unique(new_img_array, return_counts=True)
         volume_summary_old_labels = pd.DataFrame({columns[0]: old_labels, 'voxel_count': counts_old_labels})
         volume_summary_new_labels = pd.DataFrame({columns[1]: new_labels, 'voxel_count': counts_new_labels})
-        volume_summary_old_labels.to_csv(f'{args.csv_output}_old_labels.csv', index=False)
-        volume_summary_new_labels.to_csv(f'{args.csv_output}_new_labels.csv', index=False)
+        volume_summary_old_labels.to_csv(f'relabel_nii_volume_summary_old_labels.csv', index=False) 
+        volume_summary_new_labels.to_csv(f'relabel_nii_volume_summary_new_labels.csv', index=False)
 
     verbose_end_msg()
 

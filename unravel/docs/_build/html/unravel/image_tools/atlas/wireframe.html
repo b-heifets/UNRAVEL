@@ -504,20 +504,25 @@
   <section id="module-unravel.image_tools.atlas.wireframe">
 <span id="unravel-image-tools-atlas-wireframe-module"></span><span id="unravel-image-tools-atlas-wireframe"></span><h1>unravel.image_tools.atlas.wireframe module<a class="headerlink" href="#module-unravel.image_tools.atlas.wireframe" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">atlas_wireframe</span></code> from UNRAVEL to generate a thin wireframe image from an atlas NIfTI file.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>atlas_wireframe -i path.atlas.nii.gz</p>
-</div></blockquote>
-<p>Outlines are generated outside the regions and not inside smaller regions.
-For regions at the surface of the brain, the outlines are internalized.</p>
 <dl class="simple">
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>path/atlas_img_W.nii.gz # Wireframe image</p></li>
-<li><p>path/atlas_img_W_IDs.nii.gz # Wireframe image with region IDs</p></li>
+<li><p>path/atlas_img_W.nii.gz (Wireframe image)</p></li>
+<li><p>path/atlas_img_W_IDs.nii.gz (Wireframe image with region IDs)</p></li>
 </ul>
 </dd>
 </dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Outlines are generated outside the regions and not inside smaller regions.</p></li>
+<li><p>For regions at the surface of the brain, the outlines are internalized.</p></li>
+</ul>
+</div>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>atlas_wireframe -i path.atlas.nii.gz [-wo path/atlas_img_W.nii.gz] [-id path/atlas_img_W_IDs.nii.gz] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_tools.atlas.wireframe.parse_args">

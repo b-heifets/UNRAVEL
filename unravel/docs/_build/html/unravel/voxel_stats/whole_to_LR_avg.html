@@ -499,14 +499,7 @@
   <section id="module-unravel.voxel_stats.whole_to_LR_avg">
 <span id="unravel-voxel-stats-whole-to-lr-avg-module"></span><span id="unravel-voxel-stats-whole-to-lr-avg"></span><h1>unravel.voxel_stats.whole_to_LR_avg module<a class="headerlink" href="#module-unravel.voxel_stats.whole_to_LR_avg" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code> from UNRAVEL to average an image with its mirrored version for voxel-wise stats. This can also smooth the image with a kernel and apply a mask.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats_whole_to_avg -k 0.1 -v -tp</p>
-</div></blockquote>
 <dl class="simple">
-<dt>Output:</dt><dd><p>input_img_LRavg.nii.gz</p>
-</dd>
 <dt>Prereqs:</dt><dd><ul class="simple">
 <li><dl class="simple">
 <dt>Input images from <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code>.</dt><dd><ul>
@@ -517,11 +510,24 @@
 </li>
 </ul>
 </dd>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>&lt;asterisk&gt;.nii.gz images in the current directory.</p></li>
+</ul>
+</dd>
+<dt>Output:</dt><dd><ul class="simple">
+<li><p>input_img_LRavg.nii.gz for each input image.</p></li>
+</ul>
+</dd>
 <dt>Next steps:</dt><dd><ul class="simple">
 <li><p>Run <code class="docutils literal notranslate"><span class="pre">vstats</span></code> to perform voxel-wise stats.</p></li>
 </ul>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>vstats_whole_to_avg [–pattern ‘&lt;asterisk&gt;.nii.gz’] [–kernel 0] [–axis 2] [–shift 2] [–parallel] [–atlas_mask path/atlas_mask.nii.gz] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.voxel_stats.whole_to_LR_avg.parse_args">

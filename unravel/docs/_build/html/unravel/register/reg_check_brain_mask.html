@@ -498,12 +498,17 @@
                   
   <section id="module-unravel.register.reg_check_brain_mask">
 <span id="unravel-register-reg-check-brain-mask-module"></span><span id="unravel-register-reg-check-brain-mask"></span><h1>unravel.register.reg_check_brain_mask module<a class="headerlink" href="#module-unravel.register.reg_check_brain_mask" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">reg_check_brain_mask</span></code> from UNRAVEL for masking QC, copies autofluo_50um.nii.gz and autofluo_50_masked.nii.gz for each sampled to a target dir</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">reg_check_brain_mask</span></code> from UNRAVEL for masking QC, copies autofluo_50um.nii.gz and autofluo_50_masked.nii.gz for each sample to a target directory.</p>
+<section id="usage-for-copying-to-the-current-working-directory">
+<h2>Usage for copying to the current working directory:<a class="headerlink" href="#usage-for-copying-to-the-current-working-directory" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>reg_check_brain_mask -e &lt;list of experiment directories&gt; # copies to the current working directory
-reg_check_brain_mask -e &lt;list of experiment directories&gt; -td &lt;target_output_dir</p>
+<div><p>reg_check_brain_mask [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-copying-to-a-target-directory">
+<h2>Usage for copying to a target directory:<a class="headerlink" href="#usage-for-copying-to-a-target-directory" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg_check_brain_mask -td &lt;target_output_dir&gt; [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -564,7 +569,8 @@ reg_check_brain_mask -e &lt;list of experiment directories&gt; -td &lt;target_ou
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-copying-to-the-current-working-directory">Usage for copying to the current working directory:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-copying-to-a-target-directory">Usage for copying to a target directory:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_check_brain_mask.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_check_brain_mask.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>

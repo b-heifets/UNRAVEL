@@ -10,7 +10,6 @@ inputs: ./sample??/clusters/output_folder/bounding_boxes/outer_bounds.txt and ./
 outputs: ./sample??/clusters/output_folder/<chann_name>_cropped/<sample>_cluster_*.nii.gz
 """
 
-import argparse
 from glob import glob
 from pathlib import Path
 import re
@@ -19,7 +18,8 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii
 from unravel.core.img_tools import crop
@@ -27,16 +27,22 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, 
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='If if inputs is .czi or .nii.gz: path/raw_image (otherwise the tif dir mattching -cn is used)', default=None, action=SM)
-    parser.add_argument('-o', '--out_dir_name', help="Output folder name. If supplied as path (./sample??/clusters/output_folder), the basename will be used", action=SM)
-    parser.add_argument('-cn', '--chann_name', help='Channel name (e.g., cfos or cfos_rb4). Default: ochann', default='ochann', action=SM)
-    parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, action=SM)
-    parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)
-    parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='If if inputs is .czi or .nii.gz: path/raw_image (otherwise the tif dir mattching -cn is used)', default=None, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-o', '--out_dir_name', help="Output folder name. If supplied as path (./sample??/clusters/output_folder), the basename will be used", action=SM)
+    opts.add_argument('-cn', '--chann_name', help='Channel name (e.g., cfos or cfos_rb4). Default: ochann', default='ochann', action=SM)
+    opts.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, action=SM)
+    opts.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
+    general.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
+    general.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
+
     return parser.parse_args()
 
 

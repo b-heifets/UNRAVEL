@@ -499,12 +499,15 @@
   <section id="module-unravel.register.reg_check">
 <span id="unravel-register-reg-check-module"></span><span id="unravel-register-reg-check"></span><h1>unravel.register.reg_check module<a class="headerlink" href="#module-unravel.register.reg_check" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">reg_check</span></code> from UNRAVEL to check registration QC, copies autofl_&lt;asterisk&gt;um_masked_fixed_reg_input.nii.gz and atlas_in_tissue_space.nii.gz for each sample to a target dir.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<section id="usage-for-copying-to-the-current-working-directory">
+<h2>Usage for copying to the current working directory:<a class="headerlink" href="#usage-for-copying-to-the-current-working-directory" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>reg_check -e &lt;list of experiment directories&gt; # copies to the current working directory
-reg_check -e &lt;list of experiment directories&gt; -td &lt;target_output_dir</p>
+<div><p>reg_check [-ro reg_outputs] [-fri fixed_reg_in] [-wa warped_atlas] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
+<dl class="simple">
+<dt>Usage for copying to a target directory:</dt><dd><p>reg_check -td &lt;path/target_output_dir&gt; [-ro reg_outputs] [-fri fixed_reg_in] [-wa warped_atlas] [-d list of paths] [-p sample??] [-v]</p>
+</dd>
+</dl>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.register.reg_check.parse_args">
@@ -564,7 +567,7 @@ reg_check -e &lt;list of experiment directories&gt; -td &lt;target_output_dir</p
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-copying-to-the-current-working-directory">Usage for copying to the current working directory:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_check.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_check.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>

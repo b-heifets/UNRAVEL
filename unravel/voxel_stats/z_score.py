@@ -3,17 +3,20 @@
 """
 Use ``vstats_z_score`` from UNRAVEL to z-score an atlas space image using a tissue mask and/or an atlas mask.
 
-Usage w/ a tissue mask (warped to atlas space):
------------------------------------------------
-    vstats_z_score -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -v
+Prereqs:
+    ``vstats_prep`` for inputs [& ``seg_brain_mask`` for tissue masks]
 
-Usage w/ an atlas mask (warped to atlas space):
------------------------------------------------
-    vstats_z_score -i path/img.nii.gz -n -amas path/atlas_mask.nii.gz -v
+Inputs:
+    - path/img.nii.gz (e.g., an immunofluo image in atlas space)
+    - [reg_inputs/autofl_50um_brain_mask.nii.gz] for a tissue mask
+    - [path/atlas_mask.nii.gz] for an atlas mask
 
-Usage w/ both masks for side-specific z-scoring:
-------------------------------------------------
-    vstats_z_score -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -amas path/RH_mask.nii.gz -s RHz -v
+Outputs:
+    - <path/input_img>_z.nii.gz (float32)
+    - [sample??/atlas_space/autofl_50um_brain_mask.nii.gz]
+
+Note:
+    - z-score = (img.nii.gz - mean pixel intensity in brain)/standard deviation of intensity in brain
 
 Next steps: 
     - Aggregate outputs with ``utils_agg_files``.
@@ -21,18 +24,23 @@ Next steps:
     - If using side-specific z-scoring, next use ``vstats_hemi_to_avg`` to average the images.
     - Run ``vstats`` to perform voxel-wise stats.
 
-Outputs:
-    - <path/input_img>_z.nii.gz (float32)
-    - [sample??/atlas_space/autofl_50um_brain_mask.nii.gz]
+Usage:
+------
+    vstats_z_score -i path/img.nii.gz [--suffix z] [-tmas reg_inputs/autofl_50um_brain_mask.nii.gz] [-amas path/atlas_mask.nii.gz] [--no_tmask] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-d list of paths] [-p sample??] [-v]
 
-z-score = (img.nii.gz - mean pixel intensity in brain)/standard deviation of intensity in brain
+Usage w/ a tissue mask (warped to atlas space):
+-----------------------------------------------
+    vstats_z_score -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -v
 
-Prereqs:
-    ``vstats_prep`` for inputs [& ``seg_brain_mask`` for tissue masks]
+Usage w/ an atlas mask (warped to atlas space):
+-----------------------------------------------
+    vstats_z_score -i path/img.nii.gz --no_tmask -amas path/atlas_mask.nii.gz -v
+
+Usage w/ both masks for side-specific z-scoring:
+------------------------------------------------
+    vstats_z_score -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -amas path/RH_mask.nii.gz -s RH_z -v
 """
 
-import argparse
-import shutil
 import nibabel as nib
 import numpy as np
 from pathlib import Path
@@ -40,7 +48,7 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times
@@ -48,23 +56,28 @@ from unravel.warp.to_atlas import to_atlas
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='full_path/img.nii.gz or rel_path/img.nii.gz ("sample??" works for batch processing)', required=True, action=SM)
-    parser.add_argument('-s', '--suffix', help='Output suffix. Default: z (.nii.gz replaced w/ _z.nii.gz)', default='z', action=SM)
-    parser.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
-    parser.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
-    parser.add_argument('-n', '--no_tmask', help='Provide flag to avoid use of tmas', action='store_true')
-    parser.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a fixed image for warping a brain mask to atlas space (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
-    parser.add_argument('-inp', '--interpol', help='Type of interpolation (nearestNeighbor, multiLabel [default]).', default='multiLabel', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='full_path/img.nii.gz or rel_path/img.nii.gz ("sample??" works for batch processing)', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-s', '--suffix', help='Output suffix. Default: z (.nii.gz replaced w/ _z.nii.gz)', default='z', action=SM)
+    opts.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
+    opts.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
+    opts.add_argument('-n', '--no_tmask', help='Provide flag to avoid use of tmas', action='store_true')
+    opts.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
+    opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a fixed image for warping a brain mask to atlas space (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
+
     return parser.parse_args()
 
 # TODO: Set voxels outside the mask(s) to zero
+# TODO: Consider adjusting logic so --no_tmask is not required
 
 
 @print_func_name_args_times()
@@ -100,13 +113,11 @@ def main():
     if args.no_tmask and args.atlas_mask is None: 
         print("\n    [red]Please provide a path for --atlas_mask if --tissue_mask is not used\n")
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
-        for sample in samples:
-            
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+        for sample_path in sample_paths:
 
             if Path(args.input).is_absolute():
                 input_path = Path(args.input)
@@ -137,7 +148,7 @@ def main():
                 if not fixed_reg_input.exists():
                     fixed_reg_input = sample_path / "reg_outputs" / "autofl_50um_fixed_reg_input.nii.gz"
 
-                to_atlas(sample_path, brain_mask_in_tissue_space, fixed_reg_input, args.atlas, mask_output, args.interpol, dtype='float32')
+                to_atlas(sample_path, brain_mask_in_tissue_space, fixed_reg_input, args.atlas, mask_output, 'multiLabel', dtype='float32')  # or 'nearestNeighbor'
                 mask = load_3D_img(mask_output)
                 mask = np.where(mask > 0, 1, 0).astype(np.uint8)
 

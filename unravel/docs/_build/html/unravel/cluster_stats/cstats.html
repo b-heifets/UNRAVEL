@@ -499,17 +499,16 @@
   <section id="module-unravel.cluster_stats.cstats">
 <span id="unravel-cluster-stats-cstats-module"></span><span id="unravel-cluster-stats-cstats"></span><h1>unravel.cluster_stats.cstats module<a class="headerlink" href="#module-unravel.cluster_stats.cstats" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats</span></code> from UNRAVEL to validate clusters based on differences in cell/object or label density w/ t-tests.</p>
-<section id="t-test-usage">
-<h2>T-test usage:<a class="headerlink" href="#t-test-usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;group1|group2&gt;</p>
-</div></blockquote>
-</section>
-<section id="tukey-s-test-usage">
-<h2>Tukey’s test usage:<a class="headerlink" href="#tukey-s-test-usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats –groups &lt;group1&gt; &lt;group2&gt; &lt;group3&gt; &lt;group4&gt; … -hg &lt;group1|group2&gt;</p>
-</div></blockquote>
+<dl class="simple">
+<dt>Input files:</dt><dd><ul class="simple">
+<li><p>&lt;asterisk&gt;_density_data.csv from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> (e.g., in each subdir named after the rev_cluster_index.nii.gz file)</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>./_valid_clusters_stats/</p></li>
+</ul>
+</dd>
+</dl>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -521,8 +520,6 @@
 </ul>
 </div>
 <dl class="simple">
-<dt>Input files:</dt><dd><p>&lt;asterisk&gt;_density_data.csv from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> (e.g., in each subdir named after the rev_cluster_index.nii.gz file)</p>
-</dd>
 <dt>CSV naming conventions:</dt><dd><ul class="simple">
 <li><p>Condition: first word before ‘_’ in the file name</p></li>
 <li><p>Side: last word before .csv (LH or RH)</p></li>
@@ -554,11 +551,18 @@
 <dl class="simple">
 <dt>Columns in the .csv files:</dt><dd><p>sample, cluster_ID, &lt;cell_count|label_volume&gt;, cluster_volume, &lt;cell_density|label_density&gt;, …</p>
 </dd>
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>./_valid_clusters_stats/</p></li>
-</ul>
-</dd>
 </dl>
+<section id="usage-for-t-tests">
+<h2>Usage for t-tests:<a class="headerlink" href="#usage-for-t-tests" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;group1|group2&gt; [-cp &lt;condition_prefixes&gt;] [-alt &lt;two-sided|less|greater&gt;] [-pvt &lt;p_value_threshold.txt&gt;] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-tukey-s-tests">
+<h2>Usage for Tukey’s tests:<a class="headerlink" href="#usage-for-tukey-s-tests" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats –groups &lt;group1&gt; &lt;group2&gt; &lt;group3&gt; &lt;group4&gt; … -hg &lt;group1|group2&gt; [-cp &lt;condition_prefixes&gt;] [-alt &lt;two-sided|less|greater&gt;] [-pvt &lt;p_value_threshold.txt&gt;] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.cstats.parse_args">
@@ -740,8 +744,8 @@ An error is raised if the condition is neither found as an exact match nor as a 
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#t-test-usage">T-test usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tukey-s-test-usage">Tukey’s test usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-t-tests">Usage for t-tests:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-tukey-s-tests">Usage for Tukey’s tests:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.cstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.cstats.condition_selector"><code class="docutils literal notranslate"><span class="pre">condition_selector()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.cstats.cluster_validation_data_df"><code class="docutils literal notranslate"><span class="pre">cluster_validation_data_df()</span></code></a></li>

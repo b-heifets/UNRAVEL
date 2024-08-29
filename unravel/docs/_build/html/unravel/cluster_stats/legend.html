@@ -499,15 +499,14 @@
   <section id="module-unravel.cluster_stats.legend">
 <span id="unravel-cluster-stats-legend-module"></span><span id="unravel-cluster-stats-legend"></span><h1>unravel.cluster_stats.legend module<a class="headerlink" href="#module-unravel.cluster_stats.legend" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_legend</span></code> from UNRAVEL to summarize regional abbreviations from &lt;asterisk&gt;_valid_clusters_table.xlsx files.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_legend</p>
-</div></blockquote>
 <dl class="simple">
-<dt>Inputs:</dt><dd><p>&lt;asterisk&gt;_valid_clusters_table.xlsx files in the working directory output from <code class="docutils literal notranslate"><span class="pre">cstats_table</span></code></p>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>&lt;asterisk&gt;_valid_clusters_table.xlsx files in the working directory output from <code class="docutils literal notranslate"><span class="pre">cstats_table</span></code></p></li>
+</ul>
 </dd>
-<dt>Outputs:</dt><dd><p>legend.xlsx</p>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>legend.xlsx</p></li>
+</ul>
 </dd>
 </dl>
 <div class="admonition note">
@@ -518,6 +517,11 @@
 <li><p>Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.</p></li>
 </ul>
 </div>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_legend [-p path/dir/with/xlsx_files] [-csv CCFv3-2020_info.csv] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.cluster_stats.legend.parse_args">

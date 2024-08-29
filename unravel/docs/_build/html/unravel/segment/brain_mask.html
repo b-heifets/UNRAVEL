@@ -498,14 +498,11 @@
                   
   <section id="module-unravel.segment.brain_mask">
 <span id="unravel-segment-brain-mask-module"></span><span id="unravel-segment-brain-mask"></span><h1>unravel.segment.brain_mask module<a class="headerlink" href="#module-unravel.segment.brain_mask" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> from UNRAVEL to run a trained ilastik project (pixel classification) to mask the brain (often better registration).</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>seg_brain_mask -ie &lt;path/ilastik_executable&gt; -ilp &lt;path/brain_mask.ilp&gt; [-i reg_inputs/autofl_50um.nii.gz] [-r 50] [-v]</p>
-</div></blockquote>
+<p>Use <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> from UNRAVEL to use a trained ilastik project (pixel classification) to mask the brain in resampled autofluo images (often improves registration).</p>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><ul class="simple">
+<li><p>Organize training tif slices (from <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code>) into a single folder.</p></li>
+<li><p>Train an Ilastik project to segment the brain (<a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project">https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project</a>).</p></li>
 <li><p>Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif (from <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>)</p></li>
 <li><p>Save brain_mask.ilp in experiment directory of use -ilp</p></li>
 </ul>
@@ -526,6 +523,11 @@
 </ul>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>seg_brain_mask -ie &lt;path/ilastik_executable&gt; -ilp &lt;path/brain_mask.ilp&gt; [-i reg_inputs/autofl_50um.nii.gz] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.segment.brain_mask.parse_args">

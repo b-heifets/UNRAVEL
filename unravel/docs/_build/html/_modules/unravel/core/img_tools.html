@@ -462,27 +462,6 @@
     <span class="k">return</span> <span class="n">flipped_img</span></div>
 
 
-<span class="c1"># @print_func_name_args_times()</span>
-<span class="c1"># def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_log=None):</span>
-<span class="c1">#     &quot;&quot;&quot;Segment tif series with Ilastik.&quot;&quot;&quot;</span>
-<span class="c1">#     tif_dir = str(tif_dir)</span>
-<span class="c1">#     tif_list = sorted(glob(f&quot;{tif_dir}/*.tif&quot;))</span>
-<span class="c1">#     ilastik_project = str(ilastik_project)</span>
-<span class="c1">#     output_dir_ = str(output_dir)</span>
-<span class="c1">#     cmd = [</span>
-<span class="c1">#         &#39;run_ilastik.sh&#39;,</span>
-<span class="c1">#         &#39;--headless&#39;,</span>
-<span class="c1">#         &#39;--project&#39;, ilastik_project,</span>
-<span class="c1">#         &#39;--export_source&#39;, &#39;Simple Segmentation&#39;,</span>
-<span class="c1">#         &#39;--output_format&#39;, &#39;tif&#39;,</span>
-<span class="c1">#         &#39;--output_filename_format&#39;, f&#39;{output_dir}/{{nickname}}.tif&#39;,</span>
-<span class="c1">#     ] + tif_list</span>
-<span class="c1">#     if not Path(output_dir_).exists():</span>
-<span class="c1">#         if ilastik_log == None:</span>
-<span class="c1">#             subprocess.run(cmd)</span>
-<span class="c1">#         else:</span>
-<span class="c1">#             subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)</span>
-
 <div class="viewcode-block" id="pixel_classification">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.pixel_classification">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
@@ -506,14 +485,12 @@
         <span class="s1">&#39;--output_format&#39;</span><span class="p">,</span> <span class="s1">&#39;tif&#39;</span><span class="p">,</span>
         <span class="s1">&#39;--output_filename_format&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span><span class="si">}</span><span class="s1">/</span><span class="se">{{</span><span class="s1">nickname</span><span class="se">}}</span><span class="s1">.tif&#39;</span>
     <span class="p">]</span> <span class="o">+</span> <span class="n">tif_list</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Running Ilastik with command:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd</span><span class="p">))</span>
-    <span class="c1"># result = subprocess.run(cmd, capture_output=True, text=True)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Running Ilastik with command:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cmd</span><span class="p">[:</span><span class="mi">10</span><span class="p">]),</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">tif_list</span><span class="p">[:</span><span class="mi">3</span><span class="p">]),</span> <span class="sa">f</span><span class="s1">&#39;[default bold]...</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;nt&#39;</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Ilastik failed with error:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Ilastik completed successfully.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Ilastik completed successfully.&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="pad">

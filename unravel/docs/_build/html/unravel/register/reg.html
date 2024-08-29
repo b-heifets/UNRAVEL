@@ -499,34 +499,20 @@
   <section id="module-unravel.register.reg">
 <span id="unravel-register-reg-module"></span><span id="unravel-register-reg"></span><h1>unravel.register.reg module<a class="headerlink" href="#module-unravel.register.reg" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">reg</span></code> from UNRAVEL to register an average template brain/atlas to a resampled autofl brain.</p>
-<section id="usage-for-tissue-registration">
-<h2>Usage for tissue registration:<a class="headerlink" href="#usage-for-tissue-registration" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>reg -m &lt;path/template.nii.gz&gt; -bc -sm 0.4 -ort &lt;3 letter orientation code&gt; -m2 atlas/atlas_CCFv3_2020_30um.nii.gz</p>
-</div></blockquote>
-</section>
-<section id="usage-for-atlas-to-atlas-registration">
-<h2>Usage for atlas to atlas registration:<a class="headerlink" href="#usage-for-atlas-to-atlas-registration" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>reg -m &lt;path/atlas1.nii.gz&gt; -f &lt;path/atlas2.nii.gz&gt; -m2 &lt;path/atlas2.nii.gz&gt;</p>
-</div></blockquote>
-</section>
-<section id="usage-for-template-to-template-registration">
-<h2>Usage for template to template registration:<a class="headerlink" href="#usage-for-template-to-template-registration" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>reg -m &lt;path/template1.nii.gz&gt; -f &lt;path/template2.nii.gz&gt; -m2 &lt;path/template2.nii.gz&gt; -inp linear</p>
-</div></blockquote>
 <dl class="simple">
-<dt>ort_code letter options:</dt><dd><ul class="simple">
-<li><p>A/P=Anterior/Posterior</p></li>
-<li><p>L/R=Left/Right</p></li>
-<li><p>S/I=Superior/Interior</p></li>
-<li><p>The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)</p></li>
-</ul>
-</dd>
 <dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>, [<code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code>], &amp; [<code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>]</p>
 </dd>
-<dt>Next steps:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg_check</span></code> and <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code></p>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>template to register (e.g., gubra_template_CCFv3_30um.nii.gz, an iDISCO/LSFM template in CCFv3 space)</p></li>
+<li><p>reg_inputs/autofl_50um_masked.nii.gz (from <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>)</p></li>
+<li><p>atlas/atlas_CCFv3_2020_30um.nii.gz (default; from Allen Brain Institute)</p></li>
+</ul>
+</dd>
+<dt>Outputs:</dt><dd><ul class="simple">
+<li><p>reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz (padded fixed image used for registration with ANTsPy)</p></li>
+<li><p>reg_outputs/&lt;atlas&gt;_in_tissue_space.nii.gz (warped atlas to tissue space for checking reg)</p></li>
+<li><p>transformation matrices and deformation fields in reg_outputs</p></li>
+</ul>
 </dd>
 </dl>
 <div class="admonition note">
@@ -534,8 +520,32 @@
 <ul class="simple">
 <li><p>Images in reg_inputs are not padded.</p></li>
 <li><p>Images in reg_outputs have 15% padding.</p></li>
+<li><p>ort_code is a 3 letter orientation code of the fixed image if not set in fixed_img (e.g., RAS)</p></li>
+<li><p>Letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Inferior</p></li>
+<li><p>The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)</p></li>
 </ul>
 </div>
+<dl class="simple">
+<dt>Next steps:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg_check</span></code> and <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code></p>
+</dd>
+</dl>
+<section id="usage-for-tissue-registration">
+<h2>Usage for tissue registration:<a class="headerlink" href="#usage-for-tissue-registration" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg -m &lt;path/template.nii.gz&gt; -bc -sm 0.4 -ort &lt;3 letter orientation code&gt; -m2 atlas/atlas_CCFv3_2020_30um.nii.gz [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-bc] [-sm 0.4] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-atlas-to-atlas-registration">
+<h2>Usage for atlas to atlas registration:<a class="headerlink" href="#usage-for-atlas-to-atlas-registration" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg -m &lt;path/atlas1.nii.gz&gt; -f &lt;path/atlas2.nii.gz&gt; -m2 &lt;path/atlas2.nii.gz&gt; [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-template-to-template-registration">
+<h2>Usage for template to template registration:<a class="headerlink" href="#usage-for-template-to-template-registration" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg -m &lt;path/template1.nii.gz&gt; -f &lt;path/template2.nii.gz&gt; -m2 &lt;path/template2.nii.gz&gt; -inp linear [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.register.reg.parse_args">

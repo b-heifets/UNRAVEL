@@ -3,22 +3,21 @@
 """
 Use ``io_tif_to_tifs`` from UNRAVEL to load a 3D .tif image and save it as tifs.
 
-Usage:
-------
-    io_tif_to_tifs -i <path/image.tif> -t 488
-
-Inputs: 
-    - image.tif # either from -i path/image.tif or largest <asterisk>.tif in cwd
+Input: 
+    - image.tif (either from -i path/image.tif or largest <asterisk>.tif in cwd)
 
 Outputs:
     - ./<tif_dir_out>/slice_<asterisk>.tif series
     - ./parameters/metadata (text file)
 
 Next command: 
-    ``reg_prep`` for registration
+    ``reg_prep`` to prep autofluo images registration
+
+Usage:
+------
+    io_tif_to_tifs -i <path/image.tif> -t 488 [-v]
 """
 
-import argparse
 import glob
 import os
 import numpy as np
@@ -28,19 +27,26 @@ from rich.traceback import install
 from tifffile import imwrite
 import tifffile 
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/image.tif', action=SM)
-    parser.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/image.tif', required=True, action=SM)
+    reqs.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', required=True, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
+# TODO: Could remove find_largest_tif_file() and use glob matching only. 
+# TODO: Could keep metadata functions specific to io_metadata and the img_io module.
 
 def find_largest_tif_file():
     """ Find and return the path to the largest .tif file in the current directory """
@@ -141,11 +147,7 @@ def main():
         file.write(f"Voxel size: {xy_res:.4f}x{xy_res:.4f}x{z_res:.4f} µm^3")
 
     # Save as tifs 
-    if args.tif_dir is None:
-        print("    [red1]The tif_dir argument was not provided. Please specify the directory.")
-        import sys ; sys.exit()
-    else:
-        tifs_output_path = Path(".", args.tif_dir)
+    tifs_output_path = Path(args.tif_dir)
     
     save_as_tifs(img, tifs_output_path)
 

@@ -499,14 +499,15 @@
   <section id="module-unravel.utilities.prepend_conditions">
 <span id="unravel-utilities-prepend-conditions-module"></span><span id="unravel-utilities-prepend-conditions"></span><h1>unravel.utilities.prepend_conditions module<a class="headerlink" href="#module-unravel.utilities.prepend_conditions" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code> from UNRAVEL to prepend conditions to filenames based on a CSV key.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>utils_prepend -sk &lt;path/sample_key.csv&gt; -f -r</p>
-</div></blockquote>
-<p>This command renames files in the current directory based on the conditions specified in the CSV file.</p>
-<p>The sample_key.csv should have two columns: ‘dir_name’ and ‘condition’.
-The command will prepend the ‘condition’ to the filenames matching the ‘dir_name’ prefix.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>This command renames files in the current directory based on the conditions specified in the CSV file.</p></li>
+<li><p>The sample_key.csv should have two columns: ‘dir_name’ and ‘condition’.</p></li>
+<li><p>The command will prepend the ‘condition’ to the filenames matching the ‘dir_name’ prefix.</p></li>
+<li><p>If needed, files and/or folders can be renamed with <code class="docutils literal notranslate"><span class="pre">utils_rename</span></code>.</p></li>
+</ul>
+</div>
 <dl class="simple">
 <dt>For example, if the CSV contains the following rows:</dt><dd><p>dir_name,condition
 sample01,control
@@ -516,7 +517,17 @@ sample02,treatment</p>
 ‘sample02_file.csv’ –&gt; ‘treatment_sample02_file.csv’.</p>
 </dd>
 </dl>
-<p>If needed, files and/or folders can be renamed with <code class="docutils literal notranslate"><span class="pre">utils_rename</span></code>.</p>
+<section id="usage-for-files">
+<h2>Usage for files:<a class="headerlink" href="#usage-for-files" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>utils_prepend -sk &lt;path/sample_key.csv&gt; -f [–recursive] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-directories">
+<h2>Usage for directories:<a class="headerlink" href="#usage-for-directories" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>utils_prepend -sk &lt;path/sample_key.csv&gt; -d [–recursive] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.utilities.prepend_conditions.parse_args">
@@ -586,7 +597,8 @@ sample02,treatment</p>
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-files">Usage for files:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-directories">Usage for directories:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.prepend_conditions.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.prepend_conditions.rename_items"><code class="docutils literal notranslate"><span class="pre">rename_items()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.utilities.prepend_conditions.prepend_conditions"><code class="docutils literal notranslate"><span class="pre">prepend_conditions()</span></code></a></li>

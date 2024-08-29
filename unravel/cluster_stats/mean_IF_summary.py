@@ -3,30 +3,29 @@
 """
 Use ``cstats_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each cluster in atlas space.
 
-Usage for t-tests:
-------------------
-    cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
-
-Usage for Tukey's tests w/ reordering and renaming of conditions:
------------------------------------------------------------------
-    cstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1
-
-Note:
-    - The first word of the csv inputs is used for the the group names (underscore separated).
-
-Inputs: 
-    - <asterisk>.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity
-
 Prereqs:
     - Generate CSV inputs withs ``cstats_IF_mean``
     - Add conditions to input CSV file names: ``utils_prepend`` -sk $SAMPLE_KEY -f
 
+Inputs: 
+    - <asterisk>.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity
+
 Outputs:
     - cluster_mean_IF_summary/cluster_<cluster_id>.pdf for each cluster
     - If significant differences are found, a prefix '_' is added to the filename to sort the files
+
+Note:
+    - The first word of the csv inputs is used for the the group names (underscore separated).
+
+Usage for t-tests:
+------------------
+    cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest [--cluster_ids 1 2 3] [-alt two-sided] [-v]
+
+Usage for Tukey's tests w/ reordering and renaming of conditions:
+-----------------------------------------------------------------
+    cstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1 [--cluster_ids 1 2 3] [-v]
 """
 
-import argparse
 import matplotlib as mpl
 mpl.use('Agg')
 import matplotlib.pyplot as plt
@@ -41,20 +40,27 @@ from pathlib import Path
 from scipy.stats import ttest_ind, dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('--cluster_ids', help='List of cluster IDs to process (Default: process all clusters)', nargs='*', type=int, action=SM)
-    parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', action=SM)
-    parser.add_argument('--labels', nargs='*', help='Group Labels in same order', action=SM)
-    parser.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
-    parser.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', required=True, action=SM)
+    reqs.add_argument('--labels', nargs='*', help='Group Labels in same order', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('--cluster_ids', help='List of cluster IDs to process (Default: process all clusters)', nargs='*', type=int, action=SM)
+    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
+    opts.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 # TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cstats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 

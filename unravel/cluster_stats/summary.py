@@ -3,39 +3,31 @@
 """ 
 Use ``cstats_summary`` from UNRAVEL to aggregate and analyze cluster validation data from ``cstats_validation``.
 
-Usage if running directly after ``cstats_validation``:
-------------------------------------------------------
-    cstats_summary -c <path/config.ini> -e <exp dir paths> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
+Prereqs:
+    - ``cstats_validation``
+
+Inputs:
+    - Cell/label density CSVs from from ``cstats_validation``
+    - The current directory should not have other folders when running this script for the first time. 
+    - Directories from ``cstats_summary`` or ``cstats_org_data`` are ok though.
+    - The sample_key.csv file should have the following format:
+        dir_name,condition
+        sample01,control
+        sample02,treatment
+
+Outputs:
+    - Files for 3D brain models of valid clusters
+    - CSVs with valid cluster data (e.g., aggregated data for Prism)
+    - CSVs for sunburst plots
+    - Excel files with tables summarizing top regions and defining region abbreviations
+
+``cstats_summary`` runs these commands:
+    - ``cstats_org_data``, ``cstats_group_data``, ``utils_prepend``, ``cstats``, ``cstats_index``, ``cstats_brain_model``, ``cstats_table``, ``cstats_prism``, ``cstats_legend``
 
 Note: 
-    - The current working directory should not have other directories when running this script for the first time. Directories from ``cstats_org_data`` are ok though.
-
-Usage if running after ``cstats_validation`` and ``cstats_org_data``:
----------------------------------------------------------------------
-    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> -v
-
-Note:
-    - For the second usage, the ``-e``, ``-cvd``, and ``-vd`` arguments are not needed because the data is already in the working directory.
     - Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.
     - Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run ``cstats_legend``).
-
-The current working directory should not have other directories when running this script for the first time. Directories from cstats_org_data are ok though.
-
-``cstats_summary`` runs commands in this order:
-    - ``cstats_org_data``
-    - ``cstats_group_data``
-    - ``utils_prepend``
-    - ``cstats``
-    - ``cstats_index``
-    - ``cstats_brain_model``
-    - ``cstats_table``
-    - ``cstats_prism``
-    - ``cstats_legend``
-
-The sample_key.csv file should have the following format:
-    dir_name,condition
-    sample01,control
-    sample02,treatment
+    - See ``cstats`` for more information on -cp and -hg.
 
 If you need to rerun this script, delete the following directories and files in the current working directory:
 find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} \; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} \; -o -name 3D_brains -exec rm -rf {} \; -o -name valid_clusters_tables_and_legend -exec rm -rf {} \; -o -name _valid_clusters_stats -exec rm -rf {} \;
@@ -43,10 +35,17 @@ find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summ
 If you want to aggregate CSVs for sunburst plots of valid clusters, run this in a root directory:
 find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})' \;
 
-Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv). 
+Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv).
+
+Usage if running directly after ``cstats_validation``:
+------------------------------------------------------
+    cstats_summary -c <path/config.ini> -d <list of paths> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-v]
+
+Usage if running after ``cstats_validation`` and ``cstats_org_data``:
+---------------------------------------------------------------------
+    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-v]
 """
 
-import argparse
 import nibabel as nib
 import numpy as np
 import subprocess
@@ -55,31 +54,38 @@ from rich import print
 from rich.traceback import install
 
 from unravel.cluster_stats.org_data import cp
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, load_config
 from unravel.utilities.aggregate_files_recursively import find_and_copy_files
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-c', '--config', help='Path to the config.ini file. Default: unravel/cluster_stats/summary.ini', default=Path(__file__).parent / 'summary.ini', action=SM)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
-    # cstats_org_data -e <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process. (needed for cstats_org_data)', nargs='*', action=SM)
-    parser.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for cstats_org_data', action=SM) 
-    parser.add_argument('-vd', '--vstats_path', help='path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cstats_org_data)', action=SM)
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-c', '--config', help='Path to the config.ini file. Default: unravel/cluster_stats/summary.ini', default=Path(__file__).parent / 'summary.ini', action=SM)
+
+    # cstats_org_data -d <list of experiment directories> -cvd '*' -td <target_dir> -vd <path/vstats_dir> -v
+    cstats_org_data = parser.add_argument_group('Optional args for cstats_org_data')
+    cstats_org_data.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
+    cstats_org_data.add_argument('-cvd', '--cluster_val_dirs', help='Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for cstats_org_data', action=SM) 
+    cstats_org_data.add_argument('-vd', '--vstats_path', help='path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cstats_org_data)', action=SM)
 
     # utils_prepend -c <path/sample_key.csv> -f -r
-    parser.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions (for utils_prepend)', action=SM)
+    utils_prepend = parser.add_argument_group('Optional args for utils_prepend')
+    utils_prepend.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions (for utils_prepend)', action=SM)
 
     # cstats --groups <group1> <group2>
-    parser.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cstats)',  nargs='*', action=SM)
-    parser.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for cstats)',  nargs='*', default=None, action=SM)
-    parser.add_argument('-hg', '--higher_group', help='Specify the group that is expected to have a higher mean based on the direction of the p value map', required=True)
+    cstats = parser.add_argument_group('Optional rgs for cstats')
+    cstats.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cstats)',  nargs='*', action=SM)
+    cstats.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for cstats)',  nargs='*', default=None, action=SM)
+    cstats.add_argument('-hg', '--higher_group', help='Specify the group that is expected to have a higher mean based on the direction of the p value map', required=True)
 
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 # TODO: Could add a progress bar that advances after each subdir, but need to adapt running of the first few scripts for this. Include check for completeness (all samples have csvs [from both hemis]). Review outputs and output folders and consider consolidating them. Could make cells vs. labels are arg. Could add a raw data output organized for the SI table. # The valid cluster sunburst could have the val dir name and be copied to a central location
@@ -88,6 +94,8 @@ def parse_args():
 # TODO: Add a reset option to delete all output files and directories from the current working directory
 # TODO: Aggregate CSVs for valid cluster sunburst plots
 # TODO: Sort the overall valid cluster sunburst csv 
+# TODO: Check if irrelevant directories are present in the current working directory and warn the user
+# TODO: Replace this (find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})' \;) w/ example of utils_agg_files_rec
 
 
 def run_script(script_name, script_args):
@@ -108,9 +116,9 @@ def main():
     cfg = load_config(args.config)
     
     # Run cstats_org_data
-    if args.exp_paths and args.cluster_val_dirs and args.vstats_path:
+    if args.dirs and args.cluster_val_dirs and args.vstats_path:
         org_data_args = [
-            '-e', *args.exp_paths,
+            '-d', *args.dirs,
             '-p', cfg.org_data.pattern,
             '-cvd', args.cluster_val_dirs,
             '-vd', args.vstats_path,

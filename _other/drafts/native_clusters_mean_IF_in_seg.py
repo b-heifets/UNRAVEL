@@ -15,7 +15,6 @@ Version 2 allows for more flexibility (e.g., use seg from one label as a mask fo
 
 """
 
-import argparse
 from glob import glob
 from pathlib import Path
 import re
@@ -24,22 +23,27 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
-    parser.add_argument('-c', '--clusters_dir', help='Path relative to sample?? with cluster data: clusters/<output_dir>', action=SM)
-    parser.add_argument('-i', '--input_dir', help='Dir in <output_dir> with cropped immunofluo images', action=SM)
-    parser.add_argument('-s', '--seg_dir', help='Dir in <output_dir> with cropped segmentation image', action=SM)
-    parser.add_argument('-o', '--out_dir', help='Output dir prefix (e.g., th_seg_ilastik_3)', action=SM)
-    parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-c', '--clusters_dir', help='Path relative to sample?? with cluster data: clusters/<output_dir>', action=SM)
+    reqs.add_argument('-i', '--input_dir', help='Dir in <output_dir> with cropped immunofluo images', action=SM)
+    reqs.add_argument('-s', '--seg_dir', help='Dir in <output_dir> with cropped segmentation image', action=SM)
+    reqs.add_argument('-o', '--out_dir', help='Output dir prefix (e.g., th_seg_ilastik_3)', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
+    general.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
+    general.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
+
     return parser.parse_args()
 
 def binarize(array, threshold=0.5):

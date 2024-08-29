@@ -499,14 +499,14 @@
   <section id="module-unravel.region_stats.rstats_mean_IF">
 <span id="unravel-region-stats-rstats-mean-if-module"></span><span id="unravel-region-stats-rstats-mean-if"></span><h1>unravel.region_stats.rstats_mean_IF module<a class="headerlink" href="#module-unravel.region_stats.rstats_mean_IF" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">rstats_mean_IF</span></code> from UNRAVEL to measure mean intensity of immunofluorescence staining in brain regions in atlas space.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>rstats_mean_IF -i ‘&lt;asterisk&gt;.nii.gz’ -a path/atlas</p>
-</div></blockquote>
 <dl class="simple">
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>&lt;asterisk&gt;.nii.gz</p></li>
+<li><p>path/atlas.nii.gz</p></li>
+</ul>
+</dd>
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>./rstats_mean_IF/image_name.csv for each image</p></li>
+<li><p>./rstats_mean_IF/image_name.csv with regional mean intensity values for each image</p></li>
 </ul>
 </dd>
 <dt>Next:</dt><dd><ul class="simple">
@@ -515,6 +515,11 @@
 </ul>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>rstats_mean_IF -i ‘&lt;asterisk&gt;.nii.gz’ -a path/atlas [–regions 1 2 3] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.region_stats.rstats_mean_IF.parse_args">

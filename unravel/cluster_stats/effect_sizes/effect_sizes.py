@@ -3,52 +3,59 @@
 """
 Use ``effect_sizes`` from UNRAVEL to calculate the effect size for a comparison between two groups for each cluster [or a valid cluster list].
 
-Usage
------
-    effect_sizes -i densities.csv -c1 saline -c2 psilocybin
+Prereqs:
+    - ``cstats_validation`` to generate the input CSVs with densities.
 
 Inputs:
-    - CSV with densities (Columns: Samples, Conditions, Cluster_1, Cluster_2, ...)
+    - CSV with densities (Columns: Samples, Sex, Conditions, Cluster_1, Cluster_2, ...)
 
-Arguments:
+Outputs:
+    - CSV w/ absolute effect sizes and upper and lower limits of the confidence interval (CI) for each cluster
+    - <input>_Hedges_g_<condition_1>_<condition_2>.csv
+
+Note:
     - -c1 and -c2 should match the condition name in the Conditions column of the input CSV or be a prefix of the condition name.
+    - The effect size is calculated as the unbiased Hedge\'s g effect sizes (corrected for sample size).
+    - Hedges' g = ((c2-c1)/spooled*corr_factor)
+    - CI = Hedges' g +/- t * SE
+    - 0.2-0.5 = small effect; 0.5-0.8 = medium; 0.8+ = large
+    - The CI is based on a two-tailed t-test with alpha = 0.05.
+    - More more info, see: https://pubmed.ncbi.nlm.nih.gov/37248402/
 
-Outputs CSV w/ the effect size and CI for each cluster:
-    <input>_Hedges_g_<condition_1>_<condition_2>.csv
-
-If -c is used, outputs a CSV with the effect sizes and CI for valid clusters:
-    <input>_Hedges_g_<condition_1>_<condition_2>_valid_clusters.csv
-
-The effect size is calculated as the unbiased Hedge\'s g effect sizes (corrected for sample size): 
-    Hedges' g = ((c2-c1)/spooled*corr_factor)
-    CI = Hedges' g +/- t * SE
-    0.2 - 0.5 = small effect; 0.5 - 0.8 = medium; 0.8+ = large
-
-Effect size calculations are described in the supplemental information here: https://pubmed.ncbi.nlm.nih.gov/37248402/
+Usage
+-----
+    effect_sizes -i densities.csv -c1 saline -c2 psilocybin [-c 1 2 3 4 5] [-v]
 """
 
-import argparse
 import os
 import pandas as pd
 from rich.traceback import install
 from scipy.stats import t
 from termcolor import colored
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input_csv', help='CSV with densities (Columns: Samples, Conditions, Cluster_1, Cluster_2, ...)', action=SM)
-    parser.add_argument('-c1', '--condition_1', help='First condition of interest from csv (e.g., saline [data matching prefix pooled])', action=SM)
-    parser.add_argument('-c2', '--condition_2', help='Second condition (e.g, psilocybin [data matching prefix pooled])', action=SM)
-    parser.add_argument('-c', '--clusters', help='Space separated list of valid cluster IDs (default: process all clusters)', default=None, nargs='*', type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input_csv', help='CSV with densities (Columns: Samples, Conditions, Cluster_1, Cluster_2, ...)', required=True, action=SM)
+    reqs.add_argument('-c1', '--condition_1', help='First condition of interest from csv (e.g., saline [data matching prefix pooled])', required=True, action=SM)
+    reqs.add_argument('-c2', '--condition_2', help='Second condition (e.g, psilocybin [data matching prefix pooled])', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-c', '--clusters', help='Space separated list of valid cluster IDs (default: process all clusters)', default=None, nargs='*', type=int, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
+# TODO: explain in the help how the input CSVs are prepared. 
 
 # Create a condition selector to handle pooling of data
 def condition_selector(df, condition, unique_conditions, condition_column='Conditions'):

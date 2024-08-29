@@ -3,44 +3,46 @@
 """
 Use ``cstats_find_incongruent`` from UNRAVEL if ``cstats_fdr`` was used to convert non-directional p value maps into directional cluster indices. This helps to find clusters where the direction of the mean intensity difference between groups does not match direction of the difference in cell/label density between groups.
 
-Usage
------
-    cstats_find_incongruent -c tukey_results.csv -l groupA -g groupB
-    
-This is useful to find clusters where z-scoring introduces incongruencies between the mean intensity difference and the density difference.
-    
-For example, if group A has increased IF in region A and not B, z-scoring may decrease the relative intensity of region B. 
-This decrease for region B for one group, may introduce a difference in the mean intensity between groups that is not reflected in the density difference.
-
-Input csv: 
-    ./_cluster_validation_info/tukey_results.csv  or ttest_results.csv from ``cstats``
-
-Columns: 
-    'cluster_ID', 'comparison', 'higher_mean_group', 'p-value', 'significance'
+Input:
+    - ./_cluster_validation_info/tukey_results.csv  or ttest_results.csv from ``cstats``
+    - Columns: 'cluster_ID', 'comparison', 'higher_mean_group', 'p-value', 'significance'
 
 Output:
-    Cluster IDs where the mean intensity difference does not match the density difference between groups A and B.
+    - Cluster IDs where the mean intensity difference does not match the density difference between groups A and B.
+
+Note: 
+    - This is modules is useful to find clusters where z-scoring introduces incongruencies between the mean intensity difference and the density difference.
+    - For example, if group A has increased IF in region A and not B, z-scoring may decrease the relative intensity of region B. 
+    - This decrease for region B for one group, may introduce a difference in the mean intensity between groups that is not reflected in the density difference.
+
+Usage:
+------
+    cstats_find_incongruent -c tukey_results.csv -l groupA -g groupB [-v]
 """
 
-import argparse
 from pathlib import Path
 import pandas as pd
 from glob import glob
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-c', '--csv_name', help='Name of the CSV file.', required=True, action=SM)
-    parser.add_argument('-l', '--lesser_group', help='Group with a lower mean for the comparison of interest.', required=True, action=SM)
-    parser.add_argument('-g', '--greater_group', help='Group with a higher mean for the comparison of interest.', required=True, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-c', '--csv_name', help='Name of the CSV file.', required=True, action=SM)
+    reqs.add_argument('-l', '--lesser_group', help='Group with a lower mean for the comparison of interest.', required=True, action=SM)
+    reqs.add_argument('-g', '--greater_group', help='Group with a higher mean for the comparison of interest.', required=True, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 

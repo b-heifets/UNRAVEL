@@ -3,45 +3,49 @@
 """
 Use ``utils_points_compressor`` from UNRAVEL to pack or unpack point data in a CSV file or summarize the number of points per region.
 
-Packing: Group points with the same coordinates and `Region_ID`, adding a `count` column.
-Unpacking: Expand packed points back to individual rows based on the `count` column.
-Summary: Output a CSV summarizing the number of points per region.
+Input:
+    - CSV file with either unpacked (`x, y, z, Region_ID`) or packed (`x, y, z, Region_ID, count`) format.
+
+Output:
+    - CSV file with the desired packed or unpacked format.
+    - Or save a summary CSV with the number of points per region.
+
+Note:
+    - Packing: Group points with the same coordinates and `Region_ID`, adding a `count` column.
+    - Unpacking: Expand packed points back to individual rows based on the `count` column.
+    - Summary: Output a CSV summarizing the number of points per region.
+    - Use only one of the following options: -p, -u, -s.
+    - The summary option can be used with either packed or unpacked data.
 
 Usage:
 ------
     utils_points_compressor -i path/<asterisk>_points.csv [-p or -u or -s] [-v]
-
-Input:
-    CSV file with either unpacked (`x, y, z, Region_ID`) or packed (`x, y, z, Region_ID, count`) format.
-
-Output:
-    CSV file with the desired packed or unpacked format.
-    Optionally, a summary CSV with the number of points per region.
-
-Note:
-    - Use only one of the following options: -p, -u, -s.
-    - The summary option can be used with either packed or unpacked data.
 """
 
-import argparse
 import pandas as pd
 from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, process_files_with_glob
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help="Path to the input CSV file or a glob pattern.", required=True, action=SM)
-    parser.add_argument('-p', '--pack', help="Pack the points by grouping them.", action='store_true')
-    parser.add_argument('-u', '--unpack', help="Unpack the points by expanding them based on the `count` column.", action='store_true')
-    parser.add_argument('-s', '--summary', help='Output a CSV summarizing the number of points per region.', action='store_true')
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help="Path to the input CSV file or a glob pattern.", required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-p', '--pack', help="Pack the points by grouping them.", action='store_true')
+    opts.add_argument('-u', '--unpack', help="Unpack the points by expanding them based on the `count` column.", action='store_true')
+    opts.add_argument('-s', '--summary', help='Output a CSV summarizing the number of points per region.', action='store_true')
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 @print_func_name_args_times()

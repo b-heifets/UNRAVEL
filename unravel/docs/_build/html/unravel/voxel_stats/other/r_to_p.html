@@ -504,12 +504,11 @@
   <section id="module-unravel.voxel_stats.other.r_to_p">
 <span id="unravel-voxel-stats-other-r-to-p-module"></span><span id="unravel-voxel-stats-other-r-to-p"></span><h1>unravel.voxel_stats.other.r_to_p module<a class="headerlink" href="#module-unravel.voxel_stats.other.r_to_p" title="Link to this heading">#</a></h1>
 <p>Converts correlation map to z-score, p value, and FDR p value maps.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>path/r_to_p.py -i sample01_cfos_correlation_map.nii.gz -x 25 -z 25 -v</p>
-</div></blockquote>
 <dl class="simple">
+<dt>Input:</dt><dd><ul class="simple">
+<li><p>&lt;image&gt;_correlation_map.nii.gz</p></li>
+</ul>
+</dd>
 <dt>Outputs:</dt><dd><ul class="simple">
 <li><p>&lt;image&gt;_z_score_map.nii.gz</p></li>
 <li><p>&lt;image&gt;_p_value_map.nii.gz</p></li>
@@ -517,6 +516,11 @@
 </ul>
 </dd>
 </dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>path/r_to_p.py -i sample01_cfos_correlation_map.nii.gz -x 25 -z 25 -v</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.voxel_stats.other.r_to_p.parse_args">

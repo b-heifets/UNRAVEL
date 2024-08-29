@@ -499,14 +499,7 @@
   <section id="module-unravel.region_stats.rstats_summary">
 <span id="unravel-region-stats-rstats-summary-module"></span><span id="unravel-region-stats-rstats-summary"></span><h1>unravel.region_stats.rstats_summary module<a class="headerlink" href="#module-unravel.region_stats.rstats_summary" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code> from UNRAVEL to plot cell densensities for each region and summarize results.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>rstats_summary –groups Saline MDMA Meth -d 10000 -hemi r</p>
-</div></blockquote>
 <dl class="simple">
-<dt>To do:</dt><dd><p>Add module for Dunnett’s tests (don’t use this option for now)</p>
-</dd>
 <dt>Inputs:</dt><dd><ul class="simple">
 <li><p>CSVs with cell densities for each region (e.g., regional_stats/&lt;condition&gt;_sample??_cell_densities.csv)</p></li>
 <li><p>Input CSV columns: Region_ID, Side, ID_Path, Region, Abbr, &lt;OneWordCondition&gt;_sample??</p></li>
@@ -519,15 +512,26 @@
 </ul>
 </dd>
 </dl>
-<p>Example hex code list (flank arg w/ double quotes): [‘#2D67C8’, ‘#27AF2E’, ‘#D32525’, ‘#7F25D3’]</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
+<li><p>Example hex code list (flank arg w/ double quotes): [‘#2D67C8’, ‘#27AF2E’, ‘#D32525’, ‘#7F25D3’]</p></li>
 <li><p>Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020_regional_summary.csv</p></li>
 <li><p>It has columns: Region_ID, ID_Path, Region, Abbr, General_Region, R, G, B</p></li>
 <li><p>Alternatively, use CCFv3-2017_regional_summary.csv or provide a custom CSV with the same columns.</p></li>
 </ul>
 </div>
+<section id="usage-for-tukey-tests">
+<h2>Usage for Tukey tests:<a class="headerlink" href="#usage-for-tukey-tests" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>rstats_summary –groups Saline MDMA Meth -hemi both [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-t-tests">
+<h2>Usage for t-tests:<a class="headerlink" href="#usage-for-t-tests" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>rstats_summary –groups Saline MDMA -hemi both -t t-test -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.region_stats.rstats_summary.parse_args">
@@ -625,7 +629,8 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-tukey-tests">Usage for Tukey tests:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-t-tests">Usage for t-tests:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_summary.get_region_details"><code class="docutils literal notranslate"><span class="pre">get_region_details()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats_summary.parse_color_argument"><code class="docutils literal notranslate"><span class="pre">parse_color_argument()</span></code></a></li>

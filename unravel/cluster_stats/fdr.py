@@ -3,10 +3,6 @@
 """
 Use ``cstats_fdr`` from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.
 
-Usage
------
-    cstats_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05
-
 Inputs: 
     - p value map (e.g., <asterisk>vox_p_<asterisk>stat<asterisk>.nii.gz from vstats)    
 
@@ -18,7 +14,10 @@ Outputs saved in the output directory:
     - p_value_threshold.txt
     - 1-p_value_threshold.txt
 
-Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.
+Note:
+    - Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.
+    - For bilateral data processed with a hemispheric mask, next run ``cstats_mirror_indices`` to mirror the cluster indices to the other hemisphere.
+    - For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cstats_validation``.
 
 Making directional cluster indices from non-directional p value maps output from ANOVAs: 
     - Provide the average immunostaining intensity images for each group being contrasted (``img_avg``)
@@ -27,12 +26,11 @@ Making directional cluster indices from non-directional p value maps output from
     - The cluster index will be split accoding to the effect directions
     - ``cstats_fdr`` -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v
 
-For bilateral data processed with a hemispheric mask, next run ``cstats_mirror_indices`` to mirror the cluster indices to the other hemisphere.
-
-For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cstats_validation``.
+Usage
+-----
+    cstats_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 0.01 0.001 [-ms 100] [-o output_dir] [-a1 path/avg_img1.nii.gz] [-a2 path/avg_img2.nii.gz] [-th 10] [-v]
 """
 
-import argparse
 import concurrent.futures
 import subprocess
 import numpy as np
@@ -42,23 +40,29 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
-    parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
-    parser.add_argument('-q', '--q_value', help='Space-separated list of FDR q values', required=True, nargs='*', type=float, action=SM)
-    parser.add_argument('-ms', '--min_size', help='Min cluster size in voxels. Default: 100', default=100, type=int, action=SM)
-    parser.add_argument('-o', '--output', help='Output directory. Default: input_name_q{args.q_value}"', default=None, action=SM)
-    parser.add_argument('-a1', '--avg_img1', help='path/averaged_immunofluo_group1.nii.gz for spliting the cluster index based on effect direction', action=SM)
-    parser.add_argument('-a2', '--avg_img2', help='path/averaged_immunofluo_group2.nii.gz for spliting the cluster index based on effect direction', action=SM)
-    parser.add_argument('-th', '--threads', help='Number of threads. Default: 10', default=10, type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
+    reqs.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
+    reqs.add_argument('-q', '--q_value', help='Space-separated list of FDR q values', required=True, nargs='*', type=float, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-ms', '--min_size', help='Min cluster size in voxels. Default: 100', default=100, type=int, action=SM)
+    opts.add_argument('-o', '--output', help='Output directory. Default: input_name_q{args.q_value}"', default=None, action=SM)
+    opts.add_argument('-a1', '--avg_img1', help='path/averaged_immunofluo_group1.nii.gz for spliting the cluster index based on effect direction', action=SM)
+    opts.add_argument('-a2', '--avg_img2', help='path/averaged_immunofluo_group2.nii.gz for spliting the cluster index based on effect direction', action=SM)
+    opts.add_argument('-th', '--threads', help='Number of threads. Default: 10', default=10, type=int, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
+
     return parser.parse_args()
 
 # TODO: could add optional args like in ``vstats`` for running the ``cstats_fdr`` command. 

@@ -499,13 +499,14 @@
   <section id="module-unravel.warp.points_to_atlas">
 <span id="unravel-warp-points-to-atlas-module"></span><span id="unravel-warp-points-to-atlas"></span><h1>unravel.warp.points_to_atlas module<a class="headerlink" href="#module-unravel.warp.points_to_atlas" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">warp_points_to_atlas</span></code> from UNRAVEL to convert cell centroids in native space to an image matching the fixed registration input and then warp it to atlas space.</p>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>warp_points_to_atlas -i regional_stats/&lt;asterisk&gt;_sample??_cell_centroids.csv [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-r 50] [-af reg_inputs/autofl_50um.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-thr 20000] [-uthr 20000] [-md parameters/metadata.txt] [-mi -v]</p>
-</div></blockquote>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg</span></code> and <code class="docutils literal notranslate"><span class="pre">rstats</span></code></p>
+</dd>
+<dt>Inputs:</dt><dd><ul class="simple">
+<li><p>regional_stats/&lt;Condition&gt;_sample??_cell_centroids.csv (w/ columns: x, y, z, Region_ID) from <code class="docutils literal notranslate"><span class="pre">rstats</span></code> (first glob match processed)</p></li>
+<li><p>Reference image for target shape for converting points to image before padding and warping: reg_inputs/autofl_50um.nii.gz from <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code></p></li>
+<li><p>Reference image for warping to atlas space: e.g., atlas/atlas_CCFv3_2020_30um.nii.gz</p></li>
+</ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
 <li><p>./sample??/atlas_space/&lt;args.input name&gt;</p></li>
@@ -517,6 +518,11 @@
 <ul class="simple">
 <li><p>If the input CSV has a ‘count’ column, use <code class="docutils literal notranslate"><span class="pre">utils_points_compressor</span></code> to unpack the points before running this script.</p></li>
 </ul>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>warp_points_to_atlas -i regional_stats/&lt;asterisk&gt;_sample??_cell_centroids.csv [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-af reg_inputs/autofl_50um.nii.gz] [-thr 20000 or -uthr 20000] [-md parameters/metadata.txt] [-mi] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.warp.points_to_atlas.parse_args">

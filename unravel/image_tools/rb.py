@@ -3,37 +3,40 @@
 """
 Use ``img_rb`` from UNRAVEL to perform rolling ball background subtraction on a TIFF file.
 
-Usage:
-------
-    img_rb -i input.tif -rb 4 
-
-Rolling ball subtraction:
-    - Radius should be ~ 1.0 to 2.0 times the size of the features of interest
+Note:
+    - Radius for rolling ball subtraction should be ~ 1.0 to 2.0 times the size of the features of interest
     - Larger radii will remove more background, but may also remove some of the features of interest
     - Smaller radii will remove less background, but may leave some background noise
 
-To do: 
-    - Add support for other image types and 3D images
+Usage:
+------
+    img_rb -i input.tif -rb 4 [-o output.tif] [-v]
 """
 
-import argparse
 import cv2
 import numpy as np
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='Path to the input TIFF file.', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='Path to save the output TIFF file.', default=None, action=SM)
-    parser.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels.', default=None, type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='Path to the input TIFF file.', required=True, action=SM)
+    reqs.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels.', required=True, type=int, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-o', '--output', help='Path to save the output TIFF file.', default=None, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 # TODO: Add support for other image types and 3D images. 

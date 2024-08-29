@@ -354,39 +354,31 @@
 <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">Use ``cstats_summary`` from UNRAVEL to aggregate and analyze cluster validation data from ``cstats_validation``.</span>
 
-<span class="sd">Usage if running directly after ``cstats_validation``:</span>
-<span class="sd">------------------------------------------------------</span>
-<span class="sd">    cstats_summary -c &lt;path/config.ini&gt; -e &lt;exp dir paths&gt; -cvd &#39;psilocybin_v_saline_tstat1_q&lt;asterisk&gt;&#39; -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; -v</span>
+<span class="sd">Prereqs:</span>
+<span class="sd">    - ``cstats_validation``</span>
+
+<span class="sd">Inputs:</span>
+<span class="sd">    - Cell/label density CSVs from from ``cstats_validation``</span>
+<span class="sd">    - The current directory should not have other folders when running this script for the first time. </span>
+<span class="sd">    - Directories from ``cstats_summary`` or ``cstats_org_data`` are ok though.</span>
+<span class="sd">    - The sample_key.csv file should have the following format:</span>
+<span class="sd">        dir_name,condition</span>
+<span class="sd">        sample01,control</span>
+<span class="sd">        sample02,treatment</span>
+
+<span class="sd">Outputs:</span>
+<span class="sd">    - Files for 3D brain models of valid clusters</span>
+<span class="sd">    - CSVs with valid cluster data (e.g., aggregated data for Prism)</span>
+<span class="sd">    - CSVs for sunburst plots</span>
+<span class="sd">    - Excel files with tables summarizing top regions and defining region abbreviations</span>
+
+<span class="sd">``cstats_summary`` runs these commands:</span>
+<span class="sd">    - ``cstats_org_data``, ``cstats_group_data``, ``utils_prepend``, ``cstats``, ``cstats_index``, ``cstats_brain_model``, ``cstats_table``, ``cstats_prism``, ``cstats_legend``</span>
 
 <span class="sd">Note: </span>
-<span class="sd">    - The current working directory should not have other directories when running this script for the first time. Directories from ``cstats_org_data`` are ok though.</span>
-
-<span class="sd">Usage if running after ``cstats_validation`` and ``cstats_org_data``:</span>
-<span class="sd">---------------------------------------------------------------------</span>
-<span class="sd">    cstats_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; -v</span>
-
-<span class="sd">Note:</span>
-<span class="sd">    - For the second usage, the ``-e``, ``-cvd``, and ``-vd`` arguments are not needed because the data is already in the working directory.</span>
 <span class="sd">    - Only process one comparison at a time. If you have multiple comparisons, run this script separately for each comparison in separate directories.</span>
 <span class="sd">    - Then aggregate the results as needed (e.g. to make a legend with all relevant abbeviations, copy the .xlsx files to a central location and run ``cstats_legend``).</span>
-
-<span class="sd">The current working directory should not have other directories when running this script for the first time. Directories from cstats_org_data are ok though.</span>
-
-<span class="sd">``cstats_summary`` runs commands in this order:</span>
-<span class="sd">    - ``cstats_org_data``</span>
-<span class="sd">    - ``cstats_group_data``</span>
-<span class="sd">    - ``utils_prepend``</span>
-<span class="sd">    - ``cstats``</span>
-<span class="sd">    - ``cstats_index``</span>
-<span class="sd">    - ``cstats_brain_model``</span>
-<span class="sd">    - ``cstats_table``</span>
-<span class="sd">    - ``cstats_prism``</span>
-<span class="sd">    - ``cstats_legend``</span>
-
-<span class="sd">The sample_key.csv file should have the following format:</span>
-<span class="sd">    dir_name,condition</span>
-<span class="sd">    sample01,control</span>
-<span class="sd">    sample02,treatment</span>
+<span class="sd">    - See ``cstats`` for more information on -cp and -hg.</span>
 
 <span class="sd">If you need to rerun this script, delete the following directories and files in the current working directory:</span>
 <span class="sd">find . -name _valid_clusters -exec rm -rf {} \; -o -name cluster_validation_summary_t-test.csv -exec rm -f {} \; -o -name cluster_validation_summary_tukey.csv -exec rm -f {} \; -o -name 3D_brains -exec rm -rf {} \; -o -name valid_clusters_tables_and_legend -exec rm -rf {} \; -o -name _valid_clusters_stats -exec rm -rf {} \;</span>
@@ -394,10 +386,17 @@
 <span class="sd">If you want to aggregate CSVs for sunburst plots of valid clusters, run this in a root directory:</span>
 <span class="sd">find . -name &quot;valid_clusters_sunburst.csv&quot; -exec sh -c &#39;cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})&#39; \;</span>
 
-<span class="sd">Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv). </span>
+<span class="sd">Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv).</span>
+
+<span class="sd">Usage if running directly after ``cstats_validation``:</span>
+<span class="sd">------------------------------------------------------</span>
+<span class="sd">    cstats_summary -c &lt;path/config.ini&gt; -d &lt;list of paths&gt; -cvd &#39;psilocybin_v_saline_tstat1_q&lt;asterisk&gt;&#39; -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-v]</span>
+
+<span class="sd">Usage if running after ``cstats_validation`` and ``cstats_org_data``:</span>
+<span class="sd">---------------------------------------------------------------------</span>
+<span class="sd">    cstats_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">subprocess</span>
@@ -406,7 +405,8 @@
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 
 <span class="kn">from</span> <span class="nn">unravel.cluster_stats.org_data</span> <span class="kn">import</span> <span class="n">cp</span>
-<span class="kn">from</span> <span class="nn">unravel.core.argparse_utils</span> <span class="kn">import</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.argparse_rich_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span> 
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">load_config</span>
 <span class="kn">from</span> <span class="nn">unravel.utilities.aggregate_files_recursively</span> <span class="kn">import</span> <span class="n">find_and_copy_files</span>
@@ -415,24 +415,30 @@
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/summary.html#unravel.cluster_stats.summary.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the config.ini file. Default: unravel/cluster_stats/summary.ini&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;summary.ini&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
-    <span class="c1"># cstats_org_data -e &lt;list of experiment directories&gt; -cvd &#39;*&#39; -td &lt;target_dir&gt; -vd &lt;path/vstats_dir&gt; -v</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--exp_paths&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of experiment dir paths w/ sample?? dirs to process. (needed for cstats_org_data)&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cvd&#39;</span><span class="p">,</span> <span class="s1">&#39;--cluster_val_dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for cstats_org_data&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span> 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-vd&#39;</span><span class="p">,</span> <span class="s1">&#39;--vstats_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cstats_org_data)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to the config.ini file. Default: unravel/cluster_stats/summary.ini&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;summary.ini&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="c1"># cstats_org_data -d &lt;list of experiment directories&gt; -cvd &#39;*&#39; -td &lt;target_dir&gt; -vd &lt;path/vstats_dir&gt; -v</span>
+    <span class="n">cstats_org_data</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args for cstats_org_data&#39;</span><span class="p">)</span>
+    <span class="n">cstats_org_data</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">cstats_org_data</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cvd&#39;</span><span class="p">,</span> <span class="s1">&#39;--cluster_val_dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Glob pattern matching cluster validation output dirs to copy data from (relative to ./sample??/clusters/; for cstats_org_data&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span> 
+    <span class="n">cstats_org_data</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-vd&#39;</span><span class="p">,</span> <span class="s1">&#39;--vstats_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/vstats_dir (dir vstats was run from) to copy p val, info, and index files (for cstats_org_data)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="c1"># utils_prepend -c &lt;path/sample_key.csv&gt; -f -r</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sk&#39;</span><span class="p">,</span> <span class="s1">&#39;--sample_key&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/sample_key.csv w/ directory names and conditions (for utils_prepend)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">utils_prepend</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args for utils_prepend&#39;</span><span class="p">)</span>
+    <span class="n">utils_prepend</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sk&#39;</span><span class="p">,</span> <span class="s1">&#39;--sample_key&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/sample_key.csv w/ directory names and conditions (for utils_prepend)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="c1"># cstats --groups &lt;group1&gt; &lt;group2&gt;</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of group prefixes. 2 groups --&gt; t-test. &gt;2 --&gt; Tukey</span><span class="se">\&#39;</span><span class="s1">s tests (The first 2 groups reflect the main comparison for validation rates; for cstats)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_prefixes&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Condition prefixes to group related data (optional for cstats)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-hg&#39;</span><span class="p">,</span> <span class="s1">&#39;--higher_group&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Specify the group that is expected to have a higher mean based on the direction of the p value map&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">cstats</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional rgs for cstats&#39;</span><span class="p">)</span>
+    <span class="n">cstats</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of group prefixes. 2 groups --&gt; t-test. &gt;2 --&gt; Tukey</span><span class="se">\&#39;</span><span class="s1">s tests (The first 2 groups reflect the main comparison for validation rates; for cstats)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">cstats</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-cp&#39;</span><span class="p">,</span> <span class="s1">&#39;--condition_prefixes&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Condition prefixes to group related data (optional for cstats)&#39;</span><span class="p">,</span>  <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">cstats</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-hg&#39;</span><span class="p">,</span> <span class="s1">&#39;--higher_group&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Specify the group that is expected to have a higher mean based on the direction of the p value map&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">parser</span><span class="o">.</span><span class="n">epilog</span> <span class="o">=</span> <span class="vm">__doc__</span>
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
@@ -442,6 +448,8 @@
 <span class="c1"># TODO: Add a reset option to delete all output files and directories from the current working directory</span>
 <span class="c1"># TODO: Aggregate CSVs for valid cluster sunburst plots</span>
 <span class="c1"># TODO: Sort the overall valid cluster sunburst csv </span>
+<span class="c1"># TODO: Check if irrelevant directories are present in the current working directory and warn the user</span>
+<span class="c1"># TODO: Replace this (find . -name &quot;valid_clusters_sunburst.csv&quot; -exec sh -c &#39;cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})&#39; \;) w/ example of utils_agg_files_rec</span>
 
 
 <div class="viewcode-block" id="run_script">
@@ -467,9 +475,9 @@
     <span class="n">cfg</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
     
     <span class="c1"># Run cstats_org_data</span>
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">exp_paths</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_val_dirs</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">vstats_path</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">dirs</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_val_dirs</span> <span class="ow">and</span> <span class="n">args</span><span class="o">.</span><span class="n">vstats_path</span><span class="p">:</span>
         <span class="n">org_data_args</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">exp_paths</span><span class="p">,</span>
+            <span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="o">.</span><span class="n">dirs</span><span class="p">,</span>
             <span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">org_data</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span>
             <span class="s1">&#39;-cvd&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster_val_dirs</span><span class="p">,</span>
             <span class="s1">&#39;-vd&#39;</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">vstats_path</span><span class="p">,</span>

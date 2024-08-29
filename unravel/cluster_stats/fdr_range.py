@@ -3,34 +3,40 @@
 """
 Use ``cstats_fdr_range`` from UNRAVEL to output a list of FDR q values that yeild clusters.
 
-Usage
------
-    cstats_fdr_range -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz
-
 Inputs: 
-    - p value map (e.g., *vox_p_*stat*.nii.gz from vstats)    
+    - p value map (e.g., *vox_p_*stat*.nii.gz from vstats)
+
+Usage:
+------
+    cstats_fdr_range -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz [-q 0.00001 0.00005 0.0001 0.0005 0.001 0.005 0.01 0.05 0.1 0.15 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.95 0.99 0.999 0.9999] [-th 22] [-v]
 """
 
-import argparse
 import concurrent.futures
 import subprocess
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
     q_values_default = [0.00001, 0.00005, 0.0001, 0.0005, 0.001, 0.005, 0.01, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95, 0.99, 0.999, 0.9999]
-    parser.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
-    parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
-    parser.add_argument('-q', '--q_values', help='Space-separated list of q values. If omitted, a default list is used.', nargs='*', default=q_values_default, type=float, action=SM)
-    parser.add_argument('-th', '--threads', help='Number of threads. Default: 22', default=22, type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
+    reqs.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-q', '--q_values', help='Space-separated list of q values. Default: a list from 0.00001 to 0.9999 is used.', nargs='*', default=q_values_default, type=float, action=SM)
+    opts.add_argument('-th', '--threads', help='Number of threads. Default: 22', default=22, type=int, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 # TODO: Sometimes different q values yield the same p value threshold. In this case, not this in the dir name (don't process it). Case: ET z s50 tstat2

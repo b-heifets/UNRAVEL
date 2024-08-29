@@ -3,38 +3,44 @@
 """
 Use `io_img_to_points` from UNRAVEL to convert non-zero voxels in a 3D image to a set of points, accounting for voxel intensity (e.g., number of detections).
 
-Usage: 
-------
-    io_img_to_points -i path/image [-o path/points.csv] [-a path/atlas_image.nii.gz] [-v]
-
 Input image types:
-    .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
+    - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
 
 Output:
     - A CSV file where each row represents a point corresponding to a detection in the 3D image. 
     - The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple points generated for voxels with intensities greater than 1.
     - An optional 'Region_ID' column is added based on the corresponding atlas image.
+
+Usage: 
+------
+    io_img_to_points -i path/image [-a path/atlas_image.nii.gz] [-o path/points.csv] [-v]
 """
 
-import argparse
 from pathlib import Path
 import numpy as np
 import pandas as pd
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='Path to the input 3D image.', required=True, action=SM)
-    parser.add_argument('-a', '--atlas_img', help="Path to the atlas image matching -i for adding a 'Region_ID' column to the CSV.", action=SM)
-    parser.add_argument('-o', '--output', help='Path to save the output points (CSV format). Default: path/input_points.csv', default=None, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='Path to the input 3D image.', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-a', '--atlas_img', help="Path to the atlas image matching -i for adding a 'Region_ID' column to the CSV.", action=SM)
+    opts.add_argument('-o', '--output', help='Path to save the output points (CSV format). Default: path/input_points.csv', default=None, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
