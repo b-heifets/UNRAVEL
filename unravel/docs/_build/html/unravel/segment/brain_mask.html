@@ -502,19 +502,19 @@
 <dt>Prereqs:</dt><dd><ul class="simple">
 <li><p>Organize training tif slices (from <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code>) into a single folder.</p></li>
 <li><p>Train an Ilastik project to segment the brain (<a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project">https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project</a>).</p></li>
-<li><p>Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif (from <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>)</p></li>
+<li><p>Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_`*`um_tifs/<cite>*</cite>.tif (from <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>)</p></li>
 <li><p>Save brain_mask.ilp in experiment directory of use -ilp</p></li>
 </ul>
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
-<li><p>reg_inputs/autofl_&lt;asterisk&gt;um.nii.gz</p></li>
+<li><p>reg_inputs/autofl_`*`um.nii.gz</p></li>
 <li><p>brain_mask.ilp # in exp dir</p></li>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>reg_inputs/autofl_&lt;asterisk&gt;um_tifs_ilastik_brain_seg/slice_&lt;asterisk&gt;.tif series</p></li>
-<li><p>reg_inputs/autofl_&lt;asterisk&gt;um_brain_mask.nii.gz (can be used for <code class="docutils literal notranslate"><span class="pre">reg</span></code> and <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code>)</p></li>
-<li><p>reg_inputs/autofl_&lt;asterisk&gt;um_masked.nii.gz</p></li>
+<li><p>reg_inputs/autofl_`*`um_tifs_ilastik_brain_seg/slice_`*`.tif series</p></li>
+<li><p>reg_inputs/autofl_`*`um_brain_mask.nii.gz (can be used for <code class="docutils literal notranslate"><span class="pre">reg</span></code> and <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code>)</p></li>
+<li><p>reg_inputs/autofl_`*`um_masked.nii.gz</p></li>
 </ul>
 </dd>
 <dt>Next command:</dt><dd><ul class="simple">

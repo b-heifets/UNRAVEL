@@ -500,14 +500,14 @@
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_org_data</span></code> from UNRAVEL to aggregate and organize csv outputs from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>.</p>
 <dl class="simple">
 <dt>Inputs:</dt><dd><ul class="simple">
-<li><p>clusters/cluster_validation_results_&lt;asterisk&gt; (glob pattern matching <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> output dirs)</p></li>
+<li><p>clusters/cluster_validation_results_`*` (glob pattern matching <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> output dirs)</p></li>
 <li><p>CSVs with the density data (e.g., cell_density_data.csv or label_density_data.csv from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>)</p></li>
 <li><p>Optional: path/vstats to copy p val, info, and index files</p></li>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>target_dir/sample??__cell_density_data__&lt;cluster_validation_results_&lt;asterisk&gt;&gt;.csv</p></li>
-<li><p>target_dir/sample??__label_density_data__&lt;cluster_validation_results_&lt;asterisk&gt;&gt;.csv</p></li>
+<li><p>target_dir/sample??__cell_density_data__&lt;cluster_validation_results_`*`&gt;.csv</p></li>
+<li><p>target_dir/sample??__label_density_data__&lt;cluster_validation_results_`*`&gt;.csv</p></li>
 </ul>
 </dd>
 </dl>

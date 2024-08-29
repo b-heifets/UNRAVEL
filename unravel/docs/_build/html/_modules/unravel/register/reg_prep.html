@@ -355,11 +355,11 @@
 <span class="sd">Use ``reg_prep`` from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.</span>
 
 <span class="sd">Input examples (path is relative to ./sample??; 1st glob match processed): </span>
-<span class="sd">    &lt;asterisk&gt;.czi, autofluo/&lt;asterisk&gt;.tif series, autofluo, &lt;asterisk&gt;.tif, or &lt;asterisk&gt;.h5 </span>
+<span class="sd">    `*`.czi, autofluo/`*`.tif series, autofluo, `*`.tif, or `*`.h5 </span>
 
 <span class="sd">Outputs: </span>
-<span class="sd">    ./sample??/reg_inputs/autofl_&lt;asterisk&gt;um.nii.gz</span>
-<span class="sd">    ./sample??/reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif series (used for training ilastik for ``seg_brain_mask``)</span>
+<span class="sd">    ./sample??/reg_inputs/autofl_`*`um.nii.gz</span>
+<span class="sd">    ./sample??/reg_inputs/autofl_`*`um_tifs/`*`.tif series (used for training ilastik for ``seg_brain_mask``)</span>
 
 <span class="sd">Note:</span>
 <span class="sd">    - If -d is not provided, the current directory is used to search for sample?? dirs to process. </span>
@@ -372,7 +372,7 @@
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
-<span class="sd">    reg_prep -i &lt;asterisk&gt;.czi [-md path/metadata.txt] [For .czi: --channel 0] [-o reg_inputs/autofl_50um.nii.gz] [--reg_res 50] [--zoom_order 0] [--miracl] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">    reg_prep -i `*`.czi [-md path/metadata.txt] [For .czi: --channel 0] [-o reg_inputs/autofl_50um.nii.gz] [--reg_res 50] [--zoom_order 0] [--miracl] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>

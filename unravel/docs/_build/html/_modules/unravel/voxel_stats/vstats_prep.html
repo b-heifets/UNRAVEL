@@ -358,7 +358,7 @@
 <span class="sd">    - ``reg``</span>
 
 <span class="sd">Input examples (path is relative to ./sample??; 1st glob match processed): </span>
-<span class="sd">    - &lt;asterisk&gt;.czi, ochann/&lt;asterisk&gt;.tif, ochann, &lt;asterisk&gt;.tif, &lt;asterisk&gt;.h5, or &lt;asterisk&gt;.zarr</span>
+<span class="sd">    - `*`.czi, ochann/`*`.tif, ochann, `*`.tif, `*`.h5, or `*`.zarr</span>
 
 <span class="sd">Output example:</span>
 <span class="sd">    - ./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz</span>
@@ -368,7 +368,7 @@
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
-<span class="sd">    vstats_prep -i &lt;asterisk&gt;.czi -o cfos_rb4_30um_CCF_space.nii.gz [-sa 3] [-rb 4] [--chann_idx 1] [--reg_res 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-md parameters/metadata.txt] [--threads 8] [-mi] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">    vstats_prep -i `*`.czi -o cfos_rb4_30um_CCF_space.nii.gz [-sa 3] [-rb 4] [--chann_idx 1] [--reg_res 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-md parameters/metadata.txt] [--threads 8] [-mi] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">shutil</span>

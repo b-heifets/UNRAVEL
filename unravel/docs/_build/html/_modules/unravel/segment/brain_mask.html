@@ -357,17 +357,17 @@
 <span class="sd">Prereqs: </span>
 <span class="sd">    - Organize training tif slices (from ``seg_copy_tifs``) into a single folder.</span>
 <span class="sd">    - Train an Ilastik project to segment the brain (https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project).</span>
-<span class="sd">    - Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_&lt;asterisk&gt;um_tifs/&lt;asterisk&gt;.tif (from ``reg_prep``)</span>
+<span class="sd">    - Train ilastik (tissue = label 1) w/ tifs from reg_inputs/autofl_`*`um_tifs/`*`.tif (from ``reg_prep``)</span>
 <span class="sd">    - Save brain_mask.ilp in experiment directory of use -ilp</span>
 
 <span class="sd">Inputs: </span>
-<span class="sd">    - reg_inputs/autofl_&lt;asterisk&gt;um.nii.gz</span>
+<span class="sd">    - reg_inputs/autofl_`*`um.nii.gz</span>
 <span class="sd">    - brain_mask.ilp # in exp dir</span>
 
 <span class="sd">Outputs: </span>
-<span class="sd">    - reg_inputs/autofl_&lt;asterisk&gt;um_tifs_ilastik_brain_seg/slice_&lt;asterisk&gt;.tif series</span>
-<span class="sd">    - reg_inputs/autofl_&lt;asterisk&gt;um_brain_mask.nii.gz (can be used for ``reg`` and ``vstats_z_score``)</span>
-<span class="sd">    - reg_inputs/autofl_&lt;asterisk&gt;um_masked.nii.gz</span>
+<span class="sd">    - reg_inputs/autofl_`*`um_tifs_ilastik_brain_seg/slice_`*`.tif series</span>
+<span class="sd">    - reg_inputs/autofl_`*`um_brain_mask.nii.gz (can be used for ``reg`` and ``vstats_z_score``)</span>
+<span class="sd">    - reg_inputs/autofl_`*`um_masked.nii.gz</span>
 
 <span class="sd">Next command: </span>
 <span class="sd">    - ``reg``</span>
