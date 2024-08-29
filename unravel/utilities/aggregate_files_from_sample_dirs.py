@@ -24,16 +24,24 @@ Usage for when sample?? is already in the name of files being copied:
 Usage:
 ------
 <<<<<<< HEAD
+<<<<<<< HEAD
     utils_agg_files -g 'atlas_space/``*``_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
 >>>>>>> dev
 =======
     utils_agg_files -g 'atlas_space/<asterisk>_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
+>>>>>>> dev
+=======
+    utils_agg_files -g 'atlas_space/``*``_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
 >>>>>>> dev
 
 Usage to prepend sample folder name to the name of files being copied:
 ----------------------------------------------------------------------
     utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
 """
+
+# Usage:
+# ------
+#     utils_agg_files -g 'atlas_space/``*``_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
 
 import shutil
 from pathlib import Path

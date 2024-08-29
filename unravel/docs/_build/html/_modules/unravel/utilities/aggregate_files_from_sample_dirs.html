@@ -375,16 +375,24 @@
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
 <span class="sd">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
+<span class="sd">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
 <span class="sd">    utils_agg_files -g &#39;atlas_space/``*``_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&gt;&gt;&gt;&gt;&gt;&gt;&gt; dev</span>
 <span class="sd">=======</span>
 <span class="sd">    utils_agg_files -g &#39;atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">&gt;&gt;&gt;&gt;&gt;&gt;&gt; dev</span>
+<span class="sd">=======</span>
+<span class="sd">    utils_agg_files -g &#39;atlas_space/``*``_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&gt;&gt;&gt;&gt;&gt;&gt;&gt; dev</span>
 
 <span class="sd">Usage to prepend sample folder name to the name of files being copied:</span>
 <span class="sd">----------------------------------------------------------------------</span>
 <span class="sd">    utils_agg_files -g &#39;atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># Usage:</span>
+<span class="c1"># ------</span>
+<span class="c1">#     utils_agg_files -g &#39;atlas_space/``*``_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
 
 <span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
