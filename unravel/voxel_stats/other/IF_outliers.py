@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from rich import print
 from rich.live import Live
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img

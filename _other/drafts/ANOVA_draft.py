@@ -48,7 +48,7 @@ from statsmodels.stats.anova import anova_lm
 
 from unravel.cluster_stats.cstats import cluster_validation_data_df
 from unravel.cluster_stats.stats_table import cluster_summary
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 
 def parse_args():

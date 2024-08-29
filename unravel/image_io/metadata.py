@@ -20,11 +20,11 @@ Next command:
 
 Usage for when metadata is extractable:
 ---------------------------------------
-    io_metadata -i rel_path/full_res_img [-m parameters/metadata.txt] [-d space-separated list of paths] [-p sample??] [-v]
+    io_metadata -i rel_path/full_res_img [-m parameters/metadata.txt] [-d space-separated list of paths] [-p pattern] [-v]
 
 Usage for when metadata is not extractable:
 -------------------------------------------
-    io_metadata -i tif_dir -x 3.5232 -z 6 [-m parameters/metadata.txt] [-d space-separated list of paths] [-p sample??] [-v]
+    io_metadata -i tif_dir -x 3.5232 -z 6 [-m parameters/metadata.txt] [-d space-separated list of paths] [-p pattern] [-v]
 """
 
 from pathlib import Path
@@ -32,7 +32,7 @@ import cv2
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, resolve_path, save_metadata_to_file

@@ -52,7 +52,7 @@ from rich.traceback import install
 from scipy.ndimage import gaussian_filter
 
 from unravel.image_io.reorient_nii import reorient_nii
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import resolve_path
 from unravel.core.img_tools import pad

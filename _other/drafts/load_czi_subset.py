@@ -6,7 +6,7 @@ import czifile
 import numpy as np
 from datetime import datetime
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 
 

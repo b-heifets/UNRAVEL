@@ -358,14 +358,18 @@
 <span class="sd">Usage for when sample?? is already in the name of files being copied:</span>
 <span class="sd">---------------------------------------------------------------------</span>
 <span class="sd">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
+<span class="sd">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>
 <span class="sd">    utils_agg_files -g &#39;atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; -e $DIRS -v</span>
 <span class="sd">=======</span>
 <span class="sd">    utils_agg_files -g &#39;atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; [-td &lt;target_output_dir&gt;] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&gt;&gt;&gt;&gt;&gt;&gt;&gt; dev</span>
+<span class="sd">=======</span>
+<span class="sd">    utils_agg_files -g &#39;atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">&gt;&gt;&gt;&gt;&gt;&gt;&gt; dev</span>
 
 <span class="sd">Usage to prepend sample?? to the name of files being copied:</span>
 <span class="sd">------------------------------------------------------------</span>
-<span class="sd">    utils_agg_files -g &#39;atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; -a [-td &lt;target_output_dir&gt;] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">    utils_agg_files -g &#39;atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">shutil</span>
@@ -374,7 +378,7 @@
 <span class="kn">from</span> <span class="nn">rich.live</span> <span class="kn">import</span> <span class="n">Live</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 
-<span class="kn">from</span> <span class="nn">unravel.core.argparse_rich_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">initialize_progress_bar</span><span class="p">,</span> <span class="n">get_samples</span>

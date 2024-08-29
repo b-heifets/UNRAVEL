@@ -14,7 +14,7 @@ from rich.traceback import install
 
 from unravel.image_io.nii_info import nii_axis_codes
 from unravel.image_io.reorient_nii import reorient_nii
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_tools import pad
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg

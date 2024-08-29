@@ -19,7 +19,7 @@ Next steps:
 
 Usage:
 ------
-    h5_to_tifs.py -i <path/image.h5> -t 488
+    h5_to_tifs.py -i <path/image.h5> -t 488 [-d list of paths] [-p sample??] [-v]
 """
 
 import glob
@@ -31,7 +31,7 @@ from rich.traceback import install
 from tifffile import imwrite 
 
 from unravel.image_io.h5_to_tifs import load_h5
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.utils import print_cmd_and_times

@@ -7,14 +7,18 @@ Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directorie
 Usage for when sample?? is already in the name of files being copied:
 ---------------------------------------------------------------------
 <<<<<<< HEAD
+<<<<<<< HEAD
     utils_agg_files -g 'atlas_space/<asterisk>_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -e $DIRS -v
 =======
     utils_agg_files -g 'atlas_space/<asterisk>_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td <target_output_dir>] [-d list of paths] [-p sample??] [-v]
 >>>>>>> dev
+=======
+    utils_agg_files -g 'atlas_space/<asterisk>_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
+>>>>>>> dev
 
 Usage to prepend sample?? to the name of files being copied:
 ------------------------------------------------------------
-    utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -a [-td <target_output_dir>] [-d list of paths] [-p sample??] [-v]
+    utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
 """
 
 import shutil
@@ -23,7 +27,7 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples

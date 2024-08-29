@@ -381,8 +381,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../core/toc.html">unravel.core package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils.html">unravel.core.argparse_utils module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../core/argparse_utils_rich.html">unravel.core.argparse_utils_rich module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../core/help_formatter.html">unravel.core.help_formatter module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/config.html">unravel.core.config module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_io.html">unravel.core.img_io module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../core/img_tools.html">unravel.core.img_tools module</a></li>
@@ -531,7 +530,7 @@
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cstats_validation -m &lt;path/rev_cluster_index_to_warp_from_atlas_space.nii.gz&gt; -s &lt;rel_path/seg_img.nii.gz&gt; [-de cell_density or label_density] [-o rel_path/cluster_data.csv] [-c 1 3 4] [optionally save: -n rel_path/native_cluster_index.zarr] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-ro reg_outputs] [-r 50] [-md path/metadata.txt] [-zo 0] [-mi] [-cc 6] [-d &lt;list of paths&gt;] [-p sample??] [-v]</p>
+<div><p>cstats_validation -m &lt;path/rev_cluster_index_to_warp_from_atlas_space.nii.gz&gt; -s &lt;rel_path/seg_img.nii.gz&gt; [-de cell_density | label_density] [-o rel_path/cluster_data.csv] [-c 1 3 4] [optional output: -n rel_path/native_cluster_index.zarr] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-ro reg_outputs] [-r 50] [-md parameters/metadata.txt] [-zo 0] [-mi] [-cc 6] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">

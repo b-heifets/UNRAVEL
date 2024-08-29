@@ -55,7 +55,7 @@ If you encounter a situation where a command from the UNRAVEL package has the sa
 import re
 from rich import print
 
-from unravel.core.argparse_rich_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 
 
