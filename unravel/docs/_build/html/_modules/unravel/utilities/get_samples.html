@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unravel.segment.copy_tifs &#8212; UNRAVEL docs</title>
+    <title>unravel.utilities.get_samples &#8212; UNRAVEL docs</title>
   
   
   
@@ -49,7 +49,7 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/segment/copy_tifs';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/utilities/get_samples';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -331,7 +331,7 @@
     
     <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page">unravel.segm...</li>
+    <li class="breadcrumb-item active" aria-current="page">unravel.util...</li>
   </ul>
 </nav>
 </div>
@@ -348,112 +348,46 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for unravel.segment.copy_tifs</h1><div class="highlight"><pre>
+  <h1>Source code for unravel.utilities.get_samples</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``seg_copy_tifs`` from UNRAVEL to copy specified TIFFs from each sample?? to a target dir for training ilastik.</span>
+<span class="sd">Use ``path/get_samples.py`` from UNRAVEL to test the get_samples() function in unravel/core/utils.py.</span>
 
-<span class="sd">Note:</span>
-<span class="sd">    - reg_inputs/autofl_50um_tifs is from ``reg_prep`` and is used to make a brain mask using ``seg_brain_mask``.</span>
-
-<span class="sd">Usage to prep for seg_brain_mask:</span>
-<span class="sd">---------------------------------</span>
-<span class="sd">    seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0000 0005 0050 [-td brain_mask] [-d list of paths] [-p sample??] [-v]</span>
-
-<span class="sd">Usage to prep for seg_ilastik:</span>
-<span class="sd">------------------------------</span>
-<span class="sd">    seg_copy_tifs -i &lt;raw_tif_dir&gt; -s 0100 0500 1000 [-td ilastik_segmentation] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">``path/get_samples.py`` [-d dirs] [-p pattern]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">shutil</span>
-<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
-<span class="kn">from</span> <span class="nn">rich.live</span> <span class="kn">import</span> <span class="n">Live</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
-
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span> 
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">initialize_progress_bar</span><span class="p">,</span> <span class="n">get_samples</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">get_samples</span>
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel/segment/copy_tifs.html#unravel.segment.copy_tifs.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/utilities/get_samples.html#unravel.utilities.get_samples.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
-
-    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to input tifs relative to sample??/&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--slices&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;List of slice numbers to copy (4 digits each; space separated)&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-
-    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-td&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/target_dir to copy TIF files to. Default: current dir&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-
+    
     <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
     <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pattern for directories to process. Default: sample??&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;sample??&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-
-<div class="viewcode-block" id="copy_specific_tifs">
-<a class="viewcode-back" href="../../../unravel/segment/copy_tifs.html#unravel.segment.copy_tifs.copy_specific_tifs">[docs]</a>
-<span class="k">def</span> <span class="nf">copy_specific_tifs</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">source_dir</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">slice_numbers</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Copy the specified tif slices from the source directory to the target directory.</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
-<span class="sd">    sample_path : Path or str</span>
-<span class="sd">        Path to the sample directory (appended to the destination file name).</span>
-<span class="sd">    source_dir : Path or str</span>
-<span class="sd">        Path to the source directory containing the .tif files.</span>
-<span class="sd">    target_dir : Path or str</span>
-<span class="sd">        Path to the target directory where the selected slices will be copied.</span>
-<span class="sd">    slice_numbers : list</span>
-<span class="sd">        List of slice numbers to copy (4 digits each).</span>
-<span class="sd">    verbose : bool</span>
-<span class="sd">        Print verbose output.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">tif_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">source_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.tif&#39;</span><span class="p">))</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">tif_files</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No .tif files found in </span><span class="si">{</span><span class="n">source_dir</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span>
-    
-    <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">Path</span><span class="p">(</span><span class="n">source_dir</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.tif&#39;</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">file_path</span><span class="o">.</span><span class="n">stem</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">slice</span><span class="si">:</span><span class="s2">04</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="nb">slice</span> <span class="ow">in</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">slice_numbers</span><span class="p">)):</span>
-            <span class="n">dest_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">target_dir</span><span class="p">)</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">file_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
-            <span class="n">shutil</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">dest_file</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Copied </span><span class="si">{</span><span class="n">file_path</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">dest_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
-
-
-
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel/segment/copy_tifs.html#unravel.segment.copy_tifs.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/utilities/get_samples.html#unravel.utilities.get_samples.main">[docs]</a>
 <span class="nd">@log_command</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">install</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="kc">True</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
-    <span class="n">sample_paths</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dirs</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
-
-    <span class="n">progress</span><span class="p">,</span> <span class="n">task_id</span> <span class="o">=</span> <span class="n">initialize_progress_bar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_paths</span><span class="p">),</span> <span class="s2">&quot;[red]Processing samples...&quot;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">Live</span><span class="p">(</span><span class="n">progress</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">sample_path</span> <span class="ow">in</span> <span class="n">sample_paths</span><span class="p">:</span>
-
-            <span class="n">source_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span>  <span class="c1"># Path to dir w/ the .tif files to copy</span>
-            <span class="n">target_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">target_dir</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">target_dir</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
-
-            <span class="n">copy_specific_tifs</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">source_path</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">slices</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
-
-            <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sample_paths</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dirs</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">verbose_end_msg</span><span class="p">()</span></div>
 

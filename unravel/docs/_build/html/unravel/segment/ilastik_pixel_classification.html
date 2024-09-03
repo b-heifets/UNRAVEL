@@ -506,12 +506,14 @@
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
 <li><p>ilastik_project: path/ilastik_project.ilp</p></li>
-<li><p>input: path/tif_dir or path/image (relative to current dir or sample??/)</p></li>
+<li><p>Input: path/tif_dir or path/image (relative to current dir or sample??/)</p></li>
+<li><p>Input image types: .tif, .czi, .nii.gz, .h5, .zarr</p></li>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
 <li><p>seg_dir/seg_dir/<cite>*</cite>.tif series (segmented images; delete w/ –rm_out_tifs)</p></li>
-<li><p>seg_dir/seg_dir_&lt;label&gt;.nii.gz (binary masks for each label specified w/ –labels)</p></li>
+<li><p>Optional: seg_dir/seg_dir_&lt;label&gt;.nii.gz (binary masks for each label specified w/ –labels)</p></li>
+<li><p>Skips processing if output already exists (.nii.gz with –labels or .tif without)</p></li>
 </ul>
 </dd>
 </dl>
