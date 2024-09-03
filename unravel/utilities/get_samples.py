@@ -5,7 +5,7 @@ Use ``path/get_samples.py`` from UNRAVEL to test the get_samples() function in u
 
 Usage:
 ------
-``path/get_samples.py`` [-d dirs] [-p pattern] [-v]
+``path/get_samples.py`` [-d dirs] [-p pattern]
 """
 
 from rich import print
@@ -21,7 +21,6 @@ def parse_args():
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
     general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
-    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 
@@ -29,12 +28,10 @@ def parse_args():
 def main():
     install()
     args = parse_args()
-    Configuration.verbose = args.verbose
+    Configuration.verbose = True
     verbose_start_msg()
 
     sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
-
-    print(f'\n{sample_paths=}\n')
 
     verbose_end_msg()
 
