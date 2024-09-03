@@ -884,6 +884,7 @@ Atlas tools</label><div class="sd-tab-content docutils">
 <label class="sd-tab-label" for="sd-tab-item-18">
 Utilities</label><div class="sd-tab-content docutils">
 <ul class="simple">
+<li><p><a class="reference internal" href="unravel/utilities/get_samples.html#unravel-utilities-get-samples"><span class="std std-ref"><strong>utils_get_samples</strong></span></a>: Test –pattern and –dirs args of script that batch process sample?? dirs.</p></li>
 <li><p><a class="reference internal" href="unravel/utilities/aggregate_files_from_sample_dirs.html#unravel-utilities-aggregate-files-from-sample-dirs"><span class="std std-ref"><strong>utils_agg_files</strong></span></a>: Aggregate files from sample directories.</p></li>
 <li><p><a class="reference internal" href="unravel/utilities/aggregate_files_recursively.html#unravel-utilities-aggregate-files-recursively"><span class="std std-ref"><strong>utils_agg_files_rec</strong></span></a>: Recursively aggregate files.</p></li>
 <li><p><a class="reference internal" href="unravel/utilities/prepend_conditions.html#unravel-utilities-prepend-conditions"><span class="std std-ref"><strong>utils_prepend</strong></span></a>: Prepend conditions to files using sample_key.csv.</p></li>
@@ -1418,8 +1419,9 @@ Optional: to find an optimal subset of features, select all features, train Ilas
 </div>
 <div class="tip dropdown admonition">
 <p class="admonition-title">Background subtraction</p>
-<p>Removing autofluorescence from immunolabeling improves the sensitivity of voxel-wise comparisons.</p>
-<p>Use -s 3 for 3x3x3 spatial averaging if there is notable noise from voxel to voxel.</p>
+<p>Removing autofluorescence from immunolabeling improves the sensitivity of voxel-wise comparisons.
+.
+Use -s 3 for 3x3x3 spatial averaging if there is notable noise from voxel to voxel.</p>
 <p>Use a smaller rolling ball radius if you want to preserve punctate signal like c-Fos+ nuclei (e.g., 4)</p>
 <p>Use a larger rolling ball radius if you want to preserve more diffuse signal (e.g., 20).</p>
 <p>The radius should be similar to the largest feature that you want to preserve.</p>

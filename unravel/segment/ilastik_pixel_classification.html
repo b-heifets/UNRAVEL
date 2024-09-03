@@ -428,6 +428,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/get_samples.html">unravel.utilities.get_samples module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
@@ -508,12 +509,14 @@
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
 <li><p>ilastik_project: path/ilastik_project.ilp</p></li>
-<li><p>input: path/tif_dir or path/image (relative to current dir or sample??/)</p></li>
+<li><p>Input: path/tif_dir or path/image (relative to current dir or sample??/)</p></li>
+<li><p>Input image types: .tif, .czi, .nii.gz, .h5, .zarr</p></li>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
 <li><p>seg_dir/seg_dir/<cite>*</cite>.tif series (segmented images; delete w/ –rm_out_tifs)</p></li>
-<li><p>seg_dir/seg_dir_&lt;label&gt;.nii.gz (binary masks for each label specified w/ –labels)</p></li>
+<li><p>Optional: seg_dir/seg_dir_&lt;label&gt;.nii.gz (binary masks for each label specified w/ –labels)</p></li>
+<li><p>Skips processing if output already exists (.nii.gz with –labels or .tif without)</p></li>
 </ul>
 </dd>
 </dl>

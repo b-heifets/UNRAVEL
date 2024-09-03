@@ -428,6 +428,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../utilities/toc.html">unravel.utilities package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/get_samples.html">unravel.utilities.get_samples module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_from_sample_dirs.html">unravel.utilities.aggregate_files_from_sample_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
@@ -499,17 +500,23 @@
                   
   <section id="module-unravel.segment.copy_tifs">
 <span id="unravel-segment-copy-tifs-module"></span><span id="unravel-segment-copy-tifs"></span><h1>unravel.segment.copy_tifs module<a class="headerlink" href="#module-unravel.segment.copy_tifs" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> from UNRAVEL to copy a subset of .tif files to a target dir for training ilastik.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> from UNRAVEL to copy specified TIFFs from each sample?? to a target dir for training ilastik.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>reg_inputs/autofl_50um_tifs is from <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code> and is used to make a brain mask using <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>.</p></li>
+</ul>
+</div>
 <section id="usage-to-prep-for-seg-brain-mask">
-<h2>Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>:<a class="headerlink" href="#usage-to-prep-for-seg-brain-mask" title="Link to this heading">#</a></h2>
+<h2>Usage to prep for seg_brain_mask:<a class="headerlink" href="#usage-to-prep-for-seg-brain-mask" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>seg_copy_tifs -s 0000 0005 0050 [-td brain_mask] [-i reg_inputs/autofl_50um_tifs] [-d list of paths] [-p sample??] [-v]</p>
+<div><p>seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0000 0005 0050 [-td brain_mask] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
-<section id="usage-to-prep-for-seg-ilastik-to-segment-full-resolution-immunofluorescence-images">
-<h2>Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code> to segment full resolution immunofluorescence images:<a class="headerlink" href="#usage-to-prep-for-seg-ilastik-to-segment-full-resolution-immunofluorescence-images" title="Link to this heading">#</a></h2>
+<section id="usage-to-prep-for-seg-ilastik">
+<h2>Usage to prep for seg_ilastik:<a class="headerlink" href="#usage-to-prep-for-seg-ilastik" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>seg_copy_tifs -i &lt;raw_tif_dir&gt; -s 0100 0500 1000 -td ilastik_segmentation [-d list of paths] [-p sample??] [-v]</p>
+<div><p>seg_copy_tifs -i &lt;raw_tif_dir&gt; -s 0100 0500 1000 [-td ilastik_segmentation] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -518,15 +525,15 @@
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.segment.copy_tifs.copy_specific_slices">
-<span class="sig-prename descclassname"><span class="pre">unravel.segment.copy_tifs.</span></span><span class="sig-name descname"><span class="pre">copy_specific_slices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_numbers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/copy_tifs.html#copy_specific_slices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.copy_tifs.copy_specific_slices" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.segment.copy_tifs.copy_specific_tifs">
+<span class="sig-prename descclassname"><span class="pre">unravel.segment.copy_tifs.</span></span><span class="sig-name descname"><span class="pre">copy_specific_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_numbers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/copy_tifs.html#copy_specific_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.copy_tifs.copy_specific_tifs" title="Link to this definition">#</a></dt>
 <dd><p>Copy the specified tif slices from the source directory to the target directory.</p>
 <section id="parameters">
 <h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
 <dl class="simple">
-<dt>sample_path<span class="classifier">Path or str</span></dt><dd><p>Path to the sample directory.</p>
+<dt>sample_path<span class="classifier">Path or str</span></dt><dd><p>Path to the sample directory (appended to the destination file name).</p>
 </dd>
-<dt>source_dir<span class="classifier">Path or str</span></dt><dd><p>Path (relative to sample_path) to the source directory containing the .tif files to copy.</p>
+<dt>source_dir<span class="classifier">Path or str</span></dt><dd><p>Path to the source directory containing the .tif files.</p>
 </dd>
 <dt>target_dir<span class="classifier">Path or str</span></dt><dd><p>Path to the target directory where the selected slices will be copied.</p>
 </dd>
@@ -591,10 +598,10 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-brain-mask">Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-ilastik-to-segment-full-resolution-immunofluorescence-images">Usage to prep for <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code> to segment full resolution immunofluorescence images:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-brain-mask">Usage to prep for seg_brain_mask:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-ilastik">Usage to prep for seg_ilastik:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.copy_specific_slices"><code class="docutils literal notranslate"><span class="pre">copy_specific_slices()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.copy_specific_tifs"><code class="docutils literal notranslate"><span class="pre">copy_specific_tifs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
   </nav></div>

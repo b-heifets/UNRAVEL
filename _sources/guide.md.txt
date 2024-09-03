@@ -418,6 +418,7 @@ uc -m
 :::
 
 :::{tab-item} Utilities
+- [**utils_get_samples**](unravel.utilities.get_samples): Test --pattern and --dirs args of script that batch process sample?? dirs.
 - [**utils_agg_files**](unravel.utilities.aggregate_files_from_sample_dirs): Aggregate files from sample directories.
 - [**utils_agg_files_rec**](unravel.utilities.aggregate_files_recursively): Recursively aggregate files.
 - [**utils_prepend**](unravel.utilities.prepend_conditions): Prepend conditions to files using sample_key.csv.
@@ -877,7 +878,7 @@ vstats_prep -i cFos -rb 4 -x $XY -z $Z -o cFos_rb4_atlas_space.nii.gz -v -d $DIR
 :::{admonition} Background subtraction
 :class: tip dropdown
 Removing autofluorescence from immunolabeling improves the sensitivity of voxel-wise comparisons. 
-
+.
 Use -s 3 for 3x3x3 spatial averaging if there is notable noise from voxel to voxel. 
 
 Use a smaller rolling ball radius if you want to preserve punctate signal like c-Fos+ nuclei (e.g., 4)
