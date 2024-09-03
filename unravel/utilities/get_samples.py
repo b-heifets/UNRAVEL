@@ -31,7 +31,7 @@ def main():
     Configuration.verbose = True
     verbose_start_msg()
 
-    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
+    sample_paths = get_samples(args.dirs, args.pattern, verbose=True)
 
     verbose_end_msg()
 
