@@ -100,7 +100,7 @@ def main():
             last_label = args.labels[-1]
             final_output = segmentation_dir / f"{args.output}_{last_label}.nii.gz"
             if final_output.exists():
-                print(f"\n\n    {final_output.name} already exists. Skipping.\n")
+                print(f"\n\n    {final_output} already exists. Skipping.\n")
                 continue
             
             # If input tifs do not exist, create them from another image format
