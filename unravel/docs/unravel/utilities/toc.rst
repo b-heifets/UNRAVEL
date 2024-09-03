@@ -4,6 +4,7 @@ unravel.utilities package
 .. toctree::
    :maxdepth: 2
 
+   get_samples
    aggregate_files_from_sample_dirs
    aggregate_files_w_recursive_search
    clean_tif_dirs
@@ -16,4 +17,4 @@ unravel.utilities package
    :members:
    :undoc-members:
    :show-inheritance:
-   :noindex:
+   :noindex:s
