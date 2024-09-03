@@ -17,4 +17,4 @@ unravel.utilities package
    :members:
    :undoc-members:
    :show-inheritance:
-   :noindex:s
+   :noindex:
