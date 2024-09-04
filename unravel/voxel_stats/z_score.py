@@ -78,6 +78,7 @@ def parse_args():
 
 # TODO: Set voxels outside the mask(s) to zero
 # TODO: Consider adjusting logic so --no_tmask is not required
+# TODO: Make it possible to process .nii.gz files in the current directory (e.g., matching a glob pattern)
 
 
 @print_func_name_args_times()
