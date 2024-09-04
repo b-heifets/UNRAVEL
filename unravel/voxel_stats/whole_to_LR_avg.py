@@ -18,7 +18,7 @@ Next steps:
 
 Usage:
 ------
-    vstats_whole_to_avg [--pattern '<asterisk>.nii.gz'] [--kernel 0] [--axis 2] [--shift 2] [--parallel] [--atlas_mask path/atlas_mask.nii.gz] [-v]
+    vstats_whole_to_avg [--pattern '<asterisk>.nii.gz'] [--kernel 0] [--axis 2] [--shift 0] [--parallel] [--atlas_mask path/atlas_mask.nii.gz] [-v]
 """
 
 import numpy as np
