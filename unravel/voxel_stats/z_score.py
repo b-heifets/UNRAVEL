@@ -24,19 +24,19 @@ Next steps:
 
 Usage:
 ------
-    vstats_z_score -i path/img.nii.gz [--suffix z] [--tissue_mask reg_inputs/autofl_50um_brain_mask.nii.gz] [-amas path/atlas_mask.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-d list of paths] [-p sample??] [-v]
-
-Usage w/ a tissue mask:
------------------------
-    vstats_z_score -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -tmas reg_inputs/autofl_50um_brain_mask.nii.gz --dirs <list of paths>
+    vstats_z_score -i rel_path/img.nii.gz [--suffix z] [--tissue_mask reg_inputs/autofl_50um_brain_mask.nii.gz] [-amas path/atlas_mask.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-d list of paths] [-p sample??] [-v]
 
 Usage w/ an atlas mask:
 -----------------------
-    vstats_z_score -i path/img.nii.gz -amas path/atlas_mask.nii.gz
+    vstats_z_score -i 'path/<asterisk>.nii.gz' -amas path/atlas_mask.nii.gz
+
+Usage w/ a tissue mask:
+-----------------------
+    vstats_z_score -i 'atlas_space/<asterisk>.nii.gz' -tmas reg_inputs/autofl_50um_brain_mask.nii.gz --dirs <list of paths>
 
 Usage w/ both masks for side-specific z-scoring:
 ------------------------------------------------
-    vstats_z_score -i atlas_space/sample??_cfos_rb4_atlas_space.nii.gz -tmas reg_inputs/autofl_50um_brain_mask.nii.gz -amas path/RH_mask.nii.gz -s RH_z
+    vstats_z_score -i 'atlas_space/<asterisk>.nii.gz' -tmas reg_inputs/autofl_50um_brain_mask.nii.gz -amas path/RH_mask.nii.gz -s RH_z --dirs <list of paths>
 """
 
 import nibabel as nib
@@ -57,7 +57,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='full_path/img.nii.gz or rel_path/img.nii.gz ("sample??" works for batch processing)', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path to the image(s) to be z-scored relative to the current dir or sample?? dirs (glob matches processed)', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-s', '--suffix', help='Output suffix. Default: z (.nii.gz replaced w/ _z.nii.gz)', default='z', action=SM)
