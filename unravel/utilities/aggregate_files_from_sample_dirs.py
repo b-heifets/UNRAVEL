@@ -29,7 +29,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-g', '--glob_pattern', help='Glob pattern to match files within sample?? directories', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Glob pattern to match files within sample?? directories', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-td', '--target_dir', help='path/target_dir name for gathering files. Default: current working dir', default=None, action=SM)
@@ -86,7 +86,7 @@ def main():
     with Live(progress):
         for sample_path in sample_paths:
 
-            aggregate_files_from_sample_dirs(sample_path, args.glob_pattern, target_dir, args.add_prefix, args.verbose)
+            aggregate_files_from_sample_dirs(sample_path, args.input, target_dir, args.add_prefix, args.verbose)
 
             progress.update(task_id, advance=1)
 
