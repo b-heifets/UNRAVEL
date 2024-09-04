@@ -148,7 +148,19 @@ def tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, a
     return tissue_mask_img
 
 def z_score_mask(sample_path, input_path, fixed_reg_input, atlas_path, tissue_mask_path=None, atlas_mask_path=None):
-    """Combine tissue and atlas masks if both are provided, otherwise use whichever is available."""
+    """Combine tissue and atlas masks if both are provided, otherwise use whichever is available.
+    
+    Parameters:
+        - sample_path (Path): Path to the sample directory.
+        - input_path (Path): Path to the image to be z-scored.
+        - fixed_reg_input (str): Name of the fixed image for registration.
+        - atlas_path (str): Path to the atlas.
+        - tissue_mask_path (Path): Path to the tissue mask.
+        - atlas_mask_path (Path): Path to the atlas mask.
+
+    Returns:
+        - mask_img (np.ndarray): the combined mask image.
+    """
     mask_img = None
 
     # Load and warp the tissue mask to atlas space (if provided)
@@ -187,7 +199,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    if tissue_mask_path is None and atlas_mask_path is None:
+    if args.tissue_mask is None and args.atlas_mask is None:
         print("\n    Warning: No mask provided. Z-scoring will be done for the whole image.\n")
         
     # Check if inputs are in sample?? directories
