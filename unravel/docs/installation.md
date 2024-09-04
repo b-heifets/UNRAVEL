@@ -77,41 +77,69 @@ To enable copy/paste in the PowerShell or WSL, click the icon in the upper left 
 
 1. **Open a terminal**
 
-2. **Install pyenv, venv, or other tool(s) to manage Python versions and create a virtual environment:**
+2. **Install [pyenv](https://github.com/pyenv/pyenv), [venv](https://docs.python.org/3/library/venv.html), [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html), or other tool(s) to manage Python versions and create a virtual environment:**
 
     ### Option A: Using pyenv
 
     :::{note}
-    Pyenv can work on Windows, but this is not recommended (e.g., see notes [here](https://github.com/pyenv/pyenv))
-    
-    Alternatively, use [pyenv-win](https://github.com/pyenv-win/pyenv-win), [venv](https://docs.python.org/3/library/venv.html), or [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html).
+    "pyenv lets you easily switch between multiple versions of Python."
+    It works on Linux, macOS, and WSL. 
+    For Windows, use [pyenv-win](https://github.com/pyenv-win/pyenv-win) ([more info](https://github.com/pyenv/pyenv))
     :::
 
-    **a. Install dependencies:**
-    ```bash
-    sudo apt-get update
+    **a. Install python build dependencies:**
 
-    sudo apt-get install -y make build-essential libssl-dev zlib1g-dev \
-    libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
-    libncurses5-dev libncursesw5-dev xz-utils tk-dev \
-    libffi-dev liblzma-dev python3-openssl git
+    - **For Linux and WSL:**
+    ```bash
+    sudo apt update
+    
+    sudo apt install build-essential libssl-dev zlib1g-dev \ 
+    libbz2-dev libreadline-dev libsqlite3-dev curl git \ 
+    libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+    ```
+    - **For macOS:**
+    ```bash
+    xcode-select --install  # If not available, see: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
+
+    # Install Homebrew if not yet installed (https://brew.sh/)
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+    brew install openssl readline sqlite3 xz zlib tcl-tk
+    brew update  
     ```
 
     **b. Install [pyenv](https://github.com/pyenv/pyenv#installation):**
     ```bash
+    # Linux or WSL:
     curl https://pyenv.run | bash
+
+    # macOS:
+    brew install pyenv
     ```
 
-    **c. Add pyenv to your shell startup file (.bashrc or .zshrc):**
+    **c. Set up pyenv in your shell startup file (.bashrc or .zshrc):**
     ```bash
     (
+    # Run these commands to add lines to ~/.bashrc
     echo '' >> ~/.bashrc
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
-    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-    echo 'eval "$(pyenv init --path)"' >> ~/.bashrc
+    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
     echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-    echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
+    echo '' >> ~/.bashrc
+    . ~/.bashrc  # Source .bashrc for changes to take effect
     )
+
+    # Or
+    (
+    # Run these commands to add lines to ~/.zshrc
+    echo '' >> ~/.zshrc
+    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
+    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
+    echo 'eval "$(pyenv init -)"' >> ~/.zshrc
+    echo '' >> ~/.zshrc
+    . ~/.zshrc  # Source .zshrc for changes to take effect
+    )
+
     ```
 
     **d. Install Python 3.11:**
@@ -122,7 +150,7 @@ To enable copy/paste in the PowerShell or WSL, click the icon in the upper left 
     **e. Create and activate a virtual environment:**
     ```bash
     pyenv virtualenv 3.11.3 unravel
-    pyenv activate unravel # To deactivate, run: pyenv deactivate
+    pyenv activate unravel  # To deactivate, run: pyenv deactivate
     ```
 
     ### Option B: Using venv
