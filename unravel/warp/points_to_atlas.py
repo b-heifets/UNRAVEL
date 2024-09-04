@@ -90,6 +90,9 @@ def main():
 
             # Load the csv with cell centroids in full resolution tissue space
             csv_path = next(sample_path.glob(str(args.input)), None)
+            if csv_path is None:
+                print(f"\n\n    [red1]No CSV file found in {sample_path} matching {args.input}. Skipping.\n")
+                continue
 
             # Define main output path
             output_img_path = sample_path / "atlas_space" / str(csv_path.name).replace(".csv", ".nii.gz")
