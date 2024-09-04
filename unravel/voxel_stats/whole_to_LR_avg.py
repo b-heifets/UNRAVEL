@@ -18,7 +18,7 @@ Next steps:
 
 Usage:
 ------
-    vstats_whole_to_avg [--pattern '<asterisk>.nii.gz'] [--kernel 0] [--axis 2] [--shift 0] [--parallel] [--atlas_mask path/atlas_mask.nii.gz] [-v]
+    vstats_whole_to_avg [--i '<asterisk>.nii.gz'] [--kernel 0] [--axis 2] [--shift 0] [--parallel] [--atlas_mask path/atlas_mask.nii.gz] [-v]
 """
 
 import numpy as np
@@ -41,7 +41,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-p', '--pattern', help='Pattern to match atlas space input images in the working dir. Default: *.nii.gz', default='*.nii.gz', action=SM)
+    opts.add_argument('-i', '--input', help='Pattern to match atlas space input images in the working dir. Default: *.nii.gz', default='*.nii.gz', action=SM)
     opts.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0', default=0, type=float, action=SM)
     opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
     opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping (if atlas is asym.). Default: 0', default=0, type=int, action=SM)
@@ -103,10 +103,10 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    files = Path().cwd().glob(args.pattern)
+    files = Path().cwd().glob(args.input)
     print(f'\nImages to process: {list(files)}\n')
 
-    files = Path().cwd().glob(args.pattern)
+    files = Path().cwd().glob(args.input)
     if args.parallel:
         with ThreadPoolExecutor() as executor:
             executor.map(lambda file: whole_to_LR_avg(file, args.kernel, args.axis, args.shift, args.atlas_mask), files)
