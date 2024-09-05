@@ -129,9 +129,8 @@ To enable copy/paste in the PowerShell or WSL, click the icon in the upper left 
     . ~/.bashrc  # Source .bashrc for changes to take effect
     )
 
-    # Or
     (
-    # Run these commands to add lines to ~/.zshrc
+    # Or for zsh run these commands to add lines to ~/.zshrc
     echo '' >> ~/.zshrc
     echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
     echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
@@ -156,9 +155,14 @@ To enable copy/paste in the PowerShell or WSL, click the icon in the upper left 
     ### Option B: Using venv
 
     **a. Install Python 3.11 if it's not already installed:**
+    - **For Linux and WSL:**
     ```bash
     sudo apt-get update
     sudo apt-get install -y python3.11 python3.11-venv python3.11-dev
+    ```
+    - **For macOS:**
+    ```bash
+    brew install python@3.11
     ```
 
     **b. Create and activate a virtual environment:**
