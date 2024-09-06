@@ -91,20 +91,21 @@ def generate_summary_table(csv_files, data_column_name):
         if has_hemisphere:
         # if has_hemisphere, pool data from LH and RH files
             if str(file).endswith('_RH.csv'):
-                continue # Skip RH files
+                continue  # Skip RH files
 
             if str(file).endswith('_LH.csv'):
+                # LH file exists, now check if RH exists and proceed to pool
                 LH_df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
-
-                if not Path(str(file).replace('_LH.csv', '_RH.csv')).exists():
-                    print(f"[red]    {Path(str(file).replace('_LH.csv', '_RH.csv'))} is missing")
+                RH_file = str(file).replace('_LH.csv', '_RH.csv')
+                if not Path(RH_file).exists():
+                    print(f"[red]    {RH_file} is missing")
                     with open(file.parent / "missing_csv_files.txt", 'a') as f:
-                        f.write(f"{Path(str(file).replace('_LH.csv', '_RH.csv'))} is missing")
-                    import sys ; sys.exit()
+                        f.write(f"{RH_file} is missing\n")
+                    continue  # Skip this file if RH is missing
 
-                RH_df = pd.read_csv(str(file).replace('_LH.csv', '_RH.csv'), usecols=['sample', 'cluster_ID', data_column_name])
+                RH_df = pd.read_csv(RH_file, usecols=['sample', 'cluster_ID', data_column_name])
 
-                # Sum the data_col of the LH and RH dataframes
+                # Combine LH and RH dataframes
                 if data_column_name == 'cell_count' or data_column_name == 'label_volume':
                     df = pd.concat([LH_df, RH_df], ignore_index=True).groupby(['sample', 'cluster_ID']).agg( # Group by sample and cluster_ID
                         **{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='sum')} # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method
@@ -115,12 +116,13 @@ def generate_summary_table(csv_files, data_column_name):
                     ).reset_index()
 
         else:
-            # Load the CSV file into a pandas dataframe
+            # Load the CSV file into a pandas dataframe if no hemisphere distinction
             df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
 
-        # Return if df is not defined
-        if 'df' not in locals():
-            return
+        # Ensure df exists before proceeding
+        if df is None or df.empty:
+            print(f"[yellow]    Skipping {file} due to missing or empty data.")
+            continue
 
         # Set the cluster_ID as index and select the density column
         df.set_index('cluster_ID', inplace=True)
