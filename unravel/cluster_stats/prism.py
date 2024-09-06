@@ -139,6 +139,11 @@ def generate_summary_table(csv_files, data_column_name):
             # Concatenate the new dataframe with the existing one for the same condition
             data_by_condition[condition] = pd.concat([data_by_condition[condition], df], axis=1)
 
+    # If there is no valid data to concatenate, return None or an empty dataframe
+    if not data_by_condition:
+        print("[red]    No valid data to concatenate.")
+        return pd.DataFrame()  # Return an empty dataframe if no data was found
+
     # Loop through each condition and sort the columns by sample number
     for condition in data_by_condition:
         # Get current columns for the condition
