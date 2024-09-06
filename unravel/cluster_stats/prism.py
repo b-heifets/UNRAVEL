@@ -118,6 +118,10 @@ def generate_summary_table(csv_files, data_column_name):
             # Load the CSV file into a pandas dataframe
             df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
 
+        # Return if df is not defined
+        if 'df' not in locals():
+            return
+
         # Set the cluster_ID as index and select the density column
         df.set_index('cluster_ID', inplace=True)
         df = df[[data_column_name]]
