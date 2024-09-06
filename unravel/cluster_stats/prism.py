@@ -180,6 +180,12 @@ def main():
 
     # Load the first .csv file to check for data columns and set the appropriate column names
     first_df = pd.read_csv(csv_files[0])
+
+    # Check if 'cluster_ID' exists in the first dataframe
+    if 'cluster_ID' not in first_df.columns:
+        print("[red]    Error: 'cluster_ID' column missing from the input files.")
+        return
+    
     if 'cell_count' in first_df.columns:
         data_col, density_col = 'cell_count', 'cell_density'
     elif 'label_volume' in first_df.columns:
@@ -192,6 +198,10 @@ def main():
 
     # Generate a summary table for the cell_count or label_volume data
     data_col_summary_df = generate_summary_table(csv_files, data_col)  # Columns: sample, cluster_ID, cell_count|label_volume|mean_IF_intensity
+
+    if data_col_summary_df.empty:
+        print("[red]    No valid data found for the summary.")
+        return
 
     # Generate a summary table for the cluster volume data
     if 'cluster_volume' in first_df.columns:
@@ -207,11 +217,20 @@ def main():
 
     # Exclude clusters that are not in the list of valid clusters
     if args.valid_cluster_ids is not None:
-        data_col_summary_df = data_col_summary_df[data_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
-        if cluster_volume_summary_df is not None:
+        if 'cluster_ID' in data_col_summary_df.columns:
+            data_col_summary_df = data_col_summary_df[data_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
+        else:
+            print("[yellow]    Warning: 'cluster_ID' column missing from data_col_summary_df.")
+
+        if cluster_volume_summary_df is not None and 'cluster_ID' in cluster_volume_summary_df.columns:
             cluster_volume_summary_df = cluster_volume_summary_df[cluster_volume_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
-        if density_col_summary_df is not None:
+        elif cluster_volume_summary_df is not None:
+            print("[yellow]    Warning: 'cluster_ID' column missing from cluster_volume_summary_df.")
+
+        if density_col_summary_df is not None and 'cluster_ID' in density_col_summary_df.columns:
             density_col_summary_df = density_col_summary_df[density_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
+        elif density_col_summary_df is not None:
+            print("[yellow]    Warning: 'cluster_ID' column missing from density_col_summary_df.")
 
         # Sort data frames such that the 'cluster_ID' column matches the order of clusters in args.valid_cluster_ids
         data_col_summary_df = data_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
@@ -244,15 +263,19 @@ def main():
     # Save the summary tables to .csv files
     if args.valid_cluster_ids is not None:
         data_col_summary_df.to_csv(output_dir / f'{data_col}_summary_for_valid_clusters.csv', index=False)
-        if 'cluster_volume' in first_df.columns:
+        if density_col_summary_df is not None:
             density_col_summary_df.to_csv(output_dir / f'{density_col}_summary_for_valid_clusters.csv', index=False)
+        if cluster_volume_summary_df is not None:
             density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_valid_clusters.csv', index=False)
+        if cluster_volume_summary_df is not None:
             cluster_volume_summary_df.to_csv(output_dir / 'valid_cluster_volume_summary.csv', index=False)
     else:
         data_col_summary_df.to_csv(output_dir / f'{data_col}_summary.csv', index=False)
-        if 'cluster_volume' in first_df.columns:
+        if density_col_summary_df is not None:
             density_col_summary_df.to_csv(output_dir / f'{density_col}_summary.csv', index=False)
+        if cluster_volume_summary_df is not None:
             density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_clusters.csv', index=False)
+        if cluster_volume_summary_df is not None:
             cluster_volume_summary_df.to_csv(output_dir / 'cluster_volume_summary.csv', index=False)
 
     print(f"\n    Saved results in [bright_magenta]{output_dir}")
