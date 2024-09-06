@@ -82,6 +82,7 @@ def generate_summary_table(csv_files, data_column_name):
 
     # Loop through each file in the working directory
     for file in csv_files:
+        df = None  # Initialize df to ensure it is always defined
 
         # Extract the condition and sample name
         parts = str(Path(file).name).split('_')
@@ -119,7 +120,7 @@ def generate_summary_table(csv_files, data_column_name):
             # Load the CSV file into a pandas dataframe if no hemisphere distinction
             df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
 
-        # Ensure df exists before proceeding
+        # Ensure df exists and has data before proceeding
         if df is None or df.empty:
             print(f"[yellow]    Skipping {file} due to missing or empty data.")
             continue
