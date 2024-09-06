@@ -105,17 +105,7 @@ def main():
     final_data = img * atlas_img
 
     # Save the bilateral version of the cluster index with ABA colors
-
     nib.save(nib.Nifti1Image(final_data, atlas_nii.affine, atlas_nii.header), output)
-
-    # Calculate and save histogram
-    histogram, _ = np.histogram(final_data, bins=21144, range=(0, 21144))
-
-    # Exclude the background (region 0) from the histogram
-    histogram = histogram[1:]
-
-    # Determine what regions are present based on the histogram
-    present_regions = np.where(histogram > 0)[0] + 1  # Add 1 to account for the background
 
     # Get R, G, B values for each region
     if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv': 
@@ -128,6 +118,7 @@ def main():
         Path(txt_output).unlink()
 
     # Determine the RGB color for bars based on the region_id
+    present_regions = np.unique(final_data[final_data > 0])
     for region_id in present_regions:
         combined_region_id = region_id if region_id < 20000 else region_id - 20000
         region_rgb = color_map[color_map['Region_ID'] == combined_region_id][['R', 'G', 'B']]
