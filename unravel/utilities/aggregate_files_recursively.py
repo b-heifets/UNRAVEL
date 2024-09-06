@@ -12,7 +12,7 @@ import shutil
 from pathlib import Path
 from rich.traceback import install
 
-from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+from help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -42,10 +42,6 @@ def find_and_copy_files(pattern, src_dir, dest_dir, move=False):
         dest_dir = src_dir.joinpath(dest_dir)
     dest_dir.mkdir(parents=True, exist_ok=True)
 
-    if len(src_dir.rglob(pattern)) == 0:
-        print(f"\n    [red1]No files found matching the pattern:[/] [bold]{pattern}[/] in {src_dir}\n")
-        return
-    
     # Use rglob for recursive globbing
     matched_files = list(src_dir.rglob(pattern))  # Convert the generator to a list
 
