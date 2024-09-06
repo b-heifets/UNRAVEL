@@ -221,22 +221,26 @@ def main():
             data_col_summary_df = data_col_summary_df[data_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
         else:
             print("[yellow]    Warning: 'cluster_ID' column missing from data_col_summary_df.")
+            data_col_summary_df = pd.DataFrame()  # Empty the DataFrame if cluster_ID is missing
 
         if cluster_volume_summary_df is not None and 'cluster_ID' in cluster_volume_summary_df.columns:
             cluster_volume_summary_df = cluster_volume_summary_df[cluster_volume_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
         elif cluster_volume_summary_df is not None:
             print("[yellow]    Warning: 'cluster_ID' column missing from cluster_volume_summary_df.")
+            cluster_volume_summary_df = pd.DataFrame()
 
         if density_col_summary_df is not None and 'cluster_ID' in density_col_summary_df.columns:
             density_col_summary_df = density_col_summary_df[density_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
         elif density_col_summary_df is not None:
             print("[yellow]    Warning: 'cluster_ID' column missing from density_col_summary_df.")
+            density_col_summary_df = pd.DataFrame()
 
         # Sort data frames such that the 'cluster_ID' column matches the order of clusters in args.valid_cluster_ids
-        data_col_summary_df = data_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
-        if cluster_volume_summary_df is not None:
+        if not data_col_summary_df.empty:
+            data_col_summary_df = data_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
+        if cluster_volume_summary_df is not None and not cluster_volume_summary_df.empty:
             cluster_volume_summary_df = cluster_volume_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
-        if density_col_summary_df is not None:
+        if density_col_summary_df is not None and not density_col_summary_df.empty:
             density_col_summary_df = density_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
 
     # For a summary across clusters, sum each column in the summary tables other than the 'cluster_ID' column, which could be dropped
@@ -262,20 +266,22 @@ def main():
 
     # Save the summary tables to .csv files
     if args.valid_cluster_ids is not None:
-        data_col_summary_df.to_csv(output_dir / f'{data_col}_summary_for_valid_clusters.csv', index=False)
-        if density_col_summary_df is not None:
+        if not data_col_summary_df.empty:
+            data_col_summary_df.to_csv(output_dir / f'{data_col}_summary_for_valid_clusters.csv', index=False)
+        if not density_col_summary_df.empty:
             density_col_summary_df.to_csv(output_dir / f'{density_col}_summary_for_valid_clusters.csv', index=False)
-        if cluster_volume_summary_df is not None:
+        if not density_col_summary_df_sum.empty:
             density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_valid_clusters.csv', index=False)
-        if cluster_volume_summary_df is not None:
+        if not cluster_volume_summary_df.empty:
             cluster_volume_summary_df.to_csv(output_dir / 'valid_cluster_volume_summary.csv', index=False)
     else:
-        data_col_summary_df.to_csv(output_dir / f'{data_col}_summary.csv', index=False)
-        if density_col_summary_df is not None:
+        if not data_col_summary_df.empty:
+            data_col_summary_df.to_csv(output_dir / f'{data_col}_summary.csv', index=False)
+        if not density_col_summary_df.empty:
             density_col_summary_df.to_csv(output_dir / f'{density_col}_summary.csv', index=False)
-        if cluster_volume_summary_df is not None:
+        if density_col_summary_df_sum.empty:
             density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_clusters.csv', index=False)
-        if cluster_volume_summary_df is not None:
+        if not cluster_volume_summary_df.empty:
             cluster_volume_summary_df.to_csv(output_dir / 'cluster_volume_summary.csv', index=False)
 
     print(f"\n    Saved results in [bright_magenta]{output_dir}")
