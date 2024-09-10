@@ -313,12 +313,16 @@ def main():
     cluster_info_txt_parent = Path(args.val_clusters_dir).parent if args.val_clusters_dir else Path.cwd()
     cluster_info_files = list(cluster_info_txt_parent.glob('*cluster_info.txt'))
     
-    # If no cluster_info.txt file is found, exit
+    # If no cluster_info.txt file is found, search in the grandparent dir, and exit if not found
     if not cluster_info_files:
-        print(f'\n    [red]No *cluster_info.txt file found in {cluster_info_txt_parent}. Exiting...')
-        return
-    else:
-        cluster_info_file = cluster_info_files[0] # first match
+        # Check for it in the grandparent dir
+        cluster_info_txt_grandparent = cluster_info_txt_parent.parent
+        cluster_info_files = list(cluster_info_txt_grandparent.glob('*cluster_info.txt'))
+        if not cluster_info_files:
+            print(f'\n    [red]No *cluster_info.txt file found in {cluster_info_txt_parent}. Exiting...')
+            return
+    
+    cluster_info_file = cluster_info_files[0] # first match
  
     # Load the cluster info file
     cluster_info_df = pd.read_csv(cluster_info_file, sep='\t', header=None)  # Assuming tab-separated values; adjust if different
