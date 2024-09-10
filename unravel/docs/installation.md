@@ -7,15 +7,7 @@
 
 ## TL;DR
 * Activate a virtual environment in Python
-* **Option A:** install UNRAVEL via [PyPI](https://pypi.org/project/heifetslab-unravel/):
-```bash
-# Install latest release
-pip install heifetslab-unravel
-
-# Update
-pip install --upgrade heifetslab-unravel
-```
-* **Option B:** install UNRAVEL via GitHub (for editing source code and/or incremental updates):
+* **Option A:** install UNRAVEL via GitHub (for editing source code and/or incremental updates):
 ```bash
 # Install latest code on the main branch
 git clone https://github.com/b-heifets/UNRAVEL.git
@@ -25,6 +17,14 @@ pip install -e .
 # Update
 git pull 
 pip install -e . 
+```
+* **Option B:** install UNRAVEL via [PyPI](https://pypi.org/project/heifetslab-unravel/):
+```bash
+# Install latest release
+pip install heifetslab-unravel
+
+# Update
+pip install --upgrade heifetslab-unravel
 ```
 * Confirm that the installation worked: 
 ```bash
@@ -43,34 +43,24 @@ unravel_commands -c  # or: uc -c
 
 ## Setting Up Windows Subsystem for Linux (WSL)
 
-If you are using Windows and are unfamilar with WSL, check out the first few min of this [video](https://www.youtube.com/watch?v=-atblwgc63E) 
+If you're new to WSL, watch the first few minutes of [this video](https://www.youtube.com/watch?v=-atblwgc63E). After installation, refer to this [tutorial](https://www.youtube.com/watch?v=i547sSXhq0E) for navigating your files.
 
 ### Installing WSL:
-- Open the start menu, search for PowerShell, and right click on PowerShell to run it as an Administrator. Then run:
+1. Open the Start menu, search for PowerShell, and right-click to run as Administrator.
+2. Run:
     ```powershell
-    wsl --install  # If this works, the Ubuntu linux distrobution will be installed by default
-
-    # If that does not work, run this and follow additional steps
-    Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+    wsl --install  # Installs Ubuntu by default
     ```
-- Restart your computer when prompted.
-- Open the Microsoft Store and search "linux" --> Run Linux On Windows
-- Select Ubuntu and install
-- Open the PowerShell and start WSL by running: 
+3. Restart your computer when prompted.
+4. After the reboot, WSL will be ready. Open PowerShell and type:
     ```powershell
     wsl
     ```
-- Or open the WSL app or the Ubuntu app from that Start menu.
-- Follow the prompts to set up your username and password.
+5. Follow the prompts to set up your username and password.
 
-For detailed installation instructions, visit the [WSL Installation Guide](https://learn.microsoft.com/en-us/windows/wsl/install).
-
-:::{note}
-To enable copy/paste in the PowerShell or WSL, click the icon in the upper left --> Properties --> Edit Options -> check "Use Ctrl+Shift+C/V as Copy/Paste --> OK. 
-
-[Video tutorial](https://www.youtube.com/watch?v=i547sSXhq0E) on navigating to your files (either the WSL file system or your C and D drives).
+:::note
+To enable copy/paste in PowerShell or WSL, go to the top-left icon --> Properties --> Edit Options --> check "Use Ctrl+Shift+C/V as Copy/Paste" --> OK.
 :::
-
 
 
 ## Installing UNRAVEL on Linux or WSL
