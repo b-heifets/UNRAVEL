@@ -11,7 +11,8 @@ Inputs:
     - `*`.nii.gz files in the current directory with conditions as prefixes (e.g., saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz)
 
 Outputs:
-    - stats/ directory with randomise_parallel outputs (e.g., uncorrected 1-p value maps [vox_p])
+    - stats/ directory with randomise_parallel outputs (e.g., uncorrected 1-p value maps [vox_p]).
+    - The name of the current directory is used as the prefix for the output files.
 
 Next commands:
     - Run ``cstats_fdr_range`` and ``cstats_fdr`` to correct for multiple comparisons.
@@ -31,7 +32,7 @@ Usage:
 
 Usage w/ additional options:
 ----------------------------
-    vstats -mas mask.nii.gz [-p 18000] [--kernel 0] [-op output_prefix from current dir] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-v] [--options --seed=1]
+    vstats -mas mask.nii.gz [-p 18000] [--kernel 0] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-v] [--options --seed=1]
 """
 
 import argparse
@@ -58,7 +59,6 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300). Default: 18000', type=int, default=18000, action=SM)
     opts.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
-    opts.add_argument('-op', '--output_prefix', help='Prefix of output files. Default: current working dir name.', action=SM)
     opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz (copied to stats/ for viewing; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
     opts.add_argument('-opt', '--options', help='Additional options for randomise, specified like "--seed=1 -T"', nargs=argparse.REMAINDER, default=[])
 
@@ -201,10 +201,7 @@ def main():
     else:
         print("\n    [red1]There should be at least two groups with different prefixes in the input .nii.gz files.\n")
 
-    if args.output_prefix:
-        output_prefix = stats_dir / args.output_prefix
-    else:
-        output_prefix = stats_dir / cwd.name
+    output_prefix = stats_dir / cwd.name
 
     # Run the randomise_parallel command
     run_randomise_parallel(glm_input_file, args.mask, args.permutations, output_prefix, design_fts_path, args.options, args.verbose)

@@ -14,6 +14,7 @@ Note:
     - If the current dir is a sample?? dir, it will be processed.
     - If -d is provided, the specified dirs and/or dirs containing sample?? dirs will be processed.
     - If -p is not provided, the default pattern for dirs to process is 'sample??'.
+    - To test out -d/-p, use the ``utils_get_samples`` command to see which sample?? dirs will be processed.
 
 Next command:
     - ``reg_prep`` for prepping autofluo images for registration

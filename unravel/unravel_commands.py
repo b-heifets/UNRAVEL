@@ -12,6 +12,10 @@ Note:
     - Filtering is case-insensitive and matches substrings in the printed lines (regex).
     - For example, use of -f with -d will find matches in the command name and/or description, preserving those lines.
 
+Next steps:
+    - Start with ``io_metadata`` for most workflows (e.g., to extract or specify raw voxel sizes and image dimensions).
+    - Many scripts are designed for batch processing of sample directories, which can be tested using ``utils_get_samples``.
+
 Usage to print common commands and descriptions:
 ------------------------------------------------
     unravel_commands -c -d

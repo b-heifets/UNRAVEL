@@ -13,7 +13,7 @@ Next command:
 
 Usage:
 ------
-    cstats_mirror_indices -m <RH or LH> [-p glob_pattern] [-ax 2] [-s 0] [-v]
+    cstats_mirror_indices -m <RH or LH> [-i glob_pattern] [-ax 2] [-s 0] [-v]
 """
 
 import numpy as np
@@ -35,7 +35,7 @@ def parse_args():
     reqs.add_argument('-m', '--mas_side', help='Side of the brain corresponding to the mask used for ``vstats`` and ``cstats_fdr`` (RH or LH)', choices=['RH', 'LH'], required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-p', '--pattern', help='Glob pattern to match files. Default: **/*rev_cluster_index.nii.gz', default='**/*rev_cluster_index.nii.gz', action=SM)
+    opts.add_argument('-i', '--input', help='Glob pattern to match files (enable recursive pattern with: shopt -s globstar). Default: **/*rev_cluster_index.nii.gz', default='**/*rev_cluster_index.nii.gz', action=SM)
     opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
     opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
 
@@ -43,6 +43,8 @@ def parse_args():
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
+
+# TODO: consider using rglob (**/* might not work if shell is not expanding the globstar [**])
 
 
 def process_file(file_path, args):
@@ -70,7 +72,7 @@ def main():
 
 
     root_path = Path().resolve()
-    files = list(root_path.glob(args.pattern))
+    files = list(root_path.glob(args.input))
 
     with ThreadPoolExecutor() as executor:
         executor.map(lambda file: process_file(file, args), files)

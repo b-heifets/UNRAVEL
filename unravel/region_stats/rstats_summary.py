@@ -78,6 +78,7 @@ def parse_args():
 # TODO: Dunnett's test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.
 # TODO: Adapt this to work for cell counts and label densities. This could also be used for mean IF intensities.
 # TODO: Need a way to handle cases when some data from some samples is from one hemisphere and some from the other. (see filter_csv.py)
+# TODO: Fix plots for when there are > 3 groups (comparison lines are not positioned correctly)
 
 def get_region_details(region_id, df):
     # Adjust to account for the unique region IDs.

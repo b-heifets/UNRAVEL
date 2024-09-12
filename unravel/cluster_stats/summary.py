@@ -39,11 +39,11 @@ Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-
 
 Usage if running directly after ``cstats_validation``:
 ------------------------------------------------------
-    cstats_summary -c <path/config.ini> -d <list of paths> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-v]
+    cstats_summary -c <path/config.ini> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-d <list of paths>] [-v]
 
 Usage if running after ``cstats_validation`` and ``cstats_org_data``:
 ---------------------------------------------------------------------
-    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-v]
+    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-d <list of paths>] [-v]
 """
 
 import nibabel as nib
@@ -96,7 +96,7 @@ def parse_args():
 # TODO: Sort the overall valid cluster sunburst csv 
 # TODO: Check if irrelevant directories are present in the current working directory and warn the user
 # TODO: Replace this (find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})' \;) w/ example of utils_agg_files_rec
-
+# TODO: Consider using env_var.sh instead of unravel/cluster_stats/summary.ini
 
 def run_script(script_name, script_args):
     """Run a command/script using subprocess that respects the system's PATH and captures output."""

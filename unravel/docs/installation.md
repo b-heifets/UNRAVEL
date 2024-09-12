@@ -117,7 +117,7 @@ If you install graphical applications like **FSL** (which includes FSLeyes) or *
 
 You can either set your virtual environment to activate automatically when opening a terminal, or create an alias for easier activation.
 
-1. Open your `.bashrc` or `.zshrc` file with a text editor:
+1. Open your `.bashrc` or `.zshrc` file with a code editor:
     - Using **[nano](https://www.youtube.com/watch?v=DLeATFgGM-A)**:
     ```bash
     nano ~/.bashrc  # or ~/.zshrc for zsh

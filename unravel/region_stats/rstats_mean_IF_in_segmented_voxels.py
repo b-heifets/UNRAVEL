@@ -54,7 +54,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='path/name.csv relative to ./sample??/', default=None, action=SM)
     opts.add_argument('--region_ids', help='Optional: Space-separated list of region intensities to process. Default: Process all regions', default=None, nargs='*', type=int)
-    opts.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
+    opts.add_argument('-c', '--channel', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
 
     # Optional to_native() args
     opts_to_native = parser.add_argument_group('Optional to_native() arguments')
@@ -173,7 +173,7 @@ def main():
             if IF_img_path is None:
                 print(f"No files match the pattern {args.input} in {sample_path}")
                 continue
-            IF_img = load_3D_img(IF_img_path, args.chann_idx, "xyz")
+            IF_img = load_3D_img(IF_img_path, args.channel, "xyz")
 
             # Calculate mean intensity
             mean_intensities = calculate_mean_intensity(IF_img, ABA_seg, args)
