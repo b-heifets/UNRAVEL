@@ -4,6 +4,15 @@
 """
 Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directories to a target directory.
 
+Next commands for voxel-wise stats: 
+    - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average left and right hemispheres.
+    - If using side-specific z-scoring, use ``vstats_hemi_to_avg`` to average the images.
+    - Prepend condition names with ``utils_prepend``.
+    - Check images in FSLeyes and run ``vstats`` to perform voxel-wise stats.    
+
+Next command for regional stats:
+    - Use ``rstats_summary`` to summarize the results
+
 Usage:
 ------
     utils_agg_files -g 'atlas_space/<asterisk>_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td target_output_dir] [-d list of paths] [-p sample??] [-v]

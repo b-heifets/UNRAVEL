@@ -68,6 +68,8 @@ def parse_args():
 # /usr/local/UNRAVEL_dev/unravel/cluster_stats/prism.py:190: PerformanceWarning: dropping on a non-lexsorted multi-index without a level parameter may impact performance.
 # density_col_summary_df_sum = density_col_summary_df_sum.drop('cluster_ID').reset_index().T
 
+# TODO: Simplify and improve handling when data is missing or empty (perhaps revert to version for before Sept 6 and test w/ Ai14+_centroids_s100_LRavg_sub_neg_z_vox_p_tstat1_q)
+
 
 def sort_samples(sample_names):
     # Extract the numeric part of the sample names and sort by it

@@ -12,8 +12,8 @@ Input examples (path is relative to ./sample??; 1st glob match processed):
 Output example:
     - ./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz
 
-Next steps: 
-    Aggregate outputs with ``utils_agg_files`` and run ``vstats``.
+Next commands for voxel-wise stats: 
+    Preprocess atlas space IF images with ``vstats_z_score`` (recommended for c-Fos-IF) or aggregate them with ``utils_agg_files``.
 
 Usage:
 ------

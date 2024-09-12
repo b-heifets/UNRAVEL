@@ -9,7 +9,9 @@ Inputs:
     - The <OneWordCondition>_sample?? column has the cell densities for each region.
 
 Outputs:
-    - Plots and a summary CSV to the current directory.
+    - Saved to ./<args.test_type>_plots_<side>
+    - Plots for each region with cell densities for each group (e.g., Saline, MDMA, Meth)
+    - Summary of significant differences between groups
     - regional_cell_densities_all.csv (Columns: columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...)
 
 Note: 

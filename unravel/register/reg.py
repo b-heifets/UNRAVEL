@@ -23,8 +23,8 @@ Note:
     - Letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Inferior
     - The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)
 
-Next steps: 
-    ``reg_check`` and ``vstats_prep``
+Next commands: 
+    ``reg_check`` for assessing registration, ``vstats_prep`` for preparing voxel-wise stats inputs, or ``rstats`` for regional stats.
 
 Usage for tissue registration:
 ------------------------------

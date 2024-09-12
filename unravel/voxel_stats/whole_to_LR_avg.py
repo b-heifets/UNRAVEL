@@ -16,6 +16,13 @@ Output:
 Next steps:
     - Run ``vstats`` to perform voxel-wise stats.
 
+Next commands for voxel-wise stats: 
+    - Prepend condition names with ``utils_prepend``.
+    - Check images in FSLeyes and run ``vstats`` to perform voxel-wise stats.
+
+Next commands for voxel-wise stats:
+        Preprocess atlas space IF images ``vstats_z_score``, prepend condition names with ``utils_prepend``, and perform voxel-wise stats with ``vstats``.
+
 Usage:
 ------
     vstats_whole_to_avg [--i '<asterisk>.nii.gz'] [--kernel 0] [--axis 2] [--shift 0] [--parallel] [--atlas_mask path/atlas_mask.nii.gz] [-v]

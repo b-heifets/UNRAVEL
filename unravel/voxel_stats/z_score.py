@@ -16,10 +16,11 @@ Outputs:
 Note:
     - z-score = (img.nii.gz - mean pixel intensity in brain)/standard deviation of intensity in brain
 
-Next steps: 
-    - If --dirs was used, aggregate outputs with ``utils_agg_files``.
-    - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average left and right hemispheres together.
-    - If using side-specific z-scoring, next use ``vstats_hemi_to_avg`` to average the images.
+Next commands for voxel-wise stats: 
+    - Aggregate atlas space IF images with ``utils_agg_files``.
+    - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average left and right hemispheres.
+    - If using side-specific z-scoring, use ``vstats_hemi_to_avg`` to average the images.
+    - Prepend condition names with ``utils_prepend``.
     - Check images in FSLeyes and run ``vstats`` to perform voxel-wise stats.
 
 Usage:

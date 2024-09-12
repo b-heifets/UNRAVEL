@@ -8,6 +8,9 @@ Note:
     - Use -ax 2 and -s 0 for the CCFv3 2020 atlas.
     - Use -ax 0 and -s 2 for the 25 um Gubra atlas (deprecated).
 
+Next command:
+    - ``cstats_validation`` to validate the cluster indices (if unilateral data or bilateral data processed with a whole brain mask).
+
 Usage:
 ------
     cstats_mirror_indices -m <RH or LH> [-p glob_pattern] [-ax 2] [-s 0] [-v]

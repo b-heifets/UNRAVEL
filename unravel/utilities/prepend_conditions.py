@@ -18,6 +18,9 @@ Files will be renamed as follows:
     'sample01_file.csv' --> 'control_sample01_file.csv'
     'sample02_file.csv' --> 'treatment_sample02_file.csv'.
 
+Next commands for voxel-wise stats: 
+    - Check images in FSLeyes and run ``vstats`` to perform voxel-wise stats.
+
 Usage for files:
 ----------------
     utils_prepend -sk <path/sample_key.csv> -f [--recursive] [-v]

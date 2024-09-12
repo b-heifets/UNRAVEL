@@ -16,10 +16,10 @@ Inputs:
         sample02,treatment
 
 Outputs:
-    - Files for 3D brain models of valid clusters
-    - CSVs with valid cluster data (e.g., aggregated data for Prism)
-    - CSVs for sunburst plots
-    - Excel files with tables summarizing top regions and defining region abbreviations
+    - Files for 3D brain models of valid clusters (vizualize in DSI Studio)
+    - CSVs with valid cluster data (e.g., aggregated data for plotting bar graphs with GraphPad Prism)
+    - CSVs for sunburst plots (plot with Flourish)
+    - Excel files with tables summarizing top regions and defining region abbreviations (for SI tables)
 
 ``cstats_summary`` runs these commands:
     - ``cstats_org_data``, ``cstats_group_data``, ``utils_prepend``, ``cstats``, ``cstats_index``, ``cstats_brain_model``, ``cstats_table``, ``cstats_prism``, ``cstats_legend``

@@ -13,7 +13,7 @@ Inputs:
 Outputs:
     - stats/ directory with randomise_parallel outputs (e.g., uncorrected 1-p value maps [vox_p])
 
-Next steps:
+Next commands:
     - Run ``cstats_fdr_range`` and ``cstats_fdr`` to correct for multiple comparisons.
 
 Note:
