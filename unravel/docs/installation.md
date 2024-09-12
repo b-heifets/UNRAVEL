@@ -1,47 +1,58 @@
 # Installation
-
-* Please send questions/issues to [danrijs@stanford.edu](mailto:danrijs@stanford.edu), so we can improve this guide for future users.
-
-* If you are unfamiliar with the terminal, please review the beginning of our [guide](https://b-heifets.github.io/UNRAVEL/guide.html)
+* Please send questions/issues to [danrijs@stanford.edu](mailto:danrijs@stanford.edu), so we can improve UNRAVEL and/or its documentation
+* If you are new to the terminal, please see the start of the [UNRAVEL guide](https://b-heifets.github.io/UNRAVEL/guide.html)
 
 
-## TL;DR
+## TL;DR on Installation
 * Activate a virtual environment in Python
-* **Option A:** install UNRAVEL via GitHub (for editing source code and/or incremental updates):
 ```bash
-# Install latest code on the main branch
+# Installing UNRAVEL
 git clone https://github.com/b-heifets/UNRAVEL.git
 cd UNRAVEL
 pip install -e .
 
-# Update
+# Updating UNRAVEL
 git pull 
 pip install -e . 
 ```
-* **Option B:** install UNRAVEL via [PyPI](https://pypi.org/project/heifetslab-unravel/):
-```bash
-# Install latest release
-pip install heifetslab-unravel
 
-# Update
-pip install --upgrade heifetslab-unravel
-```
-* Confirm that the installation worked: 
+* Confirm that installation worked by running: 
 ```bash
-unravel_commands -c  # or: uc -c
+unravel_commands -c  # or run: uc -c
+# This should print common UNRAVEL commands
+
+# For more info, run
+uc -h 
 ```
+
 * **[Download atlas/template files](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)**
-    * This has an [iDISCO/LSFM-specific template](https://pubmed.ncbi.nlm.nih.gov/33063286/) that we warped to 30 µm CCFv3 space
+    * This has an [iDISCO/LSFM-specific template](https://pubmed.ncbi.nlm.nih.gov/33063286/) that we warped to 30 µm [CCFv3 atlas](https://www.sciencedirect.com/science/article/pii/S0092867420304025) space
 * **Required software:**
-    * [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation) for voxel-wise stats and CLI tools
+    * [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation) for voxel-wise stats, CLI tools, and viewing .nii.gz images with [FSLeyes](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html)
+        * See below on setting this up by adding lines to a terminal configuration file (e.g., .bashrc or .zshrc)
     * [Ilastik](https://www.ilastik.org/download.html) for segmenting features of interest
+        * See below for .bashrc configuration
 * **Recommended software:**
     * [3D Slicer](https://download.slicer.org/) for 3D painting to make brains more like the average template (improves registration)
     * [DSI Studio](https://dsi-studio.labsolver.org/download.html) for 3D brain models
     * [Flourish](https://app.flourish.studio/login) for sunburst plots (free web app)
+    * [Visual Studio Code](https://code.visualstudio.com/) for viewing source code, debugging, editing files (e.g., .bashrc), etc.
+        * Enstall the [Python extension](https://code.visualstudio.com/docs/languages/python)
 
+## TL;DR on Getting Started
+* Review the [UNRAVEL guide](https://b-heifets.github.io/UNRAVEL/guide.html) for analysis steps.
+* Add raw stitched LSFM data into sample?? folders (e.g., sample01, sample02, ...).
+* Try out the command `utils_get_samples` to test out batch processing of sample?? folders.
+* The first command in the workflow is `io_metadata`.
+* Each command has a help guide with inputs, outputs, next steps, etc.
+* For example, run `io_metadata -h` to get started.
 
-## Setting Up Windows Subsystem for Linux (WSL)
+--- 
+
+## Installing UNRAVEL on Linux or WSL
+
+:::{admonition} Setting Up Windows Subsystem for Linux (WSL)
+:class: hint dropdown
 
 If you're new to WSL, watch the first few minutes of [this video](https://www.youtube.com/watch?v=-atblwgc63E). After installation, refer to this [tutorial](https://www.youtube.com/watch?v=i547sSXhq0E) for navigating your files.
 
@@ -60,89 +71,26 @@ If you're new to WSL, watch the first few minutes of [this video](https://www.yo
 
 :::note
 To enable copy/paste in PowerShell or WSL, go to the top-left icon --> Properties --> Edit Options --> check "Use Ctrl+Shift+C/V as Copy/Paste" --> OK.
+
+If you install FSL (includes FSLeyes) and Ilastik for linux for use via WSL, the graphic user interface may not work. If that is an issue, try installing the Windows versions.
+:::
+
+### Running Linux Applications in WSL
+
+If you install graphical applications like **FSL** (which includes FSLeyes) or **Ilastik** for Linux in WSL, the graphical user interface may not work out of the box. 
+
+- **Option 1**: Install the Windows versions of these tools for GUI support (the linux versions could still be used via commands in WSL)
+- **Option 2**: Set up a graphical server, such as **Xming** or **VcXsrv**, to enable GUIs for Linux applications running in WSL.
+
 :::
 
 
-## Installing UNRAVEL on Linux or WSL
-
 1. **Open a terminal**
 
-2. **Install [pyenv](https://github.com/pyenv/pyenv), [venv](https://docs.python.org/3/library/venv.html), [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html), or other tool(s) to manage Python versions and create a virtual environment:**
+2. **Install [venv](https://docs.python.org/3/library/venv.html), [pyenv](https://github.com/pyenv/pyenv), [conda](https://conda.io/projects/conda/en/latest/user-guide/install/index.html), or other tool(s) to manage Python versions and create a virtual environment:**
 
-    ### Option A: Using pyenv
-
-    :::{note}
-    "pyenv lets you easily switch between multiple versions of Python."
-    It works on Linux, macOS, and WSL. 
-    For Windows, use [pyenv-win](https://github.com/pyenv-win/pyenv-win) ([more info](https://github.com/pyenv/pyenv))
-    :::
-
-    **a. Install python build dependencies:**
-
-    - **For Linux and WSL:**
-    ```bash
-    sudo apt update
-    
-    sudo apt install build-essential libssl-dev zlib1g-dev \ 
-    libbz2-dev libreadline-dev libsqlite3-dev curl git \ 
-    libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
-    ```
-    - **For macOS:**
-    ```bash
-    xcode-select --install  # If not available, see: https://github.com/pyenv/pyenv/wiki#suggested-build-environment
-
-    # Install Homebrew if not yet installed (https://brew.sh/)
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-    brew install openssl readline sqlite3 xz zlib tcl-tk
-    brew update  
-    ```
-
-    **b. Install [pyenv](https://github.com/pyenv/pyenv#installation):**
-    ```bash
-    # Linux or WSL:
-    curl https://pyenv.run | bash
-
-    # macOS:
-    brew install pyenv
-    ```
-
-    **c. Set up pyenv in your shell startup file (.bashrc or .zshrc):**
-    ```bash
-    (
-    # Run these commands to add lines to ~/.bashrc
-    echo '' >> ~/.bashrc
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc
-    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc
-    echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-    echo '' >> ~/.bashrc
-    . ~/.bashrc  # Source .bashrc for changes to take effect
-    )
-
-    (
-    # Or for zsh run these commands to add lines to ~/.zshrc
-    echo '' >> ~/.zshrc
-    echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
-    echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
-    echo 'eval "$(pyenv init -)"' >> ~/.zshrc
-    echo '' >> ~/.zshrc
-    . ~/.zshrc  # Source .zshrc for changes to take effect
-    )
-
-    ```
-
-    **d. Install Python 3.11:**
-    ```bash
-    pyenv install 3.11.3
-    ```
-
-    **e. Create and activate a virtual environment:**
-    ```bash
-    pyenv virtualenv 3.11.3 unravel
-    pyenv activate unravel  # To deactivate, run: pyenv deactivate
-    ```
-
-    ### Option B: Using venv
+:::{admonition} Setting up a virtual environment for installing python dependencies with venv
+:class: hint dropdown
 
     **a. Install Python 3.11 if it's not already installed:**
     - **For Linux and WSL:**
@@ -158,41 +106,79 @@ To enable copy/paste in PowerShell or WSL, go to the top-left icon --> Propertie
     **b. Create and activate a virtual environment:**
     ```bash
     python3.11 -m venv unravel
-    source unravel/bin/activate
+    source unravel/bin/activate  # Edit path if needed. To deactivate, run: deactivate
     ```
+:::
+
+:::{admonition} Easier virtual environment activation with venv
+:class: hint dropdown
+
+#### **Automatically Activate or Create an Alias for Your Virtual Environment**
+
+You can either set your virtual environment to activate automatically when opening a terminal, or create an alias for easier activation.
+
+1. Open your `.bashrc` or `.zshrc` file with a text editor:
+    - Using **[nano](https://www.youtube.com/watch?v=DLeATFgGM-A)**:
+    ```bash
+    nano ~/.bashrc  # or ~/.zshrc for zsh
+    ```
+    - Using **[VS Code](https://code.visualstudio.com/download)**:
+    ```bash
+    code ~/.bashrc  # or ~/.zshrc for zsh
+    ```
+
+2. **For automatic activation**, add the following line to the end of the file:
+    ```bash
+    source unravel/bin/activate   # Edit path if needed
+    ```
+
+    **Or, to create an alias**, add this line instead:
+    ```bash
+    alias unravel="source unravel/bin/activate"  # Edit path if needed
+    ```
+
+3. Save and apply the changes:
+    - If using `nano`, press `Ctrl+X` to exit and follow the prompts.
+    - Apply changes by running:
+    ```bash
+    source ~/.bashrc  # or ~/.zshrc for zsh
+    ```
+
+Now, either your virtual environment will automatically activate when you open a terminal, or you can activate it using the `unravel` command.
+:::
 
 
 3. **Install UNRAVEL**
 
-    ### Option A: Install UNRAVEL via PyPI and use as-is
+    - With your virtual environment active, follow these steps to install UNRAVEL
+
+    ### Option A: Editable installation of UNRAVEL (recommended)
+    * This is allows for editing source code and incremental updates.
+
+    ```bash
+    cd <path>  # Insert path to where you want to clone the GitHub repository
+
+    git clone https://github.com/b-heifets/UNRAVEL.git  # Code from the main branch is downloaded
+
+    cd UNRAVEL
+
+    pip install -e .  # This installs python dependencies and sets up commands (both defined in pyproject.toml)
+    ```
+
+    ### Option B: Install UNRAVEL via PyPI and use it as-is
 
     ```bash
     pip install heifetslab-unravel
     ```
 
-    ### Option B: Editable installation of UNRAVEL
-
-    ```bash
-    cd <path>  # Insert path to where you want to clone the GitHub repository
-
-    git clone https://github.com/b-heifets/UNRAVEL.git  # Clone the repo
-
-    cd UNRAVEL
-
-    <command to activate a virtual environment> # e.g., pyenv activate unravel
-
-    pip install -e .
-    ```
-
-    :::{note}
-    If you want to use another branch, run the following before ``pip install -e .``: 
-    git checkout <branch-name>  # Check out the desired remote branch (e.g., dev)
-
-    To add extra depedencies (e.g., for updating documentation), run: ``pip install -e ".[dev]"`
-    :::
-
 4. **Download atlas/template files:**
-    [Google Drive Link](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)
+    - [Google Drive Link](https://drive.google.com/drive/folders/1iZjQlPc2kPagnVsjWEFFObLlkSc2yRf9?usp=sharing)
+    - We use a 30 µm version of the mouse Allen brain atlas (CCFv3 with 2020 region labels): `atlas_CCFv3_2020_30um.nii.gz`
+    - The left hemisphere region labels/IDs are increased by 20,000 in this version: `atlas_CCFv3_2020_30um_split.nii.gz`
+    - For registeration with iDISCO/LSFM data, use this `iDISCO_template_CCFv3_30um.nii.gz` (we warped the Gubra atlas to CCFv3 space and refined alignment)
+    - For registeration with serial 2P data, use: `average_template_CCFv3_30um.nii.gz`
+    - This binary brain mask can be used for 3D brain models: `mask_CCFv3_2020_30um.nii.gz`
+    - Use a template that matches your tissue, along with a mask that includes only regions of interest.
 
 5. **Install Ilastik:**
     - [Ilastik installation website](https://www.ilastik.org/download.html).
@@ -200,12 +186,7 @@ To enable copy/paste in PowerShell or WSL, go to the top-left icon --> Propertie
 
 6. **Install FSL:**
     - Follow the installation instructions from the [FSL website](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation).
-    - Example for Ubuntu:
-        ```bash
-        sudo apt-get update
-        sudo apt-get install -y fsl
-        ```
-    - This installation includes FSLeyes, which is useful for visualizing data in atlas space and with colored wireframe atlas. 
+    - FSL includes FSLeyes, which is useful for visualizing data in atlas space and with colored wireframe atlas. 
     - Some scripts depend on FSL.
     - FSL has several command line tools (e.g., fslmaths, fslstats, fslroi, fslcpgeom) that are useful for working with .nii.gz images. 
 
@@ -223,8 +204,8 @@ To enable copy/paste in PowerShell or WSL, go to the top-left icon --> Propertie
     - Add the following to your `.bashrc` or `.zshrc` shell configuration file, and change `/usr/local/` to the path where FSL and Ilastik are installed:
 
     ```bash
-    export PATH=$PATH:/usr/local/fsl/bin
-    export FSLDIR=/usr/local/fsl
+    export PATH=$PATH:/usr/local/fsl/bin  # Update the path to FSL's binary folder
+    export FSLDIR=/usr/local/fsl  # Update the path to where FSL was installed
     PATH=${FSLDIR}/bin:${PATH}
     . ${FSLDIR}/etc/fslconf/fsl.sh
     export FSLDIR PATH
@@ -242,9 +223,15 @@ To enable copy/paste in PowerShell or WSL, go to the top-left icon --> Propertie
     Note the release/version and/or backup code before updating for reproducibility
     :::
 
-    ### Option A. Updating UNRAVEL if installed via PyPI:
+    ### Option A. Updating UNRAVEL if installed via GitHub:
     ```bash
-    # Update UNRAVEL if installed via PyPI: 
+    cd <path/to/UNRAVEL>
+    git pull  # This will update the local repo, pulling the latest code from the main branch
+    pip install -e .  # This will update commands and install new dependencies
+    ```
+
+    ### Option B. Updating UNRAVEL if installed via PyPI:
+    ```bash
     pip install --upgrade heifetslab-unravel
 
     # Check the installed version of UNRAVEL
@@ -252,32 +239,25 @@ To enable copy/paste in PowerShell or WSL, go to the top-left icon --> Propertie
     ```
     To check the latest version, go to the [heifetslab-unravel PyPI page](https://pypi.org/project/heifetslab-unravel/)
 
-    ### Option B. Updating UNRAVEL if installed via GitHub:
-    This is allows for editing source code and incremental updates
-    ```bash
-    cd <path/to/UNRAVEL>
-    git pull  # This will update the local repo
-    pip install -e .  # This will update commands and install new dependencies
-    ```
+--- 
 
-:::{admonition} Checking changes between versions
-:class: note dropdown
+## Checking changes between versions
+* Releases and update notes for UNRAVEL can be found [here](https://github.com/b-heifets/UNRAVEL/releases) on GitHub.
+* For more detailed information, you can view the commit history:
+    * [Main branch commits](https://github.com/b-heifets/UNRAVEL/commits/main)
+    * [Dev branch commits](https://github.com/b-heifets/UNRAVEL/commits/dev)
 
-Releases and update notes for UNRAVEL can be found [here](https://github.com/b-heifets/UNRAVEL/releases) on GitHub .
-
-For more detailed information, you can view the commit history:
-* [Main branch commits](https://github.com/b-heifets/UNRAVEL/commits/main)
-* [Dev branch commits](https://github.com/b-heifets/UNRAVEL/commits/dev)
-:::
+---
 
 ## Viewing images:
-
 * .nii.gz images are commonly created during analysis. 
 * They compress well when small or if there are many voxels with an intensity of zero. 
 * They can be viewed with [Fiji](https://imagej.net/software/fiji/downloads), [napari](https://napari.org/stable/), or neuroimaging viewers (e.g., FSLeyes)
 * Fiji needs the [nifti_io plugin](https://imagej.net/ij/plugins/nifti.html)
 * Napari needs the [napari-nifti plugin](https://www.napari-hub.org/plugins/napari-nifti)
 
+
+---
 
 ## Get started with analysis 
 
