@@ -503,26 +503,34 @@
 <ul class="simple">
 <li><p>Documentation: <a class="reference external" href="https://b-heifets.github.io/UNRAVEL/">https://b-heifets.github.io/UNRAVEL/</a></p></li>
 <li><p>Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.</p></li>
+<li><p>Aliases are provided for most commands to make them easier to type.</p></li>
 <li><p>Filtering is case-insensitive and matches substrings in the printed lines (regex).</p></li>
 <li><p>For example, use of -f with -d will find matches in the command name and/or description, preserving those lines.</p></li>
 </ul>
 </div>
-<section id="usage-to-print-common-commands-and-descriptions">
-<h2>Usage to print common commands and descriptions:<a class="headerlink" href="#usage-to-print-common-commands-and-descriptions" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>Next steps:</dt><dd><ul class="simple">
+<li><p>Start with <code class="docutils literal notranslate"><span class="pre">io_metadata</span></code> (<code class="docutils literal notranslate"><span class="pre">m</span></code>) for most workflows (e.g., to extract or specify raw voxel sizes and image dimensions).</p></li>
+<li><p>Many scripts are designed for batch processing of sample directories, which can be tested using <code class="docutils literal notranslate"><span class="pre">utils_get_samples</span></code> (<code class="docutils literal notranslate"><span class="pre">s</span></code>).</p></li>
+</ul>
+</dd>
+</dl>
+<section id="usage-to-print-common-commands-aliases-and-descriptions">
+<h2>Usage to print common commands, aliases, and descriptions:<a class="headerlink" href="#usage-to-print-common-commands-aliases-and-descriptions" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>unravel_commands -c -d</p>
+<div><p>uc -cad</p>
+</div></blockquote>
+</section>
+<section id="usage-to-print-all-commands-matching-a-specific-string">
+<h2>Usage to print all commands matching a specific string:<a class="headerlink" href="#usage-to-print-all-commands-matching-a-specific-string" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>uc -ad -f vstats  # Find voxel-wise stats commands</p>
 </div></blockquote>
 </section>
 <section id="usage-to-print-all-commands-and-module-names">
 <h2>Usage to print all commands and module names:<a class="headerlink" href="#usage-to-print-all-commands-and-module-names" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>unravel_commands -m</p>
-</div></blockquote>
-</section>
-<section id="usage-to-print-commands-matching-a-specific-string">
-<h2>Usage to print commands matching a specific string:<a class="headerlink" href="#usage-to-print-commands-matching-a-specific-string" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>unravel_commands -f &lt;string&gt;</p>
+<div><p>uc -m</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -583,9 +591,9 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-print-common-commands-and-descriptions">Usage to print common commands and descriptions:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-print-common-commands-aliases-and-descriptions">Usage to print common commands, aliases, and descriptions:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-print-all-commands-matching-a-specific-string">Usage to print all commands matching a specific string:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-print-all-commands-and-module-names">Usage to print all commands and module names:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-print-commands-matching-a-specific-string">Usage to print commands matching a specific string:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.unravel_commands.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.unravel_commands.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>

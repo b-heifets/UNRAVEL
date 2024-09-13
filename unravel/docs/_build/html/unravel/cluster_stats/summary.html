@@ -518,10 +518,17 @@ sample02,treatment</p>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>Files for 3D brain models of valid clusters</p></li>
-<li><p>CSVs with valid cluster data (e.g., aggregated data for Prism)</p></li>
-<li><p>CSVs for sunburst plots</p></li>
-<li><p>Excel files with tables summarizing top regions and defining region abbreviations</p></li>
+<li><dl class="simple">
+<dt>For each cluster map, the following output directories are created:</dt><dd><ul>
+<li><p>3D_brains: Files 3D brain models of valid clusters</p></li>
+<li><p>valid_clusters_tables_and_legend: Excel files with tables summarizing top regions and defining region abbreviations (for SI tables)</p></li>
+<li><p>_valid_clusters: valid cluster maps, CSVs for sunburst plots (plot with Flourish), etc.</p></li>
+<li><p>_valid_clusters_stats: test results for adding asterisks to the xlsx files, etc.</p></li>
+<li><p>_valid_clusters_prism: CSVs for making bar graphs in GraphPad Prism (refer to the xlsx files for annotations)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </dd>
 <dt><code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code> runs these commands:</dt><dd><ul class="simple">
@@ -545,13 +552,13 @@ find . -name “valid_clusters_sunburst.csv” -exec sh -c ‘cp {} ./$(basename
 <section id="usage-if-running-directly-after-cstats-validation">
 <h2>Usage if running directly after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>:<a class="headerlink" href="#usage-if-running-directly-after-cstats-validation" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cstats_summary -c &lt;path/config.ini&gt; -d &lt;list of paths&gt; -cvd ‘psilocybin_v_saline_tstat1_q&lt;asterisk&gt;’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-v]</p>
+<div><p>cstats_summary -c &lt;path/config.ini&gt; -cvd ‘psilocybin_v_saline_tstat1_q&lt;asterisk&gt;’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-d &lt;list of paths&gt;] [-v]</p>
 </div></blockquote>
 </section>
 <section id="usage-if-running-after-cstats-validation-and-cstats-org-data">
 <h2>Usage if running after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> and <code class="docutils literal notranslate"><span class="pre">cstats_org_data</span></code>:<a class="headerlink" href="#usage-if-running-after-cstats-validation-and-cstats-org-data" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cstats_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-v]</p>
+<div><p>cstats_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-d &lt;list of paths&gt;] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">

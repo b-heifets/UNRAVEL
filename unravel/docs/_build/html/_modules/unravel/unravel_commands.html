@@ -360,20 +360,25 @@
 <span class="sd">Note: </span>
 <span class="sd">    - Documentation: https://b-heifets.github.io/UNRAVEL/</span>
 <span class="sd">    - Commands are roughly organized by the order of the workflow and/or the relatedness of the commands.</span>
+<span class="sd">    - Aliases are provided for most commands to make them easier to type.</span>
 <span class="sd">    - Filtering is case-insensitive and matches substrings in the printed lines (regex).</span>
 <span class="sd">    - For example, use of -f with -d will find matches in the command name and/or description, preserving those lines.</span>
 
-<span class="sd">Usage to print common commands and descriptions:</span>
-<span class="sd">------------------------------------------------</span>
-<span class="sd">    unravel_commands -c -d</span>
+<span class="sd">Next steps:</span>
+<span class="sd">    - Start with ``io_metadata`` (``m``) for most workflows (e.g., to extract or specify raw voxel sizes and image dimensions).</span>
+<span class="sd">    - Many scripts are designed for batch processing of sample directories, which can be tested using ``utils_get_samples`` (``s``).</span>
+
+<span class="sd">Usage to print common commands, aliases, and descriptions:</span>
+<span class="sd">----------------------------------------------------------</span>
+<span class="sd">    uc -cad</span>
+
+<span class="sd">Usage to print all commands matching a specific string:</span>
+<span class="sd">-------------------------------------------------------</span>
+<span class="sd">    uc -ad -f vstats  # Find voxel-wise stats commands</span>
 
 <span class="sd">Usage to print all commands and module names:</span>
 <span class="sd">---------------------------------------------</span>
-<span class="sd">    unravel_commands -m</span>
-
-<span class="sd">Usage to print commands matching a specific string:</span>
-<span class="sd">---------------------------------------------------</span>
-<span class="sd">    unravel_commands -f &lt;string&gt;</span>
+<span class="sd">    uc -m</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">extended_help</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -409,7 +414,6 @@
 <span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 
 
-
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../unravel/unravel_commands.html#unravel.unravel_commands.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
@@ -419,7 +423,8 @@
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--common&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Only print common commands&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--module&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Print the module (script name and location in the unravel package) for each command&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--description&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Print the description of each command&#39;s purpose&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--filter&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Filter commands by a string (e.g, -f reg)&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--filter&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Filter commands by a string (e.g., -f reg)&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--aliases&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Print shorter aliases of the commands&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--extended-help&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Help on diagnosing and fixing command conflicts&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_known_args</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">extended_help</span><span class="p">:</span>
@@ -439,7 +444,8 @@
             <span class="s2">&quot;reg_prep&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.register.reg_prep&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Prepare registration (resample the autofluo image).&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rp&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;reg&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.register.reg&quot;</span><span class="p">,</span>
@@ -449,34 +455,40 @@
             <span class="s2">&quot;reg_check&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.register.reg_check&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Check registration (aggregate the autofluo and warped atlas images).&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rc&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;reg_check_brain_mask&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.register.reg_check_brain_mask&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Check brain mask for over/under segmentation.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rcbm&quot;</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Warping&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;warp_to_atlas&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.warp.to_atlas&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Warp images to atlas space.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;w2a&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;warp_to_fixed&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.warp.to_fixed&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Warp images to native space.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;w2f&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;warp_to_native&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.warp.to_native&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Warp images to native space.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;w2n&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;warp_points_to_atlas&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.warp.points_to_atlas&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Warp cell centroids in tissue space to atlas space.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;wp2a&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;warp&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.warp.warp&quot;</span><span class="p">,</span>
@@ -488,166 +500,199 @@
             <span class="s2">&quot;seg_copy_tifs&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.segment.copy_tifs&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Copy TIF images (copy select tifs to target dir for training ilastik).&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sct&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;seg_brain_mask&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.segment.brain_mask&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Create brain mask (segment resampled autofluo tifs).&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sbm&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;seg_ilastik&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.segment.ilastik_pixel_classification&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Perform pixel classification w/ Ilastik to segment features of interest.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;si&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;seg_labels_to_masks&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.segment.labels_to_masks&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert each label to a binary .nii.gz.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sl2m&quot;</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Voxel-wise stats&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;vstats_apply_mask&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.voxel_stats.apply_mask&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Apply mask to image (e.g., nullify artifacts or isolate signals).&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;apply_mask&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;vstats_prep&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.voxel_stats.vstats_prep&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;vp&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;vstats_z_score&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.voxel_stats.z_score&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Z-score images.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;zs&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;vstats_whole_to_avg&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.voxel_stats.whole_to_LR_avg&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Average left and right hemispheres together&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;lr_avg&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;vstats_hemi_to_avg&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.voxel_stats.hemi_to_LR_avg&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;If left and right hemispheres were processed separately (less common), average them together.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;h2a&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;vstats&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.voxel_stats.vstats&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Compute voxel statistics.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;vs&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;vstats_mirror&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.voxel_stats.mirror&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Flip and optionally shift content of images in atlas space.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mirror&quot;</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Cluster-wise stats&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;cstats_fdr_range&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.fdr_range&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Get FDR q value range yielding clusters.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;fr&quot;</span>
+
             <span class="p">},</span>
             <span class="s2">&quot;cstats_fdr&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.fdr&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;FDR-correct 1-p value map --&gt; cluster map.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;f&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_mirror_indices&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.recursively_mirror_rev_cluster_indices&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Recursively mirror cluster maps for validating clusters in left and right hemispheres.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mirror_ci&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_validation&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.validation&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Validate clusters w/ cell/label density measurements.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;cv&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_summary&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.summary&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Summarize info on valid clusters (run after cluster_validation).&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;css&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_org_data&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.org_data&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Organize CSVs from custer_validation.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;cod&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_group_data&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.group_bilateral_data&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Group bilateral cluster data.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;cgd&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.cstats&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Compute cluster validation statistics.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;cs&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_index&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.index&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Make a valid cluster map and sunburst plots.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;ci&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_brain_model&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.brain_model&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Make a 3D brain model from a cluster map (for DSI studio)&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;cbm&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_table&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.table&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Create a table of cluster validation data.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;ct&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_prism&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.prism&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Generate CSVs for bar charts in Prism.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;prism&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_legend&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.legend&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Make a legend of regions in cluster maps.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;legend&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_sunburst&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.sunburst&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Create a sunburst plot of regional volumes.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sunburst&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_find_incongruent&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.find_incongruent_clusters&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Find clusters where the effect direction does not match the prediction of cluster_fdr (for validation of non-directional p value maps).&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;cfi&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_crop&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.crop&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Crop clusters to a bounding box.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;crop&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_mean_IF&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.mean_IF&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Compute mean immunofluo intensities for each cluster. &quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;cmi&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_mean_IF_summary&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.mean_IF_summary&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Plot mean immunofluo intensities for each cluster.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;cmis&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;effect_sizes&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.effect_sizes.effect_sizes&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Calculate effect sizes for clusters.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;es&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;effect_sizes_sex_abs&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Calculate absolute effect sizes by sex.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;esa&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;effect_sizes_sex_rel&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Calculate relative effect sizes by sex.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;esr&quot;</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Region-wise stats&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -659,225 +704,272 @@
             <span class="s2">&quot;rstats_summary&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.region_stats.rstats_summary&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Summarize regional cell densities.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rss&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;rstats_mean_IF&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.region_stats.rstats_mean_IF&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Compute mean immunofluo intensities for regions.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rmi&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;rstats_mean_IF_in_seg&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.region_stats.rstats_mean_IF_in_segmented_voxels&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Compute mean immunofluo intensities in segmented voxels.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rmiis&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;rstats_mean_IF_summary&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.region_stats.rstats_mean_IF_summary&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Plot mean immunofluo intensities for regions.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rmis&quot;</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Image I/O&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;io_metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.metadata&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Handle image metadata.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_img&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.io_img&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Image I/O operations.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;img&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_nii_info&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.nii_info&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Print info about NIfTI files.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;i&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_nii_hd&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.nii_hd&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Print NIfTI headers.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;hd&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_nii&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.io_nii&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;NIfTI I/O operations (binarize, convert data type, scale, etc).&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;nii&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_reorient_nii&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.reorient_nii&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Reorient NIfTI files.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;reorient&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_nii_to_tifs&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.nii_to_tifs&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert NIfTI files to TIFFs.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;n2t&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_nii_to_zarr&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.nii_to_zarr&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert NIfTI files to Zarr.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;n2z&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_zarr_to_nii&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.zarr_to_nii&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert Zarr format to NIfTI.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;z2n&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_h5_to_tifs&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.h5_to_tifs&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert H5 files to TIFFs.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;h5t&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_tif_to_tifs&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.tif_to_tifs&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert TIF to TIFF series.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;t2t&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_img_to_npy&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.img_to_npy&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert images to Numpy arrays.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;i2np&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_img_to_points&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.img_to_points&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert and image into points coordinates.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;i2p&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_points_to_img&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.points_to_img&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Populate an empty image with point coordinates.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;p2i&quot;</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Image tools&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;img_avg&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.avg&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Average NIfTI images.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;avg&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_unique&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.unique_intensities&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Find unique intensities in images.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;unique&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_max&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.max&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Print the max intensity value in an image.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;max&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_bbox&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.bbox&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Compute bounding box of non-zero voxels in an image.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;bbox&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_spatial_avg&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.spatial_averaging&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Perform spatial averaging on images.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;spatial_avg&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_rb&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.rb&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Apply rolling ball filter to TIF images.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rb&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_DoG&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.DoG&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Apply Difference of Gaussian filter to TIF images.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;DoG&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_pad&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.pad&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Pad images.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;pad&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_resample&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.resample&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Resample image.nii.gz.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;resample&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_resample_points&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.resample_points&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Resample a set of points [and save as an image].&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;resample_points&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_extend&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.extend&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Extend images (add padding to one side).&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;extend&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;img_transpose&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.transpose_axes&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Transpose image axes.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;transpose&quot;</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Atlas tools&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;atlas_relabel&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.atlas.relable_nii&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Relabel atlas IDs.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;relabel&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;atlas_wireframe&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.atlas.wireframe&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Make an atlas wireframe.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;wf&quot;</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Utilities&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;utils_get_samples&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.get_samples:main&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Test --pattern and --dirs args of script that batch process sample?? dirs.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;s&quot;</span>
+            <span class="p">},</span>
             <span class="s2">&quot;utils_agg_files&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.aggregate_files_from_sample_dirs&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Aggregate files from sample directories.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;agg&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;utils_agg_files_rec&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.aggregate_files_recursively&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Recursively aggregate files.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;agg_rec&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;utils_prepend&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.prepend_conditions&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Prepend conditions to files using sample_key.csv.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;prepend&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;utils_rename&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.rename&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Rename files.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;name&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;utils_toggle&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.toggle_samples&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Toggle sample?? folders for select batch processing.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;toggle&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;utils_clean_tifs&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.clean_tif_dirs&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Clean TIF directories (no spaces, move non-tifs).&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;clean_tifs&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;utils_points_compressor&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.points_compressor&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Pack or unpack point data in a CSV file or summarize the number of points per region.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;points_compressor&quot;</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[magenta bold]Category[/], [cyan bold]Command[/], [purple3]Module (-m)[/], [grey50]Description (-d)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[magenta bold]Category[/], [cyan bold]Command[/], [green]Alias (-a), [purple3]Module (-m)[/], [grey50]Description (-d), </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">category</span><span class="p">,</span> <span class="n">cmds</span> <span class="ow">in</span> <span class="n">commands</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">common</span><span class="p">:</span>
             <span class="n">cmds</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cmds</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;common&quot;</span><span class="p">)}</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">filter</span><span class="p">:</span>
-            <span class="c1"># Construct the output string for each command</span>
+            <span class="c1"># Apply filtering logic</span>
             <span class="n">filtered_cmds</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">for</span> <span class="n">cmd</span><span class="p">,</span> <span class="n">details</span> <span class="ow">in</span> <span class="n">cmds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">module</span><span class="p">:</span>
                     <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">aliases</span><span class="p">:</span>
+                    <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;alias&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
                     <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; </span><span class="si">{</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
-                
-                <span class="c1"># Perform the filtering on the constructed output string</span>
+
+                <span class="c1"># Perform filtering on the constructed output string</span>
                 <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">filter</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">):</span>
                     <span class="n">filtered_cmds</span><span class="p">[</span><span class="n">cmd</span><span class="p">]</span> <span class="o">=</span> <span class="n">details</span>
             <span class="n">cmds</span> <span class="o">=</span> <span class="n">filtered_cmds</span>
@@ -889,6 +981,8 @@
             <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;  [cyan bold]</span><span class="si">{</span><span class="n">cmd</span><span class="si">}</span><span class="s2">[/]&quot;</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">module</span><span class="p">:</span>
                 <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; [purple3]</span><span class="si">{</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;module&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">[/]&quot;</span>
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">aliases</span><span class="p">:</span>
+                <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; [green]</span><span class="si">{</span><span class="n">details</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;alias&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">[/]&quot;</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
                 <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; [grey50]</span><span class="si">{</span><span class="n">details</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">[/]&quot;</span>
             <span class="nb">print</span><span class="p">(</span><span class="n">output</span><span class="p">)</span></div>

@@ -499,16 +499,29 @@
   <section id="module-unravel.utilities.aggregate_files_from_sample_dirs">
 <span id="unravel-utilities-aggregate-files-from-sample-dirs-module"></span><span id="unravel-utilities-aggregate-files-from-sample-dirs"></span><h1>unravel.utilities.aggregate_files_from_sample_dirs module<a class="headerlink" href="#module-unravel.utilities.aggregate_files_from_sample_dirs" title="Link to this heading">#</a></h1>
 <p>Use <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code> from UNRAVEL to aggregate files from sample?? directories to a target directory.</p>
+<dl class="simple">
+<dt>Next commands for voxel-wise stats:</dt><dd><ul class="simple">
+<li><p>If analyzing whole brains, consider using <code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code> to average left and right hemispheres.</p></li>
+<li><p>If using side-specific z-scoring, use <code class="docutils literal notranslate"><span class="pre">vstats_hemi_to_avg</span></code> to average the images.</p></li>
+<li><p>Prepend condition names with <code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code>.</p></li>
+<li><p>Check images in FSLeyes and run <code class="docutils literal notranslate"><span class="pre">vstats</span></code> to perform voxel-wise stats.</p></li>
+</ul>
+</dd>
+<dt>Next command for regional stats:</dt><dd><ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code> to summarize the results</p></li>
+</ul>
+</dd>
+</dl>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>utils_agg_files -g ‘atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</p>
+<div><p>utils_agg_files -i ‘atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <section id="usage-to-prepend-sample-folder-name-to-the-name-of-files-being-copied">
 <h2>Usage to prepend sample folder name to the name of files being copied:<a class="headerlink" href="#usage-to-prepend-sample-folder-name-to-the-name-of-files-being-copied" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>utils_agg_files -g ‘atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</p>
+<div><p>utils_agg_files -i ‘atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz’ -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">

@@ -355,8 +355,8 @@
 <span class="sd">Use ``cstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.</span>
 
 <span class="sd">Prereqs: </span>
-<span class="sd">    - vstats</span>
-<span class="sd">    - cstats_fdr</span>
+<span class="sd">    - ``vstats``</span>
+<span class="sd">    - ``cstats_fdr``</span>
 
 <span class="sd">Inputs:</span>
 <span class="sd">    - This can be run from the vstats directory (will process .nii.gz images in the current directory)</span>
@@ -367,10 +367,10 @@
 
 <span class="sd">Next steps:</span>
 <span class="sd">    - cd cluster_mean_IF...</span>
-<span class="sd">    - utils_prepend -sk &lt;path/sample_key.csv&gt; -f  # If needed</span>
+<span class="sd">    - ``utils_prepend`` -sk &lt;path/sample_key.csv&gt; -f  # If needed</span>
 <span class="sd">    - [``cstats_index`` and ``cstats_table``]  # for an xlsx table and anatomically ordered clusters that can be used with ``cstats_prism``</span>
-<span class="sd">    - cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats</span>
-<span class="sd">    - cstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests</span>
+<span class="sd">    - ``cstats_mean_IF_summary`` --order Control Treatment --labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats</span>
+<span class="sd">    - ``cstats_mean_IF_summary`` --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>

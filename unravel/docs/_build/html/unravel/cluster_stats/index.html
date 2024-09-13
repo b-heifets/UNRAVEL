@@ -501,8 +501,8 @@
 <p>Use <code class="docutils literal notranslate"><span class="pre">cstats_mean_IF</span></code> from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.</p>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><ul class="simple">
-<li><p>vstats</p></li>
-<li><p>cstats_fdr</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">vstats</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstats_fdr</span></code></p></li>
 </ul>
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
@@ -516,10 +516,10 @@
 </dd>
 <dt>Next steps:</dt><dd><ul class="simple">
 <li><p>cd cluster_mean_IF…</p></li>
-<li><p>utils_prepend -sk &lt;path/sample_key.csv&gt; -f  # If needed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code> -sk &lt;path/sample_key.csv&gt; -f  # If needed</p></li>
 <li><p>[<code class="docutils literal notranslate"><span class="pre">cstats_index</span></code> and <code class="docutils literal notranslate"><span class="pre">cstats_table</span></code>]  # for an xlsx table and anatomically ordered clusters that can be used with <code class="docutils literal notranslate"><span class="pre">cstats_prism</span></code></p></li>
-<li><p>cstats_mean_IF_summary –order Control Treatment –labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats</p></li>
-<li><p>cstats_mean_IF_summary –order group3 group2 group1 –labels Group_3 Group_2 Group_1  # Tukey tests</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstats_mean_IF_summary</span></code> –order Control Treatment –labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstats_mean_IF_summary</span></code> –order group3 group2 group1 –labels Group_3 Group_2 Group_1  # Tukey tests</p></li>
 </ul>
 </dd>
 </dl>

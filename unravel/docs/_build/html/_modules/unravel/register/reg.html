@@ -374,12 +374,12 @@
 <span class="sd">    - Letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Inferior</span>
 <span class="sd">    - The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)</span>
 
-<span class="sd">Next steps: </span>
-<span class="sd">    ``reg_check`` and ``vstats_prep``</span>
+<span class="sd">Next commands: </span>
+<span class="sd">    ``reg_check`` for assessing registration, ``vstats_prep`` for preparing voxel-wise stats inputs, or ``rstats`` for regional stats.</span>
 
 <span class="sd">Usage for tissue registration:</span>
 <span class="sd">------------------------------</span>
-<span class="sd">    reg -m &lt;path/template.nii.gz&gt; -bc -sm 0.4 -ort &lt;3 letter orientation code&gt; -m2 atlas/atlas_CCFv3_2020_30um.nii.gz [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-bc] [-sm 0.4] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">    reg -m &lt;path/template.nii.gz&gt; -bc -sm 0.4 -ort &lt;3 letter orientation code&gt; [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-bc] [-sm 0.4] [-d list of paths] [-p sample??] [-v]</span>
 
 <span class="sd">Usage for atlas to atlas registration:</span>
 <span class="sd">--------------------------------------</span>
