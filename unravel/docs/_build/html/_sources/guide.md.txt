@@ -192,6 +192,7 @@ If `Ctrl + C` doesn't stop the command, you can kill the process:
 :::
 
 ---
+<br>
 
 
 
@@ -222,6 +223,8 @@ If `Ctrl + C` doesn't stop the command, you can kill the process:
 To view help on arguments for each command in the online documentation, go to the page for that module/script, scroll to the parse_args() function, and click the link for viewing the source code.
 
 ---
+<br>
+
 
 ## Listing Commands
 ```bash
@@ -234,7 +237,7 @@ uc -cad
 # List all commands matching a string (e.g., vstats):
 uc -ad -f vstats  # Find commands related to voxel-wise stats 
 
-# List all commands and the modules that they run:
+# List all commands and the modules/scripts that they run:
 uc -m
 ```
 
@@ -243,6 +246,8 @@ uc -m
 :::
 
 ---
+<br>
+
 
 ## Common Commands
 
@@ -306,6 +311,10 @@ uc -m
 :::
 
 ::::
+
+
+
+
 
 :::::{admonition} All commands
 :class: note dropdown
@@ -430,6 +439,7 @@ uc -m
 :::::
 
 
+
 :::{admonition} More info on commands
 :class: note dropdown
 unravel_commands runs ./\<repo_root_dir\>/unravel/unravel_commands.py
@@ -447,6 +457,8 @@ pip install -e .
 :::
 
 ---
+<br>
+
 
 ## Set Up
 
@@ -455,6 +467,8 @@ Recommended steps to set up for analysis:
 ### Back Up Raw Data
    * For Heifets lab members, we keep one copy of raw data on an external drive and another on a remote server (Dan and Austen have access)
 
+
+
 ### Stitch Z-stacks
    * We use [ZEN (blue edition)](https://www.micro-shop.zeiss.com/en/us/softwarefinder/software-categories/zen-blue/) since we have a [Zeiss Lightsheet 7](https://www.zeiss.com/microscopy/en/products/light-microscopes/light-sheet-microscopes/lightsheet-7.html)
 
@@ -462,7 +476,6 @@ Recommended steps to set up for analysis:
 :::{admonition} Batch stitching settings
 :class: note dropdown
 ```{figure} _static/batch_stitching_1.JPG
-:alt: Batch stitching settings
 :height: 500px
 :align: center
 Select a mid-stack reference slice. Ideally, tissue will be present in each tile of the reference slice. 
@@ -472,7 +485,6 @@ Select a mid-stack reference slice. Ideally, tissue will be present in each tile
 :::{admonition} Running batch stitching
 :class: note dropdown
 ```{figure} _static/batch_stitching_2.JPG
-:alt: Batch stitching settings
 :align: center
 ```
 * Drag and drop images to be stitched into this section. 
@@ -520,7 +532,7 @@ Other patterns (e.g., sample???) may be used (commands have a -p option for that
 
 ### Add Images to sample?? Directories 
 
-   * For example, image.czi, image.h5, or folder(s) with tif series
+   * For example, image.czi, image.h5, folder(s) with tif series, or an .ome.tif.
 
 ```
 .
@@ -613,92 +625,55 @@ utils_clean_tifs -t <path to directories with tifs relative to ./sample?? folder
 ```
    * This will remove spaces from files names and move files other than *.tif to the parent directory
 
+---
 <br>
 
----
 
+## Analysis Overview
 
-## Analysis Steps
-
-Overview of voxel-wise analyses followed by cluster validation:
+Overview of a typical workflow (voxel-wise analyses followed by cluster validation):
 
 :::{mermaid}
 flowchart TD
     A(((LSFM))) 
-    A --> B[3D autofluorescence image]
-    B --> C(Registration to an average template brain) 
-    A --> D[3D immunofluorescence image]
-    D --> E(Remove autofluorescence from IF images)
-    C --> F(Warp IF images to atlas space)
-    E --> F
-    F --> G(Preprocess IF images: z-scoring, smoothing, and averaging left/right sides)
-    G --> H(Voxel-wise statistics)
-    H --> I(FDR correction of 1-p value maps)
-    I --> J(Warp significant voxel clusters to tissue space)
-    J --> K(Validate clusters using cell/label density measurements)
-    D --> L(Segment c-Fos+ cells or other features of interest with Ilastik)
-    L --> K
+    A --> B[Stitched 3D autofluorescence image]
+    B --> C(Resample image to 50 µm resolution)
+    C --> D(Segment tissue with Ilastik to mask external voxels)
+    D --> E(Register image to an average template brain) 
+    A --> F[Stitched 3D immunofluorescence image]
+    F --> G(Remove autofluorescence from IF images)
+    G --> H(Warp IF images to atlas space)
+    E --> H
+    H --> I(Preprocess IF images: z-score, smooth, and average left/right sides)
+    I --> J(Perform voxel-wise statistical analyses)
+    J --> K(Apply FDR correction of 1-p value maps)
+    K --> L(Warp significant voxel clusters back to tissue space)
+    F --> N(Segment c-Fos+ cells or other features using Ilastik)
+    L --> M(Validate clusters with cell/label density measurements)
+    N --> M
 :::
-
 ---
+<br>
 
-### Registration
-:::{mermaid}
-flowchart TD
-    A(((LSFM))) 
-    A --> B[Stitch z-stacks if necessary]
-    B --> C(io_metadata: Save raw voxel dimentions in microns to ./sample??/parameters/metadata.txt)
-    C --> D(reg_prep: Resample autofluorescence images to 50 µm resolution for registration)
-    D --> E(seg_copy_tifs: Copy select slices from 50 µm autofl images to create brain masks using Ilastik)
-    E --> F(Train Ilastik using pixel classification to segment autofl brains)
-    F --> G(seg_brain_mask: Generate autofl brain masks with Ilastik and apply them to the 50 µm images)
-    G --> H(Optionally use 3D Slicer to make the masked autofl image and mask better match the average template)
-    H --> I(reg: Register the template brain with the masked autofl images and warp the atlas)
-    I --> J(reg_check: Aggregate padded autofl images and warped atlas images from reg)
-    J --> K(Assess registration quality in FSLeyes and refine if necessary by repeating the 3D Slicer step, etc.)
+## Training Ilastik
 
-:::
-
-#### `io_metadata`
-{py:mod}`unravel.image_io.metadata`
-* Extract or specify x and z voxel sizes in microns (saves to ./sample??/parameters/metadata.txt). 
-* You can add these resolutions to env_var.sh as global variables (e.g., $XY and $Z) and load them before running commands with: `source path/to/env_var.sh`
-* **[Guide on defining common command arguments in env_var.sh](https://b-heifets.github.io/UNRAVEL/guide.html#defining-common-variables-for-command-arguments)**
-* For batch processing, run the io_metadata command from a directory containing sample?? folders, within a sample?? folder, or use -d to pass in a list of paths to sample folders or directories containing sample folders.
-```bash
-# To specify x and z voxel sizes in microns, use the -x and -z flags.
-io_metadata -i <path to image or directory with TIFFs relative to sample??/> -x $XY -z $Z [-d $DIRS] # Remove square brackets from optional arguments
-# If env_var.sh is not used, pass in the voxel sizes like this: -x 3.5232 -z 6.
-
-# If -x and -z are omitted, io_metadata will attempt to extract this information from the image metadata.
-io_metadata -i <rel_path/full_res_img> [-d $DIRS]
-# 'rel_path' refers to the relative path from within the sample?? folders.
-# Glob patterns can be used for -i (e.g., *.czi).
+Segmentations generated with Ilastik serve two purposes: 
+```{figure} _static/Ilastik_brain_mask_example.JPG
+:height: 500px
+:align: center
+1) During registration, they are used to create brain masks, which can also be applied for z-scoring IF images
 ```
-
-#### `reg_prep`
-{py:mod}`unravel.register.reg_prep` 
-* Prepare autofluorescence images for registration (resample them to 50 µm isotropic resolution and save to ./sample??/reg_inputs/)
-```bash
-reg_prep -i <rel_path/image> [-d $DIRS] # -i options: tif_dir, .czi, .h5, .zarr, or .tif (e.g., *.czi)
-# If using *.czi, by default the first channel is used (--channel 0), since that is usually the autofluo channel
+```{figure} _static/Ilastik_c-Fos_example.JPG
+:height: 500px
+:align: center
+2) During cluster validation, they are used to quantify c-Fos+ cells or other features of interest.
 ```
-
-#### `seg_copy_tifs`
-{py:mod}`unravel.segment.copy_tifs`
-* Copy resampled autofluo .tif files from each sample for making a brain mask with ilastik
-* In the example below -s 0000 0005 0050 means that the 1st, 6th, and 51st tif will be copied to the target directory
-* The target directory is the current working directory unless -td is used to specify an output path.
-```bash
-seg_copy_tifs -i reg_inputs/autofl_??um_tifs -s 0000 0005 0050 [-td brain_mask] [-d $DIRS]  
-```
-
-#### Train an Ilastik Project
 
 [Pixel classification documentation](https://www.ilastik.org/documentation/pixelclassification/pixelclassification)
 
+
 ::: {admonition} Setting up Ilastik for batch processing
-:class: note
+:class: note dropdown
 * [Install Ilastik](https://www.ilastik.org/download)
 ```bash
 # Add this to your ~/.bashrc or ~/.zshrc terminal config file:
@@ -717,8 +692,9 @@ alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if n
 ```
 :::
 
+
 ::: {admonition} Training Ilastik
-:class: note
+:class: note dropdown
 
 **Launch Ilastik** 
    - Either double click on the application or run: `ilastik`
@@ -752,8 +728,64 @@ alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if n
 - If the segmentation for label 1 fuses neighboring cells, draw a thin line in between them with label 2. 
 :::
 
+---
+<br>
 
-#### `seg_brain_mask`
+
+## Registration
+:::{mermaid}
+flowchart TD
+    A(((LSFM))) 
+    A --> B[Stitch z-stacks if necessary]
+    B --> C(io_metadata: Save raw voxel dimentions in microns to ./sample??/parameters/metadata.txt)
+    C --> D(reg_prep: Resample autofluorescence images to 50 µm resolution for registration)
+    D --> E(seg_copy_tifs: Copy select slices from 50 µm autofl images to create brain masks using Ilastik)
+    E --> F(Train Ilastik using pixel classification to segment autofl brains)
+    F --> G(seg_brain_mask: Generate autofl brain masks with Ilastik and apply them to the 50 µm images)
+    G --> H(Optionally use 3D Slicer to make the masked autofl image and mask better match the average template)
+    H --> I(reg: Register the template brain with the masked autofl images and warp the atlas)
+    I --> J(reg_check: Aggregate padded autofl images and warped atlas images from reg)
+    J --> K(Assess registration quality in FSLeyes and refine if necessary by repeating the 3D Slicer step, etc.)
+
+:::
+
+### `io_metadata`
+{py:mod}`unravel.image_io.metadata`
+* Extract or specify x and z voxel sizes in microns (saves to ./sample??/parameters/metadata.txt). 
+* You can add these resolutions to env_var.sh as global variables (e.g., $XY and $Z) and load them before running commands with: `source path/to/env_var.sh`
+* **[Guide on defining common command arguments in env_var.sh](https://b-heifets.github.io/UNRAVEL/guide.html#defining-common-variables-for-command-arguments)**
+* For batch processing, run the io_metadata command from a directory containing sample?? folders, within a sample?? folder, or use -d to pass in a list of paths to sample folders or directories containing sample folders.
+```bash
+# To specify x and z voxel sizes in microns, use the -x and -z flags.
+io_metadata -i <path to image or directory with TIFFs relative to sample??/> -x $XY -z $Z [-d $DIRS] # Remove square brackets from optional arguments
+# If env_var.sh is not used, pass in the voxel sizes like this: -x 3.5232 -z 6.
+
+# If -x and -z are omitted, io_metadata will attempt to extract this information from the image metadata.
+io_metadata -i <rel_path/full_res_img> [-d $DIRS]
+# 'rel_path' refers to the relative path from within the sample?? folders.
+# Glob patterns can be used for -i (e.g., *.czi).
+```
+
+### `reg_prep`
+{py:mod}`unravel.register.reg_prep` 
+* Prepare autofluorescence images for registration (resample them to 50 µm isotropic resolution and save to ./sample??/reg_inputs/)
+```bash
+reg_prep -i <rel_path/image> [-d $DIRS] # -i options: tif_dir, .czi, .h5, .zarr, or .tif (e.g., *.czi)
+# If using *.czi, by default the first channel is used (--channel 0), since that is usually the autofluo channel
+```
+
+### `seg_copy_tifs`
+{py:mod}`unravel.segment.copy_tifs`
+* Copy resampled autofluo .tif files from each sample for making a brain mask with ilastik
+* In the example below -s 0000 0005 0050 means that the 1st, 6th, and 51st tif will be copied to the target directory
+* The target directory is the current working directory unless -td is used to specify an output path.
+```bash
+seg_copy_tifs -i reg_inputs/autofl_??um_tifs -s 0000 0005 0050 [-td brain_mask] [-d $DIRS]  
+```
+
+**[Train Ilastik](https://b-heifets.github.io/UNRAVEL/guide.html#training-ilastik) to segment autofluo tissue to make a brain mask**
+
+### `seg_brain_mask`
 {py:mod}`unravel.segment.brain_mask`
 * Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz for ``reg``
 ```bash
@@ -767,7 +799,7 @@ seg_brain_mask -ie <path/ilastik_executable> -ilp <path/trained_ilastik_project.
 * If there is missing tissue, use 3D slicer to fill in gaps. 
 :::
 
-#### `reg`
+### `reg`
 {py:mod}`unravel.register.reg`
 * Register an average template brain/atlas to a resampled autofluo brain.
 
@@ -803,7 +835,7 @@ for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m $TEMPLATE -bc -pad -sm
 ```
 :::
 
-#### `reg_check`
+### `reg_check`
 {py:mod}`unravel.register.reg_check`
 * Check registration by copying these images from each sample??/reg_ouputs folder to a target directory: 
     * autofl_??um_masked_fixed_reg_input.nii.gz
@@ -820,14 +852,12 @@ reg_check [-td reg_results] [-d $DIRS]  # Default for -td: copy images to the cu
 :class: note
 
 ```{figure} _static/FSLeyes_autofl_image_from_reg.JPG
-:alt: Checking registration with FSLeyes
 :height: 800px
 :align: center
 Use FSLeyes to view the autofluo image from `reg` (sample??/reg_ouputs/autofl_50um_masked_fixed_reg_input.nii.gz).
 ```
 
 ```{figure} _static/FSLeyes_atlas_warped_to_tissue_from_reg.JPG
-:alt: Checking registration with FSLeyes
 :height: 800px
 :align: center
 Use FSLeyes to view the atlas warped to the the tissue (sample??/reg_ouputs/atlas_CCFv3_2020_30um_in_tissue_space.nii.gz)
@@ -854,8 +884,10 @@ sudo chmod a+w /usr/local/fsl/fslpython/envs/fslpython/lib/python3.8/site-packag
 * If you don't want to select the LUT every time, make a copy of `random.lut` and replace its contents with those of `ccfv3_2020.lut`.
 :::
 
+---
+<br>
 
-### Voxel-wise Statistics
+## Voxel-wise Statistics
 :::{mermaid}
 flowchart TD
     A(((LSFM))) 
@@ -872,7 +904,7 @@ flowchart TD
     K --> L(View 1-p value maps in FSLeyes and consult 'Cluster-wise stats' for multiple comparisons correction and cluster validation)
 :::
 
-#### `vstats_prep`
+### `vstats_prep`
 {py:mod}`unravel.voxel_stats.vstats_prep`
 * Preprocess immunofluo images and warp them to atlas space for voxel-wise statistics.
 ```bash
@@ -900,13 +932,12 @@ You can test parameters for background subtraction with:
 :::
 
 ```{figure} _static/FSLeyes_Ai14_image_in_CCFv3_30um_space.JPG
-:alt: Viewing atlas space images with FSLeyes
 :height: 800px
 :align: center
 Use FSLeyes to view the fluorescently labeled image in atlas space.
 ```
 
-#### `vstats_z_score`
+### `vstats_z_score`
 {py:mod}`unravel.voxel_stats.z_score`
 * Z-score atlas space images using tissue masks (from brain_mask) and/or an atlas mask.
 ```bash
@@ -920,14 +951,14 @@ vstats_z_score -i 'atlas_space/*.nii.gz' -amas $MASK [-d $DIRS]
 vstats_z_score -i 'atlas_space/*.nii.gz' -tmas reg_inputs/autofl_50um_brain_mask.nii.gz -amas $MASK [-d $DIRS] 
 ```
 
-#### `utils_agg_files`
+### `utils_agg_files`
 {py:mod}`unravel.utilities.aggregate_files_from_sample_dirs`
 * Aggregate pre-processed immunofluorescence (IF) images for voxel-wise stats
 ```bash
 utils_agg_files -i atlas_space/*_cFos_rb4_atlas_space_z.nii.gz [-td path/target_dir] [-d $DIRS]
 ```
 
-#### `vstats_whole_to_avg`
+### `vstats_whole_to_avg`
 {py:mod}`unravel.voxel_stats.whole_to_LR_avg`
 * Smooth and average left and right hemispheres together
 ```bash
@@ -968,7 +999,7 @@ vstats_whole_to_avg -i '*_cFos_rb4_atlas_space_z.nii.gz.nii.gz' -k 0.1 [-tp] [-a
    - If there are 2 groups, ``vstats`` may be used after pre-processing. 
    - If there are more than 2 groups, prepare for an ANOVA as described below
 
-#### Vstats outputs
+### ``vstats`` Outputs
 - **T-test outputs**:  
     - `vox_p_tstat1.nii.gz`: Uncorrected p-values for tstat1 (group 1 > group 2).
     - `vox_p_tstat2.nii.gz`: Uncorrected p-values for tstat2 (group 1 < group 2).
@@ -978,7 +1009,7 @@ vstats_whole_to_avg -i '*_cFos_rb4_atlas_space_z.nii.gz.nii.gz' -k 0.1 [-tp] [-a
     - `vox_p_fstat2.nii.gz`: Uncorrected p-values for fstat2 (2nd contrast, e.g., context1 vs. context2).
     - `vox_p_fstat3.nii.gz`: Uncorrected p-values for fstat3 (3rd contrast, e.g., interaction).
 
-#### Example: Preparing for an ANOVA
+### Example: Preparing for an ANOVA
 1. **Setup Design Matrix**:
    - For an ANOVA, create `./vstats/vstats_dir/stats/design/`.
    - Open terminal from `./stats` and run: `fsl`.
@@ -1014,12 +1045,12 @@ vstats_whole_to_avg -i '*_cFos_rb4_atlas_space_z.nii.gz.nii.gz' -k 0.1 [-tp] [-a
 7. **Run Voxel-wise Stats**:
    - From the vstats_dir, run: ``vstats``.
 
-#### Background on FSL's Randomise Tool
+### Background on FSL's Randomise Tool
 - [FSL GLM Guide](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/GLM)
 - [FSL Randomise User Guide](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide)
 :::
 
-#### `vstats`
+### `vstats`
 {py:mod}`unravel.voxel_stats.vstats`
 * Run voxel-wise stats using FSL's randomise_parallel command
 * Outputs saved in stats/
@@ -1040,10 +1071,10 @@ vstats -mas $MASK -a $ATLAS [-p 18000] [-k 0.1]
     * fstat*: f contrast w/ ANOVA design (non-directional p value maps)
     * fstat1 corresponds to the first Contrast defined in step 5 above. 
 :::
+---
+<br>
 
-
-
-### Cluster-wise Statistics
+## Cluster-wise Statistics
 
 flowchart TD
     A(vstats: Generates 1-p value maps named *vox_p*.nii.gz)
@@ -1055,16 +1086,16 @@ flowchart TD
     F --> G(cstats_validation: Warp clusters from atlas to full resolution tissue space, count cells, and calculate cluster volumes)
     G --> H(cstats_summary: Aggregate and analyze cluster validation data)
 
-#### False Discovery Rate (FDR) Correction
+### False Discovery Rate (FDR) Correction
 
-#### `cstats_fdr_range`
+### `cstats_fdr_range`
 {py:mod}`unravel.cluster_stats.fdr_range`
 * Outputs a list of FDR q values that yield clusters.
 ```bash
 cstats_fdr_range -i <path/vox_p_tstat1.nii.gz> -mas $MASK
 ```
 
-#### `cstats_fdr`
+### `cstats_fdr`
 {py:mod}`unravel.cluster_stats.fdr`
 * Perform FDR correction on a 1-p value map to define clusters
 * Outputs are saved to a new folder in stats/ named after the input image and q value
@@ -1081,7 +1112,7 @@ q_values=$(cstats_fdr_range -i vox_p_fstat1.nii.gz -mas $MASK) ; cstats_fdr -i v
 # Make averaged images for each group (-a1 and -a2 args) with the img_avg command
 ```
 
-#### `cstats_mirror_indices`
+### `cstats_mirror_indices`
 {py:mod}`unravel.cluster_stats.recursively_mirror_rev_cluster_indices`
 * Recursively flip the content of rev_cluster_index.nii.gz images (to validate w/ clusters in left and right hemispheres)
 * Run this in the ./stats/ folder to process all subdirs with reverse cluster maps (cluster IDs go from large to small)
@@ -1089,12 +1120,12 @@ q_values=$(cstats_fdr_range -i vox_p_fstat1.nii.gz -mas $MASK) ; cstats_fdr -i v
 # Use -m RH if a right hemisphere mask was used (otherwise use -m LH)
 cstats_mirror_indices -m RH [-i glob_pattern]
 ```
+---
+<br>
 
-#### Segmentation of Full-Resolution Fluorescence Images
+## Segmentation of Full-Resolution Fluorescence Images
 
-**[Guide on training Ilastik](https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project)**
-
-#### `seg_copy_tifs`
+### `seg_copy_tifs`
 {py:mod}`unravel.segment.copy_tifs`
 * Copy or extract full res tif files to a target dir for training Ilastik to segment labels of interest 
 :::{tip} 
@@ -1106,19 +1137,23 @@ seg_copy_tifs -i <rel_path/raw_image> -s 0100 0500 1000 [-td ilastik_segmentatio
 # The name of the dir with full-res tifs can be passed in for -i
 ```
 
-#### `seg_ilastik`
+**[Train Ilastik](https://b-heifets.github.io/UNRAVEL/guide.html#training-ilastik) to segment c-Fos+ cells or other features of interest**
+
+### `seg_ilastik`
 {py:mod}`unravel.segment.ilastik_pixel_classification`
 * Segment features of interest (e.g., c-Fos+ cells) in full-resulution images using a trained Ilastik project (pixel classification)
+
 ```bash
 seg_ilastik -ie <path/ilastik_executable> -ilp <path/ilastik_project.ilp> -i <rel_path to tif_dir or image> -o seg_dir --labels 1 [--rm_out_tifs] [--channel 1] [-d $DIRS]
 # --labels is a space-separated list of labels to convert into binary .nii.gz images.
 # --channel is for .czi images (1 is the second channel)
 ```
+---
+<br>
 
+## Cluster Validation and Statistics
 
-#### Cluster Validation and Statistics
-
-#### `cstats_validation`
+### `cstats_validation`
 {py:mod}`unravel.cluster_stats.validation`
 * Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell or label densities
 ```bash
@@ -1135,7 +1170,7 @@ cstats_validation -m <path/rev_cluster_index_to_warp_from_atlas_space.nii.gz> -s
 for q in 0.005 0.01 0.05 0.1 ; do for side in LH RH ; do cstats_validation  -m path/vstats/contrast/stats/contrast_vox_p_tstat1_q${q}/contrast_vox_p_tstat1_q${q}_rev_cluster_index_${side}.nii.gz -s rel_path/seg_img.nii.gz [-d $DIRS] ; done ; done
 ```
 
-#### `cstats_summary`
+### `cstats_summary`
 {py:mod}`unravel.cluster_stats.summary`
 * Aggregates and analyzes cluster validation data from `cstats_validation`
 * Update parameters in /UNRAVEL/unravel/cstats/cluster_summary.ini and save it with the experiment
@@ -1149,8 +1184,11 @@ cstats_summary -c <path/cluster_summary.ini> -sk $SAMPLE_KEY  --groups <group1> 
 
 # See the help guide for cstats_validation if you want to pool data using condition prefixes
 ```
+---
+<br>
 
-### Sunburst Plots
+
+## Sunburst Plots
 :::{admonition} Sunburst plots of regional volumes
 :class: note
 * CSVs for making sunburst plots are output by `cstats_validation` for each valid cluster map. 
@@ -1159,44 +1197,45 @@ cstats_summary -c <path/cluster_summary.ini> -sk $SAMPLE_KEY  --groups <group1> 
 * Sunburst CSVs can be copy and pasted into the sunburst plot tool of the [Flourish web app](https://app.flourish.studio/login)
 
 ```{figure} _static/sunburst_1_flourish.JPG
-:alt: Sunburst plots of regional volumes
 :height: 300px
 :align: center
- - Make a free account w/ Flourish.
- - Login.
- - Select "New visualization".
 ```
+* Make a free account w/ Flourish.
+* Login.
+* Select "New visualization".
+
 ```{figure} _static/sunburst_2_plot_types.JPG
-:alt: Sunburst plots of regional volumes
 :height: 300px
 :align: center
-- Under "Hierarchy" select "Sunburst"
+Under "Hierarchy" select "Sunburst"
 ```
 ```{figure} _static/sunburst_3_adding_data.JPG
-:alt: Sunburst plots of regional volumes
 :height: 300px
 :align: center
-- Select the "Data" tab.
-- Set it up like this with columns A-K. Categories/nesting: B-J, Size by: K.
-- Always delete the entirety of the columns before pasting in values. 
-- Paste in values for columns A-K from a *_sunburst.csv.
-- Switch to the "Preview" tab to view the plot.
 ```
+* Select the "Data" tab.
+* Set it up like this with columns A-K. Categories/nesting: B-J, Size by: K.
+* Always delete the entirety of the columns before pasting in values. 
+* Paste in values for columns A-K from a *_sunburst.csv.
+* Switch to the "Preview" tab to view the plot.
+
 ```{figure} _static/sunburst_4_RGB_values.JPG
-:alt: Sunburst plots of regional volumes
 :height: 400px
 :align: center
-- Paste the contents of sunburst_RGBs.csv into Colors --> Custom overrides. 
-- Location: UNRAVEL/unravel/core/csvs/sunburst_RGBs.
--``cstats_sunburst`` can output it w/ `-rgb`. 
-- Set Min font size under "Labels" to 0.5 to show labels.
-- Increase Min font size above the Max size to hide them.
-- Take a screenshot of the plot to save it.
 ```
+* Paste the contents of sunburst_RGBs.csv into Colors --> Custom overrides. 
+* Location: UNRAVEL/unravel/core/csvs/sunburst_RGBs.
+* ``cstats_sunburst`` can output it w/ `-rgb`. 
+* Set Min font size under "Labels" to 0.5 to show labels.
+* Increase Min font size above the Max size to hide them.
+* Take a screenshot of the plot to save it.
 :::
 
+---
+<br>
 
-### 3D Brain Models
+
+## 3D Brain Models
 :::{admonition} Visualize cluster maps, etc. in a 3D brain
 :class: note
 * Files for making 3D brains in DSI Studio are output by `cstats_validation` for each valid cluster map.
@@ -1206,55 +1245,72 @@ cstats_summary -c <path/cluster_summary.ini> -sk $SAMPLE_KEY  --groups <group1> 
 * Output look up table: <contrast>_q<q value>_rev_cluster_index__valid_clusters_rgba.txt
 * These files can be generated with `cstats_brain_model` (use -m for a bilateral representation of a unilateral map)
 
-#### Visualization in DSI Studio
+### Visualization in DSI Studio
 * Open DSI studio
 * Click on "Step T3"
 * Change the drop down to select all files and select the binary atlas (mask_CCFv3_2020_30um.nii.gz)
 * If you open the binary atlas in the 3D_brains folder, it is easier to open other files from there later
 * Make it visible: Slices --> Add Isosurface --> Full --> OK --> Zoom out (mouse wheel or 2 finger scroll)
 
+#### Display settings
 ```{figure} _static/brain_model_settings_1.JPG
-:alt: Visualization in DSI Studio
 :height: 800px
 :align: center
-- Display settings 
+Display settings 
 ```
+
 ```{figure} _static/brain_model_settings_2.JPG
-:alt: Visualization in DSI Studio
 :height: 800px
 :align: center
-- Surface rendering settings 
+Surface rendering settings 
 ```
+
+#### Layout
 ```{figure} _static/brain_model_layout.JPG
-:alt: Visualization in DSI Studio
 :height: 800px
 :align: center
-- The zoom and viewer dimensions determine the output video size.
-- This layout allows for 1080p videos with my MacBook (adjust as needed).
-- Move panels on the right down and make them as small as possible.
-- Line up the left edge of the viewer with View.
-- Zoom to 0.28.
-- Use `z`, `x`, and `c` to snap to specific orientations.
-- Zoom out to 0.18 for axial.
 ```
+* The zoom and viewer dimensions determine the output video size.
+* This layout allows for 1080p videos with my MacBook (adjust as needed).
+* Move panels on the right down and make them as small as possible.
+* Line up the left edge of the viewer with View.
+* Zoom to 0.28.
+
+* Zoom out to 0.18 for axial.
+
+#### Adding Regions and Color
 * Regions --> Open Region... --> load <contrast>_q<q value>_rev_cluster_index__valid_clusters_ABA_WB.nii.gz
 * Regions Misc --> Load Region Color... --> load <contrast>_q<q value>_rev_cluster_index__valid_clusters_rgba.txt
+
+#### Making Figures
+* Use `z`, `x`, and `c` to snap to specific orientations.
+* Use View --> Save Camera View... to save an oblique orientation
+* Load it with: View --> Open Camera View...
+* Capture screenshots
+
+#### Recording Videos
 * For a video: press `z` for a sagittal orientation (e.g., facing to the right), View --> Save Rotation Video/Images...
 * The output .avi is large, but can be exported in another format
 * For example, in Adobe Premiere Pro --> add the video to the timeline --> right click to double video speed --> export with SD resolution (480p) --> scale to fit --> export.
 * Composite videos with multiple cluster maps can be made with Adobe Premiere Pro using the exported videos.
 :::
 
+---
+<br>
 
-### Valid Cluster Info Tables
+
+## Valid Cluster Info Tables
 * Cluster info .xlsx tables are output by `cstats_validation` for each valid cluster map.
 * Output location: valid_clusters_tables_and_legend
 * Alternatively, they can be made with `cstats_table` and `cstats_legend`
 * Compile each <contrast>_q<q value>_valid_clusters_table.xlsx and legend.xlsx into one .xlsx SI table
 * [Example SI Table](https://static-content.springer.com/esm/art%3A10.1038%2Fs41386-023-01613-4/MediaObjects/41386_2023_1613_MOESM2_ESM.xlsx) from our [initial UNRAVEL paper](https://www.nature.com/articles/s41386-023-01613-4)
 
+---
+<br>
 
-### Region-wise Statistics
+
+## Region-wise Statistics
 
 :::{mermaid}
 flowchart TD
@@ -1270,7 +1326,7 @@ flowchart TD
     H --> I(rstats_summary: Plot cell densities by region and summarize results)
 :::
 
-#### `rstats`
+### `rstats`
 {py:mod}`unravel.region_stats.regional_cell_densities`
 * Quantify regional cell densities or label densities
 ```bash
@@ -1283,7 +1339,7 @@ rstats -s rel_path/segmentation_image.nii.gz -m $SPLIT -c Saline -t cell_densiti
 
 Aggregate outputs from `rstats` with `utils_agg_files`.
 
-#### `rstats_summary`
+### `rstats_summary`
 {py:mod}`unravel.region_stats.regional_cell_densities_summary`
 * Plot cell densities for each region and summarize results.
 * CSVs from `rstats` should be in the current directory
@@ -1299,8 +1355,10 @@ rstats_summary --groups Saline MDMA Meth -hemi <both l or r> [-y cell_density] [
 rstats_summary --groups Saline MDMA -hemi <both l or r>  -t t-test -c Saline [-alt two-sided] [-y cell_density] [-div 10000] 
 ```
 
+---
+<br>
 
-### Example sample?? Folder Structure After Analysis
+## Example sample?? Folder Structure
 ```bash
 .
 ├── atlas_space  # Dir with images warped to atlas space
@@ -1317,7 +1375,7 @@ rstats_summary --groups Saline MDMA -hemi <both l or r>  -t t-test -c Saline [-a
 └── image.czi # Or other raw/stitched image type
 ```
 
-### Example Experiment Folder Structure After Analysis
+## Example Experiment Folder Structure
 ```bash
 .
 ├── exp_notes.txt
