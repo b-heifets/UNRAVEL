@@ -7,8 +7,8 @@ Prereqs:
     ``vstats_prep`` for inputs [& ``seg_brain_mask`` for tissue masks]
 
 Inputs:
-    - For batch processing atlas space images in a single directory (not compatible with --tissue_mask), use a wildcard for -i (e.g., `*`.nii.gz) and omit --dirs 
-    - For batch processing atlas space images in the context of sample?? dirs, use -d <list of paths>, specify -i relative to sample?? (e.g., atlas_space/`*`_image.nii.gz), and provide --tissue_mask and/or --atlas_mask
+    - For batch processing atlas space images in a single directory (not compatible with --tissue_mask), use a wildcard for -i (e.g., <askterisk>.nii.gz) and omit --dirs 
+    - For batch processing atlas space images in the context of sample?? dirs, use -d <list of paths>, specify -i relative to sample?? (e.g., atlas_space/<askterisk>_image.nii.gz), and provide --tissue_mask and/or --atlas_mask
 
 Outputs:
     - <path/input_img>_z.nii.gz (float32) saved in the same directory as the input image. 
