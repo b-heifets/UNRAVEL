@@ -794,15 +794,30 @@ for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m $TEMPLATE -bc -pad -sm
 
 #### `reg_check`
 {py:mod}`unravel.register.reg_check`
-* Check registration by copying these images to a target directory: 
-    * sample??/reg_outputs/autofl_??um_masked_fixed_reg_input.nii.gz
-    * sample??/reg_outputs/atlas_in_tissue_space.nii.gz
+* Check registration by copying these images from each sample??/reg_ouputs folder to a target directory: 
+    * autofl_??um_masked_fixed_reg_input.nii.gz
+    * atlas_in_tissue_space.nii.gz
 ```bash
 reg_check [-td reg_results] [-d $DIRS]  # Default for -td: copy images to the current dir.
 # The default warped atlas from reg is atlas_CCFv3_2020_30um_in_tissue_space.nii.gz (in ./sample??/.reg_outputs). Use -wa <image_name.nii.gz> to set this.
 
 ```
 * View these images with [FSLeyes](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes) [docs](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html)
+* FSLeyes might not work in Windows without additional set up: [Installation on Windows](https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/windows)
+
+```{figure} _static/FSLeyes_autofl_image_from_reg.jpg
+:alt: Batch stitching settings
+:height: 800px
+:align: center
+Use FSLeyes to view the autofluo image from `reg` (sample??/reg_ouputs/autofl_50um_masked_fixed_reg_input.nii.gz).
+```
+
+```{figure} _static/FSLeyes_atlas_warped_to_tissue_from_reg.jpg
+:alt: Batch stitching settings
+:height: 800px
+:align: center
+Use FSLeyes to view the atlas warped to the the tissue (sample??/reg_ouputs/atlas_CCFv3_2020_30um_in_tissue_space.nii.gz)
+```
 
 ::: {admonition} Setting up Allen brain atlas coloring in FSLeyes
 :class: note
@@ -868,6 +883,13 @@ You can test parameters for background subtraction with:
     * Copy a tif to a test dir for this (e.g., with `seg_copy_tifs`)
     * Use {py:mod}`unravel.image_io.io_img` to create a tif series
 :::
+
+```{figure} _static/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg
+:alt: Batch stitching settings
+:height: 800px
+:align: center
+Use FSLeyes to view the fluorescently labeled image in atlas space.
+```
 
 #### `vstats_z_score`
 {py:mod}`unravel.voxel_stats.z_score`
