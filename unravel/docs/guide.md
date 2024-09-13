@@ -658,15 +658,15 @@ flowchart TD
 ## Training Ilastik
 
 Segmentations generated with Ilastik serve two purposes: 
+1) During registration, they are used to create brain masks, which can also be applied for z-scoring IF images
 ```{figure} _static/Ilastik_brain_mask_example.JPG
 :height: 500px
 :align: center
-1) During registration, they are used to create brain masks, which can also be applied for z-scoring IF images
 ```
+2) During cluster validation, they are used to quantify c-Fos+ cells or other features of interest.
 ```{figure} _static/Ilastik_c-Fos_example.JPG
 :height: 500px
 :align: center
-2) During cluster validation, they are used to quantify c-Fos+ cells or other features of interest.
 ```
 
 [Pixel classification documentation](https://www.ilastik.org/documentation/pixelclassification/pixelclassification)
