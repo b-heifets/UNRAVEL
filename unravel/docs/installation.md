@@ -30,11 +30,12 @@ uc -h
 * **Required software:**
     * [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation) for voxel-wise stats, CLI tools, and viewing .nii.gz images with [FSLeyes](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html)
         * See below on setting this up by adding lines to a terminal configuration file (e.g., .bashrc or .zshrc)
+        * Extra steps are required for Windows
     * [Ilastik](https://www.ilastik.org/download.html) for segmenting features of interest
         * See below for .bashrc configuration
 * **Recommended software:**
     * [3D Slicer](https://download.slicer.org/) for 3D painting to make brains more like the average template (improves registration)
-    * [DSI Studio](https://dsi-studio.labsolver.org/download.html) for 3D brain models
+    * [DSI Studio](https://dsi-studio.labsolver.org/download.html) for 3D brain models.
     * [Flourish](https://app.flourish.studio/login) for sunburst plots (free web app)
     * [Visual Studio Code](https://code.visualstudio.com/) for viewing source code, debugging, editing files (e.g., .bashrc), etc.
         * Enstall the [Python extension](https://code.visualstudio.com/docs/languages/python)
@@ -79,9 +80,9 @@ If you install FSL (includes FSLeyes) and Ilastik for linux for use via WSL, the
 
 If you install graphical applications like **FSL** (which includes FSLeyes) or **Ilastik** for Linux in WSL, the graphical user interface may not work out of the box. 
 
-- **Option 1**: Install the Windows versions of these tools for GUI support (the linux versions could still be used via commands in WSL)
-- **Option 2**: Set up a graphical server, such as **Xming** or **VcXsrv**, to enable GUIs for Linux applications running in WSL.
-
+* **Option 1**: Install the Windows versions of these tools for GUI support (the linux versions could still be used for headless processing via commands in WSL)
+* **Option 2**: Set up a graphical server, such as **VcXsrv**, to enable GUIs for Linux applications running in WSL.
+    * For example, here are detailed steps to set up FSL on Windows: [Installation on Windows](https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/windows)
 :::
 
 
@@ -241,7 +242,7 @@ Now, either your virtual environment will automatically activate when you open a
 
 --- 
 
-## Checking changes between versions
+## Checking UNRAVEL Version Changes
 * Releases and update notes for UNRAVEL can be found [here](https://github.com/b-heifets/UNRAVEL/releases) on GitHub.
 * For more detailed information, you can view the commit history:
     * [Main branch commits](https://github.com/b-heifets/UNRAVEL/commits/main)
@@ -249,16 +250,20 @@ Now, either your virtual environment will automatically activate when you open a
 
 ---
 
-## Viewing images:
-* .nii.gz images are commonly created during analysis. 
-* They compress well when small or if there are many voxels with an intensity of zero. 
-* They can be viewed with [Fiji](https://imagej.net/software/fiji/downloads), [napari](https://napari.org/stable/), or neuroimaging viewers (e.g., FSLeyes)
-* Fiji needs the [nifti_io plugin](https://imagej.net/ij/plugins/nifti.html)
-* Napari needs the [napari-nifti plugin](https://www.napari-hub.org/plugins/napari-nifti)
-
+## Viewing Images:
+* For full-resolution LSFM images, use [Fiji](https://imagej.net/software/fiji/downloads) or [napari](https://napari.org/stable/).
+* NIfTI images (.nii.gz) are commonly used in neuroimaging analysis.
+    * They compress well when the images are ~small or if there are many voxels with an intensity of zero. 
+    * They can be viewed with [Fiji](https://imagej.net/software/fiji/downloads), [napari](https://napari.org/stable/), or neuroimaging viewers (e.g., [FSLeyes](https://fsl.fmrib.ox.ac.uk/fsl/docs/#/utilities/fsleyes) or [3D Slicer](https://www.slicer.org/)).
+    * Fiji needs the [nifti_io plugin](https://imagej.net/ij/plugins/nifti.html)
+    * Napari needs the [napari-nifti plugin](https://www.napari-hub.org/plugins/napari-nifti)
+    * [FSLeyes](https://fsl.fmrib.ox.ac.uk/fsl/docs/#/utilities/fsleyes) is great for viewing the atlas_CCFv3_2020_30um.nii.gz and matching images; however, it does not work for the 10 µm atlas and larger images.
+    * For larger .nii.gz images, use [3D Slicer](https://www.slicer.org/), [ITK-SNAP](http://www.itksnap.org/pmwiki/pmwiki.php), [Fiji](https://imagej.net/software/fiji/downloads), or [napari](https://napari.org/stable/)
+* .zarr images are useful for fast compression of large images with lots of non-zero voxels (e.g., raw LSFM data)
+    * Use [napari](https://napari.org/stable/) to view them. 
 
 ---
 
-## Get started with analysis 
+## Get Started With Analysis 
 
 [UNRAVEL guide](https://b-heifets.github.io/UNRAVEL/guide.html)
