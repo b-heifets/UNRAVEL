@@ -7,7 +7,7 @@ Prereqs:
     - ``cstats_summary`` generates a valid rev_cluster_index.nii.gz (clusters of significant voxels) via ``cstats_index``.
 
 Inputs:
-    - path/rev_cluster_index.nii.gz (e.g., with valid clusters or a labeled image)
+    - path/rev_cluster_index.nii.gz (e.g., with valid clusters), path/labeled_image.nii.gz, or path/binary_image.nii.gz
     - path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz) for applying region IDs to the input image
     
 Outputs:

@@ -1,34 +1,36 @@
 #!/bin/bash
 
-# Alias for sourcing this script added to .bashrc and .zshrc: 
-# alias exp=". /path/env_var.sh"
-
 # Set environment variables for the current terminal session when this script is sourced
-export EXP="exp_name"
-export BASE="/path/to/your/experiment"
-export DIRS="$BASE/Control/ $BASE/Treatment/"
-export PATTERN="sample??"
-export LOOP=$(echo "for d in Control Treatment ; do cd \$BASE/\$d ; for s in $PATTERN; do <commands> ; done ; done")
-export XY="3.5232063182059137" # XY voxel size in microns
-export Z="5.0"
-export SAMPLE_KEY="$BASE/sample_key.csv"
-export BRAIN_MASK_ILP="$BASE/brain_mask/brain_mask.ilp"
-export ATLAS="$BASE/atlas/atlas_CCFv3_2020_30um.nii.gz"
-export SPLIT="$BASE/atlas/atlas_CCFv3_2020_30um_split.nii.gz"
-export TEMPLATE="$BASE/atlas/average_template_CCFv3_30um.nii.gz"
-export MASK="$BASE/atlas/mask_CCFv3_2020_30um_RH_wo_root_ventricles_fibers_OB.nii.gz"
+export BASE="/path/to/your/experiment"  # path to the experiment directory
+export DIRS="$BASE/Control/ $BASE/Treatment/"  # sample?? directories should be in these directories
+export PATTERN="sample??"  # pattern to match sample directories to batch process (e.g., sample?? matches sample01, sample02, etc.)
+export LOOP=$(echo "for d in Control Treatment ; do cd \$BASE/\$d ; for s in $PATTERN; do <commands> ; done ; done") # Update Control and Treatment
+export Z="5.0"  # z-slice thickness in microns
+export SAMPLE_KEY="$BASE/sample_key.csv"  # Column headers: dir_name,condition    Row 2: sample01,control    Row 3: sample02,treatment    ... (conditions should be one word, so use camelCase)
+export ATLAS="$BASE/atlas/atlas_CCFv3_2020_30um.nii.gz"  # Allen CCFv3 30um atlas
+export SPLIT="$BASE/atlas/atlas_CCFv3_2020_30um_split.nii.gz"  # Allen CCFv3 30um atlas split into left and right hemispheres (left hemisphere region IDs/labels are increased by 20,000. Right hemisphere region IDs/labels are the same as the original atlas)
+export TEMPLATE="$BASE/atlas/iDISCO_template_CCFv3_30um.nii.gz"  # Average template. Use iDISCO_template_CCFv3_30um.nii.gz for LSFM or average_template_CCFv3_30um.nii.gz for serial two-photon tomography
+export MASK="$BASE/atlas/mask_CCFv3_2020_30um_RH_wo_root_ventricles_fibers_OB.nii.gz"  # Mask for the right hemisphere without root, ventricles, fibers, and olfactory bulb (we exclude fiber tracts for c-Fos)
 
+# Print environment variables when this script is sourced
 echo "These environment variables have been set for the current session:" 
-echo "EXP: $EXP"
 echo "BASE: $BASE"
 echo 'DIRS: $BASE/Control/ $BASE/Treatment/'
 echo "PATTERN: $PATTERN"
-echo "LOOP: $LOOP"
+echo "LOOP: $LOOP"  # This can be used to loop through all samples in the Control and Treatment directories
 echo "XY: $XY"
 echo "Z: $Z"
 echo 'SAMPLE_KEY: $BASE/sample_key.csv'
-echo 'BRAIN_MASK_ILP: $BASE/brain_mask/brain_mask.ilp'
 echo 'ATLAS: $BASE/atlas/atlas_CCFv3_2020_30um.nii.gz'
 echo 'SPLIT: $BASE/atlas/atlas_CCFv3_2020_30um_split.nii.gz'
 echo 'TEMPLATE: $BASE/atlas/average_template_CCFv3_30um.nii.gz'
 echo 'MASK: $BASE/atlas/mask_CCFv3_2020_30um_RH_wo_root_ventricles_fibers_OB.nii.gz'
+
+# To source this script, run: 
+# . /path/env_var.sh
+
+# To make it easier to source this script, add an alias to .bashrc and .zshrc:
+# alias exp=". /path/env_var.sh"
+
+# Then, you can source this script by running:
+# exp

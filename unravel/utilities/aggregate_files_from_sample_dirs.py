@@ -4,13 +4,22 @@
 """
 Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directories to a target directory.
 
+Next commands for voxel-wise stats: 
+    - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average left and right hemispheres.
+    - If using side-specific z-scoring, use ``vstats_hemi_to_avg`` to average the images.
+    - Prepend condition names with ``utils_prepend``.
+    - Check images in FSLeyes and run ``vstats`` to perform voxel-wise stats.    
+
+Next command for regional stats:
+    - Use ``rstats_summary`` to summarize the results
+
 Usage:
 ------
-    utils_agg_files -g 'atlas_space/<asterisk>_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
+    utils_agg_files -i 'atlas_space/<asterisk>_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
 
 Usage to prepend sample folder name to the name of files being copied:
 ----------------------------------------------------------------------
-    utils_agg_files -g 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
+    utils_agg_files -i 'atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz' -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]
 """
 
 import shutil
@@ -29,7 +38,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-g', '--glob_pattern', help='Glob pattern to match files within sample?? directories', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Glob pattern to match files within sample?? directories', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-td', '--target_dir', help='path/target_dir name for gathering files. Default: current working dir', default=None, action=SM)
@@ -86,7 +95,7 @@ def main():
     with Live(progress):
         for sample_path in sample_paths:
 
-            aggregate_files_from_sample_dirs(sample_path, args.glob_pattern, target_dir, args.add_prefix, args.verbose)
+            aggregate_files_from_sample_dirs(sample_path, args.input, target_dir, args.add_prefix, args.verbose)
 
             progress.update(task_id, advance=1)
 

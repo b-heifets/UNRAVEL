@@ -9,7 +9,9 @@ Inputs:
     - The <OneWordCondition>_sample?? column has the cell densities for each region.
 
 Outputs:
-    - Plots and a summary CSV to the current directory.
+    - Saved to ./<args.test_type>_plots_<side>
+    - Plots for each region with cell densities for each group (e.g., Saline, MDMA, Meth)
+    - Summary of significant differences between groups
     - regional_cell_densities_all.csv (Columns: columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...)
 
 Note: 
@@ -76,6 +78,7 @@ def parse_args():
 # TODO: Dunnett's test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.
 # TODO: Adapt this to work for cell counts and label densities. This could also be used for mean IF intensities.
 # TODO: Need a way to handle cases when some data from some samples is from one hemisphere and some from the other. (see filter_csv.py)
+# TODO: Fix plots for when there are > 3 groups (comparison lines are not positioned correctly)
 
 def get_region_details(region_id, df):
     # Adjust to account for the unique region IDs.

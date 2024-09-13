@@ -42,10 +42,6 @@ def find_and_copy_files(pattern, src_dir, dest_dir, move=False):
         dest_dir = src_dir.joinpath(dest_dir)
     dest_dir.mkdir(parents=True, exist_ok=True)
 
-    if len(src_dir.rglob(pattern)) == 0:
-        print(f"\n    [red1]No files found matching the pattern:[/] [bold]{pattern}[/] in {src_dir}\n")
-        return
-    
     # Use rglob for recursive globbing
     matched_files = list(src_dir.rglob(pattern))  # Convert the generator to a list
 

@@ -38,6 +38,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Optionally pad the unmasked autofluo image and aggregate it with the masked image and/or the warped atlas image.
 
 @log_command
 def main():

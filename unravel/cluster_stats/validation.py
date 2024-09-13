@@ -89,6 +89,7 @@ def parse_args():
 # TODO: Make config file for defaults or a command_generator.py script
 # TODO: Consider adding an option to quantify mean IF intensity in each cluster in segmented voxels. Also make a script for mean IF intensity in clusters in atlas space.
 # TODO: Use glob for -s to load the first match. If no match, print a message and continue to the next sample. Afterwards, update in help: "For -s, if a dir name is provided, the command will load ./sample??/seg_dir/sample??_seg_dir.nii.gz."
+# TODO: Consider removing the -o option. Have I used this so far? If not, remove it.
 
 @print_func_name_args_times()
 def crop_outer_space(native_cluster_index, output_path):

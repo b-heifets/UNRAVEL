@@ -6,6 +6,9 @@ Use ``seg_copy_tifs`` from UNRAVEL to copy specified TIFFs from each sample?? to
 Note:
     - reg_inputs/autofl_50um_tifs is from ``reg_prep`` and is used to make a brain mask using ``seg_brain_mask``.
 
+Next command: 
+    ``seg_brain_mask`` for ``reg`` or ``seg_ilastik`` for pixel classification.   
+
 Usage to prep for seg_brain_mask:
 ---------------------------------
     seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0000 0005 0050 [-td brain_mask] [-d list of paths] [-p sample??] [-v]

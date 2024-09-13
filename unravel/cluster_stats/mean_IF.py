@@ -4,8 +4,8 @@
 Use ``cstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.
 
 Prereqs: 
-    - vstats
-    - cstats_fdr
+    - ``vstats``
+    - ``cstats_fdr``
 
 Inputs:
     - This can be run from the vstats directory (will process .nii.gz images in the current directory)
@@ -16,10 +16,10 @@ Outputs:
 
 Next steps:
     - cd cluster_mean_IF...
-    - utils_prepend -sk <path/sample_key.csv> -f  # If needed
+    - ``utils_prepend`` -sk <path/sample_key.csv> -f  # If needed
     - [``cstats_index`` and ``cstats_table``]  # for an xlsx table and anatomically ordered clusters that can be used with ``cstats_prism``
-    - cstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats
-    - cstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests
+    - ``cstats_mean_IF_summary`` --order Control Treatment --labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats
+    - ``cstats_mean_IF_summary`` --order group3 group2 group1 --labels Group_3 Group_2 Group_1  # Tukey tests
 
 Usage:
 ------

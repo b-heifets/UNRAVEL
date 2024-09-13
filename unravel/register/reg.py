@@ -23,12 +23,12 @@ Note:
     - Letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Inferior
     - The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)
 
-Next steps: 
-    ``reg_check`` and ``vstats_prep``
+Next commands: 
+    ``reg_check`` for assessing registration, ``vstats_prep`` for preparing voxel-wise stats inputs, or ``rstats`` for regional stats.
 
 Usage for tissue registration:
 ------------------------------
-    reg -m <path/template.nii.gz> -bc -sm 0.4 -ort <3 letter orientation code> -m2 atlas/atlas_CCFv3_2020_30um.nii.gz [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-bc] [-sm 0.4] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-d list of paths] [-p sample??] [-v]
+    reg -m <path/template.nii.gz> -bc -sm 0.4 -ort <3 letter orientation code> [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-bc] [-sm 0.4] [-d list of paths] [-p sample??] [-v]
 
 Usage for atlas to atlas registration:
 --------------------------------------

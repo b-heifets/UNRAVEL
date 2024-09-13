@@ -12,12 +12,12 @@ Input examples (path is relative to ./sample??; 1st glob match processed):
 Output example:
     - ./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz
 
-Next steps: 
-    Aggregate outputs with ``utils_agg_files`` and run ``vstats``.
+Next commands for voxel-wise stats: 
+    Preprocess atlas space IF images with ``vstats_z_score`` (recommended for c-Fos-IF) or aggregate them with ``utils_agg_files``.
 
 Usage:
 ------
-    vstats_prep -i `*`.czi -o cfos_rb4_30um_CCF_space.nii.gz [-sa 3] [-rb 4] [--chann_idx 1] [--reg_res 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-md parameters/metadata.txt] [--threads 8] [-mi] [-d list of paths] [-p sample??] [-v]
+    vstats_prep -i `*`.czi -o cfos_rb4_30um_CCF_space.nii.gz [-sa 3] [-rb 4] [--channel 1] [--reg_res 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-md parameters/metadata.txt] [--threads 8] [-mi] [-d list of paths] [-p sample??] [-v]
 """
 
 import shutil
@@ -47,7 +47,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-sa', '--spatial_avg', help='Spatial averaging in 2D or 3D (2 or 3). Default: None', default=None, type=int, action=SM)
     opts.add_argument('-rb', '--rb_radius', help='Radius of rolling ball in pixels (Default: None)', default=None, type=int, action=SM)
-    opts.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
+    opts.add_argument('-c', '--channel', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
     opts.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
@@ -100,7 +100,7 @@ def main():
                 print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ io_metadata")
                 import sys ; sys.exit()
 
-            img = load_3D_img(img_path, args.chann_idx, "xyz")
+            img = load_3D_img(img_path, args.channel, "xyz")
 
             # Apply spatial averaging
             if args.spatial_avg == 3:

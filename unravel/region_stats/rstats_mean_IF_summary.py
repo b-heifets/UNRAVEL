@@ -23,15 +23,15 @@ Note:
 
 Usage for t-tests:
 ------------------
-    rstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest [-alt two-sided] [--lut CCFv3-2017__regionID_side_IDpath_region_abbr.csv] [-v]
+    rstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest [-alt two-sided] [--lut CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-v]
 
 Usage for Tukey's tests w/ reordering and renaming of conditions:
 -----------------------------------------------------------------
-    rstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1 [--lut CCFv3-2017__regionID_side_IDpath_region_abbr.csv] [-v]
+    rstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1 [--lut CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-v]
 
 Usage with a custom atlas:
 --------------------------
-    atlas=path/custom_atlas.nii.gz ; rstats_mean_IF_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest [-alt two-sided] [--lut CCFv3-2017__regionID_side_IDpath_region_abbr.csv] [-v]
+    atlas=path/custom_atlas.nii.gz ; rstats_mean_IF_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest [-alt two-sided] [--lut CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-v]
 """
 
 import matplotlib as mpl

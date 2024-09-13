@@ -17,7 +17,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-g', '--glob_pattern', help="Glob pattern to match CSV files", required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="Glob pattern to match CSV files", required=True, action=SM)
     reqs.add_argument('-col', '--column', help="Column to filter", required=True, action=SM)
     reqs.add_argument('-vals', '--values', nargs='*', help="Values to filter by", required=True, action=SM)
 
@@ -64,7 +64,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    for file_path in glob.glob(args.glob_pattern):
+    for file_path in glob.glob(args.input):
         filter_csv(file_path, args.column, args.values, args.output_dir)
 
     verbose_end_msg()

@@ -1,0 +1,18 @@
+Setting up Allen brain atlas coloring in FSLeyes
+
+- Add UNRAVEL/_other/fsleyes_luts/ccfv3_2020.lut to the following location:
+   - Linux: /home/<your_username>/.config/fsleyes/luts/ccfv3_2020.lut
+   - MacOS: /usr/local/fsl/fslpython/envs/fslpython/lib/python3.8/site-packages/fsleyes/assets/luts/ccfv3_2020.lut
+   - Windows: C:\Users\<your_username>\AppData\Roaming\fsleyes\luts\ccfv3_2020.lut
+
+- On MacOS, run the following command to add write permissions to the LUT folder:
+sudo chmod a+w /usr/local/fsl/fslpython/envs/fslpython/lib/python3.8/site-packages/fsleyes/assets/luts
+
+- On MacOS, edit order.txt to include ccfv3_2020.lut.
+
+- To remove other LUTs, move them up a directory level, but keep random.lut in place.
+- Open atlas_CCFv3_2020_30um.nii.gz in FSLeyes.
+- Select the atlas and change "3D/4D volume" to "Label image."
+- Switch the lookup table from random to ccfv3_2020.
+- Click the circle icon at the top to convert the atlas to a wireframe view.
+- If you don't want to select the LUT every time, make a copy of random.lut and replace its contents with those of ccfv3_2020.lut.

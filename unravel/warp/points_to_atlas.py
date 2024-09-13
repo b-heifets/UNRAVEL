@@ -57,7 +57,7 @@ def parse_args():
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     
     compatability = parser.add_argument_group('Compatability options')
-    compatability.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
+    compatability.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting). Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
@@ -90,6 +90,9 @@ def main():
 
             # Load the csv with cell centroids in full resolution tissue space
             csv_path = next(sample_path.glob(str(args.input)), None)
+            if csv_path is None:
+                print(f"\n\n    [red1]No CSV file found in {sample_path} matching {args.input}. Skipping.\n")
+                continue
 
             # Define main output path
             output_img_path = sample_path / "atlas_space" / str(csv_path.name).replace(".csv", ".nii.gz")

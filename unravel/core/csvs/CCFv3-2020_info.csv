@@ -523,11 +523,11 @@
 521,331,#N/A,/997/8/343/1129/1097/467/331/,Hypothalamus,Hypothalamus,Mammillary body,Mammillary body,MBO,MBO,,,,"MBO: rgb(254,76,61)",254,76,61
 522,210,203,/997/8/343/1129/1097/467/331/210/,Hypothalamus,Hypothalamus,Lateral mammillary nucleus,Lateral mammillary nucleus,LM,LM,,,,"LM: rgb(255,75,61)",255,75,61
 523,491,#N/A,/997/8/343/1129/1097/467/331/491/,Hypothalamus,Hypothalamus,Medial mammillary nucleus,Medial mammillary nucleus,MM,MM,,,,"MM: rgb(255,74,62)",255,74,62
-524,732,722,/997/8/343/1129/1097/467/331/491/732/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, median part",Medial mammillary nucleus,Mmme,MM,me,median,,"Mmme: rgb(253,75,62)",253,75,62
-525,606826647,1313,/997/8/343/1129/1097/467/331/491/606826647/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, lateral part",Medial mammillary nucleus,Mml,MM,l,lateral,,"Mml: rgb(252,75,62)",252,75,62
-526,606826651,1314,/997/8/343/1129/1097/467/331/491/606826651/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, medial part",Medial mammillary nucleus,Mmm,MM,m,medial,,"Mmm: rgb(254,74,60)",254,74,60
-527,606826655,1315,/997/8/343/1129/1097/467/331/491/606826655/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, posterior part",Medial mammillary nucleus,Mmp,MM,p,posterior,,"Mmp: rgb(254,73,61)",254,73,61
-528,606826659,1316,/997/8/343/1129/1097/467/331/491/606826659/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, dorsal part",Medial mammillary nucleus,Mmd,MM,d,dorsal,,"Mmd: rgb(253,74,61)",253,74,61
+524,732,722,/997/8/343/1129/1097/467/331/491/732/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, median part",Medial mammillary nucleus,MMme,MM,me,median,,"MMme: rgb(253,75,62)",253,75,62
+525,606826647,1313,/997/8/343/1129/1097/467/331/491/606826647/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, lateral part",Medial mammillary nucleus,MMl,MM,l,lateral,,"MMl: rgb(252,75,62)",252,75,62
+526,606826651,1314,/997/8/343/1129/1097/467/331/491/606826651/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, medial part",Medial mammillary nucleus,MMm,MM,m,medial,,"MMm: rgb(254,74,60)",254,74,60
+527,606826655,1315,/997/8/343/1129/1097/467/331/491/606826655/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, posterior part",Medial mammillary nucleus,MMp,MM,p,posterior,,"MMp: rgb(254,73,61)",254,73,61
+528,606826659,1316,/997/8/343/1129/1097/467/331/491/606826659/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, dorsal part",Medial mammillary nucleus,MMd,MM,d,dorsal,,"MMd: rgb(253,74,61)",253,74,61
 529,525,515,/997/8/343/1129/1097/467/331/525/,Hypothalamus,Hypothalamus,Supramammillary nucleus,Supramammillary nucleus,SUM,SUM,,,,"SUM: rgb(255,73,61)",255,73,61
 530,557,#N/A,/997/8/343/1129/1097/467/331/557/,Hypothalamus,Hypothalamus,Tuberomammillary nucleus,Tuberomammillary nucleus,TM,TM,,,,"TM: rgb(255,75,60)",255,75,60
 531,1126,1113,/997/8/343/1129/1097/467/331/557/1126/,Hypothalamus,Hypothalamus,"Tuberomammillary nucleus, dorsal part",Tuberomammillary nucleus,TMd,TM,d,dorsal,,"TMd: rgb(252,76,61)",252,76,61

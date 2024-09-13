@@ -375,7 +375,7 @@ brain,grey,BS,IB,TH,DORsm,VENT,VP,VPLpc,
 brain,grey,CH,CTX,CTXpl,HPF,RHP,ENT,ENTm,ENTm5
 brain,fiber tracts,cbf,arb,,,,,,
 brain,grey,CH,CTX,CTXpl,Isocortex,TEa,TEa6a,,
-brain,grey,BS,IB,HY,MEZ,MBO,MM,Mmme,
+brain,grey,BS,IB,HY,MEZ,MBO,MM,MMme,
 brain,grey,BS,IB,TH,DORsm,VENT,VP,VPM,
 brain,grey,CH,CTX,CTXpl,Isocortex,AUD,AUDp,AUDp1,
 brain,grey,BS,IB,TH,DORsm,VENT,VP,VPMpc,

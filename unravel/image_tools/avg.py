@@ -46,10 +46,10 @@ def main():
     for pattern in args.inputs:
         all_files.extend(Path().glob(pattern))
 
-    print(f'\nAveraging: {str(all_files)}\n')
+    print(f'\n    Averaging: {str(all_files)}\n')
 
     if not all_files:
-        print("No NIfTI files found. Exiting.")
+        print("    [red1]No NIfTI files found. Exiting.")
         return
 
     # Initialize sum array and affine matrix
@@ -75,7 +75,7 @@ def main():
     averaged_nii = nib.Nifti1Image(average_image, affine, header)
     averaged_nii.set_data_dtype(data_type)
     nib.save(averaged_nii, args.output)
-    print("Saved averaged image to avg.nii.gz\n")
+    print(f"    Saved {args.output}\n")
 
     verbose_end_msg()
     
