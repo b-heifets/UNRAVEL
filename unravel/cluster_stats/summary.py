@@ -16,10 +16,12 @@ Inputs:
         sample02,treatment
 
 Outputs:
-    - Files for 3D brain models of valid clusters (vizualize in DSI Studio)
-    - CSVs with valid cluster data (e.g., aggregated data for plotting bar graphs with GraphPad Prism)
-    - CSVs for sunburst plots (plot with Flourish)
-    - Excel files with tables summarizing top regions and defining region abbreviations (for SI tables)
+    - For each cluster map, the following output directories are created:
+        - 3D_brains: Files 3D brain models of valid clusters 
+        - valid_clusters_tables_and_legend: Excel files with tables summarizing top regions and defining region abbreviations (for SI tables)
+        - _valid_clusters: valid cluster maps, CSVs for sunburst plots (plot with Flourish), etc.
+        - _valid_clusters_stats: test results for adding asterisks to the xlsx files, etc.
+        - _valid_clusters_prism: CSVs for making bar graphs in GraphPad Prism (refer to the xlsx files for annotations)
 
 ``cstats_summary`` runs these commands:
     - ``cstats_org_data``, ``cstats_group_data``, ``utils_prepend``, ``cstats``, ``cstats_index``, ``cstats_brain_model``, ``cstats_table``, ``cstats_prism``, ``cstats_legend``
@@ -97,6 +99,7 @@ def parse_args():
 # TODO: Check if irrelevant directories are present in the current working directory and warn the user
 # TODO: Replace this (find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})' \;) w/ example of utils_agg_files_rec
 # TODO: Consider using env_var.sh instead of unravel/cluster_stats/summary.ini
+# TODO: Could include warning if directories are present in the current working directory that should not be there
 
 def run_script(script_name, script_args):
     """Run a command/script using subprocess that respects the system's PATH and captures output."""
