@@ -18,6 +18,12 @@ Outputs:
     - reg_inputs/autofl_`*`um_brain_mask.nii.gz (can be used for ``reg`` and ``vstats_z_score``)
     - reg_inputs/autofl_`*`um_masked.nii.gz
 
+Note:
+    - Ilastik executable files for each OS (update path and version as needed):
+    - Linux and WSL: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh
+    - Mac: /Applications/ilastik-1.4.0.post1-OSX.app/Contents/ilastik-release/run_ilastik.sh
+    - Windows: C:\\Program Files\\ilastik-1.4.0.post1\\run_ilastik.bat
+
 Next command: 
     - ``reg``
 
