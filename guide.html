@@ -1105,14 +1105,14 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
 <h2>Training Ilastik<a class="headerlink" href="#training-ilastik" title="Link to this heading">#</a></h2>
 <p>Ilastik has two purposes for our typical workflow:</p>
 <ol class="arabic simple">
-<li><p>During registration, Ilastik segments autofluorescence in tissue to create brain masks, which can also be applied for z-scoring IF images. This is automated with <a class="reference internal" href="unravel/segment/brain_mask.html#unravel-segment-brain-mask"><span class="std std-ref"><strong>seg_brain_mask</strong></span></a>.</p></li>
+<li><p>During registration, Ilastik is used to segment tissue, creating brain masks that refine registration of autofluo images and z-scoring of IF images. After training Ilastik, segmentation of 50 µm autolfluo images is automated with <a class="reference internal" href="unravel/segment/brain_mask.html#unravel-segment-brain-mask"><span class="std std-ref"><strong>seg_brain_mask</strong></span></a>.</p></li>
 </ol>
 <figure class="align-center">
 <a class="reference internal image-reference" href="_images/Ilastik_brain_mask_example.jpg"><img alt="_images/Ilastik_brain_mask_example.jpg" src="_images/Ilastik_brain_mask_example.jpg" style="width: 70%;" />
 </a>
 </figure>
 <ol class="arabic simple" start="2">
-<li><p>During cluster validation, they are used to quantify c-Fos+ cells or other features of interest. This is automated with <a class="reference internal" href="unravel/segment/ilastik_pixel_classification.html#unravel-segment-ilastik-pixel-classification"><span class="std std-ref"><strong>seg_ilastik</strong></span></a>.</p></li>
+<li><p>During cluster validation, Ilastik labels c-Fos+ cells or other features of interest for quantification of cell or label densities within clusters from voxel-wise statistics. Segmentation of full-res IF images is automated with <a class="reference internal" href="unravel/segment/ilastik_pixel_classification.html#unravel-segment-ilastik-pixel-classification"><span class="std std-ref"><strong>seg_ilastik</strong></span></a>.</p></li>
 </ol>
 <figure class="align-center">
 <a class="reference internal image-reference" href="_images/Ilastik_c-Fos_example.jpg"><img alt="_images/Ilastik_c-Fos_example.jpg" src="_images/Ilastik_c-Fos_example.jpg" style="width: 70%;" />
@@ -1843,11 +1843,11 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 </ul>
 <p class="rubric" id="display-settings">Display settings</p>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_static/brain_model_settings_1.JPG"><img alt="_static/brain_model_settings_1.JPG" src="_static/brain_model_settings_1.JPG" style="width: 50%;" />
+<a class="reference internal image-reference" href="_images/brain_model_settings_1.jpg"><img alt="_images/brain_model_settings_1.jpg" src="_images/brain_model_settings_1.jpg" style="width: 50%;" />
 </a>
 </figure>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_static/brain_model_settings_2.JPG"><img alt="_static/brain_model_settings_2.JPG" src="_static/brain_model_settings_2.JPG" style="width: 50%;" />
+<a class="reference internal image-reference" href="_images/brain_model_settings_2.jpg"><img alt="_images/brain_model_settings_2.jpg" src="_images/brain_model_settings_2.jpg" style="width: 50%;" />
 </a>
 </figure>
 <p class="rubric" id="layout">Layout</p>
