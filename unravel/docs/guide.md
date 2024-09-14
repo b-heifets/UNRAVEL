@@ -658,12 +658,12 @@ flowchart TD
 ## Training Ilastik
 
 Ilastik has two purposes for our typical workflow: 
-1) During registration, Ilastik segments autofluorescence in tissue to create brain masks, which can also be applied for z-scoring IF images. This is automated with [**seg_brain_mask**](unravel.segment.brain_mask).
+1) During registration, Ilastik is used to segment tissue, creating brain masks that refine registration of autofluo images and z-scoring of IF images. After training Ilastik, segmentation of 50 µm autolfluo images is automated with [**seg_brain_mask**](unravel.segment.brain_mask).
 ```{figure} _static/Ilastik_brain_mask_example.jpg
 :width: 70%
 :align: center
 ```
-2) During cluster validation, they are used to quantify c-Fos+ cells or other features of interest. This is automated with [**seg_ilastik**](unravel.segment.ilastik_pixel_classification).
+2) During cluster validation, Ilastik labels c-Fos+ cells or other features of interest for quantification of cell or label densities within clusters from voxel-wise statistics. Segmentation of full-res IF images is automated with [**seg_ilastik**](unravel.segment.ilastik_pixel_classification).
 ```{figure} _static/Ilastik_c-Fos_example.jpg
 :width: 70%
 :align: center
@@ -1254,11 +1254,11 @@ Under "Hierarchy" select "Sunburst"
 * Make it visible: Slices --> Add Isosurface --> Full --> OK --> Zoom out (mouse wheel or 2 finger scroll)
 
 #### Display settings
-```{figure} _static/brain_model_settings_1.JPG
+```{figure} _static/brain_model_settings_1.jpg
 :width: 50%
 :align: center
 ```
-```{figure} _static/brain_model_settings_2.JPG
+```{figure} _static/brain_model_settings_2.jpg
 :width: 50%
 :align: center
 ```
