@@ -474,7 +474,7 @@ Recommended steps to set up for analysis:
 
 :::{admonition} Batch stitching settings
 :class: note dropdown
-```{figure} _static/batch_stitching_1.jpg
+```{figure} _static/batch_stitching_1.JPG
 :width: 50%
 :align: center
 Select a mid-stack reference slice. Ideally, tissue will be present in each tile of the reference slice. 
@@ -483,7 +483,7 @@ Select a mid-stack reference slice. Ideally, tissue will be present in each tile
 
 :::{admonition} Running batch stitching
 :class: note dropdown
-```{figure} _static/batch_stitching_2.jpg
+```{figure} _static/batch_stitching_2.JPG
 :width: 100%
 :align: center
 ```
