@@ -853,13 +853,13 @@ reg_check [-td reg_results] [-d $DIRS]  # Default for -td: copy images to the cu
 :class: note
 
 ```{figure} _static/FSLeyes_autofl_image_from_reg.JPG
-:width: 80%
+:width: 100%
 :align: center
 Use FSLeyes to view the autofluo image from `reg` (sample??/reg_ouputs/autofl_50um_masked_fixed_reg_input.nii.gz).
 ```
 
 ```{figure} _static/FSLeyes_atlas_warped_to_tissue_from_reg.JPG
-:width: 80%
+:width: 100%
 :align: center
 Use FSLeyes to view the atlas warped to the the tissue (sample??/reg_ouputs/atlas_CCFv3_2020_30um_in_tissue_space.nii.gz)
 ```
@@ -933,7 +933,7 @@ You can test parameters for background subtraction with:
 :::
 
 ```{figure} _static/FSLeyes_Ai14_image_in_CCFv3_30um_space.JPG
-:width: 80%
+:width: 100%
 :align: center
 Use FSLeyes to view the fluorescently labeled image in atlas space.
 ```
@@ -1211,7 +1211,7 @@ cstats_summary -c <path/cluster_summary.ini> -sk $SAMPLE_KEY  --groups <group1> 
 Under "Hierarchy" select "Sunburst"
 ```
 ```{figure} _static/sunburst_3_adding_data.JPG
-:width: 80%
+:width: 100%
 :align: center
 ```
 * Select the "Data" tab.
@@ -1221,7 +1221,7 @@ Under "Hierarchy" select "Sunburst"
 * Switch to the "Preview" tab to view the plot.
 
 ```{figure} _static/sunburst_4_RGB_values.JPG
-:width: 50%
+:width: 30%
 :align: center
 ```
 * Paste the contents of sunburst_RGBs.csv into Colors --> Custom overrides. 
@@ -1257,25 +1257,22 @@ Under "Hierarchy" select "Sunburst"
 ```{figure} _static/brain_model_settings_1.JPG
 :width: 50%
 :align: center
-Display settings 
 ```
-
 ```{figure} _static/brain_model_settings_2.JPG
 :width: 50%
 :align: center
-Surface rendering settings 
 ```
 
 #### Layout
 ```{figure} _static/brain_model_layout.JPG
-:width: 80%
+:width: 100%
 :align: center
 ```
 * The zoom and viewer dimensions determine the output video size.
 * This layout allows for 1080p videos with my MacBook (adjust as needed).
 * Move panels on the right down and make them as small as possible.
 * Line up the left edge of the viewer with View.
-* Zoom to 0.28.
+* Zoom to the view 0.28 (lower right of viewer)
 
 * Zoom out to 0.18 for axial.
 
