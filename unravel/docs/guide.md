@@ -207,8 +207,7 @@ If `Ctrl + C` doesn't stop the command, you can kill the process:
 <command> -h
 ```
 * Help guides often include info on prereqs, inputs, outputs, next steps, usage, and other notes.
-* Viewing the help in the terminal is helpful to see default values for arguments not mentioned in this guide.
-* Some commands have additional options that are not covered in this guide
+* Viewing the terminal help provides default values and additional options not covered in this guide.
 * Provide -v when running commands for verbose mode (to see info about function calls, parameters, etc.)
 
 :::{admonition} Syntax related to commands
@@ -485,7 +484,7 @@ Select a mid-stack reference slice. Ideally, tissue will be present in each tile
 :::{admonition} Running batch stitching
 :class: note dropdown
 ```{figure} _static/batch_stitching_2.JPG
-:width: 50%
+:width: 100%
 :align: center
 ```
 * Drag and drop images to be stitched into this section. 
@@ -674,7 +673,7 @@ Ilastik has two purposes for our typical workflow:
 
 
 ::: {admonition} Setting up Ilastik for batch processing
-:class: note dropdown
+:class: note
 * [Install Ilastik](https://www.ilastik.org/download)
 ```bash
 # Add this to your ~/.bashrc or ~/.zshrc terminal config file:
