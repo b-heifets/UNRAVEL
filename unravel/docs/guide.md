@@ -4,7 +4,7 @@
    * [Linux in 100 seconds](https://www.youtube.com/watch?v=rrB13utjYV4)
    * [Bash in 100 seconds](https://www.youtube.com/watch?v=I4EWvMFj37g)
    * [Interactive Linux Survival guide](https://linuxsurvival.com/)
-   * Refer to common commands and tips in the cheat sheet (click to expand dropdown):
+   * Refer to common commands and tips in this cheat sheet (click to expand dropdown):
 
 
 
@@ -476,7 +476,7 @@ Recommended steps to set up for analysis:
 :::{admonition} Batch stitching settings
 :class: note dropdown
 ```{figure} _static/batch_stitching_1.JPG
-:height: 500px
+:width: 50%
 :align: center
 Select a mid-stack reference slice. Ideally, tissue will be present in each tile of the reference slice. 
 ```
@@ -485,6 +485,7 @@ Select a mid-stack reference slice. Ideally, tissue will be present in each tile
 :::{admonition} Running batch stitching
 :class: note dropdown
 ```{figure} _static/batch_stitching_2.JPG
+:width: 50%
 :align: center
 ```
 * Drag and drop images to be stitched into this section. 
@@ -657,15 +658,15 @@ flowchart TD
 
 ## Training Ilastik
 
-Segmentations generated with Ilastik serve two purposes: 
-1) During registration, they are used to create brain masks, which can also be applied for z-scoring IF images
+Ilastik has two purposes for our typical workflow: 
+1) During registration, Ilastik segments autofluorescence in tissue to create brain masks, which can also be applied for z-scoring IF images. This is automated with [**seg_brain_mask**](unravel.segment.brain_mask).
 ```{figure} _static/Ilastik_brain_mask_example.JPG
-:height: 500px
+:width: 70%
 :align: center
 ```
-2) During cluster validation, they are used to quantify c-Fos+ cells or other features of interest.
+2) During cluster validation, they are used to quantify c-Fos+ cells or other features of interest. This is automated with [**seg_ilastik**](unravel.segment.ilastik_pixel_classification).
 ```{figure} _static/Ilastik_c-Fos_example.JPG
-:height: 500px
+:width: 70%
 :align: center
 ```
 
@@ -697,15 +698,16 @@ alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if n
 :class: note dropdown
 
 **Launch Ilastik** 
-   - Either double click on the application or run: `ilastik`
+   - Either double click on the application or run: `ilastik` (if you set up an alias)
 
 1. **Input Data**  
-   Drag training slices into the ilastik GUI (e.g., from a dir w/ 3 slices per sample and > 2 samples per condition)
-   `ctrl+A` -> right-click -> Edit shared properties -> Storage: Copy into project file -> Ok  
+   - Gather training slices to a folder from all samples with [**seg_copy_tifs**](unravel.segment.copy_tifs)
+   - Drag and drop training slices into the ilastik GUI (e.g., from a dir w/ 3 slices per sample and > 2 samples per condition)
+   - `ctrl+A` to select training slices -> right-click -> Edit shared properties -> Storage: Copy into project file -> Ok  
 
 2. **Feature Selection**  
-   Select Features... -> select all features (`control+a`) or an optimized subset (faster but less accurate).
-   Optional: to find an optimal subset of features, select all features, train Ilastik, turn off Live Updates, click Suggest Features, select a subset, and refine training.
+   - Select Features... -> select all features (`control+a`) or an optimized subset (faster but less accurate).
+   - Optional: to find an optimal subset of features, select all features, train Ilastik, turn off Live Updates, click Suggest Features, select a subset, and refine training.
 
 3. **Training**  
    - ***Brightness/contrast***: select the gradient button and click and drag in the image (faster if zoomed in)
@@ -722,10 +724,10 @@ alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if n
    - Save the project in the experiment summary folder and close if using this script to run ilastik in headless mode for segmenting all images.
 
 **Notes**
-- If you want to go back to steps 1 & 2, turn Live Updates off
-- It is possible at add extra labels with `a` (e.g., if you want to segment somata with one label and axons with another label)
-- If you accidentally press `a`, turn off Live Updates and press `x` next to the extra label to delete it.
-- If the segmentation for label 1 fuses neighboring cells, draw a thin line in between them with label 2. 
+   - If you want to go back to steps 1 & 2, turn Live Updates off
+   - It is possible at add extra labels with `a` (e.g., if you want to segment somata with one label and axons with another label)
+   - If you accidentally press `a`, turn off Live Updates and press `x` next to the extra label to delete it.
+   - If the segmentation for label 1 fuses neighboring cells, draw a thin line in between them with label 2. 
 :::
 
 ---
@@ -852,13 +854,13 @@ reg_check [-td reg_results] [-d $DIRS]  # Default for -td: copy images to the cu
 :class: note
 
 ```{figure} _static/FSLeyes_autofl_image_from_reg.JPG
-:height: 800px
+:width: 80%
 :align: center
 Use FSLeyes to view the autofluo image from `reg` (sample??/reg_ouputs/autofl_50um_masked_fixed_reg_input.nii.gz).
 ```
 
 ```{figure} _static/FSLeyes_atlas_warped_to_tissue_from_reg.JPG
-:height: 800px
+:width: 80%
 :align: center
 Use FSLeyes to view the atlas warped to the the tissue (sample??/reg_ouputs/atlas_CCFv3_2020_30um_in_tissue_space.nii.gz)
 ```
@@ -932,7 +934,7 @@ You can test parameters for background subtraction with:
 :::
 
 ```{figure} _static/FSLeyes_Ai14_image_in_CCFv3_30um_space.JPG
-:height: 800px
+:width: 80%
 :align: center
 Use FSLeyes to view the fluorescently labeled image in atlas space.
 ```
@@ -1197,7 +1199,7 @@ cstats_summary -c <path/cluster_summary.ini> -sk $SAMPLE_KEY  --groups <group1> 
 * Sunburst CSVs can be copy and pasted into the sunburst plot tool of the [Flourish web app](https://app.flourish.studio/login)
 
 ```{figure} _static/sunburst_1_flourish.JPG
-:height: 300px
+:width: 50%
 :align: center
 ```
 * Make a free account w/ Flourish.
@@ -1205,12 +1207,12 @@ cstats_summary -c <path/cluster_summary.ini> -sk $SAMPLE_KEY  --groups <group1> 
 * Select "New visualization".
 
 ```{figure} _static/sunburst_2_plot_types.JPG
-:height: 300px
+:width: 50%
 :align: center
 Under "Hierarchy" select "Sunburst"
 ```
 ```{figure} _static/sunburst_3_adding_data.JPG
-:height: 300px
+:width: 80%
 :align: center
 ```
 * Select the "Data" tab.
@@ -1220,7 +1222,7 @@ Under "Hierarchy" select "Sunburst"
 * Switch to the "Preview" tab to view the plot.
 
 ```{figure} _static/sunburst_4_RGB_values.JPG
-:height: 400px
+:width: 50%
 :align: center
 ```
 * Paste the contents of sunburst_RGBs.csv into Colors --> Custom overrides. 
@@ -1254,20 +1256,20 @@ Under "Hierarchy" select "Sunburst"
 
 #### Display settings
 ```{figure} _static/brain_model_settings_1.JPG
-:height: 800px
+:width: 50%
 :align: center
 Display settings 
 ```
 
 ```{figure} _static/brain_model_settings_2.JPG
-:height: 800px
+:width: 50%
 :align: center
 Surface rendering settings 
 ```
 
 #### Layout
 ```{figure} _static/brain_model_layout.JPG
-:height: 800px
+:width: 80%
 :align: center
 ```
 * The zoom and viewer dimensions determine the output video size.
