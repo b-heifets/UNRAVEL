@@ -474,7 +474,7 @@ Recommended steps to set up for analysis:
 
 :::{admonition} Batch stitching settings
 :class: note dropdown
-```{figure} _static/batch_stitching_1.JPG
+```{figure} _static/batch_stitching_1.jpg
 :width: 50%
 :align: center
 Select a mid-stack reference slice. Ideally, tissue will be present in each tile of the reference slice. 
@@ -483,7 +483,7 @@ Select a mid-stack reference slice. Ideally, tissue will be present in each tile
 
 :::{admonition} Running batch stitching
 :class: note dropdown
-```{figure} _static/batch_stitching_2.JPG
+```{figure} _static/batch_stitching_2.jpg
 :width: 100%
 :align: center
 ```
@@ -659,12 +659,12 @@ flowchart TD
 
 Ilastik has two purposes for our typical workflow: 
 1) During registration, Ilastik segments autofluorescence in tissue to create brain masks, which can also be applied for z-scoring IF images. This is automated with [**seg_brain_mask**](unravel.segment.brain_mask).
-```{figure} _static/Ilastik_brain_mask_example.JPG
+```{figure} _static/Ilastik_brain_mask_example.jpg
 :width: 70%
 :align: center
 ```
 2) During cluster validation, they are used to quantify c-Fos+ cells or other features of interest. This is automated with [**seg_ilastik**](unravel.segment.ilastik_pixel_classification).
-```{figure} _static/Ilastik_c-Fos_example.JPG
+```{figure} _static/Ilastik_c-Fos_example.jpg
 :width: 70%
 :align: center
 ```
@@ -852,13 +852,13 @@ reg_check [-td reg_results] [-d $DIRS]  # Default for -td: copy images to the cu
 :::{admonition} Checking registration with FSLeyes
 :class: note
 
-```{figure} _static/FSLeyes_autofl_image_from_reg.JPG
+```{figure} _static/FSLeyes_autofl_image_from_reg.jpg
 :width: 100%
 :align: center
 Use FSLeyes to view the autofluo image from `reg` (sample??/reg_ouputs/autofl_50um_masked_fixed_reg_input.nii.gz).
 ```
 
-```{figure} _static/FSLeyes_atlas_warped_to_tissue_from_reg.JPG
+```{figure} _static/FSLeyes_atlas_warped_to_tissue_from_reg.jpg
 :width: 100%
 :align: center
 Use FSLeyes to view the atlas warped to the the tissue (sample??/reg_ouputs/atlas_CCFv3_2020_30um_in_tissue_space.nii.gz)
@@ -932,7 +932,7 @@ You can test parameters for background subtraction with:
     * Use {py:mod}`unravel.image_io.io_img` to create a tif series
 :::
 
-```{figure} _static/FSLeyes_Ai14_image_in_CCFv3_30um_space.JPG
+```{figure} _static/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg
 :width: 100%
 :align: center
 Use FSLeyes to view the fluorescently labeled image in atlas space.
@@ -1197,7 +1197,7 @@ cstats_summary -c <path/cluster_summary.ini> -sk $SAMPLE_KEY  --groups <group1> 
 * Or sunburst CSVs can be generated using `cstats_sunburst`
 * Sunburst CSVs can be copy and pasted into the sunburst plot tool of the [Flourish web app](https://app.flourish.studio/login)
 
-```{figure} _static/sunburst_1_flourish.JPG
+```{figure} _static/sunburst_1_flourish.jpg
 :width: 50%
 :align: center
 ```
@@ -1205,12 +1205,12 @@ cstats_summary -c <path/cluster_summary.ini> -sk $SAMPLE_KEY  --groups <group1> 
 * Login.
 * Select "New visualization".
 
-```{figure} _static/sunburst_2_plot_types.JPG
+```{figure} _static/sunburst_2_plot_types.jpg
 :width: 50%
 :align: center
 Under "Hierarchy" select "Sunburst"
 ```
-```{figure} _static/sunburst_3_adding_data.JPG
+```{figure} _static/sunburst_3_adding_data.jpg
 :width: 100%
 :align: center
 ```
@@ -1220,7 +1220,7 @@ Under "Hierarchy" select "Sunburst"
 * Paste in values for columns A-K from a *_sunburst.csv.
 * Switch to the "Preview" tab to view the plot.
 
-```{figure} _static/sunburst_4_RGB_values.JPG
+```{figure} _static/sunburst_4_RGB_values.jpg
 :width: 30%
 :align: center
 ```
@@ -1264,7 +1264,7 @@ Under "Hierarchy" select "Sunburst"
 ```
 
 #### Layout
-```{figure} _static/brain_model_layout.JPG
+```{figure} _static/brain_model_layout.jpg
 :width: 100%
 :align: center
 ```
