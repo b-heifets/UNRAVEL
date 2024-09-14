@@ -524,11 +524,18 @@
 <li><p>Run <code class="docutils literal notranslate"><span class="pre">vstats</span></code> to perform voxel-wise stats.</p></li>
 </ul>
 </dd>
+<dt>Next commands for voxel-wise stats:</dt><dd><ul class="simple">
+<li><p>Prepend condition names with <code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code>.</p></li>
+<li><p>Check images in FSLeyes and run <code class="docutils literal notranslate"><span class="pre">vstats</span></code> to perform voxel-wise stats.</p></li>
+</ul>
+</dd>
+<dt>Next commands for voxel-wise stats:</dt><dd><p>Preprocess atlas space IF images <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code>, prepend condition names with <code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code>, and perform voxel-wise stats with <code class="docutils literal notranslate"><span class="pre">vstats</span></code>.</p>
+</dd>
 </dl>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>vstats_whole_to_avg [–pattern ‘&lt;asterisk&gt;.nii.gz’] [–kernel 0] [–axis 2] [–shift 2] [–parallel] [–atlas_mask path/atlas_mask.nii.gz] [-v]</p>
+<div><p>vstats_whole_to_avg [-i ‘&lt;asterisk&gt;.nii.gz’] [–kernel 0] [–axis 2] [–shift 0] [–parallel] [–atlas_mask path/atlas_mask.nii.gz] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">

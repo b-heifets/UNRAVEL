@@ -364,9 +364,10 @@
 <span class="sd">    - `*`.nii.gz files in the current directory with conditions as prefixes (e.g., saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz)</span>
 
 <span class="sd">Outputs:</span>
-<span class="sd">    - stats/ directory with randomise_parallel outputs (e.g., uncorrected 1-p value maps [vox_p])</span>
+<span class="sd">    - stats/ directory with randomise_parallel outputs (e.g., uncorrected 1-p value maps [vox_p]).</span>
+<span class="sd">    - The name of the current directory is used as the prefix for the output files.</span>
 
-<span class="sd">Next steps:</span>
+<span class="sd">Next commands:</span>
 <span class="sd">    - Run ``cstats_fdr_range`` and ``cstats_fdr`` to correct for multiple comparisons.</span>
 
 <span class="sd">Note:</span>
@@ -384,7 +385,7 @@
 
 <span class="sd">Usage w/ additional options:</span>
 <span class="sd">----------------------------</span>
-<span class="sd">    vstats -mas mask.nii.gz [-p 18000] [--kernel 0] [-op output_prefix from current dir] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-v] [--options --seed=1]</span>
+<span class="sd">    vstats -mas mask.nii.gz [-p 18000] [--kernel 0] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-v] [--options --seed=1]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">argparse</span>
@@ -413,7 +414,6 @@
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--permutations&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Number of permutations (divisible by 300). Default: 18000&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">18000</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-k&#39;</span><span class="p">,</span> <span class="s1">&#39;--kernel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Smoothing kernel radius in mm if &gt; 0. Default: 0 &#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-op&#39;</span><span class="p">,</span> <span class="s1">&#39;--output_prefix&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Prefix of output files. Default: current working dir name.&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-a&#39;</span><span class="p">,</span> <span class="s1">&#39;--atlas&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/atlas.nii.gz (copied to stats/ for viewing; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;atlas/atlas_CCFv3_2020_30um.nii.gz&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-opt&#39;</span><span class="p">,</span> <span class="s1">&#39;--options&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Additional options for randomise, specified like &quot;--seed=1 -T&quot;&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">REMAINDER</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[])</span>
 
@@ -574,10 +574,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]There should be at least two groups with different prefixes in the input .nii.gz files.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output_prefix</span><span class="p">:</span>
-        <span class="n">output_prefix</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">output_prefix</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">output_prefix</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="n">cwd</span><span class="o">.</span><span class="n">name</span>
+    <span class="n">output_prefix</span> <span class="o">=</span> <span class="n">stats_dir</span> <span class="o">/</span> <span class="n">cwd</span><span class="o">.</span><span class="n">name</span>
 
     <span class="c1"># Run the randomise_parallel command</span>
     <span class="n">run_randomise_parallel</span><span class="p">(</span><span class="n">glm_input_file</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">permutations</span><span class="p">,</span> <span class="n">output_prefix</span><span class="p">,</span> <span class="n">design_fts_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">options</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>

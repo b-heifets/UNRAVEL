@@ -362,7 +362,9 @@
 <span class="sd">    - The &lt;OneWordCondition&gt;_sample?? column has the cell densities for each region.</span>
 
 <span class="sd">Outputs:</span>
-<span class="sd">    - Plots and a summary CSV to the current directory.</span>
+<span class="sd">    - Saved to ./&lt;args.test_type&gt;_plots_&lt;side&gt;</span>
+<span class="sd">    - Plots for each region with cell densities for each group (e.g., Saline, MDMA, Meth)</span>
+<span class="sd">    - Summary of significant differences between groups</span>
 <span class="sd">    - regional_cell_densities_all.csv (Columns: columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...)</span>
 
 <span class="sd">Note: </span>
@@ -432,6 +434,7 @@
 <span class="c1"># TODO: Dunnett&#39;s test. LH/RH averaging via summing counts and volumes before dividing counts by volumes (rather than averaging densities directly). Set up label density quantification.</span>
 <span class="c1"># TODO: Adapt this to work for cell counts and label densities. This could also be used for mean IF intensities.</span>
 <span class="c1"># TODO: Need a way to handle cases when some data from some samples is from one hemisphere and some from the other. (see filter_csv.py)</span>
+<span class="c1"># TODO: Fix plots for when there are &gt; 3 groups (comparison lines are not positioned correctly)</span>
 
 <div class="viewcode-block" id="get_region_details">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.get_region_details">[docs]</a>

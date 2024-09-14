@@ -461,17 +461,7 @@
     <span class="n">final_data</span> <span class="o">=</span> <span class="n">img</span> <span class="o">*</span> <span class="n">atlas_img</span>
 
     <span class="c1"># Save the bilateral version of the cluster index with ABA colors</span>
-
     <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">final_data</span><span class="p">,</span> <span class="n">atlas_nii</span><span class="o">.</span><span class="n">affine</span><span class="p">,</span> <span class="n">atlas_nii</span><span class="o">.</span><span class="n">header</span><span class="p">),</span> <span class="n">output</span><span class="p">)</span>
-
-    <span class="c1"># Calculate and save histogram</span>
-    <span class="n">histogram</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">final_data</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">21144</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">21144</span><span class="p">))</span>
-
-    <span class="c1"># Exclude the background (region 0) from the histogram</span>
-    <span class="n">histogram</span> <span class="o">=</span> <span class="n">histogram</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-
-    <span class="c1"># Determine what regions are present based on the histogram</span>
-    <span class="n">present_regions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">histogram</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># Add 1 to account for the background</span>
 
     <span class="c1"># Get R, G, B values for each region</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2017_regional_summary.csv&#39;</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">csv_path</span> <span class="o">==</span> <span class="s1">&#39;CCFv3-2020_regional_summary.csv&#39;</span><span class="p">:</span> 
@@ -484,6 +474,7 @@
         <span class="n">Path</span><span class="p">(</span><span class="n">txt_output</span><span class="p">)</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
 
     <span class="c1"># Determine the RGB color for bars based on the region_id</span>
+    <span class="n">present_regions</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">final_data</span><span class="p">[</span><span class="n">final_data</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">region_id</span> <span class="ow">in</span> <span class="n">present_regions</span><span class="p">:</span>
         <span class="n">combined_region_id</span> <span class="o">=</span> <span class="n">region_id</span> <span class="k">if</span> <span class="n">region_id</span> <span class="o">&lt;</span> <span class="mi">20000</span> <span class="k">else</span> <span class="n">region_id</span> <span class="o">-</span> <span class="mi">20000</span>
         <span class="n">region_rgb</span> <span class="o">=</span> <span class="n">color_map</span><span class="p">[</span><span class="n">color_map</span><span class="p">[</span><span class="s1">&#39;Region_ID&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">combined_region_id</span><span class="p">][[</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;G&#39;</span><span class="p">,</span> <span class="s1">&#39;B&#39;</span><span class="p">]]</span>

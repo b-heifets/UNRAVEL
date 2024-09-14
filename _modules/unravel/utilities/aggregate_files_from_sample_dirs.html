@@ -357,13 +357,22 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directories to a target directory.</span>
 
+<span class="sd">Next commands for voxel-wise stats: </span>
+<span class="sd">    - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average left and right hemispheres.</span>
+<span class="sd">    - If using side-specific z-scoring, use ``vstats_hemi_to_avg`` to average the images.</span>
+<span class="sd">    - Prepend condition names with ``utils_prepend``.</span>
+<span class="sd">    - Check images in FSLeyes and run ``vstats`` to perform voxel-wise stats.    </span>
+
+<span class="sd">Next command for regional stats:</span>
+<span class="sd">    - Use ``rstats_summary`` to summarize the results</span>
+
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
-<span class="sd">    utils_agg_files -g &#39;atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">    utils_agg_files -i &#39;atlas_space/&lt;asterisk&gt;_cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
 
 <span class="sd">Usage to prepend sample folder name to the name of files being copied:</span>
 <span class="sd">----------------------------------------------------------------------</span>
-<span class="sd">    utils_agg_files -g &#39;atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">    utils_agg_files -i &#39;atlas_space/cfos_rb4_30um_CCF_space_z_LRavg.nii.gz&#39; -a [-td target_output_dir] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">shutil</span>
@@ -384,7 +393,7 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
     <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="s1">&#39;--glob_pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Glob pattern to match files within sample?? directories&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Glob pattern to match files within sample?? directories&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-td&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/target_dir name for gathering files. Default: current working dir&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -447,7 +456,7 @@
     <span class="k">with</span> <span class="n">Live</span><span class="p">(</span><span class="n">progress</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">sample_path</span> <span class="ow">in</span> <span class="n">sample_paths</span><span class="p">:</span>
 
-            <span class="n">aggregate_files_from_sample_dirs</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">glob_pattern</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">add_prefix</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+            <span class="n">aggregate_files_from_sample_dirs</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">target_dir</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">add_prefix</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
             <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 

@@ -367,10 +367,12 @@
 <span class="sd">        sample02,treatment</span>
 
 <span class="sd">Outputs:</span>
-<span class="sd">    - Files for 3D brain models of valid clusters</span>
-<span class="sd">    - CSVs with valid cluster data (e.g., aggregated data for Prism)</span>
-<span class="sd">    - CSVs for sunburst plots</span>
-<span class="sd">    - Excel files with tables summarizing top regions and defining region abbreviations</span>
+<span class="sd">    - For each cluster map, the following output directories are created:</span>
+<span class="sd">        - 3D_brains: Files 3D brain models of valid clusters </span>
+<span class="sd">        - valid_clusters_tables_and_legend: Excel files with tables summarizing top regions and defining region abbreviations (for SI tables)</span>
+<span class="sd">        - _valid_clusters: valid cluster maps, CSVs for sunburst plots (plot with Flourish), etc.</span>
+<span class="sd">        - _valid_clusters_stats: test results for adding asterisks to the xlsx files, etc.</span>
+<span class="sd">        - _valid_clusters_prism: CSVs for making bar graphs in GraphPad Prism (refer to the xlsx files for annotations)</span>
 
 <span class="sd">``cstats_summary`` runs these commands:</span>
 <span class="sd">    - ``cstats_org_data``, ``cstats_group_data``, ``utils_prepend``, ``cstats``, ``cstats_index``, ``cstats_brain_model``, ``cstats_table``, ``cstats_prism``, ``cstats_legend``</span>
@@ -390,11 +392,11 @@
 
 <span class="sd">Usage if running directly after ``cstats_validation``:</span>
 <span class="sd">------------------------------------------------------</span>
-<span class="sd">    cstats_summary -c &lt;path/config.ini&gt; -d &lt;list of paths&gt; -cvd &#39;psilocybin_v_saline_tstat1_q&lt;asterisk&gt;&#39; -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-v]</span>
+<span class="sd">    cstats_summary -c &lt;path/config.ini&gt; -cvd &#39;psilocybin_v_saline_tstat1_q&lt;asterisk&gt;&#39; -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-d &lt;list of paths&gt;] [-v]</span>
 
 <span class="sd">Usage if running after ``cstats_validation`` and ``cstats_org_data``:</span>
 <span class="sd">---------------------------------------------------------------------</span>
-<span class="sd">    cstats_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-v]</span>
+<span class="sd">    cstats_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; --groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-d &lt;list of paths&gt;] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
@@ -450,7 +452,8 @@
 <span class="c1"># TODO: Sort the overall valid cluster sunburst csv </span>
 <span class="c1"># TODO: Check if irrelevant directories are present in the current working directory and warn the user</span>
 <span class="c1"># TODO: Replace this (find . -name &quot;valid_clusters_sunburst.csv&quot; -exec sh -c &#39;cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})&#39; \;) w/ example of utils_agg_files_rec</span>
-
+<span class="c1"># TODO: Consider using env_var.sh instead of unravel/cluster_stats/summary.ini</span>
+<span class="c1"># TODO: Could include warning if directories are present in the current working directory that should not be there</span>
 
 <div class="viewcode-block" id="run_script">
 <a class="viewcode-back" href="../../../unravel/cluster_stats/summary.html#unravel.cluster_stats.summary.run_script">[docs]</a>

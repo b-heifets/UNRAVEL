@@ -514,13 +514,13 @@
 <li><p>./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz</p></li>
 </ul>
 </dd>
-<dt>Next steps:</dt><dd><p>Aggregate outputs with <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code> and run <code class="docutils literal notranslate"><span class="pre">vstats</span></code>.</p>
+<dt>Next commands for voxel-wise stats:</dt><dd><p>Preprocess atlas space IF images with <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code> (recommended for c-Fos-IF) or aggregate them with <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code>.</p>
 </dd>
 </dl>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>vstats_prep -i <cite>*</cite>.czi -o cfos_rb4_30um_CCF_space.nii.gz [-sa 3] [-rb 4] [–chann_idx 1] [–reg_res 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-md parameters/metadata.txt] [–threads 8] [-mi] [-d list of paths] [-p sample??] [-v]</p>
+<div><p>vstats_prep -i <cite>*</cite>.czi -o cfos_rb4_30um_CCF_space.nii.gz [-sa 3] [-rb 4] [–channel 1] [–reg_res 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-md parameters/metadata.txt] [–threads 8] [-mi] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
