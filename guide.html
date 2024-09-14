@@ -369,7 +369,7 @@
 <li><p><a class="reference external" href="https://www.youtube.com/watch?v=rrB13utjYV4">Linux in 100 seconds</a></p></li>
 <li><p><a class="reference external" href="https://www.youtube.com/watch?v=I4EWvMFj37g">Bash in 100 seconds</a></p></li>
 <li><p><a class="reference external" href="https://linuxsurvival.com/">Interactive Linux Survival guide</a></p></li>
-<li><p>Refer to common commands and tips in the cheat sheet (click to expand dropdown):</p></li>
+<li><p>Refer to common commands and tips in this cheat sheet (click to expand dropdown):</p></li>
 </ul>
 </li>
 </ul>
@@ -608,8 +608,7 @@ nano<span class="w"> </span>~/.bashrc<span class="w">  </span><span class="c1">#
 </div>
 <ul class="simple">
 <li><p>Help guides often include info on prereqs, inputs, outputs, next steps, usage, and other notes.</p></li>
-<li><p>Viewing the help in the terminal is helpful to see default values for arguments not mentioned in this guide.</p></li>
-<li><p>Some commands have additional options that are not covered in this guide</p></li>
+<li><p>Viewing the terminal help provides default values and additional options not covered in this guide.</p></li>
 <li><p>Provide -v when running commands for verbose mode (to see info about function calls, parameters, etc.)</p></li>
 </ul>
 <div class="hint dropdown admonition">
@@ -916,35 +915,19 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </ul>
 <div class="note dropdown admonition">
 <p class="admonition-title">Batch stitching settings</p>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<figure class="align-default" id="id2">
-<a class="reference internal image-reference" href="_images/batch_stitching_1.JPG"><img alt="_images/batch_stitching_1.JPG" src="_images/batch_stitching_1.JPG" style="height: 500px;" />
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="_images/batch_stitching_1.JPG"><img alt="_images/batch_stitching_1.JPG" src="_images/batch_stitching_1.JPG" style="width: 50%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">=======</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
-<div class="legend">
-<figure class="align-default">
-<a class="reference internal image-reference" href="_static/batch_stitching_1.jpg"><img alt="_static/batch_stitching_1.jpg" src="_static/batch_stitching_1.jpg" style="width: 50%;" />
-</a>
-</figure>
-</div>
+<p><span class="caption-text">Select a mid-stack reference slice. Ideally, tissue will be present in each tile of the reference slice.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </div>
 <div class="note dropdown admonition">
 <p class="admonition-title">Running batch stitching</p>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<figure class="align-default" id="id3">
-<img alt="_images/batch_stitching_2.JPG" src="_images/batch_stitching_2.JPG" />
-<figcaption>
-<p><span class="caption-text">=======</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
-<div class="legend">
-<figure class="align-default">
-<a class="reference internal image-reference" href="_static/batch_stitching_2.jpg"><img alt="_static/batch_stitching_2.jpg" src="_static/batch_stitching_2.jpg" style="width: 100%;" />
+<figure class="align-center">
+<a class="reference internal image-reference" href="_images/batch_stitching_2.JPG"><img alt="_images/batch_stitching_2.JPG" src="_images/batch_stitching_2.JPG" style="width: 100%;" />
 </a>
-</figure>
-</div>
-</figcaption>
 </figure>
 <ul class="simple">
 <li><p>Drag and drop images to be stitched into this section.</p></li>
@@ -1120,42 +1103,23 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
 </section>
 <section id="training-ilastik">
 <h2>Training Ilastik<a class="headerlink" href="#training-ilastik" title="Link to this heading">#</a></h2>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
-Segmentations generated with Ilastik serve two purposes:</p>
-<figure class="align-default" id="id4">
-<a class="reference internal image-reference" href="_static/Ilastik_brain_mask_example.JPG"><img alt="_static/Ilastik_brain_mask_example.JPG" src="_static/Ilastik_brain_mask_example.JPG" style="height: 500px;" />
-</a>
-<figcaption>
-<p><span class="caption-text">=======
-Ilastik has two purposes for our typical workflow:</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
-<div class="legend">
+<p>Ilastik has two purposes for our typical workflow:</p>
 <ol class="arabic simple">
 <li><p>During registration, Ilastik segments autofluorescence in tissue to create brain masks, which can also be applied for z-scoring IF images. This is automated with <a class="reference internal" href="unravel/segment/brain_mask.html#unravel-segment-brain-mask"><span class="std std-ref"><strong>seg_brain_mask</strong></span></a>.</p></li>
 </ol>
-<figure class="align-default">
+<figure class="align-center">
 <a class="reference internal image-reference" href="_images/Ilastik_brain_mask_example.jpg"><img alt="_images/Ilastik_brain_mask_example.jpg" src="_images/Ilastik_brain_mask_example.jpg" style="width: 70%;" />
 </a>
 </figure>
-</div>
-</figcaption>
-</figure>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<figure class="align-default" id="id5">
-<a class="reference internal image-reference" href="_static/Ilastik_c-Fos_example.JPG"><img alt="_static/Ilastik_c-Fos_example.JPG" src="_static/Ilastik_c-Fos_example.JPG" style="height: 500px;" />
-</a>
-<figcaption>
-<p><span class="caption-text">=======
-2) During cluster validation, they are used to quantify c-Fos+ cells or other features of interest. This is automated with <a class="reference internal" href="unravel/segment/ilastik_pixel_classification.html#unravel-segment-ilastik-pixel-classification"><span class="std std-ref"><strong>seg_ilastik</strong></span></a>.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
-<div class="legend">
-<figure class="align-default">
+<ol class="arabic simple" start="2">
+<li><p>During cluster validation, they are used to quantify c-Fos+ cells or other features of interest. This is automated with <a class="reference internal" href="unravel/segment/ilastik_pixel_classification.html#unravel-segment-ilastik-pixel-classification"><span class="std std-ref"><strong>seg_ilastik</strong></span></a>.</p></li>
+</ol>
+<figure class="align-center">
 <a class="reference internal image-reference" href="_images/Ilastik_c-Fos_example.jpg"><img alt="_images/Ilastik_c-Fos_example.jpg" src="_images/Ilastik_c-Fos_example.jpg" style="width: 70%;" />
 </a>
 </figure>
-</div>
-</figcaption>
-</figure>
 <p><a class="reference external" href="https://www.ilastik.org/documentation/pixelclassification/pixelclassification">Pixel classification documentation</a></p>
-<div class="note dropdown admonition">
+<div class="note admonition">
 <p class="admonition-title">Setting up Ilastik for batch processing</p>
 <ul class="simple">
 <li><p><a class="reference external" href="https://www.ilastik.org/download">Install Ilastik</a></p></li>
@@ -1180,15 +1144,22 @@ Ilastik has two purposes for our typical workflow:</span><a class="headerlink" h
 <p class="admonition-title">Training Ilastik</p>
 <p><strong>Launch Ilastik</strong></p>
 <ul class="simple">
-<li><p>Either double click on the application or run: <code class="docutils literal notranslate"><span class="pre">ilastik</span></code></p></li>
+<li><p>Either double click on the application or run: <code class="docutils literal notranslate"><span class="pre">ilastik</span></code> (if you set up an alias)</p></li>
 </ul>
 <ol class="arabic simple">
-<li><p><strong>Input Data</strong><br />
-Drag training slices into the ilastik GUI (e.g., from a dir w/ 3 slices per sample and &gt; 2 samples per condition)
-<code class="docutils literal notranslate"><span class="pre">ctrl+A</span></code> -&gt; right-click -&gt; Edit shared properties -&gt; Storage: Copy into project file -&gt; Ok</p></li>
-<li><p><strong>Feature Selection</strong><br />
-Select Features… -&gt; select all features (<code class="docutils literal notranslate"><span class="pre">control+a</span></code>) or an optimized subset (faster but less accurate).
-Optional: to find an optimal subset of features, select all features, train Ilastik, turn off Live Updates, click Suggest Features, select a subset, and refine training.</p></li>
+<li><p><strong>Input Data</strong></p>
+<ul class="simple">
+<li><p>Gather training slices to a folder from all samples with <a class="reference internal" href="unravel/segment/copy_tifs.html#unravel-segment-copy-tifs"><span class="std std-ref"><strong>seg_copy_tifs</strong></span></a></p></li>
+<li><p>Drag and drop training slices into the ilastik GUI (e.g., from a dir w/ 3 slices per sample and &gt; 2 samples per condition)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ctrl+A</span></code> to select training slices -&gt; right-click -&gt; Edit shared properties -&gt; Storage: Copy into project file -&gt; Ok</p></li>
+</ul>
+</li>
+<li><p><strong>Feature Selection</strong></p>
+<ul class="simple">
+<li><p>Select Features… -&gt; select all features (<code class="docutils literal notranslate"><span class="pre">control+a</span></code>) or an optimized subset (faster but less accurate).</p></li>
+<li><p>Optional: to find an optimal subset of features, select all features, train Ilastik, turn off Live Updates, click Suggest Features, select a subset, and refine training.</p></li>
+</ul>
+</li>
 <li><p><strong>Training</strong></p>
 <ul class="simple">
 <li><p><em><strong>Brightness/contrast</strong></em>: select the gradient button and click and drag in the image (faster if zoomed in)</p></li>
@@ -1362,32 +1333,18 @@ reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE<
 </ul>
 <div class="note admonition">
 <p class="admonition-title">Checking registration with FSLeyes</p>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<figure class="align-default" id="id6">
-<a class="reference internal image-reference" href="_static/FSLeyes_autofl_image_from_reg.JPG"><img alt="_static/FSLeyes_autofl_image_from_reg.JPG" src="_static/FSLeyes_autofl_image_from_reg.JPG" style="height: 800px;" />
-</a>
-<figcaption>
-<p><span class="caption-text">=======</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
-<div class="legend">
-<figure class="align-default">
+<figure class="align-center" id="id3">
 <a class="reference internal image-reference" href="_images/FSLeyes_autofl_image_from_reg.jpg"><img alt="_images/FSLeyes_autofl_image_from_reg.jpg" src="_images/FSLeyes_autofl_image_from_reg.jpg" style="width: 100%;" />
 </a>
-</figure>
-</div>
+<figcaption>
+<p><span class="caption-text">Use FSLeyes to view the autofluo image from <code class="docutils literal notranslate"><span class="pre">reg</span></code> (sample??/reg_ouputs/autofl_50um_masked_fixed_reg_input.nii.gz).</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<figure class="align-default" id="id7">
-<a class="reference internal image-reference" href="_static/FSLeyes_atlas_warped_to_tissue_from_reg.JPG"><img alt="_static/FSLeyes_atlas_warped_to_tissue_from_reg.JPG" src="_static/FSLeyes_atlas_warped_to_tissue_from_reg.JPG" style="height: 800px;" />
-</a>
-<figcaption>
-<p><span class="caption-text">=======</span><a class="headerlink" href="#id7" title="Link to this image">#</a></p>
-<div class="legend">
-<figure class="align-default">
+<figure class="align-center" id="id4">
 <a class="reference internal image-reference" href="_images/FSLeyes_atlas_warped_to_tissue_from_reg.jpg"><img alt="_images/FSLeyes_atlas_warped_to_tissue_from_reg.jpg" src="_images/FSLeyes_atlas_warped_to_tissue_from_reg.jpg" style="width: 100%;" />
 </a>
-</figure>
-</div>
+<figcaption>
+<p><span class="caption-text">Use FSLeyes to view the atlas warped to the the tissue (sample??/reg_ouputs/atlas_CCFv3_2020_30um_in_tissue_space.nii.gz)</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </div>
@@ -1471,18 +1428,11 @@ vstats_prep<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/image&
 </li>
 </ul>
 </div>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<figure class="align-default" id="id8">
-<a class="reference internal image-reference" href="_static/FSLeyes_Ai14_image_in_CCFv3_30um_space.JPG"><img alt="_static/FSLeyes_Ai14_image_in_CCFv3_30um_space.JPG" src="_static/FSLeyes_Ai14_image_in_CCFv3_30um_space.JPG" style="height: 800px;" />
-</a>
-<figcaption>
-<p><span class="caption-text">=======</span><a class="headerlink" href="#id8" title="Link to this image">#</a></p>
-<div class="legend">
-<figure class="align-default">
+<figure class="align-center" id="id5">
 <a class="reference internal image-reference" href="_images/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg"><img alt="_images/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg" src="_images/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg" style="width: 100%;" />
 </a>
-</figure>
-</div>
+<figcaption>
+<p><span class="caption-text">Use FSLeyes to view the fluorescently labeled image in atlas space.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
@@ -1828,50 +1778,23 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 <li><p>Or sunburst CSVs can be generated using <code class="docutils literal notranslate"><span class="pre">cstats_sunburst</span></code></p></li>
 <li><p>Sunburst CSVs can be copy and pasted into the sunburst plot tool of the <a class="reference external" href="https://app.flourish.studio/login">Flourish web app</a></p></li>
 </ul>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<figure class="align-default" id="id9">
-<a class="reference internal image-reference" href="_static/sunburst_1_flourish.JPG"><img alt="_static/sunburst_1_flourish.JPG" src="_static/sunburst_1_flourish.JPG" style="height: 300px;" />
-</a>
-<figcaption>
-<p><span class="caption-text">=======</span><a class="headerlink" href="#id9" title="Link to this image">#</a></p>
-<div class="legend">
-<figure class="align-default">
+<figure class="align-center">
 <a class="reference internal image-reference" href="_images/sunburst_1_flourish.jpg"><img alt="_images/sunburst_1_flourish.jpg" src="_images/sunburst_1_flourish.jpg" style="width: 50%;" />
 </a>
-</figure>
-</div>
-</figcaption>
 </figure>
 <ul class="simple">
 <li><p>Make a free account w/ Flourish.</p></li>
 <li><p>Login.</p></li>
 <li><p>Select “New visualization”.</p></li>
 </ul>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<figure class="align-center" id="id10">
-<a class="reference internal image-reference" href="_static/sunburst_2_plot_types.JPG"><img alt="_static/sunburst_2_plot_types.JPG" src="_static/sunburst_2_plot_types.JPG" style="height: 300px;" />
-</a>
-<figcaption>
-<p><span class="caption-text">Under “Hierarchy” select “Sunburst”</span><a class="headerlink" href="#id10" title="Link to this image">#</a></p>
-</figcaption>
-</figure>
-<figure class="align-default" id="id11">
-<a class="reference internal image-reference" href="_static/sunburst_3_adding_data.JPG"><img alt="_static/sunburst_3_adding_data.JPG" src="_static/sunburst_3_adding_data.JPG" style="height: 300px;" />
-</a>
-<figcaption>
-<p><span class="caption-text">=======</span><a class="headerlink" href="#id11" title="Link to this image">#</a></p>
-<div class="legend">
-<figure class="align-center" id="id12">
+<figure class="align-center" id="id6">
 <a class="reference internal image-reference" href="_images/sunburst_2_plot_types.jpg"><img alt="_images/sunburst_2_plot_types.jpg" src="_images/sunburst_2_plot_types.jpg" style="width: 50%;" />
 </a>
 <figcaption>
-<p><span class="caption-text">Under “Hierarchy” select “Sunburst”</span><a class="headerlink" href="#id12" title="Link to this image">#</a></p>
+<p><span class="caption-text">Under “Hierarchy” select “Sunburst”</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
-</div>
-</figcaption>
-</figure>
-<figure class="align-default">
+<figure class="align-center">
 <a class="reference internal image-reference" href="_images/sunburst_3_adding_data.jpg"><img alt="_images/sunburst_3_adding_data.jpg" src="_images/sunburst_3_adding_data.jpg" style="width: 100%;" />
 </a>
 </figure>
@@ -1882,19 +1805,9 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 <li><p>Paste in values for columns A-K from a *_sunburst.csv.</p></li>
 <li><p>Switch to the “Preview” tab to view the plot.</p></li>
 </ul>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<figure class="align-default" id="id13">
-<a class="reference internal image-reference" href="_static/sunburst_4_RGB_values.JPG"><img alt="_static/sunburst_4_RGB_values.JPG" src="_static/sunburst_4_RGB_values.JPG" style="height: 400px;" />
-</a>
-<figcaption>
-<p><span class="caption-text">=======</span><a class="headerlink" href="#id13" title="Link to this image">#</a></p>
-<div class="legend">
-<figure class="align-default">
+<figure class="align-center">
 <a class="reference internal image-reference" href="_images/sunburst_4_RGB_values.jpg"><img alt="_images/sunburst_4_RGB_values.jpg" src="_images/sunburst_4_RGB_values.jpg" style="width: 30%;" />
 </a>
-</figure>
-</div>
-</figcaption>
 </figure>
 <ul class="simple">
 <li><p>Paste the contents of sunburst_RGBs.csv into Colors –&gt; Custom overrides.</p></li>
@@ -1929,41 +1842,25 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 <li><p>Make it visible: Slices –&gt; Add Isosurface –&gt; Full –&gt; OK –&gt; Zoom out (mouse wheel or 2 finger scroll)</p></li>
 </ul>
 <p class="rubric" id="display-settings">Display settings</p>
-<figure class="align-center" id="id14">
-<a class="reference internal image-reference" href="_static/brain_model_settings_1.JPG"><img alt="_static/brain_model_settings_1.JPG" src="_static/brain_model_settings_1.JPG" style="height: 800px;" />
+<figure class="align-center">
+<a class="reference internal image-reference" href="_static/brain_model_settings_1.JPG"><img alt="_static/brain_model_settings_1.JPG" src="_static/brain_model_settings_1.JPG" style="width: 50%;" />
 </a>
-<figcaption>
-<p><span class="caption-text">Display settings</span><a class="headerlink" href="#id14" title="Link to this image">#</a></p>
-</figcaption>
 </figure>
-<figure class="align-center" id="id15">
-<a class="reference internal image-reference" href="_static/brain_model_settings_2.JPG"><img alt="_static/brain_model_settings_2.JPG" src="_static/brain_model_settings_2.JPG" style="height: 800px;" />
+<figure class="align-center">
+<a class="reference internal image-reference" href="_static/brain_model_settings_2.JPG"><img alt="_static/brain_model_settings_2.JPG" src="_static/brain_model_settings_2.JPG" style="width: 50%;" />
 </a>
-<figcaption>
-<p><span class="caption-text">Surface rendering settings</span><a class="headerlink" href="#id15" title="Link to this image">#</a></p>
-</figcaption>
 </figure>
 <p class="rubric" id="layout">Layout</p>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
-<figure class="align-default" id="id16">
-<a class="reference internal image-reference" href="_static/brain_model_layout.JPG"><img alt="_static/brain_model_layout.JPG" src="_static/brain_model_layout.JPG" style="height: 800px;" />
-</a>
-<figcaption>
-<p><span class="caption-text">=======</span><a class="headerlink" href="#id16" title="Link to this image">#</a></p>
-<div class="legend">
-<figure class="align-default">
+<figure class="align-center">
 <a class="reference internal image-reference" href="_images/brain_model_layout.jpg"><img alt="_images/brain_model_layout.jpg" src="_images/brain_model_layout.jpg" style="width: 100%;" />
 </a>
-</figure>
-</div>
-</figcaption>
 </figure>
 <ul class="simple">
 <li><p>The zoom and viewer dimensions determine the output video size.</p></li>
 <li><p>This layout allows for 1080p videos with my MacBook (adjust as needed).</p></li>
 <li><p>Move panels on the right down and make them as small as possible.</p></li>
 <li><p>Line up the left edge of the viewer with View.</p></li>
-<li><p>Zoom to 0.28.</p></li>
+<li><p>Zoom to the view 0.28 (lower right of viewer)</p></li>
 <li><p>Zoom out to 0.18 for axial.</p></li>
 </ul>
 <p class="rubric" id="adding-regions-and-color">Adding Regions and Color</p>
