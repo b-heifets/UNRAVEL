@@ -1,5 +1,15 @@
 # Guide
 
+
+* This guide focuses on our most common workflow (IF/iDISCO --> LSFM --> atlas registration --> voxel-wise stats --> cluster validation).
+* These [video tutorials](https://drive.google.com/drive/folders/1y5G0A1vnQhfM41FlJyMnOf7KIDZ7o3sD?usp=sharing) cover roughly similar content, but refer to this guide and command help guides for additional info.
+* For getting started, test commands using these downsampled images from an [example mouse](https://drive.google.com/drive/folders/1bKgN9UWaBq5b4LrafzgDD3XyiYZk8k9R?usp=sharing). 
+   * For instructions, see this [UNRAVEL_commands.txt](https://docs.google.com/document/d/103njLFFiqHuf4flz3OlyHnf_Rauqj5gG_Ztfjk3y8NU/edit?usp=sharing) 
+
+---
+<br>
+
+
 * If you are unfamiliar with the terminal, start here: 
    * [Linux in 100 seconds](https://www.youtube.com/watch?v=rrB13utjYV4)
    * [Bash in 100 seconds](https://www.youtube.com/watch?v=I4EWvMFj37g)
