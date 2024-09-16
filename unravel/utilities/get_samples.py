@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``path/get_samples.py`` from UNRAVEL to test the get_samples() function in unravel/core/utils.py.
+Use ``utils_get_samples`` from UNRAVEL to test the get_samples() function in unravel/core/utils.py.
 
 Usage:
 ------
-``path/get_samples.py`` [-d dirs] [-p pattern]
+``utils_get_samples`` [-d dirs] [-p pattern]
 """
 
 from rich import print
