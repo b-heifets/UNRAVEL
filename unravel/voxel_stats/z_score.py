@@ -7,8 +7,9 @@ Prereqs:
     ``vstats_prep`` for inputs [& ``seg_brain_mask`` for tissue masks]
 
 Inputs:
-    - For batch processing atlas space images in a single directory (not compatible with --tissue_mask), use a wildcard for -i (e.g., <askterisk>.nii.gz) and omit --dirs 
-    - For batch processing atlas space images in the context of sample?? dirs, use -d <list of paths>, specify -i relative to sample?? (e.g., atlas_space/<askterisk>_image.nii.gz), and provide --tissue_mask and/or --atlas_mask
+    - atlas_space/<askterisk>_image.nii.gz relative to sample??
+    - reg_inputs/autofl_50um_brain_mask.nii.gz (optional)
+    - path/to/atlas_mask.nii.gz (optional)
 
 Outputs:
     - <path/input_img>_z.nii.gz (float32) saved in the same directory as the input image. 
@@ -33,7 +34,7 @@ Usage w/ an atlas mask:
 
 Usage w/ a tissue mask:
 -----------------------
-    vstats_z_score -i 'atlas_space/<asterisk>.nii.gz' -tmas reg_inputs/autofl_50um_brain_mask.nii.gz --dirs <list of paths>
+    vstats_z_score -i 'atlas_space/<asterisk>.nii.gz' -tmas reg_inputs/autofl_50um_brain_mask.nii.gz -a atlas/atlas_CCFv3_2020_30um.nii.gz
 
 Usage w/ both masks for side-specific z-scoring:
 ------------------------------------------------
@@ -63,10 +64,10 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-s', '--suffix', help='Output suffix. Default: z (.nii.gz replaced w/ _z.nii.gz)', default='z', action=SM)
 
-    tissue_mask_opts = parser.add_argument_group('Optional args for using a tissue mask (must provide --dirs)')
+    tissue_mask_opts = parser.add_argument_group('Optional args for using a tissue mask')
     tissue_mask_opts.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. For example, reg_inputs/autofl_50um_brain_mask.nii.gz', default=None, action=SM)
     tissue_mask_opts.add_argument('-fri', '--fixed_reg_in', help='Fixed image from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    tissue_mask_opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a reference image for warping the tissue mask to atlas space. Default: atlas/atlas_CCFv3_2020_30um.nii.gz', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
+    tissue_mask_opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a reference image for warping the tissue mask to atlas space. Default: atlas/atlas_CCFv3_2020_30um.nii.gz', default=None, action=SM)
 
     atlas_mask_opts = parser.add_argument_group('Optional args for using an atlas mask')
     atlas_mask_opts.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
@@ -203,46 +204,32 @@ def main():
     if args.tissue_mask is None and args.atlas_mask is None:
         print("\n    Warning: No mask provided. Z-scoring will be done for the whole image.\n")
         
-    # Check if inputs are in sample?? directories
-    if args.dirs is not None:
-        sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
-        progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
-        with Live(progress):
-            for sample_path in sample_paths:
-                input_paths = list(sample_path.glob(str(args.input)))
-                if not input_paths:
-                    print(f"\n    [red1]No files match the pattern {args.input} in {sample_path}\n")
-                    continue
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
+    with Live(progress):
+        for sample_path in sample_paths:
+            input_paths = list(sample_path.glob(str(args.input)))
+            if not input_paths:
+                print(f"\n    [red1]No files match the pattern {args.input} in {sample_path}\n")
+                continue
 
-                for input_path in input_paths:
-                    if args.tissue_mask is not None:
-                        tissue_mask_path = sample_path / args.tissue_mask   
-                    else:
-                        tissue_mask_path = None
+            for input_path in input_paths:
+                if args.tissue_mask is not None:
+                    tissue_mask_path = sample_path / args.tissue_mask   
+                else:
+                    tissue_mask_path = None
 
-                    if args.atlas_mask is not None:
-                        atlas_mask_path = sample_path / args.atlas_mask
-                    else:
-                        atlas_mask_path = None
+                if args.atlas_mask is not None:
+                    atlas_mask_path = sample_path / args.atlas_mask
+                else:
+                    atlas_mask_path = None
 
-                    # Get the mask image
-                    mask_img = z_score_mask(sample_path, input_path, args.fixed_reg_in, args.atlas, tissue_mask_path, atlas_mask_path)
+                # Get the mask image
+                mask_img = z_score_mask(sample_path, input_path, args.fixed_reg_in, args.atlas, tissue_mask_path, atlas_mask_path)
 
-                    # Z-score the image using the mask and save the output
-                    z_score(input_path, mask_img, args.suffix)
-                progress.update(task_id, advance=1)
-    else:
-        input_paths = list(Path().glob(args.input))
-        for input_path in input_paths:
-            if args.atlas_mask is not None:
-                if not Path(args.atlas_mask).exists():
-                    raise FileNotFoundError(f"\n    [red1]Atlas mask not found: {args.atlas_mask}\n")
-                atlas_mask_img = load_3D_img(args.atlas_mask)
-                atlas_mask_img = np.where(atlas_mask_img > 0, 1, 0).astype(np.uint8)
-            else:
-                atlas_mask_img = None
-
-            z_score(input_path, atlas_mask_img, args.suffix)
+                # Z-score the image using the mask and save the output
+                z_score(input_path, mask_img, args.suffix)
+            progress.update(task_id, advance=1)
 
     verbose_end_msg()
 
