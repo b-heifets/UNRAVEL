@@ -47,6 +47,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Currently this just copies tif files from the source directory to the target directory. Adapt it so that if an input directory does not exist, it loads an image from the source directory and extracts the specified slices from it. These slices should then be saved to the target directory.
 
 def copy_specific_tifs(sample_path, source_dir, target_dir, slice_numbers, verbose=False):
     """Copy the specified tif slices from the source directory to the target directory.
