@@ -44,10 +44,10 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='path/full_res_img (path relative to ./sample??). Can use glob patterns.', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='path/full_res_img (path relative to sample??/). Can use glob patterns.', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-m', '--metad_path', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
+    opts.add_argument('-m', '--metad_path', help='Output path relative to sample??/ for storing key raw image metadata. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, default=None, action=SM)
     opts.add_argument('-z', '--z_res', help='z resolution in um', type=float, default=None, action=SM)
 
