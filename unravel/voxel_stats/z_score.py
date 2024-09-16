@@ -34,7 +34,7 @@ Usage w/ an atlas mask:
 
 Usage w/ a tissue mask:
 -----------------------
-    vstats_z_score -i 'atlas_space/<asterisk>.nii.gz' -tmas reg_inputs/autofl_50um_brain_mask.nii.gz --dirs <list of paths>
+    vstats_z_score -i 'atlas_space/<asterisk>.nii.gz' -tmas reg_inputs/autofl_50um_brain_mask.nii.gz -a atlas/atlas_CCFv3_2020_30um.nii.gz
 
 Usage w/ both masks for side-specific z-scoring:
 ------------------------------------------------
@@ -67,7 +67,7 @@ def parse_args():
     tissue_mask_opts = parser.add_argument_group('Optional args for using a tissue mask')
     tissue_mask_opts.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. For example, reg_inputs/autofl_50um_brain_mask.nii.gz', default=None, action=SM)
     tissue_mask_opts.add_argument('-fri', '--fixed_reg_in', help='Fixed image from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    tissue_mask_opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a reference image for warping the tissue mask to atlas space. Default: atlas/atlas_CCFv3_2020_30um.nii.gz', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
+    tissue_mask_opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a reference image for warping the tissue mask to atlas space. Default: atlas/atlas_CCFv3_2020_30um.nii.gz', default=None, action=SM)
 
     atlas_mask_opts = parser.add_argument_group('Optional args for using an atlas mask')
     atlas_mask_opts.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
