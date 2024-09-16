@@ -503,8 +503,9 @@
 <dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> for inputs [&amp; <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> for tissue masks]</p>
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
-<li><p>For batch processing atlas space images in a single directory (not compatible with –tissue_mask), use a wildcard for -i (e.g., &lt;askterisk&gt;.nii.gz) and omit –dirs</p></li>
-<li><p>For batch processing atlas space images in the context of sample?? dirs, use -d &lt;list of paths&gt;, specify -i relative to sample?? (e.g., atlas_space/&lt;askterisk&gt;_image.nii.gz), and provide –tissue_mask and/or –atlas_mask</p></li>
+<li><p>atlas_space/&lt;askterisk&gt;_image.nii.gz relative to sample??</p></li>
+<li><p>reg_inputs/autofl_50um_brain_mask.nii.gz (optional)</p></li>
+<li><p>path/to/atlas_mask.nii.gz (optional)</p></li>
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
@@ -543,7 +544,7 @@
 <section id="usage-w-a-tissue-mask">
 <h2>Usage w/ a tissue mask:<a class="headerlink" href="#usage-w-a-tissue-mask" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>vstats_z_score -i ‘atlas_space/&lt;asterisk&gt;.nii.gz’ -tmas reg_inputs/autofl_50um_brain_mask.nii.gz –dirs &lt;list of paths&gt;</p>
+<div><p>vstats_z_score -i ‘atlas_space/&lt;asterisk&gt;.nii.gz’ -tmas reg_inputs/autofl_50um_brain_mask.nii.gz -a atlas/atlas_CCFv3_2020_30um.nii.gz</p>
 </div></blockquote>
 </section>
 <section id="usage-w-both-masks-for-side-specific-z-scoring">
