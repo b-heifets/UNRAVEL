@@ -479,22 +479,23 @@ uc<span class="w"> </span>-h<span class="w"> </span>
 </ol>
 <div class="hint dropdown admonition">
 <p class="admonition-title">Setting up a virtual environment for installing python dependencies with venv</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>**a. Install Python 3.11 if it&#39;s not already installed:**
-- **For Linux and WSL:**
-```bash
-sudo apt-get update
-sudo apt-get install -y python3.11 python3.11-venv python3.11-dev
-```
-- **For macOS:**
-```bash
-brew install python@3.11
-```
-
-**b. Create and activate a virtual environment:**
-```bash
-python3.11 -m venv unravel
-source unravel/bin/activate  # Edit path if needed. To deactivate, run: deactivate
-```
+<p><strong>a. Install Python 3.11 if it’s not already installed:</strong></p>
+<ul class="simple">
+<li><p><strong>For Linux and WSL:</strong></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
+sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>python3.11<span class="w"> </span>python3.11-venv<span class="w"> </span>python3.11-dev
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><strong>For macOS:</strong></p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>python@3.11
+</pre></div>
+</div>
+<p><strong>b. Create and activate a virtual environment:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3.11<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>unravel
+<span class="nb">source</span><span class="w"> </span>unravel/bin/activate<span class="w">  </span><span class="c1"># Edit path if needed. To deactivate, run: deactivate</span>
 </pre></div>
 </div>
 </div>
