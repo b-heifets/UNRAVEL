@@ -92,22 +92,22 @@ If you install graphical applications like **FSL** (which includes FSLeyes) or *
 
 :::{admonition} Setting up a virtual environment for installing python dependencies with venv
 :class: hint dropdown
-**a. Install Python 3.11 if it's not already installed:**
-- **For Linux and WSL:**
-```bash
-sudo apt-get update
-sudo apt-get install -y python3.11 python3.11-venv python3.11-dev
-```
-- **For macOS:**
-```bash
-brew install python@3.11
-```
+1. Install Python 3.11 if it's not already installed:
+    - For Linux and WSL:
+    ```bash
+    sudo apt-get update
+    sudo apt-get install -y python3.11 python3.11-venv python3.11-dev
+    ```
+    - For macOS:
+    ```bash
+    brew install python@3.11
+    ```
 
-**b. Create and activate a virtual environment:**
-```bash
-python3.11 -m venv unravel
-source unravel/bin/activate  # Edit path if needed. To deactivate, run: deactivate
-```
+2. Create and activate a virtual environment:
+    ```bash
+    python3.11 -m venv unravel
+    source unravel/bin/activate  # Edit path if needed. To deactivate, run: deactivate
+    ```
 :::
 
 :::{admonition} Easier virtual environment activation with venv
