@@ -1152,7 +1152,7 @@ seg_copy_tifs -i <rel_path/raw_image> -s 0100 0500 1000 [-td ilastik_segmentatio
 # The name of the dir with full-res tifs can be passed in for -i
 ```
 
-### **2) [Train Ilastik](https://b-heifets.github.io/UNRAVEL/guide.html#training-ilastik) to segment c-Fos+ cells or other features**
+### 2) [Train Ilastik](https://b-heifets.github.io/UNRAVEL/guide.html#training-ilastik) to segment c-Fos+ cells or other features
 
 ### 3) `seg_ilastik`
 {py:mod}`unravel.segment.ilastik_pixel_classification`
