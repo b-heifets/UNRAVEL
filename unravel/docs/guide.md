@@ -690,7 +690,7 @@ Ilastik has two purposes for our typical workflow:
 export PATH=/usr/local/ilastik-1.4.0.post1-Linux:$PATH   # Update the path and version
 
 # Optional: add a shortcut command for launching Ilastik via the terminal
-alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if needed)
+alias ilastik=run_ilastik.sh  # run_ilastik.sh could be replaced w/ the full path to the executable file
 
 # Ilastik executable files for each OS:
 #     - Linux and WSL: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh
@@ -704,7 +704,7 @@ alias ilastik=run_ilastik.sh  # This is for Linux (update the relative path if n
 
 
 ::: {admonition} Training Ilastik
-:class: note dropdown
+:class: note
 
 **Launch Ilastik** 
    - Either double click on the application or run: `ilastik` (if you set up an alias)
