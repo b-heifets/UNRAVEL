@@ -661,6 +661,8 @@ flowchart TD
     F --> N(Segment c-Fos+ cells or other features using Ilastik)
     L --> M(Validate clusters with cell/label density measurements)
     N --> M
+    D --> I
+    E --> L
 :::
 ---
 <br>
