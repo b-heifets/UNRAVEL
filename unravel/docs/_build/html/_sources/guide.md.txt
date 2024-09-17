@@ -733,6 +733,8 @@ alias ilastik=run_ilastik.sh  # run_ilastik.sh could be replaced w/ the full pat
 
    - Change `Current View` to see other training slices. Check segmentation for these and refine as needed.
    - Save the project in the experiment summary folder and close if using this script to run ilastik in headless mode for segmenting all images.
+   - [Segment 50 µm autofluo images](https://b-heifets.github.io/UNRAVEL/guide.html#seg-brain-mask)
+   - [Segment immunofluo images](https://b-heifets.github.io/UNRAVEL/guide.html#segmentation-of-full-resolution-fluorescence-images) to segment c-Fos+ cells or other features
 
 **Notes**
    - If you want to go back to steps 1 & 2, turn Live Updates off
@@ -1138,7 +1140,7 @@ cstats_mirror_indices -m RH [-i glob_pattern]
 
 ## Segmentation of Full-Resolution Fluorescence Images
 
-### `seg_copy_tifs`
+### 1) `seg_copy_tifs`
 {py:mod}`unravel.segment.copy_tifs`
 * Copy or extract full res tif files to a target dir for training Ilastik to segment labels of interest 
 :::{tip} 
@@ -1150,9 +1152,9 @@ seg_copy_tifs -i <rel_path/raw_image> -s 0100 0500 1000 [-td ilastik_segmentatio
 # The name of the dir with full-res tifs can be passed in for -i
 ```
 
-**[Train Ilastik](https://b-heifets.github.io/UNRAVEL/guide.html#training-ilastik) to segment c-Fos+ cells or other features of interest**
+### **2) [Train Ilastik](https://b-heifets.github.io/UNRAVEL/guide.html#training-ilastik) to segment c-Fos+ cells or other features**
 
-### `seg_ilastik`
+### 3) `seg_ilastik`
 {py:mod}`unravel.segment.ilastik_pixel_classification`
 * Segment features of interest (e.g., c-Fos+ cells) in full-resulution images using a trained Ilastik project (pixel classification)
 
