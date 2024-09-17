@@ -1189,6 +1189,8 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
 </li>
 <li><p>Change <code class="docutils literal notranslate"><span class="pre">Current</span> <span class="pre">View</span></code> to see other training slices. Check segmentation for these and refine as needed.</p></li>
 <li><p>Save the project in the experiment summary folder and close if using this script to run ilastik in headless mode for segmenting all images.</p></li>
+<li><p><a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#seg-brain-mask">Segment 50 µm autofluo images</a></p></li>
+<li><p><a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#segmentation-of-full-resolution-fluorescence-images">Segment immunofluo images</a> to segment c-Fos+ cells or other features</p></li>
 </ul>
 </li>
 </ol>
@@ -1707,7 +1709,7 @@ cstats_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span c
 <section id="segmentation-of-full-resolution-fluorescence-images">
 <h2>Segmentation of Full-Resolution Fluorescence Images<a class="headerlink" href="#segmentation-of-full-resolution-fluorescence-images" title="Link to this heading">#</a></h2>
 <section id="id1">
-<h3><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code><a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<h3>1) <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code><a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
 <p><a class="reference internal" href="unravel/segment/copy_tifs.html#module-unravel.segment.copy_tifs" title="unravel.segment.copy_tifs"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.copy_tifs</span></code></a></p>
 <ul class="simple">
 <li><p>Copy or extract full res tif files to a target dir for training Ilastik to segment labels of interest</p></li>
@@ -1721,10 +1723,12 @@ cstats_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span c
 <span class="c1"># The name of the dir with full-res tifs can be passed in for -i</span>
 </pre></div>
 </div>
-<p><strong><a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#training-ilastik">Train Ilastik</a> to segment c-Fos+ cells or other features of interest</strong></p>
+</section>
+<section id="train-ilastik-to-segment-c-fos-cells-or-other-features">
+<h3><strong>2) <a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#training-ilastik">Train Ilastik</a> to segment c-Fos+ cells or other features</strong><a class="headerlink" href="#train-ilastik-to-segment-c-fos-cells-or-other-features" title="Link to this heading">#</a></h3>
 </section>
 <section id="seg-ilastik">
-<h3><code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code><a class="headerlink" href="#seg-ilastik" title="Link to this heading">#</a></h3>
+<h3>3) <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code><a class="headerlink" href="#seg-ilastik" title="Link to this heading">#</a></h3>
 <p><a class="reference internal" href="unravel/segment/ilastik_pixel_classification.html#module-unravel.segment.ilastik_pixel_classification" title="unravel.segment.ilastik_pixel_classification"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.ilastik_pixel_classification</span></code></a></p>
 <ul class="simple">
 <li><p>Segment features of interest (e.g., c-Fos+ cells) in full-resulution images using a trained Ilastik project (pixel classification)</p></li>
@@ -2137,8 +2141,9 @@ rstats_summary<span class="w"> </span>--groups<span class="w"> </span>Saline<spa
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#segmentation-of-full-resolution-fluorescence-images">Segmentation of Full-Resolution Fluorescence Images</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1"><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seg-ilastik"><code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">1) <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#train-ilastik-to-segment-c-fos-cells-or-other-features"><strong>2) Train Ilastik to segment c-Fos+ cells or other features</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seg-ilastik">3) <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cluster-validation-and-statistics">Cluster Validation and Statistics</a><ul class="nav section-nav flex-column">
