@@ -1092,7 +1092,7 @@ vstats -mas $MASK -a $ATLAS [-p 18000] [-k 0.1]
 ## Cluster-wise Statistics
 
 flowchart TD
-    A(vstats: Generates 1-p value maps named *vox_p*.nii.gz)
+    A(vstats: Generates 1-p value maps named with vox_p)
     A --> B(cstats_fdr_range: Input a 1-p map to find FDR q values that yield clusters)
     B --> C(cstats_fdr: Apply FDR correction on the 1-p map to identify clusters of significant voxels)
     C --> D(cstats_mirror_indices: For whole-brains, recursively mirror cluster maps in ./stats/)

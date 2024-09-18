@@ -1648,7 +1648,7 @@ vstats<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK
 <section id="cluster-wise-statistics">
 <h2>Cluster-wise Statistics<a class="headerlink" href="#cluster-wise-statistics" title="Link to this heading">#</a></h2>
 <p>flowchart TD
-A(vstats: Generates 1-p value maps named <em>vox_p</em>.nii.gz)
+A(vstats: Generates 1-p value maps named with vox_p)
 A –&gt; B(cstats_fdr_range: Input a 1-p map to find FDR q values that yield clusters)
 B –&gt; C(cstats_fdr: Apply FDR correction on the 1-p map to identify clusters of significant voxels)
 C –&gt; D(cstats_mirror_indices: For whole-brains, recursively mirror cluster maps in ./stats/)
