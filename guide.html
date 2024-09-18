@@ -1649,16 +1649,17 @@ vstats<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK
 </section>
 <section id="cluster-wise-statistics">
 <h2>Cluster-wise Statistics<a class="headerlink" href="#cluster-wise-statistics" title="Link to this heading">#</a></h2>
-<p>flowchart TD
-A(vstats: Generates 1-p value maps named with vox_p)
-A –&gt; B(cstats_fdr_range: Input a 1-p map to find FDR q values that yield clusters)
-B –&gt; C(cstats_fdr: Apply FDR correction on the 1-p map to identify clusters of significant voxels)
-C –&gt; D(cstats_mirror_indices: For whole-brains, recursively mirror cluster maps in ./stats/)
-D –&gt; E(seg_copy_tifs: Copy select full resolution TIFFs for Ilastik training)
-E –&gt; F(seg_ilastik: Perform pixel classification with a trained Ilastik project)
-F –&gt; G(cstats_validation: Warp clusters from atlas to full resolution tissue space, count cells, and calculate cluster volumes)
-G –&gt; H(cstats_summary: Aggregate and analyze cluster validation data)</p>
-<section id="false-discovery-rate-fdr-correction">
+<div class="mermaid">
+            flowchart TD
+    A(vstats: Generates 1-p value maps with vox_p in the filename)
+    A --&gt; B(cstats_fdr_range: Input a 1-p map to find FDR q values that yield clusters)
+    B --&gt; C(cstats_fdr: Apply FDR correction on the 1-p map to identify clusters of significant voxels)
+    C --&gt; D(cstats_mirror_indices: For whole-brains, recursively mirror cluster maps in ./stats/)
+    D --&gt; E(seg_copy_tifs: Copy select full resolution TIFFs for Ilastik training)
+    E --&gt; F(seg_ilastik: Perform pixel classification with a trained Ilastik project)
+    F --&gt; G(cstats_validation: Warp clusters from atlas to full resolution tissue space, count cells, and calculate cluster volumes)
+    G --&gt; H(cstats_summary: Aggregate and analyze cluster validation data)
+        </div><section id="false-discovery-rate-fdr-correction">
 <h3>False Discovery Rate (FDR) Correction<a class="headerlink" href="#false-discovery-rate-fdr-correction" title="Link to this heading">#</a></h3>
 </section>
 <section id="cstats-fdr-range">
@@ -1744,7 +1745,19 @@ cstats_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span c
 </section>
 <section id="cluster-validation-and-statistics">
 <h2>Cluster Validation and Statistics<a class="headerlink" href="#cluster-validation-and-statistics" title="Link to this heading">#</a></h2>
-<section id="cstats-validation">
+<div class="mermaid">
+            flowchart TD    
+    A(cstats_org_data: Organize cell/label density data from cluster validation)
+    A --&gt; B(cstats_group_data: Pool left and right hemisphere data)
+    B --&gt; C(utils_prepend: Prepend CSV names with conditions)
+    C --&gt; D(cstats: Run statistics to determine cluster validity)
+    D --&gt; E(cstats_index: Create valid cluster maps and CSVs for sunburst plots)
+    E --&gt; F(cstats_brain_model: Create files for 3D brain models)
+    F --&gt; G(cstats_table: Create tables summarizing top regions and volumes)
+    G --&gt; H(cstats_prism: Generate CSVs for plotting bar graphs with Prism)
+    H --&gt; I(cstats_legend: Create legend files defining region abbreviations)
+    I --&gt; J(Summarize cluster validation rates, aggregate files for 3D brains, compile SI tables, etc.)
+        </div><section id="cstats-validation">
 <h3><code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code><a class="headerlink" href="#cstats-validation" title="Link to this heading">#</a></h3>
 <p><a class="reference internal" href="unravel/cluster_stats/validation.html#module-unravel.cluster_stats.validation" title="unravel.cluster_stats.validation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.validation</span></code></a></p>
 <ul class="simple">
