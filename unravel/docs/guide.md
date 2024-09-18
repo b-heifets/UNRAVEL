@@ -1090,9 +1090,9 @@ vstats -mas $MASK -a $ATLAS [-p 18000] [-k 0.1]
 <br>
 
 ## Cluster-wise Statistics
-
+:::{mermaid}
 flowchart TD
-    A(vstats: Generates 1-p value maps named with vox_p)
+    A(vstats: Generates 1-p value maps with vox_p in the filename)
     A --> B(cstats_fdr_range: Input a 1-p map to find FDR q values that yield clusters)
     B --> C(cstats_fdr: Apply FDR correction on the 1-p map to identify clusters of significant voxels)
     C --> D(cstats_mirror_indices: For whole-brains, recursively mirror cluster maps in ./stats/)
@@ -1100,6 +1100,7 @@ flowchart TD
     E --> F(seg_ilastik: Perform pixel classification with a trained Ilastik project)
     F --> G(cstats_validation: Warp clusters from atlas to full resolution tissue space, count cells, and calculate cluster volumes)
     G --> H(cstats_summary: Aggregate and analyze cluster validation data)
+:::
 
 ### False Discovery Rate (FDR) Correction
 
@@ -1167,6 +1168,19 @@ seg_ilastik -ie <path/ilastik_executable> -ilp <path/ilastik_project.ilp> -i <re
 <br>
 
 ## Cluster Validation and Statistics
+:::{mermaid}
+flowchart TD    
+    A(cstats_org_data: Organize cell/label density data from cluster validation)
+    A --> B(cstats_group_data: Pool left and right hemisphere data)
+    B --> C(utils_prepend: Prepend CSV names with conditions)
+    C --> D(cstats: Run statistics to determine cluster validity)
+    D --> E(cstats_index: Create valid cluster maps and CSVs for sunburst plots)
+    E --> F(cstats_brain_model: Create files for 3D brain models)
+    F --> G(cstats_table: Create tables summarizing top regions and volumes)
+    G --> H(cstats_prism: Generate CSVs for plotting bar graphs with Prism)
+    H --> I(cstats_legend: Create legend files defining region abbreviations)
+    I --> J(Summarize cluster validation rates, aggregate files for 3D brains, compile SI tables, etc.)
+:::
 
 ### `cstats_validation`
 {py:mod}`unravel.cluster_stats.validation`
