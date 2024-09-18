@@ -40,7 +40,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from ``reg``)', default=False, action='store_true')
-    reqs.add_argument('-ro', '--reg_outputs', help='path/reg_outputs (contains transformation files)', default='reg_ouputs', action=SM)
+    reqs.add_argument('-ro', '--reg_outputs', help='path/reg_outputs (contains transformation files)', default='reg_outputs', action=SM)
     opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
 
     general = parser.add_argument_group('General arguments')
