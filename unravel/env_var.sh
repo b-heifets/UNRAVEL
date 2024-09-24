@@ -3,7 +3,6 @@
 # Set environment variables for the current terminal session when this script is sourced
 export BASE="/path/to/your/experiment"  # path to the experiment directory
 export DIRS="$BASE/Control/ $BASE/Treatment/"  # sample?? directories should be in these directories
-export PATTERN="sample??"  # pattern to match sample directories to batch process (e.g., sample?? matches sample01, sample02, etc.)
 export LOOP=$(echo "for d in Control Treatment ; do cd \$BASE/\$d ; for s in $PATTERN; do <commands> ; done ; done") # Update Control and Treatment
 export XY="3.5232"  # xy-pixel size in microns
 export Z="5.0"  # z-slice thickness in microns
@@ -17,7 +16,6 @@ export MASK="$BASE/atlas/mask_CCFv3_2020_30um_RH_wo_root_ventricles_fibers_OB.ni
 echo "These environment variables have been set for the current session:" 
 echo "BASE: $BASE"
 echo 'DIRS: $BASE/Control/ $BASE/Treatment/'
-echo "PATTERN: $PATTERN"
 echo "LOOP: $LOOP"  # This can be used to loop through all samples in the Control and Treatment directories
 echo "XY: $XY"
 echo "Z: $Z"
