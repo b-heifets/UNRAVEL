@@ -5,6 +5,7 @@ export BASE="/path/to/your/experiment"  # path to the experiment directory
 export DIRS="$BASE/Control/ $BASE/Treatment/"  # sample?? directories should be in these directories
 export PATTERN="sample??"  # pattern to match sample directories to batch process (e.g., sample?? matches sample01, sample02, etc.)
 export LOOP=$(echo "for d in Control Treatment ; do cd \$BASE/\$d ; for s in $PATTERN; do <commands> ; done ; done") # Update Control and Treatment
+export XY="3.5232"  # xy-pixel size in microns
 export Z="5.0"  # z-slice thickness in microns
 export SAMPLE_KEY="$BASE/sample_key.csv"  # Column headers: dir_name,condition    Row 2: sample01,control    Row 3: sample02,treatment    ... (conditions should be one word, so use camelCase)
 export ATLAS="$BASE/atlas/atlas_CCFv3_2020_30um.nii.gz"  # Allen CCFv3 30um atlas
