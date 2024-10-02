@@ -101,7 +101,7 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     # Convert the ANTsImage to a numpy array 
     warped_img = warped_img_ants.numpy()
 
-    if interpol == 'multiLabel' or interpol == 'nearestNeighbor':
+    if interpol == 'multiLabel':
         # Round the floating-point label values to the nearest integer
         warped_img = np.round(warped_img)
 
