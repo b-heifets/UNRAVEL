@@ -8,6 +8,7 @@ Usage:
 ``CCF30_to_MERFISH30.py`` -m path/image.nii.gz -o path/image_MERFISH30.nii.gz [-f path/MERFISH-CCF_average_template_30um_avg.nii.gz] [-i nearestNeighbor] [-ro path/reg_outputs] [-fri path/fixed_reg_input.nii.gz] [-v]
 """
 
+from pathlib import Path
 from rich import print
 from rich.traceback import install
 
@@ -44,6 +45,12 @@ def main():
     verbose_start_msg()
 
     forward_warp(args.fixed_img, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.interpol, output=args.output)
+
+    # Delete the intermediate warped image
+    warp_outputs_dir = Path(args.reg_outputs) / "warp_outputs" 
+    warped_nii_path = Path(str(warp_outputs_dir / str(Path(args.moving_img).name).replace(".nii.gz", "_in_fixed_img_space.nii.gz")))
+    if warped_nii_path.exists():
+        warped_nii_path.unlink()
 
     verbose_end_msg()
 
