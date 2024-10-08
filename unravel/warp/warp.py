@@ -77,8 +77,7 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     generic_affine_matrix = str(reg_outputs_path / f'{transforms_prefix}0GenericAffine.mat')
     initial_transform_matrix = str(reg_outputs_path / f'{transforms_prefix}init_tform.mat')
     if not Path(reg_outputs_path / f'{transforms_prefix}init_tform.mat').exists():
-        initial_transform_matrix = str(reg_outputs_path / 'init_tform.mat') # For backward compatibility
-
+        initial_transform_matrix = str(reg_outputs_path / 'init_tform.mat')  # Named for compatibility
 
     # Apply the transformations
     if inverse:
@@ -108,7 +107,7 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     # Convert dtype of warped image to match the moving image
     moving_img_nii = nib.load(moving_img_path) 
     data_type = moving_img_nii.header.get_data_dtype()
-    warped_img[warped_img < 0] = 0 # Removes negative values from bSpline interpolation
+    warped_img[warped_img < 0] = 0  # Removes negative values from bSpline interpolation
     warped_img = warped_img.astype(data_type)
 
     # Save the transformed image with appropriate header and affine information
