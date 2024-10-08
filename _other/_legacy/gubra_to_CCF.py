@@ -51,8 +51,8 @@ def main():
 
     # Delete the intermediate warped image
     warp_outputs_dir = Path(args.reg_outputs) / "warp_outputs" 
-    warped_nii_path = str(warp_outputs_dir / str(Path(args.moving_img).name).replace(".nii.gz", "_in_fixed_img_space.nii.gz"))
-    if Path(warped_nii_path).exists():
+    warped_nii_path = Path(str(warp_outputs_dir / str(Path(args.moving_img).name).replace(".nii.gz", "_in_fixed_img_space.nii.gz")))
+    if warped_nii_path.exists():
         warped_nii_path.unlink()
 
     verbose_end_msg()
