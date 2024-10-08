@@ -55,12 +55,18 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     Applies the transformations to an image using ANTsPy.
 
     Parameters:
+    -----------
     reg_outputs_path (Path): Path to the reg_outputs folder (contains transformation files)
     moving_img_path (str): Path to the image to be transformed.
     fixed_img_path (str): Path to the reference image for applying the transform.
     output_path (str): Path where the transformed image will be saved.
     inverse (bool): If True, apply the inverse transformation. Defaults to False.
-    interpol (str): Type of interpolation (e.g., 'Linear', 'NearestNeighbor', etc.)
+    interpol (str): Type of interpolation (e.g., 'Linear', 'NearestNeighbor', etc.).
+
+    Notes:
+    ------
+    - If multiLabel interpolation is used, the label values are rounded.
+    - If bSpline interpolation is used, negative values are set to 0.
     """
 
     # Get the transforms prefix
@@ -100,14 +106,15 @@ def warp(reg_outputs_path, moving_img_path, fixed_img_path, output_path, inverse
     # Convert the ANTsImage to a numpy array 
     warped_img = warped_img_ants.numpy()
 
+    # Post-processing
     if interpol == 'multiLabel':
-        # Round the floating-point label values to the nearest integer
-        warped_img = np.round(warped_img)
+        warped_img = np.round(warped_img)  # Round label values
+    if interpol == 'bSpline':
+        warped_img[warped_img < 0] = 0  # Remove negative values
 
     # Convert dtype of warped image to match the moving image
     moving_img_nii = nib.load(moving_img_path) 
     data_type = moving_img_nii.header.get_data_dtype()
-    warped_img[warped_img < 0] = 0  # Removes negative values from bSpline interpolation
     warped_img = warped_img.astype(data_type)
 
     # Save the transformed image with appropriate header and affine information
