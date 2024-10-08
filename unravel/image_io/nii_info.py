@@ -52,8 +52,8 @@ def main():
 
     # Print intensity range
     img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
-    max_intensity = int(img.max())
-    min_intensity = int(img.min())
+    max_intensity = img.max()
+    min_intensity = img.min()
     print(f'Intensity range: {min_intensity} to {max_intensity}')
 
     # Print dimensions
