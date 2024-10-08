@@ -42,8 +42,9 @@ def nii_axis_codes(nii):
 def main():
     install()
     args = parse_args()
-    
-    nii = nib.load(args.input)
+
+    nii_path = args.input if str(args.input).endswith(".nii.gz") else f"{args.input}.nii.gz"
+    nii = nib.load(nii_path)
     
     np.set_printoptions(precision=2, suppress=True)
 
