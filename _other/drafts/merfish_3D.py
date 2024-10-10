@@ -5,7 +5,7 @@ Use ``/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_m
 
 Usage:
 ------
-    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -r path/to/root_dir -g gene_name
+    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -b path/to/root_dir -g gene_name
 """
 
 import anndata
@@ -77,7 +77,7 @@ def main():
     cell_df_joined = m.join_reconstructed_coords(cell_df, download_base)
 
     # Load the expression data for the specified gene
-    adata = m.load_expression_data(download_base)
+    adata = m.load_expression_data(download_base, args.gene)
 
     for gene in args.gene:
         print(f"\nProcessing gene: {gene}")
