@@ -40,7 +40,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', required=True, action=SM)
-    opts.add_argument('-m', '--metadata', help='Extract metadata and save it to parameters/metadata.txt. Default: False', action='store_true', default=False)
+    opts.add_argument('-m', '--metad_path', help='Path for storing key raw image metadata. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -61,8 +61,8 @@ def main():
         print(f"\n    Processing {input_path}\n")
 
         # Load .tif image (highest res dataset) as ndarray and extract voxel sizes in microns
-        if args.metadata:
-            img = load_3D_tif(input_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=True)
+        if args.metad_path:
+            img = load_3D_tif(input_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=args.metad_path)
         else:
             img = load_3D_tif(input_path, desired_axis_order="xyz", return_res=False)
 
