@@ -275,7 +275,7 @@ def load_3D_tif(tif_path, desired_axis_order="xyz", return_res=False, return_met
         x_dim, y_dim, z_dim = ndarray.shape
 
         # If resolution is requested, extract it from OME-XML metadata
-        if return_res and not xy_res and not z_res:
+        if xy_res is None or z_res is None:
             first_page = tif.pages[0]
             description = first_page.tags[270].value
             try:
@@ -291,7 +291,7 @@ def load_3D_tif(tif_path, desired_axis_order="xyz", return_res=False, return_met
             except (ET.ParseError, KeyError, TypeError) as e:
                 raise ValueError(f"\n    Unable to parse OME-XML metadata: {e}\n")
             
-        if save_metadata:
+        if save_metadata is not None:
             save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata=save_metadata)
 
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
