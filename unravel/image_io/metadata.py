@@ -98,7 +98,7 @@ def main():
             else: 
                 # Load image and save metadata to file
                 if img_path.exists():
-                    if img_path.is_dir and args.xy_res is not None and args.z_res is not None:
+                    if img_path.is_dir and img_path.glob(f"*.tif") and args.xy_res is not None and args.z_res is not None:
                         x_dim, y_dim, z_dim = get_dims_from_tifs(img_path)
                         save_metadata_to_file(args.xy_res, args.z_res, x_dim, y_dim, z_dim, save_metadata=metadata_path)
                     else: 
