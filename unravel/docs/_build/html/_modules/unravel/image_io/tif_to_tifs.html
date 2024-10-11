@@ -352,35 +352,34 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``io_tif_to_tifs`` from UNRAVEL to load a 3D .tif image and save it as tifs.</span>
+<span class="sd">Use ``io_tif_to_tifs`` from UNRAVEL to load a 3D .tif  or .ome.tif image and save it as tifs.</span>
 
 <span class="sd">Input: </span>
-<span class="sd">    - image.tif (either from -i path/image.tif or largest `*`.tif in cwd)</span>
+<span class="sd">    - path/image.tif (can use glob patterns)</span>
 
 <span class="sd">Outputs:</span>
-<span class="sd">    - ./&lt;tif_dir_out&gt;/slice_`*`.tif series</span>
-<span class="sd">    - ./parameters/metadata (text file)</span>
+<span class="sd">    - &lt;tif_dir&gt;/slice_0000.tif, &lt;tif_dir&gt;/slice_0001.tif, ...</span>
+<span class="sd">    - tif_dir may be specified with -t flag or it will default to &lt;image_name&gt;_tifs</span>
+<span class="sd">    - parameters/metadata.txt (if -m flag is used)</span>
 
 <span class="sd">Next command: </span>
+<span class="sd">    ``io_metadata`` to specify voxel sizes and image dimensions to parameters/metadata.txt (if metadata is not extractable)</span>
 <span class="sd">    ``reg_prep`` to prep autofluo images registration</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
-<span class="sd">    io_tif_to_tifs -i &lt;path/image.tif&gt; -t 488 [-v]</span>
+<span class="sd">    io_tif_to_tifs -i &lt;path/image.tif&gt; -t autofl [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">glob</span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">glob</span> <span class="kn">import</span> <span class="n">glob</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
-<span class="kn">from</span> <span class="nn">tifffile</span> <span class="kn">import</span> <span class="n">imwrite</span>
-<span class="kn">import</span> <span class="nn">tifffile</span> 
-
-<span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">save_metadata_to_file</span><span class="p">,</span> <span class="n">save_as_tifs</span><span class="p">,</span> <span class="n">load_3D_tif</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
 
 
@@ -390,101 +389,16 @@
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
     <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image.tif&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--tif_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of output folder for outputting tifs&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image.tif (can use glob patterns)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args&#39;</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--tif_dir&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of output folder for outputting tifs&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--metad_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path for storing key raw image metadata. Default: parameters/metadata.txt&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;parameters/metadata.txt&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
     <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
-
-
-<span class="c1"># TODO: Could remove find_largest_tif_file() and use glob matching only. </span>
-<span class="c1"># TODO: Could keep metadata functions specific to io_metadata and the img_io module.</span>
-
-<div class="viewcode-block" id="find_largest_tif_file">
-<a class="viewcode-back" href="../../../unravel/image_io/tif_to_tifs.html#unravel.image_io.tif_to_tifs.find_largest_tif_file">[docs]</a>
-<span class="k">def</span> <span class="nf">find_largest_tif_file</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Find and return the path to the largest .tif file in the current directory &quot;&quot;&quot;</span>
-    <span class="n">largest_file</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">max_size</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s1">&#39;*.tif&#39;</span><span class="p">):</span>
-        <span class="n">size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="n">max_size</span><span class="p">:</span>
-            <span class="n">max_size</span> <span class="o">=</span> <span class="n">size</span>
-            <span class="n">largest_file</span> <span class="o">=</span> <span class="n">file</span>
-
-    <span class="k">return</span> <span class="n">largest_file</span></div>
-
-
-<div class="viewcode-block" id="load_3D_tif">
-<a class="viewcode-back" href="../../../unravel/image_io/tif_to_tifs.html#unravel.image_io.tif_to_tifs.load_3D_tif">[docs]</a>
-<span class="k">def</span> <span class="nf">load_3D_tif</span><span class="p">(</span><span class="n">tif_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load full res image from a 3D .tif and return ndarray</span>
-<span class="sd">    Default: axis_order=xyz (other option: axis_order=&quot;zyx&quot;)</span>
-<span class="sd">    Default: returns: ndarray</span>
-<span class="sd">    If return_res=True returns: ndarray, xy_res, z_res (resolution in um)&quot;&quot;&quot;</span>
-    <span class="k">with</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">TiffFile</span><span class="p">(</span><span class="n">tif_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">tif</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Loading </span><span class="si">{</span><span class="n">tif_path</span><span class="si">}</span><span class="s2"> as ndarray&quot;</span><span class="p">)</span>
-        <span class="n">ndarray</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span> <span class="c1"># Load image into memory (if not enough RAM, chunck data [e.g., w/ dask array])</span>
-        <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="k">if</span> <span class="n">desired_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span> <span class="k">else</span> <span class="n">ndarray</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;    </span><span class="si">{</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">return_res</span><span class="p">:</span>
-        <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">metadata_from_3D_tif</span><span class="p">(</span><span class="n">tif_path</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">ndarray</span></div>
-
-    
-<div class="viewcode-block" id="metadata_from_3D_tif">
-<a class="viewcode-back" href="../../../unravel/image_io/tif_to_tifs.html#unravel.image_io.tif_to_tifs.metadata_from_3D_tif">[docs]</a>
-<span class="k">def</span> <span class="nf">metadata_from_3D_tif</span><span class="p">(</span><span class="n">tif_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns tuple with xy_voxel_size and z_voxel_size in microns from a 3D .tif&quot;&quot;&quot;</span>
-
-    <span class="k">with</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">TiffFile</span><span class="p">(</span><span class="n">tif_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">tif</span><span class="p">:</span>
-        <span class="c1"># Get the first page of the tif file where the metadata is usually stored</span>
-        <span class="n">first_page</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">pages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        
-        <span class="c1"># Access the tags dictionary directly</span>
-        <span class="n">tags_dict</span> <span class="o">=</span> <span class="n">first_page</span><span class="o">.</span><span class="n">tags</span>
-        
-        <span class="c1"># Look for the XResolution tag (tag number 282) # &#39;XResolution&#39;: (numerator, denominator)</span>
-        <span class="k">if</span> <span class="mi">282</span> <span class="ow">in</span> <span class="n">tags_dict</span><span class="p">:</span>
-            <span class="n">res_numerator</span><span class="p">,</span> <span class="n">res_denominator</span> <span class="o">=</span> <span class="n">tags_dict</span><span class="p">[</span><span class="mi">282</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
-            
-            <span class="c1"># Calculate the resolution in pixels per micron</span>
-            <span class="n">resolution</span> <span class="o">=</span> <span class="n">res_numerator</span> <span class="o">/</span> <span class="n">res_denominator</span>
-
-            <span class="c1"># Calculate x/y voxel size in microns</span>
-            <span class="n">xy_res</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">resolution</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;XResolution tag not found in file.&quot;</span><span class="p">)</span>
-        
-        <span class="c1"># Extract z-step size in microns</span>
-        <span class="n">imagej_metadata</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">imagej_metadata</span>        
-        <span class="k">if</span> <span class="n">imagej_metadata</span> <span class="ow">and</span> <span class="s1">&#39;spacing&#39;</span> <span class="ow">in</span> <span class="n">imagej_metadata</span><span class="p">:</span>
-            <span class="n">z_res</span> <span class="o">=</span> <span class="n">imagej_metadata</span><span class="p">[</span><span class="s1">&#39;spacing&#39;</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Z-spacing information not found in ImageJ metadata.&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span></div>
-
-
-<div class="viewcode-block" id="save_as_tifs">
-<a class="viewcode-back" href="../../../unravel/image_io/tif_to_tifs.html#unravel.image_io.tif_to_tifs.save_as_tifs">[docs]</a>
-<span class="k">def</span> <span class="nf">save_as_tifs</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">tif_dir_out</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save &lt;ndarray&gt; as tifs in &lt;Path(tif_dir_out)&gt;&quot;&quot;&quot;</span>
-    <span class="n">tif_dir_out</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tif_dir_out</span><span class="p">)</span>
-    <span class="n">tif_dir_out</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">ndarray_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span><span class="p">:</span>
-        <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="c1"># Transpose to zyx (tiff expects zyx)</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">slice_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
-        <span class="n">slice_file_path</span> <span class="o">=</span> <span class="n">tif_dir_out</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;slice_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">.tif&quot;</span>
-        <span class="n">imwrite</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">slice_file_path</span><span class="p">),</span> <span class="n">slice_</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Output: [default bold]</span><span class="si">{</span><span class="n">tif_dir_out</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 
@@ -497,27 +411,28 @@
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">:</span>
-        <span class="n">tif_path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]Please provide a path/image.tif for the -t option</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+    <span class="n">input_paths</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)))</span>
 
-    <span class="c1"># Load .tif image (highest res dataset) as ndarray and extract voxel sizes in microns</span>
-    <span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">load_3D_tif</span><span class="p">(</span><span class="n">tif_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">input_path</span> <span class="ow">in</span> <span class="n">input_paths</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Processing </span><span class="si">{</span><span class="n">input_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="c1"># Make parameters directory in the sample?? folder</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;parameters&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="c1"># Load .tif image (highest res dataset) as ndarray and extract voxel sizes in microns</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">metad_path</span><span class="p">:</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_tif</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">metad_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_tif</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
-    <span class="c1"># Save metadata to text file so resolution can be obtained by other commands/modules</span>
-    <span class="n">metadata_txt_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;parameters&quot;</span><span class="p">,</span> <span class="s2">&quot;metadata&quot;</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">metadata_txt_path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span> 
-        <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Voxel size: </span><span class="si">{</span><span class="n">xy_res</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">xy_res</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="n">z_res</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> µm^3&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Save as tifs </span>
-    <span class="n">tifs_output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">tif_dir</span><span class="p">)</span>
-    
-    <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">tifs_output_path</span><span class="p">)</span>
+        <span class="c1"># Save 3D tif as tifs</span>
+        <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">tif_dir</span><span class="p">:</span>
+            <span class="n">tifs_output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">tif_dir</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s1">&#39;.ome.tif&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">input_path</span><span class="p">):</span>
+                <span class="n">tifs_output_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.ome.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;_tifs&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="s1">&#39;.tif&#39;</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">input_path</span><span class="p">):</span>
+                <span class="n">tifs_output_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;_tifs&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tifs_output_path</span> <span class="o">=</span> <span class="s1">&#39;tifs&#39;</span>
+        <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">tifs_output_path</span><span class="p">)</span>
 
     <span class="n">verbose_end_msg</span><span class="p">()</span></div>
 

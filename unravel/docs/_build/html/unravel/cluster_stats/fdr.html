@@ -505,7 +505,7 @@
 </ul>
 </dd>
 <dt>Outputs saved in the output directory:</dt><dd><ul class="simple">
-<li><p>FDR-adjusted p value map</p></li>
+<li><p>FDR-adjusted 1-p value map (1 - q value defines the threshold for cluster maps)</p></li>
 <li><p>Cluster information CSV</p></li>
 <li><p>Reversed cluster index image (output_dir/input_name_rev_cluster_index.nii.gz)</p></li>
 <li><p>min_cluster_size_in_voxels.txt</p></li>
@@ -517,6 +517,7 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
+<li><p>The q value does not influence the FDR-adjusted 1-p value map, but it does determine the threshold for cluster maps.</p></li>
 <li><p>Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.</p></li>
 <li><p>For bilateral data processed with a hemispheric mask, next run <code class="docutils literal notranslate"><span class="pre">cstats_mirror_indices</span></code> to mirror the cluster indices to the other hemisphere.</p></li>
 <li><p>For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>.</p></li>
@@ -564,7 +565,7 @@
 </dl>
 <dl class="simple">
 <dt>Saves in the fdr_path:</dt><dd><ul class="simple">
-<li><p>FDR-adjusted p value map</p></li>
+<li><p>FDR-adjusted 1-p value map (1 - q value defines the threshold)</p></li>
 </ul>
 </dd>
 </dl>

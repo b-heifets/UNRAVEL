@@ -835,7 +835,7 @@ seg_brain_mask -ie <path/ilastik_executable> -ilp <path/trained_ilastik_project.
 reg -m <path/template.nii.gz> -bc -sm 0.4 -ort <3 letter orientation code> -m2 <path/atlas_CCFv3_2020_30um.nii.gz> [-d $DIRS]
 
 # Example if using env_var.sh (assuming an RPS orientation):
-reg -m $TEMPLATE -bc -pad -sm 0.4 -ort RPS -a $ATLAS -d $DIRS
+reg -m $TEMPLATE -bc -sm 0.4 -ort RPS -m2 $ATLAS -d $DIRS
 
 # -bc performs N4 bias field correction to make image intensities more uniform
 # -sm smooths the autofluo image by the amount specified
@@ -846,7 +846,7 @@ reg -m $TEMPLATE -bc -pad -sm 0.4 -ort RPS -a $ATLAS -d $DIRS
 :class: tip dropdown
 Make a ./sample??/parameters/ort.txt with the 3 letter orientation for each sample and run:
 ```bash
-for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m $TEMPLATE -bc -pad -sm 0.4 -ort $(cat $s/parameters/ort.txt) -a $ATLAS -v -d $PWD/$s ; done ; done 
+for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m $TEMPLATE -bc -sm 0.4 -ort $(cat $s/parameters/ort.txt) -m2 $ATLAS -v -d $PWD/$s ; done ; done 
 ```
 :::
 
