@@ -239,6 +239,8 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
         test_df['reject'] = test_df['p-adj'] < 0.05
 
     significant_comparisons = test_df[test_df['reject'] == True]
+
+    # Calculate y-axis limits
     y_max = df['mean_intensity'].max()
     y_min = df['mean_intensity'].min()
     height_diff = (y_max - y_min) * 0.1
@@ -265,16 +267,9 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
         plt.text((x1+x2)*.5, y_pos + 0.8*height_diff, sig, horizontalalignment='center', size='xx-large', color='black', weight='bold')
         y_pos += 3 * height_diff
 
-    # Calculate y-axis limits
-    y_max = df['mean_intensity'].max()
-    y_min = df['mean_intensity'].min()
-    height_diff = (y_max - y_min) * 0.1
-    y_pos = y_max + 0.5 * height_diff
-
     # Ensure the y-axis starts from the minimum value, allowing for negative values
     plt.ylim(y_min - 2 * height_diff, y_pos + 2 * height_diff)
 
-    # plt.ylim(0, y_pos + 2*height_diff)
     ax.set_xlabel(None)
 
     # Save the plot

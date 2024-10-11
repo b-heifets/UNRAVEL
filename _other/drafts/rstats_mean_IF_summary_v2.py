@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_mean_IF_summary_v2`` from UNRAVEL to quantify mean IF for all atlas regions.
+Use ``_other/drafts/rstats_mean_IF_summary_v2.py`` from UNRAVEL to quantify mean IF for all atlas regions.
 
 Prereqs: 
     - ``rstats_mean_IF``
@@ -23,11 +23,11 @@ Note:
 
 Usage for Tukey tests:
 ---------------------------
-    rstats_summary --groups Saline MDMA Meth -hemi both [-y mean_IF] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-v]
+    _other/drafts/rstats_mean_IF_summary_v2.py --groups Saline MDMA Meth -hemi both [-y mean_IF] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-v]
 
 Usage for t-tests:
 ---------------------------
-    rstats_summary --groups Saline MDMA -hemi both -t t-test -c Saline [-alt two-sided] [-y mean_IF] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]
+    _other/drafts/rstats_mean_IF_summary_v2.py --groups Saline MDMA -hemi both -t t-test -c Saline [-alt two-sided] [-y mean_IF] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]
 """
 
 import ast
@@ -65,7 +65,8 @@ def parse_args():
     opts.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", action=SM)  # Does the control need to be specified for a t-test? First group could be the control.
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
     opts.add_argument('-y', '--ylabel', help='Y-axis label (Default: Mean IF)', default='Mean IF', action=SM)
-    opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
+    opts.add_argument('-c1', '--csv1_path', help='CSV name or path/name.csv. Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default='CCFv3-2020__regionID_side_IDpath_region_abbr.csv', action=SM)
+    opts.add_argument('-c2', '--csv2_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
     opts.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', action=SM)
     opts.add_argument('-s', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code lis t matching # of groups", default='light:white', action=SM)
     opts.add_argument('-o', '--output', help='Output directory for plots (Default: <args.test_type>_plots)', action=SM)
@@ -101,7 +102,7 @@ def parse_color_argument(color_arg, num_groups, region_id, csv_path):
                 results_df = pd.read_csv(csv_path)
             region_rgb = results_df[results_df['Region_ID'] == combined_region_id][['R', 'G', 'B']]
             rgb = tuple(region_rgb.iloc[0].values)
-            rgb_normalized = tuple([x / 255.0 for x in rgb])
+            rgb_normalized = tuple([float(x) / 255.0 for x in rgb])
             ABA_color = sns.color_palette([rgb_normalized] * num_groups)
             return ABA_color
         else:
@@ -163,19 +164,19 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     num_groups = len(groups)
 
     # Parse the color arguments
-    bar_color = parse_color_argument(args.bar_color, num_groups, region_id, args.csv_path)
-    symbol_color = parse_color_argument(args.symbol_color, num_groups, region_id, args.csv_path)
+    bar_color = parse_color_argument(args.bar_color, num_groups, region_id, args.csv2_path)
+    symbol_color = parse_color_argument(args.symbol_color, num_groups, region_id, args.csv2_path)
 
     # Coloring the bars and symbols
     # ax = sns.barplot(x='group', y='mean_IF', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black')
     ax = sns.barplot(x='group', y='mean_IF', hue='group', data=reshaped_df, errorbar=('se'), capsize=0.1, palette=bar_color, linewidth=2, edgecolor='black', legend=False)
     sns.stripplot(x='group', y='mean_IF', hue='group', data=reshaped_df, palette=symbol_color, alpha=0.5, size=8, linewidth=0.75, edgecolor='black')
 
-    # Calculate y_max and y_min based on the actual plot
-    y_max = ax.get_ylim()[1]
-    y_min = ax.get_ylim()[0]
-    height_diff = (y_max - y_min) * 0.05  # Adjust the height difference as needed
-    y_pos = y_max * 1.05  # Start just above the highest bar
+    # Calculate y-axis limits
+    y_max = reshaped_df['mean_IF'].max()
+    y_min = reshaped_df['mean_IF'].min()
+    height_diff = (y_max - y_min) * 0.1
+    y_pos = y_max + 0.5 * height_diff
 
     # Check which test to perform
     if args.test_type == 't-test':
@@ -227,9 +228,15 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
             sig = '**'
         else:
             sig = '*'
-        plt.text((x1 + x2) * .5, y_pos + 1 * height_diff, sig, horizontalalignment='center', size='xx-large', color='black', weight='bold')
+        # plt.text((x1 + x2) * .5, y_pos + 1 * height_diff, sig, horizontalalignment='center', size='xx-large', color='black', weight='bold')
+        plt.text((x1+x2)*.5, y_pos + 0.8*height_diff, sig, horizontalalignment='center', size='xx-large', color='black', weight='bold')
 
         y_pos += 3 * height_diff  # Increment y_pos for the next comparison bar
+
+    # Ensure the y-axis starts from the minimum value, allowing for negative values
+    plt.ylim(y_min - 2 * height_diff, y_pos + 2 * height_diff)
+
+    ax.set_xlabel(None)
 
     # Remove the legend only if it exists
     if ax.get_legend():
@@ -244,17 +251,15 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     ax.spines['right'].set_visible(False)
     ax.spines['bottom'].set_linewidth(2)
     ax.spines['left'].set_linewidth(2)
-    plt.ylim(0, y_pos) # Adjust y-axis limit to accommodate comparison bars
-    ax.set_xlabel('group') ### was None
 
     # Check if there are any significant comparisons (for prepending '_sig__' to the filename)
     has_significant_results = True if significant_comparisons.shape[0] > 0 else False
 
     # Extract the general region for the filename (output file name prefix for sorting by region)
-    if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv': 
-        regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
+    if args.csv2_path == 'CCFv3-2017_regional_summary.csv' or args.csv2_path == 'CCFv3-2020_regional_summary.csv': 
+        regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv2_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
     else:
-        regional_summary = pd.read_csv(args.csv_path)
+        regional_summary = pd.read_csv(args.csv2_path)
     region_id = region_id if region_id < 20000 else region_id - 20000 # Adjust if left hemi
     general_region = regional_summary.loc[regional_summary['Region_ID'] == region_id, 'General_Region'].values[0]
 
@@ -280,11 +285,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    # Load the region information dataframe
-    if args.csv_path == 'CCFv3-2020__regionID_side_IDpath_region_abbr.csv' or args.csv_path == 'CCFv3-2017__regionID_side_IDpath_region_abbr.csv':
-        region_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path)
+    # Load the region information dataframe Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
+    if args.csv1_path == 'CCFv3-2020__regionID_side_IDpath_region_abbr.csv' or args.csv1_path == 'CCFv3-2017__regionID_side_IDpath_region_abbr.csv':
+        region_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv1_path, usecols=['Region_ID', 'Side', 'ID_Path', 'Region', 'Abbr'])
     else:
-        region_info_df = pd.read_csv(args.csv_path)
+        region_info_df = pd.read_csv(args.csv1_path, usecols=['Region_ID', 'Side', 'ID_Path', 'Region', 'Abbr'])
 
     # Aggregate the data for each sample (Region_ID, Side, ID_Path, Region, Abbr, <OneWordCondition>_sample??)
     # Initialize the aggregated dataframe with the region_info_df 
@@ -293,6 +298,7 @@ def main():
     if not file_list:
         print("\n    [red1]No *.csv files found (excluding *_all.csv).\n")
         return
+    
     for f in file_list:
         df = pd.read_csv(f)
 
@@ -302,13 +308,14 @@ def main():
         # Rename the Mean_IF_Intensity column to <OneWordCondition>_sample??
         condition = f.split('_')[0]
         sample = f.split('_')[1]
+
         if 'Mean_IF_Intensity' in df.columns:
             df.rename(columns={'Mean_IF_Intensity': f'{condition}_{sample}'}, inplace=True)
         else:
             print(f"Column 'Mean_IF_Intensity' not found in {f}.")
             continue
         # Merge the data with the region_info_df
-        df = pd.merge(df, aggregated_df, on='Region_ID')
+        aggregated_df = pd.merge(aggregated_df, df, on='Region_ID')
 
     # Sort all columns that are not part of the first five by group prefix
     group_columns = sorted(aggregated_df.columns[5:], key=lambda x: args.groups.index(x.split('_')[0]))
@@ -401,10 +408,10 @@ def main():
                 progress.update(task_id, advance=1)
 
         # Merge with the original CCFv3-2020_regional_summary.csv and write to a new CSV
-        if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv': 
-            regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
+        if args.csv2_path == 'CCFv3-2017_regional_summary.csv' or args.csv2_path == 'CCFv3-2020_regional_summary.csv': 
+            regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv2_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
         else:
-            regional_summary = pd.read_csv(args.csv_path)
+            regional_summary = pd.read_csv(args.csv2_path)
         final_summary_pooled = pd.merge(regional_summary, all_summaries_pooled, on='Region_ID', how='left') 
         final_summary_pooled.to_csv(Path(out_dir) / '__significance_summary_pooled.csv', index=False)
 
@@ -434,10 +441,10 @@ def main():
                 progress.update(task_id, advance=1)
 
         # Merge with the original CCFv3-2020_regional_summary.csv and write to a new CSV
-        if args.csv_path == 'CCFv3-2017_regional_summary.csv' or args.csv_path == 'CCFv3-2020_regional_summary.csv': 
-            regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
+        if args.csv2_path == 'CCFv3-2017_regional_summary.csv' or args.csv2_path == 'CCFv3-2020_regional_summary.csv': 
+            regional_summary = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv2_path) #(Region_ID,ID_Path,Region,Abbr,General_Region,R,G,B)
         else:
-            regional_summary = pd.read_csv(args.csv_path)
+            regional_summary = pd.read_csv(args.csv2_path)
 
         # Adjust Region_ID for left hemisphere
         if side == "L":
