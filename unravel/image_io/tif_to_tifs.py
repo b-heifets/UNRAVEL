@@ -40,7 +40,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-t', '--tif_dir', help='Name of output folder for outputting tifs', required=True, action=SM)
-    opts.add_argument('-m', '--metadata', help='Output voxel size and image dimensions to parameters/metadata.txt. Default: False', action='store_true', default=False)
+    opts.add_argument('-m', '--metadata', help='Extract metadata and save it to parameters/metadata.txt. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -62,12 +62,9 @@ def main():
 
         # Load .tif image (highest res dataset) as ndarray and extract voxel sizes in microns
         if args.metadata:
-            metadata_path = Path(input_path.parent, "parameters", "metadata.txt")
-            img, xy_res, z_res = load_3D_tif(input_paths, desired_axis_order="xyz", return_res=True)
-            x_dim, y_dim, z_dim = img.shape
-            save_metadata_to_file(xy_res, z_res, x_dim, y_dim, z_dim, save_metadata=metadata_path)
+            img = load_3D_tif(input_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=True)
         else:
-            img = load_3D_tif(input_paths, desired_axis_order="xyz", return_res=False)
+            img = load_3D_tif(input_path, desired_axis_order="xyz", return_res=False)
 
         # Save 3D tif as tifs
         if args.tif_dir:
