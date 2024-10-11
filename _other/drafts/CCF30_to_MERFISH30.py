@@ -22,8 +22,8 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
     
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from 25 um Gubra atlas space', required=True, action=SM)
-    reqs.add_argument('-o', '--output', help='path/image_CCF30.nii.gz', required=True, action=SM)
+    reqs.add_argument('-m', '--moving_img', help='path/image.nii.gz to warp from CCFv3 30 µm atlas space', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='path/image_MERFISH-CCF30.nii.gz', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-f', '--fixed_img', help='Default: /usr/local/unravel/atlases/MERFISH-CCF_30um/MERFISH30f_CCF30m/MERFISH-CCF_average_template_30um_avg.nii.gz', default="/usr/local/unravel/atlases/MERFISH-CCF_30um/MERFISH30f_CCF30m/MERFISH-CCF_average_template_30um_avg.nii.gz", action=SM)
