@@ -32,6 +32,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Make output dirs if they don't exist
 
 @log_command
 def main():
