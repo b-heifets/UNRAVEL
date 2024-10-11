@@ -7,7 +7,7 @@ Inputs:
     - p value map (e.g., `*`vox_p_`*`stat`*`.nii.gz from vstats)    
 
 Outputs saved in the output directory:
-    - FDR-adjusted p value map
+    - FDR-adjusted 1-p value map (1 - q value defines the threshold for cluster maps)
     - Cluster information CSV
     - Reversed cluster index image (output_dir/input_name_rev_cluster_index.nii.gz)
     - min_cluster_size_in_voxels.txt
@@ -15,6 +15,7 @@ Outputs saved in the output directory:
     - 1-p_value_threshold.txt
 
 Note:
+    - The q value does not influence the FDR-adjusted 1-p value map, but it does determine the threshold for cluster maps.
     - Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.
     - For bilateral data processed with a hemispheric mask, next run ``cstats_mirror_indices`` to mirror the cluster indices to the other hemisphere.
     - For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cstats_validation``.
@@ -82,7 +83,7 @@ def fdr(input_path, fdr_path, mask_path, q_value):
         - q_value (float): the q value for FDR correction
 
     Saves in the fdr_path:
-        - FDR-adjusted p value map
+        - FDR-adjusted 1-p value map (1 - q value defines the threshold)
 
     Returns:
         - adjusted_pval_output_path (str): the path to the FDR-adjusted p value map 
@@ -90,7 +91,7 @@ def fdr(input_path, fdr_path, mask_path, q_value):
         """
 
     prefix = str(Path(input_path).name).replace('.nii.gz', '')
-    adjusted_pval_output_path = fdr_path / f"{prefix}_q{q_value}_adjusted_p_values.nii.gz"
+    adjusted_pval_output_path = fdr_path / f"{prefix}_q{q_value}_adjusted_1-p_values.nii.gz"
 
     fdr_command = [
         'fdr', 

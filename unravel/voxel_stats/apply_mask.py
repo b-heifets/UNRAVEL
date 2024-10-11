@@ -63,6 +63,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: apply_mask_to_ndarray() could accept a list of masks to apply in sequence. Perhaps mask args can be a list of paths.
 
 @print_func_name_args_times()
 def load_mask(mask_path):

@@ -42,7 +42,7 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Sometimes different q values yield the same p value threshold. In this case, not this in the dir name (don't process it). Case: ET z s50 tstat2
+# TODO: Sometimes different q values yield the same p value threshold. Don't repeat q values with the same p value threshold in the output.
 
 def smart_float_format(value, max_decimals=9):
 

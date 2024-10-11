@@ -113,7 +113,6 @@ def main():
     files = Path().cwd().glob(args.input)
     print(f'\nImages to process: {list(files)}\n')
 
-    files = Path().cwd().glob(args.input)
     if args.parallel:
         with ThreadPoolExecutor() as executor:
             executor.map(lambda file: whole_to_LR_avg(file, args.kernel, args.axis, args.shift, args.atlas_mask), files)

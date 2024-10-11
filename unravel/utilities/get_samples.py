@@ -33,6 +33,9 @@ def main():
 
     sample_paths = get_samples(args.dirs, args.pattern, verbose=True)
 
+    # Print the total number of sample?? directories found
+    print(f"\nTotal number of sample?? directories found: {len(sample_paths)}\n")
+
     verbose_end_msg()
 
 

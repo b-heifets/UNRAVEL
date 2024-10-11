@@ -100,6 +100,7 @@ def parse_args():
 # TODO: Replace this (find . -name "valid_clusters_sunburst.csv" -exec sh -c 'cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})' \;) w/ example of utils_agg_files_rec
 # TODO: Consider using env_var.sh instead of unravel/cluster_stats/summary.ini
 # TODO: Could include warning if directories are present in the current working directory that should not be there
+# TODO: Could make it possible to generate data for all clusters, not just valid clusters
 
 def run_script(script_name, script_args):
     """Run a command/script using subprocess that respects the system's PATH and captures output."""
