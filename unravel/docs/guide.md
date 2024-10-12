@@ -710,6 +710,9 @@ alias ilastik=run_ilastik.sh  # run_ilastik.sh could be replaced w/ the full pat
 
 **Launch Ilastik** 
    - Either double click on the application or run: `ilastik` (if you set up an alias)
+   - Select Pixel Classification and choose where to save the project
+   - If using WSL, you may need to save the project to the Windows file system for training Ilastik [e.g., the C drive]. It can be moved to the WSL file system after training.
+   - After saving the project, wait a sec for it to switch to the Input Data step. 
 
 1. **Input Data**  
    - Gather training slices to a folder from all samples with [**seg_copy_tifs**](unravel.segment.copy_tifs)
