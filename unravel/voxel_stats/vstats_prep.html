@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,41 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.voxel_stats.vstats_prep">
-<span id="unravel-voxel-stats-vstats-prep-module"></span><span id="unravel-voxel-stats-vstats-prep"></span><h1>unravel.voxel_stats.vstats_prep module<a class="headerlink" href="#module-unravel.voxel_stats.vstats_prep" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> from UNRAVEL to load an immunofluo image, subtract its background, and warp it to atlas space.</p>
-<dl class="simple">
-<dt>Prereqs:</dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">reg</span></code></p></li>
-</ul>
-</dd>
-<dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><ul class="simple">
-<li><p><cite>*</cite>.czi, ochann/<cite>*</cite>.tif, ochann, <cite>*</cite>.tif, <cite>*</cite>.h5, or <cite>*</cite>.zarr</p></li>
-</ul>
-</dd>
-<dt>Output example:</dt><dd><ul class="simple">
-<li><p>./sample??/atlas_space/sample??_cfos_rb4_30um_CCF_space.nii.gz</p></li>
-</ul>
-</dd>
-<dt>Next commands for voxel-wise stats:</dt><dd><p>Preprocess atlas space IF images with <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code> (recommended for c-Fos-IF) or aggregate them with <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code>.</p>
-</dd>
-</dl>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats_prep -i <cite>*</cite>.czi -o cfos_rb4_30um_CCF_space.nii.gz [-sa 3] [-rb 4] [–channel 1] [–reg_res 50] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-dt uint16] [-zo 1] [-inp bSpline] [-md parameters/metadata.txt] [–threads 8] [-mi] [-d list of paths] [-p sample??] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.vstats_prep.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats_prep.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats_prep.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats_prep.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.vstats_prep.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats_prep.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats_prep.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats_prep.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-voxel-stats-vstats-prep-module">
+<span id="unravel-voxel-stats-vstats-prep"></span><h1>unravel.voxel_stats.vstats_prep module<a class="headerlink" href="#unravel-voxel-stats-vstats-prep-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -572,20 +539,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats_prep.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats_prep.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -630,7 +583,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

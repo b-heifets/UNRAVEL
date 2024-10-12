@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,44 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.warp.points_to_atlas">
-<span id="unravel-warp-points-to-atlas-module"></span><span id="unravel-warp-points-to-atlas"></span><h1>unravel.warp.points_to_atlas module<a class="headerlink" href="#module-unravel.warp.points_to_atlas" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">warp_points_to_atlas</span></code> from UNRAVEL to convert cell centroids in native space to an image matching the fixed registration input and then warp it to atlas space.</p>
-<dl class="simple">
-<dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg</span></code> and <code class="docutils literal notranslate"><span class="pre">rstats</span></code></p>
-</dd>
-<dt>Inputs:</dt><dd><ul class="simple">
-<li><p>regional_stats/&lt;Condition&gt;_sample??_cell_centroids.csv (w/ columns: x, y, z, Region_ID) from <code class="docutils literal notranslate"><span class="pre">rstats</span></code> (first glob match processed)</p></li>
-<li><p>Reference image for target shape for converting points to image before padding and warping: reg_inputs/autofl_50um.nii.gz from <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code></p></li>
-<li><p>Reference image for warping to atlas space: e.g., atlas/atlas_CCFv3_2020_30um.nii.gz</p></li>
-</ul>
-</dd>
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>./sample??/atlas_space/&lt;args.input name&gt;</p></li>
-<li><p>./sample??/atlas_space/&lt;args.input name –&gt; .nii.gz&gt;</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>If the input CSV has a ‘count’ column, use <code class="docutils literal notranslate"><span class="pre">utils_points_compressor</span></code> to unpack the points before running this script.</p></li>
-</ul>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>warp_points_to_atlas -i regional_stats/&lt;asterisk&gt;_sample??_cell_centroids.csv [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-af reg_inputs/autofl_50um.nii.gz] [-thr 20000 or -uthr 20000] [-md parameters/metadata.txt] [-mi] [-d list of paths] [-p sample??] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.points_to_atlas.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.points_to_atlas.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/points_to_atlas.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.points_to_atlas.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.points_to_atlas.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.points_to_atlas.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/points_to_atlas.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.points_to_atlas.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-warp-points-to-atlas-module">
+<span id="unravel-warp-points-to-atlas"></span><h1>unravel.warp.points_to_atlas module<a class="headerlink" href="#unravel-warp-points-to-atlas-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -575,20 +539,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.points_to_atlas.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.points_to_atlas.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -633,7 +583,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

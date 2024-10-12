@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,68 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.image_tools.resample_points">
-<span id="unravel-image-tools-resample-points-module"></span><span id="unravel-image-tools-resample-points"></span><h1>unravel.image_tools.resample_points module<a class="headerlink" href="#module-unravel.image_tools.resample_points" title="Link to this heading">#</a></h1>
-<p>Use <cite>img_resample_points</cite> from UNRAVEL to resample a set of points (coordinates) and optionally convert them to an image, accounting for the number of detections at each voxel.</p>
-<dl class="simple">
-<dt>Input image types:</dt><dd><p>.czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p>
-</dd>
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>Output image types: .nii.gz, .tif series, .h5, .zarr</p></li>
-<li><p>A CSV file where each row represents a resampled point corresponding to a detection in the 3D image.</p></li>
-<li><p>A 3D image where each voxel contains the number of detections at that location.</p></li>
-</ul>
-</dd>
-</dl>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>img_resample_points -i path/points.csv -ri path/ref_image.nii.gz -cr 3.52 3.52 6 -tr 50 [-co path/resampled_points.csv] [-io path/resampled_image.nii.gz] [-thr 20000 or -uthr 20000] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_tools.resample_points.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.resample_points.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/resample_points.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.resample_points.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_tools.resample_points.resample_and_convert_points">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.resample_points.</span></span><span class="sig-name descname"><span class="pre">resample_and_convert_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points_csv_input_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/resample_points.html#resample_and_convert_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.resample_points.resample_and_convert_points" title="Link to this definition">#</a></dt>
-<dd><p>Resample a set of points and optionally convert them to an image.</p>
-<section id="parameters">
-<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>points_csv_input_path<span class="classifier">str</span></dt><dd><p>Path to the CSV file containing the points with columns ‘x’, ‘y’, ‘z’, and ‘Region_ID’.</p>
-</dd>
-<dt>current_res<span class="classifier">tuple of floats or float</span></dt><dd><p>The current resolution of the points in micrometers, as (x_res, y_res, z_res) or a single float value for isotropic resampling.</p>
-</dd>
-<dt>target_res<span class="classifier">tuple of floats or float</span></dt><dd><p>The target resolution of the points in micrometers, as (x_res, y_res, z_res) or a single float value for isotropic resampling.</p>
-</dd>
-<dt>ref_img<span class="classifier">numpy.ndarray</span></dt><dd><p>Reference image for the output image shape and resolution.</p>
-</dd>
-<dt>thresh<span class="classifier">float, optional</span></dt><dd><p>Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data).</p>
-</dd>
-<dt>upper_thresh<span class="classifier">float, optional</span></dt><dd><p>Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data).</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>points_resampled_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>The resampled points with columns ‘x’, ‘y’, ‘z’, and ‘Region_ID’</p>
-</dd>
-<dt>points_resampled_img<span class="classifier">numpy.ndarray or None</span></dt><dd><p>The resampled image where each voxel contains the number of detections at that location.
-Returns <cite>None</cite> if <cite>output_img_path</cite> is not provided.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_tools.resample_points.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_tools.resample_points.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/resample_points.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.resample_points.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-image-tools-resample-points-module">
+<span id="unravel-image-tools-resample-points"></span><h1>unravel.image_tools.resample_points module<a class="headerlink" href="#unravel-image-tools-resample-points-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -599,21 +539,6 @@ Returns <cite>None</cite> if <cite>output_img_path</cite> is not provided.</p>
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.resample_points.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.resample_points.resample_and_convert_points"><code class="docutils literal notranslate"><span class="pre">resample_and_convert_points()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_tools.resample_points.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -658,7 +583,7 @@ Returns <cite>None</cite> if <cite>output_img_path</cite> is not provided.</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

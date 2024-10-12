@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,150 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.region_stats.rstats">
-<span id="unravel-region-stats-rstats-module"></span><span id="unravel-region-stats-rstats"></span><h1>unravel.region_stats.rstats module<a class="headerlink" href="#module-unravel.region_stats.rstats" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">rstats</span></code> from UNRAVEL to quantify cell or label densities for all regions in an atlas.</p>
-<dl class="simple">
-<dt>Prereqs:</dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code>, <code class="docutils literal notranslate"><span class="pre">reg</span></code>, and <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code></p></li>
-</ul>
-</dd>
-<dt>Inputs:</dt><dd><ul class="simple">
-<li><p>rel_path/segmentation_image.nii.gz (can be glob pattern)</p></li>
-<li><p>rel_path/native_atlas_split.nii.gz (use this -a if this exists from <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code>; otherwise, use -m to warp atlas to native space)</p></li>
-</ul>
-</dd>
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>CSV files in ./sample??/regional_stats/ with cell counts or volumes of segmented voxels, region volumes, and cell or label densities for each region</p></li>
-<li><p>For cell counts, a CSV with cell centroids is also saved</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>Regarding –type, alternatively use ‘counts’ or ‘volumes’ for object counts or regional volumes</p></li>
-<li><p>Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv</p></li>
-<li><p>Columns: Region_ID, Side, ID_path, Region, Abbr</p></li>
-</ul>
-</div>
-<dl class="simple">
-<dt>Next steps:</dt><dd><ul class="simple">
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code> to aggregate the CSVs from sample directories to the current directory</p></li>
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">rstats_summary</span></code> to summarize the results</p></li>
-</ul>
-</dd>
-</dl>
-<section id="usage-if-the-atlas-is-already-in-native-space-from-warp-to-native">
-<h2>Usage if the atlas is already in native space from <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code>:<a class="headerlink" href="#usage-if-the-atlas-is-already-in-native-space-from-warp-to-native" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>rstats -s rel_path/segmentation_image.nii.gz -a rel_path/native_atlas_split.nii.gz -c Saline –dirs sample14 sample36 [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]</p>
-</div></blockquote>
-</section>
-<section id="usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster">
-<h2>Usage if the native atlas is not available; it is not saved (faster):<a class="headerlink" href="#usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>rstats -s rel_path/segmentation_image.nii.gz -m path/atlas_split.nii.gz -c Saline –dirs sample14 sample36 [-t cell_densities] [-md parameters/metadata.txt] [-cc 6] [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-r 50] [-csv CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-mi] [-d list of paths] [-p sample??] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.get_atlas_region_at_coords">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">get_atlas_region_at_coords</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#get_atlas_region_at_coords"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.get_atlas_region_at_coords" title="Link to this definition">#</a></dt>
-<dd><p>“Get the ndarray atlas region intensity at the given coordinates</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.count_cells_in_regions">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">count_cells_in_regions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seg_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_info_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#count_cells_in_regions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.count_cells_in_regions" title="Link to this definition">#</a></dt>
-<dd><p>Count the number of cells in each region based on atlas region intensities</p>
-<section id="parameters">
-<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>sample_path (Path): Path to the sample directory.</p></li>
-<li><p>seg_img (ndarray): 3D numpy array with the segmented image.</p></li>
-<li><p>atlas_img (ndarray): 3D numpy array with the atlas image.</p></li>
-<li><p>connectivity (int): Connectivity for connected components. Options: 6, 18, or 26.</p></li>
-<li><p>condition (str): Name of the group.</p></li>
-<li><p>region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_path, Region, Abbr).</p></li>
-</ul>
-</section>
-<section id="returns">
-<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>region_counts_df (DataFrame): DataFrame with regional cell counts in the last column (Region_ID, Side, ID_path, Region, Abbr, &lt;condition&gt;_&lt;sample_name&gt;).</p></li>
-<li><p>region_ids (list): List of region IDs in the atlas.</p></li>
-</ul>
-</section>
-<section id="output">
-<h2>Output:<a class="headerlink" href="#output" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Saves the regional cell counts as a CSV file in the sample directory (./sample??/regional_stats/)</p></li>
-</ul>
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.calculate_regional_volumes">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">calculate_regional_volumes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_ids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_info_df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#calculate_regional_volumes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.calculate_regional_volumes" title="Link to this definition">#</a></dt>
-<dd><p>Calculate volumes for given regions in an atlas image.</p>
-<section id="id1">
-<h2>Parameters:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>sample_path (Path): Path to the sample directory.</p></li>
-<li><p>atlas (ndarray): 3D numpy array with the atlas image.</p></li>
-<li><p>region_ids (list): List of region IDs to calculate volumes for.</p></li>
-<li><p>xy_res (float): Resolution in the xy plane in microns.</p></li>
-<li><p>z_res (float): Resolution in the z plane in microns.</p></li>
-<li><p>condition (str): Name of the group.</p></li>
-<li><p>region_info_df (DataFrame): DataFrame with region information (Region_ID, Side, ID_path, Region, Abbr).</p></li>
-</ul>
-</section>
-<section id="id2">
-<h2>Returns:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>regional_volumes_df (DataFrame): DataFrame with regional volumes in the last column (Region_ID, Side, ID_path, Region, Abbr, &lt;condition&gt;_&lt;sample_name&gt;).</p></li>
-</ul>
-</section>
-<section id="id3">
-<h2>Output:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Saves the regional volumes as a CSV file in the sample directory (./sample??/regional_stats/)</p></li>
-</ul>
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.calculate_regional_densities">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">calculate_regional_densities</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regional_data_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regional_volumes_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cell_densities'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#calculate_regional_densities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.calculate_regional_densities" title="Link to this definition">#</a></dt>
-<dd><p>Calculate cell or label densities for each region in the atlas.</p>
-<section id="id4">
-<h2>Parameters:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>sample_path (Path): Path to the sample directory.</p></li>
-<li><p>regional_data_df (DataFrame): DataFrame with regional data (object counts or label volumes).</p></li>
-<li><p>regional_volumes_df (DataFrame): DataFrame with regional volumes.</p></li>
-<li><p>condition (str): Name of the group.</p></li>
-<li><p>density_type (str): Type of density to calculate. Options: ‘cell_densities’ or ‘label_densities’.</p></li>
-</ul>
-</section>
-<section id="id5">
-<h2>Output:<a class="headerlink" href="#id5" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>Saves the regional densities as a CSV file in the sample directory (./sample??/regional_stats/)</p></li>
-</ul>
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.region_stats.rstats.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-region-stats-rstats-module">
+<span id="unravel-region-stats-rstats"></span><h1>unravel.region_stats.rstats module<a class="headerlink" href="#unravel-region-stats-rstats-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -681,25 +539,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-if-the-atlas-is-already-in-native-space-from-warp-to-native">Usage if the atlas is already in native space from <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code>:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-if-the-native-atlas-is-not-available-it-is-not-saved-faster">Usage if the native atlas is not available; it is not saved (faster):</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.get_atlas_region_at_coords"><code class="docutils literal notranslate"><span class="pre">get_atlas_region_at_coords()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.count_cells_in_regions"><code class="docutils literal notranslate"><span class="pre">count_cells_in_regions()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.calculate_regional_volumes"><code class="docutils literal notranslate"><span class="pre">calculate_regional_volumes()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.calculate_regional_densities"><code class="docutils literal notranslate"><span class="pre">calculate_regional_densities()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.region_stats.rstats.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -744,7 +583,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

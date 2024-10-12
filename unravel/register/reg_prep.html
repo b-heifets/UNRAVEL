@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,72 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.register.reg_prep">
-<span id="unravel-register-reg-prep-module"></span><span id="unravel-register-reg-prep"></span><h1>unravel.register.reg_prep module<a class="headerlink" href="#module-unravel.register.reg_prep" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code> from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.</p>
-<dl class="simple">
-<dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p><cite>*</cite>.czi, autofluo/<cite>*</cite>.tif series, autofluo, <cite>*</cite>.tif, or <cite>*</cite>.h5</p>
-</dd>
-<dt>Outputs:</dt><dd><p>./sample??/reg_inputs/autofl_`*`um.nii.gz
-./sample??/reg_inputs/autofl_`*`um_tifs/<cite>*</cite>.tif series (used for training ilastik for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>)</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>If -d is not provided, the current directory is used to search for sample?? dirs to process.</p></li>
-<li><p>If the current dir is a sample?? dir, it will be processed.</p></li>
-<li><p>If -d is provided, the specified dirs and/or dirs containing sample?? dirs will be processed.</p></li>
-<li><p>If -p is not provided, the default pattern for dirs to process is ‘sample??’.</p></li>
-</ul>
-</div>
-<dl class="simple">
-<dt>Next command:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> or <code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
-</dd>
-</dl>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>reg_prep -i <cite>*</cite>.czi [-md path/metadata.txt] [For .czi: –channel 0] [-o reg_inputs/autofl_50um.nii.gz] [–reg_res 50] [–zoom_order 0] [–miracl] [-d list of paths] [-p sample??] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.reg_prep.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.reg_prep.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg_prep.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg_prep.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.reg_prep.reg_prep">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.reg_prep.</span></span><span class="sig-name descname"><span class="pre">reg_prep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miracl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg_prep.html#reg_prep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg_prep.reg_prep" title="Link to this definition">#</a></dt>
-<dd><p>Prepare the autofluo image for <code class="docutils literal notranslate"><span class="pre">reg</span></code> or mimic preprocessing  for <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ndarray</strong> (<em>-</em>) – full res 3D autofluo image.</p></li>
-<li><p><strong>xy_res</strong> (<em>-</em>) – x/y resolution in microns of ndarray.</p></li>
-<li><p><strong>z_res</strong> (<em>-</em>) – z resolution in microns of ndarray.</p></li>
-<li><p><strong>reg_res</strong> (<em>-</em>) – Resample input to this resolution in microns for <code class="docutils literal notranslate"><span class="pre">reg</span></code>.</p></li>
-<li><p><strong>zoom_order</strong> (<em>-</em>) – Order for resampling (scipy.ndimage.zoom).</p></li>
-<li><p><strong>miracl</strong> (<em>-</em>) – Include reorientation step to mimic MIRACL’s tif to .nii.gz conversion.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Resampled image.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p>img_resampled (np.ndarray)</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.reg_prep.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.reg_prep.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg_prep.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg_prep.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-register-reg-prep-module">
+<span id="unravel-register-reg-prep"></span><h1>unravel.register.reg_prep module<a class="headerlink" href="#unravel-register-reg-prep-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -603,21 +539,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_prep.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_prep.reg_prep"><code class="docutils literal notranslate"><span class="pre">reg_prep()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_prep.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -662,7 +583,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

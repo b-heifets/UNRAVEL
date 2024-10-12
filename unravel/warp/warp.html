@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -534,13 +534,22 @@
 <dt class="sig sig-object py" id="unravel.warp.warp.warp">
 <span class="sig-prename descclassname"><span class="pre">unravel.warp.warp.</span></span><span class="sig-name descname"><span class="pre">warp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg_outputs_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inverse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/warp.html#warp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.warp.warp" title="Link to this definition">#</a></dt>
 <dd><p>Applies the transformations to an image using ANTsPy.</p>
-<p>Parameters:
-reg_outputs_path (Path): Path to the reg_outputs folder (contains transformation files)
+<section id="parameters">
+<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<p>reg_outputs_path (Path): Path to the reg_outputs folder (contains transformation files)
 moving_img_path (str): Path to the image to be transformed.
 fixed_img_path (str): Path to the reference image for applying the transform.
 output_path (str): Path where the transformed image will be saved.
 inverse (bool): If True, apply the inverse transformation. Defaults to False.
-interpol (str): Type of interpolation (e.g., ‘Linear’, ‘NearestNeighbor’, etc.)</p>
+interpol (str): Type of interpolation (e.g., ‘Linear’, ‘NearestNeighbor’, etc.).</p>
+</section>
+<section id="notes">
+<h2>Notes:<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>If multiLabel interpolation is used, the label values are rounded.</p></li>
+<li><p>If bSpline interpolation is used, negative values are set to 0.</p></li>
+</ul>
+</section>
 </dd></dl>
 
 <dl class="py function">
@@ -647,7 +656,7 @@ interpol (str): Type of interpolation (e.g., ‘Linear’, ‘NearestNeighbor’
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

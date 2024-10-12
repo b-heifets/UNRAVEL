@@ -39,7 +39,7 @@
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=8d563738"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -442,7 +442,7 @@ uc<span class="w"> </span>-h<span class="w"> </span>
 <div class="hint dropdown admonition">
 <p class="admonition-title">Setting Up Windows Subsystem for Linux (WSL)</p>
 <p>If you’re new to WSL, watch the first few minutes of <a class="reference external" href="https://www.youtube.com/watch?v=-atblwgc63E">this video</a>. After installation, refer to this <a class="reference external" href="https://www.youtube.com/watch?v=i547sSXhq0E">tutorial</a> for navigating your files.</p>
-<p class="rubric" id="installing-wsl">Installing WSL:</p>
+<h3 class="rubric" id="installing-wsl">Installing WSL:</h3>
 <ol class="arabic">
 <li><p>Open the Start menu, search for PowerShell, and right-click to run as Administrator.</p></li>
 <li><p>Run:</p>
@@ -508,7 +508,7 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 </div>
 <div class="hint dropdown admonition">
 <p class="admonition-title">Easier virtual environment activation with venv</p>
-<p class="rubric" id="automatically-activate-or-create-an-alias-for-your-virtual-environment"><strong>Automatically Activate or Create an Alias for Your Virtual Environment</strong></p>
+<h4 class="rubric" id="automatically-activate-or-create-an-alias-for-your-virtual-environment"><strong>Automatically Activate or Create an Alias for Your Virtual Environment</strong></h4>
 <p>You can either set your virtual environment to activate automatically when opening a terminal, or create an alias for easier activation.</p>
 <ol class="arabic">
 <li><p>Open your <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code> file with a code editor:</p>
@@ -551,7 +551,7 @@ sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w
 <ul class="simple">
 <li><p>With your virtual environment active, follow these steps to install UNRAVEL</p></li>
 </ul>
-<p class="rubric" id="option-a-editable-installation-of-unravel-recommended">Option A: Editable installation of UNRAVEL (recommended)</p>
+<h3 class="rubric" id="option-a-editable-installation-of-unravel-recommended">Option A: Editable installation of UNRAVEL (recommended)</h3>
 <ul class="simple">
 <li><p>This is allows for editing source code and incremental updates.</p></li>
 </ul>
@@ -564,7 +564,7 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/b-hei
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w">  </span><span class="c1"># This installs python dependencies and sets up commands (both defined in pyproject.toml)</span>
 </pre></div>
 </div>
-<p class="rubric" id="option-b-install-unravel-via-pypi-and-use-it-as-is">Option B: Install UNRAVEL via PyPI and use it as-is</p>
+<h3 class="rubric" id="option-b-install-unravel-via-pypi-and-use-it-as-is">Option B: Install UNRAVEL via PyPI and use it as-is</h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>heifetslab-unravel
 </pre></div>
 </div>
@@ -630,13 +630,13 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <p class="admonition-title">Hint</p>
 <p>Note the release/version and/or backup code before updating for reproducibility</p>
 </div>
-<p class="rubric" id="option-a-updating-unravel-if-installed-via-github">Option A. Updating UNRAVEL if installed via GitHub:</p>
+<h3 class="rubric" id="option-a-updating-unravel-if-installed-via-github">Option A. Updating UNRAVEL if installed via GitHub:</h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path/to/UNRAVEL&gt;
 git<span class="w"> </span>pull<span class="w">  </span><span class="c1"># This will update the local repo, pulling the latest code from the main branch</span>
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.<span class="w">  </span><span class="c1"># This will update commands and install new dependencies</span>
 </pre></div>
 </div>
-<p class="rubric" id="option-b-updating-unravel-if-installed-via-pypi">Option B. Updating UNRAVEL if installed via PyPI:</p>
+<h3 class="rubric" id="option-b-updating-unravel-if-installed-via-pypi">Option B. Updating UNRAVEL if installed via PyPI:</h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>heifetslab-unravel
 
 <span class="c1"># Check the installed version of UNRAVEL</span>
@@ -791,7 +791,7 @@ pip<span class="w"> </span>show<span class="w"> </span>heifetslab-unravel
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

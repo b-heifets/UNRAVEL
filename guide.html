@@ -39,7 +39,7 @@
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="_static/documentation_options.js?v=8d563738"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -386,7 +386,7 @@
 </ul>
 <div class="hint dropdown admonition">
 <p class="admonition-title">Terminal command cheat sheet</p>
-<p class="rubric" id="working-directory">Working Directory</p>
+<h3 class="rubric" id="working-directory">Working Directory</h3>
 <p>The working directory, or current directory, is the folder in the file system that a user or program is currently accessing.</p>
 <ul class="simple">
 <li><p><strong>Default Location</strong>: The terminal typically starts in your home directory.</p></li>
@@ -395,37 +395,37 @@
 <li><p><strong>Viewing the Directory</strong>: Use <code class="docutils literal notranslate"><span class="pre">pwd</span></code> to display the current working directory.</p></li>
 <li><p><strong>Importance</strong>: Knowing your working directory is often crucial for executing commands and managing files as intended.</p></li>
 </ul>
-<p class="rubric" id="stopping-commands">Stopping Commands</p>
+<h3 class="rubric" id="stopping-commands">Stopping Commands</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">C</span></code>: Interrupt the command</p></li>
 </ul>
-<p class="rubric" id="learning-about-commands">Learning About Commands</p>
+<h3 class="rubric" id="learning-about-commands">Learning About Commands</h3>
 <ul class="simple">
 <li><p><strong>Help Option</strong>: Many commands offer a <code class="docutils literal notranslate"><span class="pre">--help</span></code> option to provide a quick overview of usage. For example, <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">--help</span></code> or <code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-h</span></code>.</p></li>
 <li><p><strong>Manual Pages</strong>: Use <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">&lt;command&gt;</span></code> to access the manual page for detailed information about a command. For example, <code class="docutils literal notranslate"><span class="pre">man</span> <span class="pre">ls</span></code> provides options and descriptions for the <code class="docutils literal notranslate"><span class="pre">ls</span></code> command.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">which</span></code></strong>: Use <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">&lt;command&gt;</span></code> to locate the executable file for a command. For example, <code class="docutils literal notranslate"><span class="pre">which</span> <span class="pre">python</span></code> shows where the Python interpreter is installed.</p></li>
 </ul>
-<p class="rubric" id="listing-files">Listing Files</p>
+<h3 class="rubric" id="listing-files">Listing Files</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">ls</span></code>: List files and directories.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-l</span></code>: List files in long format, including details like permissions, size, and modification date.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-a</span></code>: List all files, including hidden files, which start with a “.” (unravel commands are logged in a hidden file [.command_log.txt]).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ls</span> <span class="pre">-1</span></code>: List files in a single column.</p></li>
 </ul>
-<p class="rubric" id="viewing-and-creating-files">Viewing and Creating Files</p>
+<h3 class="rubric" id="viewing-and-creating-files">Viewing and Creating Files</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">&lt;filename&gt;</span></code>: Display the contents of a file.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">&quot;string&quot;</span> <span class="pre">&gt;</span> <span class="pre">new.txt</span></code>: Create a new file named <code class="docutils literal notranslate"><span class="pre">new.txt</span></code> and write “string” to it.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">&quot;string&quot;</span> <span class="pre">&gt;&gt;</span> <span class="pre">new.txt</span></code>: Append “string” to the existing <code class="docutils literal notranslate"><span class="pre">new.txt</span></code> file.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">touch</span> <span class="pre">new.txt</span></code>: Create a new file that is empty</p></li>
 </ul>
-<p class="rubric" id="file-folder-management">File/Folder Management</p>
+<h3 class="rubric" id="file-folder-management">File/Folder Management</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">mkdir</span> <span class="pre">&lt;dir_name&gt;</span></code>: Make directory</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">-rf</span> <span class="pre">&lt;dir_name&gt;</span></code>: Delete folder and all contents recursively (be careful where you run this and what patterns you use)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">&lt;file&gt;</span></code> or <code class="docutils literal notranslate"><span class="pre">rm</span> <span class="pre">&lt;path/file&gt;</span></code></p></li>
 </ul>
-<p class="rubric" id="navigation-and-shortcuts">Navigation and Shortcuts</p>
+<h3 class="rubric" id="navigation-and-shortcuts">Navigation and Shortcuts</h3>
 <ul class="simple">
 <li><p><strong>Tab completion</strong>: Use tab to auto-complete file and directory names.</p></li>
 <li><p><strong>Up arrow</strong>: Scroll through command history. In zsh, type a partial command and press the up arrow to find past commands starting with the typed string.</p></li>
@@ -438,7 +438,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">cd</span></code>: Change to the home directory.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">~/</span></code>: Change to the home directory using the tilde shortcut.</p></li>
 </ul>
-<p class="rubric" id="command-history">Command History</p>
+<h3 class="rubric" id="command-history">Command History</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">history</span></code>: Print the history of terminal commands</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">!3</span></code>: Run the third command in the history</p></li>
@@ -446,7 +446,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">.command_log.txt</span> <span class="pre">|</span> <span class="pre">tail</span> <span class="pre">-10</span></code>: Print the last 10 lines</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cat</span> <span class="pre">.command_log.txt</span> <span class="pre">|</span> <span class="pre">head</span> <span class="pre">-10</span></code>: Print the first 10 lines</p></li>
 </ul>
-<p class="rubric" id="keyboard-shortcuts">Keyboard Shortcuts</p>
+<h3 class="rubric" id="keyboard-shortcuts">Keyboard Shortcuts</h3>
 <ul class="simple">
 <li><p><strong>Copy/Paste</strong>:</p>
 <ul>
@@ -476,7 +476,7 @@
 </ul>
 </li>
 </ul>
-<p class="rubric" id="command-execution-and-scripting">Command Execution and Scripting</p>
+<h3 class="rubric" id="command-execution-and-scripting">Command Execution and Scripting</h3>
 <ul class="simple">
 <li><p>Using <code class="docutils literal notranslate"><span class="pre">;</span></code> vs. <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>: <code class="docutils literal notranslate"><span class="pre">;</span></code> chains commands to execute sequentially, while <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> runs a command in the background.</p></li>
 <li><p>Another way to chain commands is to “pipe” (“|” character) the output from one command (what would be printed to the terminal) so it is used as the input of the next command</p>
@@ -486,13 +486,13 @@
 </li>
 <li><p>Parentheses <code class="docutils literal notranslate"><span class="pre">()</span></code> for multi-line commands: Group commands to execute them in a subshell.</p></li>
 </ul>
-<p class="rubric" id="global-variables">Global Variables</p>
+<h3 class="rubric" id="global-variables">Global Variables</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">$PWD</span></code>: Variable with the current working directory path.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">$PATH</span></code>: List of directories that have executable files. Allows for executing scripts without providing the full path (e.g., path/script.py –&gt; script.py). Folders with UNRAVEL scripts don’t need to be added to the $PATH if it installed w/ <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p></li>
 <li><p>See this <strong><a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#defining-common-variables-for-command-arguments">guide</a></strong> to define common command arguments as global variables in env_var.sh (so they can be loaded in each terminal session)</p></li>
 </ul>
-<p class="rubric" id="batch-processing-via-loops">Batch Processing Via Loops</p>
+<h3 class="rubric" id="batch-processing-via-loops">Batch Processing Via Loops</h3>
 <ul class="simple">
 <li><p>For loops examples:</p>
 <ul>
@@ -505,12 +505,12 @@
 </ul>
 </li>
 </ul>
-<p class="rubric" id="variables-and-substitution">Variables and Substitution</p>
+<h3 class="rubric" id="variables-and-substitution">Variables and Substitution</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">$PWD</span></code>: Variable with the current working directory path.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">$()</span></code>: Command substitution to capture output for use in commands (e.g., <code class="docutils literal notranslate"><span class="pre">x=$(for</span> <span class="pre">)</span></code>)</p></li>
 </ul>
-<p class="rubric" id="file-searching-and-manipulation">File Searching and Manipulation</p>
+<h3 class="rubric" id="file-searching-and-manipulation">File Searching and Manipulation</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">find</span></code>: Search for files in a directory hierarchy.</p>
 <ul>
@@ -528,7 +528,7 @@
 </li>
 <li><p><a class="reference external" href="https://github.com/junegunn/fzf"><code class="docutils literal notranslate"><span class="pre">fzf</span></code></a>: A command-line fuzzy finder that allows you to search and filter items interactively, providing a fast and efficient way to locate files, commands, or history entries.</p></li>
 </ul>
-<p class="rubric" id="text-processing">Text Processing</p>
+<h3 class="rubric" id="text-processing">Text Processing</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">sed</span></code>: Stream editor for filtering and transforming text.</p>
 <ul>
@@ -536,9 +536,9 @@
 </ul>
 </li>
 </ul>
-<p class="rubric" id="aliases">Aliases</p>
+<h3 class="rubric" id="aliases">Aliases</h3>
 <p>Aliases are shortcuts for longer commands or sequences of commands, making it easier and quicker to execute frequently used commands. You can create aliases in your shell configuration file (like <code class="docutils literal notranslate"><span class="pre">.bashrc</span></code> for Bash or <code class="docutils literal notranslate"><span class="pre">.zshrc</span></code> for Zsh).</p>
-<p class="rubric" id="how-to-create-aliases">How to Create Aliases:</p>
+<h4 class="rubric" id="how-to-create-aliases">How to Create Aliases:</h4>
 <ul>
 <li><p>Open your shell configuration file (.bashrc or .zshrc) with <strong><a class="reference external" href="https://code.visualstudio.com/download">VS Code</a></strong> or <strong><a class="reference external" href="https://www.youtube.com/watch?v=DLeATFgGM-A">nano</a></strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># For example:</span>
@@ -564,7 +564,7 @@ nano<span class="w"> </span>~/.bashrc<span class="w">  </span><span class="c1">#
 </div>
 </li>
 </ul>
-<p class="rubric" id="fsl-commands-for-nifti-files-nii-gz-extension">FSL Commands for NIfTI files (.nii.gz extension)</p>
+<h3 class="rubric" id="fsl-commands-for-nifti-files-nii-gz-extension">FSL Commands for NIfTI files (.nii.gz extension)</h3>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">fslmaths</span></code>: Perform mathematical operations on images.</p>
 <ul>
@@ -590,7 +590,7 @@ nano<span class="w"> </span>~/.bashrc<span class="w">  </span><span class="c1">#
 <li><p><code class="docutils literal notranslate"><span class="pre">fslroi</span></code>: Crop or expand images.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">fslcpgeom</span></code>: Copy header info (e.g., resolution and position in global space for viewing) from one image to another.</p></li>
 </ul>
-<p class="rubric" id="killing-a-process">Killing a Process</p>
+<h3 class="rubric" id="killing-a-process">Killing a Process</h3>
 <p>If <code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">+</span> <span class="pre">C</span></code> doesn’t stop the command, you can kill the process:</p>
 <ul class="simple">
 <li><p><strong>Find the Process ID (PID)</strong>:</p>
@@ -927,8 +927,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <div class="note dropdown admonition">
 <p class="admonition-title">Batch stitching settings</p>
 <figure class="align-center" id="id2">
-<a class="reference internal image-reference" href="_images/batch_stitching_1.JPG"><img alt="_images/batch_stitching_1.JPG" src="_images/batch_stitching_1.JPG" style="width: 50%;" />
-</a>
+<a class="reference internal image-reference" href="_images/batch_stitching_1.JPG"><img alt="_images/batch_stitching_1.JPG" src="_images/batch_stitching_1.JPG" style="width: 50%;" /></a>
 <figcaption>
 <p><span class="caption-text">Select a mid-stack reference slice. Ideally, tissue will be present in each tile of the reference slice.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
@@ -937,8 +936,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <div class="note dropdown admonition">
 <p class="admonition-title">Running batch stitching</p>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_images/batch_stitching_2.JPG"><img alt="_images/batch_stitching_2.JPG" src="_images/batch_stitching_2.JPG" style="width: 100%;" />
-</a>
+<a class="reference internal image-reference" href="_images/batch_stitching_2.JPG"><img alt="_images/batch_stitching_2.JPG" src="_images/batch_stitching_2.JPG" style="width: 100%;" /></a>
 </figure>
 <ul class="simple">
 <li><p>Drag and drop images to be stitched into this section.</p></li>
@@ -1121,15 +1119,13 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
 <li><p>During registration, Ilastik is used to segment tissue, creating brain masks that refine registration of autofluo images and z-scoring of IF images. After training Ilastik, segmentation of 50 µm autolfluo images is automated with <a class="reference internal" href="unravel/segment/brain_mask.html#unravel-segment-brain-mask"><span class="std std-ref"><strong>seg_brain_mask</strong></span></a>.</p></li>
 </ol>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_images/Ilastik_brain_mask_example.jpg"><img alt="_images/Ilastik_brain_mask_example.jpg" src="_images/Ilastik_brain_mask_example.jpg" style="width: 70%;" />
-</a>
+<a class="reference internal image-reference" href="_images/Ilastik_brain_mask_example.jpg"><img alt="_images/Ilastik_brain_mask_example.jpg" src="_images/Ilastik_brain_mask_example.jpg" style="width: 70%;" /></a>
 </figure>
 <ol class="arabic simple" start="2">
 <li><p>During cluster validation, Ilastik labels c-Fos+ cells or other features of interest for quantification of cell or label densities within clusters from voxel-wise statistics. Segmentation of full-res IF images is automated with <a class="reference internal" href="unravel/segment/ilastik_pixel_classification.html#unravel-segment-ilastik-pixel-classification"><span class="std std-ref"><strong>seg_ilastik</strong></span></a>.</p></li>
 </ol>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_images/Ilastik_c-Fos_example.jpg"><img alt="_images/Ilastik_c-Fos_example.jpg" src="_images/Ilastik_c-Fos_example.jpg" style="width: 70%;" />
-</a>
+<a class="reference internal image-reference" href="_images/Ilastik_c-Fos_example.jpg"><img alt="_images/Ilastik_c-Fos_example.jpg" src="_images/Ilastik_c-Fos_example.jpg" style="width: 70%;" /></a>
 </figure>
 <p><a class="reference external" href="https://www.ilastik.org/documentation/pixelclassification/pixelclassification">Pixel classification documentation</a></p>
 <div class="note admonition">
@@ -1223,7 +1219,7 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
 
         </div><section id="io-metadata">
 <h3><code class="docutils literal notranslate"><span class="pre">io_metadata</span></code><a class="headerlink" href="#io-metadata" title="Link to this heading">#</a></h3>
-<p><a class="reference internal" href="unravel/image_io/metadata.html#module-unravel.image_io.metadata" title="unravel.image_io.metadata"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.metadata</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.metadata</span></code></p>
 <ul class="simple">
 <li><p>Extract or specify x and z voxel sizes in microns (saves to ./sample??/parameters/metadata.txt).</p></li>
 <li><p>You can add these resolutions to env_var.sh as global variables (e.g., $XY and $Z) and load them before running commands with: <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">path/to/env_var.sh</span></code></p></li>
@@ -1243,7 +1239,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/full_r
 </section>
 <section id="reg-prep">
 <h3><code class="docutils literal notranslate"><span class="pre">reg_prep</span></code><a class="headerlink" href="#reg-prep" title="Link to this heading">#</a></h3>
-<p><a class="reference internal" href="unravel/register/reg_prep.html#module-unravel.register.reg_prep" title="unravel.register.reg_prep"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.reg_prep</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.reg_prep</span></code></p>
 <ul class="simple">
 <li><p>Prepare autofluorescence images for registration (resample them to 50 µm isotropic resolution and save to ./sample??/reg_inputs/)</p></li>
 </ul>
@@ -1267,7 +1263,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/full_r
 </section>
 <section id="seg-brain-mask">
 <h3><code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code><a class="headerlink" href="#seg-brain-mask" title="Link to this heading">#</a></h3>
-<p><a class="reference internal" href="unravel/segment/brain_mask.html#module-unravel.segment.brain_mask" title="unravel.segment.brain_mask"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.brain_mask</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.brain_mask</span></code></p>
 <ul class="simple">
 <li><p>Makes reg_inputs/autofl_??um_brain_mask.nii.gz and reg_inputs/autofl_??um_masked.nii.gz for <code class="docutils literal notranslate"><span class="pre">reg</span></code></p></li>
 </ul>
@@ -1285,7 +1281,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/full_r
 </section>
 <section id="reg">
 <h3><code class="docutils literal notranslate"><span class="pre">reg</span></code><a class="headerlink" href="#reg" title="Link to this heading">#</a></h3>
-<p><a class="reference internal" href="unravel/register/reg.html#module-unravel.register.reg" title="unravel.register.reg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.reg</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.register.reg</span></code></p>
 <ul class="simple">
 <li><p>Register an average template brain/atlas to a resampled autofluo brain.</p></li>
 </ul>
@@ -1312,7 +1308,7 @@ io_metadata<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/full_r
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg<span class="w"> </span>-m<span class="w"> </span>&lt;path/template.nii.gz&gt;<span class="w"> </span>-bc<span class="w"> </span>-sm<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>-ort<span class="w"> </span>&lt;<span class="m">3</span><span class="w"> </span>letter<span class="w"> </span>orientation<span class="w"> </span>code&gt;<span class="w"> </span>-m2<span class="w"> </span>&lt;path/atlas_CCFv3_2020_30um.nii.gz&gt;<span class="w"> </span><span class="o">[</span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="o">]</span>
 
 <span class="c1"># Example if using env_var.sh (assuming an RPS orientation):</span>
-reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE</span><span class="w"> </span>-bc<span class="w"> </span>-pad<span class="w"> </span>-sm<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>-ort<span class="w"> </span>RPS<span class="w"> </span>-a<span class="w"> </span><span class="nv">$ATLAS</span><span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span>
+reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE</span><span class="w"> </span>-bc<span class="w"> </span>-sm<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>-ort<span class="w"> </span>RPS<span class="w"> </span>-m2<span class="w"> </span><span class="nv">$ATLAS</span><span class="w"> </span>-d<span class="w"> </span><span class="nv">$DIRS</span>
 
 <span class="c1"># -bc performs N4 bias field correction to make image intensities more uniform</span>
 <span class="c1"># -sm smooths the autofluo image by the amount specified</span>
@@ -1322,7 +1318,7 @@ reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE<
 <div class="tip dropdown admonition">
 <p class="admonition-title">If sample orientations vary</p>
 <p>Make a ./sample??/parameters/ort.txt with the 3 letter orientation for each sample and run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span>d<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$d</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>s<span class="w"> </span><span class="k">in</span><span class="w"> </span>sample??<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE</span><span class="w"> </span>-bc<span class="w"> </span>-pad<span class="w"> </span>-sm<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>-ort<span class="w"> </span><span class="k">$(</span>cat<span class="w"> </span><span class="nv">$s</span>/parameters/ort.txt<span class="k">)</span><span class="w"> </span>-a<span class="w"> </span><span class="nv">$ATLAS</span><span class="w"> </span>-v<span class="w"> </span>-d<span class="w"> </span><span class="nv">$PWD</span>/<span class="nv">$s</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span>d<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="nv">$DIRS</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span><span class="nv">$d</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>s<span class="w"> </span><span class="k">in</span><span class="w"> </span>sample??<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE</span><span class="w"> </span>-bc<span class="w"> </span>-sm<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>-ort<span class="w"> </span><span class="k">$(</span>cat<span class="w"> </span><span class="nv">$s</span>/parameters/ort.txt<span class="k">)</span><span class="w"> </span>-m2<span class="w"> </span><span class="nv">$ATLAS</span><span class="w"> </span>-v<span class="w"> </span>-d<span class="w"> </span><span class="nv">$PWD</span>/<span class="nv">$s</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span>
 </pre></div>
 </div>
 </div>
@@ -1349,15 +1345,13 @@ reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE<
 <div class="note admonition">
 <p class="admonition-title">Checking registration with FSLeyes</p>
 <figure class="align-center" id="id3">
-<a class="reference internal image-reference" href="_images/FSLeyes_autofl_image_from_reg.jpg"><img alt="_images/FSLeyes_autofl_image_from_reg.jpg" src="_images/FSLeyes_autofl_image_from_reg.jpg" style="width: 100%;" />
-</a>
+<a class="reference internal image-reference" href="_images/FSLeyes_autofl_image_from_reg.jpg"><img alt="_images/FSLeyes_autofl_image_from_reg.jpg" src="_images/FSLeyes_autofl_image_from_reg.jpg" style="width: 100%;" /></a>
 <figcaption>
 <p><span class="caption-text">Use FSLeyes to view the autofluo image from <code class="docutils literal notranslate"><span class="pre">reg</span></code> (sample??/reg_ouputs/autofl_50um_masked_fixed_reg_input.nii.gz).</span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-center" id="id4">
-<a class="reference internal image-reference" href="_images/FSLeyes_atlas_warped_to_tissue_from_reg.jpg"><img alt="_images/FSLeyes_atlas_warped_to_tissue_from_reg.jpg" src="_images/FSLeyes_atlas_warped_to_tissue_from_reg.jpg" style="width: 100%;" />
-</a>
+<a class="reference internal image-reference" href="_images/FSLeyes_atlas_warped_to_tissue_from_reg.jpg"><img alt="_images/FSLeyes_atlas_warped_to_tissue_from_reg.jpg" src="_images/FSLeyes_atlas_warped_to_tissue_from_reg.jpg" style="width: 100%;" /></a>
 <figcaption>
 <p><span class="caption-text">Use FSLeyes to view the atlas warped to the the tissue (sample??/reg_ouputs/atlas_CCFv3_2020_30um_in_tissue_space.nii.gz)</span><a class="headerlink" href="#id4" title="Link to this image">#</a></p>
 </figcaption>
@@ -1410,7 +1404,7 @@ reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE<
     K --&gt; L(View 1-p value maps in FSLeyes and consult 'Cluster-wise stats' for multiple comparisons correction and cluster validation)
         </div><section id="vstats-prep">
 <h3><code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code><a class="headerlink" href="#vstats-prep" title="Link to this heading">#</a></h3>
-<p><a class="reference internal" href="unravel/voxel_stats/vstats_prep.html#module-unravel.voxel_stats.vstats_prep" title="unravel.voxel_stats.vstats_prep"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.vstats_prep</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.vstats_prep</span></code></p>
 <ul class="simple">
 <li><p>Preprocess immunofluo images and warp them to atlas space for voxel-wise statistics.</p></li>
 </ul>
@@ -1434,18 +1428,17 @@ vstats_prep<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/image&
 </ul>
 <p>You can test parameters for background subtraction with:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="unravel/image_tools/spatial_averaging.html#module-unravel.image_tools.spatial_averaging" title="unravel.image_tools.spatial_averaging"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_tools.spatial_averaging</span></code></a></p></li>
-<li><p><a class="reference internal" href="unravel/image_tools/rb.html#module-unravel.image_tools.rb" title="unravel.image_tools.rb"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_tools.rb</span></code></a></p>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_tools.spatial_averaging</span></code></p></li>
+<li><p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_tools.rb</span></code></p>
 <ul>
 <li><p>Copy a tif to a test dir for this (e.g., with <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code>)</p></li>
-<li><p>Use <a class="reference internal" href="unravel/image_io/io_img.html#module-unravel.image_io.io_img" title="unravel.image_io.io_img"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.io_img</span></code></a> to create a tif series</p></li>
+<li><p>Use <code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.io_img</span></code> to create a tif series</p></li>
 </ul>
 </li>
 </ul>
 </div>
 <figure class="align-center" id="id5">
-<a class="reference internal image-reference" href="_images/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg"><img alt="_images/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg" src="_images/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg" style="width: 100%;" />
-</a>
+<a class="reference internal image-reference" href="_images/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg"><img alt="_images/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg" src="_images/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg" style="width: 100%;" /></a>
 <figcaption>
 <p><span class="caption-text">Use FSLeyes to view the fluorescently labeled image in atlas space.</span><a class="headerlink" href="#id5" title="Link to this image">#</a></p>
 </figcaption>
@@ -1453,7 +1446,7 @@ vstats_prep<span class="w"> </span>-i<span class="w"> </span>&lt;rel_path/image&
 </section>
 <section id="vstats-z-score">
 <h3><code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code><a class="headerlink" href="#vstats-z-score" title="Link to this heading">#</a></h3>
-<p><a class="reference internal" href="unravel/voxel_stats/z_score.html#module-unravel.voxel_stats.z_score" title="unravel.voxel_stats.z_score"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.z_score</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.z_score</span></code></p>
 <ul class="simple">
 <li><p>Z-score atlas space images using tissue masks (from brain_mask) and/or an atlas mask.</p></li>
 </ul>
@@ -1480,7 +1473,7 @@ vstats_z_score<span class="w"> </span>-i<span class="w"> </span><span class="s1"
 </section>
 <section id="vstats-whole-to-avg">
 <h3><code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code><a class="headerlink" href="#vstats-whole-to-avg" title="Link to this heading">#</a></h3>
-<p><a class="reference internal" href="unravel/voxel_stats/whole_to_LR_avg.html#module-unravel.voxel_stats.whole_to_LR_avg" title="unravel.voxel_stats.whole_to_LR_avg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.whole_to_LR_avg</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.whole_to_LR_avg</span></code></p>
 <ul class="simple">
 <li><p>Smooth and average left and right hemispheres together</p></li>
 </ul>
@@ -1497,7 +1490,7 @@ vstats_whole_to_avg<span class="w"> </span>-i<span class="w"> </span><span class
 </div>
 <div class="admonition seealso">
 <p class="admonition-title">See also</p>
-<p><a class="reference internal" href="unravel/voxel_stats/hemi_to_LR_avg.html#module-unravel.voxel_stats.hemi_to_LR_avg" title="unravel.voxel_stats.hemi_to_LR_avg"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.hemi_to_LR_avg</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.hemi_to_LR_avg</span></code></p>
 </div>
 <div class="note admonition">
 <p class="admonition-title">Setting up voxel-wise stats</p>
@@ -1534,7 +1527,7 @@ vstats_whole_to_avg<span class="w"> </span>-i<span class="w"> </span><span class
 </ul>
 </li>
 </ol>
-<p class="rubric" id="vstats-outputs"><code class="docutils literal notranslate"><span class="pre">vstats</span></code> Outputs</p>
+<h3 class="rubric" id="vstats-outputs"><code class="docutils literal notranslate"><span class="pre">vstats</span></code> Outputs</h3>
 <ul class="simple">
 <li><p><strong>T-test outputs</strong>:</p>
 <ul>
@@ -1550,7 +1543,7 @@ vstats_whole_to_avg<span class="w"> </span>-i<span class="w"> </span><span class
 </ul>
 </li>
 </ul>
-<p class="rubric" id="example-preparing-for-an-anova">Example: Preparing for an ANOVA</p>
+<h3 class="rubric" id="example-preparing-for-an-anova">Example: Preparing for an ANOVA</h3>
 <ol class="arabic simple">
 <li><p><strong>Setup Design Matrix</strong>:</p>
 <ul class="simple">
@@ -1608,7 +1601,7 @@ vstats_whole_to_avg<span class="w"> </span>-i<span class="w"> </span><span class
 </ul>
 </li>
 </ol>
-<p class="rubric" id="background-on-fsl-s-randomise-tool">Background on FSL’s Randomise Tool</p>
+<h3 class="rubric" id="background-on-fsl-s-randomise-tool">Background on FSL’s Randomise Tool</h3>
 <ul class="simple">
 <li><p><a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/GLM">FSL GLM Guide</a></p></li>
 <li><p><a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Randomise/UserGuide">FSL Randomise User Guide</a></p></li>
@@ -1730,7 +1723,7 @@ cstats_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span c
 </section>
 <section id="seg-ilastik">
 <h3>3) <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code><a class="headerlink" href="#seg-ilastik" title="Link to this heading">#</a></h3>
-<p><a class="reference internal" href="unravel/segment/ilastik_pixel_classification.html#module-unravel.segment.ilastik_pixel_classification" title="unravel.segment.ilastik_pixel_classification"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.ilastik_pixel_classification</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.segment.ilastik_pixel_classification</span></code></p>
 <ul class="simple">
 <li><p>Segment features of interest (e.g., c-Fos+ cells) in full-resulution images using a trained Ilastik project (pixel classification)</p></li>
 </ul>
@@ -1759,7 +1752,7 @@ cstats_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span c
     I --&gt; J(Summarize cluster validation rates, aggregate files for 3D brains, compile SI tables, etc.)
         </div><section id="cstats-validation">
 <h3><code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code><a class="headerlink" href="#cstats-validation" title="Link to this heading">#</a></h3>
-<p><a class="reference internal" href="unravel/cluster_stats/validation.html#module-unravel.cluster_stats.validation" title="unravel.cluster_stats.validation"><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.validation</span></code></a></p>
+<p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.validation</span></code></p>
 <ul class="simple">
 <li><p>Warps cluster index from atlas space to tissue space, crops clusters, applies segmentation mask, and quantifies cell or label densities</p></li>
 </ul>
@@ -1809,8 +1802,7 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 <li><p>Sunburst CSVs can be copy and pasted into the sunburst plot tool of the <a class="reference external" href="https://app.flourish.studio/login">Flourish web app</a></p></li>
 </ul>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_images/sunburst_1_flourish.jpg"><img alt="_images/sunburst_1_flourish.jpg" src="_images/sunburst_1_flourish.jpg" style="width: 50%;" />
-</a>
+<a class="reference internal image-reference" href="_images/sunburst_1_flourish.jpg"><img alt="_images/sunburst_1_flourish.jpg" src="_images/sunburst_1_flourish.jpg" style="width: 50%;" /></a>
 </figure>
 <ul class="simple">
 <li><p>Make a free account w/ Flourish.</p></li>
@@ -1818,15 +1810,13 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 <li><p>Select “New visualization”.</p></li>
 </ul>
 <figure class="align-center" id="id6">
-<a class="reference internal image-reference" href="_images/sunburst_2_plot_types.jpg"><img alt="_images/sunburst_2_plot_types.jpg" src="_images/sunburst_2_plot_types.jpg" style="width: 50%;" />
-</a>
+<a class="reference internal image-reference" href="_images/sunburst_2_plot_types.jpg"><img alt="_images/sunburst_2_plot_types.jpg" src="_images/sunburst_2_plot_types.jpg" style="width: 50%;" /></a>
 <figcaption>
 <p><span class="caption-text">Under “Hierarchy” select “Sunburst”</span><a class="headerlink" href="#id6" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_images/sunburst_3_adding_data.jpg"><img alt="_images/sunburst_3_adding_data.jpg" src="_images/sunburst_3_adding_data.jpg" style="width: 100%;" />
-</a>
+<a class="reference internal image-reference" href="_images/sunburst_3_adding_data.jpg"><img alt="_images/sunburst_3_adding_data.jpg" src="_images/sunburst_3_adding_data.jpg" style="width: 100%;" /></a>
 </figure>
 <ul class="simple">
 <li><p>Select the “Data” tab.</p></li>
@@ -1836,8 +1826,7 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 <li><p>Switch to the “Preview” tab to view the plot.</p></li>
 </ul>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_images/sunburst_4_RGB_values.jpg"><img alt="_images/sunburst_4_RGB_values.jpg" src="_images/sunburst_4_RGB_values.jpg" style="width: 30%;" />
-</a>
+<a class="reference internal image-reference" href="_images/sunburst_4_RGB_values.jpg"><img alt="_images/sunburst_4_RGB_values.jpg" src="_images/sunburst_4_RGB_values.jpg" style="width: 30%;" /></a>
 </figure>
 <ul class="simple">
 <li><p>Paste the contents of sunburst_RGBs.csv into Colors –&gt; Custom overrides.</p></li>
@@ -1863,7 +1852,7 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 <li><p>Output look up table: <contrast>_q<q value>_rev_cluster_index__valid_clusters_rgba.txt</p></li>
 <li><p>These files can be generated with <code class="docutils literal notranslate"><span class="pre">cstats_brain_model</span></code> (use -m for a bilateral representation of a unilateral map)</p></li>
 </ul>
-<p class="rubric" id="visualization-in-dsi-studio">Visualization in DSI Studio</p>
+<h3 class="rubric" id="visualization-in-dsi-studio">Visualization in DSI Studio</h3>
 <ul class="simple">
 <li><p>Open DSI studio</p></li>
 <li><p>Click on “Step T3”</p></li>
@@ -1871,19 +1860,16 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 <li><p>If you open the binary atlas in the 3D_brains folder, it is easier to open other files from there later</p></li>
 <li><p>Make it visible: Slices –&gt; Add Isosurface –&gt; Full –&gt; OK –&gt; Zoom out (mouse wheel or 2 finger scroll)</p></li>
 </ul>
-<p class="rubric" id="display-settings">Display settings</p>
+<h4 class="rubric" id="display-settings">Display settings</h4>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_images/brain_model_settings_1.jpg"><img alt="_images/brain_model_settings_1.jpg" src="_images/brain_model_settings_1.jpg" style="width: 50%;" />
-</a>
+<a class="reference internal image-reference" href="_images/brain_model_settings_1.jpg"><img alt="_images/brain_model_settings_1.jpg" src="_images/brain_model_settings_1.jpg" style="width: 50%;" /></a>
 </figure>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_images/brain_model_settings_2.jpg"><img alt="_images/brain_model_settings_2.jpg" src="_images/brain_model_settings_2.jpg" style="width: 50%;" />
-</a>
+<a class="reference internal image-reference" href="_images/brain_model_settings_2.jpg"><img alt="_images/brain_model_settings_2.jpg" src="_images/brain_model_settings_2.jpg" style="width: 50%;" /></a>
 </figure>
-<p class="rubric" id="layout">Layout</p>
+<h4 class="rubric" id="layout">Layout</h4>
 <figure class="align-center">
-<a class="reference internal image-reference" href="_images/brain_model_layout.jpg"><img alt="_images/brain_model_layout.jpg" src="_images/brain_model_layout.jpg" style="width: 100%;" />
-</a>
+<a class="reference internal image-reference" href="_images/brain_model_layout.jpg"><img alt="_images/brain_model_layout.jpg" src="_images/brain_model_layout.jpg" style="width: 100%;" /></a>
 </figure>
 <ul class="simple">
 <li><p>The zoom and viewer dimensions determine the output video size.</p></li>
@@ -1893,19 +1879,19 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 <li><p>Zoom to the view 0.28 (lower right of viewer)</p></li>
 <li><p>Zoom out to 0.18 for axial.</p></li>
 </ul>
-<p class="rubric" id="adding-regions-and-color">Adding Regions and Color</p>
+<h4 class="rubric" id="adding-regions-and-color">Adding Regions and Color</h4>
 <ul class="simple">
 <li><p>Regions –&gt; Open Region… –&gt; load <contrast>_q<q value>_rev_cluster_index__valid_clusters_ABA_WB.nii.gz</p></li>
 <li><p>Regions Misc –&gt; Load Region Color… –&gt; load <contrast>_q<q value>_rev_cluster_index__valid_clusters_rgba.txt</p></li>
 </ul>
-<p class="rubric" id="making-figures">Making Figures</p>
+<h4 class="rubric" id="making-figures">Making Figures</h4>
 <ul class="simple">
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">z</span></code>, <code class="docutils literal notranslate"><span class="pre">x</span></code>, and <code class="docutils literal notranslate"><span class="pre">c</span></code> to snap to specific orientations.</p></li>
 <li><p>Use View –&gt; Save Camera View… to save an oblique orientation</p></li>
 <li><p>Load it with: View –&gt; Open Camera View…</p></li>
 <li><p>Capture screenshots</p></li>
 </ul>
-<p class="rubric" id="recording-videos">Recording Videos</p>
+<h4 class="rubric" id="recording-videos">Recording Videos</h4>
 <ul class="simple">
 <li><p>For a video: press <code class="docutils literal notranslate"><span class="pre">z</span></code> for a sagittal orientation (e.g., facing to the right), View –&gt; Save Rotation Video/Images…</p></li>
 <li><p>The output .avi is large, but can be exported in another format</p></li>
@@ -2220,7 +2206,7 @@ rstats_summary<span class="w"> </span>--groups<span class="w"> </span>Saline<spa
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,163 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.core.img_tools">
-<span id="unravel-core-img-tools-module"></span><span id="unravel-core-img-tools"></span><h1>unravel.core.img_tools module<a class="headerlink" href="#module-unravel.core.img_tools" title="Link to this heading">#</a></h1>
-<dl class="simple">
-<dt>This module contains functions processing 3D images:</dt><dd><ul class="simple">
-<li><p>resample: Resample a 3D ndarray.</p></li>
-<li><p>reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space</p></li>
-<li><p>pixel_classification: Segment tif series with Ilastik.</p></li>
-<li><p>pad: Pad an ndarray by a specified percentage.</p></li>
-<li><p>reorient_ndarray: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).</p></li>
-<li><p>reorient_ndarray2: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).</p></li>
-<li><p>rolling_ball_subtraction_opencv_parallel: Subtract background from a 3D ndarray using OpenCV.</p></li>
-<li><p>cluster_IDs: Prints cluster IDs for clusters &gt; minextent voxels.</p></li>
-<li><p>find_bounding_box: Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.resample">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">resample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#resample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.resample" title="Link to this definition">#</a></dt>
-<dd><p>Resample a 3D ndarray</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ndarray</strong> – 3D ndarray to resample</p></li>
-<li><p><strong>xy_res</strong> – x/y voxel size in microns (for the original image)</p></li>
-<li><p><strong>z_res</strong> – z voxel size in microns</p></li>
-<li><p><strong>res</strong> – resolution in microns for the resampled image</p></li>
-<li><p><strong>zoom_order</strong> – SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.resample_nii">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">resample_nii</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#resample_nii"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.resample_nii" title="Link to this definition">#</a></dt>
-<dd><p>Resample the input NIfTI image to the target resolution.</p>
-<section id="parameters">
-<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>nii<span class="classifier">nibabel.nifti1.Nifti1Image</span></dt><dd><p>NIfTI image object to resample.</p>
-</dd>
-<dt>target_res<span class="classifier">float</span></dt><dd><p>Target resolution in micrometers for resampling.</p>
-</dd>
-<dt>zoom_order<span class="classifier">int</span></dt><dd><p>SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>resampled_nii<span class="classifier">nibabel.nifti1.Nifti1Image</span></dt><dd><p>Resampled NIfTI image object.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.reorient_for_raw_to_nii_conv">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_for_raw_to_nii_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#reorient_for_raw_to_nii_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_for_raw_to_nii_conv" title="Link to this definition">#</a></dt>
-<dd><p>Reorient resampled ndarray for registration or warping to atlas space
-(legacy mode mimics MIRACL’s tif to .nii.gz conversion)</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reverse_reorient_for_raw_to_nii_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#reverse_reorient_for_raw_to_nii_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv" title="Link to this definition">#</a></dt>
-<dd><p>After warping to native space, reorients image to match tissue</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.pixel_classification">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">pixel_classification</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tif_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ilastik_project</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ilastik_executable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#pixel_classification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.pixel_classification" title="Link to this definition">#</a></dt>
-<dd><p>Segment tif series with Ilastik using pixel classification.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.pad">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">pad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#pad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.pad" title="Link to this definition">#</a></dt>
-<dd><p>Pads ndarray by 15% of voxels on all sides</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.reorient_ndarray">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_ndarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#reorient_ndarray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_ndarray" title="Link to this definition">#</a></dt>
-<dd><p>Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention).</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.reorient_ndarray2">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_ndarray2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#reorient_ndarray2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_ndarray2" title="Link to this definition">#</a></dt>
-<dd><p>Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI). Assumes initial orientation is RAS (NIFTI convention).</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.process_slice">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">process_slice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slice</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct_element</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#process_slice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.process_slice" title="Link to this definition">#</a></dt>
-<dd><p>Subtract background from &lt;slice&gt; using OpenCV.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">rolling_ball_subtraction_opencv_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">threads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#rolling_ball_subtraction_opencv_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel" title="Link to this definition">#</a></dt>
-<dd><p>Subtract background from &lt;ndarray&gt; using OpenCV.
-Uses multiple threads to process slices in parallel.
-Radius is the radius of the rolling ball in pixels.
-Returns ndarray with background subtracted.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.cluster_IDs">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">cluster_IDs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_extent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_IDs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_sizes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#cluster_IDs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.cluster_IDs" title="Link to this definition">#</a></dt>
-<dd><p>Gets unique intensities [and sizes] for regions/clusters &gt; minextent voxels and prints them in a string-separated list.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ndarray</strong></p></li>
-<li><p><strong>min_extent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a><em>, </em><em>optional</em>) – _description_. Defaults to 1.</p></li>
-<li><p><strong>print_IDs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – _description_. Defaults to False.</p></li>
-<li><p><strong>print_sizes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.12)"><em>bool</em></a><em>, </em><em>optional</em>) – _description_. Defaults to False.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>list of unique intensities</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.12)">list</a> of ints</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.find_bounding_box">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">find_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cluster_ID</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#find_bounding_box"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.find_bounding_box" title="Link to this definition">#</a></dt>
-<dd><p>Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ndarray</strong> – 3D numpy array to search within.</p></li>
-<li><p><strong>cluster_ID</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.12)"><em>int</em></a>) – Cluster intensity to find bbox for. If None, return bbox for all clusters.</p></li>
-<li><p><strong>output_file_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>) – File path to write the bounding box.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.crop">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">crop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bbox</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#crop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.crop" title="Link to this definition">#</a></dt>
-<dd><p>Crop an ndarray to the specified bounding box (xmin:xmax, ymin:ymax, zmin:zmax)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>bbox</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.12)"><em>str</em></a>)</p>
-</dd>
-</dl>
-</dd></dl>
-
+  <section id="unravel-core-img-tools-module">
+<span id="unravel-core-img-tools"></span><h1>unravel.core.img_tools module<a class="headerlink" href="#unravel-core-img-tools-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -694,30 +539,6 @@ Returns ndarray with background subtracted.</p>
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.resample"><code class="docutils literal notranslate"><span class="pre">resample()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.resample_nii"><code class="docutils literal notranslate"><span class="pre">resample_nii()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reorient_for_raw_to_nii_conv"><code class="docutils literal notranslate"><span class="pre">reorient_for_raw_to_nii_conv()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv"><code class="docutils literal notranslate"><span class="pre">reverse_reorient_for_raw_to_nii_conv()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.pixel_classification"><code class="docutils literal notranslate"><span class="pre">pixel_classification()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.pad"><code class="docutils literal notranslate"><span class="pre">pad()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reorient_ndarray"><code class="docutils literal notranslate"><span class="pre">reorient_ndarray()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reorient_ndarray2"><code class="docutils literal notranslate"><span class="pre">reorient_ndarray2()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.process_slice"><code class="docutils literal notranslate"><span class="pre">process_slice()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel"><code class="docutils literal notranslate"><span class="pre">rolling_ball_subtraction_opencv_parallel()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.cluster_IDs"><code class="docutils literal notranslate"><span class="pre">cluster_IDs()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.find_bounding_box"><code class="docutils literal notranslate"><span class="pre">find_bounding_box()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.crop"><code class="docutils literal notranslate"><span class="pre">crop()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -762,7 +583,7 @@ Returns ndarray with background subtracted.</p>
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

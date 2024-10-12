@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,61 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.cluster_stats.mean_IF">
-<span id="unravel-cluster-stats-mean-if-module"></span><span id="unravel-cluster-stats-mean-if"></span><h1>unravel.cluster_stats.mean_IF module<a class="headerlink" href="#module-unravel.cluster_stats.mean_IF" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">cstats_mean_IF</span></code> from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.</p>
-<dl class="simple">
-<dt>Prereqs:</dt><dd><ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">vstats</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_fdr</span></code></p></li>
-</ul>
-</dd>
-<dt>Inputs:</dt><dd><ul class="simple">
-<li><p>This can be run from the vstats directory (will process .nii.gz images in the current directory)</p></li>
-</ul>
-</dd>
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>./cluster_mean_IF_{cluster_index}/image_name.csv for each image</p></li>
-<li><p>Columns: sample, cluster_ID, mean_IF_intensity</p></li>
-</ul>
-</dd>
-<dt>Next steps:</dt><dd><ul class="simple">
-<li><p>cd cluster_mean_IF…</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code> -sk &lt;path/sample_key.csv&gt; -f  # If needed</p></li>
-<li><p>[<code class="docutils literal notranslate"><span class="pre">cstats_index</span></code> and <code class="docutils literal notranslate"><span class="pre">cstats_table</span></code>]  # for an xlsx table and anatomically ordered clusters that can be used with <code class="docutils literal notranslate"><span class="pre">cstats_prism</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_mean_IF_summary</span></code> –order Control Treatment –labels Control Treatment -t ttest  # Plots each cluster and outputs a summary table w/ stats</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cstats_mean_IF_summary</span></code> –order group3 group2 group1 –labels Group_3 Group_2 Group_1  # Tukey tests</p></li>
-</ul>
-</dd>
-</dl>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_mean_IF -ci path/rev_cluster_index.nii.gz [-ip ‘<cite>*</cite>.nii.gz’] [-c 1 2 3] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.calculate_mean_intensity_in_clusters">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">calculate_mean_intensity_in_clusters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clusters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#calculate_mean_intensity_in_clusters"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.calculate_mean_intensity_in_clusters" title="Link to this definition">#</a></dt>
-<dd><p>Calculates mean intensity in the img ndarray for each cluster in the cluster index ndarray and saves it to a CSV file.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.write_to_csv">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">write_to_csv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#write_to_csv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.write_to_csv" title="Link to this definition">#</a></dt>
-<dd><p>Writes the data to a CSV file with sample name included.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-cluster-stats-mean-if-module">
+<span id="unravel-cluster-stats-mean-if"></span><h1>unravel.cluster_stats.mean_IF module<a class="headerlink" href="#unravel-cluster-stats-mean-if-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -592,22 +539,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.calculate_mean_intensity_in_clusters"><code class="docutils literal notranslate"><span class="pre">calculate_mean_intensity_in_clusters()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.write_to_csv"><code class="docutils literal notranslate"><span class="pre">write_to_csv()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -652,7 +583,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

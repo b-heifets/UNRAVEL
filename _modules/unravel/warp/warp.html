@@ -38,7 +38,7 @@
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -395,7 +395,7 @@
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-inv&#39;</span><span class="p">,</span> <span class="s1">&#39;--inverse&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Perform inverse warping (use flag if -f &amp; -m are opposite from ``reg``)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ro&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_outputs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/reg_outputs (contains transformation files)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;reg_ouputs&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ro&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_outputs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/reg_outputs (contains transformation files)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;reg_outputs&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-inp&#39;</span><span class="p">,</span> <span class="s1">&#39;--interpol&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Type of interpolation (linear, bSpline [default], nearestNeighbor, multiLabel).&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;bSpline&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
@@ -413,12 +413,18 @@
 <span class="sd">    Applies the transformations to an image using ANTsPy.</span>
 
 <span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
 <span class="sd">    reg_outputs_path (Path): Path to the reg_outputs folder (contains transformation files)</span>
 <span class="sd">    moving_img_path (str): Path to the image to be transformed.</span>
 <span class="sd">    fixed_img_path (str): Path to the reference image for applying the transform.</span>
 <span class="sd">    output_path (str): Path where the transformed image will be saved.</span>
 <span class="sd">    inverse (bool): If True, apply the inverse transformation. Defaults to False.</span>
-<span class="sd">    interpol (str): Type of interpolation (e.g., &#39;Linear&#39;, &#39;NearestNeighbor&#39;, etc.)</span>
+<span class="sd">    interpol (str): Type of interpolation (e.g., &#39;Linear&#39;, &#39;NearestNeighbor&#39;, etc.).</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">    ------</span>
+<span class="sd">    - If multiLabel interpolation is used, the label values are rounded.</span>
+<span class="sd">    - If bSpline interpolation is used, negative values are set to 0.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Get the transforms prefix</span>
@@ -435,8 +441,7 @@
     <span class="n">generic_affine_matrix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">transforms_prefix</span><span class="si">}</span><span class="s1">0GenericAffine.mat&#39;</span><span class="p">)</span>
     <span class="n">initial_transform_matrix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">transforms_prefix</span><span class="si">}</span><span class="s1">init_tform.mat&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">transforms_prefix</span><span class="si">}</span><span class="s1">init_tform.mat&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="n">initial_transform_matrix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="s1">&#39;init_tform.mat&#39;</span><span class="p">)</span> <span class="c1"># For backward compatibility</span>
-
+        <span class="n">initial_transform_matrix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="s1">&#39;init_tform.mat&#39;</span><span class="p">)</span>  <span class="c1"># Named for compatibility</span>
 
     <span class="c1"># Apply the transformations</span>
     <span class="k">if</span> <span class="n">inverse</span><span class="p">:</span>
@@ -459,13 +464,15 @@
     <span class="c1"># Convert the ANTsImage to a numpy array </span>
     <span class="n">warped_img</span> <span class="o">=</span> <span class="n">warped_img_ants</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
 
-    <span class="c1"># Round the floating-point label values to the nearest integer</span>
-    <span class="n">warped_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">warped_img</span><span class="p">)</span>
+    <span class="c1"># Post-processing</span>
+    <span class="k">if</span> <span class="n">interpol</span> <span class="o">==</span> <span class="s1">&#39;multiLabel&#39;</span><span class="p">:</span>
+        <span class="n">warped_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">warped_img</span><span class="p">)</span>  <span class="c1"># Round label values</span>
+    <span class="k">if</span> <span class="n">interpol</span> <span class="o">==</span> <span class="s1">&#39;bSpline&#39;</span><span class="p">:</span>
+        <span class="n">warped_img</span><span class="p">[</span><span class="n">warped_img</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># Remove negative values</span>
 
     <span class="c1"># Convert dtype of warped image to match the moving image</span>
     <span class="n">moving_img_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">moving_img_path</span><span class="p">)</span> 
     <span class="n">data_type</span> <span class="o">=</span> <span class="n">moving_img_nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_data_dtype</span><span class="p">()</span>
-    <span class="n">warped_img</span><span class="p">[</span><span class="n">warped_img</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Removes negative values from bSpline interpolation</span>
     <span class="n">warped_img</span> <span class="o">=</span> <span class="n">warped_img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>
 
     <span class="c1"># Save the transformed image with appropriate header and affine information</span>
@@ -548,7 +555,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

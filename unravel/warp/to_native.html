@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,56 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.warp.to_native">
-<span id="unravel-warp-to-native-module"></span><span id="unravel-warp-to-native"></span><h1>unravel.warp.to_native module<a class="headerlink" href="#module-unravel.warp.to_native" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">warp_to_native</span></code> from UNRAVEL to warp an atlas space image to tissue space and scale to full resolution.</p>
-<dl class="simple">
-<dt>Prereq:</dt><dd><ul class="simple">
-<li><p>./parameters/metadata.txt (from io_metadata)</p></li>
-</ul>
-</dd>
-</dl>
-<section id="python-usage">
-<h2>Python usage:<a class="headerlink" href="#python-usage" title="Link to this heading">#</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">unravel.warp.to_native</span> <span class="k">as</span> <span class="nn">to_native</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">native_img</span> <span class="o">=</span> <span class="n">to_native</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">reg_outputs</span><span class="p">,</span> <span class="n">fixed_reg_in</span><span class="p">,</span> <span class="n">moving_img_path</span><span class="p">,</span> <span class="n">metadata_rel_path</span><span class="p">,</span> <span class="n">reg_res</span><span class="p">,</span> <span class="n">miracl</span><span class="p">,</span> <span class="n">zoom_order</span><span class="p">,</span> <span class="n">interpol</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># native_img is an np.ndarray</span>
-</pre></div>
-</div>
-</section>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>warp_to_native -m &lt;path/image_to_warp_from_atlas_space.nii.gz&gt; [-o &lt;path/native_image.zarr&gt;] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-i multiLabel] [-md parameters/metadata.txt] [-ro reg_outputs] [–reg_res 50] [-zo 0] [-mi] [-d list of paths] [-p sample??] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_native.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_native.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_native.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_native.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_native.calculate_resampled_padded_dimensions">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_native.</span></span><span class="sig-name descname"><span class="pre">calculate_resampled_padded_dimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_dimensions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miracl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_native.html#calculate_resampled_padded_dimensions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_native.calculate_resampled_padded_dimensions" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_native.scale_to_full_res">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_native.</span></span><span class="sig-name descname"><span class="pre">scale_to_full_res</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_res_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_native.html#scale_to_full_res"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_native.scale_to_full_res" title="Link to this definition">#</a></dt>
-<dd><p>Scale ndarray to match x, y, z dimensions provided as ndarray (order=0 is nearest-neighbor). Returns scaled ndarray.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_native.to_native">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_native.</span></span><span class="sig-name descname"><span class="pre">to_native</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_reg_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata_rel_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miracl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_native.html#to_native"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_native.to_native" title="Link to this definition">#</a></dt>
-<dd><p>Warp image from atlas space to tissue space and scale to full resolution</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_native.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_native.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_native.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_native.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-warp-to-native-module">
+<span id="unravel-warp-to-native"></span><h1>unravel.warp.to_native module<a class="headerlink" href="#unravel-warp-to-native-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -587,24 +539,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-usage">Python usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.calculate_resampled_padded_dimensions"><code class="docutils literal notranslate"><span class="pre">calculate_resampled_padded_dimensions()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.scale_to_full_res"><code class="docutils literal notranslate"><span class="pre">scale_to_full_res()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.to_native"><code class="docutils literal notranslate"><span class="pre">to_native()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_native.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -649,7 +583,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

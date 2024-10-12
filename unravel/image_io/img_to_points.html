@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,68 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.image_io.img_to_points">
-<span id="unravel-image-io-img-to-points-module"></span><span id="unravel-image-io-img-to-points"></span><h1>unravel.image_io.img_to_points module<a class="headerlink" href="#module-unravel.image_io.img_to_points" title="Link to this heading">#</a></h1>
-<p>Use <cite>io_img_to_points</cite> from UNRAVEL to convert non-zero voxels in a 3D image to a set of points, accounting for voxel intensity (e.g., number of detections).</p>
-<dl class="simple">
-<dt>Input image types:</dt><dd><ul class="simple">
-<li><p>.czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</p></li>
-</ul>
-</dd>
-<dt>Output:</dt><dd><ul class="simple">
-<li><p>A CSV file where each row represents a point corresponding to a detection in the 3D image.</p></li>
-<li><p>The coordinates (x, y, z) are derived from the voxel locations in the image, with multiple points generated for voxels with intensities greater than 1.</p></li>
-<li><p>An optional ‘Region_ID’ column is added based on the corresponding atlas image.</p></li>
-</ul>
-</dd>
-</dl>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>io_img_to_points -i path/image [-a path/atlas_image.nii.gz] [-o path/points.csv] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_io.img_to_points.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_io.img_to_points.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/img_to_points.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.img_to_points.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_io.img_to_points.img_to_points">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_io.img_to_points.</span></span><span class="sig-name descname"><span class="pre">img_to_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_img</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/img_to_points.html#img_to_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.img_to_points.img_to_points" title="Link to this definition">#</a></dt>
-<dd><p>Converts non-zero voxel coordinates in a 3D ndarray to a list of points, accounting for voxel intensity.
-Optionally adds a ‘Region_ID’ based on the corresponding atlas image.</p>
-<section id="parameters">
-<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>img<span class="classifier">numpy.ndarray</span></dt><dd><p>The 3D array representing the image data, where voxel intensities &gt; 0 indicate the number of detections.</p>
-</dd>
-<dt>atlas_img<span class="classifier">numpy.ndarray, optional</span></dt><dd><p>The 3D array representing the atlas image data. If provided, a ‘Region_ID’ column will be added to the output points.</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>points<span class="classifier">numpy.ndarray</span></dt><dd><p>An array of points where each row corresponds to the (x, y, z) coordinates of a detection.
-If atlas_img is provided, each point will have an additional ‘Region_ID’ column.</p>
-</dd>
-</dl>
-</section>
-<section id="note">
-<h2>Note:<a class="headerlink" href="#note" title="Link to this heading">#</a></h2>
-<p>Convert the points to a DataFrame using:
-&gt;&gt;&gt; points_df = pd.DataFrame(points_ndarray, columns=[‘x’, ‘y’, ‘z’])
-or
-&gt;&gt;&gt; points_df = pd.DataFrame(points_ndarray, columns=[‘x’, ‘y’, ‘z’, ‘Region_ID’])  # With atlas_img</p>
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_io.img_to_points.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_io.img_to_points.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/img_to_points.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.img_to_points.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-image-io-img-to-points-module">
+<span id="unravel-image-io-img-to-points"></span><h1>unravel.image_io.img_to_points module<a class="headerlink" href="#unravel-image-io-img-to-points-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -599,21 +539,6 @@ or
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.img_to_points.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.img_to_points.img_to_points"><code class="docutils literal notranslate"><span class="pre">img_to_points()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.img_to_points.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -658,7 +583,7 @@ or
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

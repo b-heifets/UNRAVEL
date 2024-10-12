@@ -358,7 +358,7 @@
 <span class="sd">    - p value map (e.g., `*`vox_p_`*`stat`*`.nii.gz from vstats)    </span>
 
 <span class="sd">Outputs saved in the output directory:</span>
-<span class="sd">    - FDR-adjusted p value map</span>
+<span class="sd">    - FDR-adjusted 1-p value map (1 - q value defines the threshold for cluster maps)</span>
 <span class="sd">    - Cluster information CSV</span>
 <span class="sd">    - Reversed cluster index image (output_dir/input_name_rev_cluster_index.nii.gz)</span>
 <span class="sd">    - min_cluster_size_in_voxels.txt</span>
@@ -366,6 +366,7 @@
 <span class="sd">    - 1-p_value_threshold.txt</span>
 
 <span class="sd">Note:</span>
+<span class="sd">    - The q value does not influence the FDR-adjusted 1-p value map, but it does determine the threshold for cluster maps.</span>
 <span class="sd">    - Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.</span>
 <span class="sd">    - For bilateral data processed with a hemispheric mask, next run ``cstats_mirror_indices`` to mirror the cluster indices to the other hemisphere.</span>
 <span class="sd">    - For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cstats_validation``.</span>
@@ -438,7 +439,7 @@
 <span class="sd">        - q_value (float): the q value for FDR correction</span>
 
 <span class="sd">    Saves in the fdr_path:</span>
-<span class="sd">        - FDR-adjusted p value map</span>
+<span class="sd">        - FDR-adjusted 1-p value map (1 - q value defines the threshold)</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        - adjusted_pval_output_path (str): the path to the FDR-adjusted p value map </span>
@@ -446,7 +447,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="n">prefix</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">input_path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-    <span class="n">adjusted_pval_output_path</span> <span class="o">=</span> <span class="n">fdr_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_q</span><span class="si">{</span><span class="n">q_value</span><span class="si">}</span><span class="s2">_adjusted_p_values.nii.gz&quot;</span>
+    <span class="n">adjusted_pval_output_path</span> <span class="o">=</span> <span class="n">fdr_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_q</span><span class="si">{</span><span class="n">q_value</span><span class="si">}</span><span class="s2">_adjusted_1-p_values.nii.gz&quot;</span>
 
     <span class="n">fdr_command</span> <span class="o">=</span> <span class="p">[</span>
         <span class="s1">&#39;fdr&#39;</span><span class="p">,</span> 

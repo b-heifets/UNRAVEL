@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,131 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.image_io.points_to_img">
-<span id="unravel-image-io-points-to-img-module"></span><span id="unravel-image-io-points-to-img"></span><h1>unravel.image_io.points_to_img module<a class="headerlink" href="#module-unravel.image_io.points_to_img" title="Link to this heading">#</a></h1>
-<p>Use <cite>io_points_to_img</cite> from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.</p>
-<dl class="simple">
-<dt>Input:</dt><dd><ul class="simple">
-<li><p>A CSV file where each row represents a point corresponding to a detection in the 3D image.</p></li>
-<li><p>The columns should include ‘x’, ‘y’, ‘z’, and ‘Region_ID’ (e.g., from <code class="docutils literal notranslate"><span class="pre">rstats</span></code> or <code class="docutils literal notranslate"><span class="pre">io_img_to_points</span></code>).</p></li>
-</ul>
-</dd>
-<dt>Output image types:</dt><dd><p>.nii.gz, .tif series, .h5, .zarr</p>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>Points outside the brain (i.e., ‘Region_ID’ == 0) are excluded.</p></li>
-<li><p>If the input CSV has a ‘count’ column, use <code class="docutils literal notranslate"><span class="pre">utils_points_compressor</span></code> to unpack the points before running this script.</p></li>
-</ul>
-</div>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>io_points_to_img  -i path/points.csv -ri path/ref_image [-o path/image] [-thr 20000 or -uthr 20000] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_io.points_to_img.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_io.points_to_img.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/points_to_img.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.points_to_img.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_io.points_to_img.threshold_points_by_region_id">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_io.points_to_img.</span></span><span class="sig-name descname"><span class="pre">threshold_points_by_region_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/points_to_img.html#threshold_points_by_region_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.points_to_img.threshold_points_by_region_id" title="Link to this definition">#</a></dt>
-<dd><p>Filter the points (i.e., coordinates) based on the ‘Region_ID’ column. This function removes points that are outside the brain (i.e., ‘Region_ID’ == 0) and optionally filters points based on a threshold or upper threshold.</p>
-<section id="parameters">
-<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>points_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>A DataFrame containing the points with columns ‘x’, ‘y’, ‘z’, and ‘Region_ID’.</p>
-</dd>
-<dt>thresh<span class="classifier">float, optional</span></dt><dd><p>Exclude region IDs below this threshold.</p>
-</dd>
-<dt>upper_thresh<span class="classifier">float, optional</span></dt><dd><p>Exclude region IDs above this threshold.</p>
-</dd>
-</dl>
-</section>
-<section id="returns">
-<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>points_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>The filtered DataFrame containing the points with columns ‘x’, ‘y’, ‘z’, and ‘Region_ID’.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_io.points_to_img.load_and_prepare_points">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_io.points_to_img.</span></span><span class="sig-name descname"><span class="pre">load_and_prepare_points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points_csv_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_thresh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/points_to_img.html#load_and_prepare_points"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.points_to_img.load_and_prepare_points" title="Link to this definition">#</a></dt>
-<dd><p>Load points from a CSV file and prepare them by filtering based on Region_ID and adjusting coordinates.</p>
-<section id="id1">
-<h2>Parameters:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>points_csv_path<span class="classifier">str or Path</span></dt><dd><p>Path to the input CSV file containing the points.</p>
-</dd>
-<dt>thresh<span class="classifier">float, optional</span></dt><dd><p>Threshold to exclude points with Region_ID below this value.</p>
-</dd>
-<dt>upper_thresh<span class="classifier">float, optional</span></dt><dd><p>Threshold to exclude points with Region_ID above this value.</p>
-</dd>
-</dl>
-</section>
-<section id="id2">
-<h2>Returns:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>points_df<span class="classifier">pandas.DataFrame</span></dt><dd><p>A DataFrame containing the prepared points with columns ‘x’, ‘y’, ‘z’, and ‘Region_ID’.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_io.points_to_img.points_to_img">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_io.points_to_img.</span></span><span class="sig-name descname"><span class="pre">points_to_img</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points_ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ref_img</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/points_to_img.html#points_to_img"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.points_to_img.points_to_img" title="Link to this definition">#</a></dt>
-<dd><p>Create a 3D image from a set of point coordinates, using a reference image for shape if provided.
-If multiple points fall within the same voxel, the voxel’s value is incremented accordingly.</p>
-<section id="id3">
-<h2>Parameters:<a class="headerlink" href="#id3" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>points_ndarray<span class="classifier">numpy.ndarray</span></dt><dd><p>A 2D array of shape (n, 3) where each row represents the (x, y, z) coordinates of a point.</p>
-</dd>
-<dt>ref_img<span class="classifier">numpy.ndarray</span></dt><dd><p>A reference image from which to derive the output shape.</p>
-</dd>
-</dl>
-</section>
-<section id="id4">
-<h2>Returns:<a class="headerlink" href="#id4" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>img<span class="classifier">numpy.ndarray</span></dt><dd><p>A 3D image created from the input points. Each voxel’s value represents the number of points that fall within that voxel.</p>
-</dd>
-</dl>
-</section>
-<section id="note">
-<h2>Note:<a class="headerlink" href="#note" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p>If the point coordinates are in physical or resampled space, ensure that they are appropriately
-scaled and aligned with the desired image grid before calling this function.</p></li>
-<li><p>If the count in a voxel exceeds the maximum value for <cite>uint8</cite> (255), the image’s data type is
-automatically promoted to <cite>uint16</cite> to accommodate higher counts.</p></li>
-</ul>
-</section>
-<section id="example">
-<h2>Example:<a class="headerlink" href="#example" title="Link to this heading">#</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">points_ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">35</span><span class="p">]])</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ref_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;uint8&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">img</span> <span class="o">=</span> <span class="n">points_to_img</span><span class="p">(</span><span class="n">points_ndarray</span><span class="p">,</span> <span class="n">ref_img</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">])</span>  <span class="c1"># Output will be 2, since two points are at this coordinate.</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">35</span><span class="p">])</span>  <span class="c1"># Output will be 1, since one point is at this coordinate.</span>
-</pre></div>
-</div>
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.image_io.points_to_img.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.image_io.points_to_img.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_io/points_to_img.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_io.points_to_img.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-image-io-points-to-img-module">
+<span id="unravel-image-io-points-to-img"></span><h1>unravel.image_io.points_to_img module<a class="headerlink" href="#unravel-image-io-points-to-img-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -662,23 +539,6 @@ automatically promoted to <cite>uint16</cite> to accommodate higher counts.</p><
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.points_to_img.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.points_to_img.threshold_points_by_region_id"><code class="docutils literal notranslate"><span class="pre">threshold_points_by_region_id()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.points_to_img.load_and_prepare_points"><code class="docutils literal notranslate"><span class="pre">load_and_prepare_points()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.points_to_img.points_to_img"><code class="docutils literal notranslate"><span class="pre">points_to_img()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.image_io.points_to_img.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -723,7 +583,7 @@ automatically promoted to <cite>uint16</cite> to accommodate higher counts.</p><
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

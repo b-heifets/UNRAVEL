@@ -375,6 +375,7 @@
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">tifffile</span>
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">ET</span>
 <span class="kn">import</span> <span class="nn">zarr</span>
 <span class="kn">from</span> <span class="nn">aicspylibczi</span> <span class="kn">import</span> <span class="n">CziFile</span>
 <span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
@@ -382,12 +383,10 @@
 <span class="kn">from</span> <span class="nn">lxml</span> <span class="kn">import</span> <span class="n">etree</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
-<span class="kn">from</span> <span class="nn">tifffile</span> <span class="kn">import</span> <span class="n">imwrite</span> 
 
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_func_name_args_times</span>
 
 
-<span class="c1"># Load 3D image (load_3D_img()), get/save metadata, and return ndarray [with metadata]</span>
 <span class="c1"># TODO: Create save_3D_img() function for saving 3D images in various formats. </span>
 <span class="c1"># TODO: save_as_nii() add logic for using the reference image for dtype (e.g., if reference is provided and dtype is None, use reference dtype)</span>
 
@@ -563,14 +562,14 @@
 <div class="viewcode-block" id="load_tifs">
 <a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_tifs">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">load_tifs</span><span class="p">(</span><span class="n">tif_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parallel_loading</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">load_tifs</span><span class="p">(</span><span class="n">tif_dir_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parallel_loading</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Load a series of .tif images and return the ndarray.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    tif_path : str</span>
-<span class="sd">        The path to the .tif files.</span>
+<span class="sd">    tif_dir_path : str</span>
+<span class="sd">        The path to the directory containing the .tif files.</span>
 <span class="sd">    desired_axis_order : str, optional</span>
 <span class="sd">        The desired order of the image axes. Default is &#39;xyz&#39;.</span>
 <span class="sd">    return_res : bool, optional</span>
@@ -601,7 +600,7 @@
         <span class="k">if</span> <span class="n">img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load image: </span><span class="si">{</span><span class="n">tif_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">img</span>
-    <span class="n">tif_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">tif_path</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.tif&quot;</span><span class="p">))</span>
+    <span class="n">tif_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">tif_dir_path</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.tif&quot;</span><span class="p">))</span>
     <span class="k">if</span> <span class="n">parallel_loading</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
             <span class="n">tifs_stacked</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">load_single_tif</span><span class="p">,</span> <span class="n">tif_files</span><span class="p">))</span>
@@ -612,6 +611,57 @@
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">tifs_stacked</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="k">if</span> <span class="n">desired_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span> <span class="k">else</span> <span class="n">ndarray</span>
     <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">(</span><span class="n">tif_files</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="load_3D_tif">
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_3D_tif">[docs]</a>
+<span class="k">def</span> <span class="nf">load_3D_tif</span><span class="p">(</span><span class="n">tif_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load a 3D .ome.tif or .tif image and return the ndarray.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    tif_path : str</span>
+<span class="sd">        The path to the .ome.tif file.</span>
+<span class="sd">    desired_axis_order : str, optional</span>
+<span class="sd">        The desired order of the image axes. Default is &#39;xyz&#39;.</span>
+<span class="sd">    return_res : bool, optional</span>
+<span class="sd">        Whether to return resolutions (works for .ome.tif). Default is False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    ndarray</span>
+<span class="sd">        The loaded 3D image array.</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_res is True, returns (ndarray, xy_res, z_res).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">tifffile</span><span class="o">.</span><span class="n">TiffFile</span><span class="p">(</span><span class="n">tif_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">tif</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Loading </span><span class="si">{</span><span class="n">tif_path</span><span class="si">}</span><span class="s2"> as ndarray&quot;</span><span class="p">)</span>
+        <span class="n">ndarray</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">asarray</span><span class="p">()</span>  <span class="c1"># Load the image into memory</span>
+        <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="k">if</span> <span class="n">desired_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span> <span class="k">else</span> <span class="n">ndarray</span>
+        <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span> <span class="o">=</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="c1"># If resolution is requested, extract it from OME-XML metadata</span>
+        <span class="k">if</span> <span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">z_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">first_page</span> <span class="o">=</span> <span class="n">tif</span><span class="o">.</span><span class="n">pages</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">description</span> <span class="o">=</span> <span class="n">first_page</span><span class="o">.</span><span class="n">tags</span><span class="p">[</span><span class="mi">270</span><span class="p">]</span><span class="o">.</span><span class="n">value</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Remove the OME comment header to parse XML correctly</span>
+                <span class="n">ome_xml</span> <span class="o">=</span> <span class="n">description</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;--&gt;&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">ome_xml</span><span class="p">)</span>
+
+                <span class="c1"># Find the Pixels element and get PhysicalSizeX and PhysicalSizeZ</span>
+                <span class="n">pixels</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;.//{http://www.openmicroscopy.org/Schemas/OME/2016-06}Pixels&quot;</span><span class="p">)</span>
+                <span class="n">xy_res</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pixels</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;PhysicalSizeX&#39;</span><span class="p">])</span>
+                <span class="n">z_res</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pixels</span><span class="o">.</span><span class="n">attrib</span><span class="p">[</span><span class="s1">&#39;PhysicalSizeZ&#39;</span><span class="p">])</span>
+
+            <span class="k">except</span> <span class="p">(</span><span class="n">ET</span><span class="o">.</span><span class="n">ParseError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Unable to parse OME-XML metadata: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+        <span class="k">if</span> <span class="n">save_metadata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">save_metadata_to_file</span><span class="p">(</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="n">save_metadata</span><span class="p">)</span>
+
     <span class="k">return</span> <span class="n">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">)</span></div>
 
 
@@ -935,7 +985,7 @@
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    img_path : str</span>
-<span class="sd">        The path to the image file.</span>
+<span class="sd">        The path to the image file (.czi, .ome.tif, .tif, .nii.gz, .h5, .zarr) or directory w/ 2D .ome.tif or .tif files.</span>
 <span class="sd">    channel : int, optional</span>
 <span class="sd">        The channel to load. Default is 0.</span>
 <span class="sd">    desired_axis_order : str, optional</span>
@@ -963,14 +1013,15 @@
 
     <span class="c1"># If file_path points to dir containing tifs, resolve path to first .tif</span>
     <span class="n">img_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
-
     <span class="k">if</span> <span class="n">img_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="n">sorted_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">img_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*.tif&quot;</span><span class="p">))</span>
-        <span class="k">if</span> <span class="n">sorted_files</span><span class="p">:</span> 
-            <span class="n">img_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">sorted_files</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span> 
+        <span class="n">tif_files</span> <span class="o">=</span> <span class="n">img_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*.tif&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tif_files</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="n">load_tifs</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No .tif files found in directory: </span><span class="si">{</span><span class="n">img_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">img_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No compatible image files found in </span><span class="si">{</span><span class="n">img_path</span><span class="si">}</span><span class="s2"> for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No compatible image files found at </span><span class="si">{</span><span class="n">img_path</span><span class="si">}</span><span class="s2"> for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr&quot;</span><span class="p">)</span>
     
     <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.czi&#39;</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [default]Loading channel </span><span class="si">{</span><span class="n">channel</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">img_path</span><span class="si">}</span><span class="s2"> (channel 0 is the first channel)&quot;</span><span class="p">)</span>
@@ -982,7 +1033,7 @@
         <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.czi&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">load_czi</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.ome.tif&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">load_tifs</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">parallel_loading</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">load_3D_tif</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">load_nii</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">):</span>
@@ -993,7 +1044,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported file type: </span><span class="si">{</span><span class="n">img_path</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red bold]Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
+        <span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
 
 
@@ -1085,7 +1136,7 @@
         
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">slice_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">slice_file_path</span> <span class="o">=</span> <span class="n">tif_dir_out</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;slice_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">.tif&quot;</span>
-        <span class="n">imwrite</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">slice_file_path</span><span class="p">),</span> <span class="n">slice_</span><span class="p">)</span>
+        <span class="n">tifffile</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">slice_file_path</span><span class="p">),</span> <span class="n">slice_</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Output: [default bold]</span><span class="si">{</span><span class="n">tif_dir_out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 

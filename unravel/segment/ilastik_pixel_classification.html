@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,64 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.segment.ilastik_pixel_classification">
-<span id="unravel-segment-ilastik-pixel-classification-module"></span><span id="unravel-segment-ilastik-pixel-classification"></span><h1>unravel.segment.ilastik_pixel_classification module<a class="headerlink" href="#module-unravel.segment.ilastik_pixel_classification" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code> from UNRAVEL to use segment features of interest using Ilastik.</p>
-<dl class="simple">
-<dt>Prereqs:</dt><dd><ul class="simple">
-<li><p>Organize training tifs into a folder (e.g., w/ <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code>) .</p></li>
-<li><p>Train Ilastik (<a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project">https://b-heifets.github.io/UNRAVEL/guide.html#train-an-ilastik-project</a>).</p></li>
-</ul>
-</dd>
-<dt>Inputs:</dt><dd><ul class="simple">
-<li><p>ilastik_project: path/ilastik_project.ilp</p></li>
-<li><p>Input: path/tif_dir or path/image (relative to current dir or sample??/)</p></li>
-<li><p>Input image types: .tif, .czi, .nii.gz, .h5, .zarr</p></li>
-</ul>
-</dd>
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>seg_dir/seg_dir/<cite>*</cite>.tif series (segmented images; delete w/ –rm_out_tifs)</p></li>
-<li><p>Optional: seg_dir/seg_dir_&lt;label&gt;.nii.gz (binary masks for each label specified w/ –labels)</p></li>
-<li><p>Skips processing if output already exists (.nii.gz with –labels or .tif without)</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>Ilastik executable files for each OS (update path and version as needed):</p></li>
-<li><p>Linux and WSL: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh</p></li>
-<li><p>Mac: /Applications/ilastik-1.4.0.post1-OSX.app/Contents/ilastik-release/run_ilastik.sh</p></li>
-<li><p>Windows: C:Program Filesilastik-1.4.0.post1run_ilastik.bat</p></li>
-</ul>
-</div>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>seg_ilastik -ie path/ilastik_executable -ilp path/ilastik_project.ilp -i &lt;tif_dir or image&gt; -o seg_dir [–labels 1 2 3] [–rm_out_tifs] [For .czi: –channel 1] [-d list of paths] [-p sample??] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.segment.ilastik_pixel_classification.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.segment.ilastik_pixel_classification.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/ilastik_pixel_classification.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.ilastik_pixel_classification.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.segment.ilastik_pixel_classification.count_files">
-<span class="sig-prename descclassname"><span class="pre">unravel.segment.ilastik_pixel_classification.</span></span><span class="sig-name descname"><span class="pre">count_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/ilastik_pixel_classification.html#count_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.ilastik_pixel_classification.count_files" title="Link to this definition">#</a></dt>
-<dd><p>Count the number of files in a directory, excluding subdirectories.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.segment.ilastik_pixel_classification.save_labels_as_masks">
-<span class="sig-prename descclassname"><span class="pre">unravel.segment.ilastik_pixel_classification.</span></span><span class="sig-name descname"><span class="pre">save_labels_as_masks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tif_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segmentation_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/ilastik_pixel_classification.html#save_labels_as_masks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.ilastik_pixel_classification.save_labels_as_masks" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.segment.ilastik_pixel_classification.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.segment.ilastik_pixel_classification.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/ilastik_pixel_classification.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.ilastik_pixel_classification.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-segment-ilastik-pixel-classification-module">
+<span id="unravel-segment-ilastik-pixel-classification"></span><h1>unravel.segment.ilastik_pixel_classification module<a class="headerlink" href="#unravel-segment-ilastik-pixel-classification-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -595,22 +539,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.ilastik_pixel_classification.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.ilastik_pixel_classification.count_files"><code class="docutils literal notranslate"><span class="pre">count_files()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.ilastik_pixel_classification.save_labels_as_masks"><code class="docutils literal notranslate"><span class="pre">save_labels_as_masks()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.ilastik_pixel_classification.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -655,7 +583,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,157 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.voxel_stats.z_score">
-<span id="unravel-voxel-stats-z-score-module"></span><span id="unravel-voxel-stats-z-score"></span><h1>unravel.voxel_stats.z_score module<a class="headerlink" href="#module-unravel.voxel_stats.z_score" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code> from UNRAVEL to z-score an atlas space image using a tissue mask and/or an atlas mask.</p>
-<dl class="simple">
-<dt>Prereqs:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> for inputs [&amp; <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> for tissue masks]</p>
-</dd>
-<dt>Inputs:</dt><dd><ul class="simple">
-<li><p>atlas_space/&lt;askterisk&gt;_image.nii.gz relative to sample??</p></li>
-<li><p>reg_inputs/autofl_50um_brain_mask.nii.gz (optional)</p></li>
-<li><p>path/to/atlas_mask.nii.gz (optional)</p></li>
-</ul>
-</dd>
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>&lt;path/input_img&gt;_z.nii.gz (float32) saved in the same directory as the input image.</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>z-score = (img.nii.gz - mean pixel intensity in brain)/standard deviation of intensity in brain</p></li>
-</ul>
-</div>
-<dl class="simple">
-<dt>Next commands for voxel-wise stats:</dt><dd><ul class="simple">
-<li><p>Aggregate atlas space IF images with <code class="docutils literal notranslate"><span class="pre">utils_agg_files</span></code>.</p></li>
-<li><p>If analyzing whole brains, consider using <code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code> to average left and right hemispheres.</p></li>
-<li><p>If using side-specific z-scoring, use <code class="docutils literal notranslate"><span class="pre">vstats_hemi_to_avg</span></code> to average the images.</p></li>
-<li><p>Prepend condition names with <code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code>.</p></li>
-<li><p>Check images in FSLeyes and run <code class="docutils literal notranslate"><span class="pre">vstats</span></code> to perform voxel-wise stats.</p></li>
-</ul>
-</dd>
-</dl>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats_z_score -i rel_path/img.nii.gz [–suffix z] [–tissue_mask reg_inputs/autofl_50um_brain_mask.nii.gz] [-amas path/atlas_mask.nii.gz] [-fri reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-d list of paths] [-p sample??] [-v]</p>
-</div></blockquote>
-</section>
-<section id="usage-w-an-atlas-mask">
-<h2>Usage w/ an atlas mask:<a class="headerlink" href="#usage-w-an-atlas-mask" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats_z_score -i ‘path/&lt;asterisk&gt;.nii.gz’ -amas path/atlas_mask.nii.gz</p>
-</div></blockquote>
-</section>
-<section id="usage-w-a-tissue-mask">
-<h2>Usage w/ a tissue mask:<a class="headerlink" href="#usage-w-a-tissue-mask" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats_z_score -i ‘atlas_space/&lt;asterisk&gt;.nii.gz’ -tmas reg_inputs/autofl_50um_brain_mask.nii.gz -a atlas/atlas_CCFv3_2020_30um.nii.gz</p>
-</div></blockquote>
-</section>
-<section id="usage-w-both-masks-for-side-specific-z-scoring">
-<h2>Usage w/ both masks for side-specific z-scoring:<a class="headerlink" href="#usage-w-both-masks-for-side-specific-z-scoring" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats_z_score -i ‘atlas_space/&lt;asterisk&gt;.nii.gz’ -tmas reg_inputs/autofl_50um_brain_mask.nii.gz -amas path/RH_mask.nii.gz -s RH_z –dirs &lt;list of paths&gt;</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.z_score.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.z_score.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/z_score.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.z_score.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.z_score.z_score">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.z_score.</span></span><span class="sig-name descname"><span class="pre">z_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_nii_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suffix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/z_score.html#z_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.z_score.z_score" title="Link to this definition">#</a></dt>
-<dd><p>Z-score a .nii.gz using a mask ndarray and save the output as a float32 .nii.gz.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>img</strong> (<em>-</em>) – the ndarray to be z-scored.</p></li>
-<li><p><strong>mask</strong> (<em>-</em>) – the brain mask ndarray</p></li>
-<li><p><strong>suffix</strong> (<em>-</em>) – the suffix to append to the output filename</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>img_z.nii.gz (float32)</p></li>
-</ul>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>the z-scored image</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p>z_scored_img (np.ndarray)</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.z_score.tissue_mask_to_atlas_space">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.z_score.</span></span><span class="sig-name descname"><span class="pre">tissue_mask_to_atlas_space</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tissue_mask_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_reg_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/z_score.html#tissue_mask_to_atlas_space"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.z_score.tissue_mask_to_atlas_space" title="Link to this definition">#</a></dt>
-<dd><p>Warp a tissue mask to atlas space (e.g., for z-scoring).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sample_path</strong> (<em>-</em>) – Path to the sample directory.</p></li>
-<li><p><strong>tissue_mask_path</strong> (<em>-</em>) – Path to the tissue mask.</p></li>
-<li><p><strong>fixed_reg_input</strong> (<em>-</em>) – Name of the fixed image for registration.</p></li>
-<li><p><strong>atlas_path</strong> (<em>-</em>) – Path to the atlas.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the tissue mask in atlas space.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p>tissue_mask_img (np.ndarray)</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.z_score.z_score_mask">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.z_score.</span></span><span class="sig-name descname"><span class="pre">z_score_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_reg_input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tissue_mask_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">atlas_mask_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/z_score.html#z_score_mask"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.z_score.z_score_mask" title="Link to this definition">#</a></dt>
-<dd><p>Combine tissue and atlas masks if both are provided, otherwise use whichever is available.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sample_path</strong> (<em>-</em>) – Path to the sample directory.</p></li>
-<li><p><strong>input_path</strong> (<em>-</em>) – Path to the image to be z-scored.</p></li>
-<li><p><strong>fixed_reg_input</strong> (<em>-</em>) – Name of the fixed image for registration.</p></li>
-<li><p><strong>atlas_path</strong> (<em>-</em>) – Path to the atlas.</p></li>
-<li><p><strong>tissue_mask_path</strong> (<em>-</em>) – Path to the tissue mask.</p></li>
-<li><p><strong>atlas_mask_path</strong> (<em>-</em>) – Path to the atlas mask.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the combined mask image.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><ul class="simple">
-<li><p>mask_img (np.ndarray)</p></li>
-</ul>
-</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.voxel_stats.z_score.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.z_score.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/z_score.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.z_score.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-voxel-stats-z-score-module">
+<span id="unravel-voxel-stats-z-score"></span><h1>unravel.voxel_stats.z_score module<a class="headerlink" href="#unravel-voxel-stats-z-score-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -688,26 +539,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-w-an-atlas-mask">Usage w/ an atlas mask:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-w-a-tissue-mask">Usage w/ a tissue mask:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-w-both-masks-for-side-specific-z-scoring">Usage w/ both masks for side-specific z-scoring:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.z_score.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.z_score.z_score"><code class="docutils literal notranslate"><span class="pre">z_score()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.z_score.tissue_mask_to_atlas_space"><code class="docutils literal notranslate"><span class="pre">tissue_mask_to_atlas_space()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.z_score.z_score_mask"><code class="docutils literal notranslate"><span class="pre">z_score_mask()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.z_score.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -752,7 +583,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

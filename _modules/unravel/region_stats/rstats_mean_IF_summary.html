@@ -38,7 +38,7 @@
   <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -618,6 +618,8 @@
         <span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;reject&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;p-adj&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span>
 
     <span class="n">significant_comparisons</span> <span class="o">=</span> <span class="n">test_df</span><span class="p">[</span><span class="n">test_df</span><span class="p">[</span><span class="s1">&#39;reject&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
+
+    <span class="c1"># Calculate y-axis limits</span>
     <span class="n">y_max</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
     <span class="n">y_min</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
     <span class="n">height_diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
@@ -644,16 +646,9 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">((</span><span class="n">x1</span><span class="o">+</span><span class="n">x2</span><span class="p">)</span><span class="o">*</span><span class="mf">.5</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">+</span> <span class="mf">0.8</span><span class="o">*</span><span class="n">height_diff</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;xx-large&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
         <span class="n">y_pos</span> <span class="o">+=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">height_diff</span>
 
-    <span class="c1"># Calculate y-axis limits</span>
-    <span class="n">y_max</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-    <span class="n">y_min</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mean_intensity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
-    <span class="n">height_diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_max</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span>
-    <span class="n">y_pos</span> <span class="o">=</span> <span class="n">y_max</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">height_diff</span>
-
     <span class="c1"># Ensure the y-axis starts from the minimum value, allowing for negative values</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">y_min</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">height_diff</span><span class="p">,</span> <span class="n">y_pos</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">height_diff</span><span class="p">)</span>
 
-    <span class="c1"># plt.ylim(0, y_pos + 2*height_diff)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
 
     <span class="c1"># Save the plot</span>
@@ -768,7 +763,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>

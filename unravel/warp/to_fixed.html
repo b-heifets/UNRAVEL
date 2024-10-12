@@ -39,7 +39,7 @@
   <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script src="../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -498,43 +498,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.warp.to_fixed">
-<span id="unravel-warp-to-fixed-module"></span><span id="unravel-warp-to-fixed"></span><h1>unravel.warp.to_fixed module<a class="headerlink" href="#module-unravel.warp.to_fixed" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">warp_to_fixed</span></code> from UNRAVEL to forward warp a moving image (e.g., from atlas space) to fixed image space (e.g., tissue space). The input/output do not need padding.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>Run this from the folder containing reg_outputs.</p></li>
-<li><p>This script is for warping between different atlas spaces. For warping from atlas space to tissue space, use <code class="docutils literal notranslate"><span class="pre">to_native</span></code>.</p></li>
-</ul>
-</div>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>warp_to_fixed -f reg_inputs/autofl_50um_masked.nii.gz -m path/moving_img.nii.gz -o path/warped_img.nii.gz [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-i multiLabel] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_fixed.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_fixed.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_fixed.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_fixed.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_fixed.calculate_padded_dimensions">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_fixed.</span></span><span class="sig-name descname"><span class="pre">calculate_padded_dimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">original_dimensions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_fixed.html#calculate_padded_dimensions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_fixed.calculate_padded_dimensions" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_fixed.forward_warp">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_fixed.</span></span><span class="sig-name descname"><span class="pre">forward_warp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fixed_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_outputs_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed_reg_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_img_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interpol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_fixed.html#forward_warp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_fixed.forward_warp" title="Link to this definition">#</a></dt>
-<dd><p>Warp image from atlas space to tissue space and scale to full resolution</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.warp.to_fixed.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.warp.to_fixed.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/warp/to_fixed.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.warp.to_fixed.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-warp-to-fixed-module">
+<span id="unravel-warp-to-fixed"></span><h1>unravel.warp.to_fixed module<a class="headerlink" href="#unravel-warp-to-fixed-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -574,22 +539,6 @@
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_fixed.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_fixed.calculate_padded_dimensions"><code class="docutils literal notranslate"><span class="pre">calculate_padded_dimensions()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_fixed.forward_warp"><code class="docutils literal notranslate"><span class="pre">forward_warp()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.warp.to_fixed.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 
@@ -634,7 +583,7 @@
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.0.2.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
     <br/>
   </p>
 </div>
