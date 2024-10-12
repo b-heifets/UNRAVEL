@@ -30,7 +30,7 @@ uc -h
 * **Required software:**
     * [FSL](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FslInstallation) for voxel-wise stats, CLI tools, and viewing .nii.gz images with [FSLeyes](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html)
         * See below on setting this up by adding lines to a terminal configuration file (e.g., .bashrc or .zshrc)
-        * Extra steps are required for Windows
+        * Extra steps are required for Windows (even if the GUI does not work, commands may work ok and [ITK-SNAP](http://www.itksnap.org/pmwiki/pmwiki.php?n=Main.HomePage) instead of [FSLeyes](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html))
     * [Ilastik](https://www.ilastik.org/download.html) for segmenting features of interest
         * See below for .bashrc configuration
 * **Recommended software:**
@@ -189,6 +189,16 @@ Now, either your virtual environment will automatically activate when you open a
     - FSL includes FSLeyes, which is useful for visualizing data in atlas space and with colored wireframe atlas. 
     - Some scripts depend on FSL.
     - FSL has several command line tools (e.g., fslmaths, fslstats, fslroi, fslcpgeom) that are useful for working with .nii.gz images. 
+    - Check that commands work after setting up .bashrc (step 9)
+    ```bash
+    fslmaths -h  # This should print the help for fslmaths after .bashrc is set up (see below)
+    ```
+    - Check if the GUIs work
+    ```bash
+    fsleyes  # This .nii.gz image viewer is useful for checking registration and p value maps
+    fsl  # This is used for making files for voxel-wise ANOVAs
+    ```
+    - If FSL's GUI's don't work, [ITK-SNAP](http://www.itksnap.org/pmwiki/pmwiki.php?n=Main.HomePage) can be used. Contact us for info, a look-up table for atlas coloring, and a wireframe atlas. 
 
 7. **Optional: Install 3D Slicer**
     - [3D Slicer installation](https://download.slicer.org/)
@@ -204,10 +214,9 @@ Now, either your virtual environment will automatically activate when you open a
     - Add the following to your `.bashrc` or `.zshrc` shell configuration file, and change `/usr/local/` to the path where FSL and Ilastik are installed:
 
     ```bash
-    export PATH=$PATH:/usr/local/fsl/bin  # Update the path to FSL's binary folder
-    export FSLDIR=/usr/local/fsl  # Update the path to where FSL was installed
-    PATH=${FSLDIR}/bin:${PATH}
+    FSLDIR=/usr/local/fsl  # Update the path to fsl
     . ${FSLDIR}/etc/fslconf/fsl.sh
+    PATH=${FSLDIR}/bin:${PATH}
     export FSLDIR PATH
     
     export PATH=/usr/local/ilastik-1.4.0.post1-Linux:$PATH  # Update the path and version
