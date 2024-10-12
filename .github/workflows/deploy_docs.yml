@@ -29,7 +29,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install sphinx myst-parser pydata-sphinx-theme
+        pip install sphinx==7.2.5 myst-parser pydata-sphinx-theme
         pip install -e .[dev]
 
     - name: Debug information
