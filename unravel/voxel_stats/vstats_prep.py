@@ -67,6 +67,8 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: [default] is not showing in the help message for -inp
+
 @log_command
 def main():
     install()
