@@ -8,7 +8,7 @@ Note:
 
 Usage:
 ------
-    ./abc_cache_cli.py [-b path/to/base_dir] [-d dirs] [-dd dl_data] [-dm dl_metadata] [-f] [-s]
+    ./abc_cache_cli.py [-b path/to/base_dir] [-d dirs] [--dl_data] [--dl_metadata] [-f] [-s]
 
 Usage to list directories:
 --------------------------
@@ -20,7 +20,7 @@ Usage to list subdirectories:
 
 Usage to download data:
 -----------------------
-    ./abc_cache_cli.py [-b path/to/base_dir] [-d dirs] [-dd dl_data] [-dm dl_metadata] [-f] [-s]
+    ./abc_cache_cli.py -d dirs -dd -dm
 """
 
 from abc_atlas_access.abc_atlas_cache.abc_project_cache import AbcProjectCache
@@ -49,8 +49,8 @@ def parse_args():
 
     down = parser.add_argument_group('Download arguments')
     down.add_argument('-df', '--dl_file', help='Specific file(s) to download', default=None, nargs='*', action=SM)
-    down.add_argument('-dd', '--dl_data', help='Download data files', default=None, nargs='*', action=SM)
-    down.add_argument('-dm', '--dl_metadata', help='Download metadata files', default=None, nargs='*', action=SM)
+    down.add_argument('-dd', '--dl_data', help='Download data files. Default: False', action='store_true', default=False)
+    down.add_argument('-dm', '--dl_metadata', help='Download metadata files. Default: False', action='store_true', default=False)
 
     additional_opts = parser.add_argument_group('Advanced options')
     additional_opts.add_argument('-f', '--force_download', help='Force download of files. Default: False', action='store_true', default=False)
