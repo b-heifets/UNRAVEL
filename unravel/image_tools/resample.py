@@ -13,7 +13,7 @@ Usage for isotropic resampling:
 
 Usage for anisotropic resampling:
 ---------------------------------
-    img_resample -i image.nii.gz -tr 500 10 10 [-zo 0] [-o image_resampled.nii.gz] [-v]
+    img_resample -i image.nii.gz -tr 200 10 10 -o image_200x10x10.nii.gz [-zo 0] [-v]
 """
 
 import nibabel as nib
