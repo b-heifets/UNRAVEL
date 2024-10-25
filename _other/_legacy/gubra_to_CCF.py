@@ -8,7 +8,7 @@ Note:
 
 Usage:
 ------
-``gubra_to_CCF.py`` -m path/image.nii.gz -o path/image_CCF30.nii.gz [-f path/CCFv3-2017_ano_30um_w_fixes.nii.gz] [-i interpol] [-ro path/reg_outputs] [-fri path/fixed_reg_input.nii.gz] [-v]
+``gubra_to_CCF.py`` -m path/image.nii.gz -o path/image_CCF30.nii.gz [-f path/CCFv3-2017_ano_30um_w_fixes.nii.gz] [-inp linear] [-ro path/reg_outputs] [-fri path/fixed_reg_input.nii.gz] [-v]
 """
 
 from pathlib import Path
@@ -29,8 +29,8 @@ def parse_args():
     reqs.add_argument('-o', '--output', help='path/image_CCF30.nii.gz', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-inp', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel, linear, bSpline)', default="nearestNeighbor", action=SM)
     opts.add_argument('-f', '--fixed_img', help='Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/CCFv3-2017_ano_30um_w_fixes.nii.gz', default="/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/CCFv3-2017_ano_30um_w_fixes.nii.gz", action=SM)
-    opts.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel, linear, bSpline)', default="nearestNeighbor", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/reg_outputs", default="/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/reg_outputs", action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/reg_outputs/CCFv3-2017_ano_30um_w_fixes__fixed_reg_input.nii.gz', default='/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/reg_outputs/CCFv3-2017_ano_30um_w_fixes__fixed_reg_input.nii.gz', action=SM)
 

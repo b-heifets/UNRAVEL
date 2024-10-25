@@ -402,17 +402,20 @@
 <div class="viewcode-block" id="resample_nii">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.resample_nii">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">resample_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_res</span><span class="p">,</span> <span class="n">zoom_order</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample the input NIfTI image to the target resolution.</span>
+<span class="k">def</span> <span class="nf">resample_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resample the input NIfTI image to the target resolution or dimensions.</span>
 <span class="sd">    </span>
 <span class="sd">    Parameters:</span>
 <span class="sd">    -----------</span>
 <span class="sd">    nii : nibabel.nifti1.Nifti1Image</span>
 <span class="sd">        NIfTI image object to resample.</span>
 <span class="sd">        </span>
-<span class="sd">    target_res : float</span>
-<span class="sd">        Target resolution in micrometers for resampling.</span>
-<span class="sd">        </span>
+<span class="sd">    target_res : tuple of float, optional</span>
+<span class="sd">        Target resolution in millimeters for resampling (x, y, z).</span>
+
+<span class="sd">    target_dims : tuple of int, optional</span>
+<span class="sd">        Target dimensions for resampling (x, y, z).</span>
+
 <span class="sd">    zoom_order : int</span>
 <span class="sd">        SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.</span>
 <span class="sd">        </span>
@@ -423,19 +426,30 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># Load the image data and resample it</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">nii_to_ndarray</span><span class="p">(</span><span class="n">nii</span><span class="p">)</span>
-    <span class="n">zooms</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()</span>
-    <span class="n">original_res_in_mm</span> <span class="o">=</span> <span class="n">zooms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">original_res_in_um</span> <span class="o">=</span> <span class="n">original_res_in_mm</span> <span class="o">*</span> <span class="mi">1000</span>
-    <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">resample</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">original_res_in_um</span><span class="p">,</span> <span class="n">original_res_in_um</span><span class="p">,</span> <span class="n">target_res</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="n">zoom_order</span><span class="p">)</span>
+
+    <span class="n">original_res</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">target_dims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">zoom_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">dim</span> <span class="o">/</span> <span class="n">orig_dim</span> <span class="k">for</span> <span class="n">dim</span><span class="p">,</span> <span class="n">orig_dim</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">target_dims</span><span class="p">,</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="n">target_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Update target_res based on target_dims</span>
+            <span class="n">target_res</span> <span class="o">=</span> <span class="p">[</span><span class="n">orig_dim</span> <span class="o">/</span> <span class="n">new_dim</span> <span class="o">*</span> <span class="n">original_res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">orig_dim</span><span class="p">,</span> <span class="n">new_dim</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">target_dims</span><span class="p">))]</span>
+    <span class="k">elif</span> <span class="n">target_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">zoom_factors</span> <span class="o">=</span> <span class="p">[</span><span class="n">orig</span> <span class="o">/</span> <span class="n">targ</span> <span class="k">for</span> <span class="n">orig</span><span class="p">,</span> <span class="n">targ</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">original_res</span><span class="p">,</span> <span class="n">target_res</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either target resolution or target dimensions must be specified.&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Resample the image</span>
+    <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">ndimage</span><span class="o">.</span><span class="n">zoom</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">zoom_factors</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">zoom_order</span><span class="p">)</span>
 
     <span class="c1"># Update the affine matrix</span>
-    <span class="n">affine_ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nii</span><span class="o">.</span><span class="n">affine</span><span class="p">)</span>
-    <span class="n">new_affine</span> <span class="o">=</span> <span class="n">affine_ndarray</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">new_affine</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">*=</span> <span class="p">(</span><span class="n">target_res</span> <span class="o">/</span> <span class="n">original_res_in_um</span><span class="p">)</span>
-
+    <span class="n">new_affine</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">nii</span><span class="o">.</span><span class="n">affine</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">new_affine</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">*=</span> <span class="p">(</span><span class="n">target_res</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">original_res</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    
     <span class="c1"># Update the header</span>
     <span class="n">new_header</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">new_header</span><span class="o">.</span><span class="n">set_zooms</span><span class="p">((</span><span class="n">target_res</span><span class="p">,</span> <span class="n">target_res</span><span class="p">,</span> <span class="n">target_res</span><span class="p">))</span>
+    <span class="n">new_header</span><span class="o">.</span><span class="n">set_zooms</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span>
 
     <span class="c1"># Create the resampled NIfTI image</span>
     <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">(</span><span class="n">img_resampled</span><span class="p">,</span> <span class="n">new_affine</span><span class="p">,</span> <span class="n">new_header</span><span class="p">)</span>

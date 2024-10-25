@@ -405,6 +405,7 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
+<span class="c1"># TODO: If a path is provided starting with a &#39;/&#39;, a warning should be printed that the path should be relative (w/o the leading &#39;/&#39;).</span>
 
 <div class="viewcode-block" id="aggregate_files_from_sample_dirs">
 <a class="viewcode-back" href="../../../unravel/utilities/aggregate_files_from_sample_dirs.html#unravel.utilities.aggregate_files_from_sample_dirs.aggregate_files_from_sample_dirs">[docs]</a>
@@ -438,6 +439,10 @@
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]The input path should be relative (w/o the leading &#39;/&#39;):[/] [bold]</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="si">}</span><span class="s2">[/]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
 
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">target_dir</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">target_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>

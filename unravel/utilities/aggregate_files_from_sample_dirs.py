@@ -51,6 +51,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: If a path is provided starting with a '/', a warning should be printed that the path should be relative (w/o the leading '/').
 
 def aggregate_files_from_sample_dirs(sample_path, glob_pattern, target_dir, add_prefix=False, verbose=False):
     # Use glob to find files matching the pattern
@@ -79,6 +80,10 @@ def main():
     args = parse_args()
     Configuration.verbose = args.verbose
     verbose_start_msg()
+
+    if str(args.input).startswith('/'):
+        print(f"\n    [red1]The input path should be relative (w/o the leading '/'):[/] [bold]{args.input}[/]\n")
+        return
 
     if args.target_dir is None:
         target_dir = Path().cwd()

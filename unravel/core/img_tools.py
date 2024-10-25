@@ -46,17 +46,20 @@ def resample(ndarray, xy_res, z_res, target_res, zoom_order=1):
     return img_resampled
 
 @print_func_name_args_times()
-def resample_nii(nii, target_res, zoom_order):
-    """Resample the input NIfTI image to the target resolution.
+def resample_nii(nii, target_res=None, target_dims=None, zoom_order=0):
+    """Resample the input NIfTI image to the target resolution or dimensions.
     
     Parameters:
     -----------
     nii : nibabel.nifti1.Nifti1Image
         NIfTI image object to resample.
         
-    target_res : float
-        Target resolution in micrometers for resampling.
-        
+    target_res : tuple of float, optional
+        Target resolution in millimeters for resampling (x, y, z).
+
+    target_dims : tuple of int, optional
+        Target dimensions for resampling (x, y, z).
+
     zoom_order : int
         SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.
         
@@ -67,19 +70,30 @@ def resample_nii(nii, target_res, zoom_order):
     """
     # Load the image data and resample it
     img = nii_to_ndarray(nii)
-    zooms = nii.header.get_zooms()
-    original_res_in_mm = zooms[0]
-    original_res_in_um = original_res_in_mm * 1000
-    img_resampled = resample(img, original_res_in_um, original_res_in_um, target_res, zoom_order=zoom_order)
+
+    original_res = nii.header.get_zooms()[:3]
+
+    if target_dims is not None:
+        zoom_factors = [dim / orig_dim for dim, orig_dim in zip(target_dims, img.shape)]
+        if target_res is None:
+            # Update target_res based on target_dims
+            target_res = [orig_dim / new_dim * original_res[i] for i, (orig_dim, new_dim) in enumerate(zip(img.shape, target_dims))]
+    elif target_res is not None:
+        zoom_factors = [orig / targ for orig, targ in zip(original_res, target_res)]
+    else:
+        raise ValueError("Either target resolution or target dimensions must be specified.")
+
+    # Resample the image
+    img_resampled = ndimage.zoom(img, zoom_factors, order=zoom_order)
 
     # Update the affine matrix
-    affine_ndarray = np.array(nii.affine)
-    new_affine = affine_ndarray.copy()
-    new_affine[0:3, 0:3] *= (target_res / original_res_in_um)
-
+    new_affine = np.array(nii.affine.copy())
+    for i in range(3):
+        new_affine[0:3, i] *= (target_res[i] / original_res[i])
+    
     # Update the header
     new_header = nii.header.copy()
-    new_header.set_zooms((target_res, target_res, target_res))
+    new_header.set_zooms(target_res)
 
     # Create the resampled NIfTI image
     resampled_nii = nib.Nifti1Image(img_resampled, new_affine, new_header)

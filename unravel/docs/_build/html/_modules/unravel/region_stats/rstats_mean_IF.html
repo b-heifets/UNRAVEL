@@ -374,6 +374,7 @@
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span> 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 
 <span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
@@ -404,10 +405,11 @@
 
 <div class="viewcode-block" id="calculate_mean_intensity">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.calculate_mean_intensity">[docs]</a>
-<span class="k">def</span> <span class="nf">calculate_mean_intensity</span><span class="p">(</span><span class="n">atlas</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">regions</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">calculate_mean_intensity</span><span class="p">(</span><span class="n">atlas</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">regions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates mean intensity for each region in the atlas.&quot;&quot;&quot;</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  Calculating mean immunofluorescence intensity for each region in the atlas...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Calculating mean immunofluorescence intensity for each region in the atlas...</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="c1"># Filter out background</span>
     <span class="n">valid_mask</span> <span class="o">=</span> <span class="n">atlas</span> <span class="o">&gt;</span> <span class="mi">0</span>
@@ -431,9 +433,10 @@
     <span class="k">if</span> <span class="n">regions</span><span class="p">:</span>
         <span class="n">mean_intensities_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">region</span><span class="p">:</span> <span class="n">mean_intensities_dict</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">regions</span> <span class="k">if</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">mean_intensities_dict</span><span class="p">}</span>
 
-    <span class="c1"># Optional: Print results for the filtered regions</span>
-    <span class="k">for</span> <span class="n">region</span><span class="p">,</span> <span class="n">mean_intensity</span> <span class="ow">in</span> <span class="n">mean_intensities_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Region: </span><span class="si">{</span><span class="n">region</span><span class="si">}</span><span class="se">\t</span><span class="s2">Mean intensity: </span><span class="si">{</span><span class="n">mean_intensity</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="c1"># Print the results</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">region_mean_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">mean_intensities_dict</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Region&#39;</span><span class="p">,</span> <span class="s1">&#39;Mean_intensity&#39;</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="si">{</span><span class="n">region_mean_df</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">mean_intensities_dict</span></div>
 
@@ -481,7 +484,7 @@
             <span class="n">img</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">get_fdata</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
             <span class="c1"># Calculate mean intensity</span>
-            <span class="n">mean_intensities</span> <span class="o">=</span> <span class="n">calculate_mean_intensity</span><span class="p">(</span><span class="n">atlas</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">region_intensities</span><span class="p">)</span>
+            <span class="n">mean_intensities</span> <span class="o">=</span> <span class="n">calculate_mean_intensity</span><span class="p">(</span><span class="n">atlas</span><span class="p">,</span> <span class="n">img</span><span class="p">,</span> <span class="n">region_intensities</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
             <span class="n">output_filename</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;.csv&#39;</span><span class="p">)</span>
             <span class="n">output</span> <span class="o">=</span> <span class="n">output_folder</span> <span class="o">/</span> <span class="n">output_filename</span>

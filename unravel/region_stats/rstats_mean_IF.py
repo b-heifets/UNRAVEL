@@ -23,6 +23,7 @@ import csv
 import nibabel as nib
 import numpy as np
 from pathlib import Path 
+import pandas as pd
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -48,10 +49,11 @@ def parse_args():
     return parser.parse_args()
 
 
-def calculate_mean_intensity(atlas, image, regions=None):
+def calculate_mean_intensity(atlas, image, regions=None, verbose=False):
     """Calculates mean intensity for each region in the atlas."""
 
-    print("\n  Calculating mean immunofluorescence intensity for each region in the atlas...\n")
+    if verbose:
+        print("\n    Calculating mean immunofluorescence intensity for each region in the atlas...\n")
 
     # Filter out background
     valid_mask = atlas > 0
@@ -75,9 +77,10 @@ def calculate_mean_intensity(atlas, image, regions=None):
     if regions:
         mean_intensities_dict = {region: mean_intensities_dict[region] for region in regions if region in mean_intensities_dict}
 
-    # Optional: Print results for the filtered regions
-    for region, mean_intensity in mean_intensities_dict.items():
-        print(f"    Region: {region}\tMean intensity: {mean_intensity}")
+    # Print the results
+    if verbose:
+        region_mean_df = pd.DataFrame(mean_intensities_dict.items(), columns=['Region', 'Mean_intensity'])
+        print(f'\n{region_mean_df}\n')
 
     return mean_intensities_dict
 
@@ -119,7 +122,7 @@ def main():
             img = nii.get_fdata(dtype=np.float32)
 
             # Calculate mean intensity
-            mean_intensities = calculate_mean_intensity(atlas, img, region_intensities)
+            mean_intensities = calculate_mean_intensity(atlas, img, region_intensities, args.verbose)
 
             output_filename = str(file.name).replace('.nii.gz', '.csv')
             output = output_folder / output_filename
