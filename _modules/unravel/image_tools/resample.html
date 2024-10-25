@@ -354,19 +354,26 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Use ``img_resample`` from UNRAVEL to resample an image.nii.gz and save it.</span>
 
-<span class="sd">Usage:</span>
-<span class="sd">------</span>
+<span class="sd">Usage with reference image:</span>
+<span class="sd">---------------------------</span>
+<span class="sd">    img_resample -i image.nii.gz -ref reference_image.nii.gz [-zo 0] [-o image_resampled.nii.gz] [-v]</span>
+
+<span class="sd">Usage for isotropic resampling:</span>
+<span class="sd">-------------------------------</span>
 <span class="sd">    img_resample -i image.nii.gz -tr 50 [-zo 0] [-o image_resampled.nii.gz] [-v]</span>
+
+<span class="sd">Usage for anisotropic resampling:</span>
+<span class="sd">---------------------------------</span>
+<span class="sd">    img_resample -i image.nii.gz -tr 200 10 10 -o image_200x10x10.nii.gz [-zo 0] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
-
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">resample_nii</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
-
 
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/image_tools/resample.html#unravel.image_tools.resample.parse_args">[docs]</a>
@@ -375,7 +382,9 @@
 
     <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
     <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/input_image.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-tr&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Target resolution in microns for resampling&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ref&#39;</span><span class="p">,</span> <span class="s1">&#39;--reference&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Reference image (.nii.gz) for resampling&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-tr&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_res&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Target resolution in microns for resampling (can be isotropic or anisotropic)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-td&#39;</span><span class="p">,</span> <span class="s1">&#39;--target_dims&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Target dimensions for resampling (can be isotropic or anisotropic)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-zo&#39;</span><span class="p">,</span> <span class="s1">&#39;--zoom_order&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
@@ -387,8 +396,7 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-<span class="c1"># TODO: Add support for anisotropic resampling. Add support for other image formats.</span>
-
+<span class="c1"># TODO: Add support for other image formats.</span>
 
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../unravel/image_tools/resample.html#unravel.image_tools.resample.main">[docs]</a>
@@ -400,7 +408,21 @@
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
     <span class="n">nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
-    <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">resample_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">target_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">reference</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ref_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">reference</span><span class="p">)</span>
+        <span class="n">target_res</span> <span class="o">=</span> <span class="n">ref_nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_zooms</span><span class="p">()[:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">target_dims</span> <span class="o">=</span> <span class="n">ref_nii</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">resample_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_res</span><span class="o">=</span><span class="n">target_res</span><span class="p">,</span> <span class="n">target_dims</span><span class="o">=</span><span class="n">target_dims</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">target_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">target_res</span> <span class="o">=</span> <span class="p">[</span><span class="n">res</span> <span class="o">/</span> <span class="mi">1000</span> <span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">target_res</span><span class="p">]</span>  <span class="c1"># Convert target resolution from microns to mm</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">target_res</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">target_res</span> <span class="o">=</span> <span class="n">target_res</span> <span class="o">*</span> <span class="mi">3</span>  <span class="c1"># Use isotropic resolution if only one value is provided</span>
+        <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">resample_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_res</span><span class="o">=</span><span class="n">target_res</span><span class="p">,</span> <span class="n">target_dims</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">target_dims</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">target_dims</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">resampled_nii</span> <span class="o">=</span> <span class="n">resample_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">target_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_dims</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">target_dims</span><span class="p">,</span> <span class="n">zoom_order</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either target resolution, target dimensions, or a reference image must be specified.&quot;</span><span class="p">)</span>
 
     <span class="n">data_type</span> <span class="o">=</span> <span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_data_dtype</span><span class="p">()</span>
     <span class="n">resampled_nii</span><span class="o">.</span><span class="n">set_data_dtype</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>
@@ -412,7 +434,6 @@
     <span class="n">nib</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">resampled_nii</span><span class="p">,</span> <span class="n">resampled_img_path</span><span class="p">)</span>
 
     <span class="n">verbose_end_msg</span><span class="p">()</span></div>
-
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

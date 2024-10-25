@@ -16,27 +16,30 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
   </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-
-  
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="_static/custom.css?v=872d93e8" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
 
     <script src="_static/documentation_options.js?v=8d563738"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
@@ -48,8 +51,14 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
-    <script>mermaid.initialize({startOnLoad:true});</script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'guide';</script>
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
@@ -58,6 +67,7 @@
     <link rel="prev" title="Installation" href="installation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -73,19 +83,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -93,7 +92,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search the docs ..."
          aria-label="Search the docs ..."
          autocomplete="off"
@@ -101,8 +99,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -176,15 +174,11 @@
         <div class="navbar-item navbar-persistent--container">
           
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
         </div>
       
       
@@ -211,15 +205,11 @@
   
     <div class="navbar-persistent--mobile">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
     </div>
   
 
@@ -238,7 +228,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -334,8 +325,6 @@
       
         <div class="header-article-item">
 
-
-
 <nav aria-label="Breadcrumb" class="d-print-none">
   <ul class="bd-breadcrumbs">
     
@@ -344,7 +333,7 @@
         <i class="fa-solid fa-home"></i>
       </a>
     </li>
-    <li class="breadcrumb-item active" aria-current="page">Guide</li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Guide</span></li>
   </ul>
 </nav>
 </div>
@@ -1089,8 +1078,8 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
 <section id="analysis-overview">
 <h2>Analysis Overview<a class="headerlink" href="#analysis-overview" title="Link to this heading">#</a></h2>
 <p>Overview of a typical workflow (voxel-wise analyses followed by cluster validation):</p>
-<div class="mermaid">
-            flowchart TD
+<pre  class="mermaid">
+        flowchart TD
     A(((LSFM))) 
     A --&gt; B[Stitched 3D autofluorescence image]
     B --&gt; C(Resample image to 50 µm resolution)
@@ -1109,7 +1098,7 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
     N --&gt; M
     D --&gt; I
     E --&gt; L
-        </div><hr class="docutils" />
+    </pre><hr class="docutils" />
 <br>
 </section>
 <section id="training-ilastik">
@@ -1206,8 +1195,8 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
 </section>
 <section id="registration">
 <h2>Registration<a class="headerlink" href="#registration" title="Link to this heading">#</a></h2>
-<div class="mermaid">
-            flowchart TD
+<pre  class="mermaid">
+        flowchart TD
     A(((LSFM))) 
     A --&gt; B[Stitch z-stacks if necessary]
     B --&gt; C(io_metadata: Save raw voxel dimentions in microns to ./sample??/parameters/metadata.txt)
@@ -1220,7 +1209,7 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
     I --&gt; J(reg_check: Aggregate padded autofl images and warped atlas images from reg)
     J --&gt; K(Assess registration quality in FSLeyes and refine if necessary by repeating the 3D Slicer step, etc.)
 
-        </div><section id="io-metadata">
+    </pre><section id="io-metadata">
 <h3><code class="docutils literal notranslate"><span class="pre">io_metadata</span></code><a class="headerlink" href="#io-metadata" title="Link to this heading">#</a></h3>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.image_io.metadata</span></code></p>
 <ul class="simple">
@@ -1391,8 +1380,8 @@ reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE<
 </section>
 <section id="voxel-wise-statistics">
 <h2>Voxel-wise Statistics<a class="headerlink" href="#voxel-wise-statistics" title="Link to this heading">#</a></h2>
-<div class="mermaid">
-            flowchart TD
+<pre  class="mermaid">
+        flowchart TD
     A(((LSFM))) 
     A --&gt; B[Stitch z-stacks if required]
     B --&gt; C(vstats_prep: Optionally remove autofluorescence and warp immunofluo images to atlas space)
@@ -1405,7 +1394,7 @@ reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE<
     I --&gt; J(For ANOVA designs, run fsl and set up the design. If two groups are present, proceed to the next step)
     J --&gt; K(vstats: Run voxel-wise analyses using FSL's randomise tool)
     K --&gt; L(View 1-p value maps in FSLeyes and consult 'Cluster-wise stats' for multiple comparisons correction and cluster validation)
-        </div><section id="vstats-prep">
+    </pre><section id="vstats-prep">
 <h3><code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code><a class="headerlink" href="#vstats-prep" title="Link to this heading">#</a></h3>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.voxel_stats.vstats_prep</span></code></p>
 <ul class="simple">
@@ -1645,8 +1634,8 @@ vstats<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK
 </section>
 <section id="cluster-wise-statistics">
 <h2>Cluster-wise Statistics<a class="headerlink" href="#cluster-wise-statistics" title="Link to this heading">#</a></h2>
-<div class="mermaid">
-            flowchart TD
+<pre  class="mermaid">
+        flowchart TD
     A(vstats: Generates 1-p value maps with vox_p in the filename)
     A --&gt; B(cstats_fdr_range: Input a 1-p map to find FDR q values that yield clusters)
     B --&gt; C(cstats_fdr: Apply FDR correction on the 1-p map to identify clusters of significant voxels)
@@ -1655,7 +1644,7 @@ vstats<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK
     E --&gt; F(seg_ilastik: Perform pixel classification with a trained Ilastik project)
     F --&gt; G(cstats_validation: Warp clusters from atlas to full resolution tissue space, count cells, and calculate cluster volumes)
     G --&gt; H(cstats_summary: Aggregate and analyze cluster validation data)
-        </div><section id="false-discovery-rate-fdr-correction">
+    </pre><section id="false-discovery-rate-fdr-correction">
 <h3>False Discovery Rate (FDR) Correction<a class="headerlink" href="#false-discovery-rate-fdr-correction" title="Link to this heading">#</a></h3>
 </section>
 <section id="cstats-fdr-range">
@@ -1741,8 +1730,8 @@ cstats_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span c
 </section>
 <section id="cluster-validation-and-statistics">
 <h2>Cluster Validation and Statistics<a class="headerlink" href="#cluster-validation-and-statistics" title="Link to this heading">#</a></h2>
-<div class="mermaid">
-            flowchart TD    
+<pre  class="mermaid">
+        flowchart TD    
     A(cstats_org_data: Organize cell/label density data from cluster validation)
     A --&gt; B(cstats_group_data: Pool left and right hemisphere data)
     B --&gt; C(utils_prepend: Prepend CSV names with conditions)
@@ -1753,7 +1742,7 @@ cstats_mirror_indices<span class="w"> </span>-m<span class="w"> </span>RH<span c
     G --&gt; H(cstats_prism: Generate CSVs for plotting bar graphs with Prism)
     H --&gt; I(cstats_legend: Create legend files defining region abbreviations)
     I --&gt; J(Summarize cluster validation rates, aggregate files for 3D brains, compile SI tables, etc.)
-        </div><section id="cstats-validation">
+    </pre><section id="cstats-validation">
 <h3><code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code><a class="headerlink" href="#cstats-validation" title="Link to this heading">#</a></h3>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.cluster_stats.validation</span></code></p>
 <ul class="simple">
@@ -1919,8 +1908,8 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
 </section>
 <section id="region-wise-statistics">
 <h2>Region-wise Statistics<a class="headerlink" href="#region-wise-statistics" title="Link to this heading">#</a></h2>
-<div class="mermaid">
-            flowchart TD
+<pre  class="mermaid">
+        flowchart TD
     A(((LSFM))) 
     A --&gt; B[3D autofluorescence image]
     B --&gt; C(Registration to an average template brain) 
@@ -1931,7 +1920,7 @@ cstats_summary<span class="w"> </span>-c<span class="w"> </span>&lt;path/cluster
     D --&gt; G
     G --&gt; H(utils_agg_files: Aggregate CSV outputs from rstats across all sample folders)
     H --&gt; I(rstats_summary: Plot cell densities by region and summarize results)
-        </div><section id="rstats">
+    </pre><section id="rstats">
 <h3><code class="docutils literal notranslate"><span class="pre">rstats</span></code><a class="headerlink" href="#rstats" title="Link to this heading">#</a></h3>
 <p><code class="xref py py-mod docutils literal notranslate"><span class="pre">unravel.region_stats.regional_cell_densities</span></code></p>
 <ul class="simple">
@@ -2091,7 +2080,8 @@ rstats_summary<span class="w"> </span>--groups<span class="w"> </span>Saline<spa
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -2188,8 +2178,8 @@ rstats_summary<span class="w"> </span>--groups<span class="w"> </span>Saline<spa
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -2222,7 +2212,7 @@ rstats_summary<span class="w"> </span>--groups<span class="w"> </span>Saline<spa
       
         <div class="footer-item">
 <p class="theme-version">
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.4.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.0.
 </p></div>
       
     </div>
