@@ -77,6 +77,8 @@ def parse_args():
     return parser.parse_args()
 
 
+# TODO: Consolidate calculate_mean_intensity() here and in rstats_mean_IF.py
+
 @print_func_name_args_times()
 def calculate_mean_intensity(IF_img, ABA_seg, args):
     """Calculates mean intensity for each region in the atlas.
