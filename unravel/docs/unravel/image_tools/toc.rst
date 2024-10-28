@@ -16,6 +16,7 @@ unravel.image_tools package
    transpose_axes
    unique_intensities
    resample_points
+   modify_labels
    atlas/toc
 
 .. automodule:: unravel.image_tools

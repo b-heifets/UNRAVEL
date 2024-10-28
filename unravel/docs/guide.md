@@ -425,12 +425,12 @@ uc -m
 - [**img_extend**](unravel.image_tools.extend): Extend images (add padding to one side).
 - [**img_transpose**](unravel.image_tools.transpose_axes): Transpose image axes.
 - [**img_resample_points**](unravel.image_tools.resample_points): Resample a set of points [and save as an image].
+- [**img_modify_labels**](unravel.image_tools.modify_labels): Modify labels (drop or keep IDs and optionally binarize the result)
 :::
 
 :::{tab-item} Atlas tools
 - [**atlas_relabel**](unravel.image_tools.atlas.relabel_nii): Relabel atlas IDs.
 - [**atlas_wireframe**](unravel.image_tools.atlas.wireframe): Make an atlas wireframe.
-- [**atlas_set_labels**](unravel.image_tools.atlas.set_labels): Set labels to a specified value.
 :::
 
 :::{tab-item} Utilities
