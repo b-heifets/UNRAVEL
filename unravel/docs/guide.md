@@ -430,6 +430,7 @@ uc -m
 :::{tab-item} Atlas tools
 - [**atlas_relabel**](unravel.image_tools.atlas.relabel_nii): Relabel atlas IDs.
 - [**atlas_wireframe**](unravel.image_tools.atlas.wireframe): Make an atlas wireframe.
+- [**atlas_set_labels**](unravel.image_tools.atlas.set_labels): Set labels to a specified value.
 :::
 
 :::{tab-item} Utilities

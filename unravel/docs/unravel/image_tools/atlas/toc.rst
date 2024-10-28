@@ -6,6 +6,7 @@ unravel.image_tools.atlas package
 
    relabel_nii
    wireframe
+   set_labels
 
 .. automodule:: unravel.image_tools.atlas
    :members:
