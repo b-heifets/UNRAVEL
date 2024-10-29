@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``modify_labels`` from UNRAVEL to modify specified label IDs in a NIfTI image.
+Use ``img_modify_labels`` or ``ml`` from UNRAVEL to modify specified label IDs in a NIfTI image.
 
 Usage: 
 ------
-    modify_labels -i path/image.nii.gz -ids 1 2 3 -o path/image.nii.gz [-val 0] [--retain_IDs] [--binarize] [-v]
+    img_modify_labels -i path/image.nii.gz -ids 1 2 3 -o path/image.nii.gz [-val 0] [--retain_IDs] [--binarize] [-v]
 """
 
 import numpy as np
