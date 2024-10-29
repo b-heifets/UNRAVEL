@@ -5,6 +5,7 @@ Use ``_other/drafts/correlation.py`` from UNRAVEL to calculate the region-wise o
 
 Note:
     - If an atlas is provided, the script will calculate the region-wise correlation.
+    - For processing specific regions, modify with atlas with ``img_modify_labels``.
     - If no atlas is provided, the script will calculate the voxel-wise correlation.
     - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020_regional_summary.csv
     - It has columns: Region_ID, ID_Path, Region, Abbr, General_Region, R, G, B
@@ -20,6 +21,7 @@ import nibabel as nib
 from scipy.stats import pearsonr
 
 import matplotlib.pyplot as plt
+import mplcursors
 import nibabel as nib
 import numpy as np
 import pandas as pd
@@ -47,11 +49,13 @@ def parse_args():
     opts.add_argument('-mas', '--masks', help='Paths to mask .nii.gz files to restrict analysis. Default: None', nargs='*', default=None, action=SM)
     opts.add_argument('-a', '--atlas', help='Path to the atlas NIfTI file for a region-wise correlation. Default: None', default=None, action=SM)
     opts.add_argument('-rw', '--regional', help='Region-wise correlation. Default: False', action='store_true', default=False)
-    opts.add_argument('-r', '--regions', help='Space-separated list of region IDs to process. Default: process all IDs', nargs='*', type=int, default=None, action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/unravel/core/csvs/CCFv3-2020_regional_summary.csv', action=SM)
     opts.add_argument('-p', '--plot', help='Plot correlation. Default: False', action='store_true', default=False)
     opts.add_argument('-xl', '--x_label', help='X-axis label for the correlation plot. Default: "Image X mean intensity"', default='Image X mean intensity', action=SM)
     opts.add_argument('-yl', '--y_label', help='Y-axis label for the correlation plot. Default: "Image Y mean intensity"', default='Image Y mean intensity', action=SM)
+    opts.add_argument('-xr', '--x_range', help='X-axis range for the correlation plot. (e.g., -1 1)', nargs=2, type=float, default=None, action=SM)
+    opts.add_argument('-yr', '--y_range', help='Y-axis range for the correlation plot. (e.g., -1 1)', nargs=2, type=float, default=None, action=SM)
+    opts.add_argument('-min', '--min_voxels', help='Minimum number of voxels per region.', type=int, default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -61,7 +65,7 @@ def parse_args():
 # TODO: Change /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/unravel/core/csvs/CCFv3-2020_regional_summary.csv to CCFv3-2020_regional_summary.csv after testing
 
 
-def compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list=None, regions=None, verbose=False):
+def compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list=None, min_voxels=None, verbose=False):
     """Compute region-wise correlation between two images, restricted by masks and region IDs."""
     # Apply mask(s) if provided
     valid_voxels = np.ones(imgY.shape, dtype=bool)
@@ -72,10 +76,14 @@ def compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list=None, region
     # Mask the images to keep only valid voxels
     imgX_masked = np.where(valid_voxels, imgX, 0)
     imgY_masked = np.where(valid_voxels, imgY, 0)
+    atlas_img_masked = np.where(valid_voxels, atlas_img, 0)
+
+    # Get unique region IDs from the atlas image
+    unique_regions = np.unique(atlas_img_masked)
 
     # Calculate the mean intensity of the images in each region
-    imgX_mean_intensities_dict = calculate_mean_intensity(atlas_img, imgX_masked, regions=regions, verbose=verbose)
-    mean_intensities_dict_exp = calculate_mean_intensity(atlas_img, imgY_masked, regions=regions, verbose=verbose)
+    imgX_mean_intensities_dict = calculate_mean_intensity(atlas_img_masked, imgX_masked, regions=unique_regions, verbose=verbose)
+    mean_intensities_dict_exp = calculate_mean_intensity(atlas_img_masked, imgY_masked, regions=unique_regions, verbose=verbose)
 
     # Convert the dictionaries to DataFrames
     imgX_df = pd.DataFrame(imgX_mean_intensities_dict.items(), columns=['Region', 'ImgX_Mean'])
@@ -83,6 +91,14 @@ def compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list=None, region
 
     # Merge the DataFrames on the region column
     merged_df = pd.merge(imgX_df, imgY_df, on='Region')
+
+    # Drop regions with fewer than min_voxels voxels
+    if min_voxels is not None:
+        region_volumes = {region: np.count_nonzero(atlas_img_masked == region) for region in unique_regions}
+        merged_df = merged_df[merged_df['Region'].map(region_volumes) >= min_voxels]
+
+    print("\n    [bold]Region-wise correlation results[/bold]")
+    print(merged_df)
 
     # Compute the Pearson correlation between the mean intensities
     correlation, p_value = pearsonr(merged_df['ImgX_Mean'], merged_df['ImgY_Mean'])
@@ -143,15 +159,24 @@ def color_voxels_by_region(atlas_img, valid_voxels, region_csv_path):
 
     return rgb_colors
 
-def plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title='Correlation Scatter Plot', rgb_colors=None, x_label=None, y_label=None):
-    """Generate a scatter plot for the correlation between two images."""
-    plt.figure(figsize=(8, 6))
+def toggle_hover_visibility(event):
+    global show_annotations
+    if event.key == 'v':  # Press 'v' to toggle visibility
+        show_annotations = not show_annotations
+
+def plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title='Correlation Scatter Plot', rgb_colors=None, x_label=None, y_label=None, x_range=None, y_range=None, abbreviations=None):
+    """Generate a scatter plot for the correlation between two images with hover functionality."""
+
+    global show_annotations
+    show_annotations = True  # Initialize the toggle variable
+
+    plt.figure(figsize=(6, 6))
 
     # Scatter plot with RGB colors
     if rgb_colors is not None:
-        plt.scatter(imgX_valid, imgY_valid, color=rgb_colors, alpha=0.7, label='Data points')
+        scatter = plt.scatter(imgX_valid, imgY_valid, color=rgb_colors, alpha=0.7, label='Data points')
     else:
-        plt.scatter(imgX_valid, imgY_valid, color='blue', alpha=0.7, label='Data points')
+        scatter = plt.scatter(imgX_valid, imgY_valid, color='blue', alpha=0.7, label='Data points')
 
     # Fit and plot the trend line
     z = np.polyfit(imgX_valid, imgY_valid, 1)
@@ -166,19 +191,45 @@ def plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title='C
     # Remove grid lines within the graph
     plt.grid(False)
 
-    # if there are negative values, add dashed lines at 0
-    plt.axhline(0, color='grey', linestyle='--')
-    plt.axvline(0, color='grey', linestyle='--')
+    # Get default axis limits only if x_range or y_range is not provided
+    if x_range is None:
+        x_range = plt.xlim()
+        if x_range[0] < 0 and np.min(imgX_valid) > 0:
+            x_range = (0, x_range[1])
+        plt.xlim(x_range)
+    if y_range is None:
+        y_range = plt.ylim()
+        if y_range[0] < 0 and np.min(imgY_valid) > 0:
+            y_range = (0, y_range[1])
+        plt.ylim(y_range)
 
-    # Show the legend for the data points, trend line, and horizontal line
-    plt.legend()
+    # Add dashed lines at y=0 and x=0 if ranges include 0
+    if x_range[0] < 0:
+        plt.axvline(0, color='grey', linestyle='--')
+    if y_range[0] < 0:
+        plt.axhline(0, color='grey', linestyle='--')
+
+    # Enable hover interaction
+    cursor = mplcursors.cursor(scatter, hover=True)
+    
+    # Customize hover annotation for each data point
+    @cursor.connect("add")
+    def on_add(sel):
+        if show_annotations:
+            x, y = imgX_valid[sel.index], imgY_valid[sel.index]
+            abbr = abbreviations[sel.index] if abbreviations is not None else "N/A"
+            sel.annotation.set_text(f'X: {x:.2f}\nY: {y:.2f}\nR: {abbr}')
+            sel.annotation.get_bbox_patch().set(fc="lightgrey", alpha=0.8)
+        else:
+            sel.annotation.set_visible(False)  # Hide annotation if toggle is off
+
+    # Connect key press event for toggling
+    plt.gcf().canvas.mpl_connect('key_press_event', toggle_hover_visibility)
 
     # Save and show the plot
     plt.tight_layout()
     plt.savefig('correlation_scatter.png')
     plt.show()
-
-
 
 
 @log_command
@@ -200,7 +251,7 @@ def main():
     if args.regional and args.atlas:
         atlas_img = load_nii(args.atlas)
         # Compute the region-wise correlation
-        correlation, p_value, merged_df, n = compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list, args.regions, args.verbose)
+        correlation, p_value, merged_df, n = compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list, args.min_voxels, args.verbose)
 
     else:
         # Compute the voxel-wise correlation
@@ -221,7 +272,7 @@ def main():
             #     region_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path, usecols=['Region_ID', 'R', 'G', 'B'])
             # else:
             #     region_df = pd.read_csv(args.csv_path, usecols=['Region_ID', 'R', 'G', 'B'])
-            region_df = pd.read_csv(args.csv_path, usecols=['Region_ID', 'R', 'G', 'B'])
+            region_df = pd.read_csv(args.csv_path, usecols=['Region_ID', 'R', 'G', 'B', 'Abbr'])
 
             # Rename "Region_ID" to "Region" for merging
             region_df = region_df.rename(columns={'Region_ID': 'Region'})
@@ -229,11 +280,12 @@ def main():
             # Merge the results with the region data
             merged_df = pd.merge(merged_df, region_df, on='Region')
 
-            # Convert the R, G, B values into a format usable for matplotlib
+            # Convert R, G, B to RGB colors and retrieve Abbr column as a list
             rgb_colors = merged_df[['R', 'G', 'B']].values / 255.0
+            abbreviations = merged_df['Abbr'].tolist()
 
             plot_title = 'Region-wise Correlation'
-            plot_correlation(merged_df['ImgX_Mean'], merged_df['ImgY_Mean'], correlation, p_value, plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label)
+            plot_correlation(merged_df['ImgX_Mean'], merged_df['ImgY_Mean'], correlation, p_value, plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range, abbreviations=abbreviations)
         else:
             if args.atlas:
                 # Load the atlas image
@@ -251,10 +303,10 @@ def main():
                 # Plot the voxel-wise correlation with RGB colors
                 plot_title = 'Voxel-wise Correlation'
 
-                plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label)
+                plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title, rgb_colors=rgb_colors, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range)
             else:
                 plot_title = 'Voxel-wise Correlation'
-                plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title, x_label=args.x_label, y_label=args.y_label)
+                plot_correlation(imgX_valid, imgY_valid, correlation, p_value, plot_title, x_label=args.x_label, y_label=args.y_label, x_range=args.x_range, y_range=args.y_range)
 
     verbose_end_msg()
 
