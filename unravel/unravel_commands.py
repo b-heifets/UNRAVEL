@@ -528,7 +528,13 @@ def main():
                 "description": "Transpose image axes.",
                 "common": False,
                 "alias": "transpose"
-            }
+            },
+            "img_modify_labels": {
+                "module": "unravel.image_tools.modify_labels",
+                "description": "Modify labels (drop or keep IDs and optionally binarize the result).",
+                "common": False,
+                "alias": "ml"
+            },
         },
         "Atlas tools": {
             "atlas_relabel": {
