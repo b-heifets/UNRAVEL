@@ -889,7 +889,13 @@ window.addEventListener("load", () => mermaid.run());
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Make an atlas wireframe.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;wf&quot;</span>
-            <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;atlas_set_labels&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.atlas.set_labels&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Set specified label IDs in the ndarray to the given value.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sl&quot;</span>
+            <span class="p">},</span>
         <span class="p">},</span>
         <span class="s2">&quot;Utilities&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;utils_get_samples&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -897,6 +903,12 @@ window.addEventListener("load", () => mermaid.run());
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Test --pattern and --dirs args of script that batch process sample?? dirs.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;s&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;utils_region_info&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.region_info:main&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Look up region info (e.g., find ACB to see its region name and ID).&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;region&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;utils_agg_files&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.aggregate_files_from_sample_dirs&quot;</span><span class="p">,</span>

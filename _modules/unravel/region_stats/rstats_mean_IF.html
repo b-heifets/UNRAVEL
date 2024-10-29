@@ -429,9 +429,13 @@
     <span class="c1"># Convert to dictionary (ignore background)</span>
     <span class="n">mean_intensities_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="n">mean_intensities</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">mean_intensities</span><span class="p">))}</span>
 
-    <span class="c1"># Filter the dictionary if regions are provided</span>
-    <span class="k">if</span> <span class="n">regions</span><span class="p">:</span>
-        <span class="n">mean_intensities_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">region</span><span class="p">:</span> <span class="n">mean_intensities_dict</span><span class="p">[</span><span class="n">region</span><span class="p">]</span> <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">regions</span> <span class="k">if</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">mean_intensities_dict</span><span class="p">}</span>
+    <span class="c1"># Filter the dictionary if `regions` is provided and not empty</span>
+    <span class="k">if</span> <span class="n">regions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Ensure `regions` is a list or set to prevent ambiguity</span>
+        <span class="n">regions_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">regions</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">regions</span><span class="p">,</span> <span class="nb">set</span><span class="p">)</span> <span class="k">else</span> <span class="n">regions</span>
+        <span class="n">mean_intensities_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">region</span><span class="p">:</span> <span class="n">mean_intensities_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">region</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">region</span> <span class="ow">in</span> <span class="n">regions_set</span><span class="p">}</span>
+        <span class="n">mean_intensities_dict</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>  <span class="c1"># Drop the background</span>
+        <span class="c1"># mean_intensities_dict = {region: mean_intensities_dict[region] for region in regions if region in mean_intensities_dict}  # Original line</span>
 
     <span class="c1"># Print the results</span>
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
