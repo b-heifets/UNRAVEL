@@ -549,12 +549,6 @@ def main():
                 "common": False,
                 "alias": "wf"
             },
-            "atlas_set_labels": {
-                "module": "unravel.image_tools.atlas.set_labels",
-                "description": "Set specified label IDs in the ndarray to the given value.",
-                "common": False,
-                "alias": "sl"
-            },
         },
         "Utilities": {
             "utils_get_samples": {
