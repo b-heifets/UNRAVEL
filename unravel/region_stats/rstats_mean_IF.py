@@ -73,9 +73,13 @@ def calculate_mean_intensity(atlas, image, regions=None, verbose=False):
     # Convert to dictionary (ignore background)
     mean_intensities_dict = {i: mean_intensities[i] for i in range(1, len(mean_intensities))}
 
-    # Filter the dictionary if regions are provided
-    if regions:
-        mean_intensities_dict = {region: mean_intensities_dict[region] for region in regions if region in mean_intensities_dict}
+    # Filter the dictionary if `regions` is provided and not empty
+    if regions is not None:
+        # Ensure `regions` is a list or set to prevent ambiguity
+        regions_set = set(regions) if not isinstance(regions, set) else regions
+        mean_intensities_dict = {region: mean_intensities_dict.get(region, 0) for region in regions_set}
+        mean_intensities_dict.pop(0, None)  # Drop the background
+        # mean_intensities_dict = {region: mean_intensities_dict[region] for region in regions if region in mean_intensities_dict}  # Original line
 
     # Print the results
     if verbose:

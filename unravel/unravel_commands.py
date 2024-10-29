@@ -542,7 +542,13 @@ def main():
                 "description": "Make an atlas wireframe.",
                 "common": False,
                 "alias": "wf"
-            }
+            },
+            "atlas_set_labels": {
+                "module": "unravel.image_tools.atlas.set_labels",
+                "description": "Set specified label IDs in the ndarray to the given value.",
+                "common": False,
+                "alias": "sl"
+            },
         },
         "Utilities": {
             "utils_get_samples": {
@@ -550,6 +556,12 @@ def main():
                 "description": "Test --pattern and --dirs args of script that batch process sample?? dirs.",
                 "common": True,
                 "alias": "s"
+            },
+            "utils_region_info": {
+                "module": "unravel.utilities.region_info:main",
+                "description": "Look up region info (e.g., find ACB to see its region name and ID).",
+                "common": True,
+                "alias": "region"
             },
             "utils_agg_files": {
                 "module": "unravel.utilities.aggregate_files_from_sample_dirs",

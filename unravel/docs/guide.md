@@ -314,6 +314,7 @@ uc -m
 :::
 
 ::: {tab-item} Utilities
+- [**utils_region_info**](unravel.utilities.region_info): Look up region info (e.g., find ACB to see its region name and ID)
 - [**utils_agg_files**](unravel.utilities.aggregate_files_from_sample_dirs): Aggregate files from sample directories.
 - [**utils_prepend**](unravel.utilities.prepend_conditions): Prepend conditions to files using sample_key.csv.
 - [**utils_rename**](unravel.utilities.rename): Rename files.
@@ -425,6 +426,7 @@ uc -m
 - [**img_extend**](unravel.image_tools.extend): Extend images (add padding to one side).
 - [**img_transpose**](unravel.image_tools.transpose_axes): Transpose image axes.
 - [**img_resample_points**](unravel.image_tools.resample_points): Resample a set of points [and save as an image].
+- [**img_modify_labels**](unravel.image_tools.modify_labels): Modify labels (drop or keep IDs and optionally binarize the result)
 :::
 
 :::{tab-item} Atlas tools
@@ -434,6 +436,7 @@ uc -m
 
 :::{tab-item} Utilities
 - [**utils_get_samples**](unravel.utilities.get_samples): Test --pattern and --dirs args of script that batch process sample?? dirs.
+- [**utils_region_info**](unravel.utilities.region_info): Look up region info (e.g., find ACB to see its region name and ID)
 - [**utils_agg_files**](unravel.utilities.aggregate_files_from_sample_dirs): Aggregate files from sample directories.
 - [**utils_agg_files_rec**](unravel.utilities.aggregate_files_recursively): Recursively aggregate files.
 - [**utils_prepend**](unravel.utilities.prepend_conditions): Prepend conditions to files using sample_key.csv.
