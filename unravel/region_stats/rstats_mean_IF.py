@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in brain regions in atlas space.
+Use ``rstats_mean_IF`` (``rmi``) from UNRAVEL to measure mean intensity of immunofluorescence staining in brain regions in atlas space.
 
 Inputs:
     - `*`.nii.gz

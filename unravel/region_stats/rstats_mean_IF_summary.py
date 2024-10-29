@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each region intensity ID.
+Use ``rstats_mean_IF_summary`` (``rmis``) from UNRAVEL to output plots of mean IF intensities for each region intensity ID.
 
 Prereqs:
     - Generate CSV inputs withs ``rstats_IF_mean`` or ``rstats_IF_mean_in_seg``

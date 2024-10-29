@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``atlas_relabel`` from UNRAVEL to convert intensities (e.g., atlas label IDs) based on a CSV.
+Use ``atlas_relabel`` (``relabel``) from UNRAVEL to convert intensities (e.g., atlas label IDs) based on a CSV.
 
 Inputs:
     - old_image.nii.gz: Lable image with original intensities.

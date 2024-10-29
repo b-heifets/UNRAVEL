@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_reorient_nii`` from UNRAVEL to set the orientation of a .nii.gz or its affine matrix.
+Use ``io_reorient_nii`` (``reorient``) from UNRAVEL to set the orientation of a .nii.gz or its affine matrix.
 
 Input:
     - path/input_image.nii.gz

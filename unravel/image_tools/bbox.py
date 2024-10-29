@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_bbox`` from UNRAVEL to load an image (.czi, .nii.gz, or tif series) and save bounding boxes as txt files.
+Use ``img_bbox`` (``bbox``) from UNRAVEL to load an image (.czi, .nii.gz, or tif series) and save bounding boxes as txt files.
 
 Usage:
 ------

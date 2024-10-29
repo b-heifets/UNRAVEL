@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_prep`` from UNRAVEL to load an immunofluo image, subtract its background, and warp it to atlas space.
+Use ``vstats_prep`` (``vp``) from UNRAVEL to load an immunofluo image, subtract its background, and warp it to atlas space.
 
 Prereqs: 
     - ``reg``

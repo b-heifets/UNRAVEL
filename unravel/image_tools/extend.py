@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_extend`` from UNRAVEL to load a 3D image, extend one side, and save it as tifs
+Use ``img_extend`` (``extend``) from UNRAVEL to load a 3D image, extend one side, and save it as tifs
 
 Usage:
     img_extend -i ochann -o ochann_extended -s front -e 100 [-d list of paths] [-p sample??] [-v]

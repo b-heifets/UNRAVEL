@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_modify_labels`` or ``ml`` from UNRAVEL to modify specified label IDs in a NIfTI image.
+Use ``img_modify_labels`` (``ml``) from UNRAVEL to modify specified label IDs in a NIfTI image.
 
 Usage: 
 ------

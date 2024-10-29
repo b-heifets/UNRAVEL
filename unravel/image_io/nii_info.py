@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_nii_info`` from UNRAVEL to load an .nii.gz image and print its data type, shape, voxel sizes, and affine matrix.
+Use ``io_nii_info`` (``i``) from UNRAVEL to load an .nii.gz image and print its data type, shape, voxel sizes, and affine matrix.
 
 Usage:
 ------

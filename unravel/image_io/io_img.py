@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_img`` from UNRAVEL to load a 3D image, [get metadata], and save as the specified image type.
+Use ``io_img`` (``img``) from UNRAVEL to load a 3D image, [get metadata], and save as the specified image type.
 
 Input image types:
     .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr

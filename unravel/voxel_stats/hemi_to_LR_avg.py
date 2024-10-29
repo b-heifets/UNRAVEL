@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_hemi_to_avg`` from UNRAVEL to automatically average hemisphere images with their mirrored counterparts. This can also smooth the images with a kernel and apply a mask.
+Use ``vstats_hemi_to_avg`` (``h2a``) from UNRAVEL to automatically average hemisphere images with their mirrored counterparts. This can also smooth the images with a kernel and apply a mask.
 
 Inputs: 
     - input_img_LH.nii.gz

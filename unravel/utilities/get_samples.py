@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``utils_get_samples`` from UNRAVEL to test the get_samples() function in unravel/core/utils.py.
+Use ``utils_get_samples`` (``s``) from UNRAVEL to test the get_samples() function in unravel/core/utils.py.
 
 Usage:
 ------

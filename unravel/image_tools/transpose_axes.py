@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_transpose`` from UNRAVEL to run ndarray.transpose(axis_1, axis_2, axis_3).
+Use ``img_transpose`` (``transpose``) from UNRAVEL to run ndarray.transpose(axis_1, axis_2, axis_3).
 
 Usage: 
 ------

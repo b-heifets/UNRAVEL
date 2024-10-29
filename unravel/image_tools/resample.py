@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_resample`` from UNRAVEL to resample an image.nii.gz and save it.
+Use ``img_resample`` (``resample``) from UNRAVEL to resample an image.nii.gz and save it.
 
 Usage with reference image:
 ---------------------------

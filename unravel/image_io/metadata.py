@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_metadata`` from UNRAVEL to save x/y and z voxel sizes in microns as well as image dimensions to a metadata file in each sample directory.
+Use ``io_metadata`` (``m``) from UNRAVEL to save x/y and z voxel sizes in microns as well as image dimensions to a metadata file in each sample directory.
 
 Inputs:
     - .czi, .nii.gz, .h5, or TIF series (path should be relative to ./sample??)

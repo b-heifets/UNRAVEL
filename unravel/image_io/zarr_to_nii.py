@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_zarr_to_nii`` from UNRAVEL to convert an image.zarr to an image.nii.gz.
+Use ``io_zarr_to_nii`` (``z2n``) from UNRAVEL to convert an image.zarr to an image.nii.gz.
 
 Note:
     - Outputs RAS orientation w/o respect to anatomical orientation

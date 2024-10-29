@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``seg_ilastik`` from UNRAVEL to use segment features of interest using Ilastik.
+Use ``seg_ilastik`` (``si``) from UNRAVEL to use segment features of interest using Ilastik.
 
 Prereqs: 
     - Organize training tifs into a folder (e.g., w/ ``seg_copy_tifs``) .

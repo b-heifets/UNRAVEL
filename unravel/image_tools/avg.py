@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_avg`` from UNRAVEL to average NIfTI images.
+Use ``img_avg`` (``avg``) from UNRAVEL to average NIfTI images.
 
 Usage:
 ------

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``warp_to_fixed`` from UNRAVEL to forward warp a moving image (e.g., from atlas space) to fixed image space (e.g., tissue space). The input/output do not need padding.
+Use ``warp_to_fixed`` (``w2f``) from UNRAVEL to forward warp a moving image (e.g., from atlas space) to fixed image space (e.g., tissue space). The input/output do not need padding.
 
 Note: 
     - Run this from the folder containing reg_outputs.

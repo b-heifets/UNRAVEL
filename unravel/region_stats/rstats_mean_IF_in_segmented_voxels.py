@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_mean_IF_in_seg`` from UNRAVEL to measure mean intensity of immunofluorescence (IF) staining in brain regions in segmented voxels (in tissue space).
+Use ``rstats_mean_IF_in_seg`` (``rmiis``) from UNRAVEL to measure mean intensity of immunofluorescence (IF) staining in brain regions in segmented voxels (in tissue space).
 
 Prereqs:
     - ``seg_ilastik`` for segmentation

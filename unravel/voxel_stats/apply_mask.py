@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """ 
-Use ``vstats_apply_mask`` from UNRAVEL to zeros out voxels in image based on a mask and direction args.
+Use ``vstats_apply_mask`` (``apply_mask``) from UNRAVEL to zeros out voxels in image based on a mask and direction args.
 
 Usage:
 ------

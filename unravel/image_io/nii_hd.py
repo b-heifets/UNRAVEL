@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_nii_hd`` from UNRAVEL to load a .nii.gz and print its header using nibabel.
+Use ``io_nii_hd`` (``hd``) from UNRAVEL to load a .nii.gz and print its header using nibabel.
 
 Usage:
 ------

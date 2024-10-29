@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``warp_to_atlas`` from UNRAVEL to warp a native image to atlas space.
+Use ``warp_to_atlas`` (``w2a``) from UNRAVEL to warp a native image to atlas space.
 
 Prereqs: 
     ``reg``

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use `io_points_to_img` from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.
+Use ``io_points_to_img`` (``p2i``) from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.
 
 Input:
     - A CSV file where each row represents a point corresponding to a detection in the 3D image. 

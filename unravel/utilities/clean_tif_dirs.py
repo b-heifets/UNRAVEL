@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``utils_clean_tifs`` from UNRAVEL to clean directories w/ tif series.
+Use ``utils_clean_tifs`` (``clean_tiffs``) from UNRAVEL to clean directories w/ tif series.
 
 Tif directory clean up involves:
     - Finding .tif or .ome.tif files in the tif directory

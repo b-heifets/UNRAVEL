@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_z_score`` from UNRAVEL to z-score an atlas space image using a tissue mask and/or an atlas mask.
+Use ``vstats_z_score`` (``zs``) from UNRAVEL to z-score an atlas space image using a tissue mask and/or an atlas mask.
 
 Prereqs:
     ``vstats_prep`` for inputs [& ``seg_brain_mask`` for tissue masks]

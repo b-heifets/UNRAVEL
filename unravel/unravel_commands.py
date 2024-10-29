@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``unravel_commands`` or ``uc`` to print a list of commands available in the UNRAVEL package. 
+Use ``unravel_commands`` (``uc``) to print a list of commands available in the UNRAVEL package. 
 
 For help on a ``command``, run: 
 <command> -h

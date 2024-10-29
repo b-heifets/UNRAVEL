@@ -2,7 +2,7 @@
 
 
 """
-Use ``utils_agg_files`` from UNRAVEL to aggregate files from sample?? directories to a target directory.
+Use ``utils_agg_files`` (``agg``) from UNRAVEL to aggregate files from sample?? directories to a target directory.
 
 Next commands for voxel-wise stats: 
     - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average left and right hemispheres.

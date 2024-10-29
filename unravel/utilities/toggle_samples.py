@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``utils_toggle`` from UNRAVEL to inactivate/activate sample?? dirs for batch processing (i.e., prepend/remove "_" from dir name).
+Use ``utils_toggle`` (``toggle``) from UNRAVEL to inactivate/activate sample?? dirs for batch processing (i.e., prepend/remove "_" from dir name).
 
 Note: 
     - For samples matching conditions in -c, "_" will be removed from the sample?? dir name.

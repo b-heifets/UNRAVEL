@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use save_labels_as_masks.py from UNRAVEL to convert an ilastik segmentation tif series or other image labels to binary .nii.gz masks.
+Use ``seg_labels_as_masks`` (``sl2m``) from UNRAVEL to convert an ilastik segmentation tif series or other image labels to binary .nii.gz masks.
 
 Usage:
 ------
-    save_labels_as_masks.py -i seg_ilastik_1/IlastikSegmentation -o Ai14_seg_ilasik_1 [-l 1 2 3] [-d dirs] [-p pattern] [-v]
+    ``seg_labels_as_masks`` -i seg_ilastik_1/IlastikSegmentation -o Ai14_seg_ilasik_1 [-l 1 2 3] [-d dirs] [-p pattern] [-v]
 """
 
 import nibabel as nib

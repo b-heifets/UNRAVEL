@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_nii_to_tifs`` from UNRAVEL to convert an image.nii.gz to tif series in an output_dir.
+Use ``io_nii_to_tifs`` (``n2t``) from UNRAVEL to convert an image.nii.gz to tif series in an output_dir.
 
 Usage:
 ------

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``seg_brain_mask`` from UNRAVEL to use a trained ilastik project (pixel classification) to mask the brain in resampled autofluo images (often improves registration).
+Use ``seg_brain_mask`` (``sbm``) from UNRAVEL to use a trained ilastik project (pixel classification) to mask the brain in resampled autofluo images (often improves registration).
 
 Prereqs: 
     - Organize training tif slices (from ``seg_copy_tifs``) into a single folder.

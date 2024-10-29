@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``seg_copy_tifs`` from UNRAVEL to copy specified TIFFs from each sample?? to a target dir for training ilastik.
+Use ``seg_copy_tifs`` (``sct``) from UNRAVEL to copy specified TIFFs from each sample?? to a target dir for training ilastik.
 
 Note:
     - reg_inputs/autofl_50um_tifs is from ``reg_prep`` and is used to make a brain mask using ``seg_brain_mask``.

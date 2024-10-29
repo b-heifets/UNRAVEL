@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_unique`` from UNRAVEL to print a list of unique intensities greater than 0.
+Use ``img_unique`` (``unique``) from UNRAVEL to print a list of unique intensities greater than 0.
 
 Usage for printing all non-zero intensities:
 --------------------------------------------

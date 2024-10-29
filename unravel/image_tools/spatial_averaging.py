@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_spatial_avg`` from UNRAVEL to load an image and apply 3D spatial averaging.
+Use ``img_spatial_avg`` (``spatial_avg``) from UNRAVEL to load an image and apply 3D spatial averaging.
 
 Input image types:
     - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
