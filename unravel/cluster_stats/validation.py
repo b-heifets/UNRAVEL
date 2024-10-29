@@ -43,7 +43,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration 
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, load_nii_subset, resolve_path
-from unravel.core.img_tools import cluster_IDs
+from unravel.core.img_tools import label_IDs
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, print_func_name_args_times
 from unravel.warp.to_native import to_native
 
@@ -252,7 +252,7 @@ def main():
 
             # Get clusters to process
             if args.clusters == "all":
-                clusters = cluster_IDs(rev_cluster_index)
+                clusters = label_IDs(rev_cluster_index)
             else:
                 clusters = args.clusters
             clusters = [int(cluster) for cluster in clusters]

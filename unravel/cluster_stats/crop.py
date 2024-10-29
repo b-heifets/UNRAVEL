@@ -27,7 +27,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii
-from unravel.core.img_tools import find_bounding_box, cluster_IDs, crop
+from unravel.core.img_tools import find_bounding_box, label_IDs, crop
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, load_text_from_file
 
 
@@ -92,7 +92,7 @@ def main():
         img_cropped = crop(img, bbox_str)
         save_cropped_img(img_cropped, xy_res, z_res, args, cluster=args.cluster)
     elif args.all_clusters:
-        clusters = cluster_IDs(img, min_extent=1, print_IDs=False, print_sizes=False)
+        clusters = label_IDs(img, min_voxel_count=1, print_IDs=False, print_sizes=False)
         for cluster in clusters: 
             xmin, xmax, ymin, ymax, zmin, zmax = find_bounding_box(img, cluster_ID=cluster)
             bbox_str = f"{xmin}:{xmax}, {ymin}:{ymax}, {zmin}:{zmax}"

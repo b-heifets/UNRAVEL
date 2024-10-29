@@ -25,7 +25,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.img_tools import cluster_IDs
+from unravel.core.img_tools import label_IDs
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
@@ -62,7 +62,7 @@ def uniq_intensities(input, min_extent=1, print_sizes=False):
     else: 
         img = load_3D_img(input)
 
-    uniq_intensities = cluster_IDs(img, min_extent=min_extent, print_IDs=True, print_sizes=print_sizes)
+    uniq_intensities = label_IDs(img, min_voxel_count=min_extent, print_IDs=True, print_sizes=print_sizes)
 
     return uniq_intensities
 
