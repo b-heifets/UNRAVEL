@@ -32,11 +32,11 @@ import numpy as np
 from pathlib import Path 
 from rich.traceback import install
 
-from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-
 from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.img_io import load_3D_img
+from unravel.core.img_tools import label_IDs
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
-from unravel.image_tools.unique_intensities import uniq_intensities
 
 
 def parse_args():
@@ -110,7 +110,8 @@ def main():
         clusters = args.clusters
     else:
         print(f'\nProcessing these clusters IDs from {Path(args.cluster_index).name}:')
-        clusters = uniq_intensities(args.cluster_index)
+        cluster_index_img = load_3D_img(args.input)
+        clusters = label_IDs(cluster_index_img, min_voxel_count=1, print_IDs=True, print_sizes=False)
         print()
 
     output_folder = Path(f'cluster_mean_IF_{str(Path(args.cluster_index).name).replace(".nii.gz", "")}')

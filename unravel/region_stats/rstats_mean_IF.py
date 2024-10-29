@@ -26,11 +26,11 @@ from pathlib import Path
 import pandas as pd
 from rich.traceback import install
 
-from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-
 from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.img_io import load_3D_img
+from unravel.core.img_tools import label_IDs
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
-from unravel.image_tools.unique_intensities import uniq_intensities
 
 
 def parse_args():
@@ -109,7 +109,8 @@ def main():
         region_intensities = args.regions
     else:
         print(f'\nProcessing these region IDs from {args.atlas}')
-        region_intensities = uniq_intensities(args.atlas)
+        atlas_img = load_3D_img(args.atlas)
+        region_intensities = label_IDs(atlas_img, min_voxel_count=1, print_IDs=True, print_sizes=False)
         print()
 
     atlas_nii = nib.load(args.atlas)
