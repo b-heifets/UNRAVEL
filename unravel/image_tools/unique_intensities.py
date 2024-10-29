@@ -54,7 +54,7 @@ def main():
 
     # Print unique intensities in image
     img = load_3D_img(args.input)
-    uniq_intensities = label_IDs(img, min_voxel_count=args.min_extent, print_IDs=True, print_sizes=args.print_sizes)
+    uniq_intensities = label_IDs(img, min_voxel_count=args.min_size, print_IDs=True, print_sizes=args.print_sizes)
 
     verbose_end_msg()
     
