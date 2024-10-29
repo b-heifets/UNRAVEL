@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``utils_filter_regions`` or ``ufr`` from UNRAVEL to filter CCFv3-2020_regional_summary.csv by a string and print the results.
+Use ``utils_region_info`` or ``region`` from UNRAVEL to filter CCFv3-2020_regional_summary.csv by a string and print the results.
 
 Note: 
     - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020_regional_summary.csv
@@ -9,7 +9,7 @@ Note:
 
 Usage:
 ------
-    utils_filter_regions -f <string> [-c <filter column>] [-s <sort column>] [-csv <csv_path>]
+    region -f <string> [-c <filter column>] [-s <sort column>] [-csv <csv_path>]
 """
 
 from pathlib import Path
@@ -78,8 +78,8 @@ def filter_region_summary(filter_str, column=None, sort_column=None, csv_path='C
     if filtered.empty:
         console.print(f"\n    [yellow]No results found for filter '{filter_str}' in CSV {csv_path}.\n")
         return
-
-    table = Table(title=f"Region Summary - {len(filtered)} Results")
+    title = f"Region Summary - {len(filtered)} Result" if len(filtered) == 1 else f"Region Summary - {len(filtered)} Results"
+    table = Table(title=title)
     table.add_column("Region_ID", style="magenta")
     table.add_column("General_Region", style="purple3")
     table.add_column("Region", style="cyan")
