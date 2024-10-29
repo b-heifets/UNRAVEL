@@ -258,7 +258,7 @@ def main():
     # print(f"\n    Pearson correlation: {correlation}")
     # print(f"    p-value: {p_value}")
     # print(f"    Number of voxels: {n_of_voxels}\n")
-    print(f'Min_voxels,{args.min_voxels}')
+    print(f'\nMin_voxels,{args.min_voxels}\n')
     print(f"Pearson correlation,{correlation}")
     print(f"p-value,{p_value}")
     print(f"Number of data points,{n}")
