@@ -557,6 +557,12 @@ def main():
                 "common": True,
                 "alias": "s"
             },
+            "utils_region_info": {
+                "module": "unravel.utilities.region_info:main",
+                "description": "Look up region info (e.g., find ACB to see its region name and ID).",
+                "common": True,
+                "alias": "region"
+            },
             "utils_agg_files": {
                 "module": "unravel.utilities.aggregate_files_from_sample_dirs",
                 "description": "Aggregate files from sample directories.",

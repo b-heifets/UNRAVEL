@@ -314,6 +314,7 @@ uc -m
 :::
 
 ::: {tab-item} Utilities
+- [**utils_region_info**](unravel.utilities.region_info): Look up region info (e.g., find ACB to see its region name and ID)
 - [**utils_agg_files**](unravel.utilities.aggregate_files_from_sample_dirs): Aggregate files from sample directories.
 - [**utils_prepend**](unravel.utilities.prepend_conditions): Prepend conditions to files using sample_key.csv.
 - [**utils_rename**](unravel.utilities.rename): Rename files.
