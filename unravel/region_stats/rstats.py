@@ -301,12 +301,12 @@ def main():
                 if seg_img_path is None:
                     print(f"No files match the pattern {args.seg_img_path} in {sample_path}")
                     continue
-                seg_img = load_3D_img(seg_img_path)
+                seg_img = load_3D_img(seg_img_path, verbose=args.verbose)
 
             # Load or generate the native atlas image
             if args.atlas_path is not None and Path(sample_path, args.atlas_path).exists():
                 atlas_path = sample_path / args.atlas_path
-                atlas_img = load_3D_img(atlas_path)
+                atlas_img = load_3D_img(atlas_path, verbose=args.verbose)
             elif args.moving_img is not None and Path(sample_path, args.moving_img).exists():
                 fixed_reg_input = sample_path / args.reg_outputs / args.fixed_reg_in
                 if not fixed_reg_input.exists():

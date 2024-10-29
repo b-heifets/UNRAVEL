@@ -40,7 +40,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    img = load_3D_img(args.input, desired_axis_order=args.axis_order)
+    img = load_3D_img(args.input, desired_axis_order=args.axis_order, verbose=args.verbose)
 
     if args.output: 
         output = args.output

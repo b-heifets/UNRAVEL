@@ -80,15 +80,15 @@ def main():
 
                 # Load cropped image (e.g., iba1_rb20_cropped)
                 cropped_img_path = Path(clusters_dir_path, args.input_dir, f"{sample}_cluster_{cluster}.nii.gz")
-                cropped_img = load_3D_img(cropped_img_path, return_res=False)
+                cropped_img = load_3D_img(cropped_img_path, return_res=False, verbose=args.verbose)
 
                 # Load cropped cluster
                 cropped_cluster_path = Path(clusters_dir_path, f"clusters_cropped", f"crop_{sample}_native_cluster_{cluster}.nii.gz")
-                cropped_cluster_img = load_3D_img(cropped_cluster_path, return_res=False)
+                cropped_cluster_img = load_3D_img(cropped_cluster_path, return_res=False, verbose=args.verbose)
 
                 # Load segmentation (e.g., iba1_seg_ilastik_1/sample03_iba1_seg_ilastik_1.nii.gz_cropped)
                 seg_img_path = Path(clusters_dir_path, args.seg_dir, f"{sample}_cluster_{cluster}.nii.gz")
-                seg_img = load_3D_img(seg_img_path, return_res=False)
+                seg_img = load_3D_img(seg_img_path, return_res=False, verbose=args.verbose)
 
                 # Binarize the arrays
                 cropped_cluster_img = binarize(cropped_cluster_img)

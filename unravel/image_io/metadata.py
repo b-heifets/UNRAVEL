@@ -102,7 +102,7 @@ def main():
                         x_dim, y_dim, z_dim = get_dims_from_tifs(img_path)
                         save_metadata_to_file(args.xy_res, args.z_res, x_dim, y_dim, z_dim, save_metadata=metadata_path)
                     else: 
-                        load_3D_img(img_path, desired_axis_order="xyz", xy_res=args.xy_res, z_res=args.z_res, return_metadata=True, save_metadata=metadata_path)
+                        load_3D_img(img_path, desired_axis_order="xyz", xy_res=args.xy_res, z_res=args.z_res, return_metadata=True, save_metadata=metadata_path, verbose=args.verbose)
                         print(f'\n\n{metadata_path}:')
                         print_metadata(metadata_path)
                 else:

@@ -55,9 +55,9 @@ def main():
     verbose_start_msg()
     
     if args.return_res:
-        img, xy_res, z_res = load_3D_img(args.input, args.channel, desired_axis_order=args.axis_order, return_res=args.return_res)
+        img, xy_res, z_res = load_3D_img(args.input, args.channel, desired_axis_order=args.axis_order, return_res=args.return_res, verbose=args.verbose)
     else:
-        img = load_3D_img(args.input, args.channel, desired_axis_order=args.axis_order, return_res=args.return_res)
+        img = load_3D_img(args.input, args.channel, desired_axis_order=args.axis_order, return_res=args.return_res, verbose=args.verbose)
         xy_res = float(input("Enter xy_res: "))
         z_res = float(input("Enter z_res: "))
 

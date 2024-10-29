@@ -109,7 +109,7 @@ def main():
         region_intensities = args.regions
     else:
         print(f'\nProcessing these region IDs from {args.atlas}')
-        atlas_img = load_3D_img(args.atlas)
+        atlas_img = load_3D_img(args.atlas, verbose=args.verbose)
         region_intensities = label_IDs(atlas_img, min_voxel_count=1, print_IDs=True, print_sizes=False)
         print()
 

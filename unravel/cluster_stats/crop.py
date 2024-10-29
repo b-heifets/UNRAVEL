@@ -76,9 +76,9 @@ def main():
     verbose_start_msg()
    
     if args.xy_res is None or args.z_res is None:
-        img, xy_res, z_res = load_3D_img(args.input, return_res=True)
+        img, xy_res, z_res = load_3D_img(args.input, return_res=True, verbose=args.verbose)
     else:
-        img = load_3D_img(args.input, return_res=True)
+        img = load_3D_img(args.input, return_res=True, verbose=args.verbose)
         xy_res, z_res = args.xy_res, args.z_res
 
     # Crop image

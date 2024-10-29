@@ -53,7 +53,7 @@ def main():
     verbose_start_msg()
 
     # Print unique intensities in image
-    img = load_3D_img(args.input)
+    img = load_3D_img(args.input, verbose=args.verbose)
     uniq_intensities = label_IDs(img, min_voxel_count=args.min_size, print_IDs=True, print_sizes=args.print_sizes)
 
     verbose_end_msg()

@@ -117,7 +117,7 @@ def main():
                 import sys ; sys.exit()
 
             # Load full res autofluo image
-            img = load_3D_img(img_path, args.channel)
+            img = load_3D_img(img_path, args.channel, verbose=args.verbose)
 
             # Prepare the autofluo image for registration
             img_resampled = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)

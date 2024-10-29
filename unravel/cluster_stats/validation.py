@@ -236,14 +236,14 @@ def main():
                 continue
             
             # Use lower bit-depth possible for cluster index
-            rev_cluster_index = load_3D_img(args.moving_img)
+            rev_cluster_index = load_3D_img(args.moving_img, verbose=args.verbose)
 
             # Define paths relative to sample?? folder 
             native_idx_path = resolve_path(sample_path, args.native_idx) if args.native_idx else None
             
             # Load cluster index and convert to ndarray 
             if args.native_idx and Path(args.native_idx).exists():
-                native_cluster_index = load_3D_img(Path(args.native_idx).exists())
+                native_cluster_index = load_3D_img(Path(args.native_idx), verbose=args.verbose)
             else:
                 fixed_reg_input = Path(sample_path, args.reg_outputs, args.fixed_reg_in) 
                 if not fixed_reg_input.exists():

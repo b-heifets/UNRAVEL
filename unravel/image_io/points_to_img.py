@@ -176,7 +176,7 @@ def main():
     points_ndarray = points_df[['x', 'y', 'z']].values
 
     # Create an image from the points using a reference image to determine the shape
-    ref_img = load_3D_img(args.ref_img)
+    ref_img = load_3D_img(args.ref_img, verbose=args.verbose)
     img = points_to_img(points_ndarray, ref_img)
 
     # Save the image

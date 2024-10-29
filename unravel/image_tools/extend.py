@@ -88,7 +88,7 @@ def main():
             input_path = Path(args.input).resolve()
 
             # Load image
-            img = load_3D_img(input_path, return_res=False)
+            img = load_3D_img(input_path, return_res=False, verbose=args.verbose)
 
             # Extend image
             extended_img = extend_one_side_3d_array(img, args.side, args.extension)

@@ -43,9 +43,10 @@ def parse_args():
 # TODO: Consolidate save_labels_as_masks() here and the one from unravel/segment/ilastik_pixel_classification.py
 
 @print_func_name_args_times()
-def save_labels_as_masks(ndarray, label, segmentation_dir, output_name):
+def save_labels_as_masks(ndarray, label, segmentation_dir, output_name, verbose=False):
     """Converts label in an image to a binary mask and saves it as a .nii.gz file. Assumes < 256 labels."""
-    print(f"\n    Converting label {label} to mask and saving as .nii.gz in {segmentation_dir}\n")
+    if verbose:
+        print(f"\n    Converting label {label} to mask and saving as .nii.gz in {segmentation_dir}\n")
     label_img = (ndarray == label).astype(np.uint8)
     nifti_img = nib.Nifti1Image(label_img, np.eye(4))
     nib.save(nifti_img, segmentation_dir.joinpath(f"{output_name}"))
@@ -68,17 +69,17 @@ def main():
             if img_path is None:
                 print(f"No files match the pattern {args.input} in {sample_path}")
                 continue
-            seg_img = load_3D_img(img_path)
+            seg_img = load_3D_img(img_path, verbose=args.verbose)
             
             # Convert each label to a binary mask and save as .nii.gz
             if isinstance(args.labels, int):
                 labels = [args.labels]
             if len(labels) == 1:
-                save_labels_as_masks(seg_img, int(labels[0]), img_path.parent, args.output)
+                save_labels_as_masks(seg_img, int(labels[0]), img_path.parent, args.output, verbose=args.verbose)
             else: 
                 for label in labels:
                     output_name = f"{args.output}_{int(label)}.nii.gz"
-                    save_labels_as_masks(seg_img, int(label), img_path.parent, output_name)
+                    save_labels_as_masks(seg_img, int(label), img_path.parent, output_name, verbose=args.verbose)
 
             progress.update(task_id, advance=1)
 

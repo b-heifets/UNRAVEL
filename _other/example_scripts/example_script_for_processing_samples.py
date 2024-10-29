@@ -33,9 +33,9 @@ def parse_args():
 
 
 @print_func_name_args_times()
-def example_function(img_path):
+def example_function(img_path, verbose=False):
     """Load a 3D image in the sample folder (first *.czi, *.tif, or *.nii.gz match), print shape and resolution, and mimic processing time"""
-    img, xy_res, z_res = load_3D_img(img_path, return_res=True)
+    img, xy_res, z_res = load_3D_img(img_path, return_res=True, verbose=verbose)
     print(f"\n    [default]Image shape: {img.shape}, xy_res: {xy_res}, z_res: {z_res}\n")
     sleep(0.5) 
     return img
@@ -47,7 +47,7 @@ def main():
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress):
         for sample in samples:
-            example_function(Path(sample).resolve())
+            example_function(Path(sample).resolve(), verbose=args.verbose)
             progress.update(task_id, advance=1)
 
 

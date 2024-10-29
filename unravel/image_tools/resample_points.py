@@ -131,7 +131,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    ref_img = load_3D_img(args.ref_img)
+    ref_img = load_3D_img(args.ref_img, verbose=args.verbose)
 
     # Resample and convert the points
     points_resampled_df, points_resampled_img = resample_and_convert_points(args.input, args.current_res, args.target_res, ref_img, args.thresh, args.upper_thr)

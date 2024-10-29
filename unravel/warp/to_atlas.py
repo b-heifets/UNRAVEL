@@ -141,7 +141,7 @@ def main():
 
             # Load full res image [and xy and z voxel size in microns], to be resampled [and reoriented], padded, and warped
             img_path = sample_path / args.input
-            img = load_3D_img(img_path, args.channel)
+            img = load_3D_img(img_path, args.channel, verbose=args.verbose)
 
             # Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)
             img = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)

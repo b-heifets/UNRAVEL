@@ -39,7 +39,7 @@ def save_image_as_hdf5(ndarray, output):
 def main():
     args = parse_args()
 
-    img = load_3D_img(args.input, desired_axis_order="zyx") # Ensure the image is in the correct axis order for ilastik
+    img = load_3D_img(args.input, desired_axis_order="zyx", verbose=args.verbose) # Ensure the image is in the correct axis order for ilastik
 
     if args.output: 
         output = args.output

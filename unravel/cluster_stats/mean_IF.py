@@ -110,7 +110,7 @@ def main():
         clusters = args.clusters
     else:
         print(f'\nProcessing these clusters IDs from {Path(args.cluster_index).name}:')
-        cluster_index_img = load_3D_img(args.input)
+        cluster_index_img = load_3D_img(args.input, verbose=args.verbose)
         clusters = label_IDs(cluster_index_img, min_voxel_count=1, print_IDs=True, print_sizes=False)
         print()
 

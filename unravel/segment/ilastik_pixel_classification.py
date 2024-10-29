@@ -72,8 +72,8 @@ def count_files(directory):
     return sum(1 for entry in os.scandir(directory) if entry.is_file())
 
 @print_func_name_args_times()
-def save_labels_as_masks(tif_dir, labels, segmentation_dir, output_name):
-    img = load_3D_img(tif_dir) 
+def save_labels_as_masks(tif_dir, labels, segmentation_dir, output_name, verbose=False):
+    img = load_3D_img(tif_dir, verbose=verbose) 
     for label in labels:
         print(f"\n    Converting label {label} to binary mask and saving as .nii.gz in {segmentation_dir}\n")
         # img == label creates a boolean array where pixels equal to label are True (1) and all others are False (0).
@@ -119,7 +119,7 @@ def main():
                     input_tif_dir = input_path
                     input_z_size = count_files(input_tif_dir)
                 else:
-                    img = load_3D_img(input_path, channel=args.channel)
+                    img = load_3D_img(input_path, channel=args.channel, verbose=args.verbose)
                     input_z_size = img.shape[2]
 
                 # Count the number of TIFFs in the output directory
@@ -140,7 +140,7 @@ def main():
             else:
                 remove_tmp_tifs = True
                 if not img:
-                    img = load_3D_img(input_path, channel=args.channel)
+                    img = load_3D_img(input_path, channel=args.channel, verbose=args.verbose)
                 input_tif_dir = segmentation_dir / str(input_path.name).removesuffix(".czi").removesuffix(".nii.gz").removesuffix(".zarr").removesuffix(".h5") + "_tifs"
                 save_as_tifs(img, input_tif_dir)
 
@@ -150,7 +150,7 @@ def main():
 
             # Convert each label to a binary mask and save as .nii.gz if labels are provided
             if labels:
-                save_labels_as_masks(output_tif_dir, args.labels, segmentation_dir, args.output)
+                save_labels_as_masks(output_tif_dir, args.labels, segmentation_dir, args.output, verbose=args.verbose)
 
             # Remove input TIFFs if they were created just for pixel_classification()
             if remove_tmp_tifs:

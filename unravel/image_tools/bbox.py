@@ -43,7 +43,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    img = load_3D_img(args.input)
+    img = load_3D_img(args.input, verbose=args.verbose)
 
     # Make output dir
     if args.output:

@@ -102,7 +102,7 @@ def main():
                 print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ io_metadata")
                 import sys ; sys.exit()
 
-            img = load_3D_img(img_path, args.channel, "xyz")
+            img = load_3D_img(img_path, args.channel, "xyz", verbose=args.verbose)
 
             # Apply spatial averaging
             if args.spatial_avg == 3:

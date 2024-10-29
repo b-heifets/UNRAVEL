@@ -79,7 +79,7 @@ def main():
     if str(args.input).endswith('.nii.gz'):
         img = load_nii_subset(args.input, xmin, xmax, ymin, ymax, zmin, zmax)
     else:
-        img = load_3D_img(args.input, return_res=True)
+        img = load_3D_img(args.input, return_res=True, verbose=args.verbose)
         
     # Load image metadata from .txt
     xy_res, z_res, _, _, _ = load_image_metadata_from_txt(args.metadata)

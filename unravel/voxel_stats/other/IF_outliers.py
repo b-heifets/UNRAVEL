@@ -14,6 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from rich import print
 from rich.live import Live
+from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
@@ -58,7 +59,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    mask = load_3D_img(args.mask)
+    mask = load_3D_img(args.mask, verbose=args.verbose)
 
     # Collect .nii.gz files matching the pattern
     images = [f for f in glob.glob(args.pattern) if os.path.basename(f) != args.mask]
@@ -70,7 +71,7 @@ def main():
     task_id = progress.add_task("[red]Getting means...", total=len(images))
     with Live(progress):
         for idx, img in enumerate(images):
-            image = load_3D_img(img)
+            image = load_3D_img(img, verbose=args.verbose)
             mean_intensity = mean_intensity_within_mask(image, mask)
             mean_values.append(mean_intensity)
             print(f"{idx} Mean in mask for {img}: {mean_intensity}")
