@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
 
 """
-Run ``reg_affine_initializer`` from UNRAVEL as a seperate process to kill it after a time out. This also allows for suppressing error messages.
+Run ``reg_affine_initializer`` (``rai``) from UNRAVEL to perform affine initialization using ANTsPy.
+
+Note:
+    - This allows ants.affine_initializer() to be run as a seperate process during reg.
+    - This process is killed after a time out.
+    - This also allows for suppressing error messages.
 
 Python usage:
 -------------

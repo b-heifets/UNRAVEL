@@ -107,7 +107,13 @@ def main():
                 "description": "Check brain mask for over/under segmentation.",
                 "common": False,
                 "alias": "rcbm"
-            }
+            },
+            "reg_affine_initializer": {
+                "module": "unravel.register.affine_initializer",
+                "description": "Perform affine initialization using ANTsPy.",
+                "common": False,
+                "alias": "rai"
+            },
         },
         "Warping": {
             "warp_to_atlas": {
