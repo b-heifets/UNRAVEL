@@ -255,11 +255,14 @@ def main():
     verbose_start_msg()
 
     if (args.order and not args.labels) or (not args.order and args.labels):
-        raise ValueError("Both --order and --labels must be provided together.")
+        raise ValueError("\n    [red1]Both --order and --labels must be provided together.\n")
 
     if args.order and args.labels and len(args.order) != len(args.labels):
-        raise ValueError("The number of entries in --order and --labels must match.")
+        raise ValueError("\n    [red1]The number of entries in --order and --labels must match.\n")
     
+    if not any(filename.endswith('.csv') for filename in os.listdir()):
+        raise FileNotFoundError("\n    [red1]No CSV files found in the working directory.\n")
+
     # Print CSVs in the working dir
     print(f'\n[bold]CSVs in the working dir to process (the first word defines the groups): \n')
     for filename in os.listdir():
