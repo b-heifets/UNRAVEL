@@ -95,7 +95,7 @@ def load_data(cluster_id):
     if data:
         return pd.DataFrame(data)
     else:
-        raise ValueError(f"    [red1]No data found for cluster ID: {cluster_id}")
+        raise ValueError(f"No data found for cluster ID: {cluster_id}")
 
 def perform_t_tests(df, order):
     """Perform t-tests between groups in the DataFrame."""
@@ -117,7 +117,7 @@ def plot_data(cluster_id, order=None, labels=None, test_type='tukey', alt='two-s
     df = load_data(cluster_id)
 
     if 'group' not in df.columns:
-        raise KeyError(f"    [red1]'group' column not found in the DataFrame for {cluster_id}. Ensure the CSV files contain the correct data.")
+        raise KeyError(f"'group' column not found in the DataFrame for {cluster_id}. Ensure the CSV files contain the correct data.")
     
     # Define a list of potential colors
     predefined_colors = [
@@ -255,13 +255,13 @@ def main():
     verbose_start_msg()
 
     if (args.order and not args.labels) or (not args.order and args.labels):
-        raise ValueError("\n    [red1]Both --order and --labels must be provided together.\n")
+        raise ValueError("Both --order and --labels must be provided together.")
 
     if args.order and args.labels and len(args.order) != len(args.labels):
-        raise ValueError("\n    [red1]The number of entries in --order and --labels must match.\n")
+        raise ValueError("The number of entries in --order and --labels must match.")
     
     if not any(filename.endswith('.csv') for filename in os.listdir()):
-        raise FileNotFoundError("\n    [red1]No CSV files found in the working directory.\n")
+        raise FileNotFoundError("No CSV files found in the working directory.")
 
     # Print CSVs in the working dir
     print(f'\n[bold]CSVs in the working dir to process (the first word defines the groups): \n')
