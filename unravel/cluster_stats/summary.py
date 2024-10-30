@@ -5,6 +5,9 @@ Use ``cstats_summary`` (``css``) from UNRAVEL to aggregate and analyze cluster v
 
 Prereqs:
     - ``cstats_validation``
+    - The name of the rev_cluster_index file should relate to the name of the cluster validation directory.
+    - cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
+    - _cluster_info.txt should be named like: cluster_index_dir + "_cluster_info.txt"
 
 Inputs:
     - Cell/label density CSVs from from ``cstats_validation``
@@ -101,6 +104,7 @@ def parse_args():
 # TODO: Consider using env_var.sh instead of unravel/cluster_stats/summary.ini
 # TODO: Could include warning if directories are present in the current working directory that should not be there
 # TODO: Could make it possible to generate data for all clusters, not just valid clusters
+# TODO: Given that the cluster_index_dir and cluster_info.txt names should be related, could add a check for this (perhaps also simplify logic for finding the cluster_info.txt file)
 
 def run_script(script_name, script_args):
     """Run a command/script using subprocess that respects the system's PATH and captures output."""
