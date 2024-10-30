@@ -80,7 +80,7 @@ def parse_args():
     utils_prepend.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions (for utils_prepend)', action=SM)
 
     # cstats --groups <group1> <group2>
-    cstats = parser.add_argument_group('Optional rgs for cstats')
+    cstats = parser.add_argument_group('Optional args for cstats')
     cstats.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cstats)',  nargs='*', action=SM)
     cstats.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for cstats)',  nargs='*', default=None, action=SM)
     cstats.add_argument('-hg', '--higher_group', help='Specify the group that is expected to have a higher mean based on the direction of the p value map', required=True)
@@ -116,6 +116,12 @@ def main():
     args = parse_args()
     Configuration.verbose = args.verbose
     verbose_start_msg()
+
+    # Check for subdirectories in the current working directory
+    subdirs = [d for d in Path.cwd().iterdir() if d.is_dir()]
+    if len(subdirs) == 0 and not args.dirs:
+        print(f"\n    [red1]No subdirectories found in the current directory. Provide -d/--dirs so that data from sample??/clusters/ can be aggregated and processed.\n")
+        return
 
     cfg = load_config(args.config)
     
