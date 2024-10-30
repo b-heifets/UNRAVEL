@@ -180,6 +180,13 @@ def main():
         print(f"\n[red]    No CSV files found in {path}.[/]")
         import sys ; sys.exit()
 
+    # Print CSVs in the working dir
+    if args.verbose:
+        print(f'\n[bold]CSVs in the working dir to process (the first word defines the groups): \n')
+        for filename in csv_files:
+            print(f'    {filename.name}')
+        print()
+
     # Load the first .csv file to check for data columns and set the appropriate column names
     first_df = pd.read_csv(csv_files[0])
 
