@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_legend`` from UNRAVEL to summarize regional abbreviations from _valid_clusters_table.xlsx files.
+Use ``cstats_legend`` (``legend``) from UNRAVEL to summarize regional abbreviations from _valid_clusters_table.xlsx files.
 
 Inputs:
     - <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cstats_table``

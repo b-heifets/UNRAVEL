@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_group_data`` from UNRAVEL to organize bilateral csv outputs from ``cstats_validation``
+Use ``cstats_group_data`` (``cgd``) from UNRAVEL to organize bilateral csv outputs from ``cstats_validation``
 
 Note: 
     - Run this command in the target_dir from ``cstats_org_data``

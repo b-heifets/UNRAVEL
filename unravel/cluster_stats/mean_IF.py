@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.
+Use ``cstats_mean_IF`` (``cmi``) from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.
 
 Prereqs: 
     - ``vstats``

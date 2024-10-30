@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each cluster in atlas space.
+Use ``cstats_mean_IF_summary`` (``cmis``) from UNRAVEL to output plots of mean IF intensities for each cluster in atlas space.
 
 Prereqs:
     - Generate CSV inputs withs ``cstats_IF_mean``

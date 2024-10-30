@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_mirror_indices`` from UNRAVEL to recursively process img.nii.gz files, apply mirroring, and save new files.
+Use ``cstats_mirror_indices`` (``mirror_ci``) from UNRAVEL to recursively process img.nii.gz files, apply mirroring, and save new files.
 
 Note:
     - Use this command after ``cstats_fdr`` to mirror the cluster indices for the other side of the brain before running ``cstats_validation``.  

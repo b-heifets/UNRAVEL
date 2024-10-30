@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_org_data`` from UNRAVEL to aggregate and organize csv outputs from ``cstats_validation``.
+Use ``cstats_org_data`` (``cod``) from UNRAVEL to aggregate and organize csv outputs from ``cstats_validation``.
 
 Inputs: 
     - clusters/cluster_validation_results_`*` (glob pattern matching ``cstats_validation`` output dirs)

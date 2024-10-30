@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``effect_sizes`` from UNRAVEL to calculate the effect size for a comparison between two groups for each cluster [or a valid cluster list].
+Use ``effect_sizes`` (``es``) from UNRAVEL to calculate the effect size for a comparison between two groups for each cluster [or a valid cluster list].
 
 Prereqs:
     - ``cstats_validation`` to generate the input CSVs with densities.

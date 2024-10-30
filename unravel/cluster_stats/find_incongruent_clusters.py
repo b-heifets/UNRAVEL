@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_find_incongruent`` from UNRAVEL if ``cstats_fdr`` was used to convert non-directional p value maps into directional cluster indices. This helps to find clusters where the direction of the mean intensity difference between groups does not match direction of the difference in cell/label density between groups.
+Use ``cstats_find_incongruent`` (``cfi``) from UNRAVEL if ``cstats_fdr`` was used to convert non-directional p value maps into directional cluster indices. This helps to find clusters where the direction of the mean intensity difference between groups does not match direction of the difference in cell/label density between groups.
 
 Input:
     - ./_cluster_validation_info/tukey_results.csv  or ttest_results.csv from ``cstats``

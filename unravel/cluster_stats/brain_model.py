@@ -2,7 +2,7 @@
 
 """
 
-Use ``cstats_brain_model`` from UNRAVEL to prep an img.nii.gz and RGBA.txt LUT for vizualization in dsi_studio.
+Use ``cstats_brain_model`` (``cbm``) from UNRAVEL to prep an img.nii.gz and RGBA.txt LUT for vizualization in dsi_studio.
 
 Prereqs:
     - Use ``cstats_summary`` or ``cstats_index`` to generate a valid cluster index.

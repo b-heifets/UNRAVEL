@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats`` from UNRAVEL to validate clusters based on differences in cell/object or label density w/ t-tests.    
+Use ``cstats`` (``cs``) from UNRAVEL to validate clusters based on differences in cell/object or label density w/ t-tests.    
 
 Input files: 
     - `*`_density_data.csv from ``cstats_validation`` (e.g., in each subdir named after the rev_cluster_index.nii.gz file)

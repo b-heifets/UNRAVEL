@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_prism`` from UNRAVEL to organize data for clusters for plotting in Prism.
+Use ``cstats_prism`` (``prism``) from UNRAVEL to organize data for clusters for plotting in Prism.
 
 Inputs:
     `*`.csv from ``cstats_org_data`` (in working dir) or ``cstats_mean_IF``
@@ -11,7 +11,7 @@ CSV naming conventions:
     - Sample: second word in file name
 
 Example unilateral inputs:
-    - condition1_sample01_<cell|label>_density_data.csv
+    - condition1_sample01_<cell|label>_density_data.csv (columns: sample, cluster_ID, <cell_count|label_volume|mean_IF_intensity>, [cluster_volume], [cell_density|label_density], ...)
     - condition1_sample02_<cell|label>_density_data.csv
     - condition2_sample03_<cell|label>_density_data.csv
     - condition2_sample04_<cell|label>_density_data.csv

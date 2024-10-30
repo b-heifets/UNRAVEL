@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
+Use ``cstats_table`` (``ct``) from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
 
 Prereqs:
     - This command is usually run via ``cstats_summary``.

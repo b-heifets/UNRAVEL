@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_index`` from UNRAVEL to create a cluster index with valid clusters from a given NIfTI image.
+Use ``cstats_index`` (``ci``) from UNRAVEL to create a cluster index with valid clusters from a given NIfTI image.
 
 Outputs:
     - path/valid_clusters/rev_cluster_index_valid_clusters.nii.gz

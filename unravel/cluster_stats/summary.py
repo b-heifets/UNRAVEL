@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """ 
-Use ``cstats_summary`` from UNRAVEL to aggregate and analyze cluster validation data from ``cstats_validation``.
+Use ``cstats_summary`` (``css``) from UNRAVEL to aggregate and analyze cluster validation data from ``cstats_validation``.
 
 Prereqs:
     - ``cstats_validation``

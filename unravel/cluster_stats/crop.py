@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_crop`` from UNRAVEL to load image, load bounding box, crop cluster, and save as .nii.gz.
+Use ``cstats_crop`` (``crop``) from UNRAVEL to load image, load bounding box, crop cluster, and save as .nii.gz.
 
 Note:
     - -x and -z need to be provided if the resolution is not extracted from the image metadata.
