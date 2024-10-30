@@ -182,7 +182,7 @@ def main():
 
     # Print CSVs in the working dir
     if args.verbose:
-        print(f'\n[bold]CSVs in the working dir to process (the first word defines the groups): \n')
+        print(f'\n[bold]CSVs in {path} to process (the first word defines the groups): \n')
         for filename in csv_files:
             print(f'    {filename.name}')
         print()
