@@ -36,6 +36,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Add hierarchical info (parent regions and abbreviations)
 
 def filter_region_summary(filter_str, column=None, sort_column=None, csv_path='CCFv3-2020_regional_summary.csv', case_sensitive=False):
     # Load CSV file
