@@ -105,7 +105,7 @@ def generate_summary_table(csv_files, data_column_name):
                 RH_df = pd.read_csv(str(file).replace('_LH.csv', '_RH.csv'), usecols=['sample', 'cluster_ID', data_column_name])
 
                 # Sum the data_col of the LH and RH dataframes
-                if data_column_name == 'cell_count' or data_column_name == 'label_volume':
+                if data_column_name == 'cell_count' or data_column_name == 'label_volume' or data_column_name == 'cluster_volume': ### ADDED CLUSTER_VOL
                     df = pd.concat([LH_df, RH_df], ignore_index=True).groupby(['sample', 'cluster_ID']).agg( # Group by sample and cluster_ID
                         **{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='sum')} # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method
                     ).reset_index() # Reset the index to avoid a multi-index dataframe
@@ -199,11 +199,33 @@ def main():
     else:
         cluster_volume_summary_df = None
 
-    # Generate a summary table for the cell_density or label_density data
-    if density_col is not None:
-        density_col_summary_df = generate_summary_table(csv_files, density_col)  # Columns: sample, cluster_ID, cell_density|label_density
+    # Generate a summary table for the cell_density or label_density data ###
+    if density_col is not None: ### UPDATED LOGIC FOR COUNTS / VOL or SEG VOL / VOL * 100 (rather than using generate_summary_table)
+
+        # Separate the `cluster_ID` column from both DataFrames
+        cluster_ids = data_col_summary_df.iloc[:, 0]  # First column (cluster_ID)
+
+        # Divide all other columns (excluding the first column)
+        density_values = data_col_summary_df.iloc[:, 1:] / cluster_volume_summary_df.iloc[:, 1:]
+
+        if density_col == 'label_density':
+            density_values = density_values * 100
+
+        # Combine `cluster_ID` with the calculated density values
+        density_col_summary_df = pd.concat([cluster_ids, density_values], axis=1)
+
+
+        ### density_col_summary_df = generate_summary_table(csv_files, density_col)  # Columns: sample, cluster_ID, cell_density|label_density
     else:
         density_col_summary_df = None
+
+    # Save the summary tables to .csv files
+    output_dir = path / '_prism'
+    Path(output_dir).mkdir(exist_ok=True)
+    data_col_summary_df.to_csv(output_dir / f'{data_col}_summary.csv', index=False) ### Now data for all clusters is saved even if valid cluster data also saved
+    if 'cluster_volume' in first_df.columns:
+        density_col_summary_df.to_csv(output_dir / f'{density_col}_summary.csv', index=False)
+        cluster_volume_summary_df.to_csv(output_dir / 'cluster_volume_summary.csv', index=False)
 
     # Exclude clusters that are not in the list of valid clusters
     if args.valid_cluster_ids is not None:
@@ -237,11 +259,7 @@ def main():
         density_col_summary_df_sum.columns = multi_index
         density_col_summary_df_sum = density_col_summary_df_sum.drop('cluster_ID').reset_index().T
 
-    # Make output dir
-    output_dir = path / '_prism'
-    Path(output_dir).mkdir(exist_ok=True)
-
-    # Save the summary tables to .csv files
+    # Save the valid cluster summary tables to .csv files
     if args.valid_cluster_ids is not None:
         data_col_summary_df.to_csv(output_dir / f'{data_col}_summary_for_valid_clusters.csv', index=False)
         if 'cluster_volume' in first_df.columns:
@@ -249,13 +267,11 @@ def main():
             density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_valid_clusters.csv', index=False)
             cluster_volume_summary_df.to_csv(output_dir / 'valid_cluster_volume_summary.csv', index=False)
     else:
-        data_col_summary_df.to_csv(output_dir / f'{data_col}_summary.csv', index=False)
         if 'cluster_volume' in first_df.columns:
-            density_col_summary_df.to_csv(output_dir / f'{density_col}_summary.csv', index=False)
             density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_clusters.csv', index=False)
-            cluster_volume_summary_df.to_csv(output_dir / 'cluster_volume_summary.csv', index=False)
 
-    print(f"\n    Saved results in [bright_magenta]{output_dir}")
+    if args.verbose:
+        print(f"\n    Saved CSVs for plotting with Prism to[bright_magenta]{output_dir}")
 
     verbose_end_msg()
 
