@@ -149,7 +149,7 @@ def tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, a
     tissue_mask_img = np.where(tissue_mask_img > 0, 1, 0).astype(np.uint8)
     return tissue_mask_img
 
-def z_score_mask(sample_path, input_path, fixed_reg_input, atlas_path, tissue_mask_path=None, atlas_mask_path=None, verbose=verbose):
+def z_score_mask(sample_path, input_path, fixed_reg_input, atlas_path, tissue_mask_path=None, atlas_mask_path=None, verbose=False):
     """Combine tissue and atlas masks if both are provided, otherwise use whichever is available.
     
     Parameters:
@@ -169,7 +169,7 @@ def z_score_mask(sample_path, input_path, fixed_reg_input, atlas_path, tissue_ma
     if tissue_mask_path is not None:
         if not Path(tissue_mask_path).exists():
             raise FileNotFoundError(f"Tissue mask not found: {tissue_mask_path}")
-        tissue_mask_img = tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, atlas_path, verbose=args.verbose)
+        tissue_mask_img = tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, atlas_path, verbose=verbose)
         mask_img = tissue_mask_img
 
     # Load the atlas mask (if provided)
