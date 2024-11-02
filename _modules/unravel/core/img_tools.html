@@ -360,7 +360,7 @@
 <span class="sd">    - reorient_ndarray: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).</span>
 <span class="sd">    - reorient_ndarray2: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).</span>
 <span class="sd">    - rolling_ball_subtraction_opencv_parallel: Subtract background from a 3D ndarray using OpenCV.</span>
-<span class="sd">    - cluster_IDs: Prints cluster IDs for clusters &gt; minextent voxels.</span>
+<span class="sd">    - label_IDs: Prints label IDs &gt; min_voxel_count (and optionally their sizes) in a 3D ndarray.</span>
 <span class="sd">    - find_bounding_box: Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
@@ -622,31 +622,60 @@
 
 
 <span class="n">print_func_name_args_times</span><span class="p">()</span>
-<div class="viewcode-block" id="cluster_IDs">
-<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.cluster_IDs">[docs]</a>
-<span class="k">def</span> <span class="nf">cluster_IDs</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">min_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">print_IDs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_sizes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Gets unique intensities [and sizes] for regions/clusters &gt; minextent voxels and prints them in a string-separated list. </span>
+<div class="viewcode-block" id="label_IDs">
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.label_IDs">[docs]</a>
+<span class="k">def</span> <span class="nf">label_IDs</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">min_voxel_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">print_IDs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_sizes</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This finds and prints unique intensities in the ndarry with more than min_voxel_count voxels (does not check for connectedness).</span>
 
-<span class="sd">    Args:</span>
-<span class="sd">        ndarray</span>
-<span class="sd">        min_extent (int, optional): _description_. Defaults to 1.</span>
-<span class="sd">        print_IDs (bool, optional): _description_. Defaults to False.</span>
-<span class="sd">        print_sizes (bool, optional): _description_. Defaults to False.</span>
+<span class="sd">    Optionally, it also prints the number of voxels for each label ID (intensity).</span>
 
-<span class="sd">    Returns:</span>
-<span class="sd">        list of ints: list of unique intensities</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ndarray : numpy.ndarray</span>
+<span class="sd">        Input array with integer intensities.</span>
+<span class="sd">    min_voxel_count : int, optional</span>
+<span class="sd">        Minimum size threshold for each intensity in voxels. Labels smaller than this</span>
+<span class="sd">        threshold are ignored. Default is 1.</span>
+<span class="sd">    print_IDs : bool, optional</span>
+<span class="sd">        If True, print the IDs of labels above the minimum size threshold. Default is False.</span>
+<span class="sd">    print_sizes : bool, optional</span>
+<span class="sd">        If True, print both the IDs and sizes of label IDs above the minimum size threshold.</span>
+<span class="sd">        Default is False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of int</span>
+<span class="sd">        List of unique label IDs (intensities) that meet the minimum size threshold.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; import numpy as np</span>
+<span class="sd">    &gt;&gt;&gt; array = np.array([[0, 1, 1], [0, 2, 2], [3, 3, 3]])</span>
+<span class="sd">    &gt;&gt;&gt; cluster_IDs(array, min_voxel_count=2)</span>
+<span class="sd">    [1, 2, 3]</span>
+
+<span class="sd">    &gt;&gt;&gt; cluster_IDs(array, min_voxel_count=2, print_IDs=True)</span>
+<span class="sd">    1 2 3</span>
+
+<span class="sd">    &gt;&gt;&gt; cluster_IDs(array, min_voxel_count=2, print_sizes=True)</span>
+<span class="sd">    ID: 1, Size: 2</span>
+<span class="sd">    ID: 2, Size: 2</span>
+<span class="sd">    ID: 3, Size: 3</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="c1"># Get unique intensities and their counts</span>
     <span class="n">unique_intensities</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">ndarray</span><span class="p">[</span><span class="n">ndarray</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="c1"># Filter clusters based on size</span>
-    <span class="n">clusters_above_minextent</span> <span class="o">=</span> <span class="p">[</span><span class="n">intensity</span> <span class="k">for</span> <span class="n">intensity</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique_intensities</span><span class="p">,</span> <span class="n">counts</span><span class="p">)</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="n">min_extent</span><span class="p">]</span>
+    <span class="n">clusters_above_minextent</span> <span class="o">=</span> <span class="p">[</span><span class="n">intensity</span> <span class="k">for</span> <span class="n">intensity</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">unique_intensities</span><span class="p">,</span> <span class="n">counts</span><span class="p">)</span> <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;=</span> <span class="n">min_voxel_count</span><span class="p">]</span>
     
     <span class="c1"># Print cluster IDs</span>
+    <span class="k">if</span> <span class="n">print_sizes</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">ID,Size&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">cluster_id</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">clusters_above_minextent</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">print_sizes</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ID: </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">)</span><span class="si">}</span><span class="s2">, Size: </span><span class="si">{</span><span class="n">counts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">)</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">counts</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">print_IDs</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">cluster_id</span><span class="p">),</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">print_IDs</span><span class="p">:</span> <span class="c1"># Removes trailing %</span>

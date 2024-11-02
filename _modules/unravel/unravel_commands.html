@@ -343,7 +343,7 @@ window.addEventListener("load", () => mermaid.run());
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``unravel_commands`` or ``uc`` to print a list of commands available in the UNRAVEL package. </span>
+<span class="sd">Use ``unravel_commands`` (``uc``) to print a list of commands available in the UNRAVEL package. </span>
 
 <span class="sd">For help on a ``command``, run: </span>
 <span class="sd">&lt;command&gt; -h</span>
@@ -454,7 +454,13 @@ window.addEventListener("load", () => mermaid.run());
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Check brain mask for over/under segmentation.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rcbm&quot;</span>
-            <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;reg_affine_initializer&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.register.affine_initializer&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Perform affine initialization using ANTsPy.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rai&quot;</span>
+            <span class="p">},</span>
         <span class="p">},</span>
         <span class="s2">&quot;Warping&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;warp_to_atlas&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -895,12 +901,6 @@ window.addEventListener("load", () => mermaid.run());
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Make an atlas wireframe.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;wf&quot;</span>
-            <span class="p">},</span>
-            <span class="s2">&quot;atlas_set_labels&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_tools.atlas.set_labels&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Set specified label IDs in the ndarray to the given value.&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sl&quot;</span>
             <span class="p">},</span>
         <span class="p">},</span>
         <span class="s2">&quot;Utilities&quot;</span><span class="p">:</span> <span class="p">{</span>

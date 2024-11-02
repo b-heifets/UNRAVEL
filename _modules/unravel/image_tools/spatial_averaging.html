@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``img_spatial_avg`` from UNRAVEL to load an image and apply 3D spatial averaging.</span>
+<span class="sd">Use ``img_spatial_avg`` (``spatial_avg``) from UNRAVEL to load an image and apply 3D spatial averaging.</span>
 
 <span class="sd">Input image types:</span>
 <span class="sd">    - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</span>
@@ -492,9 +492,9 @@
     
     <span class="c1"># Load image and metadata</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">z_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
         <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">z_res</span>
 
     <span class="c1"># Apply spatial averaging</span>

@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``img_bbox`` from UNRAVEL to load an image (.czi, .nii.gz, or tif series) and save bounding boxes as txt files.</span>
+<span class="sd">Use ``img_bbox`` (``bbox``) from UNRAVEL to load an image (.czi, .nii.gz, or tif series) and save bounding boxes as txt files.</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
@@ -366,7 +366,7 @@
 
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">load_3D_img</span>
-<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">find_bounding_box</span><span class="p">,</span> <span class="n">cluster_IDs</span>
+<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">find_bounding_box</span><span class="p">,</span> <span class="n">label_IDs</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
 
 
@@ -399,7 +399,7 @@
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
-    <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
     <span class="c1"># Make output dir</span>
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
@@ -419,7 +419,7 @@
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">cluster</span><span class="p">:</span>
         <span class="n">clusters</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">cluster</span><span class="p">)]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">clusters</span> <span class="o">=</span> <span class="n">cluster_IDs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">min_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">clusters</span> <span class="o">=</span> <span class="n">label_IDs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">min_voxel_count</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span> 
         <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span> <span class="o">=</span> <span class="n">find_bounding_box</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cluster_ID</span><span class="o">=</span><span class="n">cluster</span><span class="p">)</span>

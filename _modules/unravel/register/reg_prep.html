@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``reg_prep`` from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.</span>
+<span class="sd">Use ``reg_prep`` (``rp``) from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.</span>
 
 <span class="sd">Input examples (path is relative to ./sample??; 1st glob match processed): </span>
 <span class="sd">    `*`.czi, autofluo/`*`.tif series, autofluo, `*`.tif, or `*`.h5 </span>
@@ -476,7 +476,7 @@
                 <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
             <span class="c1"># Load full res autofluo image</span>
-            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
             <span class="c1"># Prepare the autofluo image for registration</span>
             <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">reg_prep</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">miracl</span><span class="p">)</span>

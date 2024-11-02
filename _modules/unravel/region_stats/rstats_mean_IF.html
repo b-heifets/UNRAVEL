@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``rstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in brain regions in atlas space.</span>
+<span class="sd">Use ``rstats_mean_IF`` (``rmi``) from UNRAVEL to measure mean intensity of immunofluorescence staining in brain regions in atlas space.</span>
 
 <span class="sd">Inputs:</span>
 <span class="sd">    - `*`.nii.gz</span>
@@ -377,11 +377,11 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
 
-<span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
-
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">load_3D_img</span>
+<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">label_IDs</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
-<span class="kn">from</span> <span class="nn">unravel.image_tools.unique_intensities</span> <span class="kn">import</span> <span class="n">uniq_intensities</span>
 
 
 <div class="viewcode-block" id="parse_args">
@@ -471,7 +471,8 @@
         <span class="n">region_intensities</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">regions</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Processing these region IDs from </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">region_intensities</span> <span class="o">=</span> <span class="n">uniq_intensities</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="p">)</span>
+        <span class="n">atlas_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+        <span class="n">region_intensities</span> <span class="o">=</span> <span class="n">label_IDs</span><span class="p">(</span><span class="n">atlas_img</span><span class="p">,</span> <span class="n">min_voxel_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">print_IDs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">print_sizes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">()</span>
 
     <span class="n">atlas_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">atlas</span><span class="p">)</span>

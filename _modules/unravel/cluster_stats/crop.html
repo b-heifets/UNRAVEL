@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``cstats_crop`` from UNRAVEL to load image, load bounding box, crop cluster, and save as .nii.gz.</span>
+<span class="sd">Use ``cstats_crop`` (``crop``) from UNRAVEL to load image, load bounding box, crop cluster, and save as .nii.gz.</span>
 
 <span class="sd">Note:</span>
 <span class="sd">    - -x and -z need to be provided if the resolution is not extracted from the image metadata.</span>
@@ -378,7 +378,7 @@
 
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">load_3D_img</span><span class="p">,</span> <span class="n">save_as_nii</span>
-<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">find_bounding_box</span><span class="p">,</span> <span class="n">cluster_IDs</span><span class="p">,</span> <span class="n">crop</span>
+<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">find_bounding_box</span><span class="p">,</span> <span class="n">label_IDs</span><span class="p">,</span> <span class="n">crop</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">load_text_from_file</span>
 
 
@@ -435,9 +435,9 @@
     <span class="n">verbose_start_msg</span><span class="p">()</span>
    
     <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">xy_res</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">args</span><span class="o">.</span><span class="n">z_res</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
         <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">z_res</span>
 
     <span class="c1"># Crop image</span>
@@ -451,7 +451,7 @@
         <span class="n">img_cropped</span> <span class="o">=</span> <span class="n">crop</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">bbox_str</span><span class="p">)</span>
         <span class="n">save_cropped_img</span><span class="p">(</span><span class="n">img_cropped</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">cluster</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">cluster</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">all_clusters</span><span class="p">:</span>
-        <span class="n">clusters</span> <span class="o">=</span> <span class="n">cluster_IDs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">min_extent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">print_IDs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_sizes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">clusters</span> <span class="o">=</span> <span class="n">label_IDs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">min_voxel_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">print_IDs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">print_sizes</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">cluster</span> <span class="ow">in</span> <span class="n">clusters</span><span class="p">:</span> 
             <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span> <span class="o">=</span> <span class="n">find_bounding_box</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">cluster_ID</span><span class="o">=</span><span class="n">cluster</span><span class="p">)</span>
             <span class="n">bbox_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">xmin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">xmax</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ymin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">ymax</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">zmin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">zmax</span><span class="si">}</span><span class="s2">&quot;</span>

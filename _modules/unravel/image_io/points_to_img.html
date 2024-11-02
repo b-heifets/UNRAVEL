@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use `io_points_to_img` from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.</span>
+<span class="sd">Use ``io_points_to_img`` (``p2i``) from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.</span>
 
 <span class="sd">Input:</span>
 <span class="sd">    - A CSV file where each row represents a point corresponding to a detection in the 3D image. </span>
@@ -541,7 +541,7 @@
     <span class="n">points_ndarray</span> <span class="o">=</span> <span class="n">points_df</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
 
     <span class="c1"># Create an image from the points using a reference image to determine the shape</span>
-    <span class="n">ref_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ref_img</span><span class="p">)</span>
+    <span class="n">ref_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">ref_img</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
     <span class="n">img</span> <span class="o">=</span> <span class="n">points_to_img</span><span class="p">(</span><span class="n">points_ndarray</span><span class="p">,</span> <span class="n">ref_img</span><span class="p">)</span>
 
     <span class="c1"># Save the image</span>

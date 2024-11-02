@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``rstats_mean_IF_in_seg`` from UNRAVEL to measure mean intensity of immunofluorescence (IF) staining in brain regions in segmented voxels (in tissue space).</span>
+<span class="sd">Use ``rstats_mean_IF_in_seg`` (``rmiis``) from UNRAVEL to measure mean intensity of immunofluorescence (IF) staining in brain regions in segmented voxels (in tissue space).</span>
 
 <span class="sd">Prereqs:</span>
 <span class="sd">    - ``seg_ilastik`` for segmentation</span>
@@ -514,7 +514,7 @@
             <span class="c1"># Load or make the native atlas image</span>
             <span class="n">native_atlas_path</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">sample_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">native_atlas</span><span class="p">)),</span> <span class="kc">None</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">native_atlas</span> <span class="ow">and</span> <span class="n">native_atlas_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-                <span class="n">native_atlas</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">native_atlas_path</span><span class="p">)</span>
+                <span class="n">native_atlas</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">native_atlas_path</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">fixed_reg_input</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">sample_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_outputs</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">fixed_reg_in</span><span class="p">)</span> 
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">fixed_reg_input</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
@@ -537,7 +537,7 @@
             <span class="k">if</span> <span class="n">IF_img_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No files match the pattern </span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">sample_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
                 <span class="k">continue</span>
-            <span class="n">IF_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">IF_img_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">)</span>
+            <span class="n">IF_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">IF_img_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
             <span class="c1"># Calculate mean intensity</span>
             <span class="n">mean_intensities</span> <span class="o">=</span> <span class="n">calculate_mean_intensity</span><span class="p">(</span><span class="n">IF_img</span><span class="p">,</span> <span class="n">ABA_seg</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>

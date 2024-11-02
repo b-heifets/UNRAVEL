@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``warp_to_atlas`` from UNRAVEL to warp a native image to atlas space.</span>
+<span class="sd">Use ``warp_to_atlas`` (``w2a``) from UNRAVEL to warp a native image to atlas space.</span>
 
 <span class="sd">Prereqs: </span>
 <span class="sd">    ``reg``</span>
@@ -503,7 +503,7 @@
 
             <span class="c1"># Load full res image [and xy and z voxel size in microns], to be resampled [and reoriented], padded, and warped</span>
             <span class="n">img_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span>
-            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">channel</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
             <span class="c1"># Resample the rb_img to the resolution of registration (and optionally reorient for compatibility with MIRACL)</span>
             <span class="n">img</span> <span class="o">=</span> <span class="n">reg_prep</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">zoom_order</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">miracl</span><span class="p">)</span>

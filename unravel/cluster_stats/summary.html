@@ -485,10 +485,13 @@
                   
   <section id="module-unravel.cluster_stats.summary">
 <span id="unravel-cluster-stats-summary-module"></span><span id="unravel-cluster-stats-summary"></span><h1>unravel.cluster_stats.summary module<a class="headerlink" href="#module-unravel.cluster_stats.summary" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code> from UNRAVEL to aggregate and analyze cluster validation data from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code> (<code class="docutils literal notranslate"><span class="pre">css</span></code>) from UNRAVEL to aggregate and analyze cluster validation data from <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>.</p>
 <dl class="simple">
 <dt>Prereqs:</dt><dd><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code></p></li>
+<li><p>The name of the rev_cluster_index file should relate to the name of the cluster validation directory.</p></li>
+<li><p>cluster_index_dir = Path(args.moving_img).name w/o “_rev_cluster_index” and “.nii.gz”</p></li>
+<li><p>_cluster_info.txt should be named like: cluster_index_dir + “_cluster_info.txt”</p></li>
 </ul>
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">

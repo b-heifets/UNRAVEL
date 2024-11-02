@@ -343,7 +343,12 @@ window.addEventListener("load", () => mermaid.run());
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Run ``reg_affine_initializer`` from UNRAVEL as a seperate process to kill it after a time out. This also allows for suppressing error messages.</span>
+<span class="sd">Run ``reg_affine_initializer`` (``rai``) from UNRAVEL to perform affine initialization using ANTsPy.</span>
+
+<span class="sd">Note:</span>
+<span class="sd">    - This allows ants.affine_initializer() to be run as a seperate process during reg.</span>
+<span class="sd">    - This process is killed after a time out.</span>
+<span class="sd">    - This also allows for suppressing error messages.</span>
 
 <span class="sd">Python usage:</span>
 <span class="sd">-------------</span>
