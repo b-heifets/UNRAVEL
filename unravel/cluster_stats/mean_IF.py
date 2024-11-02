@@ -63,8 +63,8 @@ def calculate_mean_intensity_in_clusters(cluster_index, img, clusters=None):
 
     # Filter out background
     valid_mask = cluster_index > 0
-    cluster_index = cluster_index[valid_mask].astype(int)  # Ensure int for bincount
-    img_masked = img[valid_mask]
+    cluster_index = cluster_index[valid_mask].ravel()
+    img_masked = img[valid_mask].ravel()
 
     # Use bincount to sum intensities for each cluster and count voxels
     sums = np.bincount(cluster_index, weights=img_masked)
@@ -105,12 +105,17 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
+    cluster_index_img = load_3D_img(args.input, verbose=args.verbose)
+    
+    # Check that the cluster index is a int type
+    if cluster_index_img.dtype != np.int:
+        raise ValueError('The cluster index must be of type int')
+
     # Either use the provided list of region IDs or create it using unique intensities
     if args.clusters:
         clusters = args.clusters
     else:
         print(f'\nProcessing these clusters IDs from {Path(args.input).name}:')
-        cluster_index_img = load_3D_img(args.input, verbose=args.verbose)
         clusters = label_IDs(cluster_index_img, min_voxel_count=1, print_IDs=True, print_sizes=False)
         print()
 
@@ -124,11 +129,8 @@ def main():
             nii = nib.load(file)
             img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
 
-            cluster_index = nib.load(args.input)
-            cluster_index = np.asanyarray(cluster_index.dataobj, dtype=cluster_index.header.get_data_dtype()).squeeze()
-
             # Calculate mean intensity
-            mean_intensities = calculate_mean_intensity_in_clusters(cluster_index, img, clusters)
+            mean_intensities = calculate_mean_intensity_in_clusters(cluster_index_img, img, clusters)
 
             output_filename = str(file.name).replace('.nii.gz', '.csv')
             output = output_folder / output_filename
