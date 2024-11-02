@@ -105,6 +105,7 @@ def parse_args():
 # TODO: Could include warning if directories are present in the current working directory that should not be there
 # TODO: Could make it possible to generate data for all clusters, not just valid clusters
 # TODO: Given that the cluster_index_dir and cluster_info.txt names should be related, could add a check for this (perhaps also simplify logic for finding the cluster_info.txt file)
+# TODO: cluster_mean_IF_summary_ttest.csv has the p-value column named as p-adj even for t-tests. Could change this to p_val
 
 def run_script(script_name, script_args):
     """Run a command/script using subprocess that respects the system's PATH and captures output."""
