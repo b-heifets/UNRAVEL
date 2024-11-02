@@ -97,9 +97,6 @@ def compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list=None, min_vo
         region_volumes = {region: np.count_nonzero(atlas_img_masked == region) for region in unique_regions}
         merged_df = merged_df[merged_df['Region'].map(region_volumes) >= min_voxels]
 
-    print("\n    [bold]Region-wise correlation results[/bold]")
-    print(merged_df)
-
     # Compute the Pearson correlation between the mean intensities
     correlation, p_value = pearsonr(merged_df['ImgX_Mean'], merged_df['ImgY_Mean'])
 
@@ -261,6 +258,7 @@ def main():
     # print(f"\n    Pearson correlation: {correlation}")
     # print(f"    p-value: {p_value}")
     # print(f"    Number of voxels: {n_of_voxels}\n")
+    print(f'Min_voxels,{args.min_voxels}')
     print(f"Pearson correlation,{correlation}")
     print(f"p-value,{p_value}")
     print(f"Number of data points,{n}")

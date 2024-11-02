@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``warp_points_to_atlas`` from UNRAVEL to convert cell centroids in native space to an image matching the fixed registration input and then warp it to atlas space.
+Use ``warp_points_to_atlas`` (``wp2a``) from UNRAVEL to convert cell centroids in native space to an image matching the fixed registration input and then warp it to atlas space.
 
 
 Prereqs: 

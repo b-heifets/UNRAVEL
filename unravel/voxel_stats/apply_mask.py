@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """ 
-Use ``vstats_apply_mask`` from UNRAVEL to zeros out voxels in image based on a mask and direction args.
+Use ``vstats_apply_mask`` (``apply_mask``) from UNRAVEL to zeros out voxels in image based on a mask and direction args.
 
 Usage:
 ------
@@ -142,7 +142,7 @@ def main():
                 continue
             
             # Load image
-            img = load_3D_img(sample_path / args.input, return_res=False)
+            img = load_3D_img(sample_path / args.input, return_res=False, verbose=args.verbose)
 
             # Load metadata
             metadata_path = sample_path / args.metadata
@@ -155,7 +155,7 @@ def main():
             img_resampled = reg_prep(img, xy_res, z_res, args.reg_res, int(1), args.miracl)
 
             # Load 50 um tissue mask 
-            tissue_mask_img = load_3D_img(sample_path / args.tissue_mask)
+            tissue_mask_img = load_3D_img(sample_path / args.tissue_mask, verbose=args.verbose)
 
             # Calculate mean intensity in brain
             if args.mean:

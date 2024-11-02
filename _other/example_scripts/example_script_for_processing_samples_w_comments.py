@@ -34,9 +34,9 @@ def parse_args(): # This function defines the arguments that can be passed to th
 
 # Example of a function that is only used in this script
 @print_func_name_args_times()
-def example_function(img_path):
+def example_function(img_path, verbose=False):
     """Load a 3D image in the sample folder (first *.czi, *.tif, or *.nii.gz match), print shape and resolution, and mimic processing time"""
-    img, xy_res, z_res = load_3D_img(img_path, return_res=True) # This loads the autofluo image from the .czi file (channel 0 by default). Returns ndarray and resolution in microns
+    img, xy_res, z_res = load_3D_img(img_path, return_res=True, verbose=verbose) # This loads the autofluo image from the .czi file (channel 0 by default). Returns ndarray and resolution in microns
     print(f"\n    [default]Image shape: {img.shape}, xy_res: {xy_res}, z_res: {z_res}\n")
     sleep(0.5) # This simulates processing time
     return img # This returns the image to main()
@@ -48,7 +48,7 @@ def main(): # This is the main function that is called at the bottom of the scri
     progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
     with Live(progress): # This starts the progress bar
         for sample in samples: # This iterates through each sample directory
-            example_function(Path(sample).resolve()) # This calls the example_function() function defined above, passing the path to sample directory as an argument (e.g., the sample dir could contain a .czi file)
+            example_function(Path(sample).resolve(), verbose=args.verbose) # This calls the example_function() function defined above, passing the path to sample directory as an argument (e.g., the sample dir could contain a .czi file)
             progress.update(task_id, advance=1) # This updates the progress bar
 
 

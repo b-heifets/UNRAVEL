@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``utils_agg_files_rec`` from UNRAVEL to recusively copy files matching a glob pattern.
+Use ``utils_agg_files_rec`` (``agg_rec``) from UNRAVEL to recusively copy files matching a glob pattern.
 
 Usage:
 ------

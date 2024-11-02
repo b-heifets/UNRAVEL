@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_prism`` from UNRAVEL to organize data for clusters for plotting in Prism.
+Use ``cstats_prism`` (``prism``) from UNRAVEL to organize data for clusters for plotting in Prism.
 
 Inputs:
     `*`.csv from ``cstats_org_data`` (in working dir) or ``cstats_mean_IF``
@@ -11,7 +11,7 @@ CSV naming conventions:
     - Sample: second word in file name
 
 Example unilateral inputs:
-    - condition1_sample01_<cell|label>_density_data.csv
+    - condition1_sample01_<cell|label>_density_data.csv (columns: sample, cluster_ID, <cell_count|label_volume|mean_IF_intensity>, [cluster_volume], [cell_density|label_density], ...)
     - condition1_sample02_<cell|label>_density_data.csv
     - condition2_sample03_<cell|label>_density_data.csv
     - condition2_sample04_<cell|label>_density_data.csv
@@ -67,9 +67,7 @@ def parse_args():
 # TODO: Address this warning:
 # /usr/local/UNRAVEL_dev/unravel/cluster_stats/prism.py:190: PerformanceWarning: dropping on a non-lexsorted multi-index without a level parameter may impact performance.
 # density_col_summary_df_sum = density_col_summary_df_sum.drop('cluster_ID').reset_index().T
-
-# TODO: Simplify and improve handling when data is missing or empty (perhaps revert to version for before Sept 6 and test w/ Ai14+_centroids_s100_LRavg_sub_neg_z_vox_p_tstat1_q)
-
+# TODO: Simplify and improve handling when data is missing or empty 
 
 def sort_samples(sample_names):
     # Extract the numeric part of the sample names and sort by it
@@ -84,7 +82,6 @@ def generate_summary_table(csv_files, data_column_name):
 
     # Loop through each file in the working directory
     for file in csv_files:
-        df = None  # Initialize df to ensure it is always defined
 
         # Extract the condition and sample name
         parts = str(Path(file).name).split('_')
@@ -97,19 +94,18 @@ def generate_summary_table(csv_files, data_column_name):
                 continue  # Skip RH files
 
             if str(file).endswith('_LH.csv'):
-                # LH file exists, now check if RH exists and proceed to pool
                 LH_df = pd.read_csv(file, usecols=['sample', 'cluster_ID', data_column_name])
                 RH_file = str(file).replace('_LH.csv', '_RH.csv')
                 if not Path(RH_file).exists():
                     print(f"[red]    {RH_file} is missing")
                     with open(file.parent / "missing_csv_files.txt", 'a') as f:
                         f.write(f"{RH_file} is missing\n")
-                    continue  # Skip this file if RH is missing
+                    import sys ; sys.exit()
 
-                RH_df = pd.read_csv(RH_file, usecols=['sample', 'cluster_ID', data_column_name])
+                RH_df = pd.read_csv(str(file).replace('_LH.csv', '_RH.csv'), usecols=['sample', 'cluster_ID', data_column_name])
 
-                # Combine LH and RH dataframes
-                if data_column_name == 'cell_count' or data_column_name == 'label_volume':
+                # Sum the data_col of the LH and RH dataframes
+                if data_column_name == 'cell_count' or data_column_name == 'label_volume' or data_column_name == 'cluster_volume':
                     df = pd.concat([LH_df, RH_df], ignore_index=True).groupby(['sample', 'cluster_ID']).agg( # Group by sample and cluster_ID
                         **{data_column_name: pd.NamedAgg(column=data_column_name, aggfunc='sum')} # Sum cell_count or label_volume, unpacking the dict into keyword arguments for the .agg() method
                     ).reset_index() # Reset the index to avoid a multi-index dataframe
@@ -140,11 +136,6 @@ def generate_summary_table(csv_files, data_column_name):
         else:
             # Concatenate the new dataframe with the existing one for the same condition
             data_by_condition[condition] = pd.concat([data_by_condition[condition], df], axis=1)
-
-    # If there is no valid data to concatenate, return None or an empty dataframe
-    if not data_by_condition:
-        print("[red]    No valid data to concatenate.")
-        return pd.DataFrame()  # Return an empty dataframe if no data was found
 
     # Loop through each condition and sort the columns by sample number
     for condition in data_by_condition:
@@ -180,14 +171,15 @@ def main():
         print(f"\n[red]    No CSV files found in {path}.[/]")
         import sys ; sys.exit()
 
+    # Print CSVs in the working dir
+    if args.verbose:
+        print(f'\n[bold]CSVs in {path} to process (the first word defines the groups): \n')
+        for filename in csv_files:
+            print(f'    {filename.name}')
+        print()
+
     # Load the first .csv file to check for data columns and set the appropriate column names
     first_df = pd.read_csv(csv_files[0])
-
-    # Check if 'cluster_ID' exists in the first dataframe
-    if 'cluster_ID' not in first_df.columns:
-        print("[red]    Error: 'cluster_ID' column missing from the input files.")
-        return
-    
     if 'cell_count' in first_df.columns:
         data_col, density_col = 'cell_count', 'cell_density'
     elif 'label_volume' in first_df.columns:
@@ -201,10 +193,6 @@ def main():
     # Generate a summary table for the cell_count or label_volume data
     data_col_summary_df = generate_summary_table(csv_files, data_col)  # Columns: sample, cluster_ID, cell_count|label_volume|mean_IF_intensity
 
-    if data_col_summary_df.empty:
-        print("[red]    No valid data found for the summary.")
-        return
-
     # Generate a summary table for the cluster volume data
     if 'cluster_volume' in first_df.columns:
         cluster_volume_summary_df = generate_summary_table(csv_files, 'cluster_volume')  # Columns: sample, cluster_ID, cluster_volume
@@ -213,36 +201,42 @@ def main():
 
     # Generate a summary table for the cell_density or label_density data
     if density_col is not None:
-        density_col_summary_df = generate_summary_table(csv_files, density_col)  # Columns: sample, cluster_ID, cell_density|label_density
+
+        # Separate the `cluster_ID` column from both DataFrames
+        cluster_ids = data_col_summary_df.iloc[:, 0]  # First column (cluster_ID)
+
+        # Divide all other columns (excluding the first column)
+        density_values = data_col_summary_df.iloc[:, 1:] / cluster_volume_summary_df.iloc[:, 1:]
+
+        if density_col == 'label_density':
+            density_values = density_values * 100
+
+        # Combine `cluster_ID` with the calculated density values
+        density_col_summary_df = pd.concat([cluster_ids, density_values], axis=1)
     else:
         density_col_summary_df = None
 
+    # Save the summary tables to .csv files
+    output_dir = path / '_prism'
+    Path(output_dir).mkdir(exist_ok=True)
+    data_col_summary_df.to_csv(output_dir / f'{data_col}_summary.csv', index=False)
+    if 'cluster_volume' in first_df.columns:
+        density_col_summary_df.to_csv(output_dir / f'{density_col}_summary.csv', index=False)
+        cluster_volume_summary_df.to_csv(output_dir / 'cluster_volume_summary.csv', index=False)
+
     # Exclude clusters that are not in the list of valid clusters
     if args.valid_cluster_ids is not None:
-        if 'cluster_ID' in data_col_summary_df.columns:
-            data_col_summary_df = data_col_summary_df[data_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
-        else:
-            print("[yellow]    Warning: 'cluster_ID' column missing from data_col_summary_df.")
-            data_col_summary_df = pd.DataFrame()  # Empty the DataFrame if cluster_ID is missing
-
-        if cluster_volume_summary_df is not None and 'cluster_ID' in cluster_volume_summary_df.columns:
+        data_col_summary_df = data_col_summary_df[data_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
+        if cluster_volume_summary_df is not None:
             cluster_volume_summary_df = cluster_volume_summary_df[cluster_volume_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
-        elif cluster_volume_summary_df is not None:
-            print("[yellow]    Warning: 'cluster_ID' column missing from cluster_volume_summary_df.")
-            cluster_volume_summary_df = pd.DataFrame()
-
-        if density_col_summary_df is not None and 'cluster_ID' in density_col_summary_df.columns:
+        if density_col_summary_df is not None:
             density_col_summary_df = density_col_summary_df[density_col_summary_df['cluster_ID'].isin(args.valid_cluster_ids)]
-        elif density_col_summary_df is not None:
-            print("[yellow]    Warning: 'cluster_ID' column missing from density_col_summary_df.")
-            density_col_summary_df = pd.DataFrame()
 
         # Sort data frames such that the 'cluster_ID' column matches the order of clusters in args.valid_cluster_ids
-        if not data_col_summary_df.empty:
-            data_col_summary_df = data_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
-        if cluster_volume_summary_df is not None and not cluster_volume_summary_df.empty:
+        data_col_summary_df = data_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
+        if cluster_volume_summary_df is not None:
             cluster_volume_summary_df = cluster_volume_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
-        if density_col_summary_df is not None and not density_col_summary_df.empty:
+        if density_col_summary_df is not None:
             density_col_summary_df = density_col_summary_df.sort_values(by='cluster_ID', key=lambda x: x.map({cluster: i for i, cluster in enumerate(args.valid_cluster_ids)}))
 
     # For a summary across clusters, sum each column in the summary tables other than the 'cluster_ID' column, which could be dropped
@@ -262,31 +256,19 @@ def main():
         density_col_summary_df_sum.columns = multi_index
         density_col_summary_df_sum = density_col_summary_df_sum.drop('cluster_ID').reset_index().T
 
-    # Make output dir
-    output_dir = path / '_prism'
-    Path(output_dir).mkdir(exist_ok=True)
-
-    # Save the summary tables to .csv files
+    # Save the valid cluster summary tables to .csv files
     if args.valid_cluster_ids is not None:
-        if not data_col_summary_df.empty:
-            data_col_summary_df.to_csv(output_dir / f'{data_col}_summary_for_valid_clusters.csv', index=False)
-        if not density_col_summary_df.empty:
+        data_col_summary_df.to_csv(output_dir / f'{data_col}_summary_for_valid_clusters.csv', index=False)
+        if 'cluster_volume' in first_df.columns:
             density_col_summary_df.to_csv(output_dir / f'{density_col}_summary_for_valid_clusters.csv', index=False)
-        if not density_col_summary_df_sum.empty:
             density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_valid_clusters.csv', index=False)
-        if not cluster_volume_summary_df.empty:
             cluster_volume_summary_df.to_csv(output_dir / 'valid_cluster_volume_summary.csv', index=False)
     else:
-        if not data_col_summary_df.empty:
-            data_col_summary_df.to_csv(output_dir / f'{data_col}_summary.csv', index=False)
-        if not density_col_summary_df.empty:
-            density_col_summary_df.to_csv(output_dir / f'{density_col}_summary.csv', index=False)
-        if density_col_summary_df_sum.empty:
+        if 'cluster_volume' in first_df.columns:
             density_col_summary_df_sum.to_csv(output_dir / f'{density_col}_summary_across_clusters.csv', index=False)
-        if not cluster_volume_summary_df.empty:
-            cluster_volume_summary_df.to_csv(output_dir / 'cluster_volume_summary.csv', index=False)
 
-    print(f"\n    Saved results in [bright_magenta]{output_dir}")
+    if args.verbose:
+        print(f"\n    Saved CSVs for plotting with Prism to[bright_magenta]{output_dir}")
 
     verbose_end_msg()
 

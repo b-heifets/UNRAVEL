@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_img_to_npy`` from UNRAVEL to convert a 3D image to an ndarray and save it as a .npy file.
+Use ``io_img_to_npy`` (``i2np``) from UNRAVEL to convert a 3D image to an ndarray and save it as a .npy file.
 
 Usage: 
 ------
@@ -40,7 +40,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    img = load_3D_img(args.input, desired_axis_order=args.axis_order)
+    img = load_3D_img(args.input, desired_axis_order=args.axis_order, verbose=args.verbose)
 
     if args.output: 
         output = args.output

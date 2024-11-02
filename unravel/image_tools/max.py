@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_max`` from UNRAVEL to load an image.nii.gz and print its max intensity value.
+Use ``img_max`` (``max``) from UNRAVEL to load an image.nii.gz and print its max intensity value.
 
 Usage: 
 ------

@@ -70,12 +70,12 @@ def main():
 
     # Load Pearson correlation map
     if args.xy_res is None or args.z_res is None:
-        img, xy_res, z_res = load_3D_img(args.input, return_res=True)
+        img, xy_res, z_res = load_3D_img(args.input, return_res=True, verbose=args.verbose)
     else:
-        img = load_3D_img(args.input)
+        img = load_3D_img(args.input, verbose=args.verbose)
         xy_res, z_res = args.xy_res, args.z_res
 
-    correlation_map = load_3D_img(args.input)
+    correlation_map = load_3D_img(args.input, verbose=args.verbose)
 
     # Apply Fisher Z-transformation to convert to z-score map
     z_map = r_to_z(correlation_map)

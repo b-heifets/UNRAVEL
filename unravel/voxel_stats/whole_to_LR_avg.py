@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_whole_to_avg`` from UNRAVEL to average an image with its mirrored version for voxel-wise stats. This can also smooth the image with a kernel and apply a mask.
+Use ``vstats_whole_to_avg`` (``lr_avg``) from UNRAVEL to average an image with its mirrored version for voxel-wise stats. This can also smooth the image with a kernel and apply a mask.
 
 Prereqs:
     - Input images from ``vstats_prep``.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_nii_to_zarr`` from UNRAVEL to convert an image.nii.gz to an image.zarr
+Use ``io_nii_to_zarr`` (``n2z``) from UNRAVEL to convert an image.nii.gz to an image.zarr
 
 Usage:
 ------

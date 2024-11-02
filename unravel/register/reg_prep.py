@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``reg_prep`` from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.
+Use ``reg_prep`` (``rp``) from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.
 
 Input examples (path is relative to ./sample??; 1st glob match processed): 
     `*`.czi, autofluo/`*`.tif series, autofluo, `*`.tif, or `*`.h5 
@@ -117,7 +117,7 @@ def main():
                 import sys ; sys.exit()
 
             # Load full res autofluo image
-            img = load_3D_img(img_path, args.channel)
+            img = load_3D_img(img_path, args.channel, verbose=args.verbose)
 
             # Prepare the autofluo image for registration
             img_resampled = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)

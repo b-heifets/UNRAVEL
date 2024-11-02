@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_tif_to_tifs`` from UNRAVEL to load a 3D .tif  or .ome.tif image and save it as tifs.
+Use ``io_tif_to_tifs`` (``t2t``) from UNRAVEL to load a 3D .tif  or .ome.tif image and save it as tifs.
 
 Input: 
     - path/image.tif (can use glob patterns)

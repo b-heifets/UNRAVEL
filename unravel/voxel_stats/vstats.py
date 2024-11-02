@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats`` from UNRAVEL to run voxel-wise stats using FSL's randomise_parallel command.
+Use ``vstats`` (``vs``) from UNRAVEL to run voxel-wise stats using FSL's randomise_parallel command.
 
 Prereqs: 
     - Input images from ``vstats_prep``, ``vstats_z_score``, or ``vstats_whole_to_avg``.

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use `io_points_to_img` from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.
+Use ``io_points_to_img`` (``p2i``) from UNRAVEL to convert a set of points (coordinates) to a 3D image, accounting for the number of detections at each voxel.
 
 Input:
     - A CSV file where each row represents a point corresponding to a detection in the 3D image. 
@@ -176,7 +176,7 @@ def main():
     points_ndarray = points_df[['x', 'y', 'z']].values
 
     # Create an image from the points using a reference image to determine the shape
-    ref_img = load_3D_img(args.ref_img)
+    ref_img = load_3D_img(args.ref_img, verbose=args.verbose)
     img = points_to_img(points_ndarray, ref_img)
 
     # Save the image

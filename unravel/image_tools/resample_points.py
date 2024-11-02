@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use `img_resample_points` from UNRAVEL to resample a set of points (coordinates) and optionally convert them to an image, accounting for the number of detections at each voxel.
+Use ``img_resample_points`` (``resample_points``) from UNRAVEL to resample a set of points (coordinates) and optionally convert them to an image, accounting for the number of detections at each voxel.
 
 Input image types:
     .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
@@ -131,7 +131,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    ref_img = load_3D_img(args.ref_img)
+    ref_img = load_3D_img(args.ref_img, verbose=args.verbose)
 
     # Resample and convert the points
     points_resampled_df, points_resampled_img = resample_and_convert_points(args.input, args.current_res, args.target_res, ref_img, args.thresh, args.upper_thr)

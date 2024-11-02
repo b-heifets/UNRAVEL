@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_z_score`` from UNRAVEL to z-score an atlas space image using a tissue mask and/or an atlas mask.
+Use ``vstats_z_score`` (``zs``) from UNRAVEL to z-score an atlas space image using a tissue mask and/or an atlas mask.
 
 Prereqs:
     ``vstats_prep`` for inputs [& ``seg_brain_mask`` for tissue masks]
@@ -126,7 +126,7 @@ def z_score(input_nii_path, mask_img, suffix):
 
     return z_scored_img
 
-def tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, atlas_path):
+def tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, atlas_path, verbose=False):
     """Warp a tissue mask to atlas space (e.g., for z-scoring).
     
     Parameters:
@@ -142,14 +142,14 @@ def tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, a
     tissue_mask_nii_output = sample_path / "atlas_space" / Path(tissue_mask_path).name
 
     if not Path(tissue_mask_nii_output).exists():
-        brain_mask_in_tissue_space = load_3D_img(tissue_mask_path)
+        brain_mask_in_tissue_space = load_3D_img(tissue_mask_path, verbose=verbose)
         to_atlas(sample_path, brain_mask_in_tissue_space, fixed_reg_input, atlas_path, tissue_mask_nii_output, 'multiLabel', dtype='float32')  # or 'nearestNeighbor'
 
-    tissue_mask_img = load_3D_img(tissue_mask_nii_output)
+    tissue_mask_img = load_3D_img(tissue_mask_nii_output, verbose=verbose)
     tissue_mask_img = np.where(tissue_mask_img > 0, 1, 0).astype(np.uint8)
     return tissue_mask_img
 
-def z_score_mask(sample_path, input_path, fixed_reg_input, atlas_path, tissue_mask_path=None, atlas_mask_path=None):
+def z_score_mask(sample_path, input_path, fixed_reg_input, atlas_path, tissue_mask_path=None, atlas_mask_path=None, verbose=verbose):
     """Combine tissue and atlas masks if both are provided, otherwise use whichever is available.
     
     Parameters:
@@ -169,14 +169,14 @@ def z_score_mask(sample_path, input_path, fixed_reg_input, atlas_path, tissue_ma
     if tissue_mask_path is not None:
         if not Path(tissue_mask_path).exists():
             raise FileNotFoundError(f"Tissue mask not found: {tissue_mask_path}")
-        tissue_mask_img = tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, atlas_path)
+        tissue_mask_img = tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, atlas_path, verbose=args.verbose)
         mask_img = tissue_mask_img
 
     # Load the atlas mask (if provided)
     if atlas_mask_path is not None:
         if not Path(atlas_mask_path).exists():
             raise FileNotFoundError(f"Atlas mask not found: {atlas_mask_path}")
-        atlas_mask_img = load_3D_img(atlas_mask_path)
+        atlas_mask_img = load_3D_img(atlas_mask_path, verbose=verbose)
         atlas_mask_img = np.where(atlas_mask_img > 0, 1, 0).astype(np.uint8)
 
         if mask_img is None:
@@ -225,7 +225,7 @@ def main():
                     atlas_mask_path = None
 
                 # Get the mask image
-                mask_img = z_score_mask(sample_path, input_path, args.fixed_reg_in, args.atlas, tissue_mask_path, atlas_mask_path)
+                mask_img = z_score_mask(sample_path, input_path, args.fixed_reg_in, args.atlas, tissue_mask_path, atlas_mask_path, verbose=args.verbose)
 
                 # Z-score the image using the mask and save the output
                 z_score(input_path, mask_img, args.suffix)

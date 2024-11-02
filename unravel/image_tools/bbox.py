@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_bbox`` from UNRAVEL to load an image (.czi, .nii.gz, or tif series) and save bounding boxes as txt files.
+Use ``img_bbox`` (``bbox``) from UNRAVEL to load an image (.czi, .nii.gz, or tif series) and save bounding boxes as txt files.
 
 Usage:
 ------
@@ -15,7 +15,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.img_tools import find_bounding_box, cluster_IDs
+from unravel.core.img_tools import find_bounding_box, label_IDs
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
@@ -43,7 +43,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    img = load_3D_img(args.input)
+    img = load_3D_img(args.input, verbose=args.verbose)
 
     # Make output dir
     if args.output:
@@ -63,7 +63,7 @@ def main():
     if args.cluster:
         clusters = [int(args.cluster)]
     else:
-        clusters = cluster_IDs(img, min_extent=1)
+        clusters = label_IDs(img, min_voxel_count=1)
 
     for cluster in clusters: 
         xmin, xmax, ymin, ymax, zmin, zmax = find_bounding_box(img, cluster_ID=cluster)

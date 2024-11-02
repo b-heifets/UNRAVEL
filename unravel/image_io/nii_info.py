@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_nii_info`` from UNRAVEL to load an .nii.gz image and print its data type, shape, voxel sizes, and affine matrix.
+Use ``io_nii_info`` (``i``) from UNRAVEL to load an .nii.gz image and print its data type, shape, voxel sizes, and affine matrix.
 
 Usage:
 ------
@@ -15,7 +15,7 @@ from rich.traceback import install
 
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.img_tools import cluster_IDs
+from unravel.core.img_tools import label_IDs
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
@@ -80,9 +80,9 @@ def main():
     if args.unique:
         if not 'img' in locals():
             img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
-        uniq_intensities = cluster_IDs(img, min_extent=1, print_IDs=False, print_sizes=False)
+        uniq_intensities = label_IDs(img, min_voxel_count=1, print_IDs=False, print_sizes=False)
         print(f'\nUnique intensities (total: [default bold]{len(uniq_intensities)}):')
-        uniq_intensities = cluster_IDs(img, min_extent=1, print_IDs=True, print_sizes=False)
+        uniq_intensities = label_IDs(img, min_voxel_count=1, print_IDs=True, print_sizes=False)
 
     # Print orientation and affine
     axcodes = nii_axis_codes(nii)

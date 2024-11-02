@@ -9,7 +9,7 @@ This module contains functions processing 3D images:
     - reorient_ndarray: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).
     - reorient_ndarray2: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).
     - rolling_ball_subtraction_opencv_parallel: Subtract background from a 3D ndarray using OpenCV.
-    - cluster_IDs: Prints cluster IDs for clusters > minextent voxels.
+    - label_IDs: Prints label IDs > min_voxel_count (and optionally their sizes) in a 3D ndarray.
     - find_bounding_box: Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.
 """
 
@@ -241,29 +241,58 @@ def rolling_ball_subtraction_opencv_parallel(ndarray, radius, threads=8):
     return bkg_subtracted_img
 
 print_func_name_args_times()
-def cluster_IDs(ndarray, min_extent=1, print_IDs=False, print_sizes=False):
-    """Gets unique intensities [and sizes] for regions/clusters > minextent voxels and prints them in a string-separated list. 
+def label_IDs(ndarray, min_voxel_count=1, print_IDs=False, print_sizes=False):
+    """
+    This finds and prints unique intensities in the ndarry with more than min_voxel_count voxels (does not check for connectedness).
 
-    Args:
-        ndarray
-        min_extent (int, optional): _description_. Defaults to 1.
-        print_IDs (bool, optional): _description_. Defaults to False.
-        print_sizes (bool, optional): _description_. Defaults to False.
+    Optionally, it also prints the number of voxels for each label ID (intensity).
 
-    Returns:
-        list of ints: list of unique intensities
+    Parameters
+    ----------
+    ndarray : numpy.ndarray
+        Input array with integer intensities.
+    min_voxel_count : int, optional
+        Minimum size threshold for each intensity in voxels. Labels smaller than this
+        threshold are ignored. Default is 1.
+    print_IDs : bool, optional
+        If True, print the IDs of labels above the minimum size threshold. Default is False.
+    print_sizes : bool, optional
+        If True, print both the IDs and sizes of label IDs above the minimum size threshold.
+        Default is False.
+
+    Returns
+    -------
+    list of int
+        List of unique label IDs (intensities) that meet the minimum size threshold.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> array = np.array([[0, 1, 1], [0, 2, 2], [3, 3, 3]])
+    >>> cluster_IDs(array, min_voxel_count=2)
+    [1, 2, 3]
+
+    >>> cluster_IDs(array, min_voxel_count=2, print_IDs=True)
+    1 2 3
+
+    >>> cluster_IDs(array, min_voxel_count=2, print_sizes=True)
+    ID: 1, Size: 2
+    ID: 2, Size: 2
+    ID: 3, Size: 3
     """
 
     # Get unique intensities and their counts
     unique_intensities, counts = np.unique(ndarray[ndarray > 0], return_counts=True)
 
     # Filter clusters based on size
-    clusters_above_minextent = [intensity for intensity, count in zip(unique_intensities, counts) if count >= min_extent]
+    clusters_above_minextent = [intensity for intensity, count in zip(unique_intensities, counts) if count >= min_voxel_count]
     
     # Print cluster IDs
+    if print_sizes:
+        print(f"\nID,Size")
     for idx, cluster_id in enumerate(clusters_above_minextent):
         if print_sizes:
-            print(f"ID: {int(cluster_id)}, Size: {counts[idx]}")
+            print(f"{int(cluster_id)},{counts[idx]}")
         elif print_IDs:
             print(int(cluster_id), end=' ')
     if print_IDs: # Removes trailing %

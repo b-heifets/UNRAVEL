@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use `io_img_to_points` from UNRAVEL to convert non-zero voxels in a 3D image to a set of points, accounting for voxel intensity (e.g., number of detections).
+Use `io_img_to_points` (``i2p``) from UNRAVEL to convert non-zero voxels in a 3D image to a set of points, accounting for voxel intensity (e.g., number of detections).
 
 Input image types:
     - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
@@ -96,8 +96,8 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    img = load_3D_img(args.input)
-    atlas_img = load_3D_img(args.atlas_img) if args.atlas_img else None
+    img = load_3D_img(args.input, verbose=args.verbose)
+    atlas_img = load_3D_img(args.atlas_img, verbose=args.verbose) if args.atlas_img else None
 
     # Convert the image to points
     points_ndarray = img_to_points(img, atlas_img=atlas_img)

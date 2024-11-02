@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``unravel_commands`` or ``uc`` to print a list of commands available in the UNRAVEL package. 
+Use ``unravel_commands`` (``uc``) to print a list of commands available in the UNRAVEL package. 
 
 For help on a ``command``, run: 
 <command> -h
@@ -107,7 +107,13 @@ def main():
                 "description": "Check brain mask for over/under segmentation.",
                 "common": False,
                 "alias": "rcbm"
-            }
+            },
+            "reg_affine_initializer": {
+                "module": "unravel.register.affine_initializer",
+                "description": "Perform affine initialization using ANTsPy.",
+                "common": False,
+                "alias": "rai"
+            },
         },
         "Warping": {
             "warp_to_atlas": {
@@ -548,12 +554,6 @@ def main():
                 "description": "Make an atlas wireframe.",
                 "common": False,
                 "alias": "wf"
-            },
-            "atlas_set_labels": {
-                "module": "unravel.image_tools.atlas.set_labels",
-                "description": "Set specified label IDs in the ndarray to the given value.",
-                "common": False,
-                "alias": "sl"
             },
         },
         "Utilities": {

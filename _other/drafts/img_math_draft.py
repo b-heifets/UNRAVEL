@@ -111,8 +111,8 @@ def binarize_image(image, threshold, true_val=1, false_val=0):
 def main():    
     args = parse_args()
 
-    image1 = load_3D_img(args.image1)
-    image2 = load_3D_img(args.image2)
+    image1 = load_3D_img(args.image1, verbose=args.verbose)
+    image2 = load_3D_img(args.image2, verbose=args.verbose)
 
     # Ensure image dimensions match
     if image1.shape != image2.shape:

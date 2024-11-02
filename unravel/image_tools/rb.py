@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_rb`` from UNRAVEL to perform rolling ball background subtraction on a TIFF file.
+Use ``img_rb`` (``rb``) from UNRAVEL to perform rolling ball background subtraction on a TIFF file.
 
 Note:
     - Radius for rolling ball subtraction should be ~ 1.0 to 2.0 times the size of the features of interest

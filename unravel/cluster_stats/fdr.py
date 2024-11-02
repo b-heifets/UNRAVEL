@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_fdr`` from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.
+Use ``cstats_fdr`` (``f``) from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.
 
 Inputs: 
     - p value map (e.g., `*`vox_p_`*`stat`*`.nii.gz from vstats)    

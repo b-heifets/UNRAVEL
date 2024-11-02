@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``seg_brain_mask`` from UNRAVEL to use a trained ilastik project (pixel classification) to mask the brain in resampled autofluo images (often improves registration).
+Use ``seg_brain_mask`` (``sbm``) from UNRAVEL to use a trained ilastik project (pixel classification) to mask the brain in resampled autofluo images (often improves registration).
 
 Prereqs: 
     - Organize training tif slices (from ``seg_copy_tifs``) into a single folder.
@@ -97,13 +97,13 @@ def main():
             pixel_classification(autofl_tif_directory, ilastik_project, seg_dir, args.ilastik_exe)
 
             # Load brain mask image
-            seg_img = load_3D_img(seg_dir, "xyz")
+            seg_img = load_3D_img(seg_dir, "xyz", verbose=args.verbose)
 
             # Convert anything voxels to 0 if > 1 (label 1 = tissue; other labels converted to 0)
             brain_mask = np.where(seg_img > 1, 0, seg_img)
 
             # # Load autofl image
-            autofl_img, xy_res, z_res = load_3D_img(autofl_img_path, return_res=True)
+            autofl_img, xy_res, z_res = load_3D_img(autofl_img_path, return_res=True, verbose=args.verbose)
 
             # Save brain mask as nifti
             save_as_nii(brain_mask, brain_mask_output, xy_res, z_res, np.uint8)

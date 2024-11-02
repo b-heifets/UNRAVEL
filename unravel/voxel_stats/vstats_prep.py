@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_prep`` from UNRAVEL to load an immunofluo image, subtract its background, and warp it to atlas space.
+Use ``vstats_prep`` (``vp``) from UNRAVEL to load an immunofluo image, subtract its background, and warp it to atlas space.
 
 Prereqs: 
     - ``reg``
@@ -102,7 +102,7 @@ def main():
                 print("    [red1]./sample??/parameters/metadata.txt is missing. Generate w/ io_metadata")
                 import sys ; sys.exit()
 
-            img = load_3D_img(img_path, args.channel, "xyz")
+            img = load_3D_img(img_path, args.channel, "xyz", verbose=args.verbose)
 
             # Apply spatial averaging
             if args.spatial_avg == 3:

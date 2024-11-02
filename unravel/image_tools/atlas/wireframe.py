@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``atlas_wireframe`` from UNRAVEL to generate a thin wireframe image from an atlas NIfTI file.
+Use ``atlas_wireframe`` (``wf``) from UNRAVEL to generate a thin wireframe image from an atlas NIfTI file.
 
 Outputs: 
     - path/atlas_img_W.nii.gz (Wireframe image)

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_h5_to_tifs`` from UNRAVEL to load a h5/hdf5 image and save it as tifs.
+Use ``io_h5_to_tifs`` (``h5t``) from UNRAVEL to load a h5/hdf5 image and save it as tifs.
 
 Inputs:
     - image.h5 either from -i path/image.h5 or largest `*`.h5 in cwd

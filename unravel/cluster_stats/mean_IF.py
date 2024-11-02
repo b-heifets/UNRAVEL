@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_mean_IF`` from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.
+Use ``cstats_mean_IF`` (``cmi``) from UNRAVEL to measure mean intensity of immunofluorescence staining in clusters.
 
 Prereqs: 
     - ``vstats``
@@ -32,18 +32,18 @@ import numpy as np
 from pathlib import Path 
 from rich.traceback import install
 
-from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-
 from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.img_io import load_3D_img
+from unravel.core.img_tools import label_IDs
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
-from unravel.image_tools.unique_intensities import uniq_intensities
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-ci', '--cluster_index', help='Path/rev_cluster_index.nii.gz from ``cstats_fdr``', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path/rev_cluster_index.nii.gz from ``cstats_fdr``', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-ip', '--input_pattern', help="Pattern for NIfTI images to process relative to cwd. Default: '*.nii.gz'", default='*.nii.gz', action=SM)
@@ -63,8 +63,8 @@ def calculate_mean_intensity_in_clusters(cluster_index, img, clusters=None):
 
     # Filter out background
     valid_mask = cluster_index > 0
-    cluster_index = cluster_index[valid_mask].astype(int)  # Ensure int for bincount
-    img_masked = img[valid_mask]
+    cluster_index = cluster_index[valid_mask].ravel()
+    img_masked = img[valid_mask].ravel()
 
     # Use bincount to sum intensities for each cluster and count voxels
     sums = np.bincount(cluster_index, weights=img_masked)
@@ -105,15 +105,21 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
+    cluster_index_img = load_3D_img(args.input, verbose=args.verbose)
+    
+    # Check that the cluster index is an integer type (signed or unsigned)
+    if cluster_index_img.dtype not in [np.int8, np.int16, np.int32, np.int64, np.uint8, np.uint16, np.uint32, np.uint64]:
+        raise ValueError('The cluster index must be an integer type (int8, int16, int32, int64, uint8, uint16, uint32, or uint64)')
+
     # Either use the provided list of region IDs or create it using unique intensities
     if args.clusters:
         clusters = args.clusters
     else:
-        print(f'\nProcessing these clusters IDs from {Path(args.cluster_index).name}:')
-        clusters = uniq_intensities(args.cluster_index)
+        print(f'\nProcessing these clusters IDs from {Path(args.input).name}:')
+        clusters = label_IDs(cluster_index_img, min_voxel_count=1, print_IDs=True, print_sizes=False)
         print()
 
-    output_folder = Path(f'cluster_mean_IF_{str(Path(args.cluster_index).name).replace(".nii.gz", "")}')
+    output_folder = Path(f'cluster_mean_IF_{str(Path(args.input).name).replace(".nii.gz", "")}')
     output_folder.mkdir(parents=True, exist_ok=True)
 
     files = Path().cwd().glob(args.input_pattern)
@@ -123,11 +129,8 @@ def main():
             nii = nib.load(file)
             img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
 
-            cluster_index = nib.load(args.cluster_index)
-            cluster_index = np.asanyarray(cluster_index.dataobj, dtype=cluster_index.header.get_data_dtype()).squeeze()
-
             # Calculate mean intensity
-            mean_intensities = calculate_mean_intensity_in_clusters(cluster_index, img, clusters)
+            mean_intensities = calculate_mean_intensity_in_clusters(cluster_index_img, img, clusters)
 
             output_filename = str(file.name).replace('.nii.gz', '.csv')
             output = output_folder / output_filename

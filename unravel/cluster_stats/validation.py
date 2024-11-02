@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``cstats_validation`` from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify cell/label densities.
+Use ``cstats_validation`` (``cv``) from UNRAVEL to warp a cluster index from atlas space to tissue space, crop clusters, apply a segmentation mask, and quantify cell/label densities.
 
 Prereqs:
     - ``cstats_fdr`` to generate a cluster index in atlas space (a map of clusters of significant voxels)
@@ -43,7 +43,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration 
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, load_nii_subset, resolve_path
-from unravel.core.img_tools import cluster_IDs
+from unravel.core.img_tools import label_IDs
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, print_func_name_args_times
 from unravel.warp.to_native import to_native
 
@@ -236,14 +236,14 @@ def main():
                 continue
             
             # Use lower bit-depth possible for cluster index
-            rev_cluster_index = load_3D_img(args.moving_img)
+            rev_cluster_index = load_3D_img(args.moving_img, verbose=args.verbose)
 
             # Define paths relative to sample?? folder 
             native_idx_path = resolve_path(sample_path, args.native_idx) if args.native_idx else None
             
             # Load cluster index and convert to ndarray 
             if args.native_idx and Path(args.native_idx).exists():
-                native_cluster_index = load_3D_img(Path(args.native_idx).exists())
+                native_cluster_index = load_3D_img(Path(args.native_idx), verbose=args.verbose)
             else:
                 fixed_reg_input = Path(sample_path, args.reg_outputs, args.fixed_reg_in) 
                 if not fixed_reg_input.exists():
@@ -252,7 +252,7 @@ def main():
 
             # Get clusters to process
             if args.clusters == "all":
-                clusters = cluster_IDs(rev_cluster_index)
+                clusters = label_IDs(rev_cluster_index)
             else:
                 clusters = args.clusters
             clusters = [int(cluster) for cluster in clusters]

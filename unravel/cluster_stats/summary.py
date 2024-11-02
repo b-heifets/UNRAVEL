@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 
 """ 
-Use ``cstats_summary`` from UNRAVEL to aggregate and analyze cluster validation data from ``cstats_validation``.
+Use ``cstats_summary`` (``css``) from UNRAVEL to aggregate and analyze cluster validation data from ``cstats_validation``.
 
 Prereqs:
     - ``cstats_validation``
+    - The name of the rev_cluster_index file should relate to the name of the cluster validation directory.
+    - cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
+    - _cluster_info.txt should be named like: cluster_index_dir + "_cluster_info.txt"
 
 Inputs:
     - Cell/label density CSVs from from ``cstats_validation``
@@ -80,7 +83,7 @@ def parse_args():
     utils_prepend.add_argument('-sk', '--sample_key', help='path/sample_key.csv w/ directory names and conditions (for utils_prepend)', action=SM)
 
     # cstats --groups <group1> <group2>
-    cstats = parser.add_argument_group('Optional rgs for cstats')
+    cstats = parser.add_argument_group('Optional args for cstats')
     cstats.add_argument('--groups', help='List of group prefixes. 2 groups --> t-test. >2 --> Tukey\'s tests (The first 2 groups reflect the main comparison for validation rates; for cstats)',  nargs='*', action=SM)
     cstats.add_argument('-cp', '--condition_prefixes', help='Condition prefixes to group related data (optional for cstats)',  nargs='*', default=None, action=SM)
     cstats.add_argument('-hg', '--higher_group', help='Specify the group that is expected to have a higher mean based on the direction of the p value map', required=True)
@@ -101,6 +104,8 @@ def parse_args():
 # TODO: Consider using env_var.sh instead of unravel/cluster_stats/summary.ini
 # TODO: Could include warning if directories are present in the current working directory that should not be there
 # TODO: Could make it possible to generate data for all clusters, not just valid clusters
+# TODO: Given that the cluster_index_dir and cluster_info.txt names should be related, could add a check for this (perhaps also simplify logic for finding the cluster_info.txt file)
+# TODO: cluster_mean_IF_summary_ttest.csv has the p-value column named as p-adj even for t-tests. Could change this to p_val
 
 def run_script(script_name, script_args):
     """Run a command/script using subprocess that respects the system's PATH and captures output."""
@@ -116,6 +121,12 @@ def main():
     args = parse_args()
     Configuration.verbose = args.verbose
     verbose_start_msg()
+
+    # Check for subdirectories in the current working directory
+    subdirs = [d for d in Path.cwd().iterdir() if d.is_dir()]
+    if len(subdirs) == 0 and not args.dirs:
+        print(f"\n    [red1]No subdirectories found in the current directory. Provide -d/--dirs so that data from sample??/clusters/ can be aggregated and processed.\n")
+        return
 
     cfg = load_config(args.config)
     

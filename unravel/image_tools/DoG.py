@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``img_DoG`` from UNRAVEL to apply Difference of Gaussians to a single image.
+Use ``img_DoG` (``DoG``) from UNRAVEL to apply Difference of Gaussians to a single image.
 
 Difference of Gaussians:
     - Sigma1 and sigma2 are the standard deviations for the first and second Gaussian blurs

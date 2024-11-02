@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_summary`` from UNRAVEL to plot cell densensities for each region and summarize results.
+Use ``rstats_summary`` (``rss``) from UNRAVEL to plot cell densensities for each region and summarize results.
 
 Inputs:
     - CSVs with cell densities for each region (e.g., regional_stats/<condition>_sample??_cell_densities.csv)

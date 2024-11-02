@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_nii`` from UNRAVEL to convert the data type of a .nii.gz image and optionally scale the data.
+Use ``io_nii`` (``nii``) from UNRAVEL to convert the data type of a .nii.gz image and optionally scale the data.
 
 Inputs:
     - .nii.gz image

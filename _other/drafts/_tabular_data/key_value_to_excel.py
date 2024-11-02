@@ -36,7 +36,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='Path to the input text file containing key-value data.', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path to the input file containing key-value data (txt, csv, xlsx).', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='Path to the output Excel file.', action=SM)
@@ -102,10 +102,16 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    """Main function to convert key-value data to Excel."""
     # Read the input data
-    with open(args.input, 'r') as file:
-        data = file.read()
+    if str(args.input).endswith('.txt'):
+        with open(args.input, 'r') as file:
+            data = file.read()
+    elif str(args.input).endswith('.csv'):
+        data = pd.read_csv(args.input)
+    elif str(args.input).endswith('.xlsx'):
+        data = pd.read_excel(args.input)
+    else:
+        raise ValueError(f"Unsupported file format: {args.input}")
 
     # Parse the data
     df = parse_key_value_data(data, args.delimiter)

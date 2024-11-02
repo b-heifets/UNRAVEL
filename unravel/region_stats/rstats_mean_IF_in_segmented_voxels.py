@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_mean_IF_in_seg`` from UNRAVEL to measure mean intensity of immunofluorescence (IF) staining in brain regions in segmented voxels (in tissue space).
+Use ``rstats_mean_IF_in_seg`` (``rmiis``) from UNRAVEL to measure mean intensity of immunofluorescence (IF) staining in brain regions in segmented voxels (in tissue space).
 
 Prereqs:
     - ``seg_ilastik`` for segmentation
@@ -152,7 +152,7 @@ def main():
             # Load or make the native atlas image
             native_atlas_path = next(sample_path.glob(str(args.native_atlas)), None)
             if args.native_atlas and native_atlas_path.exists():
-                native_atlas = load_3D_img(native_atlas_path)
+                native_atlas = load_3D_img(native_atlas_path, verbose=args.verbose)
             else:
                 fixed_reg_input = Path(sample_path, args.reg_outputs, args.fixed_reg_in) 
                 if not fixed_reg_input.exists():
@@ -175,7 +175,7 @@ def main():
             if IF_img_path is None:
                 print(f"No files match the pattern {args.input} in {sample_path}")
                 continue
-            IF_img = load_3D_img(IF_img_path, args.channel, "xyz")
+            IF_img = load_3D_img(IF_img_path, args.channel, "xyz", verbose=args.verbose)
 
             # Calculate mean intensity
             mean_intensities = calculate_mean_intensity(IF_img, ABA_seg, args)

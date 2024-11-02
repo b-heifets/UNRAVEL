@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``warp_to_native`` from UNRAVEL to warp an atlas space image to tissue space and scale to full resolution.
+Use ``warp_to_native`` (``w2n``) from UNRAVEL to warp an atlas space image to tissue space and scale to full resolution.
 
 Prereq:
     - ./parameters/metadata.txt (from io_metadata)

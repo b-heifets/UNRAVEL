@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_img`` from UNRAVEL to load a 3D image, [get metadata], and save as the specified image type.
+Use ``io_img`` (``img``) from UNRAVEL to load a 3D image, [get metadata], and save as the specified image type.
 
 Input image types:
     .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
@@ -53,9 +53,9 @@ def main():
 
     # Load image and metadata
     if args.xy_res is None or args.z_res is None:
-        img, xy_res, z_res = load_3D_img(args.input, return_res=True)
+        img, xy_res, z_res = load_3D_img(args.input, return_res=True, verbose=args.verbose)
     else:
-        img = load_3D_img(args.input)
+        img = load_3D_img(args.input, verbose=args.verbose)
         xy_res, z_res = args.xy_res, args.z_res
 
     # Print metadata

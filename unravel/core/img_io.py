@@ -580,7 +580,7 @@ def load_image_metadata_from_txt(metadata="./parameters/metadata*"):
     return xy_res, z_res, x_dim, y_dim, z_dim
 
 @print_func_name_args_times()
-def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=None): 
+def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, xy_res=None, z_res=None, save_metadata=None, verbose=False): 
     """
     Load a 3D image from various file formats and return the ndarray.
 
@@ -625,10 +625,11 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
     if not img_path.exists():
         raise FileNotFoundError(f"\n    [red1]No compatible image files found at {img_path} for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
     
-    if str(img_path).endswith('.czi'):
-        print(f"\n    [default]Loading channel {channel} from {img_path} (channel 0 is the first channel)")
-    else: 
-        print(f"\n    [default]Loading {img_path}")
+    if verbose:
+        if str(img_path).endswith('.czi'):
+            print(f"\n    [default]Loading channel {channel} from {img_path} (channel 0 is the first channel)")
+        else: 
+            print(f"\n    [default]Loading {img_path}")
 
     # Load image based on file type and optionally return resolutions and dimensions
     try:
