@@ -107,9 +107,9 @@ def main():
 
     cluster_index_img = load_3D_img(args.input, verbose=args.verbose)
     
-    # Check that the cluster index is a int type
-    if cluster_index_img.dtype != np.int:
-        raise ValueError('The cluster index must be of type int')
+    # Check that the cluster index is an integer type (signed or unsigned)
+    if cluster_index_img.dtype not in [np.int8, np.int16, np.int32, np.int64, np.uint8, np.uint16, np.uint32, np.uint64]:
+        raise ValueError('The cluster index must be an integer type (int8, int16, int32, int64, uint8, uint16, uint32, or uint64)')
 
     # Either use the provided list of region IDs or create it using unique intensities
     if args.clusters:
