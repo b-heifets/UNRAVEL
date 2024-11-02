@@ -43,7 +43,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-ci', '--cluster_index', help='Path/rev_cluster_index.nii.gz from ``cstats_fdr``', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path/rev_cluster_index.nii.gz from ``cstats_fdr``', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-ip', '--input_pattern', help="Pattern for NIfTI images to process relative to cwd. Default: '*.nii.gz'", default='*.nii.gz', action=SM)
@@ -109,12 +109,12 @@ def main():
     if args.clusters:
         clusters = args.clusters
     else:
-        print(f'\nProcessing these clusters IDs from {Path(args.cluster_index).name}:')
+        print(f'\nProcessing these clusters IDs from {Path(args.input).name}:')
         cluster_index_img = load_3D_img(args.input, verbose=args.verbose)
         clusters = label_IDs(cluster_index_img, min_voxel_count=1, print_IDs=True, print_sizes=False)
         print()
 
-    output_folder = Path(f'cluster_mean_IF_{str(Path(args.cluster_index).name).replace(".nii.gz", "")}')
+    output_folder = Path(f'cluster_mean_IF_{str(Path(args.input).name).replace(".nii.gz", "")}')
     output_folder.mkdir(parents=True, exist_ok=True)
 
     files = Path().cwd().glob(args.input_pattern)
@@ -124,7 +124,7 @@ def main():
             nii = nib.load(file)
             img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
 
-            cluster_index = nib.load(args.cluster_index)
+            cluster_index = nib.load(args.input)
             cluster_index = np.asanyarray(cluster_index.dataobj, dtype=cluster_index.header.get_data_dtype()).squeeze()
 
             # Calculate mean intensity
