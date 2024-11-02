@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``img_extend`` from UNRAVEL to load a 3D image, extend one side, and save it as tifs</span>
+<span class="sd">Use ``img_extend`` (``extend``) from UNRAVEL to load a 3D image, extend one side, and save it as tifs</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">    img_extend -i ochann -o ochann_extended -s front -e 100 [-d list of paths] [-p sample??] [-v]</span>
@@ -447,7 +447,7 @@
             <span class="n">input_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 
             <span class="c1"># Load image</span>
-            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">input_path</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
             <span class="c1"># Extend image</span>
             <span class="n">extended_img</span> <span class="o">=</span> <span class="n">extend_one_side_3d_array</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">side</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">extension</span><span class="p">)</span>

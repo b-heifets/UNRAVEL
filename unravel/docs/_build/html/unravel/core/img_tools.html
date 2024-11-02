@@ -509,7 +509,7 @@
 <li><p>reorient_ndarray: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).</p></li>
 <li><p>reorient_ndarray2: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).</p></li>
 <li><p>rolling_ball_subtraction_opencv_parallel: Subtract background from a 3D ndarray using OpenCV.</p></li>
-<li><p>cluster_IDs: Prints cluster IDs for clusters &gt; minextent voxels.</p></li>
+<li><p>label_IDs: Prints label IDs &gt; min_voxel_count (and optionally their sizes) in a 3D ndarray.</p></li>
 <li><p>find_bounding_box: Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.</p></li>
 </ul>
 </dd>
@@ -610,25 +610,45 @@ Returns ndarray with background subtracted.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.cluster_IDs">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">cluster_IDs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_extent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_IDs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_sizes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#cluster_IDs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.cluster_IDs" title="Link to this definition">#</a></dt>
-<dd><p>Gets unique intensities [and sizes] for regions/clusters &gt; minextent voxels and prints them in a string-separated list.</p>
+<dt class="sig sig-object py" id="unravel.core.img_tools.label_IDs">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">label_IDs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_voxel_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_IDs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_sizes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#label_IDs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.label_IDs" title="Link to this definition">#</a></dt>
+<dd><p>This finds and prints unique intensities in the ndarry with more than min_voxel_count voxels (does not check for connectedness).</p>
+<p>Optionally, it also prints the number of voxels for each label ID (intensity).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>ndarray</strong></p></li>
-<li><p><strong>min_extent</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – _description_. Defaults to 1.</p></li>
-<li><p><strong>print_IDs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – _description_. Defaults to False.</p></li>
-<li><p><strong>print_sizes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – _description_. Defaults to False.</p></li>
+<li><p><strong>ndarray</strong> (<em>numpy.ndarray</em>) – Input array with integer intensities.</p></li>
+<li><p><strong>min_voxel_count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – Minimum size threshold for each intensity in voxels. Labels smaller than this
+threshold are ignored. Default is 1.</p></li>
+<li><p><strong>print_IDs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, print the IDs of labels above the minimum size threshold. Default is False.</p></li>
+<li><p><strong>print_sizes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a><em>, </em><em>optional</em>) – If True, print both the IDs and sizes of label IDs above the minimum size threshold.
+Default is False.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>list of unique intensities</p>
+<dd class="field-even"><p>List of unique label IDs (intensities) that meet the minimum size threshold.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of ints</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.13)">list</a> of <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)">int</a></p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cluster_IDs</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">min_voxel_count</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">[1, 2, 3]</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cluster_IDs</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">min_voxel_count</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">print_IDs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">1 2 3</span>
+</pre></div>
+</div>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cluster_IDs</span><span class="p">(</span><span class="n">array</span><span class="p">,</span> <span class="n">min_voxel_count</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">print_sizes</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="go">ID: 1, Size: 2</span>
+<span class="go">ID: 2, Size: 2</span>
+<span class="go">ID: 3, Size: 3</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
@@ -715,7 +735,7 @@ Returns ndarray with background subtracted.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reorient_ndarray2"><code class="docutils literal notranslate"><span class="pre">reorient_ndarray2()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.process_slice"><code class="docutils literal notranslate"><span class="pre">process_slice()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel"><code class="docutils literal notranslate"><span class="pre">rolling_ball_subtraction_opencv_parallel()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.cluster_IDs"><code class="docutils literal notranslate"><span class="pre">cluster_IDs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.label_IDs"><code class="docutils literal notranslate"><span class="pre">label_IDs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.find_bounding_box"><code class="docutils literal notranslate"><span class="pre">find_bounding_box()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.crop"><code class="docutils literal notranslate"><span class="pre">crop()</span></code></a></li>
 </ul>

@@ -500,11 +500,11 @@
                   
   <section id="module-unravel.segment.labels_to_masks">
 <span id="unravel-segment-labels-to-masks-module"></span><span id="unravel-segment-labels-to-masks"></span><h1>unravel.segment.labels_to_masks module<a class="headerlink" href="#module-unravel.segment.labels_to_masks" title="Link to this heading">#</a></h1>
-<p>Use save_labels_as_masks.py from UNRAVEL to convert an ilastik segmentation tif series or other image labels to binary .nii.gz masks.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">seg_labels_as_masks</span></code> (<code class="docutils literal notranslate"><span class="pre">sl2m</span></code>) from UNRAVEL to convert an ilastik segmentation tif series or other image labels to binary .nii.gz masks.</p>
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>save_labels_as_masks.py -i seg_ilastik_1/IlastikSegmentation -o Ai14_seg_ilasik_1 [-l 1 2 3] [-d dirs] [-p pattern] [-v]</p>
+<div><p><code class="docutils literal notranslate"><span class="pre">seg_labels_as_masks</span></code> -i seg_ilastik_1/IlastikSegmentation -o Ai14_seg_ilasik_1 [-l 1 2 3] [-d dirs] [-p pattern] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -514,7 +514,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.segment.labels_to_masks.save_labels_as_masks">
-<span class="sig-prename descclassname"><span class="pre">unravel.segment.labels_to_masks.</span></span><span class="sig-name descname"><span class="pre">save_labels_as_masks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segmentation_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/labels_to_masks.html#save_labels_as_masks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.labels_to_masks.save_labels_as_masks" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.segment.labels_to_masks.</span></span><span class="sig-name descname"><span class="pre">save_labels_as_masks</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">label</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">segmentation_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/labels_to_masks.html#save_labels_as_masks"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.labels_to_masks.save_labels_as_masks" title="Link to this definition">#</a></dt>
 <dd><p>Converts label in an image to a binary mask and saves it as a .nii.gz file. Assumes &lt; 256 labels.</p>
 </dd></dl>
 

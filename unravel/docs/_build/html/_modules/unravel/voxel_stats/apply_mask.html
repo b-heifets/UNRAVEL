@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot; </span>
-<span class="sd">Use ``vstats_apply_mask`` from UNRAVEL to zeros out voxels in image based on a mask and direction args.</span>
+<span class="sd">Use ``vstats_apply_mask`` (``apply_mask``) from UNRAVEL to zeros out voxels in image based on a mask and direction args.</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
@@ -513,7 +513,7 @@
                 <span class="k">continue</span>
             
             <span class="c1"># Load image</span>
-            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
             <span class="c1"># Load metadata</span>
             <span class="n">metadata_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">metadata</span>
@@ -526,7 +526,7 @@
             <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">reg_prep</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">reg_res</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">args</span><span class="o">.</span><span class="n">miracl</span><span class="p">)</span>
 
             <span class="c1"># Load 50 um tissue mask </span>
-            <span class="n">tissue_mask_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">tissue_mask</span><span class="p">)</span>
+            <span class="n">tissue_mask_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">tissue_mask</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
 
             <span class="c1"># Calculate mean intensity in brain</span>
             <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">mean</span><span class="p">:</span>

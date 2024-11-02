@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``cstats_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</span>
+<span class="sd">Use ``cstats_table`` (``ct``) from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.</span>
 
 <span class="sd">Prereqs:</span>
 <span class="sd">    - This command is usually run via ``cstats_summary``.</span>
@@ -427,6 +427,9 @@
 
 <span class="c1"># TODO: Correct font color for the volumes column. &#39;fiber tracts&#39; is filled with white rather than the color of the fiber tracts</span>
 <span class="c1"># TODO: &#39;CUL4, 5&#39; is not filled with the color of the region. </span>
+<span class="c1"># TODO: The first 3 columns need to be converted to a number in the excel file. Can this be done in the code?</span>
+<span class="c1"># TODO: Sometimes when copying tables to PPT, the close to black color in the Volumes column is not visible.</span>
+<span class="c1"># TODO: Fix the font in the volumes column to be white if the fill color is dark and black if the fill color is light</span>
 
 
 <div class="viewcode-block" id="fill_na_with_last_known">

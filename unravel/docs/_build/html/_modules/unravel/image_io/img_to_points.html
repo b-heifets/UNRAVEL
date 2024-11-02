@@ -352,7 +352,7 @@
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use `io_img_to_points` from UNRAVEL to convert non-zero voxels in a 3D image to a set of points, accounting for voxel intensity (e.g., number of detections).</span>
+<span class="sd">Use `io_img_to_points` (``i2p``) from UNRAVEL to convert non-zero voxels in a 3D image to a set of points, accounting for voxel intensity (e.g., number of detections).</span>
 
 <span class="sd">Input image types:</span>
 <span class="sd">    - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr</span>
@@ -455,8 +455,8 @@
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
     <span class="n">verbose_start_msg</span><span class="p">()</span>
 
-    <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span>
-    <span class="n">atlas_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">atlas_img</span><span class="p">)</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">atlas_img</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="n">atlas_img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">atlas_img</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">atlas_img</span> <span class="k">else</span> <span class="kc">None</span>
 
     <span class="c1"># Convert the image to points</span>
     <span class="n">points_ndarray</span> <span class="o">=</span> <span class="n">img_to_points</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">atlas_img</span><span class="o">=</span><span class="n">atlas_img</span><span class="p">)</span>

@@ -500,7 +500,15 @@
                   
   <section id="module-unravel.register.affine_initializer">
 <span id="unravel-register-affine-initializer-module"></span><span id="unravel-register-affine-initializer"></span><h1>unravel.register.affine_initializer module<a class="headerlink" href="#module-unravel.register.affine_initializer" title="Link to this heading">#</a></h1>
-<p>Run <code class="docutils literal notranslate"><span class="pre">reg_affine_initializer</span></code> from UNRAVEL as a seperate process to kill it after a time out. This also allows for suppressing error messages.</p>
+<p>Run <code class="docutils literal notranslate"><span class="pre">reg_affine_initializer</span></code> (<code class="docutils literal notranslate"><span class="pre">rai</span></code>) from UNRAVEL to perform affine initialization using ANTsPy.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>This allows ants.affine_initializer() to be run as a seperate process during reg.</p></li>
+<li><p>This process is killed after a time out.</p></li>
+<li><p>This also allows for suppressing error messages.</p></li>
+</ul>
+</div>
 <section id="python-usage">
 <h2>Python usage:<a class="headerlink" href="#python-usage" title="Link to this heading">#</a></h2>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">subprocess</span>
