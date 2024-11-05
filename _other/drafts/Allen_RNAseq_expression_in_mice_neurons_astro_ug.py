@@ -47,6 +47,12 @@ def load_mouse_RNAseq_gene_metadata(download_base):
 
 @print_func_name_args_times()
 def classify_cells(cell_df):
+    # Verify that 'class' and 'subclass' columns exist in cell_df
+    if 'class' not in cell_df.columns or 'subclass' not in cell_df.columns:
+        print("Warning: 'class' and 'subclass' columns are missing. Make sure join_cluster_details() adds these columns.")
+        print("Columns in cell_df:", cell_df.columns)
+        return cell_df  # Return without classifying if missing
+
     # Define cell type classifications
     neuronal_classes = [str(i).zfill(2) for i in range(1, 30)]  # Classes 01-29 are neuronal. zfill(2) pads with zeros
     astrocyte_subclasses = ["317", "318", "319", "320"]  # Subclasses for astrocytes
@@ -142,6 +148,10 @@ def main():
     cell_df = load_RNAseq_mouse_cell_metadata(download_base)
     cell_df = m.join_cluster_details(cell_df, download_base)  # Adds 'class', 'subclass'
     cell_df = classify_cells(cell_df)
+
+    # Check if classification worked
+    print("Unique cell types in classified data:", cell_df['cell_type'].unique())
+    import sys ; sys.exit()
 
     # Load gene metadata and filter for selected genes
     gene_df = load_mouse_RNAseq_gene_metadata(download_base)
