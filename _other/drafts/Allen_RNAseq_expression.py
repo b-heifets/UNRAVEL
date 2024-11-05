@@ -119,8 +119,8 @@ def get_gene_data_wo_cache_and_chunking(
     species: str = "human",
     region: str = None,
     cell_type: str = None
-):
-    """Load expression matrix data directly from RNA-seq data for specific genes.
+) -> pd.DataFrame:
+    """Load and structure gene expression data directly from RNA-seq data for specific genes.
     
     Parameters
     ----------
@@ -146,50 +146,41 @@ def get_gene_data_wo_cache_and_chunking(
     output_gene_data : pandas.DataFrame
         Subset of gene data indexed by cell.
     """
-    # Filter the gene metadata to only include the selected genes
+    # Filter genes
     gene_mask = all_genes.gene_symbol.isin(selected_genes)
     gene_filtered = all_genes[gene_mask]  
     
-    # Define path to expression data
+    # Path to expression data
     if species == 'mouse':
         expression_path = download_base / f"expression_matrices/WMB-10Xv3/20230630/WMB-10Xv3-{region}-{data_type}.h5ad"
     else:
         expression_path = download_base / f"expression_matrices/WHB-10Xv3/20240330/WHB-10Xv3-{cell_type}-{data_type}.h5ad"
     
-    # Load the full dataset without chunking (must have enough RAM)
-    if expression_path.exists():
-        print(f"\n    Loading expression data from {expression_path}")
-        expression_data = anndata.read_h5ad(expression_path)
-        print("    Data loaded successfully.\n")
-    else:
-        print(f"\n    [red1]Expression data not found at {expression_path}\n")
-        import sys ; sys.exit()
-
-    # Print summary of obs_names and first few cell labels to check compatibility
-    print(f"\n    First 5 obs names in expression data: {expression_data.obs_names[:5]}")
-    print(f"    First 5 cell labels in cell metadata: {all_cells.index[:5]}")
-    print(f"    Total cells in expression data: {len(expression_data.obs_names)}")
-    print(f"    Total cells in metadata: {len(all_cells.index)}\n")
-    
-    # Filter for selected cells and genes
-    print(f"\n    Filtering for {len(selected_genes)} genes and {len(all_cells)} cells\n")
-    cell_indexes = all_cells.index
-    if len(cell_indexes) == 0:
-        print("[red1]No matching cell labels found. Check format or label structure.\n")
+    if not expression_path.exists():
+        print(f"[red1]Error: Expression data not found at {expression_path}\n")
         import sys; sys.exit()
     
-    print(f"    Number of matching cells: {len(cell_indexes)}")
-
-    # Extract data for matching cells and genes
-    output_gene_data = expression_data[cell_indexes, gene_filtered.index].to_df()  # Extract expression data for the gene
-    output_gene_data.columns = gene_filtered.gene_symbol  # Set the column names to the gene symbols
+    # Load data once to avoid redundant file access
+    print(f"Loading expression data from {expression_path}")
+    expression_data = anndata.read_h5ad(expression_path)
+    print("Data loaded successfully.\n")
+    
+    # Confirm compatibility with cell labels
+    cell_indexes = all_cells.index.intersection(expression_data.obs_names)  # Check for matching cell labels
+    if len(cell_indexes) == 0:
+        print("[red1]No matching cell labels found. Please check label formats.\n")
+        import sys; sys.exit()
+    
+    # Filter data to include only the selected cells and genes
+    expression_data = expression_data[cell_indexes, gene_filtered.index].to_df()  # Extract expression data for the gene
+    expression_data.columns = gene_filtered.gene_symbol  # Set the column names to the gene symbols
+    expression_data.index.name = 'cell_label'
     # output_gene_data.columns = gene_filtered.gene_symbol.values  # Set the column names to the gene symbols
 
     if hasattr(expression_data, 'file'):
         expression_data.file.close()  # Close file only if backed mode is used
-    del expression_data  # Clean up
 
-    return output_gene_data
+    return expression_data.reset_index()
 
 
 @log_command
@@ -201,45 +192,31 @@ def main():
 
     download_base = Path(args.base)
 
-    # Check that either a cell type or region is provided
     if args.species == 'human' and args.cell_type is None:
-        print("\n[red1]Please provide a cell type (Neurons or Nonneurons) for humans\n")
+        print("\n    [red1]Please provide a cell type (Neurons or Nonneurons) for humans\n")
         return
     if args.species == 'mouse' and args.region is None:
-        print("\n[red1]Please provide a region for mice\n")
+        print("\n    [red1]Please provide a region for mice\n")
         return
 
-
-    # Load the cell metadata
     cell_df = load_RNAseq_cell_metadata(download_base, species=args.species) # Add option to load cell_metadata_with_cluster_annotation.csv instead? Does this just add extra columns?
 
-    # Load the gene metadata
     gene_df = load_RNAseq_gene_metadata(download_base, species=args.species)
 
-    # Load the expression data
+    # Retrieve expression data for all selected genes at once
     expression_data = get_gene_data_wo_cache_and_chunking(
         download_base, cell_df, gene_df, args.genes, data_type=args.data_type,
         species=args.species, region=args.region, cell_type=args.cell_type
     )
     
-    # Save the subset of expression data to a CSV file
+    # Define output file path and save the DataFrame with cell labels as the first column
     output_folder = Path(args.output) if args.output != '.' else Path.cwd()
     output_folder.mkdir(parents=True, exist_ok=True)
-
-    for gene in args.genes:
-        print(f"\nProcessing gene {gene}")
-
-        gene_data = expression_data[[gene]]
-        
-        # Define the output file path for the current gene
-        if args.species == 'mouse':
-            output_file = output_folder / f"WMB-10Xv3_{gene}_expression_data_{args.region}_{args.data_type}.csv"
-        else:
-            output_file = output_folder / f"WHB-10Xv3_{gene}_expression_data_{args.cell_type}_{args.data_type}.csv"
-        
-        # Save the gene-specific data to a CSV file
-        gene_data.to_csv(output_file)
-        print(f"\n    Saved expression data for gene {gene} to {output_file}\n")
+    if args.species == 'mouse':
+        output_file = output_folder / f"WMB-10Xv3_{args.genes[0]}_expression_data_{args.region}_{args.data_type}.csv"
+    else:
+        output_file = output_folder / f"WHB-10Xv3_{args.genes[0]}_expression_data_{args.cell_type}_{args.data_type}.csv"
+    expression_data.to_csv(output_file, index=False)
 
     verbose_end_msg()
 
