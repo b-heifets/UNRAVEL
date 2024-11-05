@@ -67,13 +67,13 @@ def load_RNAseq_cell_metadata(download_base, species='human'):
         if cell_metadata_path.exists():
             print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
             cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str}, 
-                                  use_cols=['cell_label', 'region_of_interest_acronym', 'x', 'y', 'cluster_alias'])
+                                  usecols=['cell_label', 'region_of_interest_acronym', 'x', 'y', 'cluster_alias'])
     else:
         cell_metadata_path = download_base / "metadata/WHB-10Xv3/20240330/cell_metadata.csv"
         if cell_metadata_path.exists():
             print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
             cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str}, 
-                                  use_cols=['cell_label', 'x', 'y', 'cluster_alias', 'region_of_interest_label', 'anatomical_division_label'])
+                                  usecols=['cell_label', 'x', 'y', 'cluster_alias', 'region_of_interest_label', 'anatomical_division_label'])
 
     if cell_df is not None:
         cell_df.set_index('cell_label', inplace=True)
