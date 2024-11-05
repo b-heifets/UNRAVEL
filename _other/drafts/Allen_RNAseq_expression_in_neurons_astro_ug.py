@@ -86,6 +86,10 @@ def join_cluster_details(cell_df_joined, download_base, species):
         # Rename 'name' column to 'class' for consistency with mouse data
         cell_df_joined.rename(columns={'name': 'class'}, inplace=True)
 
+        # Debug: Print a sample of the 'class' column to verify correct population
+        print("\nSample of 'class' column after join for human data:\n")
+        print(cell_df_joined['class'].dropna().unique()[:10])
+
     else:
         raise ValueError("Unsupported species. Choose either 'mouse' or 'human'.")
 
