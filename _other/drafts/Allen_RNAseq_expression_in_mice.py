@@ -29,7 +29,7 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the MERFISH data', required=True, action=SM)
     reqs.add_argument('-i', '--input', help='(e.g., Relative path to expression data. E.g., expression_matrices/WMB-10Xv2/20230630/WMB-10Xv2-TH-log2.h5ad', required=True, action=SM)
-    # reqs.add_argument('-g', '--gene', help='Gene to analyze', required=True, action=SM)
+    # reqs.add_argument('-g', '--genes', help='Genes to analyze', required=True, nargs='*', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -167,22 +167,39 @@ def main():
     pred = (cell_df_joined['feature_matrix_label'] == feature_matrix_label)
     cell_filtered = cell_df_joined[pred]
 
-    ntgenes = ['Slc17a7', 'Slc17a6', 'Slc17a8', 'Slc32a1', 'Slc6a5', 'Slc18a3', 'Slc6a3', 'Slc6a4', 'Slc6a2']
-    exgenes = ['Tac2']
-    gnames = ntgenes + exgenes
+
+    # Expression of canonical neurotransmitter transporter genes in the thalamus
+    # ntgenes = ['Slc17a7', 'Slc17a6', 'Slc17a8', 'Slc32a1', 'Slc6a5', 'Slc18a3', 'Slc6a3', 'Slc6a4', 'Slc6a2']
+    # exgenes = ['Tac2']
+    # gnames = ntgenes + exgenes
+    # pred = [x in gnames for x in adata.var.gene_symbol]
+    # gene_filtered = adata.var[pred]
+
+    # print("    Loading expression data for genes:")
+    # asubset = adata[:, gene_filtered.index].to_memory()
+    # print(asubset)
+
+    # pred = [x in ntgenes for x in asubset.var.gene_symbol]
+    # gf = asubset.var[pred]
+
+    # exp_df = create_expression_dataframe(asubset, gf, cell_filtered)
+    # agg = aggregate_by_metadata(exp_df, gf.gene_symbol, 'neurotransmitter')
+    # plot_heatmap(df=agg, fig_width=8, fig_height=3, vmax=10)
+    # plt.show()
+
+
+    # Expression of Tachykinin 2 (Tac2) in the thalamus
+    gnames = 'Tac2'
     pred = [x in gnames for x in adata.var.gene_symbol]
     gene_filtered = adata.var[pred]
 
-    print("    Loading expression data for genes:")
     asubset = adata[:, gene_filtered.index].to_memory()
-    print(asubset)
 
-    pred = [x in ntgenes for x in asubset.var.gene_symbol]
-    gf = asubset.var[pred]
+    gf = asubset.var[asubset.var.gene_symbol == 'Tac2']
+    tac2_exp = create_expression_dataframe(asubset, gf)
 
-    exp_df = create_expression_dataframe(asubset, gf, cell_filtered)
-    agg = aggregate_by_metadata(exp_df, gf.gene_symbol, 'neurotransmitter')
-    plot_heatmap(df=agg, fig_width=8, fig_height=3, vmax=10)
+    agg = aggregate_by_metadata(tac2_exp, gf.gene_symbol, 'neurotransmitter', True).head(10)
+    plot_heatmap(agg, 1, 3)
     plt.show()
 
 
