@@ -158,15 +158,29 @@ def get_gene_data_wo_cache_and_chunking(
     
     # Load the full dataset without chunking (must have enough RAM)
     if expression_path.exists():
-        print(f"\nLoading expression data from {expression_path}")
+        print(f"\n    Loading expression data from {expression_path}")
         expression_data = anndata.read_h5ad(expression_path)
-        print("Data loaded successfully.\n")
+        print("    Data loaded successfully.\n")
     else:
         print(f"\n    [red1]Expression data not found at {expression_path}\n")
         import sys ; sys.exit()
+
+    # Print summary of obs_names and first few cell labels to check compatibility
+    print(f"\n    First 5 obs names in expression data: {expression_data.obs_names[:5]}")
+    print(f"    First 5 cell labels in cell metadata: {all_cells.index[:5]}")
+    print(f"    Total cells in expression data: {len(expression_data.obs_names)}")
+    print(f"    Total cells in metadata: {len(all_cells.index)}\n")
     
     # Filter for selected cells and genes
+    print(f"\n    Filtering for {len(selected_genes)} genes and {len(all_cells)} cells\n")
     cell_indexes = all_cells.index
+    if len(cell_indexes) == 0:
+        print("[red1]No matching cell labels found. Check format or label structure.\n")
+        import sys; sys.exit()
+    
+    print(f"    Number of matching cells: {len(cell_indexes)}")
+
+    # Extract data for matching cells and genes
     output_gene_data = expression_data[cell_indexes, gene_filtered.index].to_df()  # Extract expression data for the gene
     output_gene_data.columns = gene_filtered.gene_symbol  # Set the column names to the gene symbols
     # output_gene_data.columns = gene_filtered.gene_symbol.values  # Set the column names to the gene symbols
@@ -188,14 +202,13 @@ def main():
     download_base = Path(args.base)
 
     # Check that either a cell type or region is provided
-    if args.species == 'human':
-        if args.cell_type is None:
-            print("\n    [red1]Please provide a cell type (Neurons or Nonneurons) for humans\n")
-            return
-    else:
-        if args.region is None:
-            print("\n    [red1]Please provide a region (OLF, CTXsp, Isocortex-1, Isocortex-2, HPF, STR, PAL, TH, HY, MB, MY, P, CB) for mice\n")
-            return
+    if args.species == 'human' and args.cell_type is None:
+        print("\n[red1]Please provide a cell type (Neurons or Nonneurons) for humans\n")
+        return
+    if args.species == 'mouse' and args.region is None:
+        print("\n[red1]Please provide a region for mice\n")
+        return
+
 
     # Load the cell metadata
     cell_df = load_RNAseq_cell_metadata(download_base, species=args.species) # Add option to load cell_metadata_with_cluster_annotation.csv instead? Does this just add extra columns?
@@ -204,14 +217,19 @@ def main():
     gene_df = load_RNAseq_gene_metadata(download_base, species=args.species)
 
     # Load the expression data
-    expression_data = get_gene_data_wo_cache_and_chunking(download_base, cell_df, gene_df, [args.genes], data_type=args.data_type, species=args.species, region=args.region, cell_type=args.cell_type)
-
+    expression_data = get_gene_data_wo_cache_and_chunking(
+        download_base, cell_df, gene_df, args.genes, data_type=args.data_type,
+        species=args.species, region=args.region, cell_type=args.cell_type
+    )
+    
     # Save the subset of expression data to a CSV file
     output_folder = Path(args.output) if args.output != '.' else Path.cwd()
     output_folder.mkdir(parents=True, exist_ok=True)
 
     for gene in args.genes:
-        gene_data = expression_data[[gene]]  # Select only the current gene's data
+        print(f"\nProcessing gene {gene}")
+
+        gene_data = expression_data[[gene]]
         
         # Define the output file path for the current gene
         if args.species == 'mouse':
@@ -221,7 +239,7 @@ def main():
         
         # Save the gene-specific data to a CSV file
         gene_data.to_csv(output_file)
-        print(f"\nSaved expression data for gene {gene} to {output_file}\n")
+        print(f"\n    Saved expression data for gene {gene} to {output_file}\n")
 
     verbose_end_msg()
 
