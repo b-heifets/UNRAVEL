@@ -152,10 +152,6 @@ def main():
     cell_df = m.join_cluster_details(cell_df, download_base)  # Adds 'class', 'subclass'
     cell_df = classify_cells(cell_df)
 
-    # Check if classification worked
-    print("Unique cell types in classified data:", cell_df['cell_type'].unique())
-    import sys ; sys.exit()
-
     # Load gene metadata and filter for selected genes
     gene_df = load_mouse_RNAseq_gene_metadata(download_base)
     gene_filtered = gene_df[gene_df['gene_symbol'].isin(args.genes)]
