@@ -47,7 +47,7 @@ def load_RNAseq_mouse_cell_metadata(download_base):
     if cell_metadata_path.exists():
         print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
         cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str}, 
-                                use_cols=['cell_label', 'region_of_interest_acronym', 'dataset_label', 'x', 'y', 'cluster_alias'])
+                                usecols=['cell_label', 'region_of_interest_acronym', 'dataset_label', 'x', 'y', 'cluster_alias'])
         
     if cell_df is not None:
         cell_df.set_index('cell_label', inplace=True)
