@@ -238,14 +238,14 @@ def main():
         ds = matindex[0]  # dataset
         mp = matindex[1]  # matrix prefix
 
-        path_to_expresion_matrix = expression_matrices_dir / ds / '20230830' / f'{mp}-log2.h5ad'
+        file = expression_matrices_dir / ds / '20230830' / f'{mp}-log2.h5ad'
 
-        print(f"\n    Loading expression data from {path_to_expresion_matrix}\n")
+        print(f"\n    Loading expression data from {file}\n")
         
         pred = (cell_df_joined['feature_matrix_label'] == mp)
         cell_filtered = cell_df_joined[pred]
         
-        ad = anndata.read_h5ad(path_to_expresion_matrix, backed='r')
+        ad = anndata.read_h5ad(file, backed='r')
         exp = ad[cell_filtered.index, gene_filtered.index].to_df()
         gdata.loc[ exp.index, gene_filtered.index ] = exp
         
