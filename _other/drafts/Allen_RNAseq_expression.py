@@ -148,7 +148,12 @@ def get_gene_data_wo_cache_and_chunking(
     """
     # Filter genes
     gene_mask = all_genes.gene_symbol.isin(selected_genes)
-    gene_filtered = all_genes[gene_mask]  
+    gene_filtered = all_genes[gene_mask]
+    if gene_filtered.empty:
+        print(f"    [red1]Error: None of the selected genes ({selected_genes}) found in gene metadata.\n")
+        import sys; sys.exit()
+    
+    print(f"\n    Selected genes in gene metadata: {gene_filtered['gene_symbol'].tolist()}\n")
     
     # Path to expression data
     if species == 'mouse':
@@ -160,27 +165,34 @@ def get_gene_data_wo_cache_and_chunking(
         print(f"[red1]Error: Expression data not found at {expression_path}\n")
         import sys; sys.exit()
     
-    # Load data once to avoid redundant file access
-    print(f"Loading expression data from {expression_path}")
+    print(f"    Loading expression data from {expression_path}")
     expression_data = anndata.read_h5ad(expression_path)
-    print("Data loaded successfully.\n")
+    print("    Data loaded successfully.\n")
     
-    # Confirm compatibility with cell labels
+    # Match cells between metadata and expression data
+    print("    Matching cell labels between metadata and expression data...")
     cell_indexes = all_cells.index.intersection(expression_data.obs_names)  # Check for matching cell labels
     if len(cell_indexes) == 0:
-        print("[red1]No matching cell labels found. Please check label formats.\n")
+        print("\n    [red1]No matching cell labels found. Please check label formats.\n")
         import sys; sys.exit()
     
-    # Filter data to include only the selected cells and genes
-    expression_data = expression_data[cell_indexes, gene_filtered.index].to_df()  # Extract expression data for the gene
-    expression_data.columns = gene_filtered.gene_symbol  # Set the column names to the gene symbols
-    expression_data.index.name = 'cell_label'
-    # output_gene_data.columns = gene_filtered.gene_symbol.values  # Set the column names to the gene symbols
+    print(f"    Number of matching cells: {len(cell_indexes)}")
+    
+    # Extract expression data for the selected cells and genes
+    try:
+        print(f"    Extracting expression data for the selected cells and genes...")
+        expression_subset = expression_data[cell_indexes, gene_filtered.index].to_df()
+        expression_subset.columns = gene_filtered.gene_symbol
+        expression_subset.index.name = 'cell_label'
+        print(f"Extracted expression data:\n{expression_subset.head()}\n")
+    except KeyError as e:
+        print(f"\n    [red1]Error extracting data: {e}\n")
+        import sys; sys.exit()
 
     if hasattr(expression_data, 'file'):
         expression_data.file.close()  # Close file only if backed mode is used
 
-    return expression_data.reset_index()
+    return expression_subset.reset_index()
 
 
 @log_command
@@ -209,14 +221,19 @@ def main():
         species=args.species, region=args.region, cell_type=args.cell_type
     )
     
-    # Define output file path and save the DataFrame with cell labels as the first column
+    # Check the data before saving to confirm structure
+    print(f"\n    Final output data for {args.genes}:\n{expression_data.head()}\n")
+
+    # Define output file path and save the DataFrame
     output_folder = Path(args.output) if args.output != '.' else Path.cwd()
     output_folder.mkdir(parents=True, exist_ok=True)
     if args.species == 'mouse':
         output_file = output_folder / f"WMB-10Xv3_{args.genes[0]}_expression_data_{args.region}_{args.data_type}.csv"
     else:
         output_file = output_folder / f"WHB-10Xv3_{args.genes[0]}_expression_data_{args.cell_type}_{args.data_type}.csv"
+    
     expression_data.to_csv(output_file, index=False)
+    print(f"\n    Saved expression data for gene {args.genes[0]} to {output_file}\n")
 
     verbose_end_msg()
 
