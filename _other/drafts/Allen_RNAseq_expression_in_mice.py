@@ -1,18 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Use ``./Allen_RNAseq_expression`` from UNRAVEL to extract expression data for specific genes from the Allen Brain Cell Atlas RNA-seq data.
+Use ``./Allen_RNAseq_expression_in_mice.py`` from UNRAVEL to analyze mouse Allen Brain Cell Atlas scRNA-seq expression.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.htmlml
 
 Usage:
 ------
-    ./Allen_RNAseq_expression -b path/base_dir -g genes [-s mouse | human] [-c Neurons | Nonneurons] [-r region] [-d log2 | raw ] [-o output] [-v]
-
-Usage for mice:
----------------
-    ./Allen_RNAseq_expression -b path/base_dir -g genes -r region [-o output_dir] [-v]
+    ./Allen_RNAseq_expression_in_mice.py -b path/base_dir -i expression_matrices/WMB-10Xv2/20230630/WMB-10Xv2-TH-log2.h5ad [-v]
 """
 
 from pathlib import Path
@@ -104,11 +100,11 @@ def load_mouse_RNAseq_gene_metadata(download_base):
         import sys ; sys.exit()
     return gene_df
 
-def create_expression_dataframe(ad, gf) :
+def create_expression_dataframe(ad, gf, cell_filtered):
     gdata = ad[:, gf.index].to_df()
     gdata.columns = gf.gene_symbol
-    joined = cell_filtered.join(gdata)
-    return joined
+    exp_df = cell_filtered.join(gdata)
+    return exp_df
 
 def aggregate_by_metadata(df, gnames, value, sort=False):
     grouped = df.groupby(value)[gnames].mean()
@@ -177,15 +173,15 @@ def main():
     pred = [x in gnames for x in adata.var.gene_symbol]
     gene_filtered = adata.var[pred]
 
-    print("Loading expression data for genes:")
+    print("    Loading expression data for genes:")
     asubset = adata[:, gene_filtered.index].to_memory()
     print(asubset)
 
     pred = [x in ntgenes for x in asubset.var.gene_symbol]
     gf = asubset.var[pred]
 
-    ntexp = create_expression_dataframe(asubset, gf)
-    agg = aggregate_by_metadata(ntexp, gf.gene_symbol, 'neurotransmitter')
+    exp_df = create_expression_dataframe(asubset, gf, cell_filtered)
+    agg = aggregate_by_metadata(exp_df, gf.gene_symbol, 'neurotransmitter')
     plot_heatmap(df=agg, fig_width=8, fig_height=3, vmax=10)
     plt.show()
 
