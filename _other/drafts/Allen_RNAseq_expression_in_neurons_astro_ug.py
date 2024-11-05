@@ -53,9 +53,8 @@ def join_cluster_details(cell_df_joined, download_base, species):
         print(f"\n    Adding cluster details from {cluster_details_path}\n")
         cluster_details = pd.read_csv(cluster_details_path)
         cluster_details['cluster_alias'] = cluster_details['cluster_alias'].astype(str)
-
-        cluster_details.set_index('cluster_alias', inplace=True)
         cell_df_joined['cluster_alias'] = cell_df_joined['cluster_alias'].astype(str)
+        cluster_details.set_index('cluster_alias', inplace=True)
 
         cell_df_joined = cell_df_joined.join(cluster_details, on='cluster_alias')
 
@@ -71,6 +70,11 @@ def join_cluster_details(cell_df_joined, download_base, species):
         print(f"\n    Adding cluster alias details from {cluster_details_path}\n")
         cluster_details = pd.read_csv(cluster_details_path)
         cluster_details['cluster_alias'] = cluster_details['cluster_alias'].astype(str)
+        cell_df_joined['cluster_alias'] = cell_df_joined['cluster_alias'].astype(str)  # Ensure consistent data type
+
+        # Debug: Verify data types and contents
+        print("\nSample 'cluster_alias' values in cell_df_joined before join:\n", cell_df_joined['cluster_alias'].head())
+        print("\nSample 'label' values in cluster_details before join:\n", cluster_details['label'].head())
         cluster_details.set_index('label', inplace=True)
 
         # Print first row of cluster_details
@@ -85,6 +89,9 @@ def join_cluster_details(cell_df_joined, download_base, species):
 
         supercluster_details = supercluster_details[supercluster_details['cluster_annotation_term_set_name'] == 'supercluster']
         supercluster_details = supercluster_details[['label', 'name']].set_index('label')
+
+        # Debug: Print filtered supercluster details
+        print("\nSample supercluster details after filtering:\n", supercluster_details.head())
 
         # Print first row of supercluster_details after filtering
         print("\nFirst row of supercluster_details after filtering:\n", supercluster_details.head(1))
@@ -103,8 +110,8 @@ def join_cluster_details(cell_df_joined, download_base, species):
         cell_df_joined['cluster_alias'] = cell_df_joined['cluster_alias'].astype(str)  # Convert cell_df column to string
         cell_df_joined = cell_df_joined.join(cluster_details[['name']], on='cluster_alias')
 
-        # Debug: Print first row of cell_df_joined after join
-        print("\nFirst row of cell_df_joined after join:\n", cell_df_joined.head(1))
+        # Debug: Check if join populated 'name' correctly
+        print("\nSample rows in cell_df_joined after join:\n", cell_df_joined[['cluster_alias', 'name']].dropna().head())
         
         # Rename 'name' column to 'class' for consistency with mouse data
         cell_df_joined.rename(columns={'name': 'class'}, inplace=True)
@@ -112,9 +119,8 @@ def join_cluster_details(cell_df_joined, download_base, species):
         # print first row of cell_df_joined after renaming
         print("\nFirst row of cell_df_joined after renaming:\n", cell_df_joined.head(1))
 
-        # Debug: Print a sample of the 'class' column to verify correct population
-        print("\nSample of 'class' column after join for human data:\n")
-        print(cell_df_joined['class'].dropna().unique()[:10])
+        # Debug: Confirm that 'class' column now contains supercluster names
+        print("\nSample of 'class' column after renaming:\n", cell_df_joined['class'].dropna().unique()[:10])
 
     else:
         raise ValueError("Unsupported species. Choose either 'mouse' or 'human'.")
