@@ -64,18 +64,31 @@ def join_cluster_details(cell_df_joined, download_base, species):
         cluster_details_path = download_base / 'metadata/WHB-taxonomy/20240330/cluster.csv'
         supercluster_details_path = download_base / 'metadata/WHB-taxonomy/20240330/cluster_annotation_term.csv'
 
+        # print first row of cell_df_joined
+        print("\nFirst row of cell_df_joined:\n", cell_df_joined.head(1))
+
         # Load cluster details with aliases
         print(f"\n    Adding cluster alias details from {cluster_details_path}\n")
         cluster_details = pd.read_csv(cluster_details_path)
         cluster_details['cluster_alias'] = cluster_details['cluster_alias'].astype(str)
         cluster_details.set_index('label', inplace=True)
 
+        # Print first row of cluster_details
+        print("\nFirst row of cluster_details:\n", cluster_details.head(1))
+
         # Load supercluster names
         print(f"\n    Adding supercluster details from {supercluster_details_path}\n")
         supercluster_details = pd.read_csv(supercluster_details_path)
+
+        # Print first row of supercluster_details
+        print("\nFirst row of supercluster_details:\n", supercluster_details.head(1))
+
         supercluster_details = supercluster_details[supercluster_details['cluster_annotation_term_set_name'] == 'supercluster']
         supercluster_details = supercluster_details[['label', 'name']].set_index('label')
-        
+
+        # Print first row of supercluster_details after filtering
+        print("\nFirst row of supercluster_details after filtering:\n", supercluster_details.head(1))
+
         # Debug: Print unique values in cluster_alias and label to check for matches
         print("\nUnique values in 'cluster_alias' from cell_df_joined:\n", cell_df_joined['cluster_alias'].unique()[:10])
         print("\nUnique values in 'label' from cluster_details:\n", cluster_details.index.unique()[:10])
@@ -83,12 +96,21 @@ def join_cluster_details(cell_df_joined, download_base, species):
         # Join cluster aliases with superclusters on 'label'
         cluster_details = cluster_details.join(supercluster_details, on='label')
 
+        # Print first row of cluster_details after join
+        print("\nFirst row of cluster_details after join:\n", cluster_details.head(1))
+
         # Join with cell metadata based on cluster_alias
         cell_df_joined['cluster_alias'] = cell_df_joined['cluster_alias'].astype(str)  # Convert cell_df column to string
         cell_df_joined = cell_df_joined.join(cluster_details[['name']], on='cluster_alias')
+
+        # Debug: Print first row of cell_df_joined after join
+        print("\nFirst row of cell_df_joined after join:\n", cell_df_joined.head(1))
         
         # Rename 'name' column to 'class' for consistency with mouse data
         cell_df_joined.rename(columns={'name': 'class'}, inplace=True)
+
+        # print first row of cell_df_joined after renaming
+        print("\nFirst row of cell_df_joined after renaming:\n", cell_df_joined.head(1))
 
         # Debug: Print a sample of the 'class' column to verify correct population
         print("\nSample of 'class' column after join for human data:\n")
