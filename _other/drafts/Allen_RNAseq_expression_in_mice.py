@@ -258,12 +258,17 @@ def main():
 
     # Change columns from index to gene symbol
     gdata.columns = gene_filtered.gene_symbol
+    exp_df.columns = gene_filtered.gene_symbol
+
+    # Remove rows with no expression data
     pred = pd.notna(gdata[gdata.columns[0]])
     gdata = gdata[pred].copy(deep=True)
 
+    # Join the cell metadata with the gene expression data
     exp_df_filtered = exp_df[gnames]
     cell_df_joined_w_exp = cell_df_joined.join(exp_df_filtered)
 
+    # Plot the heatmap of the gene expression data
     agg = aggregate_by_metadata(cell_df_joined_w_exp, gnames, 'neurotransmitter')
     agg = agg[gnames]
     res = plot_heatmap(agg, 8, 3)
