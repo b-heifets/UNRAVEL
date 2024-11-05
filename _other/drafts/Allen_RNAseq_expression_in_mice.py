@@ -229,25 +229,25 @@ def main():
     expression_matrices_dir = download_base / 'expression_matrices'
 
     # Perhaps a recursive search for all expression matrices would be simpler
-    # list_of_paths_to_expression_matrices = list(expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'))
+    list_of_paths_to_expression_matrices = list(expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'))
 
     count = 0  # For testing purposes
-    for matindex in matrices.index:
+    for file in list_of_paths_to_expression_matrices:
 
-        ds = matindex[0]  # dataset
-        mp = matindex[1]  # matrix prefix
-
-        file = expression_matrices_dir / ds / '20230830' / f'{mp}-log2.h5ad'
-
+        if not file.exists():
+            print(f"\n    [red1]Expression data not found at {file}\n")
+            return
         print(f"\n    Loading expression data from {file}\n")
-        
-        pred = (cell_df_joined['feature_matrix_label'] == mp)
+
+        # Connect the cells with expression data to the cell metadata
+        matrix_prefix = str(file.name).replace('-log2.h5ad', '')
+        pred = (cell_df_joined['feature_matrix_label'] == matrix_prefix)
         cell_filtered = cell_df_joined[pred]
         
+        # Load the expression data
         ad = anndata.read_h5ad(file, backed='r')
         exp_df = ad[cell_filtered.index, gene_filtered.index].to_df()
         gdata.loc[ exp_df.index, gene_filtered.index ] = exp_df
-        
         ad.file.close()
         del ad
         
