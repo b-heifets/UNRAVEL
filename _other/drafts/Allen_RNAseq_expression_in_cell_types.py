@@ -24,8 +24,6 @@ import pandas as pd
 from rich import print
 from rich.traceback import install
 
-from Allen_RNAseq_expression import load_RNAseq_cell_metadata, load_RNAseq_gene_metadata
-
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -46,6 +44,43 @@ def parse_args():
 
     return parser.parse_args()
 
+
+def load_RNAseq_cell_metadata(download_base, species='human'):
+    """
+    Load a subset of cell metadata from the RNA-seq data.
+
+    Parameters
+    ----------
+    download_base : Path
+        The base directory where the data is downloaded.
+    species : str
+        The species to use (human or mouse). Default: 'human'.
+
+    Returns
+    -------
+    cell_df : pd.DataFrame
+        The cell metadata dataframe. Index: cell_label.
+    """
+    cell_df = None
+    if species == 'mouse':
+        cell_metadata_path = download_base / "metadata/WMB-10X/20231215/cell_metadata.csv"
+        if cell_metadata_path.exists():
+            print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
+            cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str}, 
+                                  use_cols=['cell_label', 'region_of_interest_acronym', 'x', 'y', 'cluster_alias'])
+    else:
+        cell_metadata_path = download_base / "metadata/WHB-10Xv3/20240330/cell_metadata.csv"
+        if cell_metadata_path.exists():
+            print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
+            cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str}, 
+                                  use_cols=['cell_label', 'x', 'y', 'cluster_alias', 'region_of_interest_label', 'anatomical_division_label'])
+
+    if cell_df is not None:
+        cell_df.set_index('cell_label', inplace=True)
+    else:
+        print(f"\n    [red1]Cell metadata not loadable from: {cell_metadata_path}\n")
+        import sys ; sys.exit()
+    return cell_df
 
 @log_command
 def main():
