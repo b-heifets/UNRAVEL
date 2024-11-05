@@ -54,6 +54,17 @@ def load_gene_metadata(download_base, species):
     return gene_df
 
 @print_func_name_args_times()
+def load_gene_metadata(download_base, species):
+    if species == 'mouse':
+        gene_metadata_path = download_base / "metadata/WMB-10X/20231215/gene.csv"
+    else:  # human
+        gene_metadata_path = download_base / "metadata/WHB-10Xv3/20240330/gene.csv"
+
+    gene_df = pd.read_csv(gene_metadata_path)
+    gene_df.set_index('gene_identifier', inplace=True)
+    return gene_df
+
+@print_func_name_args_times()
 def classify_cells(cell_df, species):
     if species == 'mouse':
         # Mouse classification identifiers
