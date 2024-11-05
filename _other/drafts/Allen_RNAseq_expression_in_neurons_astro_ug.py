@@ -74,7 +74,11 @@ def join_cluster_details(cell_df_joined, download_base, species):
         print(f"\n    Adding supercluster details from {supercluster_details_path}\n")
         supercluster_details = pd.read_csv(supercluster_details_path)
         supercluster_details = supercluster_details[supercluster_details['cluster_annotation_term_set_name'] == 'supercluster']
-        supercluster_details = supercluster_details[['label', 'name']].set_index('label')  # Keep only relevant columns
+        supercluster_details = supercluster_details[['label', 'name']].set_index('label')
+        
+        # Debug: Print unique values in cluster_alias and label to check for matches
+        print("\nUnique values in 'cluster_alias' from cell_df_joined:\n", cell_df_joined['cluster_alias'].unique()[:10])
+        print("\nUnique values in 'label' from cluster_details:\n", cluster_details.index.unique()[:10])
 
         # Join cluster aliases with superclusters on 'label'
         cluster_details = cluster_details.join(supercluster_details, on='label')
