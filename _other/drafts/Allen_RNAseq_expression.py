@@ -50,6 +50,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Should load_RNAseq_cell_metadata and load_RNAseq_gene_metadata be moved to a separate module?
 
 def load_RNAseq_cell_metadata(download_base, species='human'):
     """
@@ -184,7 +185,7 @@ def get_gene_data_wo_cache_and_chunking(
         expression_subset = expression_data[cell_indexes, gene_filtered.index].to_df()
         expression_subset.columns = gene_filtered.gene_symbol
         expression_subset.index.name = 'cell_label'
-        print(f"Extracted expression data:\n{expression_subset.head()}\n")
+        print(f"    Extracted expression data:\n\n{expression_subset.head()}\n")
     except KeyError as e:
         print(f"\n    [red1]Error extracting data: {e}\n")
         import sys; sys.exit()
@@ -231,7 +232,7 @@ def main():
         output_file = output_folder / f"WMB-10Xv3_{args.genes[0]}_expression_data_{args.region}_{args.data_type}.csv"
     else:
         output_file = output_folder / f"WHB-10Xv3_{args.genes[0]}_expression_data_{args.cell_type}_{args.data_type}.csv"
-    
+
     expression_data.to_csv(output_file, index=False)
     print(f"\n    Saved expression data for gene {args.genes[0]} to {output_file}\n")
 
