@@ -196,7 +196,7 @@ def main():
     asubset = adata[:, gene_filtered.index].to_memory()
 
     gf = asubset.var[asubset.var.gene_symbol == 'Tac2']
-    tac2_exp = create_expression_dataframe(asubset, gf)
+    tac2_exp = create_expression_dataframe(asubset, gf, cell_filtered)
 
     agg = aggregate_by_metadata(tac2_exp, gf.gene_symbol, 'neurotransmitter', True).head(10)
     plot_heatmap(agg, 1, 3)
