@@ -8,7 +8,7 @@ Note:
 
 Usage:
 ------
-    ./Allen_RNAseq_expression_in_mice.py -b path/base_dir -i expression_matrices/WMB-10Xv2/20230630/WMB-10Xv2-TH-log2.h5ad [-v]
+    ./Allen_RNAseq_expression_in_mice.py -b path/base_dir -g genes [-v]
 """
 
 from pathlib import Path
@@ -28,8 +28,10 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the MERFISH data', required=True, action=SM)
-    # reqs.add_argument('-i', '--input', help='(e.g., Relative path to expression data. E.g., expression_matrices/WMB-10Xv2/20230630/WMB-10Xv2-TH-log2.h5ad', required=True, action=SM)
-    # reqs.add_argument('-g', '--genes', help='Genes to analyze', required=True, nargs='*', action=SM)
+    reqs.add_argument('-g', '--genes', help='Space-separated list of genes to analyze', required=True, nargs='*', action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-gb', '--groupby', help='The metadata column to group by (e.g., class, subclass, etc.). Default: class', required=True, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -38,19 +40,11 @@ def parse_args():
 
 
 def load_RNAseq_mouse_cell_metadata(download_base):
-    cell_df = None
-
     cell_metadata_path = download_base / "metadata/WMB-10X/20231215/cell_metadata.csv"
-    if cell_metadata_path.exists():
-        print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
-        cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str}, 
-                                usecols=['cell_label', 'library_label', 'feature_matrix_label', 'region_of_interest_acronym', 'dataset_label', 'x', 'y', 'cluster_alias'])
-        
-    if cell_df is not None:
-        cell_df.set_index('cell_label', inplace=True)
-    else:
-        print(f"\n    [red1]Cell metadata not loadable from: {cell_metadata_path}\n")
-        import sys ; sys.exit()
+    cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str},
+                          usecols=['cell_label', 'library_label', 'feature_matrix_label', 'region_of_interest_acronym', 
+                                   'dataset_label', 'x', 'y', 'cluster_alias'])
+    cell_df.set_index('cell_label', inplace=True)
     return cell_df
 
 def join_region_of_interest_metadata(cell_df, download_base):
@@ -91,14 +85,10 @@ def plot_umap(xx, yy, cc=None, val=None, fig_width=8, fig_height=8, cmap=None):
 
 def load_mouse_RNAseq_gene_metadata(download_base):
     gene_metadata_path = download_base / "metadata/WMB-10X/20231215/gene.csv"
-    if gene_metadata_path.exists():
-        print(f"\n    Loading gene metadata from {gene_metadata_path}\n")
-        gene_df = pd.read_csv(gene_metadata_path)
-        gene_df.set_index('gene_identifier', inplace=True)
-    else:
-        print(f"\n    [red1]Gene metadata not found at {gene_metadata_path}\n")
-        import sys ; sys.exit()
+    gene_df = pd.read_csv(gene_metadata_path)
+    gene_df.set_index('gene_identifier', inplace=True)
     return gene_df
+
 
 def create_expression_dataframe(ad, gf, cell_filtered):
     gdata = ad[:, gf.index].to_df()
@@ -146,108 +136,32 @@ def main():
     # Add: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
     cell_df_joined = m.join_cluster_details(cell_df, download_base) 
 
-    # Example of plotting the UMAP coordinates colored by neurotransmitter identity
-    # cell_df_joined = m.join_cluster_colors(cell_df_joined, download_base)
-    # cell_df_joined = join_region_of_interest_metadata(cell_df_joined, download_base)
-    # cell_subsampled = cell_df_joined.loc[::10]
-    # fig, ax = plot_umap(cell_subsampled['x'], cell_subsampled['y'], cc=cell_subsampled['neurotransmitter_color'])
-    # res = ax.set_title("Neuortransmitter Identity")
-    # plt.show()
-
-    # Load expression data
-    # expression_data_path = download_base / args.input
-    # if not expression_data_path.exists():
-    #     print(f"\n    [red1]Expression data not found at {expression_data_path}\n")
-    #     return
-    # adata = anndata.read_h5ad(expression_data_path, backed='r')
-    
-
-    # expression_matrices/WMB-10Xv2/20230630/WMB-10Xv2-TH-log2.h5ad
-
-    # Connect the cells with expression data to the cell metadata
-    # feature_matrix_label = str(Path(args.input).name).replace('-log2.h5ad', '')
-    # pred = (cell_df_joined['feature_matrix_label'] == feature_matrix_label)
-    # cell_filtered = cell_df_joined[pred]
-
-
-    # Expression of canonical neurotransmitter transporter genes in the thalamus
-    # ntgenes = ['Slc17a7', 'Slc17a6', 'Slc17a8', 'Slc32a1', 'Slc6a5', 'Slc18a3', 'Slc6a3', 'Slc6a4', 'Slc6a2']
-    # exgenes = ['Tac2']
-    # gnames = ntgenes + exgenes
-    # pred = [x in gnames for x in adata.var.gene_symbol]
-    # gene_filtered = adata.var[pred]
-
-    # print("    Loading expression data for genes:")
-    # asubset = adata[:, gene_filtered.index].to_memory()
-    # print(asubset)
-
-    # pred = [x in ntgenes for x in asubset.var.gene_symbol]
-    # gf = asubset.var[pred]
-
-    # exp_df = create_expression_dataframe(asubset, gf, cell_filtered)
-    # agg = aggregate_by_metadata(exp_df, gf.gene_symbol, 'neurotransmitter')
-    # plot_heatmap(df=agg, fig_width=8, fig_height=3, vmax=10)
-    # plt.show()
-
-
-    # Expression of Tachykinin 2 (Tac2) in the thalamus
-    # gnames = 'Tac2'
-    # pred = [x in gnames for x in adata.var.gene_symbol]
-    # gene_filtered = adata.var[pred]
-
-    # asubset = adata[:, gene_filtered.index].to_memory()
-
-    # gf = asubset.var[asubset.var.gene_symbol == 'Tac2']
-    # tac2_exp = create_expression_dataframe(asubset, gf, cell_filtered)
-
-    # agg = aggregate_by_metadata(tac2_exp, gf.gene_symbol, 'neurotransmitter', True).head(10)
-    # plot_heatmap(agg, 1, 3)
-    # plt.show()
-
-    # Grouping cells by cell types class, subclass, supertype, or cluster
-    # agg = aggregate_by_metadata(tac2_exp, gf.gene_symbol, 'class', True).head(8)  # Average expression of gene by class
-    # plot_heatmap(agg, 1, 3)
-    # plt.show()
-
-
-    # Gene expression matrices
-    matrices = cell_df_joined.groupby(['dataset_label', 'feature_matrix_label'])[['library_label']].count()
-    # matrices.columns = ['cell_count']
-
-    # example_matrix_file = download_base / 'expression_matrices/WMB-10XMulti/20230830/WMB-10XMulti-log2.h5ad'
-    # ad = anndata.read_h5ad(file,backed='r')
-
-
-
     # Create empty gene expression dataframe
-    gnames = ['Slc17a7', 'Tac2']
     gene_df = load_mouse_RNAseq_gene_metadata(download_base)
-    pred = [x in gnames for x in gene_df.gene_symbol]
+    pred = [x in args.genes for x in gene_df.gene_symbol]
     gene_filtered = gene_df[pred]
     gdata = pd.DataFrame(index=cell_df_joined.index, columns=gene_filtered.index)
     
-    expression_matrices_dir = download_base / 'expression_matrices'
-
-    # Perhaps a recursive search for all expression matrices would be simpler
-    list_of_paths_to_expression_matrices = list(expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'))
-
+    # Initialize an empty list to store each exp_df for concatenation later
+    exp_dfs = []
     count = 0  # For testing purposes
+    expression_matrices_dir = download_base / 'expression_matrices'
+    list_of_paths_to_expression_matrices = list(expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'))
     for file in list_of_paths_to_expression_matrices:
 
-        if not file.exists():
-            print(f"\n    [red1]Expression data not found at {file}\n")
-            return
         print(f"\n    Loading expression data from {file}\n")
 
         # Connect the cells with expression data to the cell metadata
         matrix_prefix = str(file.name).replace('-log2.h5ad', '')
-        pred = (cell_df_joined['feature_matrix_label'] == matrix_prefix)
-        cell_filtered = cell_df_joined[pred]
+        cell_filtered = cell_df_joined[cell_df_joined['feature_matrix_label'] == matrix_prefix]
         
         # Load the expression data
         ad = anndata.read_h5ad(file, backed='r')
         exp_df = ad[cell_filtered.index, gene_filtered.index].to_df()
-        gdata.loc[ exp_df.index, gene_filtered.index ] = exp_df
+        exp_df.columns = gene_filtered.gene_symbol  # Set gene symbols as column names
+
+        # Append this exp_df to the list for concatenation later
+        exp_dfs.append(exp_df)
         ad.file.close()
         del ad
         
@@ -256,22 +170,19 @@ def main():
         if count > 2:
             break
 
-    # Change columns from index to gene symbol
-    gdata.columns = gene_filtered.gene_symbol
-    exp_df.columns = gene_filtered.gene_symbol
+    # Concatenate all exp_dfs into a single DataFrame along the rows
+    gdata = pd.concat(exp_dfs, axis=0)
 
     # Remove rows with no expression data
     pred = pd.notna(gdata[gdata.columns[0]])
     gdata = gdata[pred].copy(deep=True)
 
-    # Join the cell metadata with the gene expression data
-    exp_df_filtered = exp_df[gnames]
-    cell_df_joined_w_exp = cell_df_joined.join(exp_df_filtered)
+    # Join the full concatenated gene expression data with the cell metadata
+    cell_df_joined_w_exp = cell_df_joined.join(gdata, how="inner")
 
     # Plot the heatmap of the gene expression data
-    agg = aggregate_by_metadata(cell_df_joined_w_exp, gnames, 'neurotransmitter')
-    agg = agg[gnames]
-    res = plot_heatmap(agg, 8, 3)
+    agg = aggregate_by_metadata(cell_df_joined_w_exp, args.genes, args.groupby, True)
+    plot_heatmap(agg, fig_width=8, fig_height=3)
     plt.show()
 
     verbose_end_msg()
