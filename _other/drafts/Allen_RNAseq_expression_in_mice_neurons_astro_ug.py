@@ -14,7 +14,7 @@ import merfish as m
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, print_func_name_args_times, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -29,6 +29,7 @@ def parse_args():
 
     return parser.parse_args()
 
+@print_func_name_args_times()
 def load_RNAseq_mouse_cell_metadata(download_base):
     cell_metadata_path = download_base / "metadata/WMB-10X/20231215/cell_metadata.csv"
     cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str},
@@ -37,12 +38,14 @@ def load_RNAseq_mouse_cell_metadata(download_base):
     cell_df.set_index('cell_label', inplace=True)
     return cell_df
 
+@print_func_name_args_times()
 def load_mouse_RNAseq_gene_metadata(download_base):
     gene_metadata_path = download_base / "metadata/WMB-10X/20231215/gene.csv"
     gene_df = pd.read_csv(gene_metadata_path)
     gene_df.set_index('gene_identifier', inplace=True)
     return gene_df
 
+@print_func_name_args_times()
 def classify_cells(cell_df):
     # Define cell type classifications
     neuronal_classes = [str(i).zfill(2) for i in range(1, 30)]  # Classes 01-29 are neuronal
@@ -56,6 +59,7 @@ def classify_cells(cell_df):
 
     return cell_df
 
+@print_func_name_args_times()
 def calculate_expression_metrics(gdata, cell_df, genes):
     # Prepare DataFrame to store results
     results = []
@@ -120,6 +124,7 @@ def main():
     expression_matrices_dir = download_base / 'expression_matrices'
     exp_dfs = []
     for file in expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'):
+        print(f"    Loading expression data from {file}")
         matrix_prefix = file.stem.replace('-log2', '')
         cell_filtered = cell_df[cell_df['feature_matrix_label'] == matrix_prefix]
         if not cell_filtered.empty:
@@ -142,7 +147,7 @@ def main():
     # Save the results to a CSV file
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    results_df.to_csv(, index=False)
+    results_df.to_csv(output_path, index=False)
 
     verbose_end_msg()
 
