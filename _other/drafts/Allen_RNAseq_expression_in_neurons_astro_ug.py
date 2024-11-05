@@ -45,13 +45,45 @@ def load_RNAseq_cell_metadata(download_base, species):
     cell_df.set_index('cell_label', inplace=True)
     return cell_df
 
-
 @print_func_name_args_times()
-def load_gene_metadata(download_base, species):
-    gene_metadata_path = download_base / f"metadata/{'WMB-10X' if species == 'mouse' else 'WHB-10Xv3'}/20231215/gene.csv"
-    gene_df = pd.read_csv(gene_metadata_path)
-    gene_df.set_index('gene_identifier', inplace=True)
-    return gene_df
+def join_cluster_details(cell_df_joined, download_base, species):
+    if species == 'mouse':
+        # Mouse-specific cluster details path
+        cluster_details_path = download_base / 'metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_pivoted.csv'
+        print(f"\n    Adding cluster details from {cluster_details_path}\n")
+        cluster_details = pd.read_csv(cluster_details_path)
+        cluster_details.set_index('cluster_alias', inplace=True)
+        cell_df_joined = cell_df_joined.join(cluster_details, on='cluster_alias')
+
+    elif species == 'human':
+        # Human-specific paths
+        cluster_details_path = download_base / 'metadata/WHB-taxonomy/20240330/cluster.csv'
+        supercluster_details_path = download_base / 'metadata/WHB-taxonomy/20240330/cluster_annotation_term.csv'
+
+        # Load cluster details with aliases
+        print(f"\n    Adding cluster alias details from {cluster_details_path}\n")
+        cluster_details = pd.read_csv(cluster_details_path)
+        cluster_details.set_index('label', inplace=True)
+
+        # Load supercluster names
+        print(f"\n    Adding supercluster details from {supercluster_details_path}\n")
+        supercluster_details = pd.read_csv(supercluster_details_path)
+        supercluster_details = supercluster_details[supercluster_details['cluster_annotation_term_set_name'] == 'supercluster']
+        supercluster_details = supercluster_details[['label', 'name']].set_index('label')  # Keep only relevant columns
+
+        # Join cluster aliases with superclusters on 'label'
+        cluster_details = cluster_details.join(supercluster_details, on='label')
+
+        # Join with cell metadata based on cluster_alias
+        cell_df_joined = cell_df_joined.join(cluster_details[['name']], on='cluster_alias')
+        
+        # Rename 'name' column to 'class' for consistency with mouse data
+        cell_df_joined.rename(columns={'name': 'class'}, inplace=True)
+
+    else:
+        raise ValueError("Unsupported species. Choose either 'mouse' or 'human'.")
+
+    return cell_df_joined
 
 @print_func_name_args_times()
 def load_gene_metadata(download_base, species):
@@ -99,6 +131,10 @@ def classify_cells(cell_df, species):
         # Drop the helper columns after classification
         cell_df.drop(columns=['class_numeric', 'subclass_numeric'], inplace=True)
     else:
+        # Print a sample of cluster_alias values for debugging
+        print("\nSample cluster_alias values for human data:")
+        print(cell_df['cluster_alias'].unique()[:10])
+
         # Classify human data based on cluster alias labels
         cell_df.loc[cell_df['cluster_alias'].isin(neuronal_superclusters), 'cell_type'] = 'Neuron'
         cell_df.loc[cell_df['cluster_alias'] == astrocyte_label, 'cell_type'] = 'Astrocyte'
@@ -183,7 +219,7 @@ def main():
 
     download_base = Path(args.base)
     cell_df = load_RNAseq_cell_metadata(download_base, args.species)
-    cell_df = m.join_cluster_details(cell_df, download_base) if args.species == 'mouse' else cell_df
+    cell_df = join_cluster_details(cell_df, download_base, args.species)
     cell_df = classify_cells(cell_df, args.species)
 
     # Print unique cell types
