@@ -137,14 +137,9 @@ def classify_cells(cell_df, species):
         # Drop the helper columns after classification
         cell_df.drop(columns=['class_numeric', 'subclass_numeric'], inplace=True)
     else:
-        # Print a sample of cluster_alias values for debugging
-        print("\nSample cluster_alias values for human data:")
-        print(cell_df['cluster_alias'].unique()[:10])
-
-        # Classify human data based on cluster alias labels
-        cell_df.loc[cell_df['cluster_alias'].isin(neuronal_superclusters), 'cell_type'] = 'Neuron'
-        cell_df.loc[cell_df['cluster_alias'] == astrocyte_label, 'cell_type'] = 'Astrocyte'
-        cell_df.loc[cell_df['cluster_alias'] == microglia_label, 'cell_type'] = 'Microglia'
+        cell_df.loc[cell_df['class'].isin(neuronal_superclusters), 'cell_type'] = 'Neuron'
+        cell_df.loc[cell_df['class'] == astrocyte_label, 'cell_type'] = 'Astrocyte'
+        cell_df.loc[cell_df['class'] == microglia_label, 'cell_type'] = 'Microglia'
 
     return cell_df
 
