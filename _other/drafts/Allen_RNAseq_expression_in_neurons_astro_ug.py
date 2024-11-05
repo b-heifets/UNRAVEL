@@ -52,7 +52,11 @@ def join_cluster_details(cell_df_joined, download_base, species):
         cluster_details_path = download_base / 'metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_pivoted.csv'
         print(f"\n    Adding cluster details from {cluster_details_path}\n")
         cluster_details = pd.read_csv(cluster_details_path)
+        cluster_details['cluster_alias'] = cluster_details['cluster_alias'].astype(str)
+
         cluster_details.set_index('cluster_alias', inplace=True)
+        cell_df_joined['cluster_alias'] = cell_df_joined['cluster_alias'].astype(str)
+
         cell_df_joined = cell_df_joined.join(cluster_details, on='cluster_alias')
 
     elif species == 'human':
@@ -63,6 +67,7 @@ def join_cluster_details(cell_df_joined, download_base, species):
         # Load cluster details with aliases
         print(f"\n    Adding cluster alias details from {cluster_details_path}\n")
         cluster_details = pd.read_csv(cluster_details_path)
+        cluster_details['cluster_alias'] = cluster_details['cluster_alias'].astype(str)
         cluster_details.set_index('label', inplace=True)
 
         # Load supercluster names
@@ -75,6 +80,7 @@ def join_cluster_details(cell_df_joined, download_base, species):
         cluster_details = cluster_details.join(supercluster_details, on='label')
 
         # Join with cell metadata based on cluster_alias
+        cell_df_joined['cluster_alias'] = cell_df_joined['cluster_alias'].astype(str)  # Convert cell_df column to string
         cell_df_joined = cell_df_joined.join(cluster_details[['name']], on='cluster_alias')
         
         # Rename 'name' column to 'class' for consistency with mouse data
