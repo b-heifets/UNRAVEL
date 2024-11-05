@@ -48,7 +48,7 @@ def load_mouse_RNAseq_gene_metadata(download_base):
 @print_func_name_args_times()
 def classify_cells(cell_df):
     # Define cell type classifications
-    neuronal_classes = [str(i).zfill(2) for i in range(1, 30)]  # Classes 01-29 are neuronal
+    neuronal_classes = [str(i).zfill(2) for i in range(1, 30)]  # Classes 01-29 are neuronal. zfill(2) pads with zeros
     astrocyte_subclasses = ["317", "318", "319", "320"]  # Subclasses for astrocytes
     microglia_subclass = ["334"]  # Subclass for microglia
 
@@ -85,6 +85,7 @@ def calculate_expression_metrics(gdata, cell_df, genes):
             expressing_cells = gene_expression[gene_expression > 0].count()
             total_cells = gene_expression.count()
             mean_expression = gene_expression.mean()
+            median_expression = gene_expression.median()
             percent_expressing = (expressing_cells / total_cells * 100) if total_cells > 0 else 0
 
             # Store the results
@@ -93,6 +94,32 @@ def calculate_expression_metrics(gdata, cell_df, genes):
                 'cell_type': cell_type,
                 'region': region,
                 'mean_expression': mean_expression,
+                'median_expression': median_expression,
+                'percent_expressing': percent_expressing,
+                'expressing_cells': expressing_cells,
+                'total_cells': total_cells
+            })
+
+        # Calculate whole-brain metrics for each gene and cell type
+        for cell_type in cell_df['cell_type'].unique():
+            whole_brain_cells = cell_df[cell_df['cell_type'] == cell_type]
+            cell_indices = whole_brain_cells.index.intersection(gdata.index)
+            gene_expression = gdata.loc[cell_indices, gene]
+
+            # Calculate whole-brain metrics
+            expressing_cells = gene_expression[gene_expression > 0].count()
+            total_cells = gene_expression.count()
+            mean_expression = gene_expression.mean()
+            median_expression = gene_expression.median()
+            percent_expressing = (expressing_cells / total_cells * 100) if total_cells > 0 else 0
+
+            # Append whole-brain results
+            results.append({
+                'gene': gene,
+                'cell_type': cell_type,
+                'region': 'Whole Brain',
+                'mean_expression': mean_expression,
+                'median_expression': median_expression,
                 'percent_expressing': percent_expressing,
                 'expressing_cells': expressing_cells,
                 'total_cells': total_cells
