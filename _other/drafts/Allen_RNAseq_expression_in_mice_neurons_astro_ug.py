@@ -22,7 +22,7 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the data', required=True, action=SM)
     reqs.add_argument('-g', '--genes', help='Space-separated list of genes to analyze', required=True, nargs='*', action=SM)
-    reqs.add_argument('-o', '--output', help='Path to save the results', required=True, action=SM)
+    reqs.add_argument('-o', '--output', help='path/expression_metrics.csv', required=True, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
