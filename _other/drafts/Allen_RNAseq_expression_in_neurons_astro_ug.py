@@ -56,20 +56,39 @@ def load_gene_metadata(download_base, species):
 @print_func_name_args_times()
 def classify_cells(cell_df, species):
     if species == 'mouse':
-        neuronal_classes = [str(i).zfill(2) for i in range(1, 30)]
-        astrocyte_subclasses = ["317", "318", "319", "320"]
-        microglia_subclass = ["334"]
+        # Mouse classification identifiers
+        neuronal_classes = [str(i).zfill(2) for i in range(1, 30)]  # Classes 01-29 are neuronal
+        astrocyte_subclasses = ["317", "318", "319", "320"]  # Subclasses for astrocytes
+        microglia_subclass = ["334"]  # Subclass for microglia
     else:  # human
-        neuronal_superclusters = ["Upper-layer intratelencephalic", "Deep-layer corticothalamic and 6b", ...]  # add others
+        # Human superclusters for neuron classification
+        neuronal_superclusters = [
+            "Upper-layer intratelencephalic", "Deep-layer intratelencephalic", "Deep-layer near-projecting",
+            "Deep-layer corticothalamic and 6b", "MGE interneuron", "CGE interneuron",
+            "LAMP5-LHX6 and Chandelier", "Miscellaneous", "Hippocampal CA1-3", "Hippocampal CA4",
+            "Hippocampal dentate gyrus", "Amygdala excitatory", "Eccentric medium spiny neuron",
+            "Splatter", "Mammillary body", "Thalamic excitatory", "Upper rhombic lip",
+            "Cerebellar inhibitory", "Lower rhombic lip"
+        ]
         astrocyte_label = "Astrocyte"
         microglia_label = "Microglia"
 
     cell_df['cell_type'] = 'Other'
+
     if species == 'mouse':
-        cell_df.loc[cell_df['class'].astype(str).isin(neuronal_classes), 'cell_type'] = 'Neuron'
-        cell_df.loc[cell_df['subclass'].astype(str).isin(astrocyte_subclasses), 'cell_type'] = 'Astrocyte'
-        cell_df.loc[cell_df['subclass'].astype(str).isin(microglia_subclass), 'cell_type'] = 'Microglia'
+        # Extract the numeric part of the class and subclass columns for mouse classification
+        cell_df['class_numeric'] = cell_df['class'].str.extract(r'(\d+)')[0]
+        cell_df['subclass_numeric'] = cell_df['subclass'].str.extract(r'(\d+)')[0]
+
+        # Classify cells based on class and subclass numeric values
+        cell_df.loc[cell_df['class_numeric'].isin(neuronal_classes), 'cell_type'] = 'Neuron'
+        cell_df.loc[cell_df['subclass_numeric'].isin(astrocyte_subclasses), 'cell_type'] = 'Astrocyte'
+        cell_df.loc[cell_df['subclass_numeric'].isin(microglia_subclass), 'cell_type'] = 'Microglia'
+
+        # Drop the helper columns after classification
+        cell_df.drop(columns=['class_numeric', 'subclass_numeric'], inplace=True)
     else:
+        # Classify human data based on cluster alias labels
         cell_df.loc[cell_df['cluster_alias'].isin(neuronal_superclusters), 'cell_type'] = 'Neuron'
         cell_df.loc[cell_df['cluster_alias'] == astrocyte_label, 'cell_type'] = 'Astrocyte'
         cell_df.loc[cell_df['cluster_alias'] == microglia_label, 'cell_type'] = 'Microglia'
@@ -155,6 +174,10 @@ def main():
     cell_df = load_RNAseq_cell_metadata(download_base, args.species)
     cell_df = m.join_cluster_details(cell_df, download_base) if args.species == 'mouse' else cell_df
     cell_df = classify_cells(cell_df, args.species)
+
+    # Print unique cell types
+    print("\nUnique cell types:")
+    print(cell_df['cell_type'].unique())
 
     gene_df = load_gene_metadata(download_base, args.species)
     gene_filtered = gene_df[gene_df['gene_symbol'].isin(args.genes)]
