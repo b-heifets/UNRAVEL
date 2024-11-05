@@ -11,17 +11,22 @@ import pandas as pd
 from rich import print
 from rich.traceback import install
 import merfish as m
+
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the data', required=True, action=SM)
     reqs.add_argument('-g', '--genes', help='Space-separated list of genes to analyze', required=True, nargs='*', action=SM)
+    reqs.add_argument('-o', '--output', help='Path to save the results', required=True, action=SM)
+
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
+
     return parser.parse_args()
 
 def load_RNAseq_mouse_cell_metadata(download_base):
@@ -133,6 +138,11 @@ def main():
     # Display the results
     print("\nExpression metrics by cell type and region:\n")
     print(results_df)
+
+    # Save the results to a CSV file
+    output_path = Path(args.output)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    results_df.to_csv(, index=False)
 
     verbose_end_msg()
 
