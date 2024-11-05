@@ -165,9 +165,9 @@ def main():
     # expression_matrices/WMB-10Xv2/20230630/WMB-10Xv2-TH-log2.h5ad
 
     # Connect the cells with expression data to the cell metadata
-    feature_matrix_label = str(Path(args.input).name).replace('-log2.h5ad', '')
-    pred = (cell_df_joined['feature_matrix_label'] == feature_matrix_label)
-    cell_filtered = cell_df_joined[pred]
+    # feature_matrix_label = str(Path(args.input).name).replace('-log2.h5ad', '')
+    # pred = (cell_df_joined['feature_matrix_label'] == feature_matrix_label)
+    # cell_filtered = cell_df_joined[pred]
 
 
     # Expression of canonical neurotransmitter transporter genes in the thalamus
