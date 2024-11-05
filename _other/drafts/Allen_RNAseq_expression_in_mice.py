@@ -198,7 +198,12 @@ def main():
     gf = asubset.var[asubset.var.gene_symbol == 'Tac2']
     tac2_exp = create_expression_dataframe(asubset, gf, cell_filtered)
 
-    agg = aggregate_by_metadata(tac2_exp, gf.gene_symbol, 'neurotransmitter', True).head(10)
+    # agg = aggregate_by_metadata(tac2_exp, gf.gene_symbol, 'neurotransmitter', True).head(10)
+    # plot_heatmap(agg, 1, 3)
+    # plt.show()
+
+    # Grouping cells by cell types class
+    agg = aggregate_by_metadata(tac2_exp, gf.gene_symbol, 'class', True).head(8)
     plot_heatmap(agg, 1, 3)
     plt.show()
 
