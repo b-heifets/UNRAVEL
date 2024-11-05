@@ -44,7 +44,7 @@ def load_RNAseq_mouse_cell_metadata(download_base):
     if cell_metadata_path.exists():
         print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
         cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str}, 
-                                usecols=['cell_label', 'feature_matrix_label', 'region_of_interest_acronym', 'dataset_label', 'x', 'y', 'cluster_alias'])
+                                usecols=['cell_label', 'library_label', 'feature_matrix_label', 'region_of_interest_acronym', 'dataset_label', 'x', 'y', 'cluster_alias'])
         
     if cell_df is not None:
         cell_df.set_index('cell_label', inplace=True)
@@ -202,11 +202,66 @@ def main():
     # plot_heatmap(agg, 1, 3)
     # plt.show()
 
-    # Grouping cells by cell types class
-    agg = aggregate_by_metadata(tac2_exp, gf.gene_symbol, 'class', True).head(8)
-    plot_heatmap(agg, 1, 3)
-    plt.show()
+    # Grouping cells by cell types class, subclass, supertype, or cluster
+    # agg = aggregate_by_metadata(tac2_exp, gf.gene_symbol, 'class', True).head(8)  # Average expression of gene by class
+    # plot_heatmap(agg, 1, 3)
+    # plt.show()
 
+
+    # Gene expression matrices
+    matrices = cell_df_joined.groupby(['dataset_label', 'feature_matrix_label'])[['library_label']].count()
+    # matrices.columns = ['cell_count']
+
+    example_matrix_file = download_base / 'expression_matrices/WMB-10XMulti/20230830/WMB-10XMulti-log2.h5ad'
+    ad = anndata.read_h5ad(file,backed='r')
+    gene = ad.var
+
+    ntgenes = ['Slc17a7', 'Slc17a6', 'Slc17a8', 'Slc32a1', 'Slc6a5', 'Slc18a3', 'Slc6a3', 'Slc6a4', 'Slc6a2']
+    exgenes = ['Tac2']
+    gnames = ntgenes + exgenes
+    pred = [x in gnames for x in gene.gene_symbol]
+    gene_filtered = gene[pred]
+
+    # Create empty gene expression dataframe
+    gdata = pd.DataFrame(index=cell_df_joined.index, columns=gene_filtered.index)
+    count = 0
+
+    download_base = Path(args.base)
+
+    expression_matrices_dir = download_base / 'expression_matrices'
+
+    # Perhaps a recursive search for all expression matrices would be simpler
+    # list_of_paths_to_expression_matrices = list(expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'))
+
+    for matindex in matrices.index:
+
+        ds = matindex[0]  # dataset
+        mp = matindex[1]  # matrix prefix
+
+        path_to_expresion_matrix = expression_matrices_dir / ds / '20230830' / f'{mp}-log2.h5ad'
+
+        print(f"\n    Loading expression data from {path_to_expresion_matrix}\n")
+        
+        pred = (cell_df_joined['feature_matrix_label'] == mp)
+        cell_filtered = cell_df_joined[pred]
+        
+        ad = anndata.read_h5ad(path_to_expresion_matrix, backed='r')
+        exp = ad[cell_filtered.index, gene_filtered.index].to_df()
+        gdata.loc[ exp.index, gene_filtered.index ] = exp
+        
+        ad.file.close()
+        del ad
+        
+        # For testing purposes
+        count += 1
+        if count > 2:
+            break
+    
+    # change columns from index to gene symbol
+    gdata.columns = gene_filtered.gene_symbol
+    pred = pd.notna(gdata[gdata.columns[0]])
+    gdata = gdata[pred].copy(deep=True)
+    print(len(gdata))
 
     verbose_end_msg()
 
