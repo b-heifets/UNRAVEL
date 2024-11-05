@@ -28,7 +28,7 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the MERFISH data', required=True, action=SM)
-    reqs.add_argument('-i', '--input', help='(e.g., Relative path to expression data. E.g., expression_matrices/WMB-10Xv2/20230630/WMB-10Xv2-TH-log2.h5ad', required=True, action=SM)
+    # reqs.add_argument('-i', '--input', help='(e.g., Relative path to expression data. E.g., expression_matrices/WMB-10Xv2/20230630/WMB-10Xv2-TH-log2.h5ad', required=True, action=SM)
     # reqs.add_argument('-g', '--genes', help='Genes to analyze', required=True, nargs='*', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -112,14 +112,14 @@ def aggregate_by_metadata(df, gnames, value, sort=False):
         grouped = grouped.sort_values(by=gnames[0], ascending=False)
     return grouped
 
-def plot_heatmap(df, fig_width = 8, fig_height = 4, cmap=plt.cm.magma_r, vmax=None):
+def plot_heatmap(df, fig_width=8, fig_height=4, cmap=plt.cm.magma_r):
 
     arr = df.to_numpy()
 
     fig, ax = plt.subplots()
     fig.set_size_inches(fig_width, fig_height)
 
-    res = ax.imshow(arr, cmap=cmap, aspect='auto', vmax=vmax)
+    im = ax.imshow(arr, cmap=cmap, aspect='auto', vmin=0, vmax=6)
     xlabs = df.columns.values
     ylabs = df.index.values
 
@@ -128,6 +128,8 @@ def plot_heatmap(df, fig_width = 8, fig_height = 4, cmap=plt.cm.magma_r, vmax=No
 
     ax.set_yticks(range(len(ylabs)))
     res = ax.set_yticklabels(ylabs)
+    
+    return im
 
 @log_command
 def main():
@@ -153,11 +155,11 @@ def main():
     # plt.show()
 
     # Load expression data
-    expression_data_path = download_base / args.input
-    if not expression_data_path.exists():
-        print(f"\n    [red1]Expression data not found at {expression_data_path}\n")
-        return
-    adata = anndata.read_h5ad(expression_data_path, backed='r')
+    # expression_data_path = download_base / args.input
+    # if not expression_data_path.exists():
+    #     print(f"\n    [red1]Expression data not found at {expression_data_path}\n")
+    #     return
+    # adata = anndata.read_h5ad(expression_data_path, backed='r')
     
 
     # expression_matrices/WMB-10Xv2/20230630/WMB-10Xv2-TH-log2.h5ad
@@ -189,14 +191,14 @@ def main():
 
 
     # Expression of Tachykinin 2 (Tac2) in the thalamus
-    gnames = 'Tac2'
-    pred = [x in gnames for x in adata.var.gene_symbol]
-    gene_filtered = adata.var[pred]
+    # gnames = 'Tac2'
+    # pred = [x in gnames for x in adata.var.gene_symbol]
+    # gene_filtered = adata.var[pred]
 
-    asubset = adata[:, gene_filtered.index].to_memory()
+    # asubset = adata[:, gene_filtered.index].to_memory()
 
-    gf = asubset.var[asubset.var.gene_symbol == 'Tac2']
-    tac2_exp = create_expression_dataframe(asubset, gf, cell_filtered)
+    # gf = asubset.var[asubset.var.gene_symbol == 'Tac2']
+    # tac2_exp = create_expression_dataframe(asubset, gf, cell_filtered)
 
     # agg = aggregate_by_metadata(tac2_exp, gf.gene_symbol, 'neurotransmitter', True).head(10)
     # plot_heatmap(agg, 1, 3)
@@ -212,27 +214,24 @@ def main():
     matrices = cell_df_joined.groupby(['dataset_label', 'feature_matrix_label'])[['library_label']].count()
     # matrices.columns = ['cell_count']
 
-    example_matrix_file = download_base / 'expression_matrices/WMB-10XMulti/20230830/WMB-10XMulti-log2.h5ad'
-    ad = anndata.read_h5ad(file,backed='r')
-    gene = ad.var
+    # example_matrix_file = download_base / 'expression_matrices/WMB-10XMulti/20230830/WMB-10XMulti-log2.h5ad'
+    # ad = anndata.read_h5ad(file,backed='r')
 
-    ntgenes = ['Slc17a7', 'Slc17a6', 'Slc17a8', 'Slc32a1', 'Slc6a5', 'Slc18a3', 'Slc6a3', 'Slc6a4', 'Slc6a2']
-    exgenes = ['Tac2']
-    gnames = ntgenes + exgenes
-    pred = [x in gnames for x in gene.gene_symbol]
-    gene_filtered = gene[pred]
+
 
     # Create empty gene expression dataframe
+    gnames = ['Slc17a7', 'Tac2']
+    pred = [x in gnames for x in gene.gene_symbol]
+    gene_df = load_mouse_RNAseq_gene_metadata(download_base)
+    gene_filtered = gene_df[pred]
     gdata = pd.DataFrame(index=cell_df_joined.index, columns=gene_filtered.index)
-    count = 0
-
-    download_base = Path(args.base)
-
+    
     expression_matrices_dir = download_base / 'expression_matrices'
 
     # Perhaps a recursive search for all expression matrices would be simpler
     # list_of_paths_to_expression_matrices = list(expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'))
 
+    count = 0  # For testing purposes
     for matindex in matrices.index:
 
         ds = matindex[0]  # dataset
@@ -246,8 +245,8 @@ def main():
         cell_filtered = cell_df_joined[pred]
         
         ad = anndata.read_h5ad(file, backed='r')
-        exp = ad[cell_filtered.index, gene_filtered.index].to_df()
-        gdata.loc[ exp.index, gene_filtered.index ] = exp
+        exp_df = ad[cell_filtered.index, gene_filtered.index].to_df()
+        gdata.loc[ exp_df.index, gene_filtered.index ] = exp_df
         
         ad.file.close()
         del ad
@@ -256,12 +255,19 @@ def main():
         count += 1
         if count > 2:
             break
-    
-    # change columns from index to gene symbol
+
+    # Change columns from index to gene symbol
     gdata.columns = gene_filtered.gene_symbol
     pred = pd.notna(gdata[gdata.columns[0]])
     gdata = gdata[pred].copy(deep=True)
-    print(len(gdata))
+
+    exp_df_filtered = exp_df[gnames]
+    cell_df_joined_w_exp = cell_df_joined.join(exp_df_filtered)
+
+    agg = aggregate_by_metadata(cell_df_joined_w_exp, gnames, 'neurotransmitter')
+    agg = agg[gnames]
+    res = plot_heatmap(agg, 8, 3)
+    plt.show()
 
     verbose_end_msg()
 
