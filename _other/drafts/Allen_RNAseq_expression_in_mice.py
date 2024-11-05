@@ -221,7 +221,7 @@ def main():
 
     # Create empty gene expression dataframe
     gnames = ['Slc17a7', 'Tac2']
-    pred = [x in gnames for x in gene.gene_symbol]
+    pred = [x in gnames for x in gene_df.gene_symbol]
     gene_df = load_mouse_RNAseq_gene_metadata(download_base)
     gene_filtered = gene_df[pred]
     gdata = pd.DataFrame(index=cell_df_joined.index, columns=gene_filtered.index)
