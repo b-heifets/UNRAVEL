@@ -47,21 +47,24 @@ def load_mouse_RNAseq_gene_metadata(download_base):
 
 @print_func_name_args_times()
 def classify_cells(cell_df):
-    # Verify that 'class' and 'subclass' columns exist in cell_df
-    if 'class' not in cell_df.columns or 'subclass' not in cell_df.columns:
-        print("Warning: 'class' and 'subclass' columns are missing. Make sure join_cluster_details() adds these columns.")
-        print("Columns in cell_df:", cell_df.columns)
-        return cell_df  # Return without classifying if missing
-
     # Define cell type classifications
-    neuronal_classes = [str(i).zfill(2) for i in range(1, 30)]  # Classes 01-29 are neuronal. zfill(2) pads with zeros
+    neuronal_classes = [str(i).zfill(2) for i in range(1, 30)]  # Classes 01-29 are neuronal
     astrocyte_subclasses = ["317", "318", "319", "320"]  # Subclasses for astrocytes
     microglia_subclass = ["334"]  # Subclass for microglia
 
     cell_df['cell_type'] = 'Other'
-    cell_df.loc[cell_df['class'].astype(str).isin(neuronal_classes), 'cell_type'] = 'Neuron'
-    cell_df.loc[cell_df['subclass'].astype(str).isin(astrocyte_subclasses), 'cell_type'] = 'Astrocyte'
-    cell_df.loc[cell_df['subclass'].astype(str).isin(microglia_subclass), 'cell_type'] = 'Microglia'
+    
+    # Extract the numeric part of the class and subclass columns for classification
+    cell_df['class_numeric'] = cell_df['class'].str.extract(r'(\d+)')[0]
+    cell_df['subclass_numeric'] = cell_df['subclass'].str.extract(r'(\d+)')[0]
+
+    # Classify cells based on class and subclass
+    cell_df.loc[cell_df['class_numeric'].isin(neuronal_classes), 'cell_type'] = 'Neuron'
+    cell_df.loc[cell_df['subclass_numeric'].isin(astrocyte_subclasses), 'cell_type'] = 'Astrocyte'
+    cell_df.loc[cell_df['subclass_numeric'].isin(microglia_subclass), 'cell_type'] = 'Microglia'
+
+    # Drop the helper columns after classification
+    cell_df.drop(columns=['class_numeric', 'subclass_numeric'], inplace=True)
 
     return cell_df
 
