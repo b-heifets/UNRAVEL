@@ -16,6 +16,41 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, print_func_name_args_times, verbose_start_msg, verbose_end_msg
 
+# Human cluster_alias to name mapping
+HUMAN_CLUSTER_MAP = {
+    0: "Upper rhombic lip",
+    21: "Miscellaneous",
+    22: "Splatter",
+    41: "Thalamic excitatory",
+    125: "Cerebellar inhibitory",
+    187: "MGE interneuron",
+    374: "LAMP5-LHX6 and Chandelier",
+    425: "CGE interneuron",
+    646: "Midbrain-derived inhibitory",
+    715: "Amygdala excitatory",
+    778: "Lower rhombic lip",
+    1154: "Mammillary body",
+    1708: "Medium spiny neuron",
+    1721: "Eccentric medium spiny neuron",
+    2196: "Hippocampal dentate gyrus",
+    2224: "Hippocampal CA4",
+    2264: "Hippocampal CA1-3",
+    2375: "Deep-layer intratelencephalic",
+    2511: "Deep-layer corticothalamic and 6b",
+    2551: "Upper-layer intratelencephalic",
+    2924: "Deep-layer near-projecting",
+    2996: "Oligodendrocyte",
+    3006: "Committed oligodendrocyte precursor",
+    3039: "Oligodendrocyte precursor",
+    3058: "Bergmann glia",
+    3059: "Astrocyte",
+    3129: "Ependymal",
+    3173: "Choroid plexus",
+    3197: "Vascular",
+    3238: "Fibroblast",
+    3263: "Microglia"
+}
+
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
@@ -59,64 +94,8 @@ def join_cluster_details(cell_df_joined, download_base, species):
         cell_df_joined = cell_df_joined.join(cluster_details, on='cluster_alias')
 
     elif species == 'human':
-        # Human-specific paths
-        cluster_details_path = download_base / 'metadata/WHB-taxonomy/20240330/cluster.csv'
-        supercluster_details_path = download_base / 'metadata/WHB-taxonomy/20240330/cluster_annotation_term.csv'
-
-        # print first row of cell_df_joined
-        print("\nFirst row of cell_df_joined:\n", cell_df_joined.head(1))
-
-        # Load cluster details with aliases
-        print(f"\n    Adding cluster alias details from {cluster_details_path}\n")
-        cluster_details = pd.read_csv(cluster_details_path)
-        cluster_details['cluster_alias'] = cluster_details['cluster_alias'].astype(str)
-        cluster_details['label'] = cluster_details['label'].astype(str)
-        cell_df_joined['cluster_alias'] = cell_df_joined['cluster_alias'].astype(str)
-
-        # Debug: Verify data types and contents
-        print("\nSample 'cluster_alias' values in cell_df_joined before join:\n", cell_df_joined['cluster_alias'].head())
-        print("\nSample 'label' values in cluster_details before join:\n", cluster_details['label'].head())
-        # cluster_details.set_index('label', inplace=True)
-
-        # Print first row of cluster_details
-        print("\nFirst row of cluster_details:\n", cluster_details.head(1))
-
-        # Load supercluster names
-        print(f"\n    Adding supercluster details from {supercluster_details_path}\n")
-        supercluster_details = pd.read_csv(supercluster_details_path)
-
-        # Print first row of supercluster_details
-        print("\nFirst row of supercluster_details:\n", supercluster_details.head(1))
-
-        supercluster_details = supercluster_details[supercluster_details['cluster_annotation_term_set_name'] == 'supercluster']
-        supercluster_details['label'] = supercluster_details['label'].astype(str)
-
-        # Debug: Print filtered supercluster details
-        print("\nSample supercluster details after filtering:\n", supercluster_details.head())
-
-        # Print first row of supercluster_details after filtering
-        print("\nFirst row of supercluster_details after filtering:\n", supercluster_details.head(1))
-
-        # Debug: Print unique values in cluster_alias and label to check for matches
-        print("\nUnique 'label' values in cluster_details:\n", cluster_details['label'].unique()[:10])
-        print("\nUnique 'label' values in supercluster_details:\n", supercluster_details['label'].unique()[:10])
-
-        # Merge cluster_details and supercluster_details on 'label' to get supercluster names
-        cluster_details_merged = pd.merge(cluster_details, supercluster_details[['label', 'name']], on='label', how='left')
-
-        # Debug: Check results after merge
-        print("\nFirst rows of cluster_details_merged:\n", cluster_details_merged.head())
-        
-        # Now join with cell metadata on 'cluster_alias'
-        cluster_details_merged.set_index('cluster_alias', inplace=True)
-        cell_df_joined = cell_df_joined.join(cluster_details_merged[['name']], on='cluster_alias')
-
-        # Rename 'name' to 'class' for consistency with mouse data
-        cell_df_joined.rename(columns={'name': 'class'}, inplace=True)
-
-        # Debug: Check if 'class' was populated correctly
-        print("\nFirst rows of cell_df_joined after rename:\n", cell_df_joined[['cluster_alias', 'class']].dropna().head())
-        print("\nUnique values in 'class' column after joining:\n", cell_df_joined['class'].unique())
+        # Map cluster_alias values to their names based on HUMAN_CLUSTER_MAP
+        cell_df_joined['class'] = cell_df_joined['cluster_alias'].astype(int).map(HUMAN_CLUSTER_MAP)
 
     else:
         raise ValueError("Unsupported species. Choose either 'mouse' or 'human'.")
