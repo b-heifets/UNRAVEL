@@ -28,7 +28,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-ms', '--min_size', help='Min cluster size in voxels. Default: 100', default=100, type=int, action=SM)
-    opts.add_argument('-t', '--threshold', help='Threshold for cluster formation. Default: 0.5', default=0.5, type=float, action=SM)
+    opts.add_argument('-t', '--threshold', help='Threshold for cluster formation. Default: 1', default=1, type=float, action=SM)
     opts.add_argument('-o', '--output', help='path/image_cluster_index.nii.gz', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
