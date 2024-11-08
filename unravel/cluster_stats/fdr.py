@@ -112,12 +112,12 @@ def fdr(input_path, fdr_path, mask_path, q_value):
     return adjusted_pval_output_path, float(probability_threshold)
 
 @print_func_name_args_times()
-def cluster_index(adj_p_val_img_path, min_size, q_value, output_index):
+def cluster_index(adj_p_val_img_path, min_size, threshold, output_index):
     print('')
     command = [
         'cluster',
         '-i', adj_p_val_img_path,
-        '-t', str(thres),
+        '-t', str(threshold),
         '--oindex=' + str(output_index),
         '--minextent=' + str(min_size)
     ]
