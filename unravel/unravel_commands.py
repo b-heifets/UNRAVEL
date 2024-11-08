@@ -326,6 +326,12 @@ def main():
                 "common": False,
                 "alias": "cmis"
             },
+                "cstats_clusters": {
+                "module": "unravel.cluster_stats.clusters",
+                "description": "Make a cluster index image from a .nii.gz image",
+                "common": False,
+                "alias": "clusters"
+            },
             "effect_sizes": {
                 "module": "unravel.cluster_stats.effect_sizes.effect_sizes",
                 "description": "Calculate effect sizes for clusters.",
