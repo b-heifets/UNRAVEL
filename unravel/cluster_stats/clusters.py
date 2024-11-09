@@ -10,6 +10,7 @@ Usage
     cstats_clusters -i path/image.nii.gz [-ms 100] [-t 0.5] [-o path/image_rev_cluster_index.nii.gz] [-v]
 """
 
+from pathlib import Path
 import numpy as np
 import nibabel as nib
 from rich.traceback import install
@@ -36,6 +37,8 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Some code here is redundant with code in fdr.py. Refactor to avoid redundancy.
+
 
 @log_command
 def main():
@@ -46,7 +49,12 @@ def main():
 
     output = args.output if args.output else args.input.replace('.nii.gz', '_rev_cluster_index.nii.gz')
 
-    cluster_index(args.input, args.min_size, args.threshold, output)
+    # Create the cluster index
+    cluster_info = cluster_index(args.input, args.min_size, args.threshold, output)
+
+    # Save cluster info
+    with open(Path(args.input).parent / f"{str(Path(args.input).name).replace('.nii.gz', '_cluster_info.txt')}", 'w') as f:
+        f.write(cluster_info)
 
     # Load the cluster index and convert to an ndarray
     cluster_index_nii = nib.load(output)
