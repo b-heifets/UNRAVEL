@@ -153,7 +153,7 @@ def main():
     # Load expression data from each file and concatenate
     expression_matrices_dir = download_base / 'expression_matrices'
     exp_dfs = []
-    for file in expression_matrices_dir.rglob('WMB-10X*/**/*STR-log2.h5ad'):
+    for file in expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'):
         print(f"    Loading expression data from {file}")
         matrix_prefix = file.stem.replace('-log2', '')
         cell_filtered = cell_df[cell_df['feature_matrix_label'] == matrix_prefix]
