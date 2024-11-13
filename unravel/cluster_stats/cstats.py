@@ -351,14 +351,16 @@ def main():
             return
         expected_direction = '>' if args.higher_group == args.groups[0] else '<'
         incongruent_clusters = stats_df[(stats_df['higher_mean_group'] != args.higher_group) & (stats_df['significance'] != 'n.s.')]['cluster_ID'].tolist()
-
         with open(output_dir / 'incongruent_clusters.txt', 'w') as f:
             f.write('\n'.join(map(str, incongruent_clusters)))
-        
         print(f"Expected effect direction: [green bold]{args.groups[0]} {expected_direction} {args.groups[1]}")
 
-        if not incongruent_clusters:
+        # Print info regarding incongruent clusters
+        significant_clusters = stats_df[stats_df['significance'] != 'n.s.']['cluster_ID']
+        if not incongruent_clusters and len(significant_clusters) > 0:
             print("All significant clusters are congruent with the expected direction")
+        elif not incongruent_clusters and len(significant_clusters) == 0:
+            print("[red1 bold]No significant clusters found.")
         else:
             print(f"{len(incongruent_clusters)} of {total_clusters} clusters are incongruent with the expected direction.")
             print (f"Although they had a significant difference, they not considered valid.")
@@ -368,7 +370,6 @@ def main():
         stats_df['significance'] = stats_df.apply(lambda row: 'n.s.' if row['cluster_ID'] in incongruent_clusters else row['significance'], axis=1)
 
         # Remove invalidated clusters from the list of significant clusters
-        significant_clusters = stats_df[stats_df['significance'] != 'n.s.']['cluster_ID']
         significant_cluster_ids = significant_clusters.unique().tolist()
         significant_cluster_ids_str = ' '.join(map(str, significant_cluster_ids))
 
