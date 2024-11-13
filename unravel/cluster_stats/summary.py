@@ -180,8 +180,6 @@ def main():
         if args.verbose:
             stats_args.append('-v')
         run_script('cstats', stats_args)
-
-    
     
     # Iterate over all subdirectories in the current working directory and run the following scripts
     for subdir in [d for d in Path.cwd().iterdir() if d.is_dir() and d.name != '3D_brains' and d.name != 'valid_clusters_tables_and_legend']:
@@ -247,12 +245,11 @@ def main():
         run_script('cstats_brain_model', brain_args)
 
         # Aggregate files from cstats_brain_model
-        dsi_dir = Path().cwd() / '3D_brains'
         if cfg.brain.mirror: 
-            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA_WB.nii.gz', subdir, dsi_dir)
+            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA_WB.nii.gz', subdir, Path().cwd() / '3D_brains')
         else:
-            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA.nii.gz', subdir, dsi_dir)
-        find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_rgba.txt', subdir, dsi_dir)
+            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA.nii.gz', subdir, Path().cwd() / '3D_brains')
+        find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_rgba.txt', subdir, Path().cwd() / '3D_brains')
 
         # Run cstats_table
         table_args = [
@@ -288,9 +285,9 @@ def main():
                 print(f"\n    No valid cluster IDs found for {subdir}. Skipping cstats_prism...\n")
 
     # Copy the atlas and binarize it for visualization in DSI studio
-    dest_atlas = dsi_dir / Path(cfg.index.atlas).name
+    dest_atlas = Path().cwd() / '3D_brains' / Path(cfg.index.atlas).name
     if not dest_atlas.exists():
-        cp(cfg.index.atlas, dsi_dir)
+        cp(cfg.index.atlas, Path().cwd() / '3D_brains')
         atlas_nii = nib.load(dest_atlas)
         atlas_img = np.asanyarray(atlas_nii.dataobj, dtype=atlas_nii.header.get_data_dtype()).squeeze()
         atlas_img[atlas_img > 0] = 1
