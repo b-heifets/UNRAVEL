@@ -125,10 +125,16 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             else:
                 # Fallback to original name
                 cluster_correction_path = vstats_path / 'stats' / original_validation_dir_name
+                # Remove hemisphere suffix if present
+                if str(cluster_correction_path).endswith('_LH') or str(cluster_correction_path).endswith('_RH'):
+                    cluster_correction_path = Path(str(cluster_correction_path)[:-3])  # Remove last 3 characters (_LH or _RH)
+                else:
+                    cluster_correction_path = validation_dir_name
+                cluster_correction_dir = cluster_correction_path.name
 
         if not cluster_correction_path.exists():
-            print(f'\n    [red]Path for rev_cluster_index.nii.gz, {p_val_thresh_file}, and _cluster_info.txt does not exist: {cluster_correction_path}\n')
-            return
+            print(f'\n    [red]Path for rev_cluster_index.nii.gz, {p_val_txt}, and _cluster_info.txt does not exist: {cluster_correction_path}\n')
+            import sys ; sys.exit()
 
         cluster_info = cluster_correction_path / f'{cluster_correction_dir}_cluster_info.txt'
         if cluster_info.exists():
