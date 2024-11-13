@@ -286,7 +286,7 @@ def main():
 
     # Copy the atlas and binarize it for visualization in DSI studio
     dest_atlas = Path().cwd() / '3D_brains' / Path(cfg.index.atlas).name
-    if not dest_atlas.exists():
+    if not dest_atlas.exists() and dest_atlas.parent.exists():
         cp(cfg.index.atlas, Path().cwd() / '3D_brains')
         atlas_nii = nib.load(dest_atlas)
         atlas_img = np.asanyarray(atlas_nii.dataobj, dtype=atlas_nii.header.get_data_dtype()).squeeze()
