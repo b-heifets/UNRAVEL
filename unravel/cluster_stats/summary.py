@@ -46,11 +46,15 @@ Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-
 
 Usage if running directly after ``cstats_validation``:
 ------------------------------------------------------
-    cstats_summary -c <path/config.ini> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-d <list of paths>] [-v]
+    cstats_summary -c <path/config.ini> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
+
+Usage from a cluster correction dir after ``cstats_validation``:
+----------------------------------------------------------------
+    cstats_summary -c cluster_summary.ini -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd ../.. -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
 
 Usage if running after ``cstats_validation`` and ``cstats_org_data``:
 ---------------------------------------------------------------------
-    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-d <list of paths>] [-v]
+    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
 """
 
 import nibabel as nib
