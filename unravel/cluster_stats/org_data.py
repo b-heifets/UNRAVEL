@@ -94,15 +94,14 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
         else:
             cluster_correction_dir = validation_dir_name
 
-        # Regular expression to match the part before and after 'q*' to remove any suffix added to the rev_cluster_index<suffix>.nii.gz
-        # pattern = r'(.*q\d+\.\d+)(_.+)?'  # This also works when there is no "suffix"
-        pattern = r'(.*?)(q\d+\.\d+)?(_.*)?$' # This regex pattern matches the first part of the string before the q value (if there is one)
-        match = re.match(pattern, cluster_correction_dir) # The pattern is matched to the cluster_correction_dir, resulting in a match object with
-        if match:
-            cluster_correction_dir = match.group(1)
-            suffix = match.group(2)[1:] if match.group(2) else ''  # This gets the string after the q value if there is one
-        else:
-            print(f"\n    [red1]The regex pattern {pattern} did not match the cluster_correction_dir: {cluster_correction_dir} in cstats_org_data\n")
+        if '_q' in cluster_correction_dir:
+            pattern = r'(.*q\d+\.\d+)(_.+)?' 
+            match = re.match(pattern, cluster_correction_dir)
+            if match:
+                cluster_correction_dir = match.group(1)
+                suffix = match.group(2)[1:] if match.group(2) else ''  # This gets the string after the q value if there is one
+            else:
+                print(f"\n    [red1]The regex pattern {pattern} did not match the cluster_correction_dir: {cluster_correction_dir} in cstats_org_data\n")
 
         cluster_correction_path = vstats_path / 'stats' / cluster_correction_dir
 
