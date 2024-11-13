@@ -76,7 +76,7 @@ def cp(src, dest):
     Args:
         - src (Path): the source path
         - dest (Path): the destination path"""
-    if src.exists():
+    if Path(src).exists():
         Path(dest).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(src, dest)
 
