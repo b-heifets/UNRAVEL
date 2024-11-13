@@ -211,7 +211,7 @@ def main():
         valid_clusters_index_dir = subdir / cfg.index.valid_clusters_dir
         
         if len(valid_cluster_ids) == 0: 
-            print(f"    No clusters were valid for {subdir}. Skipping...")
+            print(f"    [red1]No clusters were valid for {subdir.name}. Skipping...")
             continue
 
         # Run cstats_index
