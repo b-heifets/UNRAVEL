@@ -76,7 +76,9 @@ def cp(src, dest):
     Args:
         - src (Path): the source path
         - dest (Path): the destination path"""
-    shutil.copy(src, dest)
+    if src.exists():
+        Path(dest).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(src, dest)
 
 def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
     """Copy the cluster info, p value threshold, and rev_cluster_index files to the target directory.

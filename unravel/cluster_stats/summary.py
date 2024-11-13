@@ -181,8 +181,7 @@ def main():
             stats_args.append('-v')
         run_script('cstats', stats_args)
 
-    dsi_dir = Path().cwd() / '3D_brains'
-    dsi_dir.mkdir(parents=True, exist_ok=True) 
+    
     
     # Iterate over all subdirectories in the current working directory and run the following scripts
     for subdir in [d for d in Path.cwd().iterdir() if d.is_dir() and d.name != '3D_brains' and d.name != 'valid_clusters_tables_and_legend']:
@@ -248,6 +247,7 @@ def main():
         run_script('cstats_brain_model', brain_args)
 
         # Aggregate files from cstats_brain_model
+        dsi_dir = Path().cwd() / '3D_brains'
         if cfg.brain.mirror: 
             find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA_WB.nii.gz', subdir, dsi_dir)
         else:
