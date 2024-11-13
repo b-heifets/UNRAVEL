@@ -6,8 +6,10 @@ Use ``cstats_summary`` (``css``) from UNRAVEL to aggregate and analyze cluster v
 Prereqs:
     - ``cstats_validation``
     - The name of the rev_cluster_index file should relate to the name of the cluster validation directory.
-    - cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
+    - cluster_index_dir = Path(args.moving_img from cstats_validation).name w/o "_rev_cluster_index" and ".nii.gz" 
     - _cluster_info.txt should be named like: cluster_index_dir + "_cluster_info.txt"
+    - vstats_path / 'stats' / cluster_correction_dir should contain: 
+    - <cluster_index_dir>_rev_cluster_index[_LH | _RH].nii.gz, <cluster_index_dir>_cluster_info.txt, and p_value_threshold.txt
 
 Inputs:
     - Cell/label density CSVs from from ``cstats_validation``
