@@ -35,7 +35,7 @@ def parse_args():
     opts.add_argument('-f', '--frames', help='Number of frames for the animation. Default: 120', default=120, type=int, action=SM)
     opts.add_argument('-sa', '--start_angle', help='Starting angle for the rotation. Default: 0', default=0, type=float, action=SM)
     opts.add_argument('-fps', '--fps', help='Frames per second for the animation. Default: 20', default=20, type=int, action=SM)
-    opts.add_argument('-r', '--rendering', help='Rendering mode. Default: mip', default='attenuated_mip', type=str, action=SM)
+    opts.add_argument('-r', '--rendering', help='Rendering mode. Default: mip', default='mip', type=str, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
@@ -78,8 +78,12 @@ def main():
     # Capture a keyframe for debugging
     animation = Animation(viewer)
     animation.capture_keyframe()
-    imsave("debug_frame.png", img[0])  # Save the first slice for inspection
+    from napari.utils import screenshot
+    rendered_frame = screenshot(viewer)  # Capture the rendered MIP view
+    imsave("debug_frame.png", rendered_frame)
+
     import sys ; sys.exit()
+
 
     # Set contrast limits
     layer.contrast_limits = (args.min_value, args.max_value)
