@@ -8,10 +8,10 @@ Usage:
     360_animation.py -i path/image -o path/video.mp4 [-min 0] [-max 1] [-f 120] [-sa 0] [-fps 20] [-r mip]
 """
 
+import os
 import napari
-from napari_animation import Animation
 import numpy as np
-
+from napari_animation import Animation
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -25,7 +25,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='path/gene_expression.csv', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='path/image', required=True, action=SM)
     reqs.add_argument('-o', '--output', help='path/video.mp4', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -55,6 +55,8 @@ def main():
 
     if not args.max_value:
         args.max_value = img.max()
+
+    os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Prevents Qt from trying to open a window
 
     # Create a napari viewer and add your image
     viewer = napari.Viewer()
