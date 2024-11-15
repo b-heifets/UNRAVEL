@@ -62,8 +62,9 @@ def main():
     print(f"\n    Contrast limits: ({args.min_value}, {args.max_value})\n")
 
     # Create the Napari viewer and animation
-    os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Prevents Qt from trying to open a window
+    # os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Prevents Qt from trying to open a window
     viewer = napari.Viewer()
+    viewer.dims.ndisplay = 3 # Set 3D rendering
 
     print(f"Camera angles: {viewer.camera.angles}")
     print(f"Camera zoom: {viewer.camera.zoom}")
@@ -83,9 +84,12 @@ def main():
     # Initialize the animation
     animation = Animation(viewer)
 
+
+
     # Capture the same key frame twice for testing
     animation.capture_keyframe()
-    animation.capture_keyframe() 
+    viewer.camera.angles = (0, 0, 0)
+    animation.capture_keyframe(steps=5)
 
     # # Set up a 360° rotation
     # angles = np.linspace(args.start_angle, args.start_angle + 360, args.frames)  # Full rotation starting at initial_angle
