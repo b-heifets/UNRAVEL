@@ -44,13 +44,6 @@ def parse_args():
 
     return parser.parse_args()
 
-@print_func_name_args_times()
-def crop_3d_to_macroblock(image, macro_block_size=16):
-    """Crop a 3D image (z, height, width) to ensure dimensions are divisible by the macro block size."""
-    z, h, w = image.shape
-    new_h = h - (h % macro_block_size)
-    new_w = w - (w % macro_block_size)
-    return image[:, :new_h, :new_w]
 
 @log_command
 def main():
@@ -61,17 +54,14 @@ def main():
 
     img = load_3D_img(args.input, desired_axis_order='zyx')
 
-    print(f"\n    Loaded image with shape: {img.shape}")
-
-    img = crop_3d_to_macroblock(img)
-
-    print(f"\n    Cropped image to shape: {img.shape}\n")
-
     if not args.min_value:
         args.min_value = img.min()
 
     if not args.max_value:
         args.max_value = img.max()
+
+    print(f"\n    Contrast limits: ({args.min_value}, {args.max_value})\n")
+    import sys ; sys.exit()
 
     # Create the Napari viewer and animation
     viewer = napari.Viewer()
