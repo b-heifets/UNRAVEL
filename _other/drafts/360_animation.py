@@ -9,6 +9,9 @@ Usage:
 """
 
 import os
+os.environ["QT_LOGGING_RULES"] = "qt.qpa.*=false"  # Suppresses Qt logging and warnings
+os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Prevents Qt from trying to open a window
+
 import napari
 import numpy as np
 from napari_animation import Animation
@@ -58,16 +61,17 @@ def main():
 
     img = load_3D_img(args.input, desired_axis_order='zyx')
 
+    print(f"\n    Loaded image with shape: {img.shape}")
+
     img = crop_3d_to_macroblock(img)
+
+    print(f"\n    Cropped image to shape: {img.shape}\n")
 
     if not args.min_value:
         args.min_value = img.min()
 
     if not args.max_value:
         args.max_value = img.max()
-
-    os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Prevents Qt from trying to open a window
-    os.environ["QT_LOGGING_RULES"] = "qt.qpa.*=false" # Suppresses Qt logging and warnings
 
     # Create the Napari viewer and animation
     viewer = napari.Viewer()
