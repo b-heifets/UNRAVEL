@@ -59,7 +59,6 @@ def main():
         args.max_value = img.max()
 
     print(f"\n    Contrast limits: ({args.min_value}, {args.max_value})\n")
-    import sys ; sys.exit()
 
     # Create the Napari viewer and animation
     os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Prevents Qt from trying to open a window
@@ -78,6 +77,7 @@ def main():
 
     animation.capture_keyframe()
     imsave("debug_frame.png", img[0])  # Save the first slice for inspection
+    import sys ; sys.exit()
 
     # Set contrast limits
     layer.contrast_limits = (args.min_value, args.max_value)
