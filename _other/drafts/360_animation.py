@@ -15,6 +15,7 @@ from napari_animation import Animation
 from pathlib import Path
 from rich import print
 from rich.traceback import install
+from skimage.io import imsave
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
@@ -34,7 +35,7 @@ def parse_args():
     opts.add_argument('-f', '--frames', help='Number of frames for the animation. Default: 120', default=120, type=int, action=SM)
     opts.add_argument('-sa', '--start_angle', help='Starting angle for the rotation. Default: 0', default=0, type=float, action=SM)
     opts.add_argument('-fps', '--fps', help='Frames per second for the animation. Default: 20', default=20, type=int, action=SM)
-    opts.add_argument('-r', '--rendering', help='Rendering mode. Default: mip', default='mip', type=str, action=SM)
+    opts.add_argument('-r', '--rendering', help='Rendering mode. Default: mip', default='attenuated_mip', type=str, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
@@ -63,11 +64,24 @@ def main():
     # Create the Napari viewer and animation
     os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Prevents Qt from trying to open a window
     viewer = napari.Viewer()
+
+    print(f"Camera angles: {viewer.camera.angles}")
+    print(f"Camera zoom: {viewer.camera.zoom}")
+    print(f"Camera center: {viewer.camera.center}")
+
+    viewer.camera.center = [img.shape[1] // 2, img.shape[2] // 2, img.shape[0] // 2] # Center the camera
+    viewer.camera.zoom = 1  # Adjust as needed
+    viewer.camera.angles = (0, 0, 0)  # Reset angles
+    # viewer.camera.angles = (args.start_angle, 0, 0)  # (azimuth, elevation, roll)
+
     layer = viewer.add_image(img, rendering=args.rendering)
+
+    animation.capture_keyframe()
+    imsave("debug_frame.png", img[0])  # Save the first slice for inspection
 
     # Set contrast limits
     layer.contrast_limits = (args.min_value, args.max_value)
-    viewer.camera.angles = (args.start_angle, 0, 0)  # (azimuth, elevation, roll)
+
 
     # Initialize the animation
     animation = Animation(viewer)
