@@ -9,9 +9,6 @@ Usage:
 """
 
 import os
-os.environ["QT_LOGGING_RULES"] = "qt.qpa.*=false"  # Suppresses Qt logging and warnings
-os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Prevents Qt from trying to open a window
-
 import napari
 import numpy as np
 from napari_animation import Animation
@@ -64,6 +61,7 @@ def main():
     import sys ; sys.exit()
 
     # Create the Napari viewer and animation
+    os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Prevents Qt from trying to open a window
     viewer = napari.Viewer()
     layer = viewer.add_image(img, rendering=args.rendering)
 
