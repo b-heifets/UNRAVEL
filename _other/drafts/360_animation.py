@@ -9,6 +9,7 @@ Usage:
 """
 
 import os
+import imageio
 import napari
 import numpy as np
 from napari_animation import Animation
@@ -68,6 +69,21 @@ def main():
     print(f"Camera zoom: {viewer.camera.zoom}")
     print(f"Camera center: {viewer.camera.center}")
 
+    # Capture a single keyframe using napari_animation
+    animation = Animation(viewer)
+    animation.capture_keyframe()  # Capture one frame with the configured view
+
+    # Save the captured frame as a single-frame .mp4 video
+    single_frame = animation.key_frames[0].screenshot  # Access the captured frame
+
+    # Use imageio to write the single frame to an .mp4 video file
+    with imageio.get_writer(args.output, fps=args.fps, codec='libx264', quality=10) as writer:
+        writer.append_data(single_frame)  # Add the single captured frame
+
+    import sys ; sys.exit()
+
+
+
     viewer.camera.center = [img.shape[1] // 2, img.shape[2] // 2, img.shape[0] // 2] # Center the camera
     viewer.camera.zoom = 1  # Adjust as needed
     viewer.camera.angles = (0, 0, 0)  # Reset angles
@@ -75,19 +91,8 @@ def main():
 
     layer = viewer.add_image(img, rendering=args.rendering)
 
-    # Capture a keyframe for debugging
-    animation = Animation(viewer)
-    animation.capture_keyframe()
-    from napari.utils import screenshot
-    rendered_frame = screenshot(viewer)  # Capture the rendered MIP view
-    imsave("debug_frame.png", rendered_frame)
-
-    import sys ; sys.exit()
-
-
     # Set contrast limits
     layer.contrast_limits = (args.min_value, args.max_value)
-
 
     # Initialize the animation
     animation = Animation(viewer)
