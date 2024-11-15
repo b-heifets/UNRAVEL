@@ -19,7 +19,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -41,6 +41,14 @@ def parse_args():
 
     return parser.parse_args()
 
+@print_func_name_args_times()
+def crop_3d_to_macroblock(image, macro_block_size=16):
+    """Crop a 3D image (z, height, width) to ensure dimensions are divisible by the macro block size."""
+    z, h, w = image.shape
+    new_h = h - (h % macro_block_size)
+    new_w = w - (w % macro_block_size)
+    return image[:, :new_h, :new_w]
+
 @log_command
 def main():
     install()
@@ -48,7 +56,9 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    img = load_3D_img(args.input)
+    img = load_3D_img(args.input, desired_axis_order='zyx')
+
+    img = crop_3d_to_macroblock(img)
 
     if not args.min_value:
         args.min_value = img.min()
@@ -57,15 +67,14 @@ def main():
         args.max_value = img.max()
 
     os.environ["QT_QPA_PLATFORM"] = "offscreen"  # Prevents Qt from trying to open a window
+    os.environ["QT_LOGGING_RULES"] = "qt.qpa.*=false" # Suppresses Qt logging and warnings
 
-    # Create a napari viewer and add your image
+    # Create the Napari viewer and animation
     viewer = napari.Viewer()
     layer = viewer.add_image(img, rendering=args.rendering)
 
     # Set contrast limits
     layer.contrast_limits = (args.min_value, args.max_value)
-
-    # Optionally, set the initial rotation angle
     viewer.camera.angles = (args.start_angle, 0, 0)  # (azimuth, elevation, roll)
 
     # Initialize the animation
@@ -78,8 +87,10 @@ def main():
         viewer.camera.angles = (angle, 0, 0)  # Keep elevation and roll fixed
         animation.capture_keyframe()  # Capture each frame
 
-    # Save the animation
+    # Save animation and clean up
     animation.animate(args.output, fps=args.fps)
+    viewer.close()
+
 
     verbose_end_msg()
 
