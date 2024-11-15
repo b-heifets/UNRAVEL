@@ -75,6 +75,8 @@ def main():
 
     layer = viewer.add_image(img, rendering=args.rendering)
 
+    # Capture a keyframe for debugging
+    animation = Animation(viewer)
     animation.capture_keyframe()
     imsave("debug_frame.png", img[0])  # Save the first slice for inspection
     import sys ; sys.exit()
