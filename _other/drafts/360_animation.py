@@ -69,29 +69,36 @@ def main():
     print(f"Camera zoom: {viewer.camera.zoom}")
     print(f"Camera center: {viewer.camera.center}")
 
-    # Capture a single frame using napari_animation
+    layer = viewer.add_image(img, rendering=args.rendering)
+    layer.contrast_limits = (args.min_value, args.max_value)
+
+    # Capture two identical keyframes
     animation = Animation(viewer)
-    animation.capture_keyframe()  # Capture the current view as a single keyframe
+    animation.capture_keyframe()  # First keyframe
+    viewer.camera.angles = (args.start_angle + 0.1, 0, 0)  # Slightly adjust the angle for the second keyframe
+    animation.capture_keyframe()  # Second keyframe
 
-    # Generate a short video by repeating the captured keyframe
-    temp_video_path = "temp_frame.mp4"  # Temporary path to store a single frame video
-    frame_count = 1  # Number of times to repeat the frame in the video
-
-    # Save the animation with just one keyframe to generate a single-frame video
+    # Save the animation with two keyframes as a short video
+    temp_video_path = "temp_frame_video.mp4"  # Temporary path to store the two-frame video
     animation.animate(temp_video_path, fps=args.fps)
 
-    # Load the single-frame video, repeat frames, and save the final output
+    # Extract the first frame and save it as a single-frame video
     with imageio.get_reader(temp_video_path, "ffmpeg") as reader:
-        frame = reader.get_next_data()  # Extract the single frame
+        frame = reader.get_next_data()  # Extract the first frame
 
     with imageio.get_writer(args.output, fps=args.fps, codec='libx264', quality=10) as writer:
-        for _ in range(frame_count):
-            writer.append_data(frame)  # Repeat the frame
+        writer.append_data(frame)  # Repeat the single frame in the final output
 
-    # Clean up
+    # Clean up temporary file
     os.remove(temp_video_path)
     viewer.close()
 
+    import sys ; sys.exit()
+
+    verbose_end_msg()
+
+
+    
 
     viewer.camera.center = [img.shape[1] // 2, img.shape[2] // 2, img.shape[0] // 2] # Center the camera
     viewer.camera.zoom = 1  # Adjust as needed
