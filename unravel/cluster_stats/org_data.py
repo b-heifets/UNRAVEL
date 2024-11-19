@@ -12,6 +12,11 @@ Outputs:
     - target_dir/sample??__cell_density_data__<cluster_validation_results_`*`>.csv
     - target_dir/sample??__label_density_data__<cluster_validation_results_`*`>.csv
 
+Notes:
+    - If the cluster_validation_results_`*` directory name contains "_gt_" or "_lt_", the script will attempt to replace it with "_v_" to match the vstats directory.
+    - This is useful when non-directional maps were made as directional.
+    - If the cluster_validation_results_`*` directory name contains "_LH" or "_RH", the script will attempt to remove it to match the vstats directory.    
+
 Usage
 -----
     cstats_org_data -cvd '<asterisk>' [-dt cell | label] [-vd path/vstats_dir] [-td target_dir] [-pvt p_value_threshold.txt] [-d list of paths] [-p sample??] [-v]
@@ -71,7 +76,9 @@ def cp(src, dest):
     Args:
         - src (Path): the source path
         - dest (Path): the destination path"""
-    shutil.copy(src, dest)
+    if Path(src).exists():
+        Path(dest).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(src, dest)
 
 def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
     """Copy the cluster info, p value threshold, and rev_cluster_index files to the target directory.
@@ -86,31 +93,51 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
 
     if vstats_path.exists():
         validation_dir_name = str(validation_dir.name)
+        original_validation_dir_name = validation_dir_name  # Keep original for fallback
 
+        # Attempt to replace _gt_/_lt_ with _v_ for cases when non-directional maps were made as directional
         validation_dir_name = validation_dir_name.replace('_gt_', '_v_').replace('_lt_', '_v_')
 
+        # Remove hemisphere suffix if present
         if validation_dir_name.endswith('_LH') or validation_dir_name.endswith('_RH'):
             cluster_correction_dir = validation_dir_name[:-3]  # Remove last 3 characters (_LH or _RH)
         else:
             cluster_correction_dir = validation_dir_name
 
-        # Regular expression to match the part before and after 'q*' to remove any suffix added to the rev_cluster_index<suffix>.nii.gz
-        pattern = r'(.*q\d+\.\d+)(_.+)?'  # This also works when there is no "suffix"
-        match = re.match(pattern, cluster_correction_dir)
-        if match:
-            cluster_correction_dir = match.group(1)
-            suffix = match.group(2)[1:] if match.group(2) else ''  # This gets the string after the q value if there is one
+        # Use regex to handle cases with or without "_q" in the directory name
+        if '_q' in cluster_correction_dir:
+            pattern = r'(.*q\d+\.\d+)(_.+)?' 
+            match = re.match(pattern, cluster_correction_dir)
+            if match:
+                cluster_correction_dir = match.group(1)
+                suffix = match.group(2)[1:] if match.group(2) else ''  # Get suffix after "q" value if present
+            else:
+                print(f"\n    [red1]The regex pattern {pattern} did not match the cluster_correction_dir: {cluster_correction_dir} in cstats_org_data\n")
         else:
-            print("\n    [red1]No match found in cstats_org_data\n")
+            suffix = ''
 
+        # Construct the path and check existence
         cluster_correction_path = vstats_path / 'stats' / cluster_correction_dir
 
         if not cluster_correction_path.exists():
             cluster_correction_dir = find_matching_directory(vstats_path / 'stats', cluster_correction_dir)
-            cluster_correction_path = vstats_path / 'stats' / cluster_correction_dir
+
+            if cluster_correction_dir is not None:
+                cluster_correction_path = vstats_path / 'stats' / cluster_correction_dir
+            else:
+                # Fallback to original name
+                cluster_correction_path = vstats_path / 'stats' / original_validation_dir_name
+                # Remove hemisphere suffix if present
+                if str(cluster_correction_path).endswith('_LH') or str(cluster_correction_path).endswith('_RH'):
+                    cluster_correction_path = Path(str(cluster_correction_path)[:-3])  # Remove last 3 characters (_LH or _RH)
+                else:
+                    cluster_correction_path = validation_dir_name
+                cluster_correction_dir = cluster_correction_path.name
 
         if not cluster_correction_path.exists():
-            print(f'\n    [red]Path for copying the rev_cluster_index.nii.gz and p value threshold does not exist: {cluster_correction_path}\n')
+            print(f'\n    [red]Path for rev_cluster_index.nii.gz, {p_val_txt}, and _cluster_info.txt does not exist: {cluster_correction_path}\n')
+            import sys ; sys.exit()
+
         cluster_info = cluster_correction_path / f'{cluster_correction_dir}_cluster_info.txt'
         if cluster_info.exists():
             dest_stats = dest_path / cluster_info.name
@@ -127,6 +154,7 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
         else: 
             print(f'\n    [red]The p value threshold txt ({p_val_thresh_file}) does not exist\n')
 
+        # Adjust rev_cluster_index path based on hemisphere suffix
         if validation_dir_name.endswith('_LH'):
             rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)[:-3]}_rev_cluster_index_LH.nii.gz'
         elif validation_dir_name.endswith('_RH'):
@@ -134,7 +162,8 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
         else:
             rev_cluster_index_path = cluster_correction_path / f'{str(validation_dir.name)}_rev_cluster_index.nii.gz'
 
-        if not rev_cluster_index_path.exists(): 
+        # Adjust rev_cluster_index_path if suffix is missing
+        if not rev_cluster_index_path.exists():
             suffix = str(validation_dir_name).replace(str(cluster_correction_path.name), '')
             rev_cluster_index_path =  cluster_correction_path / f"{cluster_correction_path.name}_rev_cluster_index{suffix}.nii.gz"
 
@@ -144,7 +173,7 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
                 cp(src=rev_cluster_index_path, dest=dest_rev_cluster_index)
         else: 
             print(f'\n    [red]The rev_cluster_index.nii.gz ({rev_cluster_index_path}) does not exist\n')
-            import sys ; sys.exit()
+            import sys; sys.exit()
 
 def organize_validation_data(sample_path, clusters_path, validation_dir_pattern, density_type, target_dir, vstats_path, p_val_txt):
     """Copy the cluster validation, p value, cluster info, and rev_cluster_index files to the target directory.

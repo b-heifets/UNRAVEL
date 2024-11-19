@@ -6,8 +6,10 @@ Use ``cstats_summary`` (``css``) from UNRAVEL to aggregate and analyze cluster v
 Prereqs:
     - ``cstats_validation``
     - The name of the rev_cluster_index file should relate to the name of the cluster validation directory.
-    - cluster_index_dir = Path(args.moving_img).name w/o "_rev_cluster_index" and ".nii.gz"
+    - cluster_index_dir = Path(args.moving_img from cstats_validation).name w/o "_rev_cluster_index" and ".nii.gz" 
     - _cluster_info.txt should be named like: cluster_index_dir + "_cluster_info.txt"
+    - vstats_path / 'stats' / cluster_correction_dir should contain: 
+    - <cluster_index_dir>_rev_cluster_index[_LH | _RH].nii.gz, <cluster_index_dir>_cluster_info.txt, and p_value_threshold.txt
 
 Inputs:
     - Cell/label density CSVs from from ``cstats_validation``
@@ -44,11 +46,15 @@ Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-
 
 Usage if running directly after ``cstats_validation``:
 ------------------------------------------------------
-    cstats_summary -c <path/config.ini> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-d <list of paths>] [-v]
+    cstats_summary -c <path/config.ini> -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd <path/vstats_dir> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
+
+Usage from a cluster correction dir after ``cstats_validation``:
+----------------------------------------------------------------
+    cstats_summary -c cluster_summary.ini -cvd 'psilocybin_v_saline_tstat1_q<asterisk>' -vd ../.. -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
 
 Usage if running after ``cstats_validation`` and ``cstats_org_data``:
 ---------------------------------------------------------------------
-    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-cp <condition_prefixes>] [-d <list of paths>] [-v]
+    cstats_summary -c <path/config.ini> -sk <path/sample_key.csv> --groups <group1> <group2> -hg <higher_group> [-d <list of paths>] [-v]
 """
 
 import nibabel as nib
@@ -174,9 +180,6 @@ def main():
         if args.verbose:
             stats_args.append('-v')
         run_script('cstats', stats_args)
-
-    dsi_dir = Path().cwd() / '3D_brains'
-    dsi_dir.mkdir(parents=True, exist_ok=True) 
     
     # Iterate over all subdirectories in the current working directory and run the following scripts
     for subdir in [d for d in Path.cwd().iterdir() if d.is_dir() and d.name != '3D_brains' and d.name != 'valid_clusters_tables_and_legend']:
@@ -208,7 +211,7 @@ def main():
         valid_clusters_index_dir = subdir / cfg.index.valid_clusters_dir
         
         if len(valid_cluster_ids) == 0: 
-            print(f"    No clusters were valid for {subdir}. Skipping...")
+            print(f"    [red1]No clusters were valid for {subdir.name}. Skipping...")
             continue
 
         # Run cstats_index
@@ -243,10 +246,10 @@ def main():
 
         # Aggregate files from cstats_brain_model
         if cfg.brain.mirror: 
-            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA_WB.nii.gz', subdir, dsi_dir)
+            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA_WB.nii.gz', subdir, Path().cwd() / '3D_brains')
         else:
-            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA.nii.gz', subdir, dsi_dir)
-        find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_rgba.txt', subdir, dsi_dir)
+            find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_ABA.nii.gz', subdir, Path().cwd() / '3D_brains')
+        find_and_copy_files(f'*{cfg.index.valid_clusters_dir}_rgba.txt', subdir, Path().cwd() / '3D_brains')
 
         # Run cstats_table
         table_args = [
@@ -282,9 +285,9 @@ def main():
                 print(f"\n    No valid cluster IDs found for {subdir}. Skipping cstats_prism...\n")
 
     # Copy the atlas and binarize it for visualization in DSI studio
-    dest_atlas = dsi_dir / Path(cfg.index.atlas).name
-    if not dest_atlas.exists():
-        cp(cfg.index.atlas, dsi_dir)
+    dest_atlas = Path().cwd() / '3D_brains' / Path(cfg.index.atlas).name
+    if not dest_atlas.exists() and dest_atlas.parent.exists():
+        cp(cfg.index.atlas, dest_atlas)
         atlas_nii = nib.load(dest_atlas)
         atlas_img = np.asanyarray(atlas_nii.dataobj, dtype=atlas_nii.header.get_data_dtype()).squeeze()
         atlas_img[atlas_img > 0] = 1

@@ -112,15 +112,12 @@ def fdr(input_path, fdr_path, mask_path, q_value):
     return adjusted_pval_output_path, float(probability_threshold)
 
 @print_func_name_args_times()
-def cluster_index(adj_p_val_img_path, min_size, q_value, output_index):
-
+def cluster_index(adj_p_val_img_path, min_size, threshold, output_index):
     print('')
-    thres = 1 - float(q_value)
-
     command = [
         'cluster',
         '-i', adj_p_val_img_path,
-        '-t', str(thres),
+        '-t', str(threshold),
         '--oindex=' + str(output_index),
         '--minextent=' + str(min_size)
     ]
@@ -130,7 +127,6 @@ def cluster_index(adj_p_val_img_path, min_size, q_value, output_index):
     else:
         print("Output:", result.stdout)
     return result.stdout
-
 
 @print_func_name_args_times()
 def reverse_clusters(cluster_index_img, output, data_type, cluster_index_nii):
@@ -217,7 +213,8 @@ def process_fdr_and_clusters(input, mask, q, min_size, avg_img1, avg_img2, outpu
 
     # Generate cluster index
     cluster_index_path = f"{fdr_path}/{fdr_dir_name}_cluster_index.nii.gz"
-    cluster_info = cluster_index(adjusted_pval_output_path, min_size, q, cluster_index_path)
+    thres = 1 - float(q)
+    cluster_info = cluster_index(adjusted_pval_output_path, min_size, thres, cluster_index_path)
 
     # Save the cluster info
     with open(fdr_path / f"{fdr_dir_name}_cluster_info.txt", "w") as f:

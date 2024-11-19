@@ -208,7 +208,7 @@
 391,/997/8/567/688/695/315/669/394/401/,"Anteromedial visual area, layer 4",VISam4,Isocortex__Visual__Anteromedial,8,133,140
 393,/997/8/567/623/477/278/403/,Medial amygdalar nucleus,MEA,Striatum-like__amygdalar_nuclei,128,192,226
 397,/997/8/567/688/695/1089/1080/375/382/407/,"Field CA1, pyramidal layer",CA1sp,Hippocampal,102,168,61
-402,/997/8/567/688/695/315/714/723/412/,"Orbital area, lateral part, layer 2/3",ORBl2/3,Isocortex__Lateral,36,138,94
+402,/997/8/567/688/695/315/714/723/412/,"Orbital area, lateral part, layer 2/3",ORBl2/3,Isocortex__Orbital__Lateral,36,138,94
 403,/997/1009/967/933/413/,vestibular nerve,vVIIIn,Fiber_tracts__Cranial_nerves,204,204,204
 404,/997/8/343/1129/549/864/406/414/,"Subparafascicular nucleus, magnocellular part",SPFm,Thalamus__Sensory-motor_cortex_related,255,128,132
 405,/997/8/567/688/695/1089/1080/375/382/415/,"Field CA1, stratum radiatum",CA1sr,Hippocampal,126,208,75
@@ -224,13 +224,13 @@
 426,/997/1009/991/768/1099/737/436/,columns of the fornix,fx,Fiber_tracts__medial_forebrain_bundle_system,204,204,204
 427,/997/8/343/1065/354/386/437/,"Spinal nucleus of the trigeminal, interpolar part",SPVI,Medulla__Sensory_related,255,165,210
 428,/997/8/567/688/695/1089/1080/375/423/438/,"Field CA2, stratum oriens",CA2so,Hippocampal,126,208,75
-430,/997/8/567/688/695/315/714/723/440/,"Orbital area, lateral part, layer 6a",ORBl6a,Isocortex__Lateral,36,138,94
+430,/997/8/567/688/695/315/714/723/440/,"Orbital area, lateral part, layer 6a",ORBl6a,Isocortex__Orbital__Lateral,36,138,94
 431,/997/8/567/688/695/315/669/394/441/,"Anteromedial visual area, layer 6b",VISam6b,Isocortex__Visual__Anteromedial,8,133,140
 432,/997/8/567/688/695/315/254/879/442/,"Retrosplenial area, dorsal part, layer 1",RSPd1,Isocortex__Retrosplenial__Dorsal,26,166,152
 433,/997/1009/991/768/1099/618/443/,dorsal hippocampal commissure,dhc,Fiber_tracts__medial_forebrain_bundle_system,204,204,204
 435,/997/8/343/1065/354/386/445/,"Spinal nucleus of the trigeminal, oral part",SPVO,Medulla__Sensory_related,255,165,210
 436,/997/8/567/688/695/1089/1080/375/423/446/,"Field CA2, pyramidal layer",CA2sp,Hippocampal,102,168,61
-438,/997/8/567/688/695/315/714/723/448/,"Orbital area, lateral part, layer 1",ORBl1,Isocortex__Lateral,36,138,94
+438,/997/8/567/688/695/315/714/723/448/,"Orbital area, lateral part, layer 1",ORBl1,Isocortex__Orbital__Lateral,36,138,94
 439,/997/1009/991/768/1099/618/449/,ventral hippocampal commissure,vhc,Fiber_tracts__medial_forebrain_bundle_system,204,204,204
 440,/997/8/567/688/695/315/453/322/369/450/,"Primary somatosensory area, upper limb, layer 1",SSp-ul1,Isocortex__Somatosensory__Upper_limb,24,128,100
 441,/997/8/567/688/703/295/451/,"Basolateral amygdalar nucleus, ventral part",BLAv,Cortical_subplate__Amygdala,157,231,156
@@ -249,7 +249,7 @@
 473,/997/8/343/1129/549/856/958/483/,Medial habenula,MH,Thalamus__Polymodal_association_cortex_related,255,144,159
 474,/997/8/567/688/695/315/714/731/484/,"Orbital area, medial part, layer 1",ORBm1,Isocortex__Orbital__Medial,36,138,94
 476,/997/8/567/688/695/1089/1080/375/463/486/,"Field CA3, stratum oriens",CA3so,Hippocampal,126,208,75
-478,/997/8/567/688/695/315/714/723/488/,"Orbital area, lateral part, layer 6b",ORBl6b,Isocortex__Lateral,36,138,94
+478,/997/8/567/688/695/315/714/723/488/,"Orbital area, lateral part, layer 6b",ORBl6b,Isocortex__Orbital__Lateral,36,138,94
 485,/997/8/567/688/695/1089/1080/375/463/495/,"Field CA3, pyramidal layer",CA3sp,Hippocampal,102,168,61
 491,/997/8/567/688/695/315/669/533/501/,"posteromedial visual area, layer 4",VISpm4,Isocortex__Visual__Posteromedial,8,133,140
 492,/997/8/567/688/695/1089/822/502/,Subiculum,SUB,Retrohippocampal__Subiculum,79,194,68
@@ -320,7 +320,7 @@
 615,/997/8/567/688/695/315/453/322/369/625/,"Primary somatosensory area, upper limb, layer 5",SSp-ul5,Isocortex__Somatosensory__Upper_limb,24,128,100
 618,/997/8/343/313/323/1100/628/,Nucleus of the optic tract,NOT,Midbrain__Motor_related,255,144,255
 619,/997/8/343/1129/549/864/637/629/,Ventral anterior-lateral complex of the thalamus,VAL,Thalamus__Sensory-motor_cortex_related,255,128,132
-620,/997/8/567/688/695/315/714/723/630/,"Orbital area, lateral part, layer 5",ORBl5,Isocortex__Lateral,36,138,94
+620,/997/8/567/688/695/315/714/723/630/,"Orbital area, lateral part, layer 5",ORBl5,Isocortex__Orbital__Lateral,36,138,94
 622,/997/8/567/688/695/1089/1080/726/632/,"Dentate gyrus, granule cell layer",DG-sg,Hippocampal,102,168,61
 623,/997/1009/967/933/948/633/,inferior colliculus commissure,cic,Fiber_tracts__Cranial_nerves,204,204,204
 624,/997/8/343/313/323/1100/634/,Nucleus of the posterior commissure,NPC,Midbrain__Motor_related,255,144,255
@@ -636,7 +636,7 @@
 1233,/997/8/567/688/695/315/669/312782628/312782648/,"Postrhinal area, layer 6a",VISpor6a,Isocortex__Visual__Postrhinal,8,133,140
 1234,/997/8/567/688/695/315/669/312782628/312782652/,"Postrhinal area, layer 6b",VISpor6b,Isocortex__Visual__Postrhinal,8,133,140
 1270,/997/8/567/688/695/1089/822/484682470/,Prosubiculum,ProS,Retrohippocampal__Subiculum,88,186,72
-1279,/997/8/567/688/695/1089/822/484682508/,Area prostriata,APr,Retrohippocampal__Area_postriata,51,185,50
+1279,/997/8/567/688/695/1089/822/484682508/,Area prostriata,APr,Retrohippocampal__Area_prostriata,51,185,50
 1280,/997/1009/484682512/,supra-callosal cerebral white matter,scwm,Fiber_tracts__Supra-callosal_cerebral_white_matter,204,204,204
 1281,/997/1009/983/776/484682516/,"corpus callosum, body",ccb,Fiber_tracts__lateral_forebrain_bundle_system,204,204,204
 1282,/997/1009/983/896/484682520/,optic radiation,or,Fiber_tracts__lateral_forebrain_bundle_system,204,204,204

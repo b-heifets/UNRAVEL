@@ -351,14 +351,16 @@ def main():
             return
         expected_direction = '>' if args.higher_group == args.groups[0] else '<'
         incongruent_clusters = stats_df[(stats_df['higher_mean_group'] != args.higher_group) & (stats_df['significance'] != 'n.s.')]['cluster_ID'].tolist()
-
         with open(output_dir / 'incongruent_clusters.txt', 'w') as f:
             f.write('\n'.join(map(str, incongruent_clusters)))
-        
         print(f"Expected effect direction: [green bold]{args.groups[0]} {expected_direction} {args.groups[1]}")
 
-        if not incongruent_clusters:
+        # Print info regarding incongruent clusters
+        significant_clusters = stats_df[stats_df['significance'] != 'n.s.']['cluster_ID']
+        if not incongruent_clusters and len(significant_clusters) > 0:
             print("All significant clusters are congruent with the expected direction")
+        elif not incongruent_clusters and len(significant_clusters) == 0:
+            print("[red1 bold]No significant clusters found.")
         else:
             print(f"{len(incongruent_clusters)} of {total_clusters} clusters are incongruent with the expected direction.")
             print (f"Although they had a significant difference, they not considered valid.")
@@ -368,7 +370,6 @@ def main():
         stats_df['significance'] = stats_df.apply(lambda row: 'n.s.' if row['cluster_ID'] in incongruent_clusters else row['significance'], axis=1)
 
         # Remove invalidated clusters from the list of significant clusters
-        significant_clusters = stats_df[stats_df['significance'] != 'n.s.']['cluster_ID']
         significant_cluster_ids = significant_clusters.unique().tolist()
         significant_cluster_ids_str = ' '.join(map(str, significant_cluster_ids))
 
@@ -378,7 +379,10 @@ def main():
 
         # Extract the FDR q value from the first csv file (float after 'FDR' or 'q' in the file name)
         first_csv_name = csv_files[0]
-        fdr_q = float(str(first_csv_name).split('FDR')[-1].split('q')[-1].split('_')[0])
+        if 'FDR' in first_csv_name.name or 'q' in first_csv_name.name:
+            fdr_q = float(str(first_csv_name).split('FDR')[-1].split('q')[-1].split('_')[0])
+        else:
+            fdr_q = None  # No FDR/q value found
         
         # Extract the p-value threshold from the specified .txt file
         try:
@@ -394,8 +398,11 @@ def main():
             print(f"An error occurred while processing the p-value file: {e}")
             import sys ; sys.exit()
 
-        # Print validation info: 
-        print(f"FDR q: [cyan bold]{fdr_q}[/] == p-value threshold: [cyan bold]{p_value_thresh}")
+        # Print validation info
+        if fdr_q is not None:
+            print(f"FDR q: [cyan bold]{fdr_q}[/] == p-value threshold: [cyan bold]{p_value_thresh}")
+        else:
+            print(f"P-value threshold: [cyan bold]{p_value_thresh}")
         print(f"Valid cluster IDs: {significant_cluster_ids_str}")
         print(f"[default]# of valid / total #: [bright_magenta]{len(significant_cluster_ids)} / {total_clusters}")
         validation_rate = len(significant_cluster_ids) / total_clusters * 100
@@ -412,7 +419,10 @@ def main():
         validation_inf_txt = output_dir / 'cluster_validation_info_t-test.txt' if len(args.groups) == 2 else output_dir / 'cluster_validation_info_tukey.txt'
         with open(validation_inf_txt, 'w') as f:
             f.write(f"Direction: {args.groups[0]} {expected_direction} {args.groups[1]}\n")
-            f.write(f"FDR q: {fdr_q} == p-value threshold {p_value_thresh}\n")
+            if fdr_q is not None:
+                f.write(f"FDR q: {fdr_q} == p-value threshold {p_value_thresh}\n")
+            else:
+                f.write(f"P-value threshold: {p_value_thresh}\n")
             f.write(f"Valid cluster IDs: {significant_cluster_ids_str}\n")
             f.write(f"# of valid / total #: {len(significant_cluster_ids)} / {total_clusters}\n")
             f.write(f"Cluster validation rate: {validation_rate:.2f}%\n")
@@ -425,14 +435,15 @@ def main():
         # Save cluster validation info for ``cstats_summary`` 
         data_df = pd.DataFrame({
             'Direction': [f"{args.groups[0]} {expected_direction} {args.groups[1]}"],
-            'FDR q': [fdr_q],
             'P value thresh': [p_value_thresh],
             'Valid clusters': [significant_cluster_ids_str],
             '# of valid clusters': [len(significant_cluster_ids)],
             '# of clusters': [total_clusters],
-            'Validation rate': [f"{len(significant_cluster_ids) / total_clusters * 100}%"]
+            'Validation rate': [f"{validation_rate}%"]
         })
-        
+        if fdr_q is not None:
+            data_df['FDR q'] = fdr_q
+
         data_df.to_csv(validation_info_csv, index=False)
 
     # Concat all cluster_validation_info.csv files
