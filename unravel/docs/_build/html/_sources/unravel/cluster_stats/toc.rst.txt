@@ -23,6 +23,7 @@ unravel.cluster_stats package
    crop
    mean_IF
    mean_IF_summary
+   clusters
    effect_sizes/toc
 
 .. automodule:: unravel.cluster_stats

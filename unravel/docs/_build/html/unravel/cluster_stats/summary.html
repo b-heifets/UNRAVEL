@@ -364,6 +364,7 @@
 <li class="toctree-l2"><a class="reference internal" href="crop.html">unravel.cluster_stats.crop module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mean_IF.html">unravel.cluster_stats.index module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mean_IF_summary.html">unravel.cluster_stats.mean_IF_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clusters.html">unravel.cluster_stats.clusters module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="effect_sizes/toc.html">unravel.cluster_stats.effect_sizes package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="effect_sizes/effect_sizes.html">unravel.cluster_stats.effect_sizes.effect_sizes module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="effect_sizes/effect_sizes_by_sex__absolute.html">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute module</a></li>
@@ -505,8 +506,10 @@
 <dt>Prereqs:</dt><dd><ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code></p></li>
 <li><p>The name of the rev_cluster_index file should relate to the name of the cluster validation directory.</p></li>
-<li><p>cluster_index_dir = Path(args.moving_img).name w/o “_rev_cluster_index” and “.nii.gz”</p></li>
+<li><p>cluster_index_dir = Path(args.moving_img from cstats_validation).name w/o “_rev_cluster_index” and “.nii.gz”</p></li>
 <li><p>_cluster_info.txt should be named like: cluster_index_dir + “_cluster_info.txt”</p></li>
+<li><p>vstats_path / ‘stats’ / cluster_correction_dir should contain:</p></li>
+<li><p>&lt;cluster_index_dir&gt;_rev_cluster_index[_LH | _RH].nii.gz, &lt;cluster_index_dir&gt;_cluster_info.txt, and p_value_threshold.txt</p></li>
 </ul>
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
@@ -557,13 +560,19 @@ find . -name “valid_clusters_sunburst.csv” -exec sh -c ‘cp {} ./$(basename
 <section id="usage-if-running-directly-after-cstats-validation">
 <h2>Usage if running directly after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>:<a class="headerlink" href="#usage-if-running-directly-after-cstats-validation" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cstats_summary -c &lt;path/config.ini&gt; -cvd ‘psilocybin_v_saline_tstat1_q&lt;asterisk&gt;’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-d &lt;list of paths&gt;] [-v]</p>
+<div><p>cstats_summary -c &lt;path/config.ini&gt; -cvd ‘psilocybin_v_saline_tstat1_q&lt;asterisk&gt;’ -vd &lt;path/vstats_dir&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-d &lt;list of paths&gt;] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-from-a-cluster-correction-dir-after-cstats-validation">
+<h2>Usage from a cluster correction dir after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>:<a class="headerlink" href="#usage-from-a-cluster-correction-dir-after-cstats-validation" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>cstats_summary -c cluster_summary.ini -cvd ‘psilocybin_v_saline_tstat1_q&lt;asterisk&gt;’ -vd ../.. -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-d &lt;list of paths&gt;] [-v]</p>
 </div></blockquote>
 </section>
 <section id="usage-if-running-after-cstats-validation-and-cstats-org-data">
 <h2>Usage if running after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> and <code class="docutils literal notranslate"><span class="pre">cstats_org_data</span></code>:<a class="headerlink" href="#usage-if-running-after-cstats-validation-and-cstats-org-data" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>cstats_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-cp &lt;condition_prefixes&gt;] [-d &lt;list of paths&gt;] [-v]</p>
+<div><p>cstats_summary -c &lt;path/config.ini&gt; -sk &lt;path/sample_key.csv&gt; –groups &lt;group1&gt; &lt;group2&gt; -hg &lt;higher_group&gt; [-d &lt;list of paths&gt;] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -631,6 +640,7 @@ find . -name “valid_clusters_sunburst.csv” -exec sh -c ‘cp {} ./$(basename
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-if-running-directly-after-cstats-validation">Usage if running directly after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-from-a-cluster-correction-dir-after-cstats-validation">Usage from a cluster correction dir after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-if-running-after-cstats-validation-and-cstats-org-data">Usage if running after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code> and <code class="docutils literal notranslate"><span class="pre">cstats_org_data</span></code>:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.summary.run_script"><code class="docutils literal notranslate"><span class="pre">run_script()</span></code></a></li>

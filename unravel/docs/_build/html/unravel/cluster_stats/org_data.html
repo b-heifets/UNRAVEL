@@ -364,6 +364,7 @@
 <li class="toctree-l2"><a class="reference internal" href="crop.html">unravel.cluster_stats.crop module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mean_IF.html">unravel.cluster_stats.index module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mean_IF_summary.html">unravel.cluster_stats.mean_IF_summary module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="clusters.html">unravel.cluster_stats.clusters module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="effect_sizes/toc.html">unravel.cluster_stats.effect_sizes package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="effect_sizes/effect_sizes.html">unravel.cluster_stats.effect_sizes.effect_sizes module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="effect_sizes/effect_sizes_by_sex__absolute.html">unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__absolute module</a></li>
@@ -514,6 +515,12 @@
 </ul>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>If the cluster_validation_results_`*` directory name contains “_gt_” or “_lt_”, the script will attempt to replace it with “_v_” to match the vstats directory.</p></li>
+<li><p>This is useful when non-directional maps were made as directional.</p></li>
+<li><p>If the cluster_validation_results_`*` directory name contains “_LH” or “_RH”, the script will attempt to remove it to match the vstats directory.</p></li>
+</ul>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
