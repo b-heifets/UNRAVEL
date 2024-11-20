@@ -173,7 +173,8 @@ def get_czi_tile_positions(czi):
     """
     xml_root = czi.meta
 
-    print(f'\nxml_root: \n{xlm_root}\n')
+    xml_string = ET.tostring(xml_root, encoding="unicode", method="xml")
+    print(xml_string)
 
     # Locate mosaic information
     tile_positions = []
