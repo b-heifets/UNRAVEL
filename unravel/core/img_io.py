@@ -195,6 +195,7 @@ def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, re
 
     if ndarray.ndim == 4:
         print(f"\n    [red1].czi channel {channel} has 4 axes. Please stitch tiles from {Path(czi_path).name}\n")
+        import sys ; sys.exit()
 
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(czi_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
