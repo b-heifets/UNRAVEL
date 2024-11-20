@@ -158,86 +158,6 @@ def extract_resolution(img_path):
     return xy_res, z_res
 
 @print_func_name_args_times()
-def get_czi_tile_positions(xml_root):
-    """
-    Extract tile positions from the CZI XML metadata.
-
-    Parameters
-    ----------
-    xml_root : xml.etree.ElementTree.Element
-        The root of the parsed XML tree.
-
-    Returns
-    -------
-    list of tuple
-        A list of (x, y) positions for each tile in the mosaic.
-    """
-    # Find TilesSetup and PositionGroups
-    tiles_setup = xml_root.find(".//TilesSetup/PositionGroups/PositionGroup")
-    if tiles_setup is None:
-        raise ValueError("No tile setup information found in the XML.")
-
-    # Extract key information
-    tiles_x = int(tiles_setup.find("TilesX").text)
-    tiles_y = int(tiles_setup.find("TilesY").text)
-    overlap = float(tiles_setup.find("TileAcquisitionOverlap").text)
-
-    # Assuming square tiles with a default size of 1 (scaling can be applied later)
-    tile_size = 1.0  # Adjust this based on actual tile size in metadata if available
-    overlap_fraction = overlap / 100.0
-    step_size = tile_size * (1 - overlap_fraction)
-
-    # Generate positions
-    tile_positions = []
-    for y in range(tiles_y):
-        for x in range(tiles_x):
-            pos_x = x * step_size
-            pos_y = y * step_size
-            tile_positions.append((pos_x, pos_y))
-
-    return tile_positions
-
-@print_func_name_args_times()
-def fuse_czi_tiles(ndarray, tile_positions):
-    """
-    Fuse tiles from a 4D ndarray (tiled z-stack) into a single 3D array.
-
-    Parameters
-    ----------
-    ndarray : ndarray
-        The tiled image array.
-    czi_metadata : dict
-        Metadata containing tile positions.
-
-    Returns
-    -------
-    ndarray
-        The fused 3D image array.
-    """
-    # Determine the maximum x and y positions of the tiles
-    max_x = max([pos[0] for pos in tile_positions])
-    max_y = max([pos[1] for pos in tile_positions])
-
-    print(f'\n{max_x=}\n')
-    print(f'\n{max_y=}\n')
-
-    # Determine the dimensions of the final image
-    tile_shape = ndarray.shape[-2:]  # Assuming tiles have consistent shape
-    final_shape = (ndarray.shape[0], max_y + tile_shape[0], max_x + tile_shape[1])
-
-    print(f'\n{tile_shape=}\n')
-    print(f'\n{final_shape=}\n')
-
-    # Create an empty array to hold the fused image
-    fused_image = np.zeros(final_shape, dtype=ndarray.dtype)
-
-    # Place tiles into the fused image
-    for idx, (y_pos, x_pos) in enumerate(tile_positions):
-        fused_image[:, y_pos:y_pos + tile_shape[0], x_pos:x_pos + tile_shape[1]] = ndarray[idx]
-
-    return fused_image
-
-@print_func_name_args_times()
 def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
     """
     Load a .czi image and return the ndarray.
@@ -273,18 +193,8 @@ def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, re
     czi = CziFile(czi_path)
     ndarray = np.squeeze(czi.read_image(C=channel)[0])
 
-    print(f'\n{ndarray.shape=}\n')
-
     if ndarray.ndim == 4:
-        print(f"\n    [yellow]Fusing tiles from {czi_path}\n")
-        tile_positions = get_czi_tile_positions(czi.meta)
-        ndarray = fuse_czi_tiles(ndarray, tile_positions)
-
-    print(f'\n{ndarray.shape=}\n')
-
-    if ndarray.ndim != 3:
-        print(f"    [red1]Cannot process array with shape {ndarray.shape}. Expected 3D image.")
-        raise ValueError(f"Cannot process array with shape {ndarray.shape}. Expected 3D image.")
+        print(f"\n    [red1].czi channel {channel} has 4 axes. Please stitch tiles from {Path(czi_path).name}\n")
 
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(czi_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
