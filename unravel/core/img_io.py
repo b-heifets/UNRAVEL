@@ -173,6 +173,8 @@ def get_czi_tile_positions(czi):
     """
     xml_root = czi.meta
 
+    print(f'\nxml_root: \n{xlm_root}\n')
+
     # Locate mosaic information
     tile_positions = []
     for tile_position in xml_root.findall(".//Tile"):
@@ -268,7 +270,7 @@ def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, re
     print(f'\n{ndarray.shape=}\n')
 
     if ndarray.ndim == 4:
-        print(f"\n    [yellow]Fusing tiles from {czi_path}")
+        print(f"\n    [yellow]Fusing tiles from {czi_path}\n")
         tile_positions = get_czi_tile_positions(czi)
         ndarray = fuse_czi_tiles(ndarray, tile_positions)
 
