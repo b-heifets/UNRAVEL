@@ -171,7 +171,7 @@ def get_czi_tile_positions(czi):
     list of tuple
         A list of (x, y) positions for each tile in the mosaic.
     """
-    xml_root = ET.fromstring(czi.metadata())  # Parse XML metadata
+    xml_root = czi.meta
 
     # Locate mosaic information
     tile_positions = []
