@@ -158,37 +158,42 @@ def extract_resolution(img_path):
     return xy_res, z_res
 
 @print_func_name_args_times()
-def get_czi_tile_positions(czi):
+def get_czi_tile_positions(xml_root):
     """
-    Extract tile positions from the CZI file metadata.
+    Extract tile positions from the CZI XML metadata.
 
     Parameters
     ----------
-    czi : CziFile
+    xml_root : xml.etree.ElementTree.Element
+        The root of the parsed XML tree.
 
     Returns
     -------
     list of tuple
         A list of (x, y) positions for each tile in the mosaic.
     """
-    xml_root = czi.meta
+    # Find TilesSetup and PositionGroups
+    tiles_setup = xml_root.find(".//TilesSetup/PositionGroups/PositionGroup")
+    if tiles_setup is None:
+        raise ValueError("No tile setup information found in the XML.")
 
-    xml_string = ET.tostring(xml_root, encoding="unicode", method="xml")
-    print(xml_string)
+    # Extract key information
+    tiles_x = int(tiles_setup.find("TilesX").text)
+    tiles_y = int(tiles_setup.find("TilesY").text)
+    overlap = float(tiles_setup.find("TileAcquisitionOverlap").text)
 
-    # Locate mosaic information
+    # Assuming square tiles with a default size of 1 (scaling can be applied later)
+    tile_size = 1.0  # Adjust this based on actual tile size in metadata if available
+    overlap_fraction = overlap / 100.0
+    step_size = tile_size * (1 - overlap_fraction)
+
+    # Generate positions
     tile_positions = []
-    for tile_position in xml_root.findall(".//Tile"):
-        x_pos = float(tile_position.find("./PositionX").text)
-        y_pos = float(tile_position.find("./PositionY").text)
-
-        print(f'\n{tile_position=}\n')
-        print(f'\n{x_pos=}\n')
-        print(f'\n{y_pos=}\n')
-
-        tile_positions.append((x_pos, y_pos))
-
-    print(f'\n{tile_positions=}\n')
+    for y in range(tiles_y):
+        for x in range(tiles_x):
+            pos_x = x * step_size
+            pos_y = y * step_size
+            tile_positions.append((pos_x, pos_y))
 
     return tile_positions
 
@@ -272,7 +277,7 @@ def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, re
 
     if ndarray.ndim == 4:
         print(f"\n    [yellow]Fusing tiles from {czi_path}\n")
-        tile_positions = get_czi_tile_positions(czi)
+        tile_positions = get_czi_tile_positions(czi.meta)
         ndarray = fuse_czi_tiles(ndarray, tile_positions)
 
     print(f'\n{ndarray.shape=}\n')
