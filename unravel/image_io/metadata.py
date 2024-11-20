@@ -31,6 +31,7 @@ Usage for when metadata is not extractable:
 from pathlib import Path
 import cv2
 from rich.live import Live
+from rich import print
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
