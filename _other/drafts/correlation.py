@@ -49,6 +49,7 @@ def parse_args():
     opts.add_argument('-mas', '--masks', help='Paths to mask .nii.gz files to restrict analysis. Default: None', nargs='*', default=None, action=SM)
     opts.add_argument('-a', '--atlas', help='Path to the atlas NIfTI file for a region-wise correlation. Default: None', default=None, action=SM)
     opts.add_argument('-rw', '--regional', help='Region-wise correlation. Default: False', action='store_true', default=False)
+    opts.add_argument('-oc', '--output', help='path/output.csv', default=None, action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/unravel/core/csvs/CCFv3-2020_regional_summary.csv', action=SM)
     opts.add_argument('-p', '--plot', help='Plot correlation. Default: False', action='store_true', default=False)
     opts.add_argument('-xl', '--x_label', help='X-axis label for the correlation plot. Default: "Image X mean intensity"', default='Image X mean intensity', action=SM)
@@ -83,11 +84,11 @@ def compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list=None, min_vo
 
     # Calculate the mean intensity of the images in each region
     imgX_mean_intensities_dict = calculate_mean_intensity(atlas_img_masked, imgX_masked, regions=unique_regions, verbose=verbose)
-    mean_intensities_dict_exp = calculate_mean_intensity(atlas_img_masked, imgY_masked, regions=unique_regions, verbose=verbose)
+    imgY_mean_intensities_dict = calculate_mean_intensity(atlas_img_masked, imgY_masked, regions=unique_regions, verbose=verbose)
 
     # Convert the dictionaries to DataFrames
     imgX_df = pd.DataFrame(imgX_mean_intensities_dict.items(), columns=['Region', 'ImgX_Mean'])
-    imgY_df = pd.DataFrame(mean_intensities_dict_exp.items(), columns=['Region', 'ImgY_Mean'])
+    imgY_df = pd.DataFrame(imgY_mean_intensities_dict.items(), columns=['Region', 'ImgY_Mean'])
 
     # Merge the DataFrames on the region column
     merged_df = pd.merge(imgX_df, imgY_df, on='Region')
@@ -262,6 +263,16 @@ def main():
     print(f"Pearson correlation,{correlation}")
     print(f"p-value,{p_value}")
     print(f"Number of data points,{n}")
+
+    if args.output:
+        # Save the image names and correlation results to a CSV file
+        result_df = pd.DataFrame({
+            'Image X': [str(Path(args.x_image).name)],
+            'Image Y': [str(Path(args.y_image).name)],
+            'Pearson correlation': [correlation],
+            'p-value': [p_value],
+        })
+        result_df.to_csv(args.output_csv, index=False)
 
     # Plot the correlation scatter plot
     if args.plot:
