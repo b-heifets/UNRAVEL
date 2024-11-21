@@ -46,7 +46,7 @@ def parse_args():
     opts.add_argument('-a', '--atlas', help='Path to the atlas NIfTI file for a region-wise correlation. Default: None', default=None, action=SM)
     opts.add_argument('-rw', '--regional', help='Region-wise correlation. Default: False', action='store_true', default=False)
     opts.add_argument('-oc', '--output', help='path/output.csv', default=None, action=SM)
-    opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/unravel/core/csvs/CCFv3-2020_regional_summary.csv', action=SM)
+    opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
     opts.add_argument('-p', '--plot', help='Plot correlation. Default: False', action='store_true', default=False)
     opts.add_argument('-xl', '--x_label', help='X-axis label for the correlation plot. Default: "Image X mean intensity"', default='Image X mean intensity', action=SM)
     opts.add_argument('-yl', '--y_label', help='Y-axis label for the correlation plot. Default: "Image Y mean intensity"', default='Image Y mean intensity', action=SM)
@@ -58,8 +58,6 @@ def parse_args():
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
-
-# TODO: Change /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/unravel/core/csvs/CCFv3-2020_regional_summary.csv to CCFv3-2020_regional_summary.csv after testing
 
 
 def compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list=None, min_voxels=None, verbose=False):
