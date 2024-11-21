@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_resample_w_summing.py from UNRAVEL to resample a 3D image by summing or averaging values in blocks, or using nearest-neighbor interpolation.
+Use /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_resample_w_summing.py from UNRAVEL to resample a 3D MERFISH-CCF image (10x10x200) to 30x30x200 µm resolution.
 
 Usage:
 ------
