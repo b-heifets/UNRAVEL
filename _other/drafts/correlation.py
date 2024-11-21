@@ -16,10 +16,6 @@ Usage:
     _other/drafts/correlation.py -x path/x_axis_image.nii.gz -y path/y_axis_image.nii.gz [-mas path/mask1.nii.gz path/mask2.nii.gz] [-a path/atlas.nii.gz] [-r 1 2 3] [-csv path/CCFv3-2020_regional_summary.csv] [-v]
 """
 
-import numpy as np
-import nibabel as nib
-from scipy.stats import pearsonr
-
 import matplotlib.pyplot as plt
 import mplcursors
 import nibabel as nib
@@ -28,7 +24,7 @@ import pandas as pd
 from pathlib import Path
 from rich import print
 from rich.traceback import install
-
+from scipy.stats import pearsonr
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
