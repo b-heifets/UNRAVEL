@@ -68,8 +68,11 @@ def parse_args():
 @print_func_name_args_times()
 def load_mask(mask_path):
     """Load .nii.gz and return to an ndarray with a binary dtype"""
-    mask_nii = nib.load(mask_path)
-    return np.asanyarray(mask_nii.dataobj, dtype=np.bool_).squeeze()
+    if Path(mask_path).exists():
+        mask_nii = nib.load(mask_path)
+        return np.asanyarray(mask_nii.dataobj, dtype=np.bool_).squeeze()
+    else:
+        raise FileNotFoundError(f"    Mask not found at {mask_path}")
 
 @print_func_name_args_times()
 def mean_intensity_in_brain(img, tissue_mask):
