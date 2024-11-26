@@ -3,6 +3,12 @@
 """
 Use ``_other/drafts/correlation.py`` from UNRAVEL to calculate the region-wise correlation between two images.
 
+Inputs:
+    - The X-axis images may be gene expression maps. The first word in the filename is used as the gene name in the output.
+
+Outputs:
+    - A CSV file for each Y-axis image with columns: Gene, Pearson correlation, p-value
+
 Note:
     - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020_regional_summary.csv
     - It has columns: Region_ID, ID_Path, Region, Abbr, General_Region, R, G, B
