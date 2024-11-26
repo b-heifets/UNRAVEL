@@ -66,7 +66,7 @@ def run_correlation_safe(x_img_path, imgY, atlas_img, mask_img):
         result = (
             f"Gene,{gene}\n"
             f"Pearson correlation,{correlation}\n"
-            f"p-value,{p_value}\n"
+            f"p-value,{p_value}"
         )
 
         return result
