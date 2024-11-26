@@ -38,6 +38,7 @@ def parse_args():
     opts.add_argument('-i', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel, linear, bSpline)', default="nearestNeighbor", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/reg_outputs", default="/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/reg_outputs", action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/reg_outputs/CCFv3-2017_ano_50um_w_fixes_fixed_reg_input.nii.gz', default='/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m_50um/reg_outputs/CCFv3-2017_ano_50um_w_fixes_fixed_reg_input.nii.gz', action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.15 (15%).', default=0.15, type=float, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -52,7 +53,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    forward_warp(args.fixed_img, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.interpol, output=args.output)
+    forward_warp(args.fixed_img, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.interpol, output=args.output, pad_percent=args.pad_percent)
 
     # Delete the intermediate warped image
     warp_outputs_dir = Path(args.reg_outputs) / "warp_outputs" 

@@ -35,23 +35,25 @@ def parse_args():
     reqs.add_argument('-o', '--output', help='path/native_image.nii.gz', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-i', '--interpol', help='Interpolator warping with ants.apply_transforms (nearestNeighbor, multiLabel [default], linear, bSpline)', default="multiLabel", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``) w/ padding in <reg_outputs>. E.g., autofl_50um_masked_fixed_reg_input.nii.gz', required=True, action=SM)
-    opts.add_argument('-i', '--interpol', help='Interpolator warping with ants.apply_transforms (nearestNeighbor, multiLabel [default], linear, bSpline)', default="multiLabel", action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.15 (15%).', default=0.15, type=float, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 
+# TODO: Can calculate_padded_dimensions() here and calculate_resampled_padded_dimensions() in to_native.py be combined?
 
 @print_func_name_args_times()
-def calculate_padded_dimensions(original_dimensions, pad_fraction=0.15):
+def calculate_padded_dimensions(original_dimensions, pad_percent=0.15):
     # Calculate padding for the original dimensions (15% of the original dimensions)
     padded_dimensions = []
     for dim in original_dimensions:
         # Calculate pad width for one side, then round to the nearest integer
-        pad_width_one_side = np.round(pad_fraction * dim)
+        pad_width_one_side = np.round(pad_percent * dim)
         # Calculate total padding for the dimension (both sides)
         total_pad = 2 * pad_width_one_side
         # Calculate new dimension after padding
@@ -61,7 +63,7 @@ def calculate_padded_dimensions(original_dimensions, pad_fraction=0.15):
     return np.array(original_dimensions), np.array(padded_dimensions)
 
 @print_func_name_args_times()
-def forward_warp(fixed_img_path, reg_outputs_path, fixed_reg_in, moving_img_path, interpol, output=None):
+def forward_warp(fixed_img_path, reg_outputs_path, fixed_reg_in, moving_img_path, interpol, output=None, pad_percent=0.15):
     """Warp image from atlas space to tissue space and scale to full resolution"""
 
     # Warp the moving image to tissue space
@@ -83,7 +85,7 @@ def forward_warp(fixed_img_path, reg_outputs_path, fixed_reg_in, moving_img_path
     original_dimensions = np.array([x_dim, y_dim, z_dim])
 
     # Calculate resampled and padded dimensions
-    dims, padded_dims = calculate_padded_dimensions(original_dimensions, pad_fraction=0.15)
+    dims, padded_dims = calculate_padded_dimensions(original_dimensions, pad_percent=pad_percent)
 
     # Determine where to start cropping (combined padding size) // 2 for padding on one side
     crop_mins = (padded_dims - dims) // 2
@@ -110,7 +112,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    forward_warp(args.fixed_img, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.interpol, output=args.output)
+    forward_warp(args.fixed_img, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.interpol, output=args.output, pad_percent=args.pad_percent)
 
     verbose_end_msg()
 

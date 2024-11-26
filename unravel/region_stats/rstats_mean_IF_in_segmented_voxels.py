@@ -65,6 +65,7 @@ def parse_args():
     opts_to_native.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     opts_to_native.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts_to_native.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
+    opts_to_native.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.15 (15%).', default=0.15, type=float, action=SM)
 
     compatability = parser.add_argument_group('Compatability options for to_native()')
     compatability.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
@@ -157,7 +158,7 @@ def main():
                 fixed_reg_input = Path(sample_path, args.reg_outputs, args.fixed_reg_in) 
                 if not fixed_reg_input.exists():
                     fixed_reg_input = sample_path / args.reg_outputs / "autofl_50um_fixed_reg_input.nii.gz"
-                native_atlas = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.atlas, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_atlas_path)
+                native_atlas = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.atlas, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_atlas_path, pad_percent=args.pad_percent)
 
             # Load the segmentation image
             seg_path = next(sample_path.glob(str(args.seg)), None)

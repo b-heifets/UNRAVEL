@@ -9,7 +9,7 @@ Prereq:
 Python usage:
 -------------
     >>> import unravel.warp.to_native as to_native
-    >>> native_img = to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None)
+    >>> native_img = to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None, pad_percent=0.15)
     >>> # native_img is an np.ndarray
 
 Usage:
@@ -43,6 +43,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='Save as rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.15 (15%).', default=0.15, type=float, action=SM)
     opts.add_argument('-i', '--interpol', help='Interpolator for warping with ants.apply_transforms (nearestNeighbor, multiLabel [default], linear, bSpline)', default="multiLabel", action=SM)
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
@@ -59,9 +60,10 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Could make a an unpad function to remove padding from the image based on to_native() and calculate_resampled_padded_dimensions() and use it in to_native()
 
 @print_func_name_args_times()
-def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, target_res=50, pad_fraction=0.15, miracl=False):
+def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, target_res=50, pad_percent=0.15, miracl=False):
     # Calculate zoom factors for xy and z dimensions
     zf_xy = xy_res / target_res
     zf_z = z_res / target_res
@@ -75,9 +77,9 @@ def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, ta
     padded_dimensions = []
     for dim in resampled_dimensions:
         # Calculate pad width for one side, then round to the nearest integer
-        pad_width_one_side = np.round(pad_fraction * dim)
+        pad_percent_one_side = np.round(pad_percent * dim)
         # Calculate total padding for the dimension (both sides)
-        total_pad = 2 * pad_width_one_side
+        total_pad = 2 * pad_percent_one_side
         # Calculate new dimension after padding
         new_dim = dim + total_pad
         padded_dimensions.append(int(new_dim))
@@ -97,7 +99,7 @@ def scale_to_full_res(ndarray, full_res_dims, zoom_order=0):
     return scaled_img
 
 @print_func_name_args_times()
-def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None):
+def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None, pad_percent=0.15):
     """Warp image from atlas space to tissue space and scale to full resolution"""
 
     # Warp the moving image to tissue space
@@ -124,7 +126,7 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
     original_dimensions = np.array([x_dim, y_dim, z_dim])
 
     # Calculate resampled and padded dimensions
-    resampled_dims, padded_dims = calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, reg_res, pad_fraction=0.15, miracl=miracl)
+    resampled_dims, padded_dims = calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, reg_res, pad_percent=pad_percent, miracl=miracl)
 
     # Determine where to start cropping (combined padding size) // 2 for padding on one side
     crop_mins = (padded_dims - resampled_dims) // 2
@@ -174,7 +176,7 @@ def main():
             else:
                 output = None
             
-            to_native(sample_path, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=output)
+            to_native(sample_path, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=output, pad_percent=args.pad_percent)
 
             progress.update(task_id, advance=1)
 

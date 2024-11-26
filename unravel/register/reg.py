@@ -18,7 +18,8 @@ Outputs:
 
 Note:
     - Images in reg_inputs are not padded.
-    - Images in reg_outputs have 15% padding.
+    - Images in reg_outputs have 15% padding by default. 
+    - If <template>_initial_alignment_to_fixed_img.nii.gz goes to the edge, increase padding (otherwise, region labels will be pulled out)
     - ort_code is a 3 letter orientation code of the fixed image if not set in fixed_img (e.g., RAS)
     - Letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Inferior
     - The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)
@@ -70,7 +71,9 @@ def parse_args():
     opts.add_argument('-f', '--fixed_img', help='reg_inputs/autofl_50um_masked.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um_masked.nii.gz", action=SM)
     opts.add_argument('-mas', '--mask', help="Brain mask for bias correction. Default: reg_inputs/autofl_50um_brain_mask.nii.gz. or pass in None", default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from ``reg`` (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
-    opts.add_argument('-bc', '--bias_correct', help='Perform N4 bias field correction. Default: False', action='store_true', default=False)
+    opts.add_argument('-bc', '--bias_correct', help='Perform N4 bias field correction on autofluo image. Default: False', action='store_true', default=False)
+    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding to add to each dimension of the fixed image (gives space for initial alignment of the moving image). Default: 0.15 (15%).', default=0.15, type=float, action=SM)
+
     opts.add_argument('-sm', '--smooth', help='Sigma value for smoothing the fixed image. Default: 0 for no smoothing. Use 0.4 for autofl', default=0, type=float, action=SM)
     opts.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     opts.add_argument('-m2', '--moving_img2', help='path/atlas.nii.gz (outputs <reg_outputs>/<atlas>_in_tissue_space.nii.gz for checking reg; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
@@ -150,7 +153,7 @@ def main():
 
                 # Pad the fixed image with 15% of voxels on all sides (keeps moving img in frame during initial alignment and avoids edge effects)
                 print(f'\n    Adding padding to the registration input\n')
-                fixed_img = pad(fixed_img, pad_width=0.15)
+                fixed_img = pad(fixed_img, pad_percent=args.pad_percent)
 
                 # Optionally smooth the fixed image (e.g., when it is an autofluorescence image)
                 if args.smooth > 0:
