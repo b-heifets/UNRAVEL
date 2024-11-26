@@ -54,17 +54,19 @@ def run_correlation_safe(x_img_path, imgY, atlas_img, mask_img):
 
         correlation, p_value = compute_regionwise_correlation_parallel(imgX, imgY, atlas_img)
 
+        gene = str(Path(x_img_path).name).split('_')[0]
+
         # Format the result
         result = (
-            f"Exp_Map,{Path(x_img_path).name}"
-            f"Pearson correlation,{correlation}"
-            f"p-value,{p_value}"
+            f"Gene,{gene}\n"
+            f"Pearson correlation,{correlation}\n"
+            f"p-value,{p_value}\n"
         )
 
         return result
 
     except Exception as e:
-        return f"Error for X: {Path(x_img_path).name} {str(e)}\n"
+        return f"Error for: {Path(x_img_path).name} {str(e)}\n"
 
 def compute_regionwise_correlation_parallel(imgX, imgY, atlas_img):
     """Compute the region-wise correlation between two images, using the provided atlas image and mask image."""
