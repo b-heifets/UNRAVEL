@@ -35,7 +35,7 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-x', '--x_img_glob', help='path/x_axis_image_*.nii.gz', required=True, action=SM)
     reqs.add_argument('-y', '--y_image', help='path/y_axis_image.nii.gz (can pass in list of images)', nargs='*', required=True, action=SM)
-    opts.add_argument('-a', '--atlas', help='Path to the atlas NIfTI file for a region-wise correlation. Default: None', required=True, action=SM)
+    reqs.add_argument('-a', '--atlas', help='Path to the atlas NIfTI file for a region-wise correlation. Default: None', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-mas', '--masks', help='Paths to mask .nii.gz files to restrict analysis. Default: None', nargs='*', default=None, action=SM)
@@ -52,7 +52,6 @@ def run_correlation_safe(x_img_path, imgY, atlas_img, mask_img):
         imgX = load_nii(x_img_path)
         imgX = np.where(mask_img, imgX, 0) # Apply mask to X image
 
-        # compute_regionwise_correlation(imgX, imgY, atlas_img, mask_list, args.min_voxels, args.verbose)
         correlation, p_value = compute_regionwise_correlation_parallel(imgX, imgY, atlas_img)
 
         # Format the result
@@ -104,10 +103,10 @@ def main():
         for mask_path in args.masks:
             mask_imgs.append(load_mask(mask_path))
 
-    if Path(args.csv_path).exists():
+    if Path(args.atlas).exists():
         atlas_img = load_nii(args.atlas)
     else:
-        print(f"\n    [red1]{atlas_img} does not exist. Exiting...\n")
+        print(f"\n    [red1]{Path(args.atlas).exists()} does not exist. Exiting...\n")
         return
 
     for y_img_path in y_img_paths:
