@@ -427,11 +427,12 @@ def process_files_with_glob(glob_pattern, processing_func, *args, **kwargs):
         file_path = Path(file_path).resolve()
         processing_func(file_path, *args, **kwargs)
 
-def get_pad_percent(sample_path, pad_percent):
+@print_func_name_args_times()
+def get_pad_percent(reg_outputs_path, pad_percent):
     if pad_percent is not None:
         return pad_percent
 
-    pad_txt = sample_path / "parameters" / "pad_percent.txt"
+    pad_txt = reg_outputs_path / "pad_percent.txt"
     if pad_txt.exists():
         with open(pad_txt, "r") as f:
             try:
