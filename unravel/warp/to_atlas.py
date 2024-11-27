@@ -46,7 +46,7 @@ def parse_args():
     opts.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
     opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
-    opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], multiLabel, nearestNeighbor).', default='bSpline', action=SM) # or 
+    opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline \[default], multiLabel, nearestNeighbor).', default='bSpline', action=SM) # or 
     opts.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the raw image to --reg_res. Default: 1', default=1, type=int, action=SM)
 
     compatability = parser.add_argument_group('Compatability options')

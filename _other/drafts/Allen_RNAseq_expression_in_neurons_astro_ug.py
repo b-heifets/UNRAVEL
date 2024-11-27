@@ -55,7 +55,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-b', '--base', help='Path to the root directory of the data', required=True, action=SM)
+    reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
     reqs.add_argument('-g', '--genes', help='Space-separated list of genes to analyze', required=True, nargs='*', action=SM)
     reqs.add_argument('-o', '--output', help='path/expression_metrics.csv', required=True, action=SM)
     reqs.add_argument('-s', '--species', help='Species: "mouse" or "human"', required=True, choices=['mouse', 'human'], action=SM)

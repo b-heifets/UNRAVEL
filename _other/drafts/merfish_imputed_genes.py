@@ -32,6 +32,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Make this script more general by allowing the user to specify the path to the expression data file. 
 
 @log_command
 def main():

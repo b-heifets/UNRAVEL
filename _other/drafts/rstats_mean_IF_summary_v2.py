@@ -8,6 +8,8 @@ Prereqs:
 
 Inputs:
     - CSV files in the working directory with mean IF intensities for each region
+    - Input CSVs should have the condition name as the prefix (e.g., Saline_sample06, MDMA_sample01, Meth_sample23)
+    - Only use one-word prefixes (e.g., Saline, MDMA, Meth)
 
 Outputs:
     - Saved to ./<args.test_type>_plots_<side>
@@ -63,7 +65,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-t', '--test_type', help="Type of statistical test to use: 'tukey' (default), 't-test'", choices=['tukey', 't-test'], default='tukey', action=SM)  # Add 'dunnett' later
     opts.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", action=SM)  # Does the control need to be specified for a t-test? First group could be the control.
-    opts.add_argument('-alt', "--alternate", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' [default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
+    opts.add_argument('-alt', "--alternate", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' \[default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
     opts.add_argument('-y', '--ylabel', help='Y-axis label (Default: Mean IF)', default='Mean IF', action=SM)
     opts.add_argument('-c1', '--csv1_path', help='CSV name or path/name.csv. Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default='CCFv3-2020__regionID_side_IDpath_region_abbr.csv', action=SM)
     opts.add_argument('-c2', '--csv2_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)

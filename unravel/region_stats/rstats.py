@@ -60,7 +60,7 @@ def parse_args():
     key_opts = parser.add_argument_group('Key options')
     key_opts.add_argument('-a', '--atlas_path', help='rel_path/native_atlas_split.nii.gz (use this -a if this exists from ``warp_to_native``, otherwise use -m ; "split" == left label IDs increased by 20,000)', default=None, action=SM)
     key_opts.add_argument('-m', '--moving_img', help='path/atlas_image.nii.gz to warp from atlas space', default=None, action=SM)
-    key_opts.add_argument('-t', '--type', help='Type of measurement (options: counts, region_volumes, cell_densities [default], label_volumes, or label_densities)', default='cell_densities', action=SM)
+    key_opts.add_argument('-t', '--type', help='Type of measurement (options: counts, region_volumes, cell_densities \[default], label_volumes, or label_densities)', default='cell_densities', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
