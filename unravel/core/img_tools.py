@@ -151,7 +151,7 @@ def pad(ndarray, pad_percent=0.15):
         Input 3D ndarray to pad.
 
     pad_percent : float
-        Percentage of padding to add to each dimension. Default: 0.15 (15%).
+        Percentage of padding to add to each dimension. Default: 0.15 (15%%).
 
     Returns:
     --------
