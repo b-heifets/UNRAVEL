@@ -48,7 +48,6 @@ def parse_args():
     opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.15 (15%%).', default=0.15, type=float, action=SM)
     opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], multiLabel, nearestNeighbor).', default='bSpline', action=SM) # or 
     opts.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the raw image to --reg_res. Default: 1', default=1, type=int, action=SM)
-    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.15 (15%%).', default=0.15, type=float, action=SM)
 
     compatability = parser.add_argument_group('Compatability options')
     compatability.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
