@@ -51,7 +51,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times
+from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times
 from unravel.warp.to_atlas import to_atlas
 
 
@@ -68,7 +68,7 @@ def parse_args():
     tissue_mask_opts.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. For example, reg_inputs/autofl_50um_brain_mask.nii.gz', default=None, action=SM)
     tissue_mask_opts.add_argument('-fri', '--fixed_reg_in', help='Fixed image from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     tissue_mask_opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a reference image for warping the tissue mask to atlas space. Default: atlas/atlas_CCFv3_2020_30um.nii.gz', default=None, action=SM)
-    tissue_mask_opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.15 (15%%).', default=0.15, type=float, action=SM)
+    tissue_mask_opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
 
     atlas_mask_opts = parser.add_argument_group('Optional args for using an atlas mask')
     atlas_mask_opts.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
@@ -226,7 +226,8 @@ def main():
                     atlas_mask_path = None
 
                 # Get the mask image
-                mask_img = z_score_mask(sample_path, input_path, args.fixed_reg_in, args.atlas, tissue_mask_path, atlas_mask_path, pad_percent=args.pad_percent, verbose=args.verbose)
+                pad_percent = get_pad_percent(sample_path, args.pad_percent)
+                mask_img = z_score_mask(sample_path, input_path, args.fixed_reg_in, args.atlas, tissue_mask_path, atlas_mask_path, pad_percent=pad_percent, verbose=args.verbose)
 
                 # Z-score the image using the mask and save the output
                 z_score(input_path, mask_img, args.suffix)

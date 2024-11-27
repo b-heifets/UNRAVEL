@@ -32,7 +32,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt
 from unravel.core.img_tools import rolling_ball_subtraction_opencv_parallel
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
+from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 from unravel.register.reg_prep import reg_prep
 from unravel.warp.to_atlas import to_atlas
 
@@ -56,7 +56,7 @@ def parse_args():
     opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default]).', default='bSpline', action=SM)
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts.add_argument('-th', '--threads', help='Number of threads for rolling ball subtraction. Default: 8', default=8, type=int, action=SM)
-    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.15 (15%%).', default=0.15, type=float, action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
 
     compatability = parser.add_argument_group('Compatability options')
     compatability.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
@@ -122,8 +122,8 @@ def main():
             fixed_reg_input = Path(sample_path, args.fixed_reg_in)    
             if not fixed_reg_input.exists():
                 fixed_reg_input = sample_path / "reg_outputs" / "autofl_50um_fixed_reg_input.nii.gz"
-
-            to_atlas(sample_path, img, fixed_reg_input, args.atlas, output, args.interpol, dtype='uint16', pad_percent=args.pad_percent)
+            pad_percent = get_pad_percent(sample_path, args.pad_percent)
+            to_atlas(sample_path, img, fixed_reg_input, args.atlas, output, args.interpol, dtype='uint16', pad_percent=pad_percent)
 
             # Copy the atlas to atlas_space
             atlas_space = sample_path / "atlas_space"
