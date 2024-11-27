@@ -429,6 +429,8 @@ def process_files_with_glob(glob_pattern, processing_func, *args, **kwargs):
 
 @print_func_name_args_times()
 def get_pad_percent(reg_outputs_path, pad_percent):
+    # TODO: Could change this from reg_outputs_path to relative path to pad_percent.txt
+
     if pad_percent is not None:
         return pad_percent
 
