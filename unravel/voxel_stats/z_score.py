@@ -226,7 +226,7 @@ def main():
                     atlas_mask_path = None
 
                 # Get the mask image
-                pad_percent = get_pad_percent(sample_path, args.pad_percent)
+                pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, args.pad_percent)
                 mask_img = z_score_mask(sample_path, input_path, args.fixed_reg_in, args.atlas, tissue_mask_path, atlas_mask_path, pad_percent=pad_percent, verbose=args.verbose)
 
                 # Z-score the image using the mask and save the output

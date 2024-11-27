@@ -133,7 +133,7 @@ def main():
             if np.max(points_resampled_img) > 0:
                 dtype = 'uint16' if np.max(points_resampled_img) > 255 else 'uint8'
         
-            pad_percent = get_pad_percent(sample_path, args.pad_percent)
+            pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, args.pad_percent)
             to_atlas(sample_path, points_resampled_img, args.fixed_reg_in, args.atlas, output_img_path, 'nearestNeighbor', dtype=dtype, pad_percent=pad_percent)
 
             progress.update(task_id, advance=1)

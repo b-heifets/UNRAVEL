@@ -153,7 +153,8 @@ def main():
                 # Pad the fixed image with 15% of voxels on all sides (keeps moving img in frame during initial alignment, avoiding edge effects)
                 print(f'\n    Adding padding to the registration input\n')
                 fixed_img = pad(fixed_img, pad_percent=args.pad_percent)
-                with open(sample_path / "parameters" / "pad_percent.txt", 'w') as f:
+                pad_txt = reg_outputs_path / "pad_percent.txt"
+                with open(pad_txt, 'w') as f:
                     f.write(str(args.pad_percent))
 
                 # Optionally smooth the fixed image (e.g., when it is an autofluorescence image)

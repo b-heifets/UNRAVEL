@@ -148,7 +148,7 @@ def main():
             img = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
 
             # Warp native image to atlas space
-            pad_percent = get_pad_percent(sample_path, args.pad_percent)
+            pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, args.pad_percent)
             to_atlas(sample_path, img, args.fixed_reg_in, args.atlas, output, args.interpol, dtype='uint16', pad_percent=pad_percent)
 
             progress.update(task_id, advance=1)

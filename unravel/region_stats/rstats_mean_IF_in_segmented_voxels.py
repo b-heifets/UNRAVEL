@@ -158,7 +158,7 @@ def main():
                 fixed_reg_input = Path(sample_path, args.reg_outputs, args.fixed_reg_in) 
                 if not fixed_reg_input.exists():
                     fixed_reg_input = sample_path / args.reg_outputs / "autofl_50um_fixed_reg_input.nii.gz"
-                pad_percent = get_pad_percent(sample_path, args.pad_percent)
+                pad_percent = get_pad_percent(sample_path / args.reg_outputs, args.pad_percent)
                 native_atlas = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.atlas, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_atlas_path, pad_percent=pad_percent)
 
             # Load the segmentation image

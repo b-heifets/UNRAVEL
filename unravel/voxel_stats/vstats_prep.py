@@ -122,7 +122,7 @@ def main():
             fixed_reg_input = Path(sample_path, args.fixed_reg_in)    
             if not fixed_reg_input.exists():
                 fixed_reg_input = sample_path / "reg_outputs" / "autofl_50um_fixed_reg_input.nii.gz"
-            pad_percent = get_pad_percent(sample_path, args.pad_percent)
+            pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, args.pad_percent)
             to_atlas(sample_path, img, fixed_reg_input, args.atlas, output, args.interpol, dtype='uint16', pad_percent=pad_percent)
 
             # Copy the atlas to atlas_space

@@ -312,7 +312,7 @@ def main():
                 fixed_reg_input = sample_path / args.reg_outputs / args.fixed_reg_in
                 if not fixed_reg_input.exists():
                     fixed_reg_input = sample_path / args.reg_outputs / "autofl_50um_fixed_reg_input.nii.gz"
-                pad_percent = get_pad_percent(sample_path, args.pad_percent)
+                pad_percent = get_pad_percent(sample_path / args.reg_outputs, args.pad_percent)
                 atlas_img = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.moving_img, args.metadata, args.reg_res, args.miracl, int(0), 'multiLabel', output=None, pad_percent=pad_percent)
             else:
                 print("    [red1]Atlas image not found. Please provide a path to the atlas image or the moving image")
