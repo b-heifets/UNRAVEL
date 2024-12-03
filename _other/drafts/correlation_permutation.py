@@ -172,7 +172,7 @@ def main():
 
             # Save the results to a CSV file
             output_path = str(y_img_path).replace('.nii.gz', '_correlations_permutations.xlsx')
-            key_val_to_excel(results, output_path, args.delimiter)
+            key_val_to_excel(results, output_path, delimiter=",")
 
 
 if __name__ == '__main__':
