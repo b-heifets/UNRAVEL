@@ -336,6 +336,9 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
     -----
     - If xy_res and z_res are provided, they will be used instead of the values from the metadata.
     """
+    if not Path(nii_path).exists():
+        raise FileNotFoundError(f"\nInput file not found: {nii_path}\n")
+
     nii = nib.load(nii_path)
     ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
