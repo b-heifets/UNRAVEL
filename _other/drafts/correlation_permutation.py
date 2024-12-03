@@ -26,12 +26,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from glob import glob
 from pathlib import Path
 from rich import print
+from rich.live import Live
 from rich.traceback import install
 from scipy.stats import pearsonr
 
 from _other.drafts._tabular_data.key_value_to_excel import key_val_to_excel
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.utils import log_command
+from unravel.core.utils import initialize_progress_bar, log_command
 from unravel.core.img_io import load_nii
 from unravel.region_stats.rstats_mean_IF import calculate_mean_intensity
 from unravel.voxel_stats.apply_mask import load_mask
@@ -48,11 +49,13 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-mas', '--masks', help='Paths to mask .nii.gz files to restrict analysis. Default: None', nargs='*', default=None, action=SM)
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
+    opts.add_argument('-p', '--permutations', help='Number of permutations to perform. Default: 10000', default=10000, type=int, action=SM)
+    opts.add_argument('-s', '--seed', help='Seed for the random number generator used for permutations. Default: 42', default=42, type=int, action=SM)
 
     return parser.parse_args()
     
 
-def run_correlation_safe(x_img_path, imgY, atlas_img, mask_img):
+def run_correlation_safe(x_img_path, imgY, atlas_img, mask_img, n_permutations=10000, seed=42):
     """
     Wrapper for running the correlation computation for a specific X and Y file pair.
     Captures results for sequential printing.
@@ -61,7 +64,7 @@ def run_correlation_safe(x_img_path, imgY, atlas_img, mask_img):
         imgX = load_nii(x_img_path)
         imgX = np.where(mask_img, imgX, 0) # Apply mask to X image
 
-        correlation, p_value = parallel_regionwise_correlations_and_permutations(imgX, imgY, atlas_img)
+        correlation, p_value = parallel_regionwise_correlations_and_permutations(imgX, imgY, atlas_img, n_permutations, seed)
 
         gene = str(Path(x_img_path).name).split('_')[0]
 
@@ -77,7 +80,7 @@ def run_correlation_safe(x_img_path, imgY, atlas_img, mask_img):
     except Exception as e:
         return f"Error for: {Path(x_img_path).name} {str(e)}\n"
 
-def parallel_regionwise_correlations_and_permutations(imgX, imgY, atlas_img, n_permutations=1000):
+def parallel_regionwise_correlations_and_permutations(imgX, imgY, atlas_img, n_permutations=10000, seed=42):
     """Compute the region-wise correlation between two images, using the provided atlas image and mask image."""
 
     # Get unique region IDs from the atlas image
@@ -101,9 +104,10 @@ def parallel_regionwise_correlations_and_permutations(imgX, imgY, atlas_img, n_p
     # Compute the Pearson correlation between the mean intensities
     observed_corr = pearsonr(imgX_mean, imgY_mean)[0]
 
-    # Vectorized permutation testing
+    # Vectorized permutation testing with a fixed seed
+    rng = np.default_rng(seed=seed) 
     permuted_corrs = np.array([
-        pearsonr(np.random.permutation(imgX_mean), imgY_mean)[0]
+        pearsonr(rng.permutation(imgX_mean), imgY_mean)[0]
         for _ in range(n_permutations)
     ])
 
@@ -157,14 +161,19 @@ def main():
         results = []
         with ThreadPoolExecutor() as executor:
             tasks = [
-                (x_img_path, imgY_masked, atlas_img_masked, mask_img)
+                (x_img_path, imgY_masked, atlas_img_masked, mask_img, args.permutations, args.seed)
                 for x_img_path in x_img_paths
             ]
+
             future_to_task = {executor.submit(run_correlation_safe, *task): task for task in tasks}
 
-            for future in as_completed(future_to_task):
-                result = future.result()
-                results.append(result)
+            progress, task_id = initialize_progress_bar(len(x_img_paths), "[red]Processing X images...")
+
+            with Live(progress):
+                for future in as_completed(future_to_task):
+                    result = future.result()
+                    results.append(result)
+                    progress.update(task_id, advance=1)
 
         for result in results:
             print(result)
