@@ -171,8 +171,9 @@ def main():
                 print(result)
 
             # Save the results to a CSV file
+            formatted_results = "\n".join(results) # Combine the results into a single string for key_val_to_excel()
             output_path = str(y_img_path).replace('.nii.gz', '_correlations_permutations.xlsx')
-            key_val_to_excel(results, output_path, delimiter=",")
+            key_val_to_excel(formatted_results, output_path, delimiter=",")
 
 
 if __name__ == '__main__':
