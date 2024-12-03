@@ -26,7 +26,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from glob import glob
 from pathlib import Path
 from rich import print
-from rich.live import Live
+from rich.progress import Progress, BarColumn, TextColumn
 from rich.traceback import install
 from scipy.stats import pearsonr
 
@@ -62,9 +62,9 @@ def run_correlation_safe(x_img_path, imgY, atlas_img, mask_img, n_permutations=1
     """
     try:
         imgX = load_nii(x_img_path)
-        imgX = np.where(mask_img, imgX, 0) # Apply mask to X image
+        imgX = np.where(mask_img, imgX, 0)  # Apply mask to X image
 
-        correlation, p_value = parallel_regionwise_correlations_and_permutations(imgX, imgY, atlas_img, n_permutations, seed)
+        correlation, p_value = compute_regionwise_correlation_parallel(imgX, imgY, atlas_img, n_permutations, seed)
 
         gene = str(Path(x_img_path).name).split('_')[0]
 
@@ -80,7 +80,7 @@ def run_correlation_safe(x_img_path, imgY, atlas_img, mask_img, n_permutations=1
     except Exception as e:
         return f"Error for: {Path(x_img_path).name} {str(e)}\n"
 
-def parallel_regionwise_correlations_and_permutations(imgX, imgY, atlas_img, n_permutations=10000, seed=42):
+def compute_regionwise_correlation_parallel(imgX, imgY, atlas_img, n_permutations=10000, seed=42):
     """Compute the region-wise correlation between two images, using the provided atlas image and mask image."""
 
     # Get unique region IDs from the atlas image
@@ -123,65 +123,53 @@ def main():
     install()
     args = parse_args()
 
-    y_img_paths = [Path(y_image) for y_image in args.y_image]
     x_img_paths = [Path(file) for file in glob(args.x_img_glob)]
+    y_img_paths = [Path(y_image) for y_image in args.y_image]
 
-    # Load masks if provided
-    mask_imgs = []
-    if args.masks:
-        for mask_path in args.masks:
-            mask_imgs.append(load_mask(mask_path))
+    mask_imgs = [load_mask(path) for path in args.masks] if args.masks else []
+    mask_img = np.ones(atlas_img.shape, dtype=bool) if not mask_imgs else np.logical_and.reduce(mask_imgs)
 
-    if Path(args.atlas).exists():
-        atlas_img = load_nii(args.atlas)
-    else:
-        print(f"\n    [red1]{Path(args.atlas).exists()} does not exist. Exiting...\n")
-        return
+    atlas_img = load_nii(args.atlas)
+    atlas_img = np.where(mask_img, atlas_img, 0)
 
-    for y_img_path in y_img_paths:
-        print("\n")
-        print(f"[bold cyan]{y_img_path}[/bold cyan]")
-        print("\n")
+    # Use Rich progress bar
+    with Progress(
+        TextColumn("[bold blue]{task.description}"),
+        BarColumn(),
+        "[progress.percentage]{task.percentage:>3.0f}%",
+    ) as progress:
+        # Iterate over Y-axis images
+        for y_img_path in y_img_paths:
+            print(f"\nProcessing Y-axis image: [bold cyan]{y_img_path}\n")
 
-        if y_img_path.exists():
             imgY = load_nii(y_img_path)
-        else:
-            print(f"    [red1]{y_img_path} does not exist. Skipping...")
-            continue
+            imgY = np.where(mask_img, imgY, 0)
 
-        # Apply mask(s) if provided
-        if mask_imgs:
-            mask_img = np.ones(imgY.shape, dtype=bool)
-            for mask in mask_imgs:
-                mask_img = mask_img & mask.astype(bool)
-        imgY_masked = np.where(mask_img, imgY, 0)
-        atlas_img_masked = np.where(mask_img, atlas_img, 0)
+            # Add progress task for X-axis images
+            task_id = progress.add_task(f"Processing {y_img_path.name}", total=len(x_img_paths))
 
-        # Get correlation results for each X image in parallel
-        results = []
-        with ThreadPoolExecutor() as executor:
-            tasks = [
-                (x_img_path, imgY_masked, atlas_img_masked, mask_img, args.permutations, args.seed)
-                for x_img_path in x_img_paths
-            ]
+            # Get correlation results for each X image in parallel
+            results = []
+            with ThreadPoolExecutor() as executor:
+                future_to_task = {
+                    executor.submit(run_correlation_safe, x_img_path, imgY, atlas_img, mask_img, args.seed, args.permutations): x_img_path
+                    for x_img_path in x_img_paths
+                }
 
-            future_to_task = {executor.submit(run_correlation_safe, *task): task for task in tasks}
-
-            progress, task_id = initialize_progress_bar(len(x_img_paths), "[red]Processing X images...")
-
-            with Live(progress):
                 for future in as_completed(future_to_task):
-                    result = future.result()
-                    results.append(result)
-                    progress.update(task_id, advance=1)
+                        result = future.result()
+                        if result:
+                            results.append(result)
+                        progress.advance(task_id)
 
-        for result in results:
-            print(result)
+            for result in results:
+                print(result)
 
-        # Save the results to a CSV file
-        output_path = str(y_img_path).replace('.nii.gz', '_correlations_permutations.xlsx')
-        key_val_to_excel(results, output_path, args.delimiter)
+            # Save the results to a CSV file
+            output_path = str(y_img_path).replace('.nii.gz', '_correlations_permutations.xlsx')
+            key_val_to_excel(results, output_path, args.delimiter)
 
+            print(f"[green]Results saved to {output_path}[/green]")
 
 if __name__ == '__main__':
     main()
