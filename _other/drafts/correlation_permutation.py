@@ -29,6 +29,7 @@ from rich import print
 from rich.traceback import install
 from scipy.stats import pearsonr
 
+from _other.drafts._tabular_data.key_value_to_excel import key_val_to_excel
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.utils import log_command
 from unravel.core.img_io import load_nii
@@ -169,9 +170,8 @@ def main():
             print(result)
 
         # Save the results to a CSV file
-        output_path = str(y_img_path).replace('.nii.gz', '_correlations.csv')
-        with open(output_path, 'w') as f:
-            f.write('\n'.join(results))
+        output_path = str(y_img_path).replace('.nii.gz', '_correlations_permutations.xlsx')
+        key_val_to_excel(results, output_path, args.delimiter)
 
 
 if __name__ == '__main__':
