@@ -105,7 +105,7 @@ def compute_regionwise_correlation_parallel(imgX, imgY, atlas_img, n_permutation
     observed_corr = pearsonr(imgX_mean, imgY_mean)[0]
 
     # Vectorized permutation testing with a fixed seed
-    rng = np.default_rng(seed=seed) 
+    rng = np.random.default_rng(seed)
     permuted_corrs = np.array([
         pearsonr(rng.permutation(imgX_mean), imgY_mean)[0]
         for _ in range(n_permutations)
