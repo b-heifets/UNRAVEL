@@ -126,9 +126,11 @@ def main():
     x_img_paths = [Path(file) for file in glob(args.x_img_glob)]
     y_img_paths = [Path(y_image) for y_image in args.y_image]
 
+    print("\n    Loading masks and making composite mask...")
     mask_imgs = [load_mask(path) for path in args.masks] if args.masks else []
     mask_img = np.ones(atlas_img.shape, dtype=bool) if not mask_imgs else np.logical_and.reduce(mask_imgs)
 
+    print("\n    Loading atlas image and applying mask...")
     atlas_img = load_nii(args.atlas)
     atlas_img = np.where(mask_img, atlas_img, 0)
 
@@ -140,27 +142,30 @@ def main():
     ) as progress:
         # Iterate over Y-axis images
         for y_img_path in y_img_paths:
-            print(f"\nProcessing Y-axis image: [bold cyan]{y_img_path}\n")
+            print(f"\n    Loading Y-axis image and masking: [bold cyan]{y_img_path}\n")
 
             imgY = load_nii(y_img_path)
             imgY = np.where(mask_img, imgY, 0)
 
             # Add progress task for X-axis images
             task_id = progress.add_task(f"Processing {y_img_path.name}", total=len(x_img_paths))
-
+            
             # Get correlation results for each X image in parallel
+            print(f"\n    Calculating region-wise correlations for {len(x_img_paths)} X-axis images...\n")
             results = []
             with ThreadPoolExecutor() as executor:
-                future_to_task = {
-                    executor.submit(run_correlation_safe, x_img_path, imgY, atlas_img, mask_img, args.seed, args.permutations): x_img_path
+                tasks = [
+                    (x_img_path, imgY, atlas_img, mask_img, args.permutations, args.seed)
                     for x_img_path in x_img_paths
-                }
+                ]
+
+                future_to_task = {executor.submit(run_correlation_safe, *task): task for task in tasks}
 
                 for future in as_completed(future_to_task):
-                        result = future.result()
-                        if result:
-                            results.append(result)
-                        progress.advance(task_id)
+                    result = future.result()
+                    if result:
+                        results.append(result)
+                    progress.advance(task_id)
 
             for result in results:
                 print(result)
@@ -169,7 +174,6 @@ def main():
             output_path = str(y_img_path).replace('.nii.gz', '_correlations_permutations.xlsx')
             key_val_to_excel(results, output_path, args.delimiter)
 
-            print(f"[green]Results saved to {output_path}[/green]")
 
 if __name__ == '__main__':
     main()
