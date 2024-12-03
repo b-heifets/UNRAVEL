@@ -107,8 +107,8 @@ def key_val_to_excel(data, output_path, delimiter=","):
         The delimiter used to separate keys and values. Default is ','.
     """
     df = parse_key_value_data(data, delimiter)
-    Path(output_file).mkdir(parents=True, exist_ok=True)
-    df.to_excel(output_file, index=False)
+    Path(output_path).mkdir(parents=True, exist_ok=True)
+    df.to_excel(output_path, index=False)
 
 
 @log_command
