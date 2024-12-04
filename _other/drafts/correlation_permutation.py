@@ -32,7 +32,7 @@ from scipy.stats import pearsonr
 
 from _other.drafts._tabular_data.key_value_to_excel import key_val_to_excel
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.utils import initialize_progress_bar, log_command
+from unravel.core.utils import log_command
 from unravel.core.img_io import load_nii
 from unravel.region_stats.rstats_mean_IF import calculate_mean_intensity
 from unravel.voxel_stats.apply_mask import load_mask
@@ -142,7 +142,7 @@ def main():
     ) as progress:
         # Iterate over Y-axis images
         for y_img_path in y_img_paths:
-            print(f"\n    Loading Y-axis image and masking: [bold cyan]{y_img_path}\n")
+            print(f"\n    Loading Y-axis image and masking: [bold cyan]{y_img_path}")
 
             imgY = load_nii(y_img_path)
             imgY = np.where(mask_img, imgY, 0)
