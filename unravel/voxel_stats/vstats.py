@@ -161,9 +161,16 @@ def main():
     stats_dir.mkdir(exist_ok=True)
 
     # Copy the mask and the atlas to the stats directory using shutil
-    if args.mask:
+    if args.mask and Path(args.mask).exists():
         shutil.copy(args.mask, stats_dir)
-    shutil.copy(args.atlas, stats_dir)
+    elif args.mask and not Path(args.mask).exists():
+        print(f"\n    [yellow]{args.mask} does not exist. Please provide a valid mask file. Skipping masking and copying to stats/\n")
+
+    if Path(args.atlas).exists():
+        shutil.copy(args.atlas, stats_dir)
+    else:
+        print(f"\n    [yellow]{args.atlas} does not exist. Skipping copying to stats/\n")
+
 
     # Merge and smooth the input images
     images = sorted(glob('*.nii.gz'))
