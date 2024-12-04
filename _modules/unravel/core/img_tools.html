@@ -510,9 +510,23 @@
 <div class="viewcode-block" id="pad">
 <a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.pad">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pad_width</span><span class="o">=</span><span class="mf">0.15</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pads ndarray by 15% of voxels on all sides&quot;&quot;&quot;</span>
-    <span class="n">pad_factor</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pad_width</span>
+<span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pad_percent</span><span class="o">=</span><span class="mf">0.15</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pads ndarray by a specified percentage.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    ndarray : numpy.ndarray</span>
+<span class="sd">        Input 3D ndarray to pad.</span>
+
+<span class="sd">    pad_percent : float</span>
+<span class="sd">        Percentage of padding to add to each dimension. Default: 0.15 (15%%).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    padded_ndarray : numpy.ndarray</span>
+<span class="sd">        Padded 3D ndarray.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pad_factor</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">pad_percent</span>
     <span class="n">pad_width_x</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(((</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">pad_factor</span><span class="p">)</span> <span class="o">-</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">pad_width_y</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(((</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">pad_factor</span><span class="p">)</span> <span class="o">-</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
     <span class="n">pad_width_z</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(((</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">pad_factor</span><span class="p">)</span> <span class="o">-</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
