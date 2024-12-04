@@ -834,6 +834,27 @@
         <span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
         <span class="n">processing_func</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="get_pad_percent">
+<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.get_pad_percent">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">get_pad_percent</span><span class="p">(</span><span class="n">reg_outputs_path</span><span class="p">,</span> <span class="n">pad_percent</span><span class="p">):</span>
+    <span class="c1"># TODO: Could change this from reg_outputs_path to relative path to pad_percent.txt</span>
+
+    <span class="k">if</span> <span class="n">pad_percent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pad_percent</span>
+
+    <span class="n">pad_txt</span> <span class="o">=</span> <span class="n">reg_outputs_path</span> <span class="o">/</span> <span class="s2">&quot;pad_percent.txt&quot;</span>
+    <span class="k">if</span> <span class="n">pad_txt</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pad_txt</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+            <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Warning: Invalid value in pad_percent.txt. Using default pad_percent = 0.15&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Warning: pad_percent.txt not found. Using default pad_percent = 0.15&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">0.15</span></div>
+
 </pre></div>
 
                 </article>

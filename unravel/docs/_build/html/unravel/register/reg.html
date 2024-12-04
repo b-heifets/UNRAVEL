@@ -522,7 +522,8 @@
 <p class="admonition-title">Note</p>
 <ul class="simple">
 <li><p>Images in reg_inputs are not padded.</p></li>
-<li><p>Images in reg_outputs have 15% padding.</p></li>
+<li><p>Images in reg_outputs have 15% padding by default.</p></li>
+<li><p>If &lt;template&gt;_initial_alignment_to_fixed_img.nii.gz goes to the edge, increase padding (otherwise, region labels will be pulled out)</p></li>
 <li><p>ort_code is a 3 letter orientation code of the fixed image if not set in fixed_img (e.g., RAS)</p></li>
 <li><p>Letter options: A/P=Anterior/Posterior, L/R=Left/Right, S/I=Superior/Inferior</p></li>
 <li><p>The side of the brain at the positive direction of the x, y, and z axes determines the 3 letters (axis order xyz)</p></li>

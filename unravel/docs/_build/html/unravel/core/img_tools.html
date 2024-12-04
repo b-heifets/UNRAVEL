@@ -579,8 +579,24 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.core.img_tools.pad">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">pad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#pad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.pad" title="Link to this definition">#</a></dt>
-<dd><p>Pads ndarray by 15% of voxels on all sides</p>
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">pad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad_percent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#pad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.pad" title="Link to this definition">#</a></dt>
+<dd><p>Pads ndarray by a specified percentage.</p>
+<section id="id1">
+<h2>Parameters:<a class="headerlink" href="#id1" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>ndarray<span class="classifier">numpy.ndarray</span></dt><dd><p>Input 3D ndarray to pad.</p>
+</dd>
+<dt>pad_percent<span class="classifier">float</span></dt><dd><p>Percentage of padding to add to each dimension. Default: 0.15 (15%%).</p>
+</dd>
+</dl>
+</section>
+<section id="id2">
+<h2>Returns:<a class="headerlink" href="#id2" title="Link to this heading">#</a></h2>
+<dl class="simple">
+<dt>padded_ndarray<span class="classifier">numpy.ndarray</span></dt><dd><p>Padded 3D ndarray.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 <dl class="py function">

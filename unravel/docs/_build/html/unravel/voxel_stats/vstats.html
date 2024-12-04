@@ -508,7 +508,6 @@
 </ul>
 </dd>
 <dt>Inputs:</dt><dd><ul class="simple">
-<li><p>mask.nii.gz (e.g., stats/mask.nii.gz)</p></li>
 <li><p><cite>*</cite>.nii.gz files in the current directory with conditions as prefixes (e.g., saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz)</p></li>
 </ul>
 </dd>
@@ -537,13 +536,7 @@
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>vstats -mas mask.nii.gz -v</p>
-</div></blockquote>
-</section>
-<section id="usage-w-additional-options">
-<h2>Usage w/ additional options:<a class="headerlink" href="#usage-w-additional-options" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>vstats -mas mask.nii.gz [-p 18000] [–kernel 0] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-v] [–options –seed=1]</p>
+<div><p>vstats [-mas mask.nii.gz] [-p 18000] [–kernel 0] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-v] [–options –seed=1]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -576,7 +569,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.voxel_stats.vstats.run_randomise_parallel">
-<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">run_randomise_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permutations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_fts_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats.html#run_randomise_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.run_randomise_parallel" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.voxel_stats.vstats.</span></span><span class="sig-name descname"><span class="pre">run_randomise_parallel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">permutations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">design_fts_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/voxel_stats/vstats.html#run_randomise_parallel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.voxel_stats.vstats.run_randomise_parallel" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -633,7 +626,6 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-w-additional-options">Usage w/ additional options:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.check_fdr_command"><code class="docutils literal notranslate"><span class="pre">check_fdr_command()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.voxel_stats.vstats.create_design_ttest2"><code class="docutils literal notranslate"><span class="pre">create_design_ttest2()</span></code></a></li>
