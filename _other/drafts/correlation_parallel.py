@@ -104,12 +104,8 @@ def main():
 
     y_img_paths = [Path(y_image) for y_image in args.y_image]
     x_img_paths = [Path(file) for file in glob(args.x_img_glob)]
-
-    # Load masks if provided
-    mask_imgs = []
-    if args.masks:
-        for mask_path in args.masks:
-            mask_imgs.append(load_mask(mask_path))
+    mask_imgs = [load_mask(path) for path in args.masks] if args.masks else []
+    mask_img = np.ones(atlas_img.shape, dtype=bool) if not mask_imgs else np.logical_and.reduce(mask_imgs)
 
     if Path(args.atlas).exists():
         atlas_img = load_nii(args.atlas)
@@ -129,10 +125,6 @@ def main():
             continue
 
         # Apply mask(s) if provided
-        if mask_imgs:
-            mask_img = np.ones(imgY.shape, dtype=bool)
-            for mask in mask_imgs:
-                mask_img = mask_img & mask.astype(bool)
         imgY_masked = np.where(mask_img, imgY, 0)
         atlas_img_masked = np.where(mask_img, atlas_img, 0)
 
