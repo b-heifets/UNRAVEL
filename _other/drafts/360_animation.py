@@ -66,15 +66,7 @@ def main():
     viewer = napari.Viewer()
     viewer.dims.ndisplay = 3 # Set 3D rendering
 
-    print(f"Camera angles: {viewer.camera.angles}")
-    print(f"Camera zoom: {viewer.camera.zoom}")
-    print(f"Camera center: {viewer.camera.center}")
 
-    # viewer.camera.center = [img.shape[1] // 2, img.shape[2] // 2, img.shape[0] // 2] # Center the camera
-    # viewer.camera.zoom = 1  # Adjust as needed
-    # viewer.camera.angles = (0, 0, 0)  # Reset angles
-
-    # viewer.camera.angles = (args.start_angle, 0, 0)  # (azimuth, elevation, roll)
 
     layer = viewer.add_image(img, rendering=args.rendering)
 
@@ -87,16 +79,11 @@ def main():
 
 
     # Capture the same key frame twice for testing
-    animation.capture_keyframe()
+    animation.capture_keyframe(steps=5)
     viewer.camera.angles = (0, 0, 0)
     animation.capture_keyframe(steps=5)
 
-    # # Set up a 360° rotation
-    # angles = np.linspace(args.start_angle, args.start_angle + 360, args.frames)  # Full rotation starting at initial_angle
 
-    # for angle in angles:
-    #     viewer.camera.angles = (angle, 0, 0)  # Keep elevation and roll fixed
-    #     animation.capture_keyframe()  # Capture each frame
 
     # Save animation and clean up
     animation.animate(args.output, fps=args.fps)
@@ -107,3 +94,21 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+    # print(f"Camera angles: {viewer.camera.angles}")
+    # print(f"Camera zoom: {viewer.camera.zoom}")
+    # print(f"Camera center: {viewer.camera.center}")
+
+    # viewer.camera.center = [img.shape[1] // 2, img.shape[2] // 2, img.shape[0] // 2] # Center the camera
+    # viewer.camera.zoom = 1  # Adjust as needed
+    # viewer.camera.angles = (0, 0, 0)  # Reset angles
+
+    # viewer.camera.angles = (args.start_angle, 0, 0)  # (azimuth, elevation, roll)
+
+    # # Set up a 360° rotation
+    # angles = np.linspace(args.start_angle, args.start_angle + 360, args.frames)  # Full rotation starting at initial_angle
+
+    # for angle in angles:
+    #     viewer.camera.angles = (angle, 0, 0)  # Keep elevation and roll fixed
+    #     animation.capture_keyframe()  # Capture each frame

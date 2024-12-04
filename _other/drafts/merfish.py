@@ -47,6 +47,8 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Make base cwd by default. Consider intergrating with the cache tool from Allen. 
+
 def load_cell_metadata(download_base):
     """
     Load the cell metadata from the MERFISH data (using cell_label as the index).

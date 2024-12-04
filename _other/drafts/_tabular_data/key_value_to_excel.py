@@ -23,6 +23,7 @@ Usage:
     _other/drafts/_other/key_value_to_excel.py -i path/input.txt [-o path/output.xlsx] [-d ,] [-v]
 """
 
+from pathlib import Path
 import pandas as pd
 from rich import print
 from rich.traceback import install
@@ -39,7 +40,6 @@ def parse_args():
     reqs.add_argument('-i', '--input', help='Path to the input file containing key-value data (txt, csv, xlsx).', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-o', '--output', help='Path to the output Excel file.', action=SM)
     opts.add_argument('-d', '--delimiter', help="Delimiter used in the key-value pairs (default: ',').", default=',', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -94,6 +94,22 @@ def parse_key_value_data(data, delimiter=","):
 
     return df
 
+def key_val_to_excel(data, output_path, delimiter=","):
+    """Convert key-value structured data into an Excel file.
+    
+    Parameters:
+    -----------
+    data : str
+        The structured key-value data (e.g., from a text file).
+    output_path : str
+        The path to the output Excel file.
+    delimiter : str, optional
+        The delimiter used to separate keys and values. Default is ','.
+    """
+    df = parse_key_value_data(data, delimiter)
+    Path(output_path).parent.mkdir(parents=True, exist_ok=True)
+    df.to_excel(output_path, index=False)
+
 
 @log_command
 def main():
@@ -113,16 +129,8 @@ def main():
     else:
         raise ValueError(f"Unsupported file format: {args.input}")
 
-    # Parse the data
-    df = parse_key_value_data(data, args.delimiter)
-
-    # Save to Excel
-    if args.output:
-        output_file = args.output
-    else:
-        output_file = args.input.replace(".txt", ".xlsx")
-    df.to_excel(output_file, index=False)
-    print(f"\n    Data successfully saved to {output_file}\n")
+    output_path = str(args.input).replace(".txt", ".xlsx")
+    key_val_to_excel(data, output_path, args.delimiter)
 
     verbose_end_msg()
 

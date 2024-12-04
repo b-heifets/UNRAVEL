@@ -27,6 +27,7 @@ def parse_args():
     reqs.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding to add to each dimension of the image. Default: 0.15 (15%%).', default=0.15, type=float, action=SM)
     opts.add_argument('-ort', '--ort_code', help='3 letter orientation code of fixed image if not set in fixed_img (e.g., RAS)', action=SM)
     opts.add_argument('-r', '--ref_nii', help='Reference image for setting the orientation code', action=SM)
     opts.add_argument('-o', '--output', help='path/img.nii.gz. Default: None (saves as path/img_pad.nii.gz) ', default=None, action=SM)
@@ -51,7 +52,7 @@ def main():
     img = np.asanyarray(nii.dataobj, dtype=data_type).squeeze()
 
     # Pad the image
-    img = pad(img, pad_width=0.15)
+    img = pad(img, pad_percent=args.pad_percent)
 
     # Save the padded image
     fixed_img_padded_nii = nib.Nifti1Image(img, nii.affine, nii.header)

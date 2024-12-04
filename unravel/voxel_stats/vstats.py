@@ -7,7 +7,6 @@ Prereqs:
     - Input images from ``vstats_prep``, ``vstats_z_score``, or ``vstats_whole_to_avg``.
 
 Inputs:
-    - mask.nii.gz (e.g., stats/mask.nii.gz)
     - `*`.nii.gz files in the current directory with conditions as prefixes (e.g., saline_1.nii.gz, saline_2.nii.gz, drug_1.nii.gz, drug_2.nii.gz)
 
 Outputs:
@@ -28,11 +27,7 @@ Note:
 
 Usage:
 ------
-    vstats -mas mask.nii.gz -v
-
-Usage w/ additional options:
-----------------------------
-    vstats -mas mask.nii.gz [-p 18000] [--kernel 0] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-v] [--options --seed=1]
+    vstats [-mas mask.nii.gz] [-p 18000] [--kernel 0] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-v] [--options --seed=1]
 """
 
 import argparse
@@ -53,10 +48,8 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
-    reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
-
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-mas', '--mask', help='path/mask.nii.gz', action=SM)
     opts.add_argument('-p', '--permutations', help='Number of permutations (divisible by 300). Default: 18000', type=int, default=18000, action=SM)
     opts.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
     opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz (copied to stats/ for viewing; Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
@@ -105,20 +98,27 @@ def calculate_fragments(num_contrasts, total_permutations_per_contrast=18000, pe
     return total_fragments
 
 @print_func_name_args_times()
-def run_randomise_parallel(input_image_path, mask_path, permutations, output_name, design_fts_path, options, verbose):
+def run_randomise_parallel(input_image_path, permutations, output_name, design_fts_path, mask_path=None, options=None, verbose=False):
     
-    # Construct the command
+    # Construct the base command
     command = [
         "randomise_parallel",
         "-i", str(input_image_path),
-        "-m", str(mask_path),
         "-n", str(permutations),
         "-o", str(output_name),
         "-d", "stats/design.mat",
         "-t", "stats/design.con",
         "--uncorrp",
         "-x"
-    ] + options # Make sure options is a list of strings
+    ]
+    
+    # Add the mask argument if provided
+    if mask_path is not None:
+        command.extend(["-m", str(mask_path)])
+
+    # Append any additional options
+    if options is not None:
+        command.extend(options)  # Ensure options is a list of strings
 
     design_fts_path = str(design_fts_path) if Path(design_fts_path).exists() else None
     if design_fts_path:
@@ -127,7 +127,7 @@ def run_randomise_parallel(input_image_path, mask_path, permutations, output_nam
     command_line = " ".join(command)
     print(f"\n[bold]{command_line}\n")
 
-    if verbose:
+    if verbose is not None:
         # Execute the command and stream output
         try:
             with subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1) as proc:
@@ -161,8 +161,16 @@ def main():
     stats_dir.mkdir(exist_ok=True)
 
     # Copy the mask and the atlas to the stats directory using shutil
-    shutil.copy(args.mask, stats_dir)
-    shutil.copy(args.atlas, stats_dir)
+    if args.mask and Path(args.mask).exists():
+        shutil.copy(args.mask, stats_dir)
+    elif args.mask and not Path(args.mask).exists():
+        print(f"\n    [yellow]{args.mask} does not exist. Please provide a valid mask file. Skipping masking and copying to stats/\n")
+
+    if Path(args.atlas).exists():
+        shutil.copy(args.atlas, stats_dir)
+    else:
+        print(f"\n    [yellow]{args.atlas} does not exist. Skipping copying to stats/\n")
+
 
     # Merge and smooth the input images
     images = sorted(glob('*.nii.gz'))
@@ -204,7 +212,7 @@ def main():
     output_prefix = stats_dir / cwd.name
 
     # Run the randomise_parallel command
-    run_randomise_parallel(glm_input_file, args.mask, args.permutations, output_prefix, design_fts_path, args.options, args.verbose)
+    run_randomise_parallel(glm_input_file, args.permutations, output_prefix, design_fts_path, args.mask, args.options, args.verbose)
 
     verbose_end_msg()
 

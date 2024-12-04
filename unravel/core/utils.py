@@ -426,3 +426,21 @@ def process_files_with_glob(glob_pattern, processing_func, *args, **kwargs):
     for file_path in files:
         file_path = Path(file_path).resolve()
         processing_func(file_path, *args, **kwargs)
+
+@print_func_name_args_times()
+def get_pad_percent(reg_outputs_path, pad_percent):
+    # TODO: Could change this from reg_outputs_path to relative path to pad_percent.txt
+
+    if pad_percent is not None:
+        return pad_percent
+
+    pad_txt = reg_outputs_path / "pad_percent.txt"
+    if pad_txt.exists():
+        with open(pad_txt, "r") as f:
+            try:
+                return float(f.read().strip())
+            except ValueError:
+                print("    Warning: Invalid value in pad_percent.txt. Using default pad_percent = 0.15")
+    else:
+        print("    Warning: pad_percent.txt not found. Using default pad_percent = 0.15")
+    return 0.15

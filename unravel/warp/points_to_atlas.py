@@ -36,7 +36,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_image_metadata_from_txt, nii_to_ndarray, nii_voxel_size
 from unravel.core.img_tools import reorient_for_raw_to_nii_conv, reverse_reorient_for_raw_to_nii_conv
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
+from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 from unravel.image_io.img_to_points import img_to_points
 from unravel.image_tools.resample_points import resample_and_convert_points
 from unravel.warp.to_atlas import to_atlas
@@ -55,7 +55,8 @@ def parse_args():
     opts.add_argument('-thr', '--thresh', help='Exclude region IDs below this threshold (e.g., 20000 to obtain left hemisphere data)', type=float, action=SM)
     opts.add_argument('-uthr', '--upper_thr', help='Exclude region IDs above this threshold (e.g., 20000 to obtain right hemisphere data)', type=float, action=SM)
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
-    
+    opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
+
     compatability = parser.add_argument_group('Compatability options')
     compatability.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting). Default: False', action='store_true', default=False)
 
@@ -132,7 +133,8 @@ def main():
             if np.max(points_resampled_img) > 0:
                 dtype = 'uint16' if np.max(points_resampled_img) > 255 else 'uint8'
         
-            to_atlas(sample_path, points_resampled_img, args.fixed_reg_in, args.atlas, output_img_path, 'nearestNeighbor', dtype=dtype)
+            pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, args.pad_percent)
+            to_atlas(sample_path, points_resampled_img, args.fixed_reg_in, args.atlas, output_img_path, 'nearestNeighbor', dtype=dtype, pad_percent=pad_percent)
 
             progress.update(task_id, advance=1)
 

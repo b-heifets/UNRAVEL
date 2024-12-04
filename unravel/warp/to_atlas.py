@@ -26,7 +26,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt
 from unravel.core.img_tools import pad
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
+from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
 from unravel.register.reg_prep import reg_prep
 from unravel.warp.warp import warp
 
@@ -45,7 +45,8 @@ def parse_args():
     opts.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: uint16', default="uint16", action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Reference nii header from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
-    opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline [default], multiLabel, nearestNeighbor).', default='bSpline', action=SM) # or 
+    opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
+    opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline \[default], multiLabel, nearestNeighbor).', default='bSpline', action=SM) # or 
     opts.add_argument('-zo', '--zoom_order', help='SciPy zoom order for resampling the raw image to --reg_res. Default: 1', default=1, type=int, action=SM)
 
     compatability = parser.add_argument_group('Compatability options')
@@ -72,7 +73,7 @@ def copy_nii_header(source_img, new_img):
     return new_img
 
 @print_func_name_args_times()
-def to_atlas(sample_path, img, fixed_reg_in, atlas, output, interpol, dtype='uint16'):
+def to_atlas(sample_path, img, fixed_reg_in, atlas, output, interpol, dtype='uint16', pad_percent=0.15):
     """Warp the image to atlas space using ANTsPy.
     
     Args:
@@ -84,7 +85,7 @@ def to_atlas(sample_path, img, fixed_reg_in, atlas, output, interpol, dtype='uin
         - interpol (str): Type of interpolation (linear, bSpline, nearestNeighbor, multiLabel).
         - dtype (str): Desired dtype for output (e.g., uint8, uint16). Default: uint16"""
     # Pad the image
-    img = pad(img, pad_width=0.15)
+    img = pad(img, pad_percent=pad_percent)
 
     # Create NIfTI, set header info, and save the input for warp()
     fixed_reg_input = sample_path / fixed_reg_in
@@ -147,7 +148,8 @@ def main():
             img = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
 
             # Warp native image to atlas space
-            to_atlas(sample_path, img, args.fixed_reg_in, args.atlas, output, args.interpol, dtype='uint16')
+            pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, args.pad_percent)
+            to_atlas(sample_path, img, args.fixed_reg_in, args.atlas, output, args.interpol, dtype='uint16', pad_percent=pad_percent)
 
             progress.update(task_id, advance=1)
 

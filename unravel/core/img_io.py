@@ -192,6 +192,11 @@ def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, re
     """
     czi = CziFile(czi_path)
     ndarray = np.squeeze(czi.read_image(C=channel)[0])
+
+    if ndarray.ndim == 4:
+        print(f"\n    [red1].czi channel {channel} has 4 axes. Please stitch tiles from {Path(czi_path).name}\n")
+        import sys ; sys.exit()
+
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(czi_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
@@ -331,6 +336,9 @@ def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metada
     -----
     - If xy_res and z_res are provided, they will be used instead of the values from the metadata.
     """
+    if not Path(nii_path).exists():
+        raise FileNotFoundError(f"\nInput file not found: {nii_path}\n")
+
     nii = nib.load(nii_path)
     ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray

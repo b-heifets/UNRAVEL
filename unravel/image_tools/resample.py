@@ -42,7 +42,7 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Add support for other image formats.
+# TODO: Add support for other image formats (e.g., tifs to tifs). Add args for scaling by a factor for each dimension.
 
 @log_command
 def main():

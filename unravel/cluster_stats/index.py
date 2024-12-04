@@ -13,7 +13,7 @@ Note:
 
 Usage
 -----
-    cstats_index -ci path/rev_cluster_index.nii.gz -ids 1 2 3 [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-vcd valid_clusters_dir] [-rgb] [-scsv sunburst_IDPath_Abbrv.csv] [-in CCFv3-2020_info.csv] [-v]
+    cstats_index -i path/rev_cluster_index.nii.gz -ids 1 2 3 [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-vcd valid_clusters_dir] [-rgb] [-scsv sunburst_IDPath_Abbrv.csv] [-in CCFv3-2020_info.csv] [-v]
 """
 
 from pathlib import Path
@@ -33,7 +33,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-ci', '--cluster_idx', help='Path to the reverse cluster index NIfTI file.', required=True, action=SM)
+    reqs.add_argument('-i', '--cluster_idx', help='Path to the reverse cluster index NIfTI file.', required=True, action=SM)
     reqs.add_argument('-ids', '--valid_cluster_ids', help='Space-separated list of valid cluster IDs.', nargs='*', type=int, required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')

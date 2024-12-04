@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Use ``_other/drafts/remap_atlas.py`` from UNRAVEL to remap an atlas, updating region IDs. 
+Use ``_other/drafts/collapse_atlas.py`` from UNRAVEL to remap an atlas, updating region IDs. 
 
 Note:
     - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020_info.csv
     
 Usage:
 ------
-    _other/drafts/remap_atlas.py -a path/to/atlas.nii.gz -csv path/to/CCFv3-2020_info.csv] [-v]
+    _other/drafts/collapse_atlas.py -a path/to/atlas.nii.gz -csv path/to/CCFv3-2020_info.csv] [-v]
 """
 
 import nibabel as nib
