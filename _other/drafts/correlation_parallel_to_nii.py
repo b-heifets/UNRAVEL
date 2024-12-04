@@ -88,7 +88,7 @@ def compute_regionwise_correlation_parallel(imgX, imgY, atlas_img):
     merged_df = pd.merge(imgX_df, imgY_df, on='Region')
 
     # Compute the Pearson correlation between the mean intensities
-    correlation = pearsonr(merged_df['ImgX_Mean'], merged_df['ImgY_Mean'])[0]
+    correlation = pearsonr(merged_df['ImgX_Mean'], merged_df['ImgY_Mean'])
 
     return correlation
 
@@ -133,7 +133,7 @@ def main():
             results = []
             with ThreadPoolExecutor() as executor:
                 tasks = [
-                    (x_img_path, imgY, atlas_img, mask_img, args.permutations, args.seed)
+                    (x_img_path, imgY, atlas_img, mask_img)
                     for x_img_path in x_img_paths
                 ]
 
@@ -145,8 +145,32 @@ def main():
                         results.append(result)
                     progress.advance(task_id)
 
-            # Make a df from the results and save to a CSV file
-            results_df = pd.DataFrame(results, columns=['Gene', 'Correlation'])
+            # Separate valid results and errors
+            valid_results = []
+            errors = []
+            for res in results:
+                if isinstance(res, tuple) and len(res) == 2:
+                    valid_results.append(res)
+                else:
+                    errors.append(res)
+
+            # Handle empty results
+            if not valid_results:
+                print(f"No valid results for {y_img_path}. Skipping...")
+                continue
+
+            # Log errors if any
+            if errors:
+                error_log_path = "correlation_errors.log"
+                with open(error_log_path, "w") as f:
+                    for err in errors:
+                        f.write(f"{err}\n")
+                print(f"Logged errors to {error_log_path}")
+
+            # Create DataFrame for valid results
+            results_df = pd.DataFrame(valid_results, columns=['Gene', 'Correlation'])
+
+            # Save to CSV
             output_name = str(Path(y_img_path).name).replace('.nii.gz', '_regional_gene_correlations.csv')
             output_path = Path('regional_gene_correlations') / output_name
             output_path.parent.mkdir(parents=True, exist_ok=True)
