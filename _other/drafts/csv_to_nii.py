@@ -6,8 +6,9 @@ Use ``_other/drafts/csv_to_nii.py`` from UNRAVEL to convert a CSV file to a NIfT
 Outputs:
     - A NIfTI file for each CSV file into a `_csv_to_nii` directory.
 
-Notes:
-    - Use the same .csv file pattern and working dir for this script and for the "nii_to_csv.py" script.
+Usage:
+------
+    _other/drafts/csv_to_nii.py -i path/*.csv [-s sort_col] [-val value_cols]
 """
 
 import nibabel as nib
