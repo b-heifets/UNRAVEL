@@ -95,6 +95,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Since .nii files from Fiji may have a data type that does not match the actual data type, we may need to infer the data type based on the actual min and max values. This could be used in img_io.py as well. nii.get_fdata() uses could be updated in other scripts as well.
 
 def transform_nii_affine(nii, target_ort, zero_origin=False):
     """Transform the affine matrix of a NIfTI image to a target orientation and return the new affine matrix
