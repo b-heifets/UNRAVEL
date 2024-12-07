@@ -27,7 +27,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-u', '--unique', help='Print unique intensities. Default: False', action='store_true', default=False)
-    opts.add_argument('-v', '--verbose', help='Print volume and intenisty info. Default: False', action='store_true', default=False)
+    opts.add_argument('-v', '--verbose', help='Print volume and intensity info. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 
