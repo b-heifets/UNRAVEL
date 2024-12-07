@@ -5,7 +5,7 @@ Use volcano.py from UNRAVEL to create a volcano plot.
 
 Input: 
     - path/.csv
-    - Column order: label, value, p-value (names can be different)
+    - Expected column order: label, effect size, p-value (names can vary)
 """
 
 import matplotlib.pyplot as plt
@@ -27,9 +27,6 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/.csv', required=True, action=SM)
-    reqs.add_argument('-l', '--label', help='Column name for labels (e.g., gene names)', required=True)
-    reqs.add_argument('-val', '--value', help='Column name for correlation values', required=True)
-    reqs.add_argument('-p', '--pvalue', help='Column name for p-values', required=True)
     
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
@@ -45,59 +42,73 @@ def main():
 
     # Load the CSV file
     df = pd.read_csv(args.input)
-
-    # Rename columns to standard names for easier handling
-    df = df.rename(columns={args.label: 'label', args.value: 'correlation', args.pvalue: 'p_value'})
-
-    # Step 1: Apply FDR-BH correction
-    df['p_adj'] = multipletests(df['p_value'], method='fdr_bh')[1]  # FDR-BH adjusted p-values
-    df['log_p_adj'] = -np.log10(df['p_adj'])
-
-    # Define significance threshold based on FDR-corrected p-value (e.g., FDR-adjusted p < 0.05)
-    significant_threshold = -np.log10(0.05)
+    cols = df.columns
 
     # Step 2: Create the Volcano Plot
-    plt.figure(figsize=(14, 8))
+    plt.figure(figsize=(12, 10))
 
     # Plot all points, color by significance
-    plt.scatter(df['correlation'], df['log_p_adj'], c='grey', label='Not significant')
+    plt.scatter(df[cols[1]], df[cols[2]], c='grey', label='Not significant', alpha=0.5)
 
-    # Plot significant points: red for r >= 0, blue for r < 0
-    significant = df['log_p_adj'] > significant_threshold
-    plt.scatter(df.loc[significant & (df['correlation'] >= 0), 'correlation'], 
-                df.loc[significant & (df['correlation'] >= 0), 'log_p_adj'], 
-                c='red', label='Significant (r >= 0)', edgecolor='black')
-    plt.scatter(df.loc[significant & (df['correlation'] < 0), 'correlation'], 
-                df.loc[significant & (df['correlation'] < 0), 'log_p_adj'], 
-                c='blue', label='Significant (r < 0)', edgecolor='black')
+    # Plot significant points: red for r > 0, blue for r < 0
+    significant = df[cols[2]] > -np.log10(0.05)
+    plt.scatter(df.loc[significant & (df[cols[1]] > 0), cols[1]], 
+                df.loc[significant & (df[cols[1]] > 0), cols[2]], 
+                c='red', label='Significant (r > 0)', edgecolor='grey', alpha=0.5)
+    plt.scatter(df.loc[significant & (df[cols[1]] < 0), cols[1]], 
+                df.loc[significant & (df[cols[1]] < 0), cols[2]], 
+                c='blue', label='Significant (r < 0)', edgecolor='grey', alpha=0.5)
 
-    # Step 3: Label the top 10 positive and top 10 negative correlations
+    # Filter significant points
+    sig_pos = df[significant & (df[cols[1]] > 0)]  # Significant positive effects
+    sig_neg = df[significant & (df[cols[1]] < 0)]  # Significant negative effects
+
+    # Calculate thresholds separately for positive and negative effects
+    effect_threshold_pos = np.percentile(sig_pos[cols[1]], 90)  # Top 5% positive effect size
+    effect_threshold_neg = np.percentile(sig_neg[cols[1]].abs(), 90)  # Top 5% negative effect size (absolute value)
+    sig_threshold_pos = np.percentile(sig_pos[cols[2]], 90)  # Top 5% significance for positive effects
+    sig_threshold_neg = np.percentile(sig_neg[cols[2]], 90)  # Top 5% significance for negative effects
+
+    # Filter top points based on separate thresholds
+    top_pos = sig_pos[(sig_pos[cols[1]] >= effect_threshold_pos) & (sig_pos[cols[2]] >= sig_threshold_pos)]
+    top_neg = sig_neg[(sig_neg[cols[1]].abs() >= effect_threshold_neg) & (sig_neg[cols[2]] >= sig_threshold_neg)]
+
+    # Get the current axis limits
+    x_min, x_max = plt.gca().get_xlim()
+    y_min, y_max = plt.gca().get_ylim()
+
+    # Calculate the offset range as a fraction of the axis range
+    x_offset_range = (x_max - x_min) * 0.01  # 1% of the x-axis range
+    y_offset_range = (y_max - y_min) * 0.05  # 8% of the y-axis range
+
+    # Label these points with random x and y offsets based on axis ranges
     texts = []
-    # Get the top 10 positive and top 10 negative significant correlations
-    top_pos = df.loc[significant & (df['correlation'] > 0)].nlargest(10, 'correlation')
-    top_neg = df.loc[significant & (df['correlation'] < 0)].nsmallest(10, 'correlation')
-    
-    # Label these points with a slight y-offset
     for _, row in pd.concat([top_pos, top_neg]).iterrows():
-        text = plt.text(row['correlation'], row['log_p_adj'] + 0.2, row['label'], fontsize=8)  # Apply slight y-offset
+        # Generate random offsets within the calculated range
+        rand_val_x = np.random.uniform(-x_offset_range, x_offset_range)  # Random x offset
+        rand_val_y = np.random.uniform(-y_offset_range, y_offset_range)  # Random y offset
+
+        # Apply the random offsets to the label position
+        text = plt.text(row[cols[1]] + rand_val_x, row[cols[2]] + rand_val_y, row[cols[0]], fontsize=8)
         texts.append(text)
 
     # Adjust text to avoid overlap
     adjust_text(
-        texts, 
-        lim=50,                 # Allow some movement for text
-        expand_text=(1.1, 1.1), # Slight expansion to avoid overlap
-        expand_points=(1.2, 1.2), 
-        force_text=1.2, 
-        force_points=1.2
+        texts,
+        # x=[row[cols[1]] for _, row in pd.concat([top_pos, top_neg]).iterrows()],
+        # y=[row[cols[2]] for _, row in pd.concat([top_pos, top_neg]).iterrows()],
+        force_text=(rand_val_x, rand_val_y),  # Adjust repel force for labels
+        # force_static=(rand_val_x, rand_val_y),  # Adjust repel force for points
+        ensure_inside_axes=True,  # Keep labels inside plot boundaries
     )
 
     # Add threshold line, labels, and legend
-    plt.axhline(y=significant_threshold, color='grey', linestyle='--', linewidth=0.7, label='FDR p < 0.05')
-    plt.xlabel('Correlation')
+    plt.axhline(y=-np.log10(0.05), color='grey', linestyle='--', linewidth=0.7, label='FDR p < 0.05')
+    plt.xlabel(cols[1])
     plt.ylabel('-log10(FDR-adjusted p-value)')
     plt.title('Volcano Plot of Gene Correlations with c-Fos Induction (FDR Corrected)')
     plt.legend()
+    plt.ylim(0, plt.gca().get_ylim()[1]*1.1)  # Extend y-axis slightly for better visibility
 
     # Save as PDF
     output = Path(args.input).with_suffix('.pdf')
