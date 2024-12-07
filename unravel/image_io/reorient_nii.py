@@ -160,48 +160,48 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
     """Reorient a NIfTI image or its affine matrix to a target orientation.
 
     Args:
-        nii_path (str): Path to the NIfTI image
-        target_ort (str): Target orientation axis codes (e.g., RAS)
-        zero_origin (bool): Zero the origin of the affine matrix. Default: False
-        apply (bool): Apply the new orientation to the ndarray data. Default: False
-        form_code (int): Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned). Default: None (get from the input NIfTI image)
+        nii (nibabel.nifti1.Nifti1Image): Input NIfTI image.
+        target_ort (str): Target orientation axis codes (e.g., RAS).
+        zero_origin (bool): Whether to zero the origin of the affine matrix.
+        apply (bool): Apply the orientation change to the image data.
+        form_code (int): Code for spatial coordinate type (e.g., 1 = scanner; 2 = aligned).
 
     Returns:
-        If apply True: new_nii (nibabel.nifti1.Nifti1Image): NIfTI image with the new orientation
-        If apply False: new_affine (np.ndarray): New affine matrix
-        
+        nib.Nifti1Image: New NIfTI image with reoriented data and affine.
     """
-
     data_type = nii.header.get_data_dtype()
+    img = np.asanyarray(nii.dataobj).squeeze()
 
-    # Optionally apply the orientation change to the image data
     if apply:
-        print('Applying orientation change to the image data...')
-        # img = nii.get_fdata(dtype=np.float32)
-        
-        img = np.asanyarray(nii.dataobj, dtype=data_type).squeeze()
+        print('Applying orientation change to the image data...')        
         current_orientation = io_orientation(nii.affine)
         target_orientation = axcodes2ornt(target_ort)
         orientation_change = ornt_transform(current_orientation, target_orientation)
         img = apply_orientation(img, orientation_change)
-    else:
-        # img = nii.get_fdata(dtype=np.float32)
-        img = np.asanyarray(nii.dataobj, dtype=data_type).squeeze()
 
-    # For integer data types, round the values to the nearest integer
+    # Ensure values remain within valid range for integer types
     if np.issubdtype(data_type, np.integer):
-        img = np.round(img).astype(data_type)
+        # Round to nearest integer before casting
+        img = np.round(img)
 
-    # Get the new affine matrix
+        # Get the valid range for the detected data type
+        data_min, data_max = np.iinfo(data_type).min, np.iinfo(data_type).max
+        print(f"Clipping data to valid range for {data_type}: [{data_min}, {data_max}]")
+        img = np.clip(img, data_min, data_max).astype(data_type)
+    else:
+        # For floating-point types, preserve precision
+        img = img.astype(data_type)
+
+    # Generate the new affine matrix
     new_affine = transform_nii_affine(nii, target_ort, zero_origin=zero_origin)
 
-    # Create a new NIfTI image with the reoriented data and affine
+    # Create a new NIfTI image with the processed data and new affine
     new_nii = nib.Nifti1Image(img, new_affine)
     new_nii.header.set_data_dtype(data_type)  # Preserve original data type
     new_nii.header['xyzt_units'] = 10  # mm, s
     new_nii.header['regular'] = b'r'
 
-    # Set the sform and qform codes
+    # Update sform and qform codes if specified
     if form_code:
         new_nii.header.set_qform(new_affine, code=form_code)
         new_nii.header.set_sform(new_affine, code=form_code)
