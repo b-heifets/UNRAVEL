@@ -172,20 +172,21 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
         
     """
 
+    data_type = nii.header.get_data_dtype()
+
     # Optionally apply the orientation change to the image data
     if apply:
         print('Applying orientation change to the image data...')
-        img = nii.get_fdata(dtype=np.float32)
+        # img = nii.get_fdata(dtype=np.float32)
+        
+        img = np.asanyarray(nii.dataobj, dtype=data_type).squeeze()
         current_orientation = io_orientation(nii.affine)
         target_orientation = axcodes2ornt(target_ort)
         orientation_change = ornt_transform(current_orientation, target_orientation)
         img = apply_orientation(img, orientation_change)
     else:
-        img = nii.get_fdata(dtype=np.float32)
-
-
-    # Check data type
-    data_type = nii.header.get_data_dtype()
+        # img = nii.get_fdata(dtype=np.float32)
+        img = np.asanyarray(nii.dataobj, dtype=data_type).squeeze()
 
     # For integer data types, round the values to the nearest integer
     if np.issubdtype(data_type, np.integer):
@@ -194,18 +195,17 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
     # Get the new affine matrix
     new_affine = transform_nii_affine(nii, target_ort, zero_origin=zero_origin)
 
-    # Make the new NIfTI image
+    # Create a new NIfTI image with the reoriented data and affine
     new_nii = nib.Nifti1Image(img, new_affine)
-    new_nii.header.set_data_dtype(data_type)
-
-    # Set the header information
-    new_nii.header['xyzt_units'] = 10 # mm, s
+    new_nii.header.set_data_dtype(data_type)  # Preserve original data type
+    new_nii.header['xyzt_units'] = 10  # mm, s
     new_nii.header['regular'] = b'r'
 
+    # Set the sform and qform codes
     if form_code:
         new_nii.header.set_qform(new_affine, code=form_code)
         new_nii.header.set_sform(new_affine, code=form_code)
-    else: 
+    else:
         new_nii.header.set_qform(new_affine, code=int(nii.header['qform_code']))
         new_nii.header.set_sform(new_affine, code=int(nii.header['sform_code']))
 
