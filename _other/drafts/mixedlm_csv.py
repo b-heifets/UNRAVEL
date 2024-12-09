@@ -94,7 +94,7 @@ def main():
         # Process each Y image
         for y_img_path in y_img_paths:
             try:
-                print(f"\n    Loading Y-axis image and masking: [bold cyan]{y_img_path}")
+                print(f"\n    Loading Y-axis image and masking: [bold cyan]{y_img_path}\n")
 
                 imgY = np.where(mask_img, load_nii(y_img_path), 0)
                 group, mouse_id = Path(y_img_path).stem.split('_')[:2]
@@ -137,7 +137,7 @@ def main():
         for task in failed_tasks:
             print(f"    {task}")
     else:
-        print("\n    [green]All tasks completed successfully!")
+        print("\n    [green]All tasks completed successfully!\n")
 
 
 if __name__ == '__main__':
