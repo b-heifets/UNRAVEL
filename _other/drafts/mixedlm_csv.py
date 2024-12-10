@@ -42,25 +42,19 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-mas', '--masks', help='Paths to mask .nii.gz files to restrict analysis. Default: None', nargs='*', default=None, action=SM)
-    opts.add_argument('-yn', '--y_name', help='Name of the Y-axis image (e.g., cFos). Default: cFos', default='cFos', action=SM)
+    opts.add_argument('-yn', '--y_name', help='Name for the Y-axis image column. Default: cFos', default='cFos', action=SM)
 
     return parser.parse_args()
 
-def extract_regional_intensities(x_img_path, imgY, atlas_img, mask_img, y_name='cFos'):
-    """Extract region-wise mean intensities for X and Y images."""
+
+def calculate_mean_intensities_parallel(y_img_path, x_img_path, atlas_img, region_ids):
+    """Extracts region-wise mean intensities for an X image."""
     try:
-        imgX = load_nii(x_img_path)
-        imgX = np.where(mask_img, imgX, 0)
-
-        # Extract region means
-        region_ids = np.unique(atlas_img)
-        imgX_means = calculate_mean_intensity(atlas_img, imgX, regions=region_ids)
-        imgY_means = calculate_mean_intensity(atlas_img, imgY, regions=region_ids)
-
-        # Create dataframe
+        group, mouse_id = Path(y_img_path).stem.split('_')[:2]
         gene = Path(x_img_path).stem.split('_')[0]
-        df = pd.DataFrame({'RegionID': list(imgX_means.keys()), y_name: list(imgY_means.values()), gene: list(imgX_means.values())})
-        return df
+        img = load_nii(x_img_path)
+        region_mean_dict = calculate_mean_intensity(atlas_img, img, regions=region_ids)
+        return group, mouse_id, gene, region_mean_dict
     except Exception as e:
         print(f"[red]    Error processing {x_img_path}: {e}")
         return None
@@ -76,6 +70,7 @@ def main():
     atlas_img = load_nii(args.atlas)
     mask_img = np.logical_and.reduce([load_mask(m) for m in args.masks]) if args.masks else np.ones_like(atlas_img, dtype=bool)
     atlas_img = np.where(mask_img, atlas_img, 0)
+    region_ids = np.unique(atlas_img[atlas_img > 0])
 
     # Collect image paths
     x_img_paths = [Path(file) for file in sorted(glob(args.x_img_glob))]
@@ -86,59 +81,62 @@ def main():
 
     print(f"\n    Processing {len(x_img_paths)} X images and {len(y_img_paths)} Y images...")
     all_results = []
-    failed_tasks = []
-
     with Progress(TextColumn("[bold blue]{task.description}"), BarColumn(), "[progress.percentage]{task.percentage:>3.0f}%") as progress:
         task = progress.add_task("Processing images...", total=len(x_img_paths) * len(y_img_paths))
 
         # Process each Y image
         for y_img_path in y_img_paths:
-            try:
-                print(f"\n    Loading Y-axis image and masking: [bold cyan]{y_img_path}\n")
+            print(f"\n    Loading Y-axis image and masking: [bold cyan]{y_img_path}\n")
+            
+            imgY = np.where(mask_img, load_nii(y_img_path), 0)
+            imgY_region_mean_dict = calculate_mean_intensity(atlas_img, imgY, regions=region_ids)
 
-                imgY = np.where(mask_img, load_nii(y_img_path), 0)
-                group, mouse_id = Path(y_img_path).stem.split('_')[:2]
+            futures = []
+            with ThreadPoolExecutor() as executor:
+                futures = [
+                    executor.submit(calculate_mean_intensities_parallel, y_img_path, x_img_path, atlas_img, region_ids)
+                    for x_img_path in x_img_paths
+                ]
 
-                futures = []
-                with ThreadPoolExecutor() as executor:
-                    futures = [
-                        executor.submit(extract_regional_intensities, x_img_path, imgY, atlas_img, mask_img, args.y_name)
-                        for x_img_path in x_img_paths
-                    ]
+                for future in as_completed(futures):
+                    result = future.result()
+                    if result is not None:
+                        group, mouse_id, gene, region_mean_dict = result
+                        for region, mean in region_mean_dict.items():
+                            all_results.append({
+                                'Group': group,
+                                'MouseID': mouse_id,
+                                'RegionID': region,
+                                'Gene': gene,
+                                'Mean': mean
+                            })
+                    progress.advance(task)
 
-                    for future in as_completed(futures):
-                        result = future.result()
-                        if result is not None:
-                            result['Group'] = group
-                            result['MouseID'] = mouse_id
-                            all_results.append(result)
-                        else:
-                            failed_tasks.append(f"Failed: {x_img_path} for {y_img_path}")
-                        progress.advance(task)
+    # Create a dataframe from results
+    results_df = pd.DataFrame(all_results)
 
-            except IndexError:
-                print(f"[yellow]Warning: Filename format does not match expected 'Group_MouseID'. Skipping: {y_img_path}")
-                failed_tasks.append(f"Skipped due to filename: {y_img_path}")
-    # Combine results
-    print("\n    Combining results...")
-    combined_df = pd.concat(all_results, axis=0, ignore_index=True)
-    cols = combined_df.columns.tolist()
-    cols = cols[:4] + sorted(cols[4:])
-    combined_df = combined_df[cols]
+    # Pivot table to have genes as columns
+    results_pivot_df = results_df.pivot_table(
+        index=['Group', 'MouseID', 'RegionID'], 
+        columns='Gene', 
+        values='Mean'
+    ).reset_index()
+
+    # Add the Y-axis intensities (e.g., cFos) to the final DataFrame
+    y_data = pd.DataFrame.from_dict(imgY_region_mean_dict, orient='index', columns=[args.y_name])
+    y_data.index.name = 'RegionID'
+    y_data.reset_index(inplace=True)
+    final_df = pd.merge(results_pivot_df, y_data, on='RegionID', how='left')
+
+    # Move the Y-axis column to after the RegionID column
+    cols = final_df.columns.tolist()
+    cols = cols[:3] + [cols[-1]] + cols[3:-1]
+    final_df = final_df[cols]
 
     # Save to CSV
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    combined_df.to_csv(output_path, index=False)
-
-    # Log failed tasks
-    if failed_tasks:
-        print(f"\n    [yellow]Warning: {len(failed_tasks)} tasks failed or were skipped:")
-        for task in failed_tasks:
-            print(f"    {task}")
-    else:
-        print("\n    [green]All tasks completed successfully!\n")
-
+    final_df.to_csv(output_path, index=False)
 
 if __name__ == '__main__':
     main()
