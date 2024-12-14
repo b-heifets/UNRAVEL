@@ -34,8 +34,8 @@ def parse_args():
     opts.add_argument('-n', '--top_percent_neg', help='Top percent of significant points to label for negative effects. Default: 10.', type=float, default=10, action=SM)
     opts.add_argument('-x', '--per_x_range', help='Percentage of x-axis range for random label offset. Default: 0.01.', type=float, default=0.01, action=SM)
     opts.add_argument('-y', '--per_y_range', help='Percentage of y-axis range for random label offset. Default: 0.08.', type=float, default=0.08, action=SM)
+    opts.add_argument('-th', '--thresh_type', help='For point labeling, threshold sig. and/or effect size. Default: "and".', choices=['and', 'or'], default='and', action=SM)
     
-
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
 
@@ -58,6 +58,9 @@ def main():
     # Plot all points, color by significance
     plt.scatter(df[cols[1]], df[cols[2]], c='grey', label='Not significant', alpha=0.5)
 
+    # Check types of all columns
+    print(f"\n{df.dtypes=}/n")
+
     # Plot significant points: red for r > 0, blue for r < 0
     significant = df[cols[2]] > -np.log10(0.05)
     plt.scatter(df.loc[significant & (df[cols[1]] > 0), cols[1]], 
@@ -71,17 +74,43 @@ def main():
     sig_pos = df[significant & (df[cols[1]] > 0)]  # Significant positive effects
     sig_neg = df[significant & (df[cols[1]] < 0)]  # Significant negative effects
 
-    # Calculate thresholds only for significant positive and negative effects
-    percentile_pos = 100 - args.top_percent_pos
-    percentile_neg = 100 - args.top_percent_neg
-    effect_threshold_pos = np.percentile(sig_pos[cols[1]], percentile_pos)  # Top 10% positive effect size
-    effect_threshold_neg = np.percentile(sig_neg[cols[1]].abs(), percentile_neg)  # Top 10% negative effect size (absolute value)
-    sig_threshold_pos = np.percentile(sig_pos[cols[2]], percentile_pos)  # Top 10% significance for positive effects
-    sig_threshold_neg = np.percentile(sig_neg[cols[2]], percentile_neg)  # Top 10% significance for negative effects
+    print(f'\n{sig_pos=}\n')
+    print(f'\n{sig_neg=}\n')
 
-    # Filter top points based on updated thresholds
-    top_pos = sig_pos[(sig_pos[cols[1]] >= effect_threshold_pos) | (sig_pos[cols[2]] >= sig_threshold_pos)]
-    top_neg = sig_neg[(sig_neg[cols[1]].abs() >= effect_threshold_neg) | (sig_neg[cols[2]] >= sig_threshold_neg)]
+    # Check if sig_pos is not empty before calculating percentiles
+    if not sig_pos.empty:
+        percentile_pos = 100 - args.top_percent_pos
+        effect_threshold_pos = np.percentile(sig_pos[cols[1]], percentile_pos)  # Top 10% positive effect size
+        sig_threshold_pos = np.percentile(sig_pos[cols[2]], percentile_pos)  # Top 10% significance for positive effects
+    else:
+        effect_threshold_pos = None
+        sig_threshold_pos = None
+
+    # Check if sig_neg is not empty before calculating percentiles
+    if not sig_neg.empty:
+        percentile_neg = 100 - args.top_percent_neg
+        effect_threshold_neg = np.percentile(sig_neg[cols[1]].abs(), percentile_neg)  # Top 10% negative effect size (absolute value)
+        sig_threshold_neg = np.percentile(sig_neg[cols[2]], percentile_neg)  # Top 10% significance for negative effects
+    else:
+        effect_threshold_neg = None
+        sig_threshold_neg = None
+
+    # Only filter top points if thresholds are available
+    if effect_threshold_pos is not None and sig_threshold_pos is not None:
+        if args.thresh_type == 'or':
+            top_pos = sig_pos[(sig_pos[cols[1]] >= effect_threshold_pos) | (sig_pos[cols[2]] >= sig_threshold_pos)]
+        else:
+            top_pos = sig_pos[(sig_pos[cols[1]] >= effect_threshold_pos) & (sig_pos[cols[2]] >= sig_threshold_pos)]
+    else:
+        top_pos = pd.DataFrame(columns=sig_pos.columns)
+
+    if effect_threshold_neg is not None and sig_threshold_neg is not None:
+        if args.thresh_type == 'or':
+            top_neg = sig_neg[(sig_neg[cols[1]].abs() >= effect_threshold_neg) & (sig_neg[cols[2]] >= sig_threshold_neg)]
+        else:
+            top_neg = sig_neg[(sig_neg[cols[1]].abs() >= effect_threshold_neg) & (sig_neg[cols[2]] >= sig_threshold_neg)]
+    else:
+        top_neg = pd.DataFrame(columns=sig_neg.columns)
 
     # Get the current axis limits
     x_min, x_max = plt.gca().get_xlim()
