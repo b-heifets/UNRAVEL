@@ -110,17 +110,16 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    files = Path().cwd().glob(args.input)
-    print(f'\nImages to process: {list(files)}\n')
+    files = list(Path().cwd().glob(args.input))
+    print(f'\nImages to process: {files}\n')
 
     if args.parallel:
         with ThreadPoolExecutor() as executor:
             executor.map(lambda file: whole_to_LR_avg(file, args.kernel, args.axis, args.shift, args.atlas_mask), files)
     else:
         for file in files:
-            whole_to_LR_avg(file, args)
             whole_to_LR_avg(file, args.kernel, args.axis, args.shift, args.atlas_mask)
-    
+
     verbose_end_msg()
 
 
