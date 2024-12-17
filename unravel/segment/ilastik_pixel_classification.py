@@ -11,6 +11,7 @@ Inputs:
     - ilastik_project: path/ilastik_project.ilp
     - Input: path/tif_dir or path/image (relative to current dir or sample??/)
     - Input image types: .tif, .czi, .nii.gz, .h5, .zarr
+    - If glob is used, the first match is used.
 
 Outputs:
     - seg_dir/seg_dir/`*`.tif series (segmented images; delete w/ --rm_out_tifs)
@@ -51,7 +52,7 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable.', required=True, action=SM)
     reqs.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
-    reqs.add_argument('-i', '--input', help='Relative path to dir with tifs or an image (.nii.gz, .h5, .zarr)', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Relative path to dir with tifs or an image (.nii.gz, .h5, .zarr).', required=True, action=SM)
     reqs.add_argument('-o', '--output', help='Output dir name', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -119,7 +120,14 @@ def main():
                     input_tif_dir = input_path
                     input_z_size = count_files(input_tif_dir)
                 else:
-                    img = load_3D_img(input_path, channel=args.channel, verbose=args.verbose)
+                    # Load the image
+                    matches = sorted(Path(sample_path).glob(args.input))
+                    if not matches:
+                        raise FileNotFoundError(f"No files matching '{args.input}' found in {sample_path}")
+                    image_path = matches[0]  # Use the first match after sorting
+                    if args.verbose:
+                        print(f"    Using {image_path} as the input image.")
+                    img = load_3D_img(image_path, channel=args.channel, verbose=args.verbose)
                     input_z_size = img.shape[2]
 
                 # Count the number of TIFFs in the output directory
@@ -139,8 +147,6 @@ def main():
                 remove_tmp_tifs = False
             else:
                 remove_tmp_tifs = True
-                if not img:
-                    img = load_3D_img(input_path, channel=args.channel, verbose=args.verbose)
                 input_tif_dir = segmentation_dir / str(input_path.name).removesuffix(".czi").removesuffix(".nii.gz").removesuffix(".zarr").removesuffix(".h5") + "_tifs"
                 save_as_tifs(img, input_tif_dir)
 
