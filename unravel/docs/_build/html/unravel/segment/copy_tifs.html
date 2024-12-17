@@ -501,7 +501,7 @@
                   
   <section id="module-unravel.segment.copy_tifs">
 <span id="unravel-segment-copy-tifs-module"></span><span id="unravel-segment-copy-tifs"></span><h1>unravel.segment.copy_tifs module<a class="headerlink" href="#module-unravel.segment.copy_tifs" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> (<code class="docutils literal notranslate"><span class="pre">sct</span></code>) from UNRAVEL to copy specified TIFFs from each sample?? to a target dir for training ilastik.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> (<code class="docutils literal notranslate"><span class="pre">sct</span></code>) from UNRAVEL to copy or save specified slices from each sample?? dir to a target dir for training ilastik with TIFFs.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -518,10 +518,10 @@
 <div><p>seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0000 0005 0050 [-td brain_mask] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
-<section id="usage-to-prep-for-seg-ilastik">
-<h2>Usage to prep for seg_ilastik:<a class="headerlink" href="#usage-to-prep-for-seg-ilastik" title="Link to this heading">#</a></h2>
+<section id="usage-to-copy-tifs-for-ilastik">
+<h2>Usage to copy tifs for ilastik:<a class="headerlink" href="#usage-to-copy-tifs-for-ilastik" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>seg_copy_tifs -i &lt;raw_tif_dir&gt; -s 0100 0500 1000 [-td ilastik_segmentation] [-d list of paths] [-p sample??] [-v]</p>
+<div><p>seg_copy_tifs -i &lt;path to dir with tifs or to a 3D image&gt; -s 0100 0500 1000 [-td ilastik_segmentation] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -604,7 +604,7 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-brain-mask">Usage to prep for seg_brain_mask:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-ilastik">Usage to prep for seg_ilastik:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-copy-tifs-for-ilastik">Usage to copy tifs for ilastik:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.copy_specific_tifs"><code class="docutils literal notranslate"><span class="pre">copy_specific_tifs()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>

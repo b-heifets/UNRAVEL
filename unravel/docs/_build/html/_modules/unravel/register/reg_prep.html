@@ -385,7 +385,7 @@
 
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
 <span class="kn">from</span> <span class="nn">unravel.core.img_io</span> <span class="kn">import</span> <span class="n">load_3D_img</span><span class="p">,</span> <span class="n">load_image_metadata_from_txt</span><span class="p">,</span> <span class="n">resolve_path</span><span class="p">,</span> <span class="n">save_as_tifs</span><span class="p">,</span> <span class="n">save_as_nii</span>
-<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">resample</span><span class="p">,</span> <span class="n">reorient_for_raw_to_nii_conv</span>
+<span class="kn">from</span> <span class="nn">unravel.core.img_tools</span> <span class="kn">import</span> <span class="n">resample</span><span class="p">,</span> <span class="n">reorient_axes</span>
 <span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">initialize_progress_bar</span><span class="p">,</span> <span class="n">get_samples</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
 
 
@@ -438,7 +438,7 @@
 
     <span class="c1"># Optionally reorient autofluo image (mimics MIRACL&#39;s tif to .nii.gz conversion)</span>
     <span class="k">if</span> <span class="n">miracl</span><span class="p">:</span> 
-        <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">reorient_for_raw_to_nii_conv</span><span class="p">(</span><span class="n">img_resampled</span><span class="p">)</span>
+        <span class="n">img_resampled</span> <span class="o">=</span> <span class="n">reorient_axes</span><span class="p">(</span><span class="n">img_resampled</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">img_resampled</span></div>
 

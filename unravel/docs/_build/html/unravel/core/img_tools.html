@@ -504,7 +504,7 @@
 <dl class="simple">
 <dt>This module contains functions processing 3D images:</dt><dd><ul class="simple">
 <li><p>resample: Resample a 3D ndarray.</p></li>
-<li><p>reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space</p></li>
+<li><p>reorient_axes: Reorient an ndarray for registration or warping to atlas space</p></li>
 <li><p>pixel_classification: Segment tif series with Ilastik.</p></li>
 <li><p>pad: Pad an ndarray by a specified percentage.</p></li>
 <li><p>reorient_ndarray: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).</p></li>
@@ -559,16 +559,18 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.reorient_for_raw_to_nii_conv">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_for_raw_to_nii_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#reorient_for_raw_to_nii_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_for_raw_to_nii_conv" title="Link to this definition">#</a></dt>
+<dt class="sig sig-object py" id="unravel.core.img_tools.reorient_axes">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reorient_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#reorient_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reorient_axes" title="Link to this definition">#</a></dt>
 <dd><p>Reorient resampled ndarray for registration or warping to atlas space
-(legacy mode mimics MIRACL’s tif to .nii.gz conversion)</p>
+(mimics orientation change from MIRACL’s tif to .nii.gz conversion)</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv">
-<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reverse_reorient_for_raw_to_nii_conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#reverse_reorient_for_raw_to_nii_conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv" title="Link to this definition">#</a></dt>
-<dd><p>After warping to native space, reorients image to match tissue</p>
+<dt class="sig sig-object py" id="unravel.core.img_tools.reverse_reorient_axes">
+<span class="sig-prename descclassname"><span class="pre">unravel.core.img_tools.</span></span><span class="sig-name descname"><span class="pre">reverse_reorient_axes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/core/img_tools.html#reverse_reorient_axes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.core.img_tools.reverse_reorient_axes" title="Link to this definition">#</a></dt>
+<dd><p>Reorient an ndarray by rotating and flipping to correct axis order for image conversion.</p>
+<p>Rotates 90 degrees to the right and flips horizontally.</p>
+<p>This can reverse the reorientation done by reorient_axes().</p>
 </dd></dl>
 
 <dl class="py function">
@@ -744,8 +746,8 @@ Default is False.</p></li>
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.resample"><code class="docutils literal notranslate"><span class="pre">resample()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.resample_nii"><code class="docutils literal notranslate"><span class="pre">resample_nii()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reorient_for_raw_to_nii_conv"><code class="docutils literal notranslate"><span class="pre">reorient_for_raw_to_nii_conv()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv"><code class="docutils literal notranslate"><span class="pre">reverse_reorient_for_raw_to_nii_conv()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reorient_axes"><code class="docutils literal notranslate"><span class="pre">reorient_axes()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reverse_reorient_axes"><code class="docutils literal notranslate"><span class="pre">reverse_reorient_axes()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.pixel_classification"><code class="docutils literal notranslate"><span class="pre">pixel_classification()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.pad"><code class="docutils literal notranslate"><span class="pre">pad()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.core.img_tools.reorient_ndarray"><code class="docutils literal notranslate"><span class="pre">reorient_ndarray()</span></code></a></li>
