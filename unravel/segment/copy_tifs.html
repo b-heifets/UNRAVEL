@@ -484,62 +484,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.segment.copy_tifs">
-<span id="unravel-segment-copy-tifs-module"></span><span id="unravel-segment-copy-tifs"></span><h1>unravel.segment.copy_tifs module<a class="headerlink" href="#module-unravel.segment.copy_tifs" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> (<code class="docutils literal notranslate"><span class="pre">sct</span></code>) from UNRAVEL to copy specified TIFFs from each sample?? to a target dir for training ilastik.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>reg_inputs/autofl_50um_tifs is from <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code> and is used to make a brain mask using <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>.</p></li>
-</ul>
-</div>
-<dl class="simple">
-<dt>Next command:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> for <code class="docutils literal notranslate"><span class="pre">reg</span></code> or <code class="docutils literal notranslate"><span class="pre">seg_ilastik</span></code> for pixel classification.</p>
-</dd>
-</dl>
-<section id="usage-to-prep-for-seg-brain-mask">
-<h2>Usage to prep for seg_brain_mask:<a class="headerlink" href="#usage-to-prep-for-seg-brain-mask" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>seg_copy_tifs -i reg_inputs/autofl_50um_tifs -s 0000 0005 0050 [-td brain_mask] [-d list of paths] [-p sample??] [-v]</p>
-</div></blockquote>
-</section>
-<section id="usage-to-prep-for-seg-ilastik">
-<h2>Usage to prep for seg_ilastik:<a class="headerlink" href="#usage-to-prep-for-seg-ilastik" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>seg_copy_tifs -i &lt;raw_tif_dir&gt; -s 0100 0500 1000 [-td ilastik_segmentation] [-d list of paths] [-p sample??] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.segment.copy_tifs.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.segment.copy_tifs.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/copy_tifs.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.copy_tifs.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.segment.copy_tifs.copy_specific_tifs">
-<span class="sig-prename descclassname"><span class="pre">unravel.segment.copy_tifs.</span></span><span class="sig-name descname"><span class="pre">copy_specific_tifs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sample_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_numbers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/copy_tifs.html#copy_specific_tifs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.copy_tifs.copy_specific_tifs" title="Link to this definition">#</a></dt>
-<dd><p>Copy the specified tif slices from the source directory to the target directory.</p>
-<section id="parameters">
-<h2>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
-<dl class="simple">
-<dt>sample_path<span class="classifier">Path or str</span></dt><dd><p>Path to the sample directory (appended to the destination file name).</p>
-</dd>
-<dt>source_dir<span class="classifier">Path or str</span></dt><dd><p>Path to the source directory containing the .tif files.</p>
-</dd>
-<dt>target_dir<span class="classifier">Path or str</span></dt><dd><p>Path to the target directory where the selected slices will be copied.</p>
-</dd>
-<dt>slice_numbers<span class="classifier">list</span></dt><dd><p>List of slice numbers to copy (4 digits each).</p>
-</dd>
-<dt>verbose<span class="classifier">bool</span></dt><dd><p>Print verbose output.</p>
-</dd>
-</dl>
-</section>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.segment.copy_tifs.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.segment.copy_tifs.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/segment/copy_tifs.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.segment.copy_tifs.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-segment-copy-tifs-module">
+<span id="unravel-segment-copy-tifs"></span><h1>unravel.segment.copy_tifs module<a class="headerlink" href="#unravel-segment-copy-tifs-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -580,22 +526,6 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-brain-mask">Usage to prep for seg_brain_mask:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-to-prep-for-seg-ilastik">Usage to prep for seg_ilastik:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.copy_specific_tifs"><code class="docutils literal notranslate"><span class="pre">copy_specific_tifs()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.segment.copy_tifs.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
 

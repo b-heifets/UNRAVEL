@@ -354,7 +354,7 @@
 <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">This module contains functions processing 3D images: </span>
 <span class="sd">    - resample: Resample a 3D ndarray.</span>
-<span class="sd">    - reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space</span>
+<span class="sd">    - reorient_axes: Reorient an ndarray for registration or warping to atlas space</span>
 <span class="sd">    - pixel_classification: Segment tif series with Ilastik.</span>
 <span class="sd">    - pad: Pad an ndarray by a specified percentage.</span>
 <span class="sd">    - reorient_ndarray: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).</span>
@@ -456,21 +456,26 @@
     <span class="k">return</span> <span class="n">resampled_nii</span></div>
 
 
-<div class="viewcode-block" id="reorient_for_raw_to_nii_conv">
-<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reorient_for_raw_to_nii_conv">[docs]</a>
+<div class="viewcode-block" id="reorient_axes">
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reorient_axes">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">reorient_for_raw_to_nii_conv</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">reorient_axes</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reorient resampled ndarray for registration or warping to atlas space </span>
-<span class="sd">    (legacy mode mimics MIRACL&#39;s tif to .nii.gz conversion)&quot;&quot;&quot;</span>
+<span class="sd">    (mimics orientation change from MIRACL&#39;s tif to .nii.gz conversion)&quot;&quot;&quot;</span>
     <span class="n">img_reoriented</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;zyx-&gt;xzy&#39;</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">img_reoriented</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="reverse_reorient_for_raw_to_nii_conv">
-<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reverse_reorient_for_raw_to_nii_conv">[docs]</a>
+<div class="viewcode-block" id="reverse_reorient_axes">
+<a class="viewcode-back" href="../../../unravel/core/img_tools.html#unravel.core.img_tools.reverse_reorient_axes">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">reverse_reorient_for_raw_to_nii_conv</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;After warping to native space, reorients image to match tissue&quot;&quot;&quot;</span>
+<span class="k">def</span> <span class="nf">reverse_reorient_axes</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reorient an ndarray by rotating and flipping to correct axis order for image conversion.</span>
+
+<span class="sd">    Rotates 90 degrees to the right and flips horizontally.</span>
+<span class="sd">    </span>
+<span class="sd">    This can reverse the reorientation done by reorient_axes().</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">rotated_img</span> <span class="o">=</span> <span class="n">rotate</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="n">reshape</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># Rotate 90 degrees to the right</span>
     <span class="n">flipped_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fliplr</span><span class="p">(</span><span class="n">rotated_img</span><span class="p">)</span> <span class="c1"># Flip horizontally</span>
     <span class="k">return</span> <span class="n">flipped_img</span></div>

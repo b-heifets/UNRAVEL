@@ -583,19 +583,18 @@ S: Superior / I: Inferior</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>nii_path</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Path to the NIfTI image</p></li>
-<li><p><strong>target_ort</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Target orientation axis codes (e.g., RAS)</p></li>
-<li><p><strong>zero_origin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Zero the origin of the affine matrix. Default: False</p></li>
-<li><p><strong>apply</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Apply the new orientation to the ndarray data. Default: False</p></li>
-<li><p><strong>form_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned). Default: None (get from the input NIfTI image)</p></li>
+<li><p><strong>nii</strong> (<em>nibabel.nifti1.Nifti1Image</em>) – Input NIfTI image.</p></li>
+<li><p><strong>target_ort</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – Target orientation axis codes (e.g., RAS).</p></li>
+<li><p><strong>zero_origin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to zero the origin of the affine matrix.</p></li>
+<li><p><strong>apply</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Apply the orientation change to the image data.</p></li>
+<li><p><strong>form_code</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – Code for spatial coordinate type (e.g., 1 = scanner; 2 = aligned).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>new_nii (nibabel.nifti1.Nifti1Image): NIfTI image with the new orientation
-If apply False: new_affine (np.ndarray): New affine matrix</p>
+<dd class="field-even"><p>New NIfTI image with reoriented data and affine.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>If apply True</p>
+<dd class="field-odd"><p>nib.Nifti1Image</p>
 </dd>
 </dl>
 </dd></dl>
