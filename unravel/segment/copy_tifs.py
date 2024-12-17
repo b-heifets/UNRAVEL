@@ -37,7 +37,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='Path to input tifs relative to sample??/', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path to dir with the .tif files to copy or path to a 3D image', required=True, action=SM)
     reqs.add_argument('-s', '--slices', help='List of slice numbers to copy (4 digits each; space separated)', nargs='*', type=str, required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -116,6 +116,8 @@ def main():
                         f"Invalid slice index. Valid range is 0 to {img.shape[2] - 1}. "
                         f"Provided slices: {args.slices}"
                     )
+
+                Path(target_dir).mkdir(exist_ok=True, parents=True)
 
                 for slice_number in slices:
                     slice_img = img[:, :, int(slice_number)]  # Access the z slice
