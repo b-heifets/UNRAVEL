@@ -3,7 +3,7 @@
 """ 
 This module contains functions processing 3D images: 
     - resample: Resample a 3D ndarray.
-    - reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space
+    - reorient_axes: Reorient an ndarray for registration or warping to atlas space
     - pixel_classification: Segment tif series with Ilastik.
     - pad: Pad an ndarray by a specified percentage.
     - reorient_ndarray: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).
@@ -100,15 +100,20 @@ def resample_nii(nii, target_res=None, target_dims=None, zoom_order=0):
     return resampled_nii
 
 @print_func_name_args_times()
-def reorient_for_raw_to_nii_conv(ndarray):
+def reorient_axes(ndarray):
     """Reorient resampled ndarray for registration or warping to atlas space 
-    (legacy mode mimics MIRACL's tif to .nii.gz conversion)"""
+    (mimics orientation change from MIRACL's tif to .nii.gz conversion)"""
     img_reoriented = np.einsum('zyx->xzy', ndarray)
     return np.transpose(img_reoriented, (2, 1, 0))
 
 @print_func_name_args_times()
-def reverse_reorient_for_raw_to_nii_conv(ndarray):
-    """After warping to native space, reorients image to match tissue"""
+def reverse_reorient_axes(ndarray):
+    """Reorient an ndarray by rotating and flipping to correct axis order for image conversion.
+
+    Rotates 90 degrees to the right and flips horizontally.
+    
+    This can reverse the reorientation done by reorient_axes().
+    """
     rotated_img = rotate(ndarray, -90, reshape=True, axes=(0, 1)) # Rotate 90 degrees to the right
     flipped_img = np.fliplr(rotated_img) # Flip horizontally
     return flipped_img

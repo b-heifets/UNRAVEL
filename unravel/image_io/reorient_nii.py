@@ -95,6 +95,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Since .nii files from Fiji may have a data type that does not match the actual data type, we may need to infer the data type based on the actual min and max values. This could be used in img_io.py as well. nii.get_fdata() uses could be updated in other scripts as well.
 
 def transform_nii_affine(nii, target_ort, zero_origin=False):
     """Transform the affine matrix of a NIfTI image to a target orientation and return the new affine matrix
@@ -160,52 +161,60 @@ def reorient_nii(nii, target_ort, zero_origin=False, apply=False, form_code=None
     """Reorient a NIfTI image or its affine matrix to a target orientation.
 
     Args:
-        nii_path (str): Path to the NIfTI image
-        target_ort (str): Target orientation axis codes (e.g., RAS)
-        zero_origin (bool): Zero the origin of the affine matrix. Default: False
-        apply (bool): Apply the new orientation to the ndarray data. Default: False
-        form_code (int): Set the sform and qform codes for spatial coordinate type (1 = scanner; 2 = aligned). Default: None (get from the input NIfTI image)
+        nii (nibabel.nifti1.Nifti1Image): Input NIfTI image.
+        target_ort (str): Target orientation axis codes (e.g., RAS).
+        zero_origin (bool): Whether to zero the origin of the affine matrix.
+        apply (bool): Apply the orientation change to the image data.
+        form_code (int): Code for spatial coordinate type (e.g., 1 = scanner; 2 = aligned).
 
     Returns:
-        If apply True: new_nii (nibabel.nifti1.Nifti1Image): NIfTI image with the new orientation
-        If apply False: new_affine (np.ndarray): New affine matrix
-        
+        nib.Nifti1Image: New NIfTI image with reoriented data and affine.
     """
+    # Load image data
+    data_type = nii.header.get_data_dtype()
+    img = np.asanyarray(nii.dataobj).squeeze()
 
-    # Optionally apply the orientation change to the image data
+    # Determine the actual min and max values
+    actual_min, actual_max = img.min(), img.max()
+
+    # Infer true data type based on actual value range
+    if actual_min >= 0 and actual_max <= 255:
+        inferred_type = np.uint8  # 8-bit unsigned
+    elif actual_min >= 0 and actual_max <= 65535:
+        inferred_type = np.uint16  # 16-bit unsigned
+    elif np.issubdtype(data_type, np.floating) or actual_min < 0 or actual_max > 65535:
+        inferred_type = np.float32  # 32-bit floating-point
+    else:
+        inferred_type = data_type  # Fall back to metadata-specified type
+
     if apply:
         print('Applying orientation change to the image data...')
-        img = nii.get_fdata(dtype=np.float32)
         current_orientation = io_orientation(nii.affine)
         target_orientation = axcodes2ornt(target_ort)
         orientation_change = ornt_transform(current_orientation, target_orientation)
         img = apply_orientation(img, orientation_change)
+
+    # Round values for integer types before casting
+    if np.issubdtype(inferred_type, np.integer):
+        img = np.round(img).astype(inferred_type)
     else:
-        img = nii.get_fdata(dtype=np.float32)
+        # For floating-point types, preserve precision
+        img = img.astype(inferred_type)
 
-
-    # Check data type
-    data_type = nii.header.get_data_dtype()
-
-    # For integer data types, round the values to the nearest integer
-    if np.issubdtype(data_type, np.integer):
-        img = np.round(img).astype(data_type)
-
-    # Get the new affine matrix
+    # Generate the new affine matrix
     new_affine = transform_nii_affine(nii, target_ort, zero_origin=zero_origin)
 
-    # Make the new NIfTI image
+    # Create a new NIfTI image with the processed data and new affine
     new_nii = nib.Nifti1Image(img, new_affine)
-    new_nii.header.set_data_dtype(data_type)
-
-    # Set the header information
-    new_nii.header['xyzt_units'] = 10 # mm, s
+    new_nii.header.set_data_dtype(inferred_type)  # Preserve inferred data type
+    new_nii.header['xyzt_units'] = 10  # mm, s
     new_nii.header['regular'] = b'r'
 
+    # Update sform and qform codes if specified
     if form_code:
         new_nii.header.set_qform(new_affine, code=form_code)
         new_nii.header.set_sform(new_affine, code=form_code)
-    else: 
+    else:
         new_nii.header.set_qform(new_affine, code=int(nii.header['qform_code']))
         new_nii.header.set_sform(new_affine, code=int(nii.header['sform_code']))
 
