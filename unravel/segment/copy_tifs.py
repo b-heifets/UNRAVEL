@@ -104,7 +104,13 @@ def main():
                 copy_specific_tifs(sample_path, input_path, target_dir, args.slices, args.verbose)
             else:
                 # Load the image, extract the specified slices, and save them to the target directory
-                img = load_3D_img(input_path, channel=args.channel, verbose=args.verbose)
+                matches = sorted(Path(sample_path).glob(args.input))
+                if not matches:
+                    raise FileNotFoundError(f"No files matching '{args.input}' found in {sample_path}")
+                image_path = matches[0]  # Use the first match after sorting
+                if args.verbose:
+                    print(f"    Using {image_path} as the input image.")
+                img = load_3D_img(image_path, channel=args.channel, verbose=args.verbose)
 
                 # Validate the slice indices
                 try:
