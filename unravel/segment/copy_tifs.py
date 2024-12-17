@@ -103,7 +103,7 @@ def main():
                 copy_specific_tifs(sample_path, input_path, target_dir, args.slices, args.verbose)
             else:
                 # Load the image, extract the specified slices, and save them to the target directory
-                img = load_3D_img(input_path, channel=args.channel, verbose=args.verbose)
+                img = load_3D_img(input_path, channel=args.channel, desired_axis_order="zyx", verbose=args.verbose)
 
                 # Validate the slice indices
                 try:
@@ -120,7 +120,8 @@ def main():
                 Path(target_dir).mkdir(exist_ok=True, parents=True)
 
                 for slice_number in slices:
-                    slice_img = img[:, :, int(slice_number)]  # Access the z slice
+                    # slice_img = img[:, :, int(slice_number)]  # Access the z slice
+                    slice_img = img[int(slice_number):, :]  # Access the z slice
                     slice_path = target_dir / f"{Path(sample_path).stem}_{slice_number:04d}.tif"
 
                     tifffile.imwrite(str(slice_path), slice_img)
