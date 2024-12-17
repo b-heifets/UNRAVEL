@@ -35,7 +35,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_image_metadata_from_txt, nii_to_ndarray, nii_voxel_size
-from unravel.core.img_tools import reorient_for_raw_to_nii_conv, reverse_reorient_axes
+from unravel.core.img_tools import reorient_axes, reverse_reorient_axes
 from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 from unravel.image_io.img_to_points import img_to_points
 from unravel.image_tools.resample_points import resample_and_convert_points
@@ -117,7 +117,7 @@ def main():
 
             # Optionally reorient autofluo image (mimics MIRACL's tif to .nii.gz conversion)
             if args.miracl: 
-                points_resampled_img = reorient_for_raw_to_nii_conv(points_resampled_img)
+                points_resampled_img = reorient_axes(points_resampled_img)
 
             # Use function from img_to_points to convert the resampled image to a points DataFrame
             points_resampled_ndarray = img_to_points(points_resampled_img)

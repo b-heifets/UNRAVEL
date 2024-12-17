@@ -34,7 +34,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii
-from unravel.core.img_tools import resample, reorient_for_raw_to_nii_conv
+from unravel.core.img_tools import resample, reorient_axes
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, print_func_name_args_times
 
 
@@ -82,7 +82,7 @@ def reg_prep(ndarray, xy_res, z_res, reg_res, zoom_order, miracl):
 
     # Optionally reorient autofluo image (mimics MIRACL's tif to .nii.gz conversion)
     if miracl: 
-        img_resampled = reorient_for_raw_to_nii_conv(img_resampled)
+        img_resampled = reorient_axes(img_resampled)
 
     return img_resampled
 
