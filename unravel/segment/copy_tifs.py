@@ -27,7 +27,7 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.img_tools import reverse_reorient_for_raw_to_nii_conv
+from unravel.core.img_tools import reverse_reorient_axes
 from unravel.core.img_io import load_3D_img
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
@@ -124,7 +124,7 @@ def main():
                     slice_img = img[:, :, int(slice_number)]  # Access the z slice
 
                     # Reorient the slice to account for the xyz axis order change
-                    slice_img = reverse_reorient_for_raw_to_nii_conv(slice_img)
+                    slice_img = reverse_reorient_axes(slice_img)
                     
                     slice_path = target_dir / f"{Path(sample_path).stem}_{slice_number:04d}.tif"
                     tifffile.imwrite(str(slice_path), slice_img)

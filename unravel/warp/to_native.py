@@ -29,7 +29,7 @@ from scipy.ndimage import zoom
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_image_metadata_from_txt, save_as_zarr, save_as_nii
-from unravel.core.img_tools import reverse_reorient_for_raw_to_nii_conv
+from unravel.core.img_tools import reverse_reorient_axes
 from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times
 from unravel.warp.warp import warp
 
@@ -143,7 +143,7 @@ def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_
 
     # Reorient if needed
     if miracl: 
-        warped_img = reverse_reorient_for_raw_to_nii_conv(warped_img)
+        warped_img = reverse_reorient_axes(warped_img)
 
     # Scale to full resolution
     native_img = scale_to_full_res(warped_img, original_dimensions, zoom_order=zoom_order)
