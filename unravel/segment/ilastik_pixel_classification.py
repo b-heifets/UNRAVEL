@@ -147,7 +147,7 @@ def main():
                 remove_tmp_tifs = False
             else:
                 remove_tmp_tifs = True
-                input_tif_name = str(input_path.name).removesuffix(".czi").removesuffix(".nii.gz").removesuffix(".zarr").removesuffix(".h5")
+                input_tif_name = str(image_path.name).removesuffix(".czi").removesuffix(".nii.gz").removesuffix(".zarr").removesuffix(".h5")
                 input_tif_dir = segmentation_dir / f"{input_tif_name}_tifs"
                 save_as_tifs(img, input_tif_dir)
 
