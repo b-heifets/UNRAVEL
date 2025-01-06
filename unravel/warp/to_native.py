@@ -175,8 +175,8 @@ def main():
                 output = sample_path / args.output
             else:
                 output = None
-            
-            pad_percent = get_pad_percent(sample_path / Path(args.fixed_reg_in).parent, args.pad_percent)
+
+            pad_percent = get_pad_percent(sample_path / args.reg_outputs, args.pad_percent)
             to_native(sample_path, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=output, pad_percent=pad_percent)
 
             progress.update(task_id, advance=1)
