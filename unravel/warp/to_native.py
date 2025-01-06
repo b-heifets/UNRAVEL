@@ -61,6 +61,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Could make a an unpad function to remove padding from the image based on to_native() and calculate_resampled_padded_dimensions() and use it in to_native()
+# TODO: Could consolidate -ro and -fri into one argument
 
 @print_func_name_args_times()
 def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, target_res=50, pad_percent=0.15, miracl=False):
