@@ -216,7 +216,7 @@ def main():
 
         # Run cstats_index
         index_args = [
-            '-ci', rev_cluster_index_path,
+            '-i', rev_cluster_index_path,
             '-ids', *valid_cluster_ids,
             '-vcd', valid_clusters_index_dir,
             '-a', cfg.index.atlas,
