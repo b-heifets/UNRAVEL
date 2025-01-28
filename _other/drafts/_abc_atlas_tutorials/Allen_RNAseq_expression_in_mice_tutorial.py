@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Use ``./Allen_RNAseq_expression_in_mice.py`` from UNRAVEL to analyze mouse Allen Brain Cell Atlas scRNA-seq expression.
+Use ``./RNAseq_expression_in_mice.py`` from UNRAVEL to analyze mouse Allen Brain Cell Atlas scRNA-seq expression.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.htmlml
 
 Usage:
 ------
-    ./Allen_RNAseq_expression_in_mice.py -b path/base_dir -i expression_matrices/WMB-10Xv2/20230630/WMB-10Xv2-TH-log2.h5ad [-v]
+    ./RNAseq_expression_in_mice.py -b path/base_dir -i expression_matrices/WMB-10Xv2/20230630/WMB-10Xv2-TH-log2.h5ad [-v]
 """
 
 from pathlib import Path
