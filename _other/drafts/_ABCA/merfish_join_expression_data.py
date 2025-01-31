@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
 """
-Use ``./merfish_join_expression.py`` from UNRAVEL to join [filtered] cell metadata with MERFISH expression data from the Allen Brain Cell Atlas.
+Use ``./merfish_join_expression_data.py`` from UNRAVEL to join [filtered] cell metadata with MERFISH expression data from the Allen Brain Cell Atlas.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/merfish_tutorial_part_2b.html
 
+Output:
+    - A CSV file with the joined data (input_<gene>_expression.csv)
+
 Usage:
 ------
-    ./merfish_join_expression.py -i path/filtered_cells.csv -b path/base_dir -g gene -gb groupby [-v]
+    ./merfish_join_expression_data.py -i path/filtered_cells.csv -b path/base_dir -g gene -gb groupby [-v]
 
 """
 
@@ -22,7 +25,7 @@ from rich import print
 from rich.traceback import install
 
 import merfish as m
-from unravel.drafts._ABCA.merfish_heatmap import aggregate_by_metadata, plot_heatmap
+from merfish_heatmap import aggregate_by_metadata, plot_heatmap
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -34,8 +37,7 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
     reqs.add_argument('-i', '--input', help='path/filtered_cells.csv', required=True, action=SM)
-    reqs.add_argument('-g', '--gene', help='Gene to plot.', action=SM)
-    reqs.add_argument('-gb', '--groupby', help='The metadata column to group by.', required=True, action=SM)
+    reqs.add_argument('-g', '--gene', help='Gene to analyze', required=True, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -63,15 +65,15 @@ def main():
 
     # Create a dataframe with the expression data for the specified gene
     gdata = asubset[:, gf.index].to_df()  # Extract expression data for the gene
+    
     gdata.columns = gf.gene_symbol  # Set the column names to the gene symbols
-    exp_df = cell_df.join(gdata)  # Join the cell metadata with the expression data
+    
+    # exp_df = cell_df.join(gdata)  # Join the cell metadata with the expression data
+    exp_df = cell_df.set_index('cell_label').join(gdata, how='left').reset_index()
 
-    print("Expression data columns:")
-    print(exp_df.columns)
-    print()
-
-    agg = aggregate_by_metadata(exp_df, args.gene, args.groupby, True)
-    plot_heatmap(agg, args.gene, 1, 3)
+    # Save the joined data
+    exp_df.to_csv(f"{Path(args.input).stem}_{args.gene}_expression.csv", index=False)
+    print(f"\n    Saved the joined data to {Path(args.input).stem}_{args.gene}_expression.csv\n")
 
     verbose_end_msg()
 

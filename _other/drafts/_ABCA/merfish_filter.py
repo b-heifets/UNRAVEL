@@ -86,6 +86,8 @@ def main():
     # Load the cell metadata
     cell_df = m.load_cell_metadata(download_base)
     print(f"\n    Initial cell metadata shape:\n    {cell_df.shape}")
+    
+    print(f'\n{cell_df=}\n')
 
     # Add the reconstructed coordinates to the cell metadata
     cell_df_joined = m.join_reconstructed_coords(cell_df, download_base)
@@ -109,6 +111,8 @@ def main():
     if 'parcellation_substructure' not in cell_df_joined.columns:
         print("Column 'parcellation_substructure' not found!")
         return
+    
+    print(f'\n{cell_df_joined=}\n')
 
     # Filter the DataFrame
     filtered_df = filter_dataframe(cell_df_joined, args.columns, args.values)
@@ -121,13 +125,11 @@ def main():
     # Save the filtered DataFrame
     if args.output is not None:
         output_path = Path(args.output)
-        filtered_df.to_csv(output_path, index=False)
+        filtered_df.to_csv(output_path)
         print(f"\nFiltered data saved to: {output_path}")
-
 
     print("\nUnique parcellation substructures:")
     print(cell_df_joined['parcellation_substructure'].unique())
-
 
     verbose_end_msg()
 

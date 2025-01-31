@@ -27,33 +27,32 @@ Usage:
     /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -b path/to/root_dir -i cluster.nii.gz
 """
 
-import anndata
-import matplotlib.pyplot as plt
 import nibabel as nib
 import numpy as np
 import pandas as pd
-import SimpleITK as sitk
 from pathlib import Path
 from rich import print
 from rich.traceback import install
 
+# 208 685 651 75 31 7 0 1  # <xmin> <xsize> <ymin> <ysize> <zmin> <zsize> <tmin> <tsize>
+
 import merfish as m
+from unravel.cluster_stats.validation import cluster_bbox
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.img_io import load_nii
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/cluster.nii.gz', required=True, action=SM)
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
-    reqs.add_argument('-g', '--gene', help='Gene(s) to plot.', required=True, nargs='*', action=SM)
-    reqs.add_argument('-r', '--ref_nii', help='Path to reference .nii.gz for header info (e.g., image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation.nii.gz)', required=True, action=SM)
-
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-o', '--output', help='Output path for the saved .nii.gz image. Default: None', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='Output path for cell metadata after filtering by cluster. Default: None', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -86,6 +85,63 @@ def main():
     args = parse_args()
     Configuration.verbose = args.verbose
     verbose_start_msg()
+
+    # Load the cluster image
+    cluster_img = load_nii(args.input)
+
+    # Binarize
+    cluster_img[cluster_img > 0] = 1
+
+    # Get the bounding box of the cluster
+    _, xmin, xmax, ymin, ymax, zmin, zmax = cluster_bbox(1, cluster_img)
+
+    # Load the cell metadata
+    download_base = Path(args.base)
+
+    # Load the cell metadata
+    cell_df = m.load_cell_metadata(download_base)
+
+    # Add the reconstructed coordinates to the cell metadata
+    cell_df_joined = m.join_reconstructed_coords(cell_df, download_base)
+
+    # Add the classification levels and the corresponding color.
+    cell_df_joined = m.join_cluster_details(cell_df_joined, download_base)
+
+    # Add the cluster colors
+    cell_df_joined = m.join_cluster_colors(cell_df_joined, download_base)
+    
+    # Add the parcellation annotation
+    cell_df_joined = m.join_parcellation_annotation(cell_df_joined, download_base)
+
+    # Add the parcellation color
+    cell_df_joined = m.join_parcellation_color(cell_df_joined, download_base)
+
+    print(f'\n{cell_df_joined=}\n')
+    print(f'\n{xmin=}\n')
+    print(f'\n{xmax=}\n')
+    print(f'\n{ymin=}\n')
+    print(f'\n{ymax=}\n')
+    print(f'\n{zmin=}\n')
+    print(f'\n{zmax=}\n')
+
+    # Filter the cell metadata by the bounding box of the cluster using the reconstructed coordinates (x_reconstructed, y_reconstructed, z_reconstructed)
+    cell_df_bbox_filter = cell_df_joined[cell_df_joined['x_reconstructed'] >= xmin &
+                                        cell_df_joined['x_reconstructed'] <= xmax &
+                                        cell_df_joined['y_reconstructed'] >= ymin &
+                                        cell_df_joined['y_reconstructed'] <= ymax &
+                                        cell_df_joined['z_reconstructed'] >= zmin & 
+                                        cell_df_joined['z_reconstructed'] <= zmax]
+    
+    print(f'\n{cell_df_bbox_filter=}\n')
+    
+
+
+    import sys ; sys.exit()
+
+    # Loop through each cell and filter out cells whose reconstructed coordinates fall are external to the cluster
+
+
+
 
     download_base = Path(args.base)
 
