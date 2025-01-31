@@ -89,7 +89,6 @@ def load_mouse_RNAseq_gene_metadata(download_base):
     gene_df.set_index('gene_identifier', inplace=True)
     return gene_df
 
-
 def create_expression_dataframe(ad, gf, cell_filtered):
     gdata = ad[:, gf.index].to_df()
     gdata.columns = gf.gene_symbol

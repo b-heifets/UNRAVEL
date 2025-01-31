@@ -146,8 +146,10 @@ def main():
 
     import sys ; sys.exit()
 
-    # Load the expression data for the specified gene
+    # Load the expression data for all genes (if the gene is in the dataset) 
     adata = m.load_expression_data(download_base, args.gene)
+
+    # Filter expression data for the specified gene
     asubset, gf = m.filter_expression_data(adata, args.gene)
 
     # Generate `exp_df` for filtered cells

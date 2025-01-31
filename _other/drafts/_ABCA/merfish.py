@@ -637,12 +637,14 @@ def main():
     # Get the boundary slice for the specified brain section
     boundary_slice = annotation_boundary_array[zindex, :, :]
 
-
-
     if args.gene is not None:
-        # Load the expression data for the specified gene
+        # Load the expression data for all genes (if the gene is in the dataset) 
         adata = load_expression_data(download_base, args.gene)
+
+        # Filter expression data for the specified gene
         asubset, gf = filter_expression_data(adata, args.gene)
+
+        # Create a dataframe with the expression data for the specified gene
         exp_df = create_expression_dataframe(asubset, gf, section)
 
         # Plot the expression data with a wireframe overlay of the annotation boundary

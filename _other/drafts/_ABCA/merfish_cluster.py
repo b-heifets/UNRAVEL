@@ -1,11 +1,30 @@
 #!/usr/bin/env python3
 
 """
-Use ``/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py`` from UNRAVEL to plot MERFISH data from the Allen Brain Cell Atlas.
+Use ``merfish_cluster.py`` from UNRAVEL to filter MERFISH cell metadata by cluster.
+
+Prereqs:
+    - Use CCF30_to_MERFISH.py to warp the cluster image to MERFISH-CCF space
+
+Notes:
+    - This script assumes that there is only one cluster
+    - 1) Binarize the cluster map
+    - 2) Determine the bounding box of the cluster
+    - 3) Filter the cell metadata using the bounding box info
+    - 4a) Loop through each cell and filter out cells whose reconstructed coordinates fall are external to the cluster
+    - 4b) Or, convert the filtered cell metadata to a 3D image using cell IDs as the intensity values 
+    - 5b) Multiply the 3D image by the cluster image to zero out cellular voxels that are not in the cluster
+    - 6b) Convert non-zero voxels in the 3D cell image into a DataFrame (cell ID, x, y, z)
+    - 7b) Use the cells in cluster DataFrame to check that cells do not overlap and to filter cell metadata by cell ID
+    - Finally, save the filtered cell metadata to a new CSV file
+
+Next steps:
+    - Use the filtered cell metadata to examine cell type prevalence or gene expression
+    - For looking at gene expression, load the filtered cell metadata and join it with the expression data for the gene(s) of interest
 
 Usage:
 ------
-    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -b path/to/root_dir -g gene_name
+    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -b path/to/root_dir -i cluster.nii.gz
 """
 
 import anndata
