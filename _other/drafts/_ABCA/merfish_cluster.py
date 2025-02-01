@@ -34,8 +34,6 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-# 208 685 651 75 31 7 0 1  # <xmin> <xsize> <ymin> <ysize> <zmin> <zsize> <tmin> <tsize>
-
 import merfish as m
 from unravel.cluster_stats.validation import cluster_bbox
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -60,25 +58,6 @@ def parse_args():
     return parser.parse_args()
 
 
-def add_merfish_slice_to_3d_img(z, cell_df_joined, asubset, gf, gene, img):
-    brain_section = cell_df_joined[cell_df_joined['z_reconstructed'] == z]['brain_section_label'].values[0]
-    slice_index_map = m.slice_index_dict()
-
-    if brain_section not in slice_index_map:
-        return img
-
-    print(f"    Processing brain section: {brain_section}")
-    # pred = (cell_df_joined['z_reconstructed'] == z)
-    # section = cell_df_joined[pred]
-    section = cell_df_joined[cell_df_joined['z_reconstructed'] == z]
-    exp_df = m.create_expression_dataframe(asubset, gf, section)
-    points_ndarray = exp_df[['x_reconstructed', 'y_reconstructed', gene]].values
-    img_slice = m.points_to_img_sum(points_ndarray, x_size=1100, y_size=1100, pixel_size=10)
-    zindex = m.section_to_zindex(brain_section)
-    img[:, :, zindex] = img_slice
-    return img
-
-
 @log_command
 def main():
     install()
@@ -88,7 +67,11 @@ def main():
 
     # Load the cluster image
     cluster_img = load_nii(args.input)
-
+    xy_res = 10
+    z_res = 200
+    xy_res_mm = xy_res / 1000
+    z_res_mm = z_res / 1000
+    
     # Binarize
     cluster_img[cluster_img > 0] = 1
 
@@ -117,26 +100,82 @@ def main():
     cell_df_joined = m.join_parcellation_color(cell_df_joined, download_base)
 
     print(f'\n{cell_df_joined=}\n')
-    print(f'\n{xmin=}\n')
-    print(f'\n{xmax=}\n')
-    print(f'\n{ymin=}\n')
-    print(f'\n{ymax=}\n')
-    print(f'\n{zmin=}\n')
-    print(f'\n{zmax=}\n')
+
+    # Convert the bounding box to float
+    xmin, xmax, ymin, ymax, zmin, zmax = map(float, [xmin, xmax, ymin, ymax, zmin, zmax])
+
+    # The bbox needs to be converted to the same units as the reconstructed coordinates, which are in mm
+    # The bounding box is in voxel units, so we need to convert it to mm using the voxel size
+    xmin_mm = xmin * xy_res_mm
+    xmax_mm = xmax * xy_res_mm
+    ymin_mm = ymin * xy_res_mm
+    ymax_mm = ymax * xy_res_mm
+    zmin_mm = zmin * z_res_mm
+    zmax_mm = zmax * z_res_mm
+
+    print(f'\n{xmin_mm=}\n')
+    print(f'{xmax_mm=}\n')
+    print(f'{ymin_mm=}\n')
+    print(f'{ymax_mm=}\n')
+    print(f'{zmin_mm=}\n')
+    print(f'{zmax_mm=}\n')
+
+    # Check the min and max values of the reconstructed coordinates
+    xmin_reconstructed= cell_df_joined['x_reconstructed'].min()
+    xmax_reconstructed = cell_df_joined['x_reconstructed'].max()
+    ymin_reconstructed = cell_df_joined['y_reconstructed'].min()
+    ymax_reconstructed = cell_df_joined['y_reconstructed'].max()
+    zmin_reconstructed = cell_df_joined['z_reconstructed'].min()
+    zmax_reconstructed = cell_df_joined['z_reconstructed'].max()
+
+    print(f'\n{xmin_reconstructed=}\n')
+    print(f'{xmax_reconstructed=}\n')
+    print(f'{ymin_reconstructed=}\n')
+    print(f'{ymax_reconstructed=}\n')
+    print(f'{zmin_reconstructed=}\n')
+    print(f'{zmax_reconstructed=}\n')
 
     # Filter the cell metadata by the bounding box of the cluster using the reconstructed coordinates (x_reconstructed, y_reconstructed, z_reconstructed)
-    cell_df_bbox_filter = cell_df_joined[cell_df_joined['x_reconstructed'] >= xmin &
-                                        cell_df_joined['x_reconstructed'] <= xmax &
-                                        cell_df_joined['y_reconstructed'] >= ymin &
-                                        cell_df_joined['y_reconstructed'] <= ymax &
-                                        cell_df_joined['z_reconstructed'] >= zmin & 
-                                        cell_df_joined['z_reconstructed'] <= zmax]
+    cell_df_bbox_filter = cell_df_joined[
+        (cell_df_joined['x_reconstructed'] >= xmin_mm) &
+        (cell_df_joined['x_reconstructed'] <= xmax_mm) &
+        (cell_df_joined['y_reconstructed'] >= ymin_mm) &
+        (cell_df_joined['y_reconstructed'] <= ymax_mm) &
+        (cell_df_joined['z_reconstructed'] >= zmin_mm) &
+        (cell_df_joined['z_reconstructed'] <= zmax_mm)
+    ]
+
+    # Check the min and max values of the reconstructed coordinates
+    xmin_reconstructed= cell_df_bbox_filter['x_reconstructed'].min()
+    xmax_reconstructed = cell_df_bbox_filter['x_reconstructed'].max()
+    ymin_reconstructed = cell_df_bbox_filter['y_reconstructed'].min()
+    ymax_reconstructed = cell_df_bbox_filter['y_reconstructed'].max()
+    zmin_reconstructed = cell_df_bbox_filter['z_reconstructed'].min()
+    zmax_reconstructed = cell_df_bbox_filter['z_reconstructed'].max()
+
     
+    print(f'\n{xmin_reconstructed=}\n')
+    print(f'{xmax_reconstructed=}\n')
+    print(f'{ymin_reconstructed=}\n')
+    print(f'{ymax_reconstructed=}\n')
+    print(f'{zmin_reconstructed=}\n')
+    print(f'{zmax_reconstructed=}\n')
+
     print(f'\n{cell_df_bbox_filter=}\n')
-    
 
+    # Save the filtered cell metadata to a new CSV file
+    if args.output:
+        output_path = Path(args.output)
+        cell_df_bbox_filter.to_csv(output_path)
+        print(f"\nFiltered data saved to: {output_path}\n")
+    else:
+        print(f"\nFiltered data saved to: cell_metadata_filtered.csv\n")
 
+        
     import sys ; sys.exit()
+
+
+    
 
     # Loop through each cell and filter out cells whose reconstructed coordinates fall are external to the cluster
 
@@ -194,3 +233,21 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+def add_merfish_slice_to_3d_img(z, cell_df_joined, asubset, gf, gene, img):
+    brain_section = cell_df_joined[cell_df_joined['z_reconstructed'] == z]['brain_section_label'].values[0]
+    slice_index_map = m.slice_index_dict()
+
+    if brain_section not in slice_index_map:
+        return img
+
+    print(f"    Processing brain section: {brain_section}")
+    # pred = (cell_df_joined['z_reconstructed'] == z)
+    # section = cell_df_joined[pred]
+    section = cell_df_joined[cell_df_joined['z_reconstructed'] == z]
+    exp_df = m.create_expression_dataframe(asubset, gf, section)
+    points_ndarray = exp_df[['x_reconstructed', 'y_reconstructed', gene]].values
+    img_slice = m.points_to_img_sum(points_ndarray, x_size=1100, y_size=1100, pixel_size=10)
+    zindex = m.section_to_zindex(brain_section)
+    img[:, :, zindex] = img_slice
+    return img
