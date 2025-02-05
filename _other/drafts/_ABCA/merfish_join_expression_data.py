@@ -39,6 +39,9 @@ def parse_args():
     reqs.add_argument('-i', '--input', help='path/filtered_cells.csv', required=True, action=SM)
     reqs.add_argument('-g', '--gene', help='Gene to analyze', required=True, action=SM)
 
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-im', '--imputed', help='Use imputed expression data. Default: False', action='store_true', default=False)
+
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
@@ -58,7 +61,7 @@ def main():
     cell_df = pd.read_csv(args.input, dtype={'cell_label': str})
 
     # Load the expression data for all genes (if the gene is in the dataset) 
-    adata = m.load_expression_data(download_base, args.gene)
+    adata = m.load_expression_data(download_base, args.gene, imputed=args.imputed)
 
     # Filter expression data for the specified gene
     asubset, gf = m.filter_expression_data(adata, args.gene)
