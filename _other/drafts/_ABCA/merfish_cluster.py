@@ -27,7 +27,6 @@ Usage:
     /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -b path/to/root_dir -i cluster.nii.gz
 """
 
-import nibabel as nib
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -38,7 +37,7 @@ import merfish as m
 from unravel.cluster_stats.validation import cluster_bbox
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 from unravel.core.img_io import load_nii
 
 
@@ -50,27 +49,39 @@ def parse_args():
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-o', '--output', help='Output path for cell metadata after filtering by cluster. Default: None', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='path/cells_filtered_by_cluster.csv. Default: None', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 
+# TODO: make this script more general (not cluster specific, but for non-zero voxels in a 3D image)
 
+@print_func_name_args_times()
 def check_cells_in_cluster(cell_df_bbox_filter, cluster_img, xy_res, z_res):
     """
-    Check if each cell is within the cluster using a 3D image representation.
-    Cells are stored in a dictionary of lists to handle multiple cells per voxel.
+    Determines whether each cell is within the cluster using a 3D image representation.
 
-    Args:
-        cell_df_bbox_filter (pd.DataFrame): Filtered cell metadata within the bounding box.
-        cluster_img (np.ndarray): 3D binary cluster image.
-        xy_res (float): Resolution in xy plane in microns.
-        z_res (float): Resolution in z plane in microns.
+    This function converts cell coordinates to voxel indices and stores them in a dictionary, 
+    allowing multiple cells per voxel. The function then filters out cells that do not belong 
+    to the cluster based on the cluster image.
 
-    Returns:
-        pd.DataFrame: Filtered cell metadata where cells are in the cluster.
+    Parameters
+    ----------
+    cell_df_bbox_filter : pd.DataFrame
+        DataFrame containing filtered cell metadata, including reconstructed coordinates.
+    cluster_img : np.ndarray
+        A 3D binary NumPy array representing the cluster image, where 1 indicates the cluster.
+    xy_res : float
+        Resolution of the x-y plane in microns (µm).
+    z_res : float
+        Resolution of the z-plane in microns (µm).
+
+    Returns
+    -------
+    pd.DataFrame
+        A filtered DataFrame containing only the cells that fall within the cluster.
     """
     # Convert resolution to mm
     xy_res_mm = xy_res / 1000
@@ -91,17 +102,17 @@ def check_cells_in_cluster(cell_df_bbox_filter, cluster_img, xy_res, z_res):
 
     # Create a dictionary to store cell labels per voxel
     cell_dict = {}
-    for _, row in cell_df_bbox_filter.iterrows():
-        voxel_coords = (row['x_voxel'], row['y_voxel'], row['z_voxel'])
-        if voxel_coords not in cell_dict:
-            cell_dict[voxel_coords] = []
-        cell_dict[voxel_coords].append(row.name)  # Using cell_label as identifier
+    for _, row in cell_df_bbox_filter.iterrows():  # row has the cell's metadata, such as cell label and voxel coordinates 
+        voxel_coords = (row['x_voxel'], row['y_voxel'], row['z_voxel'])  # Get the voxel coordinates for the cell
+        if voxel_coords not in cell_dict:  # Check if the voxel is already in the dictionary
+            cell_dict[voxel_coords] = []  # Initialize the list (value) for the voxel (key). This list will store all cell labels that fall into the same voxel.
+        cell_dict[voxel_coords].append(row.name)  # Append the cell_label to the list of cells inside the voxel.
 
     # Filter only voxels that are inside the cluster
-    retained_cells = []
+    retained_cells = []  # This will store cell labels that belong to voxels inside the cluster.
     for (x, y, z), cell_labels in cell_dict.items():
         if cluster_img[x, y, z] > 0:  # Check if the voxel is part of the cluster
-            retained_cells.extend(cell_labels)
+            retained_cells.extend(cell_labels)  # Add the cell labels to the retained_cells lists
 
     # Filter the original DataFrame based on retained cell labels (index)
     cell_df_final = cell_df_bbox_filter.loc[cell_df_bbox_filter.index.intersection(retained_cells)].copy()
