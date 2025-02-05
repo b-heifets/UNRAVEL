@@ -247,7 +247,7 @@ def load_region_boundaries(download_base):
 
     return annotation_boundary_array, extent
 
-def load_expression_data(download_base, gene):
+def load_expression_data(download_base, gene, imputed=False):
     """
     Load the expression data from the MERFISH data.
 
@@ -264,7 +264,7 @@ def load_expression_data(download_base, gene):
     genes_in_merfish = genes_in_merfish_data()
     genes_in_imputed_merfish = genes_in_imputed_merfish_data()
 
-    if gene in genes_in_merfish:
+    if gene in genes_in_merfish and not imputed:
         expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad'
     elif gene in genes_in_imputed_merfish:
         expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad'
