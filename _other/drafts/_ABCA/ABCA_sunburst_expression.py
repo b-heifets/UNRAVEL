@@ -93,7 +93,7 @@ def main():
     # Save the mean expression and percent expressing for all cells (.txt)
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / str(Path(args.input).name).replace('.csv', '_sunburst_expression_all.csv')
+    output_path = output_dir / str(Path(args.input).name).replace('.csv', '_sunburst_expression_all.txt')
     with open(output_path, 'w') as f:
         f.write(f"all_mean: {all_mean}\nall_percent: {all_percent}")
     print(f"\nSaved mean expression and percent expressing for all cells to {output_path}")
