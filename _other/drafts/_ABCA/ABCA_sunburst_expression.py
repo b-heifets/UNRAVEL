@@ -86,6 +86,18 @@ def main():
     # Sort by percentage
     cells_df = cells_df.sort_values('percent', ascending=False).reset_index(drop=True)
 
+    # Calculate the mean expression and percent expressing for all cells in cells_df
+    all_mean = cells_df[args.gene].mean()
+    all_percent = (cells_df[args.gene] > 0).mean() * 100
+
+    # Save the mean expression and percent expressing for all cells (.txt)
+    output_dir = Path(args.output)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / str(Path(args.input).name).replace('.csv', '_sunburst_expression_all.csv')
+    with open(output_path, 'w') as f:
+        f.write(f"all_mean: {all_mean}\nall_percent: {all_percent}")
+    print(f"\nSaved mean expression and percent expressing for all cells to {output_path}")
+
     # Calculate mean expression and percent expressing at each hierarchy level
     summary_df = cells_df.copy()
     hierarchy_levels = ['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster']
@@ -96,8 +108,6 @@ def main():
     summary_df = summary_df.drop(columns=[args.gene]).drop_duplicates()
     
     # Save the results
-    output_dir = Path(args.output)
-    output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / str(Path(args.input).name).replace('.csv', '_sunburst_expression_summary.csv')
     summary_df.to_csv(output_path, index=False)
     

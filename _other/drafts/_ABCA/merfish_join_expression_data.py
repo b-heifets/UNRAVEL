@@ -25,7 +25,6 @@ from rich import print
 from rich.traceback import install
 
 import merfish as m
-from merfish_heatmap import aggregate_by_metadata, plot_heatmap
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
