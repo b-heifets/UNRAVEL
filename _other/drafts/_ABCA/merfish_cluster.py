@@ -58,6 +58,57 @@ def parse_args():
     return parser.parse_args()
 
 
+def check_cells_in_cluster(cell_df_bbox_filter, cluster_img, xy_res, z_res):
+    """
+    Check if each cell is within the cluster using a 3D image representation.
+    Cells are stored in a dictionary of lists to handle multiple cells per voxel.
+
+    Args:
+        cell_df_bbox_filter (pd.DataFrame): Filtered cell metadata within the bounding box.
+        cluster_img (np.ndarray): 3D binary cluster image.
+        xy_res (float): Resolution in xy plane in microns.
+        z_res (float): Resolution in z plane in microns.
+
+    Returns:
+        pd.DataFrame: Filtered cell metadata where cells are in the cluster.
+    """
+    # Convert resolution to mm
+    xy_res_mm = xy_res / 1000
+    z_res_mm = z_res / 1000
+
+    # Get the shape of the cluster image
+    x_size, y_size, z_size = cluster_img.shape
+
+    # Convert cell coordinates to voxel indices
+    cell_df_bbox_filter['x_voxel'] = (cell_df_bbox_filter['x_reconstructed'] / xy_res_mm).astype(int)
+    cell_df_bbox_filter['y_voxel'] = (cell_df_bbox_filter['y_reconstructed'] / xy_res_mm).astype(int)
+    cell_df_bbox_filter['z_voxel'] = (cell_df_bbox_filter['z_reconstructed'] / z_res_mm).astype(int)
+
+    # Clip voxel indices to stay within image bounds
+    cell_df_bbox_filter['x_voxel'] = cell_df_bbox_filter['x_voxel'].clip(0, x_size - 1)
+    cell_df_bbox_filter['y_voxel'] = cell_df_bbox_filter['y_voxel'].clip(0, y_size - 1)
+    cell_df_bbox_filter['z_voxel'] = cell_df_bbox_filter['z_voxel'].clip(0, z_size - 1)
+
+    # Create a dictionary to store cell labels per voxel
+    cell_dict = {}
+    for _, row in cell_df_bbox_filter.iterrows():
+        voxel_coords = (row['x_voxel'], row['y_voxel'], row['z_voxel'])
+        if voxel_coords not in cell_dict:
+            cell_dict[voxel_coords] = []
+        cell_dict[voxel_coords].append(row.name)  # Using cell_label as identifier
+
+    # Filter only voxels that are inside the cluster
+    retained_cells = []
+    for (x, y, z), cell_labels in cell_dict.items():
+        if cluster_img[x, y, z] > 0:  # Check if the voxel is part of the cluster
+            retained_cells.extend(cell_labels)
+
+    # Filter the original DataFrame based on retained cell labels (index)
+    cell_df_final = cell_df_bbox_filter.loc[cell_df_bbox_filter.index.intersection(retained_cells)].copy()
+
+    return cell_df_final
+
+
 @log_command
 def main():
     install()
@@ -163,91 +214,19 @@ def main():
 
     print(f'\n{cell_df_bbox_filter=}\n')
 
+    # Loop through each cell and check if it is within the cluster
+    cell_df_filtered = check_cells_in_cluster(cell_df_bbox_filter, cluster_img, xy_res=10, z_res=200)
+
     # Save the filtered cell metadata to a new CSV file
     if args.output:
         output_path = Path(args.output)
-        cell_df_bbox_filter.to_csv(output_path)
+        cell_df_filtered.to_csv(output_path)
         print(f"\nFiltered data saved to: {output_path}\n")
     else:
         print(f"\nFiltered data saved to: cell_metadata_filtered.csv\n")
 
         
-    import sys ; sys.exit()
-
-
-    
-
-    # Loop through each cell and filter out cells whose reconstructed coordinates fall are external to the cluster
-
-
-
-
-    download_base = Path(args.base)
-
-    # Load the cell metadata (for the cell_label and brain_section_label [e.g. C57BL6J-638850.0])
-    cell_df = m.load_cell_metadata(download_base)
-
-    # Add the reconstructed coordinates to the cell metadata
-    cell_df_joined = m.join_reconstructed_coords(cell_df, download_base)
-
-    # Load the expression data for all genes (if the gene is in the dataset) 
-    adata = m.load_expression_data(download_base, args.gene)
-
-    for gene in args.gene:
-        print(f"\nProcessing gene: {gene}")
-
-        if gene not in adata.var.gene_symbol.values:
-            print(f"Gene {gene} not found in the dataset, skipping.")
-            continue
-
-        if args.output:
-            output_path = Path(args.output)
-        else:
-            output_path = download_base / f"{gene}_MERFISH-CCF.nii.gz"
-
-        # Check if the output file already exists
-        if output_path.exists():
-            print(f"\n    Output file already exists: {output_path}\n")
-            continue
-        
-        # Filter expression data for the specified gene
-        asubset, gf = m.filter_expression_data(adata, gene)
-
-        # Get the unique z_positions and their corresponding MERFISH slice indices
-        z_positions = np.sort(cell_df_joined['z_reconstructed'].unique())
-
-        # Create an empty 3D image with shape
-        img = np.zeros((1100, 1100, 76))
-
-        # Loop through all z positions and add the expression data to the image at the corresponding z index
-        for z in z_positions:
-            img = add_merfish_slice_to_3d_img(z, cell_df_joined, asubset, gf, gene, img)
-
-        # Save the image as a .nii.gz file
-        ref_nii = nib.load(args.ref_nii)
-        nii_img = nib.Nifti1Image(img, affine=ref_nii.affine, header=ref_nii.header)
-        nib.save(nii_img, str(output_path))
-        print(f"\n    Saved image to {output_path}\n")
-
     verbose_end_msg()
 
 if __name__ == '__main__':
     main()
-
-def add_merfish_slice_to_3d_img(z, cell_df_joined, asubset, gf, gene, img):
-    brain_section = cell_df_joined[cell_df_joined['z_reconstructed'] == z]['brain_section_label'].values[0]
-    slice_index_map = m.slice_index_dict()
-
-    if brain_section not in slice_index_map:
-        return img
-
-    print(f"    Processing brain section: {brain_section}")
-    # pred = (cell_df_joined['z_reconstructed'] == z)
-    # section = cell_df_joined[pred]
-    section = cell_df_joined[cell_df_joined['z_reconstructed'] == z]
-    exp_df = m.create_expression_dataframe(asubset, gf, section)
-    points_ndarray = exp_df[['x_reconstructed', 'y_reconstructed', gene]].values
-    img_slice = m.points_to_img_sum(points_ndarray, x_size=1100, y_size=1100, pixel_size=10)
-    zindex = m.section_to_zindex(brain_section)
-    img[:, :, zindex] = img_slice
-    return img
