@@ -24,6 +24,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-min', '--min', help='min percent value for the colormap', default=0, type=float, action=SM)
     opts.add_argument('-max', '--max', help='max percent value for the colormap', default=100, type=float, action=SM)
+    opts.add_argument('-o', '--output', help='path/percent_expression_scale.pdf', default='percent_expression_scale.pdf', action=SM)
 
     return parser.parse_args()
 
@@ -53,8 +54,8 @@ def main():
     # Remove y-axis labels
     cbar.ax.set_yticks([])
 
-    # Show the figure
-    plt.show()
+    # Save the color scale to a PDF file
+    plt.savefig(args.output, bbox_inches='tight')
     
 
 if __name__ == '__main__':
