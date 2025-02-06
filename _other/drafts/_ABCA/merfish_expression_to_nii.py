@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py`` from UNRAVEL to plot MERFISH data from the Allen Brain Cell Atlas.
+Use ``merfish_expression_to_nii.py`` from UNRAVEL to make a 3D .nii.gz image of ABCA MERFISH expression data.
 
 Usage:
 ------
-    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -b path/to/root_dir -g gene_name
+    merfish_expression_to_nii.py -b path/to/root_dir -g gene_name
 """
 
 import anndata
