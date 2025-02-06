@@ -6,6 +6,9 @@ Use ``./RNAseq_expression_in_mice_heatmap.py`` from UNRAVEL to join cell metadat
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.html
 
+Next steps:
+    - RNAseq_filter.py
+
 Usage:
 ------
     ./RNAseq_expression_in_mice_heatmap.py -b path/base_dir -g genes [-o output] [-v]
@@ -31,6 +34,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='path/expression_metrics.csv. Default: cell_metadata_<gene>.csv', default=None, action=SM)
+    opts.add_argument('-e', '--extra_cols', help='Include extra columns in the cell metadata (e.g., x and y). Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -38,11 +42,16 @@ def parse_args():
     return parser.parse_args()
 
 @print_func_name_args_times()
-def load_RNAseq_mouse_cell_metadata(download_base):
+def load_RNAseq_mouse_cell_metadata(download_base, extra_cols=False):
     cell_metadata_path = download_base / "metadata/WMB-10X/20231215/cell_metadata.csv"
-    cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str},
-                          usecols=['cell_label', 'feature_matrix_label', 'region_of_interest_acronym', 
-                                   'x', 'y', 'cluster_alias'])
+    if extra_cols: 
+        cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str},
+                            usecols=['cell_label', 'feature_matrix_label', 'region_of_interest_acronym', 
+                                    'x', 'y', 'cluster_alias'])
+    else:
+        cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str},
+                            usecols=['cell_label', 'region_of_interest_acronym', 'cluster_alias'])
+
     cell_df.set_index('cell_label', inplace=True)
     return cell_df
 
@@ -63,10 +72,13 @@ def main():
     download_base = Path(args.base)
 
     # Load the cell metadata
-    cell_df = load_RNAseq_mouse_cell_metadata(download_base) 
+    cell_df = load_RNAseq_mouse_cell_metadata(download_base, extra_cols=args.extra_cols)
 
     # Add: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
     cell_df_joined = m.join_cluster_details(cell_df, download_base) 
+
+    # Drop cluster_alias column
+    cell_df_joined.drop(columns='cluster_alias', inplace=True)
 
     # Create empty gene expression dataframe
     gene_df = load_mouse_RNAseq_gene_metadata(download_base)
