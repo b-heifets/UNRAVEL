@@ -4,7 +4,7 @@
 Use ``./RNAseq_expression_in_mice_heatmap.py`` from UNRAVEL to join cell metadata with scRNA-seq expression data.
 
 Note:
-    - https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.htmlml
+    - https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.html
 
 Usage:
 ------
@@ -76,7 +76,6 @@ def main():
     
     # Initialize an empty list to store each exp_df for concatenation later
     exp_dfs = []
-    count = 0  # For testing purposes
     expression_matrices_dir = download_base / 'expression_matrices'
     list_of_paths_to_expression_matrices = list(expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'))
     for file in list_of_paths_to_expression_matrices:
@@ -96,11 +95,6 @@ def main():
         exp_dfs.append(exp_df)
         ad.file.close()
         del ad
-        
-        # For testing purposes
-        count += 1
-        if count > 2:
-            break
 
     # Concatenate all exp_dfs into a single DataFrame along the rows
     gdata = pd.concat(exp_dfs, axis=0)
@@ -117,13 +111,13 @@ def main():
         output = args.output
     else:
         if len(args.genes) == 1:
-            output = f"cell_metadata_{args.genes[0]}.csv"
+            output = f"scRNAseq_WMB_{args.genes[0]}.csv"
         elif len(args.genes) == 2:
-            output = f"cell_metadata_{args.genes[0]}_{args.genes[1]}.csv"
+            output = f"scRNAseq_WMB_{args.genes[0]}_{args.genes[1]}.csv"
         elif len(args.genes) == 3:
-            output = f"cell_metadata_{args.genes[0]}_{args.genes[1]}_{args.genes[2]}.csv"
+            output = f"scRNAseq_WMB_{args.genes[0]}_{args.genes[1]}_{args.genes[2]}.csv"
         else:
-            output = "cell_metadata_w_exp.csv"
+            output = "scRNAseq_WMB_w_exp.csv"
         output_path = Path().cwd() / output
     output_path.parent.mkdir(parents=True, exist_ok=True)
     cell_df_joined_w_exp.to_csv(output_path)
