@@ -93,18 +93,31 @@ def main():
     if args.data_set == 'all':
         list_of_paths_to_expression_matrices = list(expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'))
     else:
-        list_of_paths_to_expression_matrices.append(expression_matrices_dir / 'WMB-10XMulti/20230830/WMB-10XMulti-log2.h5ad')
+        # Always add the Multi dataset (if it exists)
+        multi_path = expression_matrices_dir / 'WMB-10XMulti/20230830/WMB-10XMulti-log2.h5ad'
+        if multi_path.exists():
+            list_of_paths_to_expression_matrices.append(multi_path)
+
         v3_prefix = 'WMB-10Xv3/20230630/WMB-10Xv3-'
         v2_prefix = 'WMB-10Xv2/20230630/WMB-10Xv2-'
         suffix = '-log2.h5ad'
-        
-        datasets = [args.data_set] if isinstance(args.data_set, str) else args.data_set  # Convert to list if str
 
-        v3_paths = [expression_matrices_dir / f"{v3_prefix}{dataset}{suffix}" for dataset in datasets]
-        v2_paths = [expression_matrices_dir / f"{v2_prefix}{dataset}{suffix}" for dataset in datasets]
+        datasets = [args.data_set] if isinstance(args.data_set, str) else args.data_set  # Ensure list format
 
-        list_of_paths_to_expression_matrices.extend(v3_paths)
-        list_of_paths_to_expression_matrices.extend(v2_paths)
+        # Add valid v3 and v2 paths
+        for dataset in datasets:
+            v3_path = expression_matrices_dir / f"{v3_prefix}{dataset}{suffix}"
+            v2_path = expression_matrices_dir / f"{v2_prefix}{dataset}{suffix}"
+
+            if v3_path.exists():
+                list_of_paths_to_expression_matrices.append(v3_path)
+            if v2_path.exists():
+                list_of_paths_to_expression_matrices.append(v2_path)
+
+    # Check if any files are available; if not, print a warning and exit
+    if not list_of_paths_to_expression_matrices:
+        print("[bold red]Error:[/bold red] No valid expression matrix files found for the selected dataset(s).")
+        exit(1)
     
     for file in list_of_paths_to_expression_matrices:
 
