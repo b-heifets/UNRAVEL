@@ -52,7 +52,7 @@ def load_RNAseq_mouse_cell_metadata(download_base, extra_cols=False):
                                     'x', 'y', 'cluster_alias'])
     else:
         cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str},
-                            usecols=['cell_label', 'region_of_interest_acronym', 'cluster_alias'])
+                            usecols=['cell_label', 'feature_matrix_label', 'region_of_interest_acronym', 'cluster_alias'])
 
     cell_df.set_index('cell_label', inplace=True)
     return cell_df
@@ -133,6 +133,9 @@ def main():
 
     # Join the full concatenated gene expression data with the cell metadata
     cell_df_joined_w_exp = cell_df.join(gdata, how="inner")
+
+    if not args.extra_cols:
+        cell_df_joined_w_exp.drop(columns=['feature_matrix_label'], inplace=True)
 
     # Save the joined cell metadata with expression data
     if args.output is not None:
