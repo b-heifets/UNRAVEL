@@ -5,6 +5,7 @@ Use ``./RNAseq_expression_in_mice_heatmap.py`` from UNRAVEL to join cell metadat
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.html
+    - By default, expression data is collected frmo the WMB-10Xv3, WMB-10Xv2, and WMB-10XMulti datasets.
 
 Next steps:
     - RNAseq_filter.py
@@ -34,6 +35,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='path/expression_metrics.csv. Default: cell_metadata_<gene>.csv', default=None, action=SM)
+    opts.add_argument('-d', '--data_set', help='The dataset to use (all \[default], CB, CTXsp, HPF, HY, Isocortex, MB, MY, OLF, P, PAL, STR, TH)', default='all', action=SM)
     opts.add_argument('-e', '--extra_cols', help='Include extra columns in the cell metadata (e.g., x and y). Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
@@ -75,10 +77,8 @@ def main():
     cell_df = load_RNAseq_mouse_cell_metadata(download_base, extra_cols=args.extra_cols)
 
     # Add: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
-    cell_df_joined = m.join_cluster_details(cell_df, download_base) 
-
-    # Drop cluster_alias column
-    cell_df_joined.drop(columns='cluster_alias', inplace=True)
+    if args.extra_cols:
+        cell_df_joined = m.join_cluster_details(cell_df, download_base) 
 
     # Create empty gene expression dataframe
     gene_df = load_mouse_RNAseq_gene_metadata(download_base)
@@ -89,7 +89,23 @@ def main():
     # Initialize an empty list to store each exp_df for concatenation later
     exp_dfs = []
     expression_matrices_dir = download_base / 'expression_matrices'
-    list_of_paths_to_expression_matrices = list(expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'))
+    list_of_paths_to_expression_matrices = []
+    if args.data_set == 'all':
+        list_of_paths_to_expression_matrices = list(expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'))
+    else:
+        list_of_paths_to_expression_matrices.append(expression_matrices_dir / 'WMB-10XMulti/20230830/WMB-10XMulti-log2.h5ad')
+        v3_prefix = 'WMB-10Xv3/20230630/WMB-10Xv3-'
+        v2_prefix = 'WMB-10Xv2/20230630/WMB-10Xv2-'
+        suffix = '-log2.h5ad'
+        
+        datasets = [args.data_set] if isinstance(args.data_set, str) else args.data_set  # Convert to list if str
+
+        v3_paths = [expression_matrices_dir / f"{v3_prefix}{dataset}{suffix}" for dataset in datasets]
+        v2_paths = [expression_matrices_dir / f"{v2_prefix}{dataset}{suffix}" for dataset in datasets]
+
+        list_of_paths_to_expression_matrices.extend(v3_paths)
+        list_of_paths_to_expression_matrices.extend(v2_paths)
+    
     for file in list_of_paths_to_expression_matrices:
 
         print(f"\n    Loading expression data from {file}\n")
