@@ -78,13 +78,13 @@ def main():
 
     # Add: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
     if args.extra_cols:
-        cell_df_joined = m.join_cluster_details(cell_df, download_base) 
+        cell_df = m.join_cluster_details(cell_df, download_base) 
 
     # Create empty gene expression dataframe
     gene_df = load_mouse_RNAseq_gene_metadata(download_base)
     pred = [x in args.genes for x in gene_df.gene_symbol]
     gene_filtered = gene_df[pred]
-    gdata = pd.DataFrame(index=cell_df_joined.index, columns=gene_filtered.index)
+    gdata = pd.DataFrame(index=cell_df.index, columns=gene_filtered.index)
     
     # Initialize an empty list to store each exp_df for concatenation later
     exp_dfs = []
@@ -112,7 +112,7 @@ def main():
 
         # Connect the cells with expression data to the cell metadata
         matrix_prefix = str(file.name).replace('-log2.h5ad', '')
-        cell_filtered = cell_df_joined[cell_df_joined['feature_matrix_label'] == matrix_prefix]
+        cell_filtered = cell_df[cell_df['feature_matrix_label'] == matrix_prefix]
         
         # Load the expression data
         ad = anndata.read_h5ad(file, backed='r')
@@ -132,7 +132,7 @@ def main():
     gdata = gdata[pred].copy(deep=True)
 
     # Join the full concatenated gene expression data with the cell metadata
-    cell_df_joined_w_exp = cell_df_joined.join(gdata, how="inner")
+    cell_df_joined_w_exp = cell_df.join(gdata, how="inner")
 
     # Save the joined cell metadata with expression data
     if args.output is not None:
