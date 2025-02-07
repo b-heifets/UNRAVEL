@@ -35,7 +35,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='path/expression_metrics.csv. Default: cell_metadata_<gene>.csv', default=None, action=SM)
-    opts.add_argument('-d', '--data_set', help='The dataset to use (all \[default], CB, CTXsp, HPF, HY, Isocortex, MB, MY, OLF, P, PAL, STR, TH)', default='all', action=SM)
+    opts.add_argument('-d', '--data_set', help='The dataset to use (all \[default], CB, CTXsp, HPF, HY, Isocortex, MB, MY, OLF, P, PAL, STR, TH)', default='all', nargs='+', action=SM)
     opts.add_argument('-e', '--extra_cols', help='Include extra columns in the cell metadata (e.g., x and y). Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
