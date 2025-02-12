@@ -23,7 +23,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-min', '--min', help='min value for the gene expression colormap', default=0, action=SM)
-    opts.add_argument('-max', '--max', help='max value for the gene expression colormap', default=8, action=SM)
+    opts.add_argument('-max', '--max', help='max value for the gene expression colormap', default=10, action=SM)
     opts.add_argument('-o', '--output', help='path/magma_r_scale.pdf', default='magma_r_scale.pdf', action=SM)
 
     return parser.parse_args()

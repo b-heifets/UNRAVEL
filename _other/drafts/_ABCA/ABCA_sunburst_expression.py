@@ -4,8 +4,8 @@
 Use ``ABCA_sunburst_expression.py`` from UNRAVEL to calculate mean expression for all cell types in the ABCA and make a sunburst plot.
 
 Prereqs: 
-    - merfish_filter.py
-    - merfish_join_expression_data.py (use output from this script as input)
+    - merfish_filter.py and merfish_join_expression_data.py
+    - Or: RNAseq_expression_in_mice.py and RNAseq_filter.py
 
 Note:
     - LUT location: unravel/core/csvs/ABCA/ABCA_sunburst_colors.csv
@@ -43,7 +43,9 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
-    opts.add_argument('-o', '--output', help='Output dir path. Default: ABCA_sunburst_expression', default='ABCA_sunburst_expression', action=SM)
+    opts.add_argument('-c', '--color_max', help='Maximum value for the color scale. Default: 10', default=10, type=float, action=SM)
+    opts.add_argument('-t', '--threshold', help='Log2(CPM+1) threshold for percent gene expression. Default: 6', default=6, type=float, action=SM)
+    opts.add_argument('-o', '--output', help='Output dir path. Default: ABCA_sunburst_cmax10_thr6/', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -88,27 +90,32 @@ def main():
 
     # Calculate the mean expression and percent expressing for all cells in cells_df
     all_mean = cells_df[args.gene].mean()
-    all_percent = (cells_df[args.gene] > 0).mean() * 100
+    all_percent = (cells_df[args.gene] > args.threshold).mean() * 100
+
+    # Create the output directory
+    if args.output is None:
+        output_dir = Path(args.input).parent / f'ABCA_sunburst_cmax{args.color_max}_thr{args.threshold}'
+    else:
+        output_dir = Path(args.output)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     # Save the mean expression and percent expressing for all cells (.txt)
-    output_dir = Path(args.output)
-    output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = output_dir / str(Path(args.input).name).replace('.csv', '_sunburst_expression_all.txt')
-    with open(output_path, 'w') as f:
-        f.write(f"all_mean: {all_mean}\nall_percent: {all_percent}")
-    print(f"\nSaved mean expression and percent expressing for all cells to {output_path}")
+    # output_path = output_dir / str(Path(args.input).name).replace('.csv', f'_sunburst_expression_thr{args.threshold}_all.txt')
+    # with open(output_path, 'w') as f:
+    #     f.write(f"all_mean: {all_mean}\nall_percent (threshold: {args.threshold}): {all_percent}")
+    # print(f"\nSaved mean expression and percent expressing for all cells to {output_path}")
 
     # Calculate mean expression and percent expressing at each hierarchy level
     summary_df = cells_df.copy()
     hierarchy_levels = ['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster']
     for level in hierarchy_levels:
         summary_df[f'{level}_mean'] = summary_df[level].map(cells_df.groupby(level)[args.gene].mean())
-        summary_df[f'{level}_percent'] = summary_df[level].map(cells_df.groupby(level)[args.gene].apply(lambda x: (x > 0).mean() * 100))
+        summary_df[f'{level}_percent'] = summary_df[level].map(cells_df.groupby(level)[args.gene].apply(lambda x: (x > args.threshold).mean() * 100))
 
     summary_df = summary_df.drop(columns=[args.gene]).drop_duplicates()
     
     # Save the results
-    output_path = output_dir / str(Path(args.input).name).replace('.csv', '_sunburst_expression_summary.csv')
+    output_path = output_dir / str(Path(args.input).name).replace('.csv', f'_sunburst_expression_thr{args.threshold}.csv')
     summary_df.to_csv(output_path, index=False)
     
     print(f"\nSaved sunburst expression summary to {output_path}")
@@ -127,11 +134,11 @@ def main():
     mean_df.columns = ['label', 'value']
 
     # Replace the mean value with the hex color (magma_r)
-    mean_df['color'] = mean_df['value'].apply(lambda x: mcolors.rgb2hex(plt.cm.magma_r((x - 0) / (8 - 0))))
+    mean_df['color'] = mean_df['value'].apply(lambda x: mcolors.rgb2hex(plt.cm.magma_r((x - 0) / (args.color_max - 0))))
     mean_df = mean_df.drop(columns=['value'])
 
     # Save the mean expression LUT
-    mean_path = str(output_path).replace('expression_summary.csv', 'mean_expression_lut.txt')
+    mean_path = str(output_path).replace(f'_expression_thr{args.threshold}.csv', '_mean_expression_lut.txt')
     for row in mean_df.itertuples(index=False):
         with open(mean_path, 'a') as f:
             f.write(f"{row.label}: {row.color}\n")
@@ -149,11 +156,14 @@ def main():
     percent_df = percent_df.drop(columns=['value'])
 
     # Save the percent expression LUT
-    percent_path = str(output_path).replace('expression_summary.csv', 'percent_expression_lut.txt')
+    percent_path = str(output_path).replace(f'_expression_thr{args.threshold}.csv', f'_percent_expression_thr{args.threshold}_lut.txt')
     for row in percent_df.itertuples(index=False):
         with open(percent_path, 'a') as f:
             f.write(f"{row.label}: {row.color}\n")
-
+    
+    lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'ABCA_sunburst_colors.csv'
+    shutil.copy(lut_path, output_path.parent / lut_path.name)
+    
     verbose_end_msg()
 
 

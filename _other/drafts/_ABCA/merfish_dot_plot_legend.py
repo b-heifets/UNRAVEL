@@ -22,7 +22,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='Path/legend.pdf. Default: dot_plot_legend.pdf', default='dot_plot_legend.pdf', action=SM)
     opts.add_argument('--min_color', help='Min color value. Default: 0', default=0, type=float)
-    opts.add_argument('--max_color', help='Max color value. Default: 8', default=8, type=float)
+    opts.add_argument('--max_color', help='Max color value. Default: 10', default=10, type=float)
     opts.add_argument('--min_size', help='Min dot size. Default: 0', default=0, type=float)
     opts.add_argument('--max_size', help='Max dot size. Default: 100', default=100, type=float)
 
@@ -31,7 +31,7 @@ def parse_args():
 
     return parser.parse_args()
 
-def save_legend(output_path, min_color=0, max_color=8, min_size=1, max_size=100):
+def save_legend(output_path, min_color=0, max_color=10, min_size=1, max_size=100):
     """
     Generate and save a standalone legend with separate labels for Mean Expression and Percent Expression.
     """
@@ -40,7 +40,7 @@ def save_legend(output_path, min_color=0, max_color=8, min_size=1, max_size=100)
     ax.axis("off")
 
     # Define mean expression color gradient
-    mean_values = np.linspace(min_color, max_color, 5)
+    mean_values = np.linspace(min_color, max_color, 5) # 5 color stops
     mean_colors = [sns.color_palette("magma_r", as_cmap=True)(v / max_color) for v in mean_values]
 
     # Define percent expressing sizes

@@ -35,7 +35,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='path/expression_metrics.csv. Default: cell_metadata_<gene>.csv', default=None, action=SM)
-    opts.add_argument('-d', '--data_set', help='The dataset to use (all \[default], CB, CTXsp, HPF, HY, Isocortex, MB, MY, OLF, P, PAL, STR, TH)', default='all', nargs='+', action=SM)
+    opts.add_argument('-d', '--data_set', help='The dataset to use (all \[default], CB, CTXsp, HPF, HY, Isocortex, MB, MY, OLF, P, PAL, STR, TH, multi)', default='all', nargs='+', action=SM)
     opts.add_argument('-e', '--extra_cols', help='Include extra columns in the cell metadata (e.g., x and y). Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
@@ -90,11 +90,14 @@ def main():
     exp_dfs = []
     expression_matrices_dir = download_base / 'expression_matrices'
     list_of_paths_to_expression_matrices = []
+    multi_path = expression_matrices_dir / 'WMB-10XMulti/20230830/WMB-10XMulti-log2.h5ad'
     if args.data_set == 'all':
         list_of_paths_to_expression_matrices = list(expression_matrices_dir.rglob('WMB-10X*/**/*-log2.h5ad'))
+    elif args.data_set == 'multi':
+        if multi_path.exists():
+            list_of_paths_to_expression_matrices.append(multi_path)
     else:
         # Always add the Multi dataset (if it exists)
-        multi_path = expression_matrices_dir / 'WMB-10XMulti/20230830/WMB-10XMulti-log2.h5ad'
         if multi_path.exists():
             list_of_paths_to_expression_matrices.append(multi_path)
 
@@ -155,11 +158,11 @@ def main():
         output = args.output
     else:
         if len(args.genes) == 1:
-            output = f"scRNAseq_WMB_{args.genes[0]}.csv"
+            output = f"scRNAseq_WMB_{args.data_set}_{args.genes[0]}.csv"
         elif len(args.genes) == 2:
-            output = f"scRNAseq_WMB_{args.genes[0]}_{args.genes[1]}.csv"
+            output = f"scRNAseq_WMB_{args.data_set}_{args.genes[0]}_{args.genes[1]}.csv"
         elif len(args.genes) == 3:
-            output = f"scRNAseq_WMB_{args.genes[0]}_{args.genes[1]}_{args.genes[2]}.csv"
+            output = f"scRNAseq_WMB_{args.data_set}_{args.genes[0]}_{args.genes[1]}_{args.genes[2]}.csv"
         else:
             output = "scRNAseq_WMB_w_exp.csv"
         output_path = Path().cwd() / output

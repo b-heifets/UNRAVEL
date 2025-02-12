@@ -40,7 +40,8 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-t', '--threshold', help='Log2(CPM+1) threshold for percent gene expression (rec: use same thresh as for ABCA_sunburst_expression.py). Default: 6', default=6, type=float, action=SM)
-    opts.add_argument('-o', '--output', help='Output dir path. Default: ABCA_sunburst_filtered_thr6/', default=None, action=SM)
+    opts.add_argument('-l', '--level', help='Level to filter on. Default: supertype', default='supertype', action=SM)
+    opts.add_argument('-o', '--output', help='Output dir path. Default: ABCA_sunburst_filtered_thr6_<level>', default=None, action=SM)
     opts.add_argument('-a', '--apply_to', help='path/secondary_ABCA_sunburst_expression.csv (the secondary file to filter based on the primary file)', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -60,28 +61,28 @@ def main():
     print('\nMain sunburst expression data:')
     print(main_sunburst_exp_df)
 
-    # Keep cells (rows) that have high expression (e.g., >= 6) of the gene of interest
-    # If mean expression >= 6 at any level (class, subclass, supertype, cluster), keep the cell (row)
+    # Keep cells that have high mean expression (e.g., >= 6) of the gene of interest in 
+    cell_mean_col = f'{args.level}_mean'
     cells_df_filtered = main_sunburst_exp_df[
-        (main_sunburst_exp_df['class_mean'] >= args.threshold) |
-        (main_sunburst_exp_df['subclass_mean'] >= args.threshold) |
-        (main_sunburst_exp_df['supertype_mean'] >= args.threshold) |
-        (main_sunburst_exp_df['cluster_mean'] >= args.threshold)
+        (main_sunburst_exp_df[cell_mean_col] >= args.threshold)
     ]
 
     print('\nMain sunburst expression data after filtering:')
     print(cells_df_filtered)
 
-    # Create output directory
+    # Save the filtered results
     if args.output:
         output_dir = Path(args.output)
     else:
-        output_dir = Path(f'ABCA_sunburst_filtered_thr{args.threshold}')
+        output_dir = Path(f'ABCA_sunburst_filtered_thr{args.threshold}_{args.level}')
     output_dir.mkdir(parents=True, exist_ok=True)
-
-    # Save the filtered results
     output_path = output_dir / str(Path(args.input).name).replace('.csv', f'_filtered.csv')
     cells_df_filtered.to_csv(output_path, index=False)
+
+    # Copy the mean expression LUT
+    mean_lut = str(args.input).replace(f'expression_thr{args.threshold}.csv', 'mean_expression_lut.txt')
+    if Path(mean_lut).exists():
+        shutil.copy(mean_lut, output_dir)
 
     if args.apply_to:
         # Get list of clusters with high expression
@@ -99,8 +100,16 @@ def main():
         print(secondary_cells_df_filtered)
 
         # Save the filtered results
-        main_csv_name = Path(args.input).name
-        output_path = output_dir / str(Path(args.apply_to).name).replace('.csv', f'_filtered_w_{main_csv_name}')
+        output_path = output_dir / str(Path(args.apply_to).name).replace('.csv', f'_filtered_with_{Path(args.input).name}')
+        secondary_cells_df_filtered.to_csv(output_path, index=False)
+
+        # Copy the mean expression LUT
+        if str(args.apply_to).endswith(f'expression_thr{args.threshold}.csv'):  # scRNA-seq data
+            mean_lut = str(args.apply_to).replace(f'expression_thr{args.threshold}.csv', 'mean_expression_lut.txt')
+        elif str(args.apply_to).endswith(f'expression_summary.csv'):  # MERFISH data
+            mean_lut = str(args.apply_to).replace(f'expression_summary.csv', 'mean_expression_lut.txt')
+        if Path(mean_lut).exists():
+            shutil.copy(mean_lut, output_dir)
     
     verbose_end_msg()
 

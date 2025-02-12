@@ -68,12 +68,6 @@ def filter_dataframe(df, columns, values):
 
     return df
 
-def cell_type_frequency(df, ontology_level, value, sort=False):
-    grouped = df.groupby(value)[ontology_level].mean()
-    if sort:
-        grouped = grouped.sort_values(ascending=False)
-    return grouped
-
 @log_command
 def main():
     install()

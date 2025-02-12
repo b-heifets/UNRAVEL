@@ -37,10 +37,10 @@ def parse_args():
     opts.add_argument('-fh', '--fig_height', help='Fig height', default=4, type=float, action=SM)
     opts.add_argument('-fw', '--fig_width', help='Fig width', default=4, type=float, action=SM)
     opts.add_argument('-min_c', '--min_color', help='Min color value', default=0, type=float, action=SM)
-    opts.add_argument('-max_c', '--max_color', help='Max color value', default=8, type=float, action=SM)
+    opts.add_argument('-max_c', '--max_color', help='Max color value', default=10, type=float, action=SM)
     opts.add_argument('-min_s', '--min_size', help='Min dot size', default=1, type=float, action=SM)
     opts.add_argument('-max_s', '--max_size', help='Max dot size', default=100, type=float, action=SM)
-    opts.add_argument('-t', '--threshold', help='Threshold for gene expression (3 \[default] is stringent)', default=3, type=float, action=SM)
+    opts.add_argument('-t', '--threshold', help='Threshold for gene expression (5 \[default] is stringent)', default=5, type=float, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true', default=False)
