@@ -44,7 +44,8 @@ import textwrap
 from rich import print
 from rich.traceback import install
 from pathlib import Path
-from scipy.stats import ttest_ind, dunnett
+# from scipy.stats import ttest_ind, dunnett  # dunnett is not available in scipy
+from scipy.stats import ttest_ind
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -61,7 +62,7 @@ def parse_args():
     reqs.add_argument('--labels', nargs='*', help='Group Labels in same order', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
+    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett" (ignore for now), and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
     opts.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', action=SM)
     opts.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default="CCFv3-2020__regionID_side_IDpath_region_abbr.csv", action=SM)
@@ -71,6 +72,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Dunnett's test is not available in scipy.stats. Find an alternative or implement it.
 # TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cstats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 # TODO: CSVs are loaded for each region. It would be more efficient to load them once for processing all regions. 
 # TODO: Update coloring of plots to match ABA colors (i.e., use code from rstats_summary.py)

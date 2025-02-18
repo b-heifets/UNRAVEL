@@ -37,7 +37,8 @@ import textwrap
 from rich import print
 from rich.traceback import install
 from pathlib import Path
-from scipy.stats import ttest_ind, dunnett
+# from scipy.stats import ttest_ind, dunnett  # dunnett is not available in scipy
+from scipy.stats import ttest_ind
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -55,7 +56,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('--cluster_ids', help='List of cluster IDs to process (Default: process all clusters)', nargs='*', type=int, action=SM)
-    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
+    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett" (ignore for now), and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -63,6 +64,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Dunnett's test is not available in scipy.stats. Find an alternative or implement it.
 # TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cstats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 # TODO: CSVs are loaded for each cluster. It would be more efficient to load them once for processing all clusters. 
 # TODO: Perhaps functions in this script could be made more generic and used in rstats_mean_IF_summary.py as well.
