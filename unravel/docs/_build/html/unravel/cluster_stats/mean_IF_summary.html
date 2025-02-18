@@ -499,69 +499,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.cluster_stats.mean_IF_summary">
-<span id="unravel-cluster-stats-mean-if-summary-module"></span><span id="unravel-cluster-stats-mean-if-summary"></span><h1>unravel.cluster_stats.mean_IF_summary module<a class="headerlink" href="#module-unravel.cluster_stats.mean_IF_summary" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">cstats_mean_IF_summary</span></code> (<code class="docutils literal notranslate"><span class="pre">cmis</span></code>) from UNRAVEL to output plots of mean IF intensities for each cluster in atlas space.</p>
-<dl class="simple">
-<dt>Prereqs:</dt><dd><ul class="simple">
-<li><p>Generate CSV inputs withs <code class="docutils literal notranslate"><span class="pre">cstats_IF_mean</span></code></p></li>
-<li><p>Add conditions to input CSV file names: <code class="docutils literal notranslate"><span class="pre">utils_prepend</span></code> -sk $SAMPLE_KEY -f</p></li>
-</ul>
-</dd>
-<dt>Inputs:</dt><dd><ul class="simple">
-<li><p><cite>*</cite>.csv files in the working dir with these columns: sample, cluster_ID, mean_IF_intensity</p></li>
-</ul>
-</dd>
-<dt>Outputs:</dt><dd><ul class="simple">
-<li><p>cluster_mean_IF_summary/cluster_&lt;cluster_id&gt;.pdf for each cluster</p></li>
-<li><p>If significant differences are found, a prefix ‘_’ is added to the filename to sort the files</p></li>
-</ul>
-</dd>
-</dl>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>The first word of the csv inputs is used for the the group names (underscore separated).</p></li>
-</ul>
-</div>
-<section id="usage-for-t-tests">
-<h2>Usage for t-tests:<a class="headerlink" href="#usage-for-t-tests" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_mean_IF_summary –order Control Treatment –labels Control Treatment -t ttest [–cluster_ids 1 2 3] [-alt two-sided] [-v]</p>
-</div></blockquote>
-</section>
-<section id="usage-for-tukey-s-tests-w-reordering-and-renaming-of-conditions">
-<h2>Usage for Tukey’s tests w/ reordering and renaming of conditions:<a class="headerlink" href="#usage-for-tukey-s-tests-w-reordering-and-renaming-of-conditions" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>cstats_mean_IF_summary –order group3 group2 group1 –labels Group_3 Group_2 Group_1 [–cluster_ids 1 2 3] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF_summary.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF_summary.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF_summary.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF_summary.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF_summary.load_data">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF_summary.</span></span><span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF_summary.html#load_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF_summary.load_data" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF_summary.perform_t_tests">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF_summary.</span></span><span class="sig-name descname"><span class="pre">perform_t_tests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF_summary.html#perform_t_tests"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF_summary.perform_t_tests" title="Link to this definition">#</a></dt>
-<dd><p>Perform t-tests between groups in the DataFrame.</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF_summary.plot_data">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF_summary.</span></span><span class="sig-name descname"><span class="pre">plot_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cluster_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'tukey'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'two-sided'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF_summary.html#plot_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF_summary.plot_data" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.cluster_stats.mean_IF_summary.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.cluster_stats.mean_IF_summary.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/cluster_stats/mean_IF_summary.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.cluster_stats.mean_IF_summary.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-cluster-stats-mean-if-summary-module">
+<span id="unravel-cluster-stats-mean-if-summary"></span><h1>unravel.cluster_stats.mean_IF_summary module<a class="headerlink" href="#unravel-cluster-stats-mean-if-summary-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -603,24 +542,6 @@
 
 
   <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-t-tests">Usage for t-tests:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-tukey-s-tests-w-reordering-and-renaming-of-conditions">Usage for Tukey’s tests w/ reordering and renaming of conditions:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF_summary.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF_summary.load_data"><code class="docutils literal notranslate"><span class="pre">load_data()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF_summary.perform_t_tests"><code class="docutils literal notranslate"><span class="pre">perform_t_tests()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF_summary.plot_data"><code class="docutils literal notranslate"><span class="pre">plot_data()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.cluster_stats.mean_IF_summary.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
-
-  <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
     <a href="../../_sources/unravel/cluster_stats/mean_IF_summary.rst.txt">
@@ -654,7 +575,7 @@
 
   <p class="copyright">
     
-      © Copyright 2024, the UNRAVEL team.
+      © Copyright 2025, the UNRAVEL team.
       <br/>
     
   </p>
