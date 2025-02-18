@@ -11,6 +11,7 @@ Inputs:
     - ilastik_project: path/ilastik_project.ilp
     - Input: path/tif_dir or path/image (relative to current dir or sample??/)
     - Input image types: .tif, .czi, .nii.gz, .h5, .zarr
+    - If glob is used, the first match is used.
 
 Outputs:
     - seg_dir/seg_dir/`*`.tif series (segmented images; delete w/ --rm_out_tifs)
@@ -51,7 +52,7 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable.', required=True, action=SM)
     reqs.add_argument('-ilp', '--ilastik_prj', help='path/ilastik_project.ilp', required=True, action=SM)
-    reqs.add_argument('-i', '--input', help='Relative path to dir with tifs or an image (.nii.gz, .h5, .zarr)', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Relative path to dir with tifs or an image (.nii.gz, .h5, .zarr).', required=True, action=SM)
     reqs.add_argument('-o', '--output', help='Output dir name', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -95,64 +96,67 @@ def main():
     with Live(progress):
         for sample_path in sample_paths:
 
-            # Define paths
+            # Define paths, create output directories, and initialize variables
             input_path = sample_path / args.input
             segmentation_dir = sample_path / args.output
             output_tif_dir = segmentation_dir / args.output
 
+            segmentation_dir.mkdir(exist_ok=True, parents=True)
+            output_tif_dir.mkdir(exist_ok=True, parents=True)
             img = None
 
             # Check for final output and skip if it already exists
-            if args.labels is not None:
-                labels = [label for label in args.labels]
-            else:
-                labels = []
+            labels = args.labels if args.labels else []
             if labels:
-                last_label = args.labels[-1]
+                last_label = labels[-1]
                 final_output = segmentation_dir / f"{args.output}_{last_label}.nii.gz"
                 if final_output.exists():
                     print(f"\n\n    {final_output} already exists. Skipping.\n")
+                    progress.update(task_id, advance=1)
                     continue
-            else:
-                # No labels provided, so check if the output directory already contains the expected number of TIFFs
-                if input_path.is_dir() and any(input_path.glob("*.tif")):
-                    input_tif_dir = input_path
-                    input_z_size = count_files(input_tif_dir)
-                else:
-                    img = load_3D_img(input_path, channel=args.channel, verbose=args.verbose)
-                    input_z_size = img.shape[2]
 
-                # Count the number of TIFFs in the output directory
-                if output_tif_dir.exists():
-                    output_z_size = count_files(output_tif_dir)
-                else:
-                    output_z_size = 0
-                
-                # If the number of TIFFs in the output directory matches the number of TIFFs in the input directory, skip
-                if input_z_size == output_z_size:
-                    print(f"\n\n    {output_tif_dir} already contains {output_z_size} TIFFs. Skipping.\n")
-                    continue
-            
-            # If input tifs do not exist, create them from another image format
+            # Check if input TIFF series exists
             if input_path.is_dir() and any(input_path.glob("*.tif")):
                 input_tif_dir = input_path
+                input_z_size = count_files(input_tif_dir)
                 remove_tmp_tifs = False
             else:
-                remove_tmp_tifs = True
-                if not img:
-                    img = load_3D_img(input_path, channel=args.channel, verbose=args.verbose)
-                input_tif_dir = segmentation_dir / str(input_path.name).removesuffix(".czi").removesuffix(".nii.gz").removesuffix(".zarr").removesuffix(".h5") + "_tifs"
-                save_as_tifs(img, input_tif_dir)
+                # Load and process input image
+                matches = sorted(Path(sample_path).glob(args.input))
+                if not matches:
+                    raise FileNotFoundError(f"No files matching '{args.input}' found in {sample_path}")
+                image_path = matches[0]
+                if args.verbose:
+                    print(f"    Using {image_path} as the input image.")
+                img = load_3D_img(image_path, channel=args.channel, verbose=args.verbose)
+                input_z_size = img.shape[2]
 
-            # Perform pixel classification and output segmented tifs to output dir
+                # Define temporary TIFF directory
+                input_tif_name = str(image_path.name).removesuffix(".czi").removesuffix(".nii.gz").removesuffix(".zarr").removesuffix(".h5")
+                input_tif_dir = segmentation_dir / f"{input_tif_name}_tifs"
+                save_as_tifs(img, input_tif_dir)
+                remove_tmp_tifs = True
+
+            # Check if output TIFFs already exist
+            if output_tif_dir.exists():
+                output_z_size = count_files(output_tif_dir)
+            else:
+                output_z_size = 0
+
+            if input_z_size == output_z_size:
+                print(f"\n\n    {output_tif_dir} already contains {output_z_size} TIFFs. Skipping.\n")
+                progress.update(task_id, advance=1)
+                continue
+
+            # Perform pixel classification and output segmented tifs
             output_tif_dir.mkdir(exist_ok=True, parents=True)
             pixel_classification(str(input_tif_dir), str(args.ilastik_prj), str(output_tif_dir), args.ilastik_exe)
 
-            # Convert each label to a binary mask and save as .nii.gz if labels are provided
+            # Save labels as binary masks if requested
             if labels:
-                save_labels_as_masks(output_tif_dir, args.labels, segmentation_dir, args.output, verbose=args.verbose)
+                save_labels_as_masks(output_tif_dir, labels, segmentation_dir, args.output, verbose=args.verbose)
 
-            # Remove input TIFFs if they were created just for pixel_classification()
+            # Remove temporary TIFFs if they were created
             if remove_tmp_tifs:
                 Path(input_tif_dir).unlink()
 

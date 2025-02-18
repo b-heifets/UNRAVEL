@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use Allen_RNAseq_expression_in_mice.py from UNRAVEL to analyze scRNA-seq expression in neurons, astrocytes, and microglia,
+Use RNAseq_expression_in_mice.py from UNRAVEL to analyze scRNA-seq expression in neurons, astrocytes, and microglia,
 providing statistics for each major brain region and the whole brain.
 """
 
@@ -48,23 +48,17 @@ def load_mouse_RNAseq_gene_metadata(download_base):
 @print_func_name_args_times()
 def classify_cells(cell_df):
     # Define cell type classifications
-    neuronal_classes = [str(i).zfill(2) for i in range(1, 30)]  # Classes 01-29 are neuronal
-    astrocyte_subclasses = ["317", "318", "319", "320"]  # Subclasses for astrocytes
-    microglia_subclass = ["334"]  # Subclass for microglia
-
-    cell_df['cell_type'] = 'Other'
+    str_d1_gaba = ["061"]  # Subclass
+    str_d2_gaba = ["062"]  # Subclass
     
     # Extract the numeric part of the class and subclass columns for classification
-    cell_df['class_numeric'] = cell_df['class'].str.extract(r'(\d+)')[0]
     cell_df['subclass_numeric'] = cell_df['subclass'].str.extract(r'(\d+)')[0]
 
-    # Classify cells based on class and subclass
-    cell_df.loc[cell_df['class_numeric'].isin(neuronal_classes), 'cell_type'] = 'Neuron'
-    cell_df.loc[cell_df['subclass_numeric'].isin(astrocyte_subclasses), 'cell_type'] = 'Astrocyte'
-    cell_df.loc[cell_df['subclass_numeric'].isin(microglia_subclass), 'cell_type'] = 'Microglia'
+    cell_df.loc[cell_df['subclass_numeric'].isin(str_d1_gaba), 'cell_type'] = 'STR-D1-GABA'
+    cell_df.loc[cell_df['subclass_numeric'].isin(str_d2_gaba), 'cell_type'] = 'STR-D2-GABA'
 
     # Drop the helper columns after classification
-    cell_df.drop(columns=['class_numeric', 'subclass_numeric'], inplace=True)
+    cell_df.drop(columns=['subclass_numeric'], inplace=True)
 
     return cell_df
 

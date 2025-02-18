@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``_other/drafts/correlation.py`` from UNRAVEL to calculate the region-wise or voxel-wise correlation between two images.
+Use ``_other/drafts/correlation_plot.py`` from UNRAVEL to calculate the region-wise or voxel-wise correlation between two images.
 
 Note:
     - If an atlas is provided, the script will calculate the region-wise correlation.
@@ -13,7 +13,7 @@ Note:
     
 Usage:
 ------
-    _other/drafts/correlation.py -x path/x_axis_image.nii.gz -y path/y_axis_image.nii.gz [-mas path/mask1.nii.gz path/mask2.nii.gz] [-a path/atlas.nii.gz] [-r 1 2 3] [-csv path/CCFv3-2020_regional_summary.csv] [-v]
+    _other/drafts/correlation_plot.py -x path/x_axis_image.nii.gz -y path/y_axis_image.nii.gz [-mas path/mask1.nii.gz path/mask2.nii.gz] [-a path/atlas.nii.gz] [-r 1 2 3] [-csv path/CCFv3-2020_regional_summary.csv] [-v]
 """
 
 import matplotlib.pyplot as plt

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use Allen_RNAseq_expression_in_neurons_astro_ug.py from UNRAVEL to analyze scRNA-seq expression for neurons, astrocytes, and microglia.
+Use RNAseq_expression_in_neurons_astro_ug.py from UNRAVEL to analyze scRNA-seq expression for neurons, astrocytes, and microglia.
 It provides statistics for each major brain region and the whole brain.
 """
 

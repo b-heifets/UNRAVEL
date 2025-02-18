@@ -167,6 +167,12 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
             suffix = str(validation_dir_name).replace(str(cluster_correction_path.name), '')
             rev_cluster_index_path =  cluster_correction_path / f"{cluster_correction_path.name}_rev_cluster_index{suffix}.nii.gz"
 
+        if not rev_cluster_index_path.exists():
+            rev_cluster_index_path = Path(f"{cluster_correction_path}{suffix}") / f"{cluster_correction_path.name}_rev_cluster_index{suffix}.nii.gz"
+
+        if not rev_cluster_index_path.exists() and str(cluster_correction_path).endswith('_LH') or str(cluster_correction_path).endswith('_RH'):
+            rev_cluster_index_path = Path(f"{cluster_correction_path}{str(suffix)[:-3]}") / f"{cluster_correction_path.name}_rev_cluster_index{suffix}.nii.gz"
+
         if rev_cluster_index_path.exists():
             dest_rev_cluster_index = dest_path / rev_cluster_index_path.name
             if not dest_rev_cluster_index.exists():

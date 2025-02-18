@@ -105,9 +105,10 @@ def main():
     # Add the parcellation color
     cell_df_joined = m.join_parcellation_color(cell_df_joined, download_base)
 
-    # Load the expression data for the specified gene
+    # Load the expression data for all genes (if the gene is in the dataset) 
     adata = m.load_expression_data(download_base, args.gene)
 
+    # Filter expression data for the specified gene
     asubset, gf = m.filter_expression_data(adata, args.gene)
 
     # Create a dataframe with the expression data for the specified gene

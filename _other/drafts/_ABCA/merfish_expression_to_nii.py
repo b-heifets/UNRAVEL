@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py`` from UNRAVEL to plot MERFISH data from the Allen Brain Cell Atlas.
+Use ``merfish_expression_to_nii.py`` from UNRAVEL to make a 3D .nii.gz image of ABCA MERFISH expression data.
 
 Usage:
 ------
-    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -b path/to/root_dir -g gene_name
+    merfish_expression_to_nii.py -b path/to/root_dir -g gene_name
 """
 
 import anndata
@@ -76,7 +76,7 @@ def main():
     # Add the reconstructed coordinates to the cell metadata
     cell_df_joined = m.join_reconstructed_coords(cell_df, download_base)
 
-    # Load the expression data for the specified gene
+    # Load the expression data for all genes (if the gene is in the dataset) 
     adata = m.load_expression_data(download_base, args.gene)
 
     for gene in args.gene:
@@ -96,6 +96,7 @@ def main():
             print(f"\n    Output file already exists: {output_path}\n")
             continue
         
+        # Filter expression data for the specified gene
         asubset, gf = m.filter_expression_data(adata, gene)
 
         # Get the unique z_positions and their corresponding MERFISH slice indices

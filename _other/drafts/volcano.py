@@ -112,6 +112,9 @@ def main():
     else:
         top_neg = pd.DataFrame(columns=sig_neg.columns)
 
+    print(f'\n{top_pos=}\n')
+    print(f'\n{top_neg=}\n')
+
     # Get the current axis limits
     x_min, x_max = plt.gca().get_xlim()
     y_min, y_max = plt.gca().get_ylim()
@@ -122,24 +125,29 @@ def main():
 
     # Label these points with random x and y offsets based on axis ranges
     texts = []
-    for _, row in pd.concat([top_pos, top_neg]).iterrows():
-        # Generate random offsets within the calculated range
-        rand_val_x = np.random.uniform(-x_offset_range, x_offset_range)  # Random x offset
-        rand_val_y = np.random.uniform(-y_offset_range, y_offset_range)  # Random y offset
+    if not pd.concat([top_pos, top_neg]).empty:
 
-        # Apply the random offsets to the label position
-        text = plt.text(row[cols[1]] + rand_val_x, row[cols[2]] + rand_val_y, row[cols[0]], fontsize=8)
-        texts.append(text)
+        for _, row in pd.concat([top_pos, top_neg]).iterrows():
+            # Generate random offsets within the calculated range
+            rand_val_x = np.random.uniform(-x_offset_range, x_offset_range)  # Random x offset
+            rand_val_y = np.random.uniform(-y_offset_range, y_offset_range)  # Random y offset
 
-    # Adjust text to avoid overlap
-    adjust_text(
-        texts,
-        # x=[row[cols[1]] for _, row in pd.concat([top_pos, top_neg]).iterrows()],
-        # y=[row[cols[2]] for _, row in pd.concat([top_pos, top_neg]).iterrows()],
-        force_text=(rand_val_x, rand_val_y),  # Adjust repel force for labels
-        # force_static=(rand_val_x, rand_val_y),  # Adjust repel force for points
-        ensure_inside_axes=True,  # Keep labels inside plot boundaries
-    )
+            # Apply the random offsets to the label position
+            text = plt.text(row[cols[1]] + rand_val_x, row[cols[2]] + rand_val_y, row[cols[0]], fontsize=8)
+            texts.append(text)
+
+        # Adjust text to avoid overlap
+        adjust_text(
+            texts,
+            # x=[row[cols[1]] for _, row in pd.concat([top_pos, top_neg]).iterrows()],
+            # y=[row[cols[2]] for _, row in pd.concat([top_pos, top_neg]).iterrows()],
+            force_text=(rand_val_x, rand_val_y),  # Adjust repel force for labels
+            # force_static=(rand_val_x, rand_val_y),  # Adjust repel force for points
+            ensure_inside_axes=True,  # Keep labels inside plot boundaries
+        )
+    else:
+        print('No significant points to label.')
+
 
     # Add threshold line, labels, and legend
     plt.axhline(y=-np.log10(0.05), color='grey', linestyle='--', linewidth=0.7, label='FDR p < 0.05')

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use Allen_RNAseq_expression_in_mice.py from UNRAVEL to analyze scRNA-seq expression in neurons, astrocytes, and microglia,
+Use RNAseq_expression_in_mice.py from UNRAVEL to analyze scRNA-seq expression in neurons, astrocytes, and microglia,
 providing statistics for each major brain region and the whole brain.
 """
 
@@ -144,7 +144,17 @@ def main():
     # Load and classify cell metadata
     cell_df = load_RNAseq_mouse_cell_metadata(download_base)
     cell_df = m.join_cluster_details(cell_df, download_base)  # Adds 'class', 'subclass'
-    cell_df = classify_cells(cell_df)
+
+    # print the first row of the cell metadata
+    print("\nCell metadata columns:")
+    print(cell_df.columns)
+    print("\nFirst row:")
+    print(cell_df.iloc[0])
+
+    # Skip or adapt this step
+    # cell_df = classify_cells(cell_df)
+
+    # For calculating expression metrics, don't filter by cell type 
 
     # Load gene metadata and filter for selected genes
     gene_df = load_mouse_RNAseq_gene_metadata(download_base)

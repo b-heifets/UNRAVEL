@@ -34,8 +34,8 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-l', '--lsfm_csv', help='path/lsfm.csv.', required=True, action=SM)
-    reqs.add_argument('-m', '--merfish_csv', help='path/merfish.csv.', required=True, action=SM)
+    reqs.add_argument('-x', '--x_vars_csv', help='path/merfish.csv.', required=True, action=SM)
+    reqs.add_argument('-y', '--y_var_csv', help='path/lsfm.csv.', required=True, action=SM)
     reqs.add_argument('-o', '--output', help='path/output.csv.', required=True, action=SM)
 
     return parser.parse_args()
@@ -47,8 +47,8 @@ def main():
     args = parse_args()
 
     # Load the LSFM and MERFISH CSVs
-    lsfm_df = pd.read_csv(args.lsfm_csv)
-    merfish_df = pd.read_csv(args.merfish_csv)
+    merfish_df = pd.read_csv(args.x_vars_csv)
+    lsfm_df = pd.read_csv(args.y_var_csv)
 
     # Merge on RegionID
     combined_df = lsfm_df.merge(merfish_df, on="RegionID", how="left")

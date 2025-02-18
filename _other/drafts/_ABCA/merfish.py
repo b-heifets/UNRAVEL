@@ -247,7 +247,7 @@ def load_region_boundaries(download_base):
 
     return annotation_boundary_array, extent
 
-def load_expression_data(download_base, gene):
+def load_expression_data(download_base, gene, imputed=False):
     """
     Load the expression data from the MERFISH data.
 
@@ -264,7 +264,7 @@ def load_expression_data(download_base, gene):
     genes_in_merfish = genes_in_merfish_data()
     genes_in_imputed_merfish = genes_in_imputed_merfish_data()
 
-    if gene in genes_in_merfish:
+    if gene in genes_in_merfish and not imputed:
         expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad'
     elif gene in genes_in_imputed_merfish:
         expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad'
@@ -637,12 +637,14 @@ def main():
     # Get the boundary slice for the specified brain section
     boundary_slice = annotation_boundary_array[zindex, :, :]
 
-
-
     if args.gene is not None:
-        # Load the expression data for the specified gene
+        # Load the expression data for all genes (if the gene is in the dataset) 
         adata = load_expression_data(download_base, args.gene)
+
+        # Filter expression data for the specified gene
         asubset, gf = filter_expression_data(adata, args.gene)
+
+        # Create a dataframe with the expression data for the specified gene
         exp_df = create_expression_dataframe(asubset, gf, section)
 
         # Plot the expression data with a wireframe overlay of the annotation boundary

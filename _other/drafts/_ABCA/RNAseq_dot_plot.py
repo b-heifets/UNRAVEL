@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
 """
-Use dot_plot.py from UNRAVEL to analyze scRNA-seq expression.
+Use RNAseq_dot_plot.py from UNRAVEL to analyze scRNA-seq expression.
+
+Prereqs:
+    - RNAseq_expression scripts
 
 Input: 
     - path/gene_expression.csv
