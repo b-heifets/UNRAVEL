@@ -62,7 +62,7 @@ def parse_args():
     reqs.add_argument('--labels', nargs='*', help='Group Labels in same order', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett" (ignore for now), and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
+    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett" (ignore for now), and "ttest" post-hoc tests. Default: ttest or tukey', default=None, choices=['tukey', 'dunnett', 'ttest'], action=SM)
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
     opts.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', action=SM)
     opts.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default="CCFv3-2020__regionID_side_IDpath_region_abbr.csv", action=SM)
@@ -304,6 +304,16 @@ def main():
 
     if args.order and args.labels and len(args.order) != len(args.labels):
         raise ValueError("The number of entries in --order and --labels must match.")
+
+    if len(args.order) < 2:
+        raise ValueError("At least two groups are required for comparison)")
+    
+    if len(args.order) == 2:
+        test_type = 'ttest'
+    elif len(args.order) > 2 and args.test is None:
+        test_type = 'tukey'
+    else:
+        test_type = args.test
     
     # Print CSVs in the working dir
     print(f'\n[bold]CSVs in the working dir to process (the first word defines the groups): \n')
@@ -325,7 +335,7 @@ def main():
 
     # Process each region ID
     for region_id in region_ids_to_process:
-        plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=args.test, alt=args.alternate)
+        plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=test_type, alt=args.alternate)
 
     verbose_end_msg()
     
