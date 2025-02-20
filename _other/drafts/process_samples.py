@@ -50,12 +50,11 @@ def process_samples(command, output, dirs, pattern, verbose):
 
     sample_paths = get_samples(dirs, pattern, verbose)
 
-    print(f'\n{sample_paths=}\n')
-    import sys ; sys.exit()
-
     progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
         for sample_path in sample_paths:
+
+            print(f"\nProcessing sample: [bold cyan]{sample_path.name}\n")
 
             # If user provided an --output path (relative to sample), skip if it already exists
             if output:
