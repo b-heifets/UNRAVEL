@@ -51,7 +51,7 @@ def process_samples(command, output, dirs, pattern, verbose):
     # Detect misuse of -d inside the command string
     if "-d" in command:
         print(
-            f"\n[yellow bold]Warning:[/] The [cyan]-d[/] flag should not be used inside the command (unless a cmd uses that arg).\n"
+            f"\n[yellow bold]Warning:[/] The [green]-d[/] flag should not be used inside the command (unless a cmd uses that arg).\n"
             f"Instead, pass directories using the [green]-d[/] argument for [bold magenta]ups[/].\n"
             f"Example:\n"
             f"    [bold magenta]ups[/] -c [default]'warp -m input.nii.gz -f atlas.nii.gz -o output.nii.gz'[/] [green]-d[/] /path/to/samples\n"
