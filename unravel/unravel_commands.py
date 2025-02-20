@@ -102,6 +102,12 @@ def main():
                 "common": True,
                 "alias": "rc"
             },
+            "reg_check_fsleyes": {
+                "module": "unravel.register.reg_check_fsleyes",
+                "description": "Check registration (aggregate the autofluo and warped atlas images).",
+                "common": True,
+                "alias": "rcf"
+            },
             "reg_check_brain_mask": {
                 "module": "unravel.register.reg_check_brain_mask",
                 "description": "Check brain mask for over/under segmentation.",

@@ -266,6 +266,7 @@ uc -m
 - [**reg_prep**](unravel.register.reg_prep): Prepare registration (resample the autofluo image to lower res).
 - [**reg**](unravel.register.reg): Perform registration (e.g., register the autofluo image to an average template).
 - [**reg_check**](unravel.register.reg_check): Check registration (aggregate the autofluo and warped atlas images).
+- [**reg_check_fsleyes**](unravel.register.reg_check): Check registration using the aggregated images.
 :::
 
 ::: {tab-item} Warping
@@ -336,6 +337,7 @@ uc -m
 - [**reg**](unravel.register.reg): Perform registration (e.g., register the autofluo image to an average template).
 - [**reg_affine_initializer**](unravel.register.affine_initializer): Part of reg. Roughly aligns the template to the autofl image.
 - [**reg_check**](unravel.register.reg_check): Check registration (aggregate the autofluo and warped atlas images).
+- [**reg_check_fsleyes**](unravel.register.reg_check): Check registration using the aggregated images.
 - [**reg_check_brain_mask**](unravel.register.reg_check_brain_mask): Check brain mask for over/under segmentation.
 :::
 
@@ -766,7 +768,7 @@ flowchart TD
     F --> G(seg_brain_mask: Generate autofl brain masks with Ilastik and apply them to the 50 µm images)
     G --> H(Optionally use 3D Slicer to make the masked autofl image and mask better match the average template)
     H --> I(reg: Register the template brain with the masked autofl images and warp the atlas)
-    I --> J(reg_check: Aggregate padded autofl images and warped atlas images from reg)
+    I --> J(reg_check and reg_check_fsleyes: Aggregate padded autofl images and warped atlas images from reg)
     J --> K(Assess registration quality in FSLeyes and refine if necessary by repeating the 3D Slicer step, etc.)
 
 :::
@@ -867,7 +869,7 @@ reg_check [-td reg_results] [-d $DIRS]  # Default for -td: copy images to the cu
 # The default warped atlas from reg is atlas_CCFv3_2020_30um_in_tissue_space.nii.gz (in ./sample??/.reg_outputs). Use -wa <image_name.nii.gz> to set this.
 
 ```
-* View these images with [FSLeyes](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes) [docs](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html)
+* View these images with `reg_check_fsleyes`, which launches [FSLeyes](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes) [docs](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html)
 * FSLeyes might not work in Windows without additional set up: [Installation on Windows](https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/windows)
 
 :::{admonition} Checking registration with FSLeyes
