@@ -10,6 +10,7 @@ unravel.utilities package
    aggregate_files_w_recursive_search
    clean_tif_dirs
    prepend_conditions
+   process_samples
    rename
    toggle_samples
    points_compressor

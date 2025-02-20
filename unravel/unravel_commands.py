@@ -575,6 +575,12 @@ def main():
                 "common": True,
                 "alias": "s"
             },
+                "utils_process_samples": {
+                "module": "unravel.utilities.process_samples:main",
+                "description": "Use this for batch processing when commands lack that functionality.",
+                "common": False,
+                "alias": "ups"
+            },
             "utils_region_info": {
                 "module": "unravel.utilities.region_info:main",
                 "description": "Look up region info (e.g., find ACB to see its region name and ID).",

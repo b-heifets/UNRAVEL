@@ -439,6 +439,7 @@ uc -m
 
 :::{tab-item} Utilities
 - [**utils_get_samples**](unravel.utilities.get_samples): Test --pattern and --dirs args of script that batch process sample?? dirs.
+- [**utils_process_samples**](unravel.utilities.process_samples): Use this for batch processing when commands lack that functionality.
 - [**utils_region_info**](unravel.utilities.region_info): Look up region info (e.g., find ACB to see its region name and ID)
 - [**utils_agg_files**](unravel.utilities.aggregate_files_from_sample_dirs): Aggregate files from sample directories.
 - [**utils_agg_files_rec**](unravel.utilities.aggregate_files_recursively): Recursively aggregate files.

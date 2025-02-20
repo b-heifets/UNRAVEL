@@ -1,9 +1,9 @@
-.. _unravel.register.reg_check:
+.. _unravel.register.reg_check_fsleyes:
 
-unravel.register.reg_check module
-=================================
+unravel.register.reg_check_fsleyes module
+=========================================
 
-.. automodule:: unravel.register.reg_check
+.. automodule:: unravel.register.reg_check_fsleyes
    :members:
    :undoc-members:
    :show-inheritance:
