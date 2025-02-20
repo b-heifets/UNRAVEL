@@ -59,7 +59,6 @@ def parse_args():
     reqs.add_argument('-hemi', help="Hemisphere(s) to process (r, l or both)", choices=['r', 'l', 'both'], required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-t', '--test_type', help="Type of statistical test to use: 'tukey' (default), 't-test'", choices=['tukey', 't-test'], default='tukey', action=SM)  # Add 'dunnett' later
     opts.add_argument('-c', '--ctrl_group', help="Control group name for t-test or Dunnett's tests", action=SM)  # Does the control need to be specified for a t-test? First group could be the control.
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction for t-tests or Dunnett's tests ('two-sided' \[default], 'less' [group1 < group2], or 'greater')", default='two-sided', action=SM)
     opts.add_argument('-d', '--divide', type=float, help='Divide the cell densities by the specified value for plotting (default is None)', default=None, action=SM)
@@ -67,7 +66,7 @@ def parse_args():
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
     opts.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', action=SM)
     opts.add_argument('-s', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code lis t matching # of groups", default='light:white', action=SM)
-    opts.add_argument('-o', '--output', help='Output directory for plots (Default: <args.test_type>_plots)', action=SM)
+    opts.add_argument('-o', '--output', help='Output directory for plots (Default: <ttest or tukey>_plots)', action=SM)
     opts.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -150,7 +149,7 @@ def summarize_significance(test_df, id):
         })
     return pd.DataFrame(summary_rows)
 
-def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir, group_columns, args):
+def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir, group_columns, test_type, args):
 
     # Reshaping the data for plotting
     reshaped_data = []
@@ -182,7 +181,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     y_pos = y_max * 1.05  # Start just above the highest bar
 
     # Check which test to perform
-    if args.test_type == 't-test':
+    if test_type == 't-test':
         # Perform t-test for each group against the control group
         control_data = df[group_columns[args.ctrl_group]].values.ravel()
         test_results = []
@@ -211,7 +210,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         test_results_df = pd.DataFrame(test_results)
         significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
 
-    # elif args.test_type == 'dunnett':
+    # elif test_type == 'dunnett':
 
     #     # Extract the data for the control group and the other groups
     #     data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
@@ -231,7 +230,7 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
     #     })
     #     significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
 
-    elif args.test_type == 'tukey':
+    elif test_type == 'tukey':
 
         # Conduct Tukey's HSD test
         densities = np.array([value for prefix in args.groups for value in df[group_columns[prefix]].values.ravel()]) # Flatten the data
@@ -317,6 +316,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
     
+    if len(args.groups) == 2:
+        test_type = 'ttest'
+    elif len(args.groups) > 2:
+        test_type = 'tukey'
+
     # Find all CSV files in the current directory matching *cell_densities.csv
     file_list = [file for file in os.listdir('.') if file.endswith('cell_densities.csv')]
     print(f"\nAggregating data from *cell_densities.csv: {file_list}\n")
@@ -429,7 +433,7 @@ def main():
             for region_id in unique_region_ids:
                 region_name, region_abbr = get_region_details(region_id, df)
                 out_dir = out_dirs["pooled"]
-                comparisons_summary = process_and_plot_data(pooled_df[pooled_df["Region_ID"] == region_id], region_id, region_name, region_abbr, "Pooled", out_dir, group_columns, args)
+                comparisons_summary = process_and_plot_data(pooled_df[pooled_df["Region_ID"] == region_id], region_id, region_name, region_abbr, "Pooled", out_dir, group_columns, test_type, args)
                 summary_df = summarize_significance(comparisons_summary, region_id)
                 all_summaries_pooled = pd.concat([all_summaries_pooled, summary_df], ignore_index=True)
                 progress.update(task_id, advance=1)
