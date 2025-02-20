@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``process_samples`` (``psa``) from UNRAVEL to run a command on all samples or directories containing samples.
+Use ``process_samples`` (``ups``) from UNRAVEL to run a command on all samples or directories containing samples.
 
 Notes:
     - {sample_path} and {sample} placeholders can be used in the command to refer to the sample directory path and name, respectively.
@@ -9,7 +9,7 @@ Notes:
 
 Usage:
 ------
-    process_samples -c "command" [-o rel_path/output] [-d list of paths] [-p sample??] [-v]
+    ups -c "command" [-o rel_path/output] [-d list of paths] [-p sample??] [-v]
 """
 
 import subprocess
@@ -48,6 +48,15 @@ def process_samples(command, output, dirs, pattern, verbose):
     If ``-o/--output`` is provided and already exists in the sample directory, skip processing.
     """
 
+    # Detect misuse of -d inside the command string
+    if "-d" in command:
+        print(
+            f"[yellow bold]Warning:[/] The [cyan]-d[/] flag should not be used inside the command (unless a cmd uses that arg).\n"
+            f"Instead, pass directories using the [green]-d[/] argument for [bold magenta]ups[/].\n"
+            f"Example:\n"
+            f"    [bold magenta]ups[/] -c 'warp -m input.nii.gz -f atlas.nii.gz -o output.nii.gz' [green]-d /path/to/samples"
+        )
+
     sample_paths = get_samples(dirs, pattern, verbose)
 
     progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
@@ -66,7 +75,7 @@ def process_samples(command, output, dirs, pattern, verbose):
 
             # Replace {sample} placeholder in the command if present
             cmd = command.replace('{sample_path}', str(sample_path))
-            cmd = command.replace('{sp}', str(sample_path))
+            cmd = cmd.replace('{sp}', str(sample_path))
             cmd = cmd.replace('{sample}', str(sample_path.name))
             cmd = cmd.replace('{s}', str(sample_path.name))
 
@@ -86,6 +95,7 @@ def process_samples(command, output, dirs, pattern, verbose):
             
             progress.update(task_id, advance=1)
 
+
 @log_command
 def main():
     install()
@@ -95,9 +105,8 @@ def main():
 
     process_samples(args.command, args.output, args.dirs, args.pattern, args.verbose)
 
-
     verbose_end_msg()
-    
+
 
 if __name__ == '__main__':
     main()
