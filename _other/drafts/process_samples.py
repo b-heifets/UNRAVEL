@@ -50,6 +50,9 @@ def process_samples(command, output, dirs, pattern, verbose):
 
     sample_paths = get_samples(dirs, pattern, verbose)
 
+    print(f'\n{sample_paths=}\n')
+    import sys ; sys.exit()
+
     progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
         for sample_path in sample_paths:
@@ -73,7 +76,12 @@ def process_samples(command, output, dirs, pattern, verbose):
 
             # Run the command in a shell
             try:
-                subprocess.run(cmd, shell=True, check=True)
+                subprocess.run(
+                    cmd, 
+                    shell=True, 
+                    check=True, 
+                    cwd=sample_path  # Set working directory to sample_path
+                )
             except subprocess.CalledProcessError as e:
                 print(f"[red]Command failed on sample {sample_path}[/]\n{e}")
             
