@@ -40,6 +40,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: add parallel processing or another script for that.
 
 @print_func_name_args_times()
 def process_samples(command, output, dirs, pattern, verbose):
@@ -63,7 +64,7 @@ def process_samples(command, output, dirs, pattern, verbose):
     with Live(progress):
         for sample_path in sample_paths:
 
-            print(f"\nProcessing sample: [bold cyan]{sample_path.name}\n")
+            print(f"\nProcessing: [bold cyan]{sample_path.name}\n")
 
             # If user provided an --output path (relative to sample), skip if it already exists
             if output:
