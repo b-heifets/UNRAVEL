@@ -66,7 +66,7 @@ def parse_args():
     opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv', default='CCFv3-2020_regional_summary.csv', action=SM)
     opts.add_argument('-b', '--bar_color', help="ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups", default='ABA', action=SM)
     opts.add_argument('-s', '--symbol_color', help="ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code lis t matching # of groups", default='light:white', action=SM)
-    opts.add_argument('-o', '--output', help='Output directory for plots (Default: <ttest or tukey>_plots)', action=SM)
+    opts.add_argument('-o', '--output', help='Output directory for plots (Default: <t-test or tukey>_plots)', action=SM)
     opts.add_argument('-e', "--extension", help="File extension for plots. Choices: pdf (default), svg, eps, tiff, png)", default='pdf', choices=['pdf', 'svg', 'eps', 'tiff', 'png'], action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -317,7 +317,7 @@ def main():
     verbose_start_msg()
     
     if len(args.groups) == 2:
-        test_type = 'ttest'
+        test_type = 't-test'
     elif len(args.groups) > 2:
         test_type = 'tukey'
 
