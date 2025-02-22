@@ -9,7 +9,7 @@ Inputs:
     - The <OneWordCondition>_sample?? column has the cell densities for each region.
 
 Outputs:
-    - Saved to ./<args.test_type>_plots_<side>
+    - Saved to ./<test_type>_plots_<side>
     - Plots for each region with cell densities for each group (e.g., Saline, MDMA, Meth)
     - Summary of significant differences between groups
     - regional_cell_densities_all.csv (Columns: columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,...,MDMA_sample01,...,Meth_sample23,...)
@@ -21,12 +21,12 @@ Note:
     - Alternatively, use CCFv3-2017_regional_summary.csv or provide a custom CSV with the same columns.
 
 Usage for Tukey tests:
----------------------------
+----------------------
     rstats_summary --groups Saline MDMA Meth -hemi both [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-v]
 
 Usage for t-tests:
----------------------------
-    rstats_summary --groups Saline MDMA -hemi both -t t-test -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]
+------------------
+    rstats_summary --groups Saline MDMA -hemi both -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]
 """
 
 import ast
@@ -385,11 +385,11 @@ def main():
             import sys ; sys.exit()
     else:
         if args.hemi == 'both': 
-            out_dirs = {side: f"{args.test_type}_plots_{side}{suffix}" for side in ["L", "R", "pooled"]}
+            out_dirs = {side: f"{test_type}_plots_{side}{suffix}" for side in ["L", "R", "pooled"]}
         elif args.hemi == 'r': 
-            out_dirs = {side: f"{args.test_type}_plots_{side}{suffix}" for side in ["R"]}
+            out_dirs = {side: f"{test_type}_plots_{side}{suffix}" for side in ["R"]}
         elif args.hemi == 'l': 
-            out_dirs = {side: f"{args.test_type}_plots_{side}{suffix}" for side in ["L"]}
+            out_dirs = {side: f"{test_type}_plots_{side}{suffix}" for side in ["L"]}
         else: 
             print("--hemi should be l, r, or both")
             import sys ; sys.exit()
