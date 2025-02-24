@@ -61,7 +61,7 @@ def main():
     print('\nMain sunburst expression data:')
     print(main_sunburst_exp_df)
 
-    # Keep cells that have high mean expression (e.g., >= 6) of the gene of interest in 
+    # Keep cells that have high mean expression (e.g., >= 6) of the gene of interest at the specified level
     cell_mean_col = f'{args.level}_mean'
     cells_df_filtered = main_sunburst_exp_df[
         (main_sunburst_exp_df[cell_mean_col] >= args.threshold)
