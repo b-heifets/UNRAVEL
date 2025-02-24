@@ -74,8 +74,12 @@ def main():
     exp_df = cell_df.set_index('cell_label').join(gdata, how='left').reset_index()
 
     # Save the joined data
-    exp_df.to_csv(f"{Path(args.input).stem}_{args.gene}_expression.csv", index=False)
-    print(f"\n    Saved the joined data to {Path(args.input).stem}_{args.gene}_expression.csv\n")
+    if args.imputed:
+        exp_df.to_csv(f"{Path(args.input).stem}_{args.gene}_imputed_expression.csv", index=False)
+        print(f"\n    Saved the joined data to {Path(args.input).stem}_{args.gene}_imputed_expression.csv\n")
+    else:
+        exp_df.to_csv(f"{Path(args.input).stem}_{args.gene}_expression.csv", index=False)
+        print(f"\n    Saved the joined data to {Path(args.input).stem}_{args.gene}_expression.csv\n")
 
     verbose_end_msg()
 
