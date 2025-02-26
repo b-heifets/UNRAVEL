@@ -42,7 +42,8 @@ def parse_args():
     opts.add_argument('-g', '--gene', help='Gene to plot.', action=SM)
     opts.add_argument('-c', '--color', help='Color to plot (e.g., parcellation_substructure_color or neurotransmitter_color', action=SM)
     opts.add_argument('-im', '--imputed', help='Use imputed expression data. Default: False', action='store_true', default=False)
-
+    opts.add_argument('-o', '--output', help='Path to save the plot rather than showing it with Matplotlib.', default=None, action=SM)
+    
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
@@ -660,7 +661,10 @@ def main():
                         fig_width = 9,
                         fig_height = 9 )
         res = ax.set_title(f"{args.gene} Expression in MERFISH-CCF Space")
-        plt.show()
+        if args.output is not None:
+            plt.savefig(args.output, bbox_inches='tight')
+        else:
+            plt.show()
     elif args.color is not None:
         # Plot color with reconstructed coordinates and overlay of the annotation boundary
         fig, ax = plot_section(xx=section['x_reconstructed'],
@@ -673,7 +677,10 @@ def main():
                             fig_width=9,
                             fig_height=9 )
         res = ax.set_title(f"{args.color} in MERFISH-CCF Space")
-        plt.show()
+        if args.output is not None:
+            plt.savefig(args.output, bbox_inches='tight')
+        else:
+            plt.show()
     else:
         print(f"\n    [red1]Error: Please specify either a gene or a color\n")
 
