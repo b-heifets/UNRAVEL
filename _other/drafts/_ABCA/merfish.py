@@ -41,6 +41,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-g', '--gene', help='Gene to plot.', action=SM)
     opts.add_argument('-c', '--color', help='Color to plot (e.g., parcellation_substructure_color or neurotransmitter_color', action=SM)
+    opts.add_argument('-im', '--imputed', help='Use imputed expression data. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -639,7 +640,7 @@ def main():
 
     if args.gene is not None:
         # Load the expression data for all genes (if the gene is in the dataset) 
-        adata = load_expression_data(download_base, args.gene)
+        adata = load_expression_data(download_base, args.gene, imputed=args.imputed)
 
         # Filter expression data for the specified gene
         asubset, gf = filter_expression_data(adata, args.gene)
