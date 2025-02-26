@@ -650,7 +650,7 @@ def main():
         # Plot the expression data with a wireframe overlay of the annotation boundary
         fig, ax = plot_section(exp_df['x_reconstructed'],
                         exp_df['y_reconstructed'], 
-                        val=exp_df['Htr2a'], 
+                        val=exp_df[args.gene], 
                         pcmap=plt.cm.magma_r,  # Light color scheme
                         overlay=boundary_slice,
                         extent=extent, 
