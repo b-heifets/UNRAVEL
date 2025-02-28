@@ -2,7 +2,7 @@
 
 
 """
-Use ``vstats_mirror`` (``mirror``) from UNRAVEL to load a `*`.nii.gz, flip a copy [and shift content], average original and copy together, and save as .nii.gz.
+Use ``vstats_mirror`` (``mirror``) from UNRAVEL to load a .nii.gz, flip it, and save the flipped image.
 
 Note:
     - Use -ax 2 and -s 0 for the CCFv3 2020 atlas.
