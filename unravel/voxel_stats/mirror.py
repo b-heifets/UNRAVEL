@@ -10,7 +10,7 @@ Note:
 
 Usage:
 ------
-    vstats_mirror [-p '<asterisk>.nii.gz'] [-ax 2] [-s 0] [-v]
+    vstats_mirror [-i '<asterisk>.nii.gz'] [-ax 2] [-s 0] [-v]
 """
 
 import os
