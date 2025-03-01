@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py`` from UNRAVEL to plot MERFISH data from the Allen Brain Cell Atlas.
+Use ``/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish.py`` from UNRAVEL to plot MERFISH data from the Allen Brain Cell Atlas.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/merfish_ccf_registration_tutorial.html#read-in-section-reconstructed-and-ccf-coordinates-for-all-cells
@@ -10,11 +10,11 @@ Note:
 
 Usage for gene:
 ---------------
-    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -b path/to/base_dir -s slice -g gene
+    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish.py -b path/to/base_dir -s slice -g gene
 
 Usage for color:
 ----------------
-    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -b path/to/base_dir -s slice -c color
+    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish.py -b path/to/base_dir -s slice -c color
 """
 
 import anndata
@@ -42,8 +42,8 @@ def parse_args():
     opts.add_argument('-g', '--gene', help='Gene to plot.', action=SM)
     opts.add_argument('-c', '--color', help='Color to plot (e.g., parcellation_substructure_color or neurotransmitter_color', action=SM)
     opts.add_argument('-im', '--imputed', help='Use imputed expression data. Default: False', action='store_true', default=False)
-    opts.add_argument('-o', '--output', help='Path to save the plot rather than showing it with Matplotlib.', default=None, action=SM)
-    
+    opts.add_argument('-o', '--output', help='Path to save the plot rather than showing it with Matplotlib (end with .pdf)', default=None, action=SM)
+
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
@@ -58,7 +58,7 @@ def load_cell_metadata(download_base):
     Parameters:
     -----------
     download_base : Path
-        The root directory of the MERFISH data.
+        The root directory of the MERFISH data or the path to the cell metadata.
 
     Returns:
     --------
@@ -67,7 +67,10 @@ def load_cell_metadata(download_base):
        'feature_matrix_label', 'donor_label', 'donor_genotype', 'donor_sex',
        'x_section', 'y_section', 'z_section'
     """
-    cell_metadata_path = download_base / 'metadata/MERFISH-C57BL6J-638850/20231215/cell_metadata.csv'
+    if Path(download_base).is_file():
+        cell_metadata_path = download_base
+    else:
+        cell_metadata_path = download_base / 'metadata/MERFISH-C57BL6J-638850/20231215/cell_metadata.csv'
     print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
     cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str})
     cell_df.rename(columns={'x': 'x_section',
