@@ -149,7 +149,6 @@ def summarize_significance(test_df, id):
         })
     return pd.DataFrame(summary_rows)
 
-process_and_plot_data(side_df[side_df["Region_ID"] == region_id], region_id, region_name, region_abbr, side, out_dir, group_columns, args)
 def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir, group_columns, test_type, args):
 
     # Reshaping the data for plotting
