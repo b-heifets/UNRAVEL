@@ -5,7 +5,7 @@ Use ``rstats_mean_IF`` (``rmi``) from UNRAVEL to measure mean intensity of immun
 
 Inputs:
     - `*`.nii.gz
-    - path/atlas.nii.gz
+    - path/atlas.nii.gz (e.g., atlas_CCFv3_2020_30um.nii.gz)
 
 Outputs: 
     - ./rstats_mean_IF/image_name.csv with regional mean intensity values for each image
@@ -16,7 +16,7 @@ Next:
 
 Usage:
 ------
-    rstats_mean_IF -i '<asterisk>.nii.gz' -a path/atlas [--regions 1 2 3] [-v]
+    rstats_mean_IF -i '<asterisk>.nii.gz' -a path/atlas [--regions 1 2 3] [--masks path/mask1.nii.gz path/mask2.nii.gz] [-v]
 """
 
 import csv
@@ -39,7 +39,7 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", required=True, action=SM)
-    reqs.add_argument('-a', '--atlas', help='Path/atlas.nii.gz', required=True, action=SM)
+    reqs.add_argument('-a', '--atlas', help='Path/atlas.nii.gz (e.g., atlas_CCFv3_2020_30um.nii.gz or atlas_CCFv3_2020_30um_split.nii.gz)', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-r', '--regions', help='Space-separated list of region intensities to process. Default: process all IDs', nargs='*', type=int, action=SM)
