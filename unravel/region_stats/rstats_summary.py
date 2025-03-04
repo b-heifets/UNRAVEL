@@ -149,6 +149,7 @@ def summarize_significance(test_df, id):
         })
     return pd.DataFrame(summary_rows)
 
+process_and_plot_data(side_df[side_df["Region_ID"] == region_id], region_id, region_name, region_abbr, side, out_dir, group_columns, args)
 def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir, group_columns, test_type, args):
 
     # Reshaping the data for plotting
@@ -466,7 +467,7 @@ def main():
             for region_id in unique_region_ids:
                 region_name, region_abbr = get_region_details(region_id, side_df)
                 out_dir = out_dirs[side]
-                comparisons_summary = process_and_plot_data(side_df[side_df["Region_ID"] == region_id], region_id, region_name, region_abbr, side, out_dir, group_columns, args)
+                comparisons_summary = process_and_plot_data(side_df[side_df["Region_ID"] == region_id], region_id, region_name, region_abbr, side, out_dir, group_columns, test_type, args)
                 summary_df = summarize_significance(comparisons_summary, region_id)
                 all_summaries = pd.concat([all_summaries, summary_df], ignore_index=True)
                 progress.update(task_id, advance=1)
