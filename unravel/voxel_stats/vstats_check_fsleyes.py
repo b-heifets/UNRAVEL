@@ -27,7 +27,7 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-min', '--min', help='Minimum intensity value for ``fsleyes`` display (.e.g., "-1" for z scored or "0")', type=float, required=True)
-    reqs.add_argument('-max', '--max', help='Maximum intensity value for ``fsleyes`` display (e.g., "3" for z-scored or "300")', type=float, required=True)
+    reqs.add_argument('-max', '--max', help='Maximum intensity value for ``fsleyes`` display (e.g., "3" for z-scored or "3000")', type=float, required=True)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", default='*.nii.gz', action=SM)
@@ -59,6 +59,8 @@ def main():
 
     # Add atlas to fsleyes command
     fsleyes_command.extend([args.atlas, '-ot', 'label', '-l', args.lut, '-o', '-a', '50'])
+
+    print(f'\n{fsleyes_command=}\n')    
 
     # Execute fsleyes command
     subprocess.run(fsleyes_command)
