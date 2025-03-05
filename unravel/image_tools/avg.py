@@ -75,8 +75,10 @@ def main():
     # Save the averaged image
     averaged_nii = nib.Nifti1Image(average_image, affine, header)
     averaged_nii.set_data_dtype(data_type)
-    nib.save(averaged_nii, args.output)
-    print(f"    Saved {args.output}\n")
+    output = Path(args.output)
+    output.parent.mkdir(parents=True, exist_ok=True)
+    nib.save(averaged_nii, output)
+    print(f"    Saved {output}\n")
 
     verbose_end_msg()
     
