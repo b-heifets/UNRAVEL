@@ -285,6 +285,7 @@ uc -m
 - [**vstats_prep**](unravel.voxel_stats.vstats_prep): Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).
 - [**vstats_z_score**](unravel.voxel_stats.z_score): Z-score images.
 - [**vstats_whole_to_avg**](unravel.voxel_stats.whole_to_LR_avg): Average left and right hemispheres together.
+- [**vstats_check_fsleyes**](unravel.voxel_stats.vstats_check_fsleyes): Check vstats inputs with fsleyes.
 - [**vstats**](unravel.voxel_stats.vstats): Compute voxel statistics.
 :::
 
@@ -362,6 +363,7 @@ uc -m
 - [**vstats_z_score**](unravel.voxel_stats.z_score): Z-score images.
 - [**vstats_whole_to_avg**](unravel.voxel_stats.whole_to_LR_avg): Average left and right hemispheres together.
 - [**vstats_hemi_to_avg**](unravel.voxel_stats.hemi_to_LR_avg): If left and right hemispheres were processed separately (less common), average them together.
+- [**vstats_check_fsleyes**](unravel.voxel_stats.vstats_check_fsleyes): Check vstats inputs with fsleyes.
 - [**vstats**](unravel.voxel_stats.vstats): Compute voxel statistics.
 - [**vstats_mirror**](unravel.voxel_stats.mirror): Flip and optionally shift content of images in atlas space.
 :::

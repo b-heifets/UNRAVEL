@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_check_fsleyes`` (``vcf``) from UNRAVEL to check registration in fsleyes.
+Use ``vstats_check_fsleyes`` (``vcf``) from UNRAVEL to check inputs for voxel-wise stats in fsleyes.
 
 Prereqs:
     - ``fsleyes`` must be installed and the custom look up table (LUT) must be in the correct directory.

@@ -11,6 +11,7 @@ unravel.voxel_stats package
    hemi_to_LR_avg
    vstats
    mirror
+   vstats_check_fsleyes
    other/toc
 
 .. automodule:: unravel.voxel_stats

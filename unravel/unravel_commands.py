@@ -209,6 +209,12 @@ def main():
                 "common": False,
                 "alias": "h2a"
             },
+            "vstats_check_fsleyes": {
+                "module": "unravel.voxel_stats.vstats_check_fsleyes",
+                "description": "Check vstats inputs with fsleyes.",
+                "common": True,
+                "alias": "vcf"
+            },
             "vstats": {
                 "module": "unravel.voxel_stats.vstats",
                 "description": "Compute voxel statistics.",
