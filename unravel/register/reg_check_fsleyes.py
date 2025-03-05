@@ -31,10 +31,10 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-fri', '--fixed_reg_in', help='Fixed image from registration ``reg``. Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-wa', '--warped_atlas', help='Warped atlas image from ``reg``. Default: atlas_CCFv3_2020_30um_in_tissue_space.nii.gz', default="atlas_CCFv3_2020_30um_in_tissue_space.nii.gz", action=SM)
+    opts.add_argument('-min', '--min', help='Minimum intensity value for ``fsleyes`` display. Default: 0', type=float, default=0.0)
+    opts.add_argument('-max', '--max', help='Maximum intensity value for ``fsleyes`` display. Default: 5000', type=float, default=5000.0)
 
     general = parser.add_argument_group('General arguments')
-    general.add_argument('-min', '--min', help='Minimum intensity value for ``fsleyes`` display. Default: 0', type=float, default=0.0)
-    general.add_argument('-max', '--max', help='Maximum intensity value for ``fsleyes`` display. Default: 5000', type=float, default=5000.0)
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
 
     return parser.parse_args()
