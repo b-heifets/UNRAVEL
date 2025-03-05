@@ -31,7 +31,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", default='*.nii.gz', action=SM)
-    opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
+    opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz (e.g., atlas_CCFv3_2020_30um.nii.gz). Default: $ATLAS', default='$ATLAS', action=SM)
     opts.add_argument('-l', '--lut', help='Look up table name. Default: ccfv3_2020', default='ccfv3_2020', action=SM)
 
     return parser.parse_args()
