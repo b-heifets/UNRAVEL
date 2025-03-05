@@ -12,6 +12,7 @@ Usage:
 ``vstats_check_fsleyes`` -min -1 -max 3 [-i '*.nii.gz'] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-l ccfv3_2020]
 """
 
+import os
 import subprocess
 from glob import glob
 from pathlib import Path
@@ -21,6 +22,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.utils import log_command
 
+ATLAS = os.getenv("ATLAS", "None")
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -31,7 +33,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", default='*.nii.gz', action=SM)
-    opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz (e.g., atlas_CCFv3_2020_30um.nii.gz). Default: $ATLAS', default='$ATLAS', action=SM)
+    opts.add_argument('-a', '--atlas', help=f'path/atlas.nii.gz (e.g., atlas_CCFv3_2020_30um.nii.gz). Default: {ATLAS}', default=ATLAS, action=SM)
     opts.add_argument('-l', '--lut', help='Look up table name. Default: ccfv3_2020', default='ccfv3_2020', action=SM)
 
     return parser.parse_args()
