@@ -7,6 +7,7 @@ unravel.voxel_stats package
    apply_mask
    vstats_prep
    z_score
+   z_score_cwd
    whole_to_LR_avg
    hemi_to_LR_avg
    vstats

@@ -197,6 +197,12 @@ def main():
                 "common": True,
                 "alias": "zs"
             },
+            "vstats_z_score_cwd": {
+                "module": "unravel.voxel_stats.z_score_cwd",
+                "description": "Z-score images in the current working directory.",
+                "common": True,
+                "alias": "zsc"
+            },
             "vstats_whole_to_avg": {
                 "module": "unravel.voxel_stats.whole_to_LR_avg",
                 "description": "Average left and right hemispheres together",

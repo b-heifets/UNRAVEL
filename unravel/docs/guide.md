@@ -284,6 +284,7 @@ uc -m
 ::: {tab-item} Voxel-wise stats
 - [**vstats_prep**](unravel.voxel_stats.vstats_prep): Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).
 - [**vstats_z_score**](unravel.voxel_stats.z_score): Z-score images.
+- [**vstats_z_score_cwd**](unravel.voxel_stats.z_score_cwd): Z-score images in the current working directory. 
 - [**vstats_whole_to_avg**](unravel.voxel_stats.whole_to_LR_avg): Average left and right hemispheres together.
 - [**vstats_check_fsleyes**](unravel.voxel_stats.vstats_check_fsleyes): Check vstats inputs with fsleyes.
 - [**vstats**](unravel.voxel_stats.vstats): Compute voxel statistics.
@@ -361,6 +362,7 @@ uc -m
 - [**vstats_apply_mask**](unravel.voxel_stats.apply_mask): Apply mask to image (e.g., nullify artifacts or isolate signals).
 - [**vstats_prep**](unravel.voxel_stats.vstats_prep): Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).
 - [**vstats_z_score**](unravel.voxel_stats.z_score): Z-score images.
+- [**vstats_z_score_cwd**](unravel.voxel_stats.z_score_cwd): Z-score images in the current working directory. 
 - [**vstats_whole_to_avg**](unravel.voxel_stats.whole_to_LR_avg): Average left and right hemispheres together.
 - [**vstats_hemi_to_avg**](unravel.voxel_stats.hemi_to_LR_avg): If left and right hemispheres were processed separately (less common), average them together.
 - [**vstats_check_fsleyes**](unravel.voxel_stats.vstats_check_fsleyes): Check vstats inputs with fsleyes.
@@ -976,6 +978,9 @@ vstats_z_score -i 'atlas_space/*.nii.gz' -amas $MASK [-d $DIRS]
 
 # Using a tissue mask and an atlas mask
 vstats_z_score -i 'atlas_space/*.nii.gz' -tmas reg_inputs/autofl_50um_brain_mask.nii.gz -amas $MASK [-d $DIRS] 
+
+# Alternatively, use `vstats_z_score_cwd` to z-score images in the current working directory
+vstats_z_score_cwd -mas $MASK
 ```
 
 ### `utils_agg_files`
@@ -1011,7 +1016,7 @@ vstats_whole_to_avg -i '*_cFos_rb4_atlas_space_z.nii.gz.nii.gz' -k 0.1 [-tp] [-a
    - Name subfolders succinctly (this name is added to other folder and file names).
 
 2. **Generate and add .nii.gz files to vstats subfolders**:
-   - Input images are from ``vstats_prep`` and may have been z-scored with ``vstats_z_score`` (we z-score c-Fos labeling as intensities are not extreme)
+   - Input images are from ``vstats_prep`` and may have been z-scored with ``vstats_z_score`` or ``vstats_z_score_cwd`` (we z-score c-Fos labeling as intensities are not extreme)
    - For bilateral data, left and right sides can be averaged with ``vstats_whole_to_avg`` (then use a unilateral hemisphere mask for ``vstats`` and ``cstats_fdr``).
    - We smooth data (e.g., with a 100 µm kernel) to account for innacuracies in registration
       - This can be performed with ``vstats_whole_to_avg`` or ``vstats``

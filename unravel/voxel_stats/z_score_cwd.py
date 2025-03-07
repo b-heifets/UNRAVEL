@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_z_score_cwd`` (``zs``) from UNRAVEL to z-score .nii.gz images in the current directory.
+Use ``vstats_z_score_cwd`` (``zsc``) from UNRAVEL to z-score .nii.gz images in the current directory.
 
 Prereqs:
     - ``vstats_prep``
@@ -22,7 +22,7 @@ Next commands for voxel-wise stats:
 
 Usage:
 ------
-    vstats_z_score -i '*.nii.gz' [-mas path/mask1.nii.gz path/mask2.nii.gz] [-s z] [-v]
+    vstats_z_score_cwd -i '*.nii.gz' [-mas path/mask1.nii.gz path/mask2.nii.gz] [-s z] [-v]
 """
 
 import nibabel as nib
