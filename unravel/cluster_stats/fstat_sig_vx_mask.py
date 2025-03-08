@@ -54,7 +54,7 @@ def main():
 
     # Combine the images to get the sig voxels
     for img in imgs:
-        sig_vx_img |= img.get_fdata() < args.threshold
+        sig_vx_img |= img < args.threshold
 
     # The dtype for sig_vx_img is bool, so we need to convert it to uint8
     sig_vx_img = sig_vx_img.astype(np.uint8)
