@@ -60,7 +60,7 @@ def main():
     sig_vx_img = sig_vx_img.astype(np.uint8)
 
     # Save the z-scored image
-    output_path = Path("fstat_sig_vx_mask.nii.gz") if args.output is None else Path(args.output)
+    output_path = Path("fstat_sig_vx_mask.nii.gz")
     first_nii = nib.load(nii_paths[0])
     sig_vx_nii = nib.Nifti1Image(sig_vx_img, first_nii.affine, first_nii.header)
     sig_vx_nii.header.set_data_dtype(np.uint8)
