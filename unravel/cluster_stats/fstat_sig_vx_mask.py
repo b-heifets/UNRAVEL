@@ -26,6 +26,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help='Glob pattern for ANOVA f statistic 1-p value images. Default: "*vox_p_fstat*.nii.gz"', default='*vox_p_fstat*.nii.gz', action=SM)
     opts.add_argument('-t', '--threshold', help='Threshold for the p-value. Default: 0.95', default=0.95, type=float, action=SM)
+    opts.add_argument('-o', '--output', help='Output file path. Default: fstat_sig_vx_mask.nii.gz', default='fstat_sig_vx_mask.nii.gz', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -60,7 +61,7 @@ def main():
     sig_vx_img = sig_vx_img.astype(np.uint8)
 
     # Save the z-scored image
-    output_path = Path("fstat_sig_vx_mask.nii.gz")
+    output_path = Path(args.output)
     first_nii = nib.load(nii_paths[0])
     sig_vx_nii = nib.Nifti1Image(sig_vx_img, first_nii.affine, first_nii.header)
     sig_vx_nii.header.set_data_dtype(np.uint8)
