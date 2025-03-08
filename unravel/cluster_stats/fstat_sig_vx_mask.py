@@ -52,9 +52,9 @@ def main():
     # Initialize an empty image to store the sig voxels
     sig_vx_img = np.zeros(imgs[0].shape, dtype=bool)
 
-    # Combine the images
+    # Combine the images to get the sig voxels
     for img in imgs:
-        sig_vx_img = np.logical_or(sig_vx_img, img < args.threshold) # logical_or will combine the images by taking the union (i.e., the voxels that are significant in any of the images)
+        sig_vx_img |= img.get_fdata() < args.threshold
 
     # The dtype for sig_vx_img is bool, so we need to convert it to uint8
     sig_vx_img = sig_vx_img.astype(np.uint8)
