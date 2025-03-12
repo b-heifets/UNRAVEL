@@ -51,7 +51,7 @@ def main():
     var_img = np.var(imgs, axis=0, ddof=1)  # Sample variance. axis=0 means variance is computed along the 4th dimension (across images)
 
     # Save the variance image
-    ref_nii = nii_paths[0]
+    ref_nii = nib.load(nii_paths[0])
     var_nii = nib.Nifti1Image(var_img, ref_nii.affine, ref_nii.header)
     var_nii.header.set_data_dtype(np.float32)
     nib.save(var_nii, args.output)
