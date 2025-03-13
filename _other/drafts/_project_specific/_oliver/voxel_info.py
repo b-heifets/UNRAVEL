@@ -38,10 +38,9 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help='Path to the image or images to compute variance. Default: "*.nii.gz"', default='*.nii.gz', action=SM)
     opts.add_argument('-mi', '--more_inputs', help='Paths to additional images to append to the DataFrame. Default: None', default=None, nargs='*', action=SM)
-    opts.add_argument('-mic', '--mi_cols', help='Column names for the additional images (same order as -mi). Default: None', default=None, nargs='*', action=SM)
+    opts.add_argument('-mic', '--mi_cols', help='Column names for the additional images (same order as -mi; rec: use region_id for the atlas. Default: None', default=None, nargs='*', action=SM)
     opts.add_argument('-o', '--output', help='Output parquet file path. Default: voxel_info.parquet', default='voxel_info.parquet', action=SM)
-    opts.add_argument('-a', '--atlas', help='Path to the atlas image. Default: None', default=None, action=SM)
-    opts.add_argument('-c', '--csv', help='Path to csv with region info. Default: None', default=None, action=SM)
+    opts.add_argument('-c', '--csv', help='Path to csv with region info (e.g., CCFv3-2020_info.csv). Default: None', default=None, action=SM)
     opts.add_argument('-ri', '--region_id', help='Region ID column. Default: structure_ID', default='structure_ID', action=SM)
     opts.add_argument('-r', '--region', help='Region name column. Default: region', default='region', action=SM)
 
@@ -156,11 +155,6 @@ def main():
     if args.more_inputs is not None:
         for nii_path, col_name in zip(args.more_inputs, args.mi_cols):
             df = append_img_to_df(df, load_nii(nii_path), col_name)
-
-    # Add the atlas image
-    if args.atlas is not None:
-        atlas_img = load_nii(args.atlas)
-        df = append_img_to_df(df, atlas_img, 'region_id')
 
     # Add region info
     if args.csv is not None:
