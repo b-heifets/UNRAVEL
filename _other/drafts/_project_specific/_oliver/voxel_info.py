@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_info.py`` from UNRAVEL to compute voxel statistics for a set of images.
+Use ``voxel_info.py`` from UNRAVEL to compute voxel statistics for a set of images.
 
 Creates csv with columns:
     - x_coord, y_coord, z_coord, 
@@ -14,7 +14,7 @@ Creates csv with columns:
 
 Usage:
 ------
-    vstats_z_score_cwd -i '<asterisk>.nii.gz' 
+    voxel_info -i '<asterisk>.nii.gz' 
 """
 
 import nibabel as nib
@@ -28,7 +28,6 @@ from unravel.core.img_io import load_nii
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
-from unravel.voxel_stats.vstats import get_groups_info
 
 
 def parse_args():
@@ -36,7 +35,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help='Path to the image or images to compute variance. Default: "*.nii.gz"', default='*.nii.gz', action=SM)
-    opts.add_argument('-o', '--output', help='Output csv path. Default: vstats_info.csv', default='vstats_info.csv', action=SM)
+    opts.add_argument('-o', '--output', help='Output parquet file path. Default: voxel_info.parquet', default='voxel_info.parquet', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -144,8 +143,8 @@ def main():
 
     print(f'\n{df}\n')
 
-    # Save the DataFrame to a CSV file
-    df.to_csv(args.output, index=False)
+    # Save the DataFrame
+    df.to_parquet(args.output, engine="pyarrow", compression="snappy")
 
     verbose_end_msg()
 
