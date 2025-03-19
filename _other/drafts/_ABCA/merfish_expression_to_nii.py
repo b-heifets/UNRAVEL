@@ -83,7 +83,7 @@ def main():
 
     if args.neurons:
         # Add: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
-        cell_df_joined = m.join_cluster_details(cell_df, download_base) 
+        cell_df_joined = m.join_cluster_details(cell_df_joined, download_base) 
 
         # Filter out non-neuronal cells
         cell_df_joined = cell_df_joined[cell_df_joined['class'].str.split().str[0].astype(int) <= 29]
