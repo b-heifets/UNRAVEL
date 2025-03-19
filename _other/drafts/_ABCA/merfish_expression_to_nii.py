@@ -34,7 +34,8 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
-    opts.add_argument('-o', '--output', help='Output path for the saved .nii.gz image. Default: None', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='Output path for the saved .nii.gz image. Default: MERFISH-CCF_expression_maps/<gene>[_imputed][_neurons].nii.gz', default=None, action=SM)
+    opts.add_argument('-im', '--imputed', help='Use imputed expression data. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -84,7 +85,7 @@ def main():
         cell_df_joined = cell_df_joined[cell_df_joined['class'].str.split().str[0].astype(int) <= 29]
 
     # Load the expression data for all genes (if the gene is in the dataset) 
-    adata = m.load_expression_data(download_base, args.gene)
+    adata = m.load_expression_data(download_base, args.gene, imputed=args.imputed)
 
     for gene in args.gene:
         print(f"\nProcessing gene: {gene}")
@@ -96,7 +97,14 @@ def main():
         if args.output:
             output_path = Path(args.output)
         else:
-            output_path = download_base / f"{gene}_MERFISH-CCF.nii.gz"
+            if args.imputed and args.neurons:
+                output_path = Path().cwd() / "MERFISH-CCF_expression_maps" / f"{gene}_imputed_neurons.nii.gz"
+            elif args.imputed:
+                output_path = Path().cwd() / "MERFISH-CCF_expression_maps" / f"{gene}_imputed.nii.gz"
+            elif args.neurons:
+                output_path = Path().cwd() / "MERFISH-CCF_expression_maps" / f"{gene}_neurons.nii.gz"
+            else:
+                output_path = Path().cwd() / "MERFISH-CCF_expression_maps" / f"{gene}.nii.gz"
 
         # Check if the output file already exists
         if output_path.exists():
