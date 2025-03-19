@@ -5,11 +5,10 @@ Use ``merfish_expression_to_nii.py`` from UNRAVEL to make a 3D .nii.gz image of 
 
 Usage:
 ------
-    merfish_expression_to_nii.py -b path/to/root_dir -g gene_name
+    merfish_expression_to_nii.py -b <abc_download_root> -g <gene> -r <ref_nii> [-n] [-o <output>] [-im] [-v]
 """
 
 import anndata
-import matplotlib.pyplot as plt
 import nibabel as nib
 import numpy as np
 import pandas as pd
@@ -34,7 +33,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
-    opts.add_argument('-o', '--output', help='Output path for the saved .nii.gz image. Default: MERFISH-CCF_expression_maps/<gene>[_imputed][_neurons].nii.gz', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='Output path for the saved .nii.gz image. Default: [imputed_]MERFISH[_neuronal]_expression_maps/<gene>.nii.gz', default=None, action=SM)
     opts.add_argument('-im', '--imputed', help='Use imputed expression data. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
