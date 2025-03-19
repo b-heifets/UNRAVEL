@@ -32,8 +32,8 @@ def parse_args():
     reqs.add_argument('-g', '--gene', help='Gene(s) to plot.', required=True, nargs='*', action=SM)
     reqs.add_argument('-r', '--ref_nii', help='Path to reference .nii.gz for header info (e.g., image_volumes/MERFISH-C57BL6J-638850-CCF/20230630/resampled_annotation.nii.gz)', required=True, action=SM)
 
-
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
     opts.add_argument('-o', '--output', help='Output path for the saved .nii.gz image. Default: None', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -75,6 +75,13 @@ def main():
 
     # Add the reconstructed coordinates to the cell metadata
     cell_df_joined = m.join_reconstructed_coords(cell_df, download_base)
+
+    if args.neurons:
+        # Add: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
+        cell_df_joined = m.join_cluster_details(cell_df, download_base) 
+
+        # Filter out non-neuronal cells
+        cell_df_joined = cell_df_joined[cell_df_joined['class'].str.split().str[0].astype(int) <= 29]
 
     # Load the expression data for all genes (if the gene is in the dataset) 
     adata = m.load_expression_data(download_base, args.gene)
