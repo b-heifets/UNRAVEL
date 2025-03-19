@@ -266,16 +266,28 @@ def load_expression_data(download_base, gene, imputed=False):
     adata : anndata.AnnData object with n_obs x n_vars = 4334174 x 550
         The expression data. obs: 'brain_section_label', var: 'gene_symbol', 'transcript_identifier', uns: 'accessed_on', 'src'
     """
-    genes_in_merfish = genes_in_merfish_data()
-    genes_in_imputed_merfish = genes_in_imputed_merfish_data()
+    genes_in_merfish = []
+    genes_in_imputed_merfish = []
+    if not imputed:
+        genes_in_merfish = genes_in_merfish_data()
+        if gene not in genes_in_merfish:
+            print(f"    Gene [yellow]{gene}[/] not found in MERFISH data, using imputed data.")
+            genes_in_imputed_merfish = genes_in_imputed_merfish_data()
 
-    if gene in genes_in_merfish and not imputed:
-        expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad'
-    elif gene in genes_in_imputed_merfish:
-        expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad'
+            if gene not in genes_in_imputed_merfish:
+                print(f"    Gene [yellow]{gene}[/] not found in imputed MERFISH data.")
+                import sys ; sys.exit()
     else:
-        print(f"    Gene [yellow]{gene}[/] not found in MERFISH data or imputed data.")
-        import sys ; sys.exit()
+        genes_in_imputed_merfish = genes_in_imputed_merfish_data()
+        if gene not in genes_in_imputed_merfish:
+            print(f"    Gene [yellow]{gene}[/] not found in imputed MERFISH data.")
+            import sys ; sys.exit()
+
+    if genes_in_merfish:
+        expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad'
+    else:
+        expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad'
+
     print(f"\n    Loading expression data from {expression_path}\n")
     adata = anndata.read_h5ad(expression_path, backed='r')
     return adata
