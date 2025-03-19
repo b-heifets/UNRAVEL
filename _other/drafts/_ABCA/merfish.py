@@ -266,6 +266,7 @@ def load_expression_data(download_base, gene, imputed=False):
     adata : anndata.AnnData object with n_obs x n_vars = 4334174 x 550
         The expression data. obs: 'brain_section_label', var: 'gene_symbol', 'transcript_identifier', uns: 'accessed_on', 'src'
     """
+    gene = gene[0]  # Only one gene is allowed for now
     genes_in_merfish = []
     genes_in_imputed_merfish = []
     if not imputed:
