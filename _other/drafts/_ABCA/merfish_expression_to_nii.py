@@ -77,6 +77,10 @@ def main():
     # Add the reconstructed coordinates to the cell metadata
     cell_df_joined = m.join_reconstructed_coords(cell_df, download_base)
 
+    # Print columns
+    print(f"\nColumns in cell metadata:")
+    print(cell_df_joined.columns)
+
     if args.neurons:
         # Add: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
         cell_df_joined = m.join_cluster_details(cell_df, download_base) 
@@ -115,6 +119,10 @@ def main():
         
         # Filter expression data for the specified gene
         asubset, gf = m.filter_expression_data(adata, gene)
+
+        # Print columns
+        print(f"\nColumns in cell metadata:")
+        print(cell_df_joined.columns)
 
         # Get the unique z_positions and their corresponding MERFISH slice indices
         z_positions = np.sort(cell_df_joined['z_reconstructed'].unique())
