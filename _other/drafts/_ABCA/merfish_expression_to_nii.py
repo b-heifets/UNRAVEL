@@ -94,6 +94,7 @@ def main():
             print(f"Gene {gene} not found in the dataset, skipping.")
             continue
 
+        # Define the output path and create the output directory if it doesn't exist
         if args.output:
             output_path = Path(args.output)
         else:
@@ -105,6 +106,7 @@ def main():
                 output_path = Path().cwd() / "MERFISH-CCF_expression_maps" / f"{gene}_neurons.nii.gz"
             else:
                 output_path = Path().cwd() / "MERFISH-CCF_expression_maps" / f"{gene}.nii.gz"
+        output_path.parent.mkdir(parents=True, exist_ok=True)
 
         # Check if the output file already exists
         if output_path.exists():
