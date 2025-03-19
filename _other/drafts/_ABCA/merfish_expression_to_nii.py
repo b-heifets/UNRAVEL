@@ -42,6 +42,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Add option for non-neuronal cells
 
 def add_merfish_slice_to_3d_img(z, cell_df_joined, asubset, gf, gene, img):
     brain_section = cell_df_joined[cell_df_joined['z_reconstructed'] == z]['brain_section_label'].values[0]
@@ -99,13 +100,13 @@ def main():
             output_path = Path(args.output)
         else:
             if args.imputed and args.neurons:
-                output_path = Path().cwd() / "MERFISH-CCF_expression_maps" / f"{gene}_imputed_neurons.nii.gz"
+                output_path = Path().cwd() / "imputed_MERFISH_neuronal_expression_maps" / f"{gene}.nii.gz"
             elif args.imputed:
-                output_path = Path().cwd() / "MERFISH-CCF_expression_maps" / f"{gene}_imputed.nii.gz"
+                output_path = Path().cwd() / "imputed_MERFISH_expression_maps" / f"{gene}_imputed.nii.gz"
             elif args.neurons:
-                output_path = Path().cwd() / "MERFISH-CCF_expression_maps" / f"{gene}_neurons.nii.gz"
+                output_path = Path().cwd() / "MERFISH_neuronal_expression_maps" / f"{gene}_neurons.nii.gz"
             else:
-                output_path = Path().cwd() / "MERFISH-CCF_expression_maps" / f"{gene}.nii.gz"
+                output_path = Path().cwd() / "MERFISH_expression_maps" / f"{gene}.nii.gz"
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
         # Check if the output file already exists
