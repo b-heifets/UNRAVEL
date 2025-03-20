@@ -55,7 +55,7 @@
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="unravel.voxel_stats.other package" href="other/toc.html" />
+    <link rel="next" title="unravel.voxel_stats.vstats_check_fsleyes module" href="vstats_check_fsleyes.html" />
     <link rel="prev" title="unravel.voxel_stats.vstats module" href="vstats.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -298,6 +298,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg_check.html">unravel.register.reg_check module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/reg_check_fsleyes.html">unravel.register.reg_check_fsleyes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg_check_brain_mask.html">unravel.register.reg_check_brain_mask module</a></li>
 </ul>
 </details></li>
@@ -320,10 +321,12 @@
 <li class="toctree-l2"><a class="reference internal" href="apply_mask.html">unravel.voxel_stats.apply_mask module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vstats_prep.html">unravel.voxel_stats.vstats_prep module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="z_score.html">unravel.voxel_stats.z_score module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="z_score_cwd.html">unravel.voxel_stats.z_score_cwd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="whole_to_LR_avg.html">unravel.voxel_stats.whole_to_LR_avg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="hemi_to_LR_avg.html">unravel.voxel_stats.hemi_to_LR_avg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vstats.html">unravel.voxel_stats.vstats module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.voxel_stats.mirror module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vstats_check_fsleyes.html">unravel.voxel_stats.vstats_check_fsleyes module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="other/toc.html">unravel.voxel_stats.other package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="other/IF_outliers.html">unravel.voxel_stats.other.IF_outliers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="other/r_to_p.html">unravel.voxel_stats.other.r_to_p module</a></li>
@@ -421,6 +424,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/process_samples.html">unravel.utilities.process_samples module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/toggle_samples.html">unravel.utilities.toggle_samples module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/points_compressor.html">unravel.utilities.points_compressor module</a></li>
@@ -491,7 +495,7 @@
                   
   <section id="module-unravel.voxel_stats.mirror">
 <span id="unravel-voxel-stats-mirror-module"></span><span id="unravel-voxel-stats-mirror"></span><h1>unravel.voxel_stats.mirror module<a class="headerlink" href="#module-unravel.voxel_stats.mirror" title="Link to this heading">#</a></h1>
-<p>Use <code class="docutils literal notranslate"><span class="pre">vstats_mirror</span></code> (<code class="docutils literal notranslate"><span class="pre">mirror</span></code>) from UNRAVEL to load a <cite>*</cite>.nii.gz, flip a copy [and shift content], average original and copy together, and save as .nii.gz.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">vstats_mirror</span></code> (<code class="docutils literal notranslate"><span class="pre">mirror</span></code>) from UNRAVEL to load a .nii.gz, flip it, and save the flipped image.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <ul class="simple">
@@ -502,7 +506,7 @@
 <section id="usage">
 <h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>vstats_mirror [-p ‘&lt;asterisk&gt;.nii.gz’] [-ax 2] [-s 0] [-v]</p>
+<div><p>vstats_mirror [-i ‘&lt;asterisk&gt;.nii.gz’] [-ax 2] [-s 0] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -552,11 +556,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="other/toc.html"
+       href="vstats_check_fsleyes.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.voxel_stats.other package</p>
+        <p class="prev-next-title">unravel.voxel_stats.vstats_check_fsleyes module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

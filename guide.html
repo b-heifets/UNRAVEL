@@ -664,6 +664,7 @@ Registration</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/register/reg_prep.html#unravel-register-reg-prep"><span class="std std-ref"><strong>reg_prep</strong></span></a>: Prepare registration (resample the autofluo image to lower res).</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg.html#unravel-register-reg"><span class="std std-ref"><strong>reg</strong></span></a>: Perform registration (e.g., register the autofluo image to an average template).</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg_check.html#unravel-register-reg-check"><span class="std std-ref"><strong>reg_check</strong></span></a>: Check registration (aggregate the autofluo and warped atlas images).</p></li>
+<li><p><a class="reference internal" href="unravel/register/reg_check.html#unravel-register-reg-check"><span class="std std-ref"><strong>reg_check_fsleyes</strong></span></a>: Check registration using the aggregated images.</p></li>
 </ul>
 </div>
 <input id="sd-tab-item-1" name="sd-tab-set-0" type="radio">
@@ -690,7 +691,9 @@ Voxel-wise stats</label><div class="sd-tab-content docutils">
 <ul class="simple">
 <li><p><a class="reference internal" href="unravel/voxel_stats/vstats_prep.html#unravel-voxel-stats-vstats-prep"><span class="std std-ref"><strong>vstats_prep</strong></span></a>: Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/z_score.html#unravel-voxel-stats-z-score"><span class="std std-ref"><strong>vstats_z_score</strong></span></a>: Z-score images.</p></li>
+<li><p><a class="reference internal" href="unravel/voxel_stats/z_score_cwd.html#unravel-voxel-stats-z-score-cwd"><span class="std std-ref"><strong>vstats_z_score_cwd</strong></span></a>: Z-score images in the current working directory.</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/whole_to_LR_avg.html#unravel-voxel-stats-whole-to-lr-avg"><span class="std std-ref"><strong>vstats_whole_to_avg</strong></span></a>: Average left and right hemispheres together.</p></li>
+<li><p><a class="reference internal" href="unravel/voxel_stats/vstats_check_fsleyes.html#unravel-voxel-stats-vstats-check-fsleyes"><span class="std std-ref"><strong>vstats_check_fsleyes</strong></span></a>: Check vstats inputs with fsleyes.</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/vstats.html#unravel-voxel-stats-vstats"><span class="std std-ref"><strong>vstats</strong></span></a>: Compute voxel statistics.</p></li>
 </ul>
 </div>
@@ -754,6 +757,7 @@ Registration</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/register/reg.html#unravel-register-reg"><span class="std std-ref"><strong>reg</strong></span></a>: Perform registration (e.g., register the autofluo image to an average template).</p></li>
 <li><p><a class="reference internal" href="unravel/register/affine_initializer.html#unravel-register-affine-initializer"><span class="std std-ref"><strong>reg_affine_initializer</strong></span></a>: Part of reg. Roughly aligns the template to the autofl image.</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg_check.html#unravel-register-reg-check"><span class="std std-ref"><strong>reg_check</strong></span></a>: Check registration (aggregate the autofluo and warped atlas images).</p></li>
+<li><p><a class="reference internal" href="unravel/register/reg_check.html#unravel-register-reg-check"><span class="std std-ref"><strong>reg_check_fsleyes</strong></span></a>: Check registration using the aggregated images.</p></li>
 <li><p><a class="reference internal" href="unravel/register/reg_check_brain_mask.html#unravel-register-reg-check-brain-mask"><span class="std std-ref"><strong>reg_check_brain_mask</strong></span></a>: Check brain mask for over/under segmentation.</p></li>
 </ul>
 </div>
@@ -785,8 +789,10 @@ Voxel-wise stats</label><div class="sd-tab-content docutils">
 <li><p><a class="reference internal" href="unravel/voxel_stats/apply_mask.html#unravel-voxel-stats-apply-mask"><span class="std std-ref"><strong>vstats_apply_mask</strong></span></a>: Apply mask to image (e.g., nullify artifacts or isolate signals).</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/vstats_prep.html#unravel-voxel-stats-vstats-prep"><span class="std std-ref"><strong>vstats_prep</strong></span></a>: Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/z_score.html#unravel-voxel-stats-z-score"><span class="std std-ref"><strong>vstats_z_score</strong></span></a>: Z-score images.</p></li>
+<li><p><a class="reference internal" href="unravel/voxel_stats/z_score_cwd.html#unravel-voxel-stats-z-score-cwd"><span class="std std-ref"><strong>vstats_z_score_cwd</strong></span></a>: Z-score images in the current working directory.</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/whole_to_LR_avg.html#unravel-voxel-stats-whole-to-lr-avg"><span class="std std-ref"><strong>vstats_whole_to_avg</strong></span></a>: Average left and right hemispheres together.</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/hemi_to_LR_avg.html#unravel-voxel-stats-hemi-to-lr-avg"><span class="std std-ref"><strong>vstats_hemi_to_avg</strong></span></a>: If left and right hemispheres were processed separately (less common), average them together.</p></li>
+<li><p><a class="reference internal" href="unravel/voxel_stats/vstats_check_fsleyes.html#unravel-voxel-stats-vstats-check-fsleyes"><span class="std std-ref"><strong>vstats_check_fsleyes</strong></span></a>: Check vstats inputs with fsleyes.</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/vstats.html#unravel-voxel-stats-vstats"><span class="std std-ref"><strong>vstats</strong></span></a>: Compute voxel statistics.</p></li>
 <li><p><a class="reference internal" href="unravel/voxel_stats/mirror.html#unravel-voxel-stats-mirror"><span class="std std-ref"><strong>vstats_mirror</strong></span></a>: Flip and optionally shift content of images in atlas space.</p></li>
 </ul>
@@ -882,6 +888,7 @@ Atlas tools</label><div class="sd-tab-content docutils">
 Utilities</label><div class="sd-tab-content docutils">
 <ul class="simple">
 <li><p><a class="reference internal" href="unravel/utilities/get_samples.html#unravel-utilities-get-samples"><span class="std std-ref"><strong>utils_get_samples</strong></span></a>: Test –pattern and –dirs args of script that batch process sample?? dirs.</p></li>
+<li><p><a class="reference internal" href="unravel/utilities/process_samples.html#unravel-utilities-process-samples"><span class="std std-ref"><strong>utils_process_samples</strong></span></a>: Use this for batch processing when commands lack that functionality.</p></li>
 <li><p><a class="reference internal" href="unravel/utilities/region_info.html#unravel-utilities-region-info"><span class="std std-ref"><strong>utils_region_info</strong></span></a>: Look up region info (e.g., find ACB to see its region name and ID)</p></li>
 <li><p><a class="reference internal" href="unravel/utilities/aggregate_files_from_sample_dirs.html#unravel-utilities-aggregate-files-from-sample-dirs"><span class="std std-ref"><strong>utils_agg_files</strong></span></a>: Aggregate files from sample directories.</p></li>
 <li><p><a class="reference internal" href="unravel/utilities/aggregate_files_recursively.html#unravel-utilities-aggregate-files-recursively"><span class="std std-ref"><strong>utils_agg_files_rec</strong></span></a>: Recursively aggregate files.</p></li>
@@ -1215,7 +1222,7 @@ utils_get_samples<span class="w"> </span>-d<span class="w"> </span><span class="
     F --&gt; G(seg_brain_mask: Generate autofl brain masks with Ilastik and apply them to the 50 µm images)
     G --&gt; H(Optionally use 3D Slicer to make the masked autofl image and mask better match the average template)
     H --&gt; I(reg: Register the template brain with the masked autofl images and warp the atlas)
-    I --&gt; J(reg_check: Aggregate padded autofl images and warped atlas images from reg)
+    I --&gt; J(reg_check and reg_check_fsleyes: Aggregate padded autofl images and warped atlas images from reg)
     J --&gt; K(Assess registration quality in FSLeyes and refine if necessary by repeating the 3D Slicer step, etc.)
 
     </pre><section id="io-metadata">
@@ -1340,7 +1347,7 @@ reg<span class="w"> </span>-m<span class="w"> </span><span class="nv">$TEMPLATE<
 </pre></div>
 </div>
 <ul class="simple">
-<li><p>View these images with <a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes">FSLeyes</a> <a class="reference external" href="https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html">docs</a></p></li>
+<li><p>View these images with <code class="docutils literal notranslate"><span class="pre">reg_check_fsleyes</span></code>, which launches <a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes">FSLeyes</a> <a class="reference external" href="https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html">docs</a></p></li>
 <li><p>FSLeyes might not work in Windows without additional set up: <a class="reference external" href="https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/windows">Installation on Windows</a></p></li>
 </ul>
 <div class="note admonition">
@@ -1459,6 +1466,9 @@ vstats_z_score<span class="w"> </span>-i<span class="w"> </span><span class="s1"
 
 <span class="c1"># Using a tissue mask and an atlas mask</span>
 vstats_z_score<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;atlas_space/*.nii.gz&#39;</span><span class="w"> </span>-tmas<span class="w"> </span>reg_inputs/autofl_50um_brain_mask.nii.gz<span class="w"> </span>-amas<span class="w"> </span><span class="nv">$MASK</span><span class="w"> </span><span class="o">[</span>-d<span class="w"> </span><span class="nv">$DIRS</span><span class="o">]</span><span class="w"> </span>
+
+<span class="c1"># Alternatively, use `vstats_z_score_cwd` to z-score images in the current working directory</span>
+vstats_z_score_cwd<span class="w"> </span>-mas<span class="w"> </span><span class="nv">$MASK</span>
 </pre></div>
 </div>
 </section>
@@ -1503,7 +1513,7 @@ vstats_whole_to_avg<span class="w"> </span>-i<span class="w"> </span><span class
 </li>
 <li><p><strong>Generate and add .nii.gz files to vstats subfolders</strong>:</p>
 <ul class="simple">
-<li><p>Input images are from <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> and may have been z-scored with <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code> (we z-score c-Fos labeling as intensities are not extreme)</p></li>
+<li><p>Input images are from <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> and may have been z-scored with <code class="docutils literal notranslate"><span class="pre">vstats_z_score</span></code> or <code class="docutils literal notranslate"><span class="pre">vstats_z_score_cwd</span></code> (we z-score c-Fos labeling as intensities are not extreme)</p></li>
 <li><p>For bilateral data, left and right sides can be averaged with <code class="docutils literal notranslate"><span class="pre">vstats_whole_to_avg</span></code> (then use a unilateral hemisphere mask for <code class="docutils literal notranslate"><span class="pre">vstats</span></code> and <code class="docutils literal notranslate"><span class="pre">cstats_fdr</span></code>).</p></li>
 <li><p>We smooth data (e.g., with a 100 µm kernel) to account for innacuracies in registration</p>
 <ul>

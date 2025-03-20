@@ -298,6 +298,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../register/reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/affine_initializer.html">unravel.register.affine_initializer module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg_check.html">unravel.register.reg_check module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../register/reg_check_fsleyes.html">unravel.register.reg_check_fsleyes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../register/reg_check_brain_mask.html">unravel.register.reg_check_brain_mask module</a></li>
 </ul>
 </details></li>
@@ -320,10 +321,12 @@
 <li class="toctree-l2"><a class="reference internal" href="../voxel_stats/apply_mask.html">unravel.voxel_stats.apply_mask module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../voxel_stats/vstats_prep.html">unravel.voxel_stats.vstats_prep module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../voxel_stats/z_score.html">unravel.voxel_stats.z_score module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../voxel_stats/z_score_cwd.html">unravel.voxel_stats.z_score_cwd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../voxel_stats/whole_to_LR_avg.html">unravel.voxel_stats.whole_to_LR_avg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../voxel_stats/hemi_to_LR_avg.html">unravel.voxel_stats.hemi_to_LR_avg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../voxel_stats/vstats.html">unravel.voxel_stats.vstats module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../voxel_stats/mirror.html">unravel.voxel_stats.mirror module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../voxel_stats/vstats_check_fsleyes.html">unravel.voxel_stats.vstats_check_fsleyes module</a></li>
 <li class="toctree-l2 has-children"><a class="reference internal" href="../voxel_stats/other/toc.html">unravel.voxel_stats.other package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../voxel_stats/other/IF_outliers.html">unravel.voxel_stats.other.IF_outliers module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../voxel_stats/other/r_to_p.html">unravel.voxel_stats.other.r_to_p module</a></li>
@@ -421,6 +424,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../utilities/aggregate_files_recursively.html">unravel.utilities.aggregate_files_recursively module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/clean_tif_dirs.html">unravel.utilities.clean_tif_dirs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/prepend_conditions.html">unravel.utilities.prepend_conditions module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/process_samples.html">unravel.utilities.process_samples module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/toggle_samples.html">unravel.utilities.toggle_samples module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/points_compressor.html">unravel.utilities.points_compressor module</a></li>
@@ -500,7 +504,7 @@
 </ul>
 </dd>
 <dt>Outputs:</dt><dd><ul class="simple">
-<li><p>Saved to ./&lt;args.test_type&gt;_plots_&lt;side&gt;</p></li>
+<li><p>Saved to ./&lt;test_type&gt;_plots_&lt;side&gt;</p></li>
 <li><p>Plots for each region with cell densities for each group (e.g., Saline, MDMA, Meth)</p></li>
 <li><p>Summary of significant differences between groups</p></li>
 <li><p>regional_cell_densities_all.csv (Columns: columns: Region_ID,Side,Name,Abbr,Saline_sample06,Saline_sample07,…,MDMA_sample01,…,Meth_sample23,…)</p></li>
@@ -525,7 +529,7 @@
 <section id="usage-for-t-tests">
 <h2>Usage for t-tests:<a class="headerlink" href="#usage-for-t-tests" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>rstats_summary –groups Saline MDMA -hemi both -t t-test -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]</p>
+<div><p>rstats_summary –groups Saline MDMA -hemi both -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]</p>
 </div></blockquote>
 </section>
 <dl class="py function">
@@ -568,7 +572,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.region_stats.rstats_summary.process_and_plot_data">
-<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_summary.</span></span><span class="sig-name descname"><span class="pre">process_and_plot_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_abbr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_summary.html#process_and_plot_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_summary.process_and_plot_data" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">unravel.region_stats.rstats_summary.</span></span><span class="sig-name descname"><span class="pre">process_and_plot_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region_abbr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">side</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group_columns</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/region_stats/rstats_summary.html#process_and_plot_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.region_stats.rstats_summary.process_and_plot_data" title="Link to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">

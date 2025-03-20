@@ -373,7 +373,7 @@
 <span class="sd">    - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average left and right hemispheres.</span>
 <span class="sd">    - If using side-specific z-scoring, use ``vstats_hemi_to_avg`` to average the images.</span>
 <span class="sd">    - Prepend condition names with ``utils_prepend``.</span>
-<span class="sd">    - Check images in FSLeyes and run ``vstats`` to perform voxel-wise stats.</span>
+<span class="sd">    - Check images in FSLeyes (e.g., with ``vstats_check_fsleyes``) and run ``vstats`` to perform voxel-wise stats.</span>
 
 <span class="sd">Usage:</span>
 <span class="sd">------</span>
@@ -434,7 +434,7 @@
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-<span class="c1"># TODO: Set voxels outside the mask(s) to zero</span>
+<span class="c1"># TODO: Adapt this script to use the function from z_score_cwd.py (perhaps consolidate scripts)</span>
 
 
 <div class="viewcode-block" id="z_score">
@@ -473,7 +473,7 @@
     <span class="n">z_scored_img</span> <span class="o">=</span> <span class="p">(</span><span class="n">masked_data</span> <span class="o">-</span> <span class="n">mean_intensity</span><span class="p">)</span> <span class="o">/</span> <span class="n">std_dev</span>
 
     <span class="c1"># Set voxels outside the mask to zero</span>
-    <span class="c1"># z_scored_img *= mask</span>
+    <span class="n">z_scored_img</span> <span class="o">*=</span> <span class="n">mask</span>
 
     <span class="c1"># Save the z-scored image</span>
     <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">input_nii_path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;_</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s1">.nii.gz&#39;</span><span class="p">))</span>

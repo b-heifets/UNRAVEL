@@ -355,6 +355,12 @@ window.addEventListener("load", () => mermaid.run());
 
 <span class="sd">Note: </span>
 <span class="sd">    - This warps padded images in ./reg_outputs (i.e., images that match the padded fixed reg input). For unpadded final images, use ``warp_to_fixed`` and ``warp_to_atlas``.</span>
+<span class="sd">    - To make an average template, run reg as usual then follow the usage to inverse warp the autofl images to atlas space. </span>
+<span class="sd">    - agg -i &#39;atlas_space/tissue_in_atlas_space.nii.gz&#39; -a -td autofl_CCF30 -d $DIRS</span>
+<span class="sd">    - cd autofl_CCF30</span>
+<span class="sd">    - avg -o SMM2_autofl_avg.nii.gz</span>
+<span class="sd">    - lr_avg -i SMM2_autofl_avg.nii.gz</span>
+<span class="sd">    - for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m path/SMM2_autofl_avg_LRavg.nii.gz -bc -sm 0.4 -ort $(cat $s/parameters/ort.txt) -m2 path/atlas_CCFv3_2020_30um.nii.gz -v -d $s  ; done ; done</span>
 
 <span class="sd">Usage for forward warping atlas to tissue space:</span>
 <span class="sd">------------------------------------------------</span>
@@ -389,7 +395,7 @@ window.addEventListener("load", () => mermaid.run());
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-inv&#39;</span><span class="p">,</span> <span class="s1">&#39;--inverse&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Perform inverse warping (use flag if -f &amp; -m are opposite from ``reg``)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ro&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_outputs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/reg_outputs (contains transformation files)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;reg_outputs&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ro&#39;</span><span class="p">,</span> <span class="s1">&#39;--reg_outputs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/reg_outputs (contains transformation files)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;reg_outputs&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-inp&#39;</span><span class="p">,</span> <span class="s1">&#39;--interpol&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Type of interpolation (linear, bSpline \[default], nearestNeighbor, multiLabel).&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;bSpline&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
