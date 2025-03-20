@@ -9,7 +9,7 @@ Prereqs:
 
 Usage:
 ------
-``vstats_check_fsleyes`` -min -1 -max 3 [-i '*.nii.gz'] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-l ccfv3_2020]
+``vstats_check_fsleyes`` -min -1 -max 3 [-i '<asterisk>.nii.gz'] [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-l ccfv3_2020]
 """
 
 import os
