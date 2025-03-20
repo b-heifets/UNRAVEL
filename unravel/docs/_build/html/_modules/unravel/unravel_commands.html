@@ -458,6 +458,12 @@
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rc&quot;</span>
             <span class="p">},</span>
+            <span class="s2">&quot;reg_check_fsleyes&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.register.reg_check_fsleyes&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Check registration (aggregate the autofluo and warped atlas images).&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rcf&quot;</span>
+            <span class="p">},</span>
             <span class="s2">&quot;reg_check_brain_mask&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.register.reg_check_brain_mask&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Check brain mask for over/under segmentation.&quot;</span><span class="p">,</span>
@@ -547,6 +553,12 @@
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;zs&quot;</span>
             <span class="p">},</span>
+            <span class="s2">&quot;vstats_z_score_cwd&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.voxel_stats.z_score_cwd&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Z-score images in the current working directory.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;zsc&quot;</span>
+            <span class="p">},</span>
             <span class="s2">&quot;vstats_whole_to_avg&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.voxel_stats.whole_to_LR_avg&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Average left and right hemispheres together&quot;</span><span class="p">,</span>
@@ -558,6 +570,12 @@
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;If left and right hemispheres were processed separately (less common), average them together.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;h2a&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;vstats_check_fsleyes&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.voxel_stats.vstats_check_fsleyes&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Check vstats inputs with fsleyes.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;vcf&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;vstats&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.voxel_stats.vstats&quot;</span><span class="p">,</span>
@@ -924,6 +942,12 @@
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Test --pattern and --dirs args of script that batch process sample?? dirs.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;s&quot;</span>
+            <span class="p">},</span>
+                <span class="s2">&quot;utils_process_samples&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.process_samples:main&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Use this for batch processing when commands lack that functionality.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;ups&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;utils_region_info&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.utilities.region_info:main&quot;</span><span class="p">,</span>
