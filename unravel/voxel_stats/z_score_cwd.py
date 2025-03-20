@@ -22,7 +22,7 @@ Next commands for voxel-wise stats:
 
 Usage:
 ------
-    vstats_z_score_cwd -i '*.nii.gz' [-mas path/mask1.nii.gz path/mask2.nii.gz] [-s z] [-v]
+    vstats_z_score_cwd -i '<asterisk>.nii.gz' [-mas path/mask1.nii.gz path/mask2.nii.gz] [-s z] [-v]
 """
 
 import nibabel as nib
