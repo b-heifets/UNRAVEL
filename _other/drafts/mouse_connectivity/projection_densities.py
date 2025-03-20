@@ -4,7 +4,9 @@
 Use ``projection_densities.py`` from UNRAVEL to analyze connectivity data from the Allen Brain Atlas Mouse Connectivity API.
 
 Notes:
+    - https://allensdk.readthedocs.io/en/latest/connectivity.html
     - https://allensdk.readthedocs.io/en/stable/_static/examples/nb/mouse_connectivity.html
+    - https://alleninstitute.github.io/AllenSDK/allensdk.api.queries.mouse_connectivity_api.html#allensdk.api.queries.mouse_connectivity_api.MouseConnectivityApi
 
 """
 
