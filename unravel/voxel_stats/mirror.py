@@ -2,7 +2,7 @@
 
 
 """
-Use ``vstats_mirror`` (``mirror``) from UNRAVEL to load a `*`.nii.gz, flip a copy [and shift content], average original and copy together, and save as .nii.gz.
+Use ``vstats_mirror`` (``mirror``) from UNRAVEL to load a .nii.gz, flip it, and save the flipped image.
 
 Note:
     - Use -ax 2 and -s 0 for the CCFv3 2020 atlas.
@@ -10,7 +10,7 @@ Note:
 
 Usage:
 ------
-    vstats_mirror [-p '<asterisk>.nii.gz'] [-ax 2] [-s 0] [-v]
+    vstats_mirror [-i '<asterisk>.nii.gz'] [-ax 2] [-s 0] [-v]
 """
 
 import os
@@ -27,7 +27,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-p', '--pattern', help='Pattern to match files. Default: *.nii.gz', default='*.nii.gz', action=SM)
+    opts.add_argument('-i', '--input', help='Input file or pattern. Default: *.nii.gz', default='*.nii.gz', action=SM)
     opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
     opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
 
@@ -68,7 +68,11 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    files = Path().cwd().glob(args.pattern)
+    if Path(args.input).is_absolute():
+        files = [Path(args.input)]
+    else:
+        files = Path().cwd().glob(args.input)
+
     for file in files:
 
         basename = Path(file).name

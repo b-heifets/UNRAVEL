@@ -92,7 +92,7 @@ def to_atlas(sample_path, img, fixed_reg_in, atlas, output, interpol, dtype='uin
     reg_outputs_path = fixed_reg_input.parent
     warp_inputs_dir = reg_outputs_path / "warp_inputs"
     warp_inputs_dir.mkdir(exist_ok=True, parents=True)
-    warp_input_path = str(warp_inputs_dir / output.name)
+    warp_input_path = str(warp_inputs_dir / Path(output).name)
     print(f'\n    Setting header info and saving the input for warp() here: {warp_input_path}\n')
     img = img.astype(np.float32) # Convert the fixed image to FLOAT32 for ANTsPy
     fixed_reg_input_nii = nib.load(fixed_reg_input)

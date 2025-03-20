@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``ABCA_sunburst_expression.py`` from UNRAVEL to filter ABCA sunburst expression data, keeping cells with high expression at any level (class, subclass, supertype, cluster).
+Use ``ABCA_sunburst_filter.py`` from UNRAVEL to filter ABCA sunburst expression data, keeping cells with high expression at any level (class, subclass, supertype, cluster).
 
 Prereqs:
     - ABCA_suburst_expression.py
@@ -61,7 +61,7 @@ def main():
     print('\nMain sunburst expression data:')
     print(main_sunburst_exp_df)
 
-    # Keep cells that have high mean expression (e.g., >= 6) of the gene of interest in 
+    # Keep cells that have high mean expression (e.g., >= 6) of the gene of interest at the specified level
     cell_mean_col = f'{args.level}_mean'
     cells_df_filtered = main_sunburst_exp_df[
         (main_sunburst_exp_df[cell_mean_col] >= args.threshold)

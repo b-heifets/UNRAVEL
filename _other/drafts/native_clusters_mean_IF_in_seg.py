@@ -7,7 +7,7 @@ Usage:
 ------
 native_clusters_mean_IF_in_seg.py -c clusters/output_folder -i iba1_rb20_cropped -s iba1_seg_ilastik_1/sample03_iba1_seg_ilastik_1.nii.gz_cropped -o th_seg_ilastik_3 -v
 
--o glm_iba1_rb20_cbsMeth_v_meth_18000p_vox_p_tstat1_FDR0.2_MinCluster100 -cn iba1_rb20 -s iba1_seg_ilastik_1 -v
+-o glm_iba1_rb20_saline_v_meth_vox_p_tstat1 -cn iba1_rb20 -s iba1_seg_ilastik_1 -v
 
 Run native_clusters_mean_IF_in_seg.py from the experiment directory containing sample?? folders or a sample?? folder.
 

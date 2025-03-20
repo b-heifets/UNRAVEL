@@ -22,7 +22,7 @@ Next commands for voxel-wise stats:
     - If analyzing whole brains, consider using ``vstats_whole_to_avg`` to average left and right hemispheres.
     - If using side-specific z-scoring, use ``vstats_hemi_to_avg`` to average the images.
     - Prepend condition names with ``utils_prepend``.
-    - Check images in FSLeyes and run ``vstats`` to perform voxel-wise stats.
+    - Check images in FSLeyes (e.g., with ``vstats_check_fsleyes``) and run ``vstats`` to perform voxel-wise stats.
 
 Usage:
 ------
@@ -80,7 +80,7 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Set voxels outside the mask(s) to zero
+# TODO: Adapt this script to use the function from z_score_cwd.py (perhaps consolidate scripts)
 
 
 @print_func_name_args_times()
@@ -117,7 +117,7 @@ def z_score(input_nii_path, mask_img, suffix):
     z_scored_img = (masked_data - mean_intensity) / std_dev
 
     # Set voxels outside the mask to zero
-    # z_scored_img *= mask
+    z_scored_img *= mask
 
     # Save the z-scored image
     output_path = Path(str(input_nii_path).replace('.nii.gz', f'_{suffix}.nii.gz'))

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py`` from UNRAVEL to plot MERFISH data from the Allen Brain Cell Atlas.
+Use ``/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish.py`` from UNRAVEL to plot MERFISH data from the Allen Brain Cell Atlas.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/merfish_ccf_registration_tutorial.html#read-in-section-reconstructed-and-ccf-coordinates-for-all-cells
@@ -10,11 +10,11 @@ Note:
 
 Usage for gene:
 ---------------
-    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -b path/to/base_dir -s slice -g gene
+    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish.py -b path/to/base_dir -s slice -g gene
 
 Usage for color:
 ----------------
-    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish_ccf_mpl.py -b path/to/base_dir -s slice -c color
+    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish.py -b path/to/base_dir -s slice -c color
 """
 
 import anndata
@@ -41,6 +41,8 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-g', '--gene', help='Gene to plot.', action=SM)
     opts.add_argument('-c', '--color', help='Color to plot (e.g., parcellation_substructure_color or neurotransmitter_color', action=SM)
+    opts.add_argument('-im', '--imputed', help='Use imputed expression data. Default: False', action='store_true', default=False)
+    opts.add_argument('-o', '--output', help='Path to save the plot rather than showing it with Matplotlib (end with .png)', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -56,7 +58,7 @@ def load_cell_metadata(download_base):
     Parameters:
     -----------
     download_base : Path
-        The root directory of the MERFISH data.
+        The root directory of the MERFISH data or the path to the cell metadata.
 
     Returns:
     --------
@@ -65,7 +67,10 @@ def load_cell_metadata(download_base):
        'feature_matrix_label', 'donor_label', 'donor_genotype', 'donor_sex',
        'x_section', 'y_section', 'z_section'
     """
-    cell_metadata_path = download_base / 'metadata/MERFISH-C57BL6J-638850/20231215/cell_metadata.csv'
+    if Path(download_base).is_file():
+        cell_metadata_path = download_base
+    else:
+        cell_metadata_path = download_base / 'metadata/MERFISH-C57BL6J-638850/20231215/cell_metadata.csv'
     print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
     cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str})
     cell_df.rename(columns={'x': 'x_section',
@@ -261,16 +266,29 @@ def load_expression_data(download_base, gene, imputed=False):
     adata : anndata.AnnData object with n_obs x n_vars = 4334174 x 550
         The expression data. obs: 'brain_section_label', var: 'gene_symbol', 'transcript_identifier', uns: 'accessed_on', 'src'
     """
-    genes_in_merfish = genes_in_merfish_data()
-    genes_in_imputed_merfish = genes_in_imputed_merfish_data()
+    gene = gene[0]  # Only one gene is allowed for now
+    genes_in_merfish = []
+    genes_in_imputed_merfish = []
+    if not imputed:
+        genes_in_merfish = genes_in_merfish_data()
+        if gene not in genes_in_merfish:
+            print(f"    Gene [yellow]{gene}[/] not found in MERFISH data, using imputed data.")
+            genes_in_imputed_merfish = genes_in_imputed_merfish_data()
 
-    if gene in genes_in_merfish and not imputed:
-        expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad'
-    elif gene in genes_in_imputed_merfish:
-        expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad'
+            if gene not in genes_in_imputed_merfish:
+                print(f"    Gene [yellow]{gene}[/] not found in imputed MERFISH data.")
+                import sys ; sys.exit()
     else:
-        print(f"    Gene [yellow]{gene}[/] not found in MERFISH data or imputed data.")
-        import sys ; sys.exit()
+        genes_in_imputed_merfish = genes_in_imputed_merfish_data()
+        if gene not in genes_in_imputed_merfish:
+            print(f"    Gene [yellow]{gene}[/] not found in imputed MERFISH data.")
+            import sys ; sys.exit()
+
+    if genes_in_merfish:
+        expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850/20230830/C57BL6J-638850-log2.h5ad'
+    else:
+        expression_path = download_base / 'expression_matrices/MERFISH-C57BL6J-638850-imputed/20240831/C57BL6J-638850-imputed-log2.h5ad'
+
     print(f"\n    Loading expression data from {expression_path}\n")
     adata = anndata.read_h5ad(expression_path, backed='r')
     return adata
@@ -639,7 +657,7 @@ def main():
 
     if args.gene is not None:
         # Load the expression data for all genes (if the gene is in the dataset) 
-        adata = load_expression_data(download_base, args.gene)
+        adata = load_expression_data(download_base, args.gene, imputed=args.imputed)
 
         # Filter expression data for the specified gene
         asubset, gf = filter_expression_data(adata, args.gene)
@@ -650,7 +668,7 @@ def main():
         # Plot the expression data with a wireframe overlay of the annotation boundary
         fig, ax = plot_section(exp_df['x_reconstructed'],
                         exp_df['y_reconstructed'], 
-                        val=exp_df['Htr2a'], 
+                        val=exp_df[args.gene], 
                         pcmap=plt.cm.magma_r,  # Light color scheme
                         overlay=boundary_slice,
                         extent=extent, 
@@ -659,7 +677,10 @@ def main():
                         fig_width = 9,
                         fig_height = 9 )
         res = ax.set_title(f"{args.gene} Expression in MERFISH-CCF Space")
-        plt.show()
+        if args.output is not None:
+            plt.savefig(args.output, bbox_inches='tight', dpi=300)
+        else:
+            plt.show()
     elif args.color is not None:
         # Plot color with reconstructed coordinates and overlay of the annotation boundary
         fig, ax = plot_section(xx=section['x_reconstructed'],
@@ -672,7 +693,10 @@ def main():
                             fig_width=9,
                             fig_height=9 )
         res = ax.set_title(f"{args.color} in MERFISH-CCF Space")
-        plt.show()
+        if args.output is not None:
+            plt.savefig(args.output, bbox_inches='tight', dpi=300)
+        else:
+            plt.show()
     else:
         print(f"\n    [red1]Error: Please specify either a gene or a color\n")
 

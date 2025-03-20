@@ -8,6 +8,7 @@ unravel.register package
    reg
    affine_initializer
    reg_check
+   reg_check_fsleyes
    reg_check_brain_mask
 
 .. automodule:: unravel.register

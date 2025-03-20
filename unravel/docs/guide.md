@@ -266,6 +266,7 @@ uc -m
 - [**reg_prep**](unravel.register.reg_prep): Prepare registration (resample the autofluo image to lower res).
 - [**reg**](unravel.register.reg): Perform registration (e.g., register the autofluo image to an average template).
 - [**reg_check**](unravel.register.reg_check): Check registration (aggregate the autofluo and warped atlas images).
+- [**reg_check_fsleyes**](unravel.register.reg_check): Check registration using the aggregated images.
 :::
 
 ::: {tab-item} Warping
@@ -283,7 +284,9 @@ uc -m
 ::: {tab-item} Voxel-wise stats
 - [**vstats_prep**](unravel.voxel_stats.vstats_prep): Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).
 - [**vstats_z_score**](unravel.voxel_stats.z_score): Z-score images.
+- [**vstats_z_score_cwd**](unravel.voxel_stats.z_score_cwd): Z-score images in the current working directory. 
 - [**vstats_whole_to_avg**](unravel.voxel_stats.whole_to_LR_avg): Average left and right hemispheres together.
+- [**vstats_check_fsleyes**](unravel.voxel_stats.vstats_check_fsleyes): Check vstats inputs with fsleyes.
 - [**vstats**](unravel.voxel_stats.vstats): Compute voxel statistics.
 :::
 
@@ -336,6 +339,7 @@ uc -m
 - [**reg**](unravel.register.reg): Perform registration (e.g., register the autofluo image to an average template).
 - [**reg_affine_initializer**](unravel.register.affine_initializer): Part of reg. Roughly aligns the template to the autofl image.
 - [**reg_check**](unravel.register.reg_check): Check registration (aggregate the autofluo and warped atlas images).
+- [**reg_check_fsleyes**](unravel.register.reg_check): Check registration using the aggregated images.
 - [**reg_check_brain_mask**](unravel.register.reg_check_brain_mask): Check brain mask for over/under segmentation.
 :::
 
@@ -358,8 +362,10 @@ uc -m
 - [**vstats_apply_mask**](unravel.voxel_stats.apply_mask): Apply mask to image (e.g., nullify artifacts or isolate signals).
 - [**vstats_prep**](unravel.voxel_stats.vstats_prep): Prepare immunofluo images for voxel statistics (e.g., background subtract and warp to atlas space).
 - [**vstats_z_score**](unravel.voxel_stats.z_score): Z-score images.
+- [**vstats_z_score_cwd**](unravel.voxel_stats.z_score_cwd): Z-score images in the current working directory. 
 - [**vstats_whole_to_avg**](unravel.voxel_stats.whole_to_LR_avg): Average left and right hemispheres together.
 - [**vstats_hemi_to_avg**](unravel.voxel_stats.hemi_to_LR_avg): If left and right hemispheres were processed separately (less common), average them together.
+- [**vstats_check_fsleyes**](unravel.voxel_stats.vstats_check_fsleyes): Check vstats inputs with fsleyes.
 - [**vstats**](unravel.voxel_stats.vstats): Compute voxel statistics.
 - [**vstats_mirror**](unravel.voxel_stats.mirror): Flip and optionally shift content of images in atlas space.
 :::
@@ -437,6 +443,7 @@ uc -m
 
 :::{tab-item} Utilities
 - [**utils_get_samples**](unravel.utilities.get_samples): Test --pattern and --dirs args of script that batch process sample?? dirs.
+- [**utils_process_samples**](unravel.utilities.process_samples): Use this for batch processing when commands lack that functionality.
 - [**utils_region_info**](unravel.utilities.region_info): Look up region info (e.g., find ACB to see its region name and ID)
 - [**utils_agg_files**](unravel.utilities.aggregate_files_from_sample_dirs): Aggregate files from sample directories.
 - [**utils_agg_files_rec**](unravel.utilities.aggregate_files_recursively): Recursively aggregate files.
@@ -766,7 +773,7 @@ flowchart TD
     F --> G(seg_brain_mask: Generate autofl brain masks with Ilastik and apply them to the 50 µm images)
     G --> H(Optionally use 3D Slicer to make the masked autofl image and mask better match the average template)
     H --> I(reg: Register the template brain with the masked autofl images and warp the atlas)
-    I --> J(reg_check: Aggregate padded autofl images and warped atlas images from reg)
+    I --> J(reg_check and reg_check_fsleyes: Aggregate padded autofl images and warped atlas images from reg)
     J --> K(Assess registration quality in FSLeyes and refine if necessary by repeating the 3D Slicer step, etc.)
 
 :::
@@ -867,7 +874,7 @@ reg_check [-td reg_results] [-d $DIRS]  # Default for -td: copy images to the cu
 # The default warped atlas from reg is atlas_CCFv3_2020_30um_in_tissue_space.nii.gz (in ./sample??/.reg_outputs). Use -wa <image_name.nii.gz> to set this.
 
 ```
-* View these images with [FSLeyes](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes) [docs](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html)
+* View these images with `reg_check_fsleyes`, which launches [FSLeyes](https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/FSLeyes) [docs](https://open.win.ox.ac.uk/pages/fsl/fsleyes/fsleyes/userdoc/index.html)
 * FSLeyes might not work in Windows without additional set up: [Installation on Windows](https://fsl.fmrib.ox.ac.uk/fsl/docs/#/install/windows)
 
 :::{admonition} Checking registration with FSLeyes
@@ -971,6 +978,9 @@ vstats_z_score -i 'atlas_space/*.nii.gz' -amas $MASK [-d $DIRS]
 
 # Using a tissue mask and an atlas mask
 vstats_z_score -i 'atlas_space/*.nii.gz' -tmas reg_inputs/autofl_50um_brain_mask.nii.gz -amas $MASK [-d $DIRS] 
+
+# Alternatively, use `vstats_z_score_cwd` to z-score images in the current working directory
+vstats_z_score_cwd -mas $MASK
 ```
 
 ### `utils_agg_files`
@@ -1006,7 +1016,7 @@ vstats_whole_to_avg -i '*_cFos_rb4_atlas_space_z.nii.gz.nii.gz' -k 0.1 [-tp] [-a
    - Name subfolders succinctly (this name is added to other folder and file names).
 
 2. **Generate and add .nii.gz files to vstats subfolders**:
-   - Input images are from ``vstats_prep`` and may have been z-scored with ``vstats_z_score`` (we z-score c-Fos labeling as intensities are not extreme)
+   - Input images are from ``vstats_prep`` and may have been z-scored with ``vstats_z_score`` or ``vstats_z_score_cwd`` (we z-score c-Fos labeling as intensities are not extreme)
    - For bilateral data, left and right sides can be averaged with ``vstats_whole_to_avg`` (then use a unilateral hemisphere mask for ``vstats`` and ``cstats_fdr``).
    - We smooth data (e.g., with a 100 µm kernel) to account for innacuracies in registration
       - This can be performed with ``vstats_whole_to_avg`` or ``vstats``

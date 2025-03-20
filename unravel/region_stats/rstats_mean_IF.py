@@ -5,7 +5,7 @@ Use ``rstats_mean_IF`` (``rmi``) from UNRAVEL to measure mean intensity of immun
 
 Inputs:
     - `*`.nii.gz
-    - path/atlas.nii.gz
+    - path/atlas.nii.gz (e.g., atlas_CCFv3_2020_30um.nii.gz)
 
 Outputs: 
     - ./rstats_mean_IF/image_name.csv with regional mean intensity values for each image
@@ -16,7 +16,7 @@ Next:
 
 Usage:
 ------
-    rstats_mean_IF -i '<asterisk>.nii.gz' -a path/atlas [--regions 1 2 3] [-v]
+    rstats_mean_IF -i '<asterisk>.nii.gz' -a path/atlas [--regions 1 2 3] [--masks path/mask1.nii.gz path/mask2.nii.gz] [-v]
 """
 
 import csv
@@ -31,6 +31,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img
 from unravel.core.img_tools import label_IDs
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.voxel_stats.apply_mask import load_mask
 
 
 def parse_args():
@@ -38,10 +39,11 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help="Pattern for NIfTI images to process (e.g., '*.nii.gz')", required=True, action=SM)
-    reqs.add_argument('-a', '--atlas', help='Path/atlas.nii.gz', required=True, action=SM)
+    reqs.add_argument('-a', '--atlas', help='Path/atlas.nii.gz (e.g., atlas_CCFv3_2020_30um.nii.gz or atlas_CCFv3_2020_30um_split.nii.gz)', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-r', '--regions', help='Space-separated list of region intensities to process. Default: process all IDs', nargs='*', type=int, action=SM)
+    opts.add_argument('-mas', '--masks', help='Paths to mask .nii.gz files to restrict analysis. Default: None', nargs='*', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -114,7 +116,13 @@ def main():
         print()
 
     atlas_nii = nib.load(args.atlas)
-    atlas = atlas_nii.get_fdata(dtype=np.float32)
+    atlas_img = atlas_nii.get_fdata(dtype=np.float32)
+
+    # Apply mask(s) if provided
+    if args.masks is not None:
+        mask_imgs = [load_mask(path) for path in args.masks] if args.masks else []
+        mask_img = np.ones(atlas_img.shape, dtype=bool) if not mask_imgs else np.logical_and.reduce(mask_imgs)
+        atlas_img = np.where(mask_img, atlas_img, 0)
 
     output_folder = Path('rstats_mean_IF')
     output_folder.mkdir(parents=True, exist_ok=True)
@@ -127,7 +135,7 @@ def main():
             img = nii.get_fdata(dtype=np.float32)
 
             # Calculate mean intensity
-            mean_intensities = calculate_mean_intensity(atlas, img, region_intensities, args.verbose)
+            mean_intensities = calculate_mean_intensity(atlas_img, img, region_intensities, args.verbose)
 
             output_filename = str(file.name).replace('.nii.gz', '.csv')
             output = output_folder / output_filename

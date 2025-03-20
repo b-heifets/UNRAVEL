@@ -102,6 +102,12 @@ def main():
                 "common": True,
                 "alias": "rc"
             },
+            "reg_check_fsleyes": {
+                "module": "unravel.register.reg_check_fsleyes",
+                "description": "Check registration (aggregate the autofluo and warped atlas images).",
+                "common": True,
+                "alias": "rcf"
+            },
             "reg_check_brain_mask": {
                 "module": "unravel.register.reg_check_brain_mask",
                 "description": "Check brain mask for over/under segmentation.",
@@ -191,6 +197,12 @@ def main():
                 "common": True,
                 "alias": "zs"
             },
+            "vstats_z_score_cwd": {
+                "module": "unravel.voxel_stats.z_score_cwd",
+                "description": "Z-score images in the current working directory.",
+                "common": True,
+                "alias": "zsc"
+            },
             "vstats_whole_to_avg": {
                 "module": "unravel.voxel_stats.whole_to_LR_avg",
                 "description": "Average left and right hemispheres together",
@@ -202,6 +214,12 @@ def main():
                 "description": "If left and right hemispheres were processed separately (less common), average them together.",
                 "common": False,
                 "alias": "h2a"
+            },
+            "vstats_check_fsleyes": {
+                "module": "unravel.voxel_stats.vstats_check_fsleyes",
+                "description": "Check vstats inputs with fsleyes.",
+                "common": True,
+                "alias": "vcf"
             },
             "vstats": {
                 "module": "unravel.voxel_stats.vstats",
@@ -568,6 +586,12 @@ def main():
                 "description": "Test --pattern and --dirs args of script that batch process sample?? dirs.",
                 "common": True,
                 "alias": "s"
+            },
+                "utils_process_samples": {
+                "module": "unravel.utilities.process_samples:main",
+                "description": "Use this for batch processing when commands lack that functionality.",
+                "common": False,
+                "alias": "ups"
             },
             "utils_region_info": {
                 "module": "unravel.utilities.region_info:main",

@@ -56,7 +56,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('--cluster_ids', help='List of cluster IDs to process (Default: process all clusters)', nargs='*', type=int, action=SM)
-    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett" (ignore for now), and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
+    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett" (ignore for now), and "ttest" post-hoc tests. Default: ttest or tukey', default=None, choices=['tukey', 'dunnett', 'ttest'], action=SM)
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -262,6 +262,14 @@ def main():
     if args.order and args.labels and len(args.order) != len(args.labels):
         raise ValueError("The number of entries in --order and --labels must match.")
     
+    if len(args.order) == 2:
+        test_type = 'ttest'
+    elif len(args.order) > 2 and args.test is None:
+        test_type = 'tukey'
+    else:
+        test_type = args.test
+
+    
     if not any(filename.endswith('.csv') for filename in os.listdir()):
         raise FileNotFoundError("No CSV files found in the working directory.")
 
@@ -278,7 +286,7 @@ def main():
     # Process each cluster ID
     test_df_all = pd.DataFrame()
     for cluster_id in clusters_to_process:
-        test_df = plot_data(cluster_id, args.order, args.labels, test_type=args.test, alt=args.alternate)
+        test_df = plot_data(cluster_id, args.order, args.labels, test_type=test_type, alt=args.alternate)
 
         # Add the cluster ID to the DataFrame
         test_df['cluster_ID'] = cluster_id
@@ -297,11 +305,11 @@ def main():
     # Save the results to a CSV
     output_folder = Path('cluster_mean_IF_summary')
     output_folder.mkdir(parents=True, exist_ok=True)
-    if args.test == 'tukey':
+    if test_type == 'tukey':
         test_df_all.to_csv(output_folder / 'cluster_mean_IF_summary_tukey.csv', index=False)
-    elif args.test == 'dunnett':
+    elif test_type == 'dunnett':
         test_df_all.to_csv(output_folder / 'cluster_mean_IF_summary_dunnett.csv', index=False)
-    elif args.test == 'ttest':
+    elif test_type == 'ttest':
         test_df_all.to_csv(output_folder / 'cluster_mean_IF_summary_ttest.csv', index=False)
 
     print(f'\n{test_df_all}\n')

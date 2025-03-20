@@ -8,6 +8,12 @@ Prereq:
 
 Note: 
     - This warps padded images in ./reg_outputs (i.e., images that match the padded fixed reg input). For unpadded final images, use ``warp_to_fixed`` and ``warp_to_atlas``.
+    - To make an average template, run reg as usual then follow the usage to inverse warp the autofl images to atlas space. 
+    - agg -i 'atlas_space/tissue_in_atlas_space.nii.gz' -a -td autofl_CCF30 -d $DIRS
+    - cd autofl_CCF30
+    - avg -o SMM2_autofl_avg.nii.gz
+    - lr_avg -i SMM2_autofl_avg.nii.gz
+    - for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m path/SMM2_autofl_avg_LRavg.nii.gz -bc -sm 0.4 -ort $(cat $s/parameters/ort.txt) -m2 path/atlas_CCFv3_2020_30um.nii.gz -v -d $s  ; done ; done
 
 Usage for forward warping atlas to tissue space:
 ------------------------------------------------
@@ -40,7 +46,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-inv', '--inverse', help='Perform inverse warping (use flag if -f & -m are opposite from ``reg``)', default=False, action='store_true')
-    reqs.add_argument('-ro', '--reg_outputs', help='path/reg_outputs (contains transformation files)', default='reg_outputs', action=SM)
+    opts.add_argument('-ro', '--reg_outputs', help='path/reg_outputs (contains transformation files)', default='reg_outputs', action=SM)
     opts.add_argument('-inp', '--interpol', help='Type of interpolation (linear, bSpline \[default], nearestNeighbor, multiLabel).', default='bSpline', action=SM)
 
     general = parser.add_argument_group('General arguments')

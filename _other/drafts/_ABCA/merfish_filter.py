@@ -3,6 +3,10 @@
 """
 Filter ABCA MERFISH cells based on columns and values in the cell metadata. It integrates the filtering with the generation of `exp_df` and allows optional export of filtered data or the generation of updated 3D images.
 
+Notes:
+    - Columns to filter by: parcellation_substructure (default)
+    - Values to filter by: e.g., ACB
+
 Usage:
 ------
     ./merfish_filter.py -b path/base_dir [--columns] [--values] [-o path/output.csv] [-v]
@@ -27,11 +31,11 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
-    reqs.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure)', nargs='*', action=SM)
     reqs.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata by (e.g., ACB).', nargs='*', action=SM)
+    reqs.add_argument('-o', '--output', help='Output path for the filtered cell metadata. Default: None', default=None, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-o', '--output', help='Output path for the filtered cell metadata. Default: None', default=None, action=SM)
+    opts.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure \[default])', default='parcellation_substructure', nargs='*', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -102,12 +106,9 @@ def main():
     print("\nCell metadata:")
     print(f'{cell_df_joined}\n')
 
-    if 'parcellation_substructure' not in cell_df_joined.columns:
-        print("Column 'parcellation_substructure' not found!")
-        return
+    # Print column names
+    print(f"\nColumn names: {cell_df_joined.columns}\n")
     
-    print(f'\n{cell_df_joined=}\n')
-
     # Filter the DataFrame
     filtered_df = filter_dataframe(cell_df_joined, args.columns, args.values)
     print("\nFiltered cell metadata shape:", filtered_df.shape)
@@ -116,11 +117,7 @@ def main():
     print("Filtered cell metadata:")
     print(f'\n{filtered_df}\n')
 
-    # Save the filtered DataFrame
-    if args.output is not None:
-        output_path = Path(args.output)
-        filtered_df.to_csv(output_path)
-        print(f"\nFiltered data saved to: {output_path}")
+    filtered_df.to_csv(args.output)
 
     print("\nUnique parcellation substructures:")
     print(cell_df_joined['parcellation_substructure'].unique())

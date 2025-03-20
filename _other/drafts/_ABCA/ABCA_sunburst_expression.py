@@ -46,6 +46,7 @@ def parse_args():
     opts.add_argument('-c', '--color_max', help='Maximum value for the color scale. Default: 10', default=10, type=float, action=SM)
     opts.add_argument('-t', '--threshold', help='Log2(CPM+1) threshold for percent gene expression. Default: 6', default=6, type=float, action=SM)
     opts.add_argument('-o', '--output', help='Output dir path. Default: ABCA_sunburst_cmax10_thr6/', default=None, action=SM)
+    opts.add_argument('-a', '--all', help='Save mean expression and percent expressing for all cells. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -100,10 +101,11 @@ def main():
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Save the mean expression and percent expressing for all cells (.txt)
-    # output_path = output_dir / str(Path(args.input).name).replace('.csv', f'_sunburst_expression_thr{args.threshold}_all.txt')
-    # with open(output_path, 'w') as f:
-    #     f.write(f"all_mean: {all_mean}\nall_percent (threshold: {args.threshold}): {all_percent}")
-    # print(f"\nSaved mean expression and percent expressing for all cells to {output_path}")
+    if args.all:
+        output_path = output_dir / str(Path(args.input).name).replace('.csv', f'_sunburst_expression_thr{args.threshold}_all.txt')
+        with open(output_path, 'w') as f:
+            f.write(f"all_mean: {all_mean}\nall_percent (threshold: {args.threshold}): {all_percent}")
+        print(f"\nSaved mean expression and percent expressing for all cells to {output_path}")
 
     # Calculate mean expression and percent expressing at each hierarchy level
     summary_df = cells_df.copy()
