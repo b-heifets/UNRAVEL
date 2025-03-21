@@ -5,17 +5,14 @@ Use ``parquet_unique_intensities.py`` from UNRAVEL to load a column from a parqu
 
 Usage:
 ------
-    parquet_unique_intensities -i path/to/parquet -c column_name [-s] [-min min_size] [-v]
+    parquet_unique_intensities -i path/to/parquet -c column_name [-s] [-min min_size] [-gt_zero] [-v]
 """
 
 import numpy as np
 import pandas as pd
-from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.img_tools import label_IDs
-from unravel.core.img_io import load_nii
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -31,6 +28,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-s', '--print_sizes', help='Print label IDs and sizes. Default: False', default=False, action='store_true')
     opts.add_argument('-min', '--min_size', help='Min label size in voxels (Default: 1)', default=1, action=SM, type=int)
+    opts.add_argument('-gt', '--gt_zero', help='Print intensities greater than 0. Default: False', default=False, action='store_true')
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
