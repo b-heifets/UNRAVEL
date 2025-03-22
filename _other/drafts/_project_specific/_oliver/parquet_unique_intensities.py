@@ -59,11 +59,11 @@ def main():
     # Print cluster IDs
     if args.print_sizes:
         print(f"\nID,Size")
-    for idx, cluster_id in enumerate(clusters_above_minextent):
+    for idx, intensity in enumerate(clusters_above_minextent):
         if args.print_sizes:
-            print(f"{int(cluster_id)},{counts[idx]}")
+            print(f"{intensity},{counts[idx]}")
         else:
-            print(int(cluster_id), end=' ')
+            print(intensity, end=' ')
     print()
 
     verbose_end_msg()
