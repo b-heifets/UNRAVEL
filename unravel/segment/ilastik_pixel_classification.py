@@ -30,6 +30,7 @@ Usage:
 """
 
 import os
+import shutil
 import nibabel as nib
 import numpy as np
 from glob import glob
@@ -158,11 +159,11 @@ def main():
 
             # Remove temporary TIFFs if they were created
             if remove_tmp_tifs:
-                Path(input_tif_dir).unlink()
+                shutil.rmtree(input_tif_dir)
 
             # Remove output TIFFs if requested
             if args.rm_out_tifs:
-                Path(output_tif_dir).unlink()
+                shutil.rmtree(output_tif_dir)
 
             progress.update(task_id, advance=1)
 
