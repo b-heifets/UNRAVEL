@@ -14,7 +14,7 @@ Python usage:
 
 Usage:
 ------
-    warp_to_native -m <path/image_to_warp_from_atlas_space.nii.gz> [-o <path/native_image.zarr>] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-i multiLabel] [-md parameters/metadata.txt] [-ro reg_outputs] [--reg_res 50] [-zo 0] [-mi] [-d list of paths] [-p sample??] [-v]
+    warp_to_native -m <path/image_to_warp_from_atlas_space.nii.gz> [-o <path/native_image.zarr>] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp multiLabel] [-md parameters/metadata.txt] [-ro reg_outputs] [--reg_res 50] [-zo 0] [-mi] [-d list of paths] [-p sample??] [-v]
 """
 
 import nibabel as nib
@@ -44,7 +44,7 @@ def parse_args():
     opts.add_argument('-o', '--output', help='Save as rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
-    opts.add_argument('-i', '--interpol', help='Interpolator for warping with ants.apply_transforms (nearestNeighbor, multiLabel \[default], linear, bSpline)', default="multiLabel", action=SM)
+    opts.add_argument('-inp', '--interpol', help='Interpolator for warping with ants.apply_transforms (nearestNeighbor, multiLabel \[default], linear, bSpline)', default="multiLabel", action=SM)
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
     opts.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)

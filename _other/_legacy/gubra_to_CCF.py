@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 
 """
-Use ``gubra_to_CCF.py`` from UNRAVEL to warp an image from gubra 25 um space to Allen CCFv3 30 um space.
+Use ``gubra_to_CCF30.py`` from UNRAVEL to warp an image from gubra 25 um space to Allen CCFv3 30 um space.
 
 Note: 
     - We will use CCFv3 space for future analyses, so this script is used for converting gubra 25 um space to CCFv3 30 um space.
 
+Next steps:
+    - For resampling to the standard 10x10x10 um resolution, use: ``resample``
+    - For warping to MERFISH-CCF space, use: ``CCF30_to_MERFISH.py`
+
 Usage:
 ------
-``gubra_to_CCF.py`` -m path/image.nii.gz -o path/image_CCF30.nii.gz [-f path/CCFv3-2017_ano_30um_w_fixes.nii.gz] [-inp linear] [-ro path/reg_outputs] [-fri path/fixed_reg_input.nii.gz] [-v]
+``gubra_to_CCF30.py`` -m path/image.nii.gz -o path/image_CCF30.nii.gz [-f path/CCFv3-2017_ano_30um_w_fixes.nii.gz] [-inp linear] [-ro path/reg_outputs] [-fri path/fixed_reg_input.nii.gz] [-v]
 """
 
 from pathlib import Path
@@ -47,6 +51,10 @@ def main():
     args = parse_args()
     Configuration.verbose = args.verbose
     verbose_start_msg()
+
+    print(f'\n{args.interpol=}\n')
+    print(f'\n{type(args.interpol)=}\n')
+    import sys ; sys.exit()
 
     forward_warp(args.fixed_img, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.interpol, output=args.output, pad_percent=args.pad_percent)
 
