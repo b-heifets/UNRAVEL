@@ -8,6 +8,7 @@ unravel.cluster_stats package
    fdr
    recursively_mirror_rev_cluster_indices
    validation
+   summary_config
    summary
    brain_model
    find_incongruent_clusters

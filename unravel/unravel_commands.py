@@ -260,6 +260,12 @@ def main():
                 "common": True,
                 "alias": "cv"
             },
+            "cstats_summary_config": {
+                "module": "unravel.cluster_stats.summary_config",
+                "description": "Copy a config file for cstats_summary to the working dir.",
+                "common": True,
+                "alias": "css"
+            },
             "cstats_summary": {
                 "module": "unravel.cluster_stats.summary",
                 "description": "Summarize info on valid clusters (run after cluster_validation).",
