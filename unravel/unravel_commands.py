@@ -248,6 +248,12 @@ def main():
                 "common": True,
                 "alias": "f"
             },
+            "cstats_fstat_sig_vx_mask": {
+                "module": "unravel.cluster_stats.fstat_sig_vx_mask",
+                "description": "Make FDR mask by thresholding and combining f-stat 1-p maps.",
+                "common": False,
+                "alias": "fsvm"
+            },
             "cstats_mirror_indices": {
                 "module": "unravel.cluster_stats.recursively_mirror_rev_cluster_indices",
                 "description": "Recursively mirror cluster maps for validating clusters in left and right hemispheres.",
@@ -264,7 +270,7 @@ def main():
                 "module": "unravel.cluster_stats.summary_config",
                 "description": "Copy a config file for cstats_summary to the working dir.",
                 "common": True,
-                "alias": "css"
+                "alias": "csc"
             },
             "cstats_summary": {
                 "module": "unravel.cluster_stats.summary",
