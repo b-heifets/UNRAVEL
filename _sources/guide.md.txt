@@ -295,6 +295,7 @@ uc -m
 - [**cstats_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
 - [**cstats_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
 - [**cstats_validation**](unravel.cluster_stats.validation): Validate clusters w/ cell/label density measurements.
+- [**cstats_summary_config**](unravel.cluster_stats.summary): Copy a config file for cstats_summary to the working dir.
 - [**cstats_summary**](unravel.cluster_stats.summary): Summarize info on valid clusters (run after cluster_validation).
 :::
 
@@ -373,8 +374,10 @@ uc -m
 :::{tab-item} Cluster-wise stats
 - [**cstats_fdr_range**](unravel.cluster_stats.fdr_range): Get FDR q value range yielding clusters.
 - [**cstats_fdr**](unravel.cluster_stats.fdr): FDR-correct 1-p value map → cluster map.
+- [**cstats_fstat_sig_vx_mask**](unravel.cluster_stats.fstat_sig_vx_mask): Make FDR mask by thresholding and combining f-stat 1-p maps.
 - [**cstats_mirror_indices**](unravel.cluster_stats.recursively_mirror_rev_cluster_indices): Recursively mirror cluster maps for validating clusters in left and right hemispheres.
 - [**cstats_validation**](unravel.cluster_stats.validation): Validate clusters w/ cell/label density measurements.
+- [**cstats_summary_config**](unravel.cluster_stats.summary): Copy a config file for cstats_summary to the working dir.
 - [**cstats_summary**](unravel.cluster_stats.summary): Summarize info on valid clusters (run after cluster_validation).
 - [**cstats_org_data**](unravel.cluster_stats.org_data): Organize CSVs from cluster_validation.
 - [**cstats_group_data**](unravel.cluster_stats.group_bilateral_data): Group bilateral cluster data.

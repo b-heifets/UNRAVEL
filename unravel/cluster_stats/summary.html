@@ -56,7 +56,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="unravel.cluster_stats.brain_model module" href="brain_model.html" />
-    <link rel="prev" title="unravel.cluster_stats.validation module" href="validation.html" />
+    <link rel="prev" title="unravel.cluster_stats.summary_config module" href="summary_config.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -337,8 +337,10 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="toc.html">unravel.cluster_stats package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="fdr_range.html">unravel.cluster_stats.fdr_range module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="fdr.html">unravel.cluster_stats.fdr module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fstat_sig_vx_mask.html">unravel.cluster_stats.fstat_sig_vx_mask module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="recursively_mirror_rev_cluster_indices.html">unravel.cluster_stats.recursively_mirror_rev_cluster_indices module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="validation.html">unravel.cluster_stats.validation module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="summary_config.html">unravel.cluster_stats.summary_config module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.cluster_stats.summary module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="brain_model.html">unravel.cluster_stats.brain_model module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="find_incongruent_clusters.html">unravel.cluster_stats.find_incongruent_clusters module</a></li>
@@ -551,6 +553,13 @@ find . -name _valid_clusters -exec rm -rf {} ; -o -name cluster_validation_summa
 <p>If you want to aggregate CSVs for sunburst plots of valid clusters, run this in a root directory:
 find . -name “valid_clusters_sunburst.csv” -exec sh -c ‘cp {} ./$(basename $(dirname $(dirname {})))_$(basename {})’ ;</p>
 <p>Likewise, you can aggregate raw data (raw_data_for_t-test_pooled.csv), stats (t-test_results.csv), and prism files (cell_density_summary_for_valid_clusters.csv).</p>
+<dl class="simple">
+<dt>Next steps:</dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cstats_summary_config</span></code>: Copy the cluster_summary.ini file to a new location.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cstats_summary</span></code>: Aggregate and analyze cluster validation data from cstats_validation.</p></li>
+</ul>
+</dd>
+</dl>
 <section id="usage-if-running-directly-after-cstats-validation">
 <h2>Usage if running directly after <code class="docutils literal notranslate"><span class="pre">cstats_validation</span></code>:<a class="headerlink" href="#usage-if-running-directly-after-cstats-validation" title="Link to this heading">#</a></h2>
 <blockquote>
@@ -598,12 +607,12 @@ find . -name “valid_clusters_sunburst.csv” -exec sh -c ‘cp {} ./$(basename
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="validation.html"
+       href="summary_config.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">unravel.cluster_stats.validation module</p>
+        <p class="prev-next-title">unravel.cluster_stats.summary_config module</p>
       </div>
     </a>
     <a class="right-next"

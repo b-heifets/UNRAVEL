@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>unravel.cluster_stats.clusters &#8212; UNRAVEL docs</title>
+    <title>unravel.cluster_stats.summary_config &#8212; UNRAVEL docs</title>
   
   
   
@@ -49,7 +49,7 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
     <script>mermaid.initialize({startOnLoad:true});</script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/clusters';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/cluster_stats/summary_config';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -348,86 +348,58 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for unravel.cluster_stats.clusters</h1><div class="highlight"><pre>
+  <h1>Source code for unravel.cluster_stats.summary_config</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``cstats_clusters`` (``clusters``) from UNRAVEL to make a cluster index image from a .nii.gz image.</span>
-
-<span class="sd">Note:</span>
-<span class="sd">    - This uses the cluster command from FSL and then reverses the clusters so that the largest cluster is 1, the second largest is 2, etc.</span>
-
-<span class="sd">Usage</span>
-<span class="sd">-----</span>
-<span class="sd">    cstats_clusters -i path/image.nii.gz [-ms 100] [-t 0.5] [-o path/image_rev_cluster_index.nii.gz] [-v]</span>
+<span class="sd">Use ``cstats_summary_config`` (``csc``) copy a cluster_summary.ini config file from UNRAVEL to a new location.</span>
+<span class="sd">    </span>
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    cstats_summary_config -o path/to/output_dir</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">shutil</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">nibabel</span> <span class="k">as</span> <span class="nn">nib</span>
 <span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
+<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
 
-<span class="kn">from</span> <span class="nn">unravel.cluster_stats.fdr</span> <span class="kn">import</span> <span class="n">cluster_index</span><span class="p">,</span> <span class="n">reverse_clusters</span>
 <span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
-<span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span>
+
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span>
 
 
 <div class="viewcode-block" id="parse_args">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/clusters.html#unravel.cluster_stats.clusters.parse_args">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/summary_config.html#unravel.cluster_stats.summary_config.parse_args">[docs]</a>
 <span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
-    <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image.nii.gz&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional args&#39;</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-ms&#39;</span><span class="p">,</span> <span class="s1">&#39;--min_size&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Min cluster size in voxels. Default: 100&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--threshold&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Threshold for cluster formation. Default: 1&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;path/image_cluster_index.nii.gz&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-
-    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
-    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Path to save the cluster_summary.ini config file. Default: current working directory&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
-<span class="c1"># TODO: Some code here is redundant with code in fdr.py. Refactor to avoid redundancy.</span>
-
 
 <div class="viewcode-block" id="main">
-<a class="viewcode-back" href="../../../unravel/cluster_stats/clusters.html#unravel.cluster_stats.clusters.main">[docs]</a>
+<a class="viewcode-back" href="../../../unravel/cluster_stats/summary_config.html#unravel.cluster_stats.summary_config.main">[docs]</a>
 <span class="nd">@log_command</span>
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">install</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
-    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
-    <span class="n">verbose_start_msg</span><span class="p">()</span>
 
-    <span class="n">output</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span> <span class="k">else</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;_rev_cluster_index.nii.gz&#39;</span><span class="p">)</span>
+    <span class="n">config_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;cluster_stats&#39;</span> <span class="o">/</span> <span class="s1">&#39;cluster_summary.ini&#39;</span>
+   
+    <span class="c1"># Copy the cluster_summary.ini file to the new location</span>
+    <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">:</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="o">/</span> <span class="s1">&#39;cluster_summary.ini&#39;</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">config_path</span><span class="p">,</span> <span class="n">output_path</span><span class="p">)</span>
 
-    <span class="c1"># Create the cluster index</span>
-    <span class="n">cluster_info</span> <span class="o">=</span> <span class="n">cluster_index</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">min_size</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="p">,</span> <span class="n">output</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Copied cluster_summary.ini to </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-    <span class="c1"># Save cluster info</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">input</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;_cluster_info.txt&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cluster_info</span><span class="p">)</span>
 
-    <span class="c1"># Load the cluster index and convert to an ndarray</span>
-    <span class="n">cluster_index_nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
-    <span class="n">cluster_index_img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">cluster_index_nii</span><span class="o">.</span><span class="n">dataobj</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
-
-    <span class="c1"># Lower the data type if the max cluster ID is less than 256 </span>
-    <span class="n">max_cluster_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cluster_index_img</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
-    <span class="n">data_type</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">uint16</span> <span class="k">if</span> <span class="n">max_cluster_id</span> <span class="o">&gt;=</span> <span class="mi">256</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">uint8</span>
-    <span class="n">cluster_index_img</span> <span class="o">=</span> <span class="n">cluster_index_img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">data_type</span><span class="p">)</span>
-
-    <span class="c1"># Reverse cluster ID order in cluster_index and save it</span>
-    <span class="n">rev_cluster_index_img</span> <span class="o">=</span> <span class="n">reverse_clusters</span><span class="p">(</span><span class="n">cluster_index_img</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">data_type</span><span class="p">,</span> <span class="n">cluster_index_nii</span><span class="p">)</span>
-
-    <span class="n">verbose_end_msg</span><span class="p">()</span></div>
-
-    
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
     <span class="n">main</span><span class="p">()</span>

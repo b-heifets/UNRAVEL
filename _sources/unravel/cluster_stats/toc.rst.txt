@@ -6,8 +6,10 @@ unravel.cluster_stats package
 
    fdr_range
    fdr
+   fstat_sig_vx_mask
    recursively_mirror_rev_cluster_indices
    validation
+   summary_config
    summary
    brain_model
    find_incongruent_clusters
