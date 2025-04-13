@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``fstat_sig_vx_mask`` (``fsvm``) from UNRAVEL to threshold FSL's f-statistic images and combine them to make a mask for FDR-correction.
+Use ``cstats_fstat_sig_vx_mask`` (``fsvm``) from UNRAVEL to threshold f-statistic 1-p value images and combine them to make a mask for FDR-correction.
 
 Usage:
 ------
-    fstat_sig_vx_mask -i ['<asterisk>vox_p_fstat<asterisk>.nii.gz'] [-t 0.95] [-o fstat_sig_vx_mask.nii.gz] [-v]
+    cstats_fstat_sig_vx_mask -i ['<asterisk>vox_p_fstat<asterisk>.nii.gz'] [-t 0.95] [-o fstat_sig_vx_mask.nii.gz] [-v]
 """
 
 import nibabel as nib

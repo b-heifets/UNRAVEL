@@ -9,7 +9,7 @@ Note:
 
 Usage:
 ------
-    warp_to_fixed -f reg_inputs/autofl_50um_masked.nii.gz -m path/moving_img.nii.gz -o path/warped_img.nii.gz [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-i multiLabel] [-v]
+    warp_to_fixed -f reg_inputs/autofl_50um_masked.nii.gz -m path/moving_img.nii.gz -o path/warped_img.nii.gz [-ro reg_outputs] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp multiLabel] [-v]
 """
 
 import nibabel as nib
@@ -35,7 +35,7 @@ def parse_args():
     reqs.add_argument('-o', '--output', help='path/native_image.nii.gz', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--interpol', help='Interpolator warping with ants.apply_transforms (nearestNeighbor, multiLabel \[default], linear, bSpline)', default="multiLabel", action=SM)
+    opts.add_argument('-inp', '--interpol', help='Interpolator warping with ants.apply_transforms (nearestNeighbor, multiLabel \[default], linear, bSpline)', default="multiLabel", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``) w/ padding in <reg_outputs>. E.g., autofl_50um_masked_fixed_reg_input.nii.gz', required=True, action=SM)
     opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.15 (15%%).', default=0.15, type=float, action=SM)

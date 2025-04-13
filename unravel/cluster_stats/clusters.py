@@ -2,6 +2,7 @@
 
 """
 Use ``cstats_clusters`` (``clusters``) from UNRAVEL to make a cluster index image from a .nii.gz image.
+
 Note:
     - This uses the cluster command from FSL and then reverses the clusters so that the largest cluster is 1, the second largest is 2, etc.
 
