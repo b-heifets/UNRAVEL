@@ -4,7 +4,6 @@ version = "1.0.0b10"
 description = "UNRAVEL: UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images"
 readme = "README.md"
 license = "GPL-3.0-or-later"
-license-files = ["LICENSE"]
 authors = [
     { name = "Daniel Ryskamp Rijsketic", email = "danrijs@stanford.edu" }, 
     { name = "Austen Brooks Casey", email = "abcasey@stanford.edu" }, 
@@ -72,6 +71,7 @@ dev = [
 [tool.setuptools]
 package-dir = {"" = "."}
 packages = { find = {} }
+license-files = []
 
 [build-system]
 requires = ["setuptools>=77.0.0", "wheel"]
