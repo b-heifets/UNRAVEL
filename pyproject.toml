@@ -4,6 +4,7 @@ version = "1.0.0b10"
 description = "UNRAVEL: UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images"
 readme = "README.md"
 license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
 authors = [
     { name = "Daniel Ryskamp Rijsketic", email = "danrijs@stanford.edu" }, 
     { name = "Austen Brooks Casey", email = "abcasey@stanford.edu" }, 
@@ -43,7 +44,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
@@ -72,7 +72,6 @@ dev = [
 [tool.setuptools]
 package-dir = {"" = "."}
 packages = { find = {} }
-license-files = ["LICENSE"]
 
 [build-system]
 requires = ["setuptools", "wheel"]
