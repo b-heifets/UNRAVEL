@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``ABCA_sunburst_expression.py`` from UNRAVEL to calculate mean expression for all cell types in the ABCA and make a sunburst plot.
+Use ``abca_sunburst_expression`` or ``sb_exp`` from UNRAVEL to calculate mean expression for all cell types in the ABCA and make a sunburst plot.
 
 Prereqs: 
     - merfish_filter.py and merfish_join_expression_data.py
@@ -17,7 +17,7 @@ Next steps:
 
 Usage:
 ------ 
-    ABCA_sunburst_expression.py -i path/VTA_DA_cells_Th_expression.csv -g gene [-o path/out_dir] [-n] [-v]
+    abca_sunburst_expression -i path/VTA_DA_cells_Th_expression.csv -g gene [-o path/out_dir] [-n] [-v]
 """
 
 import matplotlib.pyplot as plt

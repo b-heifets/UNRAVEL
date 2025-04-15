@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``ABCA_sunburst.py`` from UNRAVEL to generate a sunburst plot of cell type proportions across all ontological levels.
+Use ``abca_sunburst`` or ``sb`` from UNRAVEL to generate a sunburst plot of cell type proportions across all ontological levels.
 
 Prereqs: 
     - merfish_filter.py
@@ -19,7 +19,7 @@ Next steps:
 
 Usage:
 ------ 
-    ABCA_sunburst.py -i path/cell_metadata_filtered.csv [-n] [-l] [-v]
+    abca_sunburst -i path/cell_metadata_filtered.csv [-n] [-l] [-v]
 """
 
 import numpy as np

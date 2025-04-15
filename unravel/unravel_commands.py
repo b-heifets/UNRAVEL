@@ -655,11 +655,35 @@ def main():
             }
         },
         "Allen Brain Cell Atlas (ABCA)": {
+            "abca_cache": {
+                "module": "unravel.abca.cache",
+                "description": "Download data from the Allen Brain Cell Atlas.",
+                "common": True,
+                "alias": "points_compressor"
+            },
             "abca_merfish": {
                 "module": "unravel.abca.merfish",
                 "description": "Plot MERFISH data from the ABCA.",
-                "common": False,
+                "common": True,
                 "alias": "mf"
+            },
+            "abca_merfish_filter": {
+                "module": "unravel.abca.merfish_filter",
+                "description": "Filter MERFISH data from the ABCA and output CSV.",
+                "common": True,
+                "alias": "mf_filter"
+            },
+            "abca_sunburst": {
+                "module": "unravel.abca.sunburst",
+                "description": "Make a CSV for a sunburst plot of cell type proportions across all ontological levels.",
+                "common": True,
+                "alias": "sb"
+            },
+            "abca_sunburst_expression": {
+                "module": "unravel.abca.sunburst_expression",
+                "description": "Calculate mean expression for all cell types in the ABCA and make a sunburst plot.",
+                "common": True,
+                "alias": "sb_exp"
             },
         },
     }

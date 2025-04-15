@@ -50,6 +50,8 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Make base cwd by default. Consider intergrating with the cache tool from Allen. 
+# TODO: Offload the lists of genes to CSVs
+# TODO: Offload common functions to utils.py
 
 def load_cell_metadata(download_base):
     """
