@@ -17,7 +17,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-import merfish as m
+import unravel.abca.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -45,7 +45,7 @@ def parse_args():
 
 def add_merfish_slice_to_3d_img(z, cell_df_joined, asubset, gf, gene, img):
     brain_section = cell_df_joined[cell_df_joined['z_reconstructed'] == z]['brain_section_label'].values[0]
-    slice_index_map = m.slice_index_dict()
+    slice_index_map = mf.slice_index_dict()
 
     if brain_section not in slice_index_map:
         return img
@@ -54,10 +54,10 @@ def add_merfish_slice_to_3d_img(z, cell_df_joined, asubset, gf, gene, img):
     # pred = (cell_df_joined['z_reconstructed'] == z)
     # section = cell_df_joined[pred]
     section = cell_df_joined[cell_df_joined['z_reconstructed'] == z]
-    exp_df = m.create_expression_dataframe(asubset, gf, section)
+    exp_df = mf.create_expression_dataframe(asubset, gf, section)
     points_ndarray = exp_df[['x_reconstructed', 'y_reconstructed', gene]].values
-    img_slice = m.points_to_img_sum(points_ndarray, x_size=1100, y_size=1100, pixel_size=10)
-    zindex = m.section_to_zindex(brain_section)
+    img_slice = mf.points_to_img_sum(points_ndarray, x_size=1100, y_size=1100, pixel_size=10)
+    zindex = mf.section_to_zindex(brain_section)
     img[:, :, zindex] = img_slice
     return img
 
@@ -72,10 +72,10 @@ def main():
     download_base = Path(args.base)
 
     # Load the cell metadata (for the cell_label and brain_section_label [e.g. C57BL6J-638850.0])
-    cell_df = m.load_cell_metadata(download_base)
+    cell_df = mf.load_cell_metadata(download_base)
 
     # Add the reconstructed coordinates to the cell metadata
-    cell_df_joined = m.join_reconstructed_coords(cell_df, download_base)
+    cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
 
     # Print columns
     print(f"\nColumns in cell metadata:")
@@ -83,13 +83,13 @@ def main():
 
     if args.neurons:
         # Add: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
-        cell_df_joined = m.join_cluster_details(cell_df_joined, download_base) 
+        cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base) 
 
         # Filter out non-neuronal cells
         cell_df_joined = cell_df_joined[cell_df_joined['class'].str.split().str[0].astype(int) <= 29]
 
     # Load the expression data for all genes (if the gene is in the dataset) 
-    adata = m.load_expression_data(download_base, args.gene, imputed=args.imputed)
+    adata = mf.load_expression_data(download_base, args.gene, imputed=args.imputed)
 
     for gene in args.gene:
         print(f"\nProcessing gene: {gene}")
@@ -118,7 +118,7 @@ def main():
             continue
         
         # Filter expression data for the specified gene
-        asubset, gf = m.filter_expression_data(adata, gene)
+        asubset, gf = mf.filter_expression_data(adata, gene)
 
         # Print columns
         print(f"\nColumns in cell metadata:")

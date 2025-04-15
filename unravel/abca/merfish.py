@@ -40,7 +40,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-g', '--gene', help='Gene to plot.', action=SM)
-    opts.add_argument('-c', '--color', help='Color to plot (e.g., parcellation_substructure_color or neurotransmitter_color', action=SM)
+    opts.add_argument('-c', '--color', help='Color to plot (e.g., parcellation_substructure_color or neurotransmitter_color)', action=SM)
     opts.add_argument('-im', '--imputed', help='Use imputed expression data. Default: False', action='store_true', default=False)
     opts.add_argument('-o', '--output', help='Path to save the plot rather than showing it with Matplotlib (end with .png)', default=None, action=SM)
 

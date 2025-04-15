@@ -18,7 +18,7 @@ import pandas as pd
 from rich import print
 from rich.traceback import install
 
-import merfish as m
+import unravel.abca.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -133,7 +133,7 @@ def main():
     cell_df = load_RNAseq_mouse_cell_metadata(download_base) 
 
     # Add: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
-    cell_df_joined = m.join_cluster_details(cell_df, download_base) 
+    cell_df_joined = mf.join_cluster_details(cell_df, download_base) 
 
     # Create empty gene expression dataframe
     gene_df = load_mouse_RNAseq_gene_metadata(download_base)

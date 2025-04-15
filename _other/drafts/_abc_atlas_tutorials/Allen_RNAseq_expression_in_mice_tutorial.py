@@ -18,7 +18,7 @@ import pandas as pd
 from rich import print
 from rich.traceback import install
 
-import merfish as m
+import unravel.abca.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -144,10 +144,10 @@ def main():
     cell_df = load_RNAseq_mouse_cell_metadata(download_base) 
 
     # Add: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
-    cell_df_joined = m.join_cluster_details(cell_df, download_base) 
+    cell_df_joined = mf.join_cluster_details(cell_df, download_base) 
 
     # Example of plotting the UMAP coordinates colored by neurotransmitter identity
-    # cell_df_joined = m.join_cluster_colors(cell_df_joined, download_base)
+    # cell_df_joined = mf.join_cluster_colors(cell_df_joined, download_base)
     # cell_df_joined = join_region_of_interest_metadata(cell_df_joined, download_base)
     # cell_subsampled = cell_df_joined.loc[::10]
     # fig, ax = plot_umap(cell_subsampled['x'], cell_subsampled['y'], cc=cell_subsampled['neurotransmitter_color'])

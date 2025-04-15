@@ -10,7 +10,7 @@ import anndata
 import pandas as pd
 from rich import print
 from rich.traceback import install
-import merfish as m
+import unravel.abca.merfish as mf
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
@@ -149,7 +149,7 @@ def main():
 
     # Load and classify cell metadata
     cell_df = load_RNAseq_mouse_cell_metadata(download_base)
-    cell_df = m.join_cluster_details(cell_df, download_base)  # Adds 'class', 'subclass'
+    cell_df = mf.join_cluster_details(cell_df, download_base)  # Adds 'class', 'subclass'
     cell_df = classify_cells(cell_df)
 
     # Load gene metadata and filter for selected genes

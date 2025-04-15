@@ -18,7 +18,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-import merfish as m
+import unravel.abca.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -100,22 +100,22 @@ def main():
     download_base = Path(args.base)
 
     # Load the cell metadata
-    cell_df = m.load_cell_metadata(download_base)
+    cell_df = mf.load_cell_metadata(download_base)
 
     # Add the reconstructed coordinates to the cell metadata
-    cell_df_joined = m.join_reconstructed_coords(cell_df, download_base)
+    cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
 
     # Add the classification levels and the corresponding color.
-    cell_df_joined = m.join_cluster_details(cell_df_joined, download_base)
+    cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
 
     # Add the cluster colors
-    cell_df_joined = m.join_cluster_colors(cell_df_joined, download_base)
+    cell_df_joined = mf.join_cluster_colors(cell_df_joined, download_base)
     
     # Add the parcellation annotation
-    cell_df_joined = m.join_parcellation_annotation(cell_df_joined, download_base)
+    cell_df_joined = mf.join_parcellation_annotation(cell_df_joined, download_base)
 
     # Add the parcellation color
-    cell_df_joined = m.join_parcellation_color(cell_df_joined, download_base)
+    cell_df_joined = mf.join_parcellation_color(cell_df_joined, download_base)
 
     # Print the columns and the first row
     print("\nCell metadata columns:")
@@ -147,13 +147,13 @@ def main():
     import sys ; sys.exit()
 
     # Load the expression data for all genes (if the gene is in the dataset) 
-    adata = m.load_expression_data(download_base, args.gene)
+    adata = mf.load_expression_data(download_base, args.gene)
 
     # Filter expression data for the specified gene
-    asubset, gf = m.filter_expression_data(adata, args.gene)
+    asubset, gf = mf.filter_expression_data(adata, args.gene)
 
     # Generate `exp_df` for filtered cells
-    exp_df = m.create_expression_dataframe(asubset, gf, filtered_cells)
+    exp_df = mf.create_expression_dataframe(asubset, gf, filtered_cells)
     print(f"\nFiltered exp_df created with {len(exp_df)} cells.")
 
     if args.output:
@@ -163,7 +163,7 @@ def main():
         img = np.zeros((1100, 1100, 76))
 
         for z in z_positions:
-            img = m.add_merfish_slice_to_3d_img(z, filtered_cells, asubset, gf, args.gene, img)
+            img = mf.add_merfish_slice_to_3d_img(z, filtered_cells, asubset, gf, args.gene, img)
 
         # Save the 3D image
         ref_nii = nib.load(args.mask)  # Use the mask for affine/header info

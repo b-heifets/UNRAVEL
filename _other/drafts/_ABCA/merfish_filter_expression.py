@@ -16,7 +16,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-import merfish as m
+import unravel.abca.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -78,23 +78,23 @@ def main():
     download_base = Path(args.base)
 
     # Load the cell metadata
-    cell_df = m.load_cell_metadata(download_base)
+    cell_df = mf.load_cell_metadata(download_base)
     print(f"\n    Initial cell metadata shape:\n    {cell_df.shape}")
 
     # Add the reconstructed coordinates to the cell metadata
-    cell_df_joined = m.join_reconstructed_coords(cell_df, download_base)
+    cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
 
     # Add the classification levels and the corresponding color.
-    cell_df_joined = m.join_cluster_details(cell_df_joined, download_base)
+    cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
 
     # Add the cluster colors
-    cell_df_joined = m.join_cluster_colors(cell_df_joined, download_base)
+    cell_df_joined = mf.join_cluster_colors(cell_df_joined, download_base)
     
     # Add the parcellation annotation
-    cell_df_joined = m.join_parcellation_annotation(cell_df_joined, download_base)
+    cell_df_joined = mf.join_parcellation_annotation(cell_df_joined, download_base)
 
     # Add the parcellation color
-    cell_df_joined = m.join_parcellation_color(cell_df_joined, download_base)
+    cell_df_joined = mf.join_parcellation_color(cell_df_joined, download_base)
     print("\n                                             First row:")
     print(cell_df_joined.iloc[0])
     print("\nCell metadata:")

@@ -26,7 +26,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-import merfish as m
+import unravel.abca.merfish as mf
 from merfish_filter import filter_dataframe
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
@@ -74,10 +74,10 @@ def main():
     print(f'\n{filtered_df}\n')
 
     # Add the classification levels and the corresponding color.
-    filtered_df_joined = m.join_cluster_details(filtered_df, download_base)
+    filtered_df_joined = mf.join_cluster_details(filtered_df, download_base)
 
     # Add the cluster colors
-    filtered_df_joined = m.join_cluster_colors(filtered_df_joined, download_base)
+    filtered_df_joined = mf.join_cluster_colors(filtered_df_joined, download_base)
     
     for column in args.columns:
         print(f"\nUnique values for {column}:")

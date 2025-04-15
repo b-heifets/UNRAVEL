@@ -18,7 +18,6 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-import merfish as m
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
