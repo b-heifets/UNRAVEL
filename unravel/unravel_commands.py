@@ -653,7 +653,15 @@ def main():
                 "common": False,
                 "alias": "points_compressor"
             }
-        }
+        },
+        "Allen Brain Cell Atlas (ABCA)": {
+            "abca_merfish": {
+                "module": "unravel.abca.merfish",
+                "description": "Plot MERFISH data from the ABCA.",
+                "common": False,
+                "alias": "mf"
+            },
+        },
     }
 
     print("\n[magenta bold]Category[/], [cyan bold]Command[/], [green]Alias (-a), [purple3]Module (-m)[/], [grey50]Description (-d), \n")
