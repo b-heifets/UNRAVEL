@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``ABCA_sunburst_filter_by_proportion.py`` from UNRAVEL to filter ABCA sunburst expression data, keeping prevalent cells at any level (class, subclass, supertype, cluster).
+Use ``sunburst_filter_by_proportion`` or ``sbfp`` from UNRAVEL to filter ABCA sunburst expression data, keeping prevalent cells at any level (class, subclass, supertype, cluster).
 
 Notes:
     - The proportion threshold means that each cell type must comprise at least 20% of the total cells in sunburst data.
@@ -9,7 +9,7 @@ Notes:
 
 Usage:
 ------
-./ABCA_sunburst_filter_by_proportion.py -i path/ABCA_sunburst.csv
+./sunburst_filter_by_proportion -i path/ABCA_sunburst.csv
 """
 
 import numpy as np

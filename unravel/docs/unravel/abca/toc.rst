@@ -9,6 +9,10 @@ unravel.abca package
    merfish_filter
    sunburst
    sunburst_expression
+   sunburst_filter
+   sunburst_filter_by_proportion
+   mean_expression_color_scale
+   percent_expression_color_scale
 
 .. automodule:: unravel.abca
    :members:

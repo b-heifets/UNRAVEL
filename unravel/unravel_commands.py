@@ -683,7 +683,31 @@ def main():
                 "module": "unravel.abca.sunburst_expression",
                 "description": "Calculate mean expression for all cell types in the ABCA and make a sunburst plot.",
                 "common": True,
-                "alias": "sb_exp"
+                "alias": "sbe"
+            },
+            "abca_sunburst_filter": {
+                "module": "unravel.abca.sunburst_filter",
+                "description": "Filter ABCA sunburst expression data, keeping cells with high expression at any level (class, subclass, supertype, cluster).",
+                "common": False,
+                "alias": "sbf"
+            },
+            "abca_sunburst_filter_by_proportion": {
+                "module": "unravel.abca.sunburst_filter_by_proportion",
+                "description": "Filter ABCA sunburst expression data, keeping prevalent cells at any level (class, subclass, supertype, cluster).",
+                "common": False,
+                "alias": "sbfp"
+            },
+            "abca_mean_expression_color_scale": {
+                "module": "unravel.abca.mean_expression_color_scale",
+                "description": "Save a color scale for mean RNA expression values.",
+                "common": False,
+                "alias": "mecs"
+            },
+            "abca_percent_expression_color_scale": {
+                "module": "unravel.abca.percent_expression_color_scale",
+                "description": "Save a color scale for the percent of cells expressing a gene.",
+                "common": False,
+                "alias": "pecs"
             },
         },
     }
