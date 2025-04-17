@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Use ``merfish_cells_to_nii.py`` from UNRAVEL to convert MERFISH cell metadata to a 3D image.
+Use ``abca_merfish_cells_to_nii`` or ``mc`` from UNRAVEL to convert ABCA MERFISH cells to a .nii.gz 3D image.
 
 Prereqs:
-    - `merfish_cluster.py` or `merfish_filter.py` to generate filtered cell data.
+    - ``merfish_cluster`` or ``merfish_filter`` to generate filtered cell data.
 
 Usage:
 ------
-    merfish_cells_to_nii.py -i path/filtered_cells.csv -r path/to/reference.nii.gz [-b] [-o path/to/output.nii.gz] [-v]
+    abca_merfish_cells_to_nii -i path/filtered_cells.csv -r path/to/reference.nii.gz [-b] [-o path/to/output.nii.gz] [-v]
 """
 
 import nibabel as nib

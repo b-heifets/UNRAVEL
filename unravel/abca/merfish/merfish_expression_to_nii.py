@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``merfish_expression_to_nii.py`` from UNRAVEL to make a 3D .nii.gz image of ABCA MERFISH expression data.
+Use ``abca_merfish_expression_to_nii`` or ``me`` from UNRAVEL to make a 3D .nii.gz image of ABCA MERFISH expression data.
 
 Usage:
 ------
-    merfish_expression_to_nii.py -b <abc_download_root> -g <gene> -r <ref_nii> [-n] [-o <output>] [-im] [-v]
+    abca_merfish_expression_to_nii -b <abc_download_root> -g <gene> -r <ref_nii> [-n] [-o <output>] [-im] [-v]
 """
 
 import anndata

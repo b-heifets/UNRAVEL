@@ -6,6 +6,8 @@ unravel.abca.merfish package
 
    merfish
    merfish_filter
+   merfish_cells_to_nii
+   merfish_expression_to_nii
 
 .. automodule:: unravel.abca.merfish
    :members:

@@ -662,49 +662,61 @@ def main():
                 "alias": "points_compressor"
             },
             "abca_merfish": {
-                "module": "unravel.abca.merfish",
+                "module": "unravel.abca.merfish.merfish",
                 "description": "Plot MERFISH data from the ABCA.",
                 "common": True,
                 "alias": "mf"
             },
             "abca_merfish_filter": {
-                "module": "unravel.abca.merfish_filter",
+                "module": "unravel.abca.merfish.merfish_filter",
                 "description": "Filter MERFISH data from the ABCA and output CSV.",
                 "common": True,
                 "alias": "mf_filter"
             },
+            "abca_merfish_expression_to_nii": {
+                "module": "unravel.abca.merfish.abca_merfish_expression_to_nii",
+                "description": "Make a 3D .nii.gz image of ABCA MERFISH expression data.",
+                "common": True,
+                "alias": "me"
+            },
+            "abca_merfish_cells_to_nii": {
+                "module": "unravel.abca.merfish.abca_merfish_cells_to_nii",
+                "description": "Convert ABCA MERFISH cells to a .nii.gz 3D image.",
+                "common": False,
+                "alias": "mc"
+            },
             "abca_sunburst": {
-                "module": "unravel.abca.sunburst",
+                "module": "unravel.abca.sunburst.sunburst",
                 "description": "Make a CSV for a sunburst plot of cell type proportions across all ontological levels.",
                 "common": True,
                 "alias": "sb"
             },
             "abca_sunburst_expression": {
-                "module": "unravel.abca.sunburst_expression",
+                "module": "unravel.abca.sunburst.sunburst_expression",
                 "description": "Calculate mean expression for all cell types in the ABCA and make a sunburst plot.",
                 "common": True,
                 "alias": "sbe"
             },
             "abca_sunburst_filter": {
-                "module": "unravel.abca.sunburst_filter",
+                "module": "unravel.abca.sunburst.sunburst_filter",
                 "description": "Filter ABCA sunburst expression data, keeping cells with high expression at any level (class, subclass, supertype, cluster).",
                 "common": False,
                 "alias": "sbf"
             },
             "abca_sunburst_filter_by_proportion": {
-                "module": "unravel.abca.sunburst_filter_by_proportion",
+                "module": "unravel.abca.sunburst.sunburst_filter_by_proportion",
                 "description": "Filter ABCA sunburst expression data, keeping prevalent cells at any level (class, subclass, supertype, cluster).",
                 "common": False,
                 "alias": "sbfp"
             },
             "abca_mean_expression_color_scale": {
-                "module": "unravel.abca.mean_expression_color_scale",
+                "module": "unravel.abca.sunburst.mean_expression_color_scale",
                 "description": "Save a color scale for mean RNA expression values.",
                 "common": False,
                 "alias": "mecs"
             },
             "abca_percent_expression_color_scale": {
-                "module": "unravel.abca.percent_expression_color_scale",
+                "module": "unravel.abca.sunburst.percent_expression_color_scale",
                 "description": "Save a color scale for the percent of cells expressing a gene.",
                 "common": False,
                 "alias": "pecs"
