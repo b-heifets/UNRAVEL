@@ -2,17 +2,11 @@ unravel.abca package
 ====================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    cache
-   merfish
-   merfish_filter
-   sunburst
-   sunburst_expression
-   sunburst_filter
-   sunburst_filter_by_proportion
-   mean_expression_color_scale
-   percent_expression_color_scale
+   merfish/toc
+   sunburst/toc
 
 .. automodule:: unravel.abca
    :members:
