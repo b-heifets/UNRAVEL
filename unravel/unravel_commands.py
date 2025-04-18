@@ -721,6 +721,12 @@ def main():
                 "common": False,
                 "alias": "pecs"
             },
+            "abca_scRNA-seq_filter": {
+                "module": "unravel.abca.scRNA-seq.filter",
+                "description": "Filter ABCA scRNA-seq cells based on columns and values in the cell metadata and save as CSV.",
+                "common": True,
+                "alias": "s_filter"
+            },
         },
     }
 

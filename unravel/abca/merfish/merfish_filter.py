@@ -43,6 +43,8 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Does it make sense to consolidate this with scRNA-seq_filter.py?
+
 def filter_dataframe(df, columns, values):
     """
     Filter a DataFrame by columns and values.
