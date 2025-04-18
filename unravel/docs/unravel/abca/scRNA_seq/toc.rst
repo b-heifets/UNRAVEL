@@ -1,4 +1,4 @@
-unravel.abca.scRNA-seq package
+unravel.abca.scRNA_seq package
 ==============================
 
 .. toctree::
@@ -6,7 +6,7 @@ unravel.abca.scRNA-seq package
 
    filter
 
-.. automodule:: unravel.abca.scRNA-seq
+.. automodule:: unravel.abca.scRNA_seq
    :members:
    :undoc-members:
    :show-inheritance:

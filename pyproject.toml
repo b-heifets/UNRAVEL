@@ -283,5 +283,5 @@ abca_mean_expression_color_scale = "unravel.abca.sunburst.mean_expression_color_
 mecs = "unravel.abca.sunburst.mean_expression_color_scale:main"
 abca_percent_expression_color_scale = "unravel.abca.sunburst.percent_expression_color_scale:main"
 pecs = "unravel.abca.sunburst.percent_expression_color_scale:main"
-abca_scRNA-seq_filter = "unravel.abca.scRNA-seq.filter:main"
-s_filter = "unravel.abca.scRNA-seq.filter:main"
+abca_scRNA-seq_filter = "unravel.abca.scRNA_seq.filter:main"
+s_filter = "unravel.abca.scRNA_seq.filter:main"
