@@ -18,7 +18,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-import unravel.abca.merfish as mf
+import unravel.abca.merfish.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
