@@ -632,7 +632,7 @@ def main():
             "utils_rename": {
                 "module": "unravel.utilities.rename",
                 "description": "Rename files.",
-                "common": True,
+                "common": False,
                 "alias": "name"
             },
             "utils_toggle": {
@@ -699,13 +699,13 @@ def main():
             },
             "abca_sunburst_filter": {
                 "module": "unravel.abca.sunburst.sunburst_filter",
-                "description": "Filter ABCA sunburst expression data, keeping cells with high expression at any level (class, subclass, supertype, cluster).",
+                "description": "Filter ABCA sunburst data, keeping cells with high expression at any level (class, subclass, etc.).",
                 "common": False,
                 "alias": "sbf"
             },
             "abca_sunburst_filter_by_proportion": {
                 "module": "unravel.abca.sunburst.sunburst_filter_by_proportion",
-                "description": "Filter ABCA sunburst expression data, keeping prevalent cells at any level (class, subclass, supertype, cluster).",
+                "description": "Filter ABCA sunburst data, keeping prevalent cells at any level.",
                 "common": False,
                 "alias": "sbfp"
             },
