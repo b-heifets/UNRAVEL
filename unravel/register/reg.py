@@ -27,9 +27,13 @@ Note:
 Next commands: 
     ``reg_check`` for assessing registration, ``vstats_prep`` for preparing voxel-wise stats inputs, or ``rstats`` for regional stats.
 
-Usage for tissue registration:
-------------------------------
-    reg -m <path/template.nii.gz> -bc -sm 0.4 -ort <3 letter orientation code> [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]
+Usage for tissue registration with brain mask and bias correction:
+------------------------------------------------------------------
+    reg -m <path/template.nii.gz> -bc -sm 0.4 -ort <3 letter orientation code> [-pad 0.15] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]
+
+Usage for tissue registration without brain mask and bias correction:
+---------------------------------------------------------------------
+    reg -m <path/template.nii.gz> -f reg_inputs/autofl_50um.nii.gz -mas None -sm 0.4 -ort <orient code> [-pad 0.15] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]
 
 Usage for atlas to atlas registration:
 --------------------------------------
