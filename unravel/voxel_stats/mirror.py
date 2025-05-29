@@ -30,6 +30,7 @@ def parse_args():
     opts.add_argument('-i', '--input', help='Input file or pattern. Default: *.nii.gz', default='*.nii.gz', action=SM)
     opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
     opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
+    opts.add_argument('-o', '--output', help='Output folder path. Default: current working directory', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
@@ -76,7 +77,13 @@ def main():
     for file in files:
 
         basename = Path(file).name
-        mirrored_filename = f"mirror_{basename}"
+        if args.output is not None:
+            output_dir = Path(args.output)
+            if not output_dir.exists():
+                output_dir.mkdir(parents=True, exist_ok=True)
+            mirrored_filename = output_dir / f"mirror_{basename}"
+        else:
+            mirrored_filename = Path.cwd() / f"mirror_{basename}"
 
         if not os.path.exists(mirrored_filename): 
             nii = nib.load(file)
