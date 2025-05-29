@@ -235,9 +235,11 @@ def main():
     # Save the filtered cell metadata to a new CSV file
     if args.output:
         output_path = Path(args.output)
-        output_path.mkdir(parents=True, exist_ok=True)
+        output_dir = output_path.parent
+        output_dir.mkdir(parents=True, exist_ok=True)  # Only create the parent directory
     else:
         output_path = Path("MERFISH_cells_filtered_by_mask.csv")
+
     cell_df_filtered.to_csv(output_path)
     print(f"\nFiltered data saved to: {output_path}\n")
            
