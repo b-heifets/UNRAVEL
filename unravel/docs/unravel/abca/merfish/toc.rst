@@ -6,6 +6,7 @@ unravel.abca.merfish package
 
    merfish
    merfish_filter
+   merfish_filter_by_mask
    merfish_cells_to_nii
    merfish_expression_to_nii
 

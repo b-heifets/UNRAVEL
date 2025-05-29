@@ -679,6 +679,12 @@ def main():
                 "common": True,
                 "alias": "mf_filter"
             },
+            "abca_merfish_filter_by_mask": {
+                "module": "unravel.abca.merfish.merfish_filter_by_mask",
+                "description": "Filter MERFISH data using a mask.nii.gz and output CSV.",
+                "common": True,
+                "alias": "mf_filter_mask"
+            },
             "abca_merfish_expression_to_nii": {
                 "module": "unravel.abca.merfish.abca_merfish_expression_to_nii",
                 "description": "Make a 3D .nii.gz image of ABCA MERFISH expression data.",
