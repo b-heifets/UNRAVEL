@@ -1,38 +1,57 @@
 #!/usr/bin/env python3
 
 """
-This script performs element-wise mathematical operations on two images and saves the result.
+This script performs element-wise mathematical operations on one or more 3D images and saves the result.
 
 Inputs: 
-    - .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
+    - Any of the following formats: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
     
 Outputs:
-    - .nii.gz, .tif series, .zarr
+    - .nii.gz, .tif series, or .zarr depending on the output path extension
 
-Operations:
-    +: Add
-    -: Subtract
-    *: Multiply
-    /: Divide
-    //: Floor divide
-    %: Modulo
-    **: Power
-    ==: Equal (element-wise comparison)
-    !=: Not equal
-    >: Greater
-    >=: Greater or equal
-    <: Less
-    <=: Less or equal
-    and: Logical AND
-    or: Logical OR
-    xor: Logical XOR
-    not: Logical NOT
-    abs_diff: Absolute difference
+Supported Operations (with -n/--operation):
+    +     : Add
+    -     : Subtract
+    *     : Multiply
+    /     : Divide
+    //    : Floor divide
+    %     : Modulo
+    **    : Power
+    ==    : Equal (element-wise comparison)
+    !=    : Not equal
+    >     : Greater
+    >=    : Greater or equal
+    <     : Less
+    <=    : Less or equal
+    and   : Logical AND
+    or    : Logical OR
+    xor   : Logical XOR
+    not   : Logical NOT
+    abs_diff : Absolute difference
 
-Usage:
-------
-    img_math.py -i image1.nii.gz image2.nii.gz -n + -o result.nii.gz -b 0.5 -d float32
+Thresholding:
+    Optionally apply a threshold (lower and/or upper) to the result using:
+    - --threshold      : Lower threshold
+    - --upper_thres    : Upper threshold
+    - --True_val       : Value to assign if the condition is met (default: 1)
+    - --False_val      : Value to assign if the condition is not met (default: 0)
+
+Examples:
+---------
+
+1. Add two images and threshold the result:
+    img_math.py -i A.nii.gz B.nii.gz -n + -t 0.5 -T 1 -F 0 -o result.nii.gz -r reference.nii.gz
+
+2. Multiply three images and save as Zarr:
+    img_math.py -i A.nii.gz B.nii.gz C.nii.gz -n * -o result.zarr
+
+3. Binarize a single image:
+    img_math.py -i A.nii.gz -t 1.2 -T 1 -F 0 -o binarized.nii.gz
+
+4. Apply upper and lower thresholds without an operation:
+    img_math.py -i A.nii.gz -t 1.0 -ut 5.0 -T 255 -F 0 -o clipped.nii.gz
 """
+
 
 import numpy as np
 from rich.traceback import install
@@ -41,18 +60,18 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii, save_as_tifs, save_as_zarr
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--images', help="Paths to the input images. (path/image1 path/image2)", nargs=2, required=True, action=SM)
-    reqs.add_argument('-n', '--operation', help="Numpy operation to perform (+, -, *, /, etc.).", required=True, action=SM)
+    reqs.add_argument('-i', '--images', help="Paths to the input images. (path/image1 path/image2 ...)", nargs='*', required=True, action=SM)
     reqs.add_argument('-o', '--output', help='Path to the output image', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-t', '--threshold', help='Threshold the output image.', default=None, type=float, action=SM)
+    opts.add_argument('-n', '--operation', help="Numpy operation to perform (+, -, *, /, etc.).", default=None, action=SM)
+    opts.add_argument('-t', '--threshold', help='Apply a lower threshold.', default=None, type=float, action=SM)
     opts.add_argument('-ut', '--upper_thres', help='Upper threshold for thresholding.', default=None, type=float, action=SM)
     opts.add_argument('-T', '--True_val', help='Value to assign when threshold condition is true.', default=1, type=float, action=SM)
     opts.add_argument('-F', '--False_val', help='Value to assign when threshold condition is false.', default=0, type=float, action=SM)
@@ -64,10 +83,31 @@ def parse_args():
 
     return parser.parse_args() 
 
-# TODO: Add support for chaining operations
+# TODO: Add support for chaining operations (e.g., img1 + img2 - img3 * img4)
+# TODO: Add the ability to apply operations to a single image (e.g., img1 * 2)
 
+@print_func_name_args_times()
 def apply_operation(image1, image2, operation):
-    """Apply the specified operation on two images."""
+    """Apply a mathematical operation to two ndarrays (images).
+    Supported operations include addition, subtraction, multiplication, division, and more.
+    Args:
+    -----
+        image1 (np.ndarray): First image.
+        image2 (np.ndarray): Second image.
+        operation (str): The operation to perform. Supported operations are:
+        '+', '-', '*', '/', '//', '%', '**', '==', '!=', '>', '>=', '<', '<=', 'and', 'or', 'xor', 'not', 'abs_diff'.
+    
+    Notes:
+    -----
+        - Element-wise comparison operations ('==', '!=', '>', '>=', '<', '<=') return a boolean array.
+        - Logical operations ('and', 'or', 'xor', 'not') also return a boolean array.
+        - The 'abs_diff' operation computes the absolute difference between the two images.
+    
+    Returns:
+    -------
+        np.ndarray: Resulting image after applying the operation.
+    """
+        
     operations = {
         '+': np.add,
         '-': np.subtract,
@@ -85,52 +125,66 @@ def apply_operation(image1, image2, operation):
         'and': np.logical_and, # Element-wise comparison
         'or': np.logical_or, # Element-wise comparison
         'xor': np.logical_xor, # Element-wise comparison
-        'not': np.logical_not, # Element-wise comparison
+        'not': np.logical_not, # Inverts boolean values of a single image (image1)
         'abs_diff': lambda x, y: np.abs(x - y), # Absolute difference
     }
     
+    if operation == 'not':
+        return operations['not'](image1)
+
     if operation in operations:
         return operations[operation](image1, image2)
     else:
         raise ValueError("Unsupported operation.")
-    
+
+@print_func_name_args_times()
 def threshold_image(image, lower_thr=None, upper_thr=None, true_val=1, false_val=0):
-    """Apply lower and upper thresholding to an image with specified values for true and false conditions."""
+    """Apply lower and/or upper thresholding to an image."""
+    mask = np.ones_like(image, dtype=bool)
     if lower_thr is not None:
-        image = np.where(image >= lower_thr, image, false_val)
+        mask &= image >= lower_thr
     if upper_thr is not None:
-        image = np.where(image <= upper_thr, image, false_val)
-    # This assumes you want to keep the original value when the condition is true, 
-    # and set to `false_val` otherwise. Adjust as needed.
-    return image
+        mask &= image <= upper_thr
+    return np.where(mask, true_val, false_val)
 
-def binarize_image(image, threshold, true_val=1, false_val=0):
-    """Binarize an image based on a threshold with specified values for true and false conditions."""
-    return np.where(image > threshold, true_val, false_val)
-
+@log_command
 def main():    
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
-    image1 = load_3D_img(args.image1, verbose=args.verbose)
-    image2 = load_3D_img(args.image2, verbose=args.verbose)
+    if not args.images:
+        raise ValueError("At least one image must be specified with --images.")
 
-    # Ensure image dimensions match
-    if image1.shape != image2.shape:
-        raise ValueError("Image dimensions do not match.")
+    images = [load_3D_img(img_path, verbose=args.verbose) for img_path in args.images]
 
-    # Apply operation
-    result = apply_operation(image1, image2, args.operation)
+    # Ensure all images are the same shape
+    shape0 = images[0].shape
+    if not all(img.shape == shape0 for img in images):
+        raise ValueError("All input images must have the same shape.")
 
-    # TODO: Add in args.True_val and args.False_val to threshold_image and binarize_image
-    # Threshold image 
-    if args.threshold is not None:
-        result = threshold_image(result, args.threshold, true_val=1, false_val=0)
-    if args.upper_thres is not None:
-        result = threshold_image(result, upper_thr=args.upper_thres, true_val=1, false_val=0)
+    # If an operation is specified and there is more than one image, reduce using the operation
+    if args.operation:
+        if len(images) == 1:
+            raise ValueError("At least two images are required for operation: {}".format(args.operation))
+        result = images[0]
+        for img in images[1:]:
+            result = apply_operation(result, img, args.operation)
+    else:
+        if len(images) > 1:
+            raise ValueError("Multiple images provided, but no operation specified.")
+        result = images[0]
 
-    # Binarize image
-    if args.binarize is not None:
-        result = binarize_image(result, args.binarize)
+    # Apply thresholding
+    if args.threshold is not None or args.upper_thres is not None:
+        result = threshold_image(
+            result,
+            lower_thr=args.threshold,
+            upper_thr=args.upper_thres,
+            true_val=args.True_val,
+            false_val=args.False_val
+        )
 
     # Set data type
     if args.dtype: 
@@ -138,15 +192,13 @@ def main():
 
     # Save image    
     if args.output.endswith('.nii.gz'):
-        save_as_nii(result, args.output, reference=args.reference)
+        save_as_nii(result, args.output, reference=args.reference, data_type=args.dtype)
     elif args.output.endswith('.tif'):
         save_as_tifs(result, args.output)
     elif args.output.endswith('.zarr'):
         save_as_zarr(result, args.output)
 
-
-if __name__ == '__main__': 
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    verbose_end_msg()
+    
+if __name__ == '__main__':
+    main()
