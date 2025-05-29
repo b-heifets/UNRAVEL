@@ -73,8 +73,8 @@ def parse_args():
     opts.add_argument('-n', '--operation', help="Numpy operation to perform (+, -, *, /, etc.).", default=None, action=SM)
     opts.add_argument('-t', '--threshold', help='Apply a lower threshold.', default=None, type=float, action=SM)
     opts.add_argument('-ut', '--upper_thres', help='Upper threshold for thresholding.', default=None, type=float, action=SM)
-    opts.add_argument('-T', '--True_val', help='Value to assign when threshold condition is true.', default=1, type=float, action=SM)
-    opts.add_argument('-F', '--False_val', help='Value to assign when threshold condition is false.', default=0, type=float, action=SM)
+    opts.add_argument('-T', '--True_val', help='Value to assign when threshold condition is true. Default: 1', default=1, type=float, action=SM)
+    opts.add_argument('-F', '--False_val', help='Value to assign when threshold condition is false. Default: 0', default=0, type=float, action=SM)
     opts.add_argument('-d', '--dtype', help='Numpy array data type', default=None, action=SM)
     opts.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata.', default=None, action=SM)
 
