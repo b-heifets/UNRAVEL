@@ -235,12 +235,11 @@ def main():
     # Save the filtered cell metadata to a new CSV file
     if args.output:
         output_path = Path(args.output)
-        cell_df_filtered.to_csv(output_path)
-        print(f"\nFiltered data saved to: {output_path}\n")
+        output_path.mkdir(parents=True, exist_ok=True)
     else:
         output_path = Path("MERFISH_cells_filtered_by_mask.csv")
-        cell_df_filtered.to_csv(output_path)
-        print(f"\nFiltered data saved to: {output_path}\n")
+    cell_df_filtered.to_csv(output_path)
+    print(f"\nFiltered data saved to: {output_path}\n")
            
     verbose_end_msg()
 
