@@ -36,20 +36,17 @@ Thresholding:
     - --True_val       : Value to assign if the condition is met (default: 1)
     - --False_val      : Value to assign if the condition is not met (default: 0)
 
-Examples:
----------
+Usage to add two images and binarize the result:
+------------------------------------------------
+    img_math -i A.nii.gz B.nii.gz -n + -t 0.5 -o result.nii.gz -r A.nii.gz -d uint8
 
-1. Add two images and threshold the result:
-    img_math.py -i A.nii.gz B.nii.gz -n + -t 0.5 -T 1 -F 0 -o result.nii.gz -r reference.nii.gz
+Usage multiply three images and save as Zarr:
+--------------------------------------------
+    img_math -i A.nii.gz B.nii.gz C.nii.gz -n * -o result.zarr
 
-2. Multiply three images and save as Zarr:
-    img_math.py -i A.nii.gz B.nii.gz C.nii.gz -n * -o result.zarr
-
-3. Binarize a single image:
-    img_math.py -i A.nii.gz -t 1.2 -T 1 -F 0 -o binarized.nii.gz
-
-4. Apply upper and lower thresholds without an operation:
-    img_math.py -i A.nii.gz -t 1.0 -ut 5.0 -T 255 -F 0 -o clipped.nii.gz
+Usage to binarize a single image and set to 8 bit:
+--------------------------------------------------
+    img_math -i A.nii.gz -t 0.5 -o binarized.nii.gz -r A.nii.gz -d uint8
 """
 
 
