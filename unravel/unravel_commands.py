@@ -499,6 +499,12 @@ def main():
             }
         },
         "Image tools": {
+            "img_math": {
+                "module": "unravel.image_tools.math",
+                "description": "Perform mathematical operations on 3D images.",
+                "common": True,
+                "alias": "math"
+            },
             "img_avg": {
                 "module": "unravel.image_tools.avg",
                 "description": "Average NIfTI images.",

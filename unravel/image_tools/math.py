@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-This script performs element-wise mathematical operations on one or more 3D images and saves the result.
+Use ``img_math`` (``math``) from UNRAVEL to perform mathematical operations on 3D images.
 
 Inputs: 
     - Any of the following formats: .czi, .nii.gz, .ome.tif series, .tif series, .h5, .zarr
@@ -26,7 +26,7 @@ Supported Operations (with -n/--operation):
     and   : Logical AND
     or    : Logical OR
     xor   : Logical XOR
-    not   : Logical NOT
+    not   : Logical NOT (applied to a single image to invert its boolean values)
     abs_diff : Absolute difference
 
 Thresholding:
