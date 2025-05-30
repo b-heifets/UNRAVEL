@@ -379,7 +379,7 @@
 <span class="sd">    img_math -i A.nii.gz B.nii.gz -n + -t 0.5 -o result.nii.gz -r A.nii.gz -d uint8</span>
 
 <span class="sd">Usage multiply three images and save as Zarr:</span>
-<span class="sd">--------------------------------------------</span>
+<span class="sd">---------------------------------------------</span>
 <span class="sd">    img_math -i A.nii.gz B.nii.gz C.nii.gz -n &lt;asterisk&gt; -o result.zarr</span>
 
 <span class="sd">Usage to binarize a single image and set to 8 bit:</span>
@@ -428,24 +428,32 @@
 <a class="viewcode-back" href="../../../unravel/image_tools/math.html#unravel.image_tools.math.apply_operation">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">apply_operation</span><span class="p">(</span><span class="n">image1</span><span class="p">,</span> <span class="n">image2</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply a mathematical operation to two ndarrays (images).</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Apply a mathematical operation to two ndarrays (images).</span>
+
 <span class="sd">    Supported operations include addition, subtraction, multiplication, division, and more.</span>
-<span class="sd">    Args:</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    image1 : np.ndarray</span>
+<span class="sd">        First image.</span>
+<span class="sd">    image2 : np.ndarray</span>
+<span class="sd">        Second image.</span>
+<span class="sd">    operation : str</span>
+<span class="sd">        The operation to perform. Supported operations are:</span>
+<span class="sd">        ``+``, ``-``, ``*``, ``/``, ``//``, ``%``, ``**``, ``==``, ``!=``, ``&gt;``, ``&gt;=``, ``&lt;``, ``&lt;=``,</span>
+<span class="sd">        ``and``, ``or``, ``xor``, ``not``, ``abs_diff``.</span>
+
+<span class="sd">    Notes</span>
 <span class="sd">    -----</span>
-<span class="sd">        - image1 (np.ndarray): First image.</span>
-<span class="sd">        - image2 (np.ndarray): Second image.</span>
-<span class="sd">        - operation (str): The operation to perform. Supported operations are:</span>
-<span class="sd">        - &#39;+&#39;, &#39;-&#39;, &#39;&lt;asterisk&gt;&#39;, &#39;/&#39;, &#39;//&#39;, &#39;%&#39;, &#39;&lt;asterisk&gt;&lt;asterisk&gt;&#39;, &#39;==&#39;, &#39;!=&#39;, &#39;&gt;&#39;, &#39;&gt;=&#39;, &#39;&lt;&#39;, &#39;&lt;=&#39;, &#39;and&#39;, &#39;or&#39;, &#39;xor&#39;, &#39;not&#39;, &#39;abs_diff&#39;.</span>
-<span class="sd">    </span>
-<span class="sd">    Notes:</span>
-<span class="sd">    ------</span>
-<span class="sd">        - Element-wise comparison operations (&#39;==&#39;, &#39;!=&#39;, &#39;&gt;&#39;, &#39;&gt;=&#39;, &#39;&lt;&#39;, &#39;&lt;=&#39;) return a boolean array.</span>
-<span class="sd">        - Logical operations (&#39;and&#39;, &#39;or&#39;, &#39;xor&#39;, &#39;not&#39;) also return a boolean array.</span>
-<span class="sd">        - The &#39;abs_diff&#39; operation computes the absolute difference between the two images.</span>
-<span class="sd">    </span>
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">        np.ndarray: Resulting image after applying the operation.</span>
+<span class="sd">    - Element-wise comparison operations (``==``, ``!=``, ``&gt;``, ``&gt;=``, ``&lt;``, ``&lt;=``) return a boolean array.</span>
+<span class="sd">    - Logical operations (``and``, ``or``, ``xor``, ``not``) also return a boolean array.</span>
+<span class="sd">    - The ``abs_diff`` operation computes the absolute difference between the two images.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    np.ndarray</span>
+<span class="sd">        Resulting image after applying the operation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
         
     <span class="n">operations</span> <span class="o">=</span> <span class="p">{</span>
