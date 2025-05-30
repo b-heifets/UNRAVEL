@@ -1,9 +1,9 @@
-.. _unravel.abca.percent_expression_color_scale:
+.. _unravel.abca.sunburst.percent_expression_color_scale:
 
-unravel.abca.percent_expression_color_scale module
-==================================================
+unravel.abca.sunburst.percent_expression_color_scale module
+===========================================================
 
-.. automodule:: unravel.abca.percent_expression_color_scale
+.. automodule:: unravel.abca.sunburst.percent_expression_color_scale
    :members:
    :undoc-members:
    :show-inheritance:

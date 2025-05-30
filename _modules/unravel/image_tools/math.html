@@ -360,25 +360,12 @@
 <span class="sd">Outputs:</span>
 <span class="sd">    - .nii.gz, .tif series, or .zarr depending on the output path extension</span>
 
-<span class="sd">Supported Operations (with -n/--operation):</span>
-<span class="sd">    +     : Add</span>
-<span class="sd">    -     : Subtract</span>
-<span class="sd">    *     : Multiply</span>
-<span class="sd">    /     : Divide</span>
-<span class="sd">    //    : Floor divide</span>
-<span class="sd">    %     : Modulo</span>
-<span class="sd">    **    : Power</span>
-<span class="sd">    ==    : Equal (element-wise comparison)</span>
-<span class="sd">    !=    : Not equal</span>
-<span class="sd">    &gt;     : Greater</span>
-<span class="sd">    &gt;=    : Greater or equal</span>
-<span class="sd">    &lt;     : Less</span>
-<span class="sd">    &lt;=    : Less or equal</span>
-<span class="sd">    and   : Logical AND</span>
-<span class="sd">    or    : Logical OR</span>
-<span class="sd">    xor   : Logical XOR</span>
-<span class="sd">    not   : Logical NOT (applied to a single image to invert its boolean values)</span>
-<span class="sd">    abs_diff : Absolute difference</span>
+<span class="sd">Supported Operations:</span>
+<span class="sd">    - Use with the ``-n`` or ``--operation`` flag:</span>
+<span class="sd">    - Arithmetic: ``+``, ``-``, ``&lt;asterisk&gt;``, ``/``, ``//``, ``%``, ``&lt;asterisk&gt;&lt;asterisk&gt;``  </span>
+<span class="sd">    - Comparison: ``==``, ``!=``, ``&gt;``, ``&gt;=``, ``&lt;``, ``&lt;=``  </span>
+<span class="sd">    - Logical: ``and``, ``or``, ``xor``, ``not``  </span>
+<span class="sd">    - Other: ``abs_diff`` (absolute difference)</span>
 
 <span class="sd">Thresholding:</span>
 <span class="sd">    Optionally apply a threshold (lower and/or upper) to the result using:</span>
@@ -393,7 +380,7 @@
 
 <span class="sd">Usage multiply three images and save as Zarr:</span>
 <span class="sd">--------------------------------------------</span>
-<span class="sd">    img_math -i A.nii.gz B.nii.gz C.nii.gz -n * -o result.zarr</span>
+<span class="sd">    img_math -i A.nii.gz B.nii.gz C.nii.gz -n &lt;asterisk&gt; -o result.zarr</span>
 
 <span class="sd">Usage to binarize a single image and set to 8 bit:</span>
 <span class="sd">--------------------------------------------------</span>
@@ -445,19 +432,19 @@
 <span class="sd">    Supported operations include addition, subtraction, multiplication, division, and more.</span>
 <span class="sd">    Args:</span>
 <span class="sd">    -----</span>
-<span class="sd">        image1 (np.ndarray): First image.</span>
-<span class="sd">        image2 (np.ndarray): Second image.</span>
-<span class="sd">        operation (str): The operation to perform. Supported operations are:</span>
-<span class="sd">        &#39;+&#39;, &#39;-&#39;, &#39;*&#39;, &#39;/&#39;, &#39;//&#39;, &#39;%&#39;, &#39;**&#39;, &#39;==&#39;, &#39;!=&#39;, &#39;&gt;&#39;, &#39;&gt;=&#39;, &#39;&lt;&#39;, &#39;&lt;=&#39;, &#39;and&#39;, &#39;or&#39;, &#39;xor&#39;, &#39;not&#39;, &#39;abs_diff&#39;.</span>
+<span class="sd">        - image1 (np.ndarray): First image.</span>
+<span class="sd">        - image2 (np.ndarray): Second image.</span>
+<span class="sd">        - operation (str): The operation to perform. Supported operations are:</span>
+<span class="sd">        - &#39;+&#39;, &#39;-&#39;, &#39;&lt;asterisk&gt;&#39;, &#39;/&#39;, &#39;//&#39;, &#39;%&#39;, &#39;&lt;asterisk&gt;&lt;asterisk&gt;&#39;, &#39;==&#39;, &#39;!=&#39;, &#39;&gt;&#39;, &#39;&gt;=&#39;, &#39;&lt;&#39;, &#39;&lt;=&#39;, &#39;and&#39;, &#39;or&#39;, &#39;xor&#39;, &#39;not&#39;, &#39;abs_diff&#39;.</span>
 <span class="sd">    </span>
 <span class="sd">    Notes:</span>
-<span class="sd">    -----</span>
+<span class="sd">    ------</span>
 <span class="sd">        - Element-wise comparison operations (&#39;==&#39;, &#39;!=&#39;, &#39;&gt;&#39;, &#39;&gt;=&#39;, &#39;&lt;&#39;, &#39;&lt;=&#39;) return a boolean array.</span>
 <span class="sd">        - Logical operations (&#39;and&#39;, &#39;or&#39;, &#39;xor&#39;, &#39;not&#39;) also return a boolean array.</span>
 <span class="sd">        - The &#39;abs_diff&#39; operation computes the absolute difference between the two images.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns:</span>
-<span class="sd">    -------</span>
+<span class="sd">    --------</span>
 <span class="sd">        np.ndarray: Resulting image after applying the operation.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
         

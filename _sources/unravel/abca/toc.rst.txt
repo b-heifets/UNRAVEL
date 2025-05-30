@@ -7,7 +7,7 @@ unravel.abca package
    cache
    merfish/toc
    sunburst/toc
-   scRNA-seq/toc
+   scRNA_seq/toc
 
 .. automodule:: unravel.abca
    :members:

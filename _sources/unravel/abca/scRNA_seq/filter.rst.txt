@@ -1,9 +1,9 @@
-.. _unravel.abca.filter:
+.. _unravel.abca.scRNA_seq.filter:
 
-unravel.abca.filter module
-==========================
+unravel.abca..scRNA_seq.filter module
+=====================================
 
-.. automodule:: unravel.abca.filter
+.. automodule:: unravel.abca.scRNA_seq.filter
    :members:
    :undoc-members:
    :show-inheritance:
