@@ -28,7 +28,7 @@ Usage to add two images and binarize the result:
     img_math -i A.nii.gz B.nii.gz -n + -t 0.5 -o result.nii.gz -r A.nii.gz -d uint8
 
 Usage multiply three images and save as Zarr:
---------------------------------------------
+---------------------------------------------
     img_math -i A.nii.gz B.nii.gz C.nii.gz -n <asterisk> -o result.zarr
 
 Usage to binarize a single image and set to 8 bit:
@@ -72,24 +72,32 @@ def parse_args():
 
 @print_func_name_args_times()
 def apply_operation(image1, image2, operation):
-    """Apply a mathematical operation to two ndarrays (images).
+    """
+    Apply a mathematical operation to two ndarrays (images).
+
     Supported operations include addition, subtraction, multiplication, division, and more.
-    Args:
+
+    Parameters
+    ----------
+    image1 : np.ndarray
+        First image.
+    image2 : np.ndarray
+        Second image.
+    operation : str
+        The operation to perform. Supported operations are:
+        ``+``, ``-``, ``*``, ``/``, ``//``, ``%``, ``**``, ``==``, ``!=``, ``>``, ``>=``, ``<``, ``<=``,
+        ``and``, ``or``, ``xor``, ``not``, ``abs_diff``.
+
+    Notes
     -----
-        - image1 (np.ndarray): First image.
-        - image2 (np.ndarray): Second image.
-        - operation (str): The operation to perform. Supported operations are:
-        - '+', '-', '<asterisk>', '/', '//', '%', '<asterisk><asterisk>', '==', '!=', '>', '>=', '<', '<=', 'and', 'or', 'xor', 'not', 'abs_diff'.
-    
-    Notes:
-    ------
-        - Element-wise comparison operations ('==', '!=', '>', '>=', '<', '<=') return a boolean array.
-        - Logical operations ('and', 'or', 'xor', 'not') also return a boolean array.
-        - The 'abs_diff' operation computes the absolute difference between the two images.
-    
-    Returns:
-    --------
-        np.ndarray: Resulting image after applying the operation.
+    - Element-wise comparison operations (``==``, ``!=``, ``>``, ``>=``, ``<``, ``<=``) return a boolean array.
+    - Logical operations (``and``, ``or``, ``xor``, ``not``) also return a boolean array.
+    - The ``abs_diff`` operation computes the absolute difference between the two images.
+
+    Returns
+    -------
+    np.ndarray
+        Resulting image after applying the operation.
     """
         
     operations = {
