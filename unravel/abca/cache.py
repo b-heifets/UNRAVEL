@@ -1,26 +1,26 @@
 #!/usr/bin/env python3
 
 """
-Use ``./ABCA_cache_cli.py`` from UNRAVEL to download data from the Allen Brain Cell Atlas.
+Use ``abca_cache`` or ``cache`` from UNRAVEL to download data from the Allen Brain Cell Atlas.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/getting_started.html
 
 Usage:
 ------
-    ./ABCA_cache_cli.py [-b path/to/base_dir] [-d dirs] [--dl_data] [--dl_metadata] [-f] [-s]
+    abca_cache [-b path/to/base_dir] [-d dirs] [--dl_data] [--dl_metadata] [-f] [-s]
 
 Usage to list directories:
 --------------------------
-    ./ABCA_cache_cli.py
+    abca_cache
 
 Usage to list subdirectories:
 -----------------------------
-    ./ABCA_cache_cli.py [-d dirs]
+    abca_cache [-d dirs]
 
 Usage to download data:
 -----------------------
-    ./ABCA_cache_cli.py -d dirs -dd -dm
+    cache -d dirs -dd -dm
 """
 
 from abc_atlas_access.abc_atlas_cache.abc_project_cache import AbcProjectCache

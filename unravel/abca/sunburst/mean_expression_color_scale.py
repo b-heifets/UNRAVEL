@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``ABCA_mean_expression_color_scale.py`` from UNRAVEL to plot a color scale for mean expression values in the ABCA.
+Use ``abca_mean_expression_color_scale`` or ``mecs`` from UNRAVEL to save a color scale for mean RNA expression values.
 
 Usage:
 ------ 
-    ABCA_mean_expression_color_scale.py
+    abca_mean_expression_color_scale
 """
 
 import matplotlib.pyplot as plt

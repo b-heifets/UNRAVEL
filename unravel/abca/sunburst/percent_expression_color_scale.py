@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``ABCA_percent_expression_color_scale.py`` from UNRAVEL to plot a color scale for the percent of cells expressing a gene.
+Use ``abca_percent_expression_color_scale`` or ``pecs`` from UNRAVEL to save a color scale for the percent of cells expressing a gene.
 
 Usage:
 ------ 
-    ABCA_percent_expression_color_scale.py
+    abca_percent_expression_color_scale
 """
 
 import matplotlib.pyplot as plt

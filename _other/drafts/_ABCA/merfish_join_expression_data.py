@@ -24,7 +24,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-import merfish as m
+import unravel.abca.merfish.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -60,10 +60,10 @@ def main():
     cell_df = pd.read_csv(args.input, dtype={'cell_label': str})
 
     # Load the expression data for all genes (if the gene is in the dataset) 
-    adata = m.load_expression_data(download_base, args.gene, imputed=args.imputed)
+    adata = mf.load_expression_data(download_base, args.gene, imputed=args.imputed)
 
     # Filter expression data for the specified gene
-    asubset, gf = m.filter_expression_data(adata, args.gene)
+    asubset, gf = mf.filter_expression_data(adata, args.gene)
 
     # Create a dataframe with the expression data for the specified gene
     gdata = asubset[:, gf.index].to_df()  # Extract expression data for the gene

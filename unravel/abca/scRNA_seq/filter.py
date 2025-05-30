@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Filter ABCA MERFISH cells based on columns and values in the cell metadata.
+Use ``abca_scRNA-seq_filter`` or ``s_filter`` from UNRAVEL to filter ABCA scRNA-seq cells based on columns and values in the cell metadata.
 
 Notes:
     - region_of_interest_acronym: ACA, AI, AUD, AUD-TEa-PERI-ECT, CB, CTXsp, 
@@ -11,11 +11,11 @@ Notes:
     cluster_alias, neurotransmitter, class, subclass, supertype, cluster, <genes>
 
 Next steps:
-    - ABCA_sunburst_expression.py
+    - ``abca_sunburst_expression``
 
 Usage:
 ------
-    ./RNAseq_filter.py -b path/base_dir [--columns] [--values] [-o path/output.csv] [-v]
+    abca_scRNA-seq_filter -b path/base_dir [--columns] [--values] [-o path/output.csv] [-v]
 """
 
 import anndata
@@ -26,8 +26,8 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-import merfish as m
-from merfish_filter import filter_dataframe
+import unravel.abca.merfish.merfish as mf
+from unravel.abca.merfish.merfish_filter import filter_dataframe
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -74,10 +74,10 @@ def main():
     print(f'\n{filtered_df}\n')
 
     # Add the classification levels and the corresponding color.
-    filtered_df_joined = m.join_cluster_details(filtered_df, download_base)
+    filtered_df_joined = mf.join_cluster_details(filtered_df, download_base)
 
     # Add the cluster colors
-    filtered_df_joined = m.join_cluster_colors(filtered_df_joined, download_base)
+    filtered_df_joined = mf.join_cluster_colors(filtered_df_joined, download_base)
     
     for column in args.columns:
         print(f"\nUnique values for {column}:")

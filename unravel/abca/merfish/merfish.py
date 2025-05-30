@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
 
 """
-Use ``/Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish.py`` from UNRAVEL to plot MERFISH data from the Allen Brain Cell Atlas.
+Use ``abca_merfish`` or ``mf`` from UNRAVEL to plot MERFISH data from the Allen Brain Cell Atlas (ABCA). This script has several useful functions for ABCA data exploration.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/merfish_ccf_registration_tutorial.html#read-in-section-reconstructed-and-ccf-coordinates-for-all-cells
     - The slice index ranges from 05 to 67.
     - Missing slices include: 07 20 21 22 23 34 41 63 65.
 
-Usage for gene:
----------------
-    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish.py -b path/to/base_dir -s slice -g gene
+Usage for gene expression:
+--------------------------
+    abca_merfish -b path/to/base_dir -s slice -g gene
 
 Usage for color:
 ----------------
-    /Users/Danielthy/Documents/_GitHub/UNRAVEL_dev/_other/drafts/merfish.py -b path/to/base_dir -s slice -c color
+    abca_merfish -b path/to/base_dir -s slice -c color
 """
 
 import anndata
@@ -40,7 +40,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-g', '--gene', help='Gene to plot.', action=SM)
-    opts.add_argument('-c', '--color', help='Color to plot (e.g., parcellation_substructure_color or neurotransmitter_color', action=SM)
+    opts.add_argument('-c', '--color', help='Color to plot (e.g., parcellation_substructure_color or neurotransmitter_color)', action=SM)
     opts.add_argument('-im', '--imputed', help='Use imputed expression data. Default: False', action='store_true', default=False)
     opts.add_argument('-o', '--output', help='Path to save the plot rather than showing it with Matplotlib (end with .png)', default=None, action=SM)
 
@@ -50,6 +50,9 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Make base cwd by default. Consider intergrating with the cache tool from Allen. 
+# TODO: Offload the lists of genes to CSVs
+# TODO: Offload common functions to utils.py
+# TODO: Add option to download the data if not present
 
 def load_cell_metadata(download_base):
     """

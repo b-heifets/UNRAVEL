@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 """
-Filter ABCA MERFISH cells based on columns and values in the cell metadata. It integrates the filtering with the generation of `exp_df` and allows optional export of filtered data or the generation of updated 3D images.
+Use ``abca_merfish_filter`` or ``mf_filter`` from UNRAVEL to filter ABCA MERFISH cells based on columns and values in the cell metadata. 
+It integrates the filtering with the generation of `exp_df` and allows optional export of filtered data or the generation of updated 3D images.
 
 Notes:
     - Columns to filter by: parcellation_substructure (default)
@@ -9,7 +10,7 @@ Notes:
 
 Usage:
 ------
-    ./merfish_filter.py -b path/base_dir [--columns] [--values] [-o path/output.csv] [-v]
+    ./abca_merfish_filter -b path/base_dir [--columns] [--values] [-o path/output.csv] [-v]
 """
 
 import anndata
@@ -20,7 +21,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-import merfish as m
+import unravel.abca.merfish.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -31,16 +32,19 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
-    reqs.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata by (e.g., ACB).', nargs='*', action=SM)
-    reqs.add_argument('-o', '--output', help='Output path for the filtered cell metadata. Default: None', default=None, action=SM)
+    reqs.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata or input.csv by (e.g., ACB).', nargs='*', action=SM)
+    reqs.add_argument('-o', '--output', help='Output path for the filtered df. Default: None', default=None, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-i', '--input', help='Input CSV file containing cell metadata (from MERFISH). If omitted, default metadata will be loaded.', default=None, action=SM)
     opts.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure \[default])', default='parcellation_substructure', nargs='*', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
+
+# TODO: Does it make sense to consolidate this with scRNA-seq_filter.py?
 
 def filter_dataframe(df, columns, values):
     """
@@ -82,25 +86,32 @@ def main():
     download_base = Path(args.base)
 
     # Load the cell metadata
-    cell_df = m.load_cell_metadata(download_base)
-    print(f"\n    Initial cell metadata shape:\n    {cell_df.shape}")
+    if args.input:
+        cell_df_joined = pd.read_csv(args.input)
+        print(f"\n    Cell metadata shape:\n    {cell_df_joined.shape}")
+    else:
+        # If no input is provided, load the default cell metadata
+        print(f"Loading default cell metadata from {download_base}")
+        cell_df = mf.load_cell_metadata(download_base)
+        print(f"\n    Initial cell metadata shape:\n    {cell_df.shape}")
     
-    print(f'\n{cell_df=}\n')
+        print(f'\n{cell_df=}\n')
 
-    # Add the reconstructed coordinates to the cell metadata
-    cell_df_joined = m.join_reconstructed_coords(cell_df, download_base)
+        # Add the reconstructed coordinates to the cell metadata
+        cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
 
-    # Add the classification levels and the corresponding color.
-    cell_df_joined = m.join_cluster_details(cell_df_joined, download_base)
+        # Add the classification levels and the corresponding color.
+        cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
 
-    # Add the cluster colors
-    cell_df_joined = m.join_cluster_colors(cell_df_joined, download_base)
-    
-    # Add the parcellation annotation
-    cell_df_joined = m.join_parcellation_annotation(cell_df_joined, download_base)
+        # Add the cluster colors
+        cell_df_joined = mf.join_cluster_colors(cell_df_joined, download_base)
+        
+        # Add the parcellation annotation
+        cell_df_joined = mf.join_parcellation_annotation(cell_df_joined, download_base)
 
-    # Add the parcellation color
-    cell_df_joined = m.join_parcellation_color(cell_df_joined, download_base)
+        # Add the parcellation color
+        cell_df_joined = mf.join_parcellation_color(cell_df_joined, download_base)
+
     print("\n                                             First row:")
     print(cell_df_joined.iloc[0])
     print("\nCell metadata:")
@@ -108,6 +119,10 @@ def main():
 
     # Print column names
     print(f"\nColumn names: {cell_df_joined.columns}\n")
+
+    missing_cols = [col for col in args.columns if col not in cell_df_joined.columns]
+    if missing_cols:
+        raise ValueError(f"Missing expected column(s) in input file: {missing_cols}")
     
     # Filter the DataFrame
     filtered_df = filter_dataframe(cell_df_joined, args.columns, args.values)
