@@ -412,6 +412,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../image_tools/toc.html">unravel.image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../image_tools/math.html">unravel.image_tools.math module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/avg.html">unravel.image_tools.avg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/bbox.html">unravel.image_tools.bbox module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_tools/extend.html">unravel.image_tools.extend module</a></li>
@@ -443,6 +444,27 @@
 <li class="toctree-l2"><a class="reference internal" href="../utilities/rename.html">unravel.utilities.rename module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/toggle_samples.html">unravel.utilities.toggle_samples module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/points_compressor.html">unravel.utilities.points_compressor module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../abca/toc.html">unravel.abca package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../abca/cache.html">unravel.abca.cache module</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../abca/merfish/toc.html">unravel.abca.merfish package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish.html">unravel.abca.merfish module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_filter.html">unravel.abca.merfish_filter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_filter_by_mask.html">unravel.abca.merfish_filter_by_mask module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_cells_to_nii.html">unravel.abca.merfish_cells_to_nii module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_expression_to_nii.html">unravel.abca.merfish_expression_to_nii module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../abca/sunburst/toc.html">unravel.abca.sunburst package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst.html">unravel.abca.sunburst module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_expression.html">unravel.abca.sunburst_expression module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_filter.html">unravel.abca.sunburst_filter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_filter_by_proportion.html">unravel.abca.sunburst_filter_by_proportion module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/mean_expression_color_scale.html">unravel.abca.mean_expression_color_scale module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/percent_expression_color_scale.html">unravel.abca.percent_expression_color_scale module</a></li>
+</ul>
+</details></li>
 </ul>
 </details></li>
 </ul>
@@ -539,10 +561,16 @@
 <dt>Next commands:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">reg_check</span></code> for assessing registration, <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code> for preparing voxel-wise stats inputs, or <code class="docutils literal notranslate"><span class="pre">rstats</span></code> for regional stats.</p>
 </dd>
 </dl>
-<section id="usage-for-tissue-registration">
-<h2>Usage for tissue registration:<a class="headerlink" href="#usage-for-tissue-registration" title="Link to this heading">#</a></h2>
+<section id="usage-for-tissue-registration-with-brain-mask-and-bias-correction">
+<h2>Usage for tissue registration with brain mask and bias correction:<a class="headerlink" href="#usage-for-tissue-registration-with-brain-mask-and-bias-correction" title="Link to this heading">#</a></h2>
 <blockquote>
-<div><p>reg -m &lt;path/template.nii.gz&gt; -bc -sm 0.4 -ort &lt;3 letter orientation code&gt; [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]</p>
+<div><p>reg -m &lt;path/template.nii.gz&gt; -bc -sm 0.4 -ort &lt;3 letter orientation code&gt; [-pad 0.15] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-f reg_inputs/autofl_50um_masked.nii.gz] [-mas reg_inputs/autofl_50um_brain_mask.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
+</section>
+<section id="usage-for-tissue-registration-without-brain-mask-and-bias-correction">
+<h2>Usage for tissue registration without brain mask and bias correction:<a class="headerlink" href="#usage-for-tissue-registration-without-brain-mask-and-bias-correction" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg -m &lt;path/template.nii.gz&gt; -f reg_inputs/autofl_50um.nii.gz -mas None -sm 0.4 -ort &lt;orient code&gt; [-pad 0.15] [-m2 atlas/atlas_CCFv3_2020_30um.nii.gz] [-ro reg_outputs] [-d list of paths] [-p sample??] [-v]</p>
 </div></blockquote>
 </section>
 <section id="usage-for-atlas-to-atlas-registration">
@@ -632,7 +660,8 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-tissue-registration">Usage for tissue registration:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-tissue-registration-with-brain-mask-and-bias-correction">Usage for tissue registration with brain mask and bias correction:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-tissue-registration-without-brain-mask-and-bias-correction">Usage for tissue registration without brain mask and bias correction:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-atlas-to-atlas-registration">Usage for atlas to atlas registration:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage-for-template-to-template-registration">Usage for template to template registration:</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>

@@ -412,6 +412,7 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="image_tools/toc.html">unravel.image_tools package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools/math.html">unravel.image_tools.math module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_tools/avg.html">unravel.image_tools.avg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_tools/bbox.html">unravel.image_tools.bbox module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="image_tools/extend.html">unravel.image_tools.extend module</a></li>
@@ -443,6 +444,27 @@
 <li class="toctree-l2"><a class="reference internal" href="utilities/rename.html">unravel.utilities.rename module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities/toggle_samples.html">unravel.utilities.toggle_samples module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities/points_compressor.html">unravel.utilities.points_compressor module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="abca/toc.html">unravel.abca package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="abca/cache.html">unravel.abca.cache module</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="abca/merfish/toc.html">unravel.abca.merfish package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="abca/merfish/merfish.html">unravel.abca.merfish module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/merfish/merfish_filter.html">unravel.abca.merfish_filter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/merfish/merfish_filter_by_mask.html">unravel.abca.merfish_filter_by_mask module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/merfish/merfish_cells_to_nii.html">unravel.abca.merfish_cells_to_nii module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/merfish/merfish_expression_to_nii.html">unravel.abca.merfish_expression_to_nii module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="abca/sunburst/toc.html">unravel.abca.sunburst package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/sunburst.html">unravel.abca.sunburst module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/sunburst_expression.html">unravel.abca.sunburst_expression module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/sunburst_filter.html">unravel.abca.sunburst_filter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/sunburst_filter_by_proportion.html">unravel.abca.sunburst_filter_by_proportion module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/mean_expression_color_scale.html">unravel.abca.mean_expression_color_scale module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/percent_expression_color_scale.html">unravel.abca.percent_expression_color_scale module</a></li>
+</ul>
+</details></li>
 </ul>
 </details></li>
 </ul>
@@ -522,7 +544,8 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="register/reg.html">unravel.register.reg module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="register/reg.html#usage-for-tissue-registration">Usage for tissue registration:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/reg.html#usage-for-tissue-registration-with-brain-mask-and-bias-correction">Usage for tissue registration with brain mask and bias correction:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="register/reg.html#usage-for-tissue-registration-without-brain-mask-and-bias-correction">Usage for tissue registration without brain mask and bias correction:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="register/reg.html#usage-for-atlas-to-atlas-registration">Usage for atlas to atlas registration:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="register/reg.html#usage-for-template-to-template-registration">Usage for template to template registration:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="register/reg.html#unravel.register.reg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
@@ -1161,6 +1184,16 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="image_tools/toc.html">unravel.image_tools package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="image_tools/math.html">unravel.image_tools.math module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="image_tools/math.html#usage-to-add-two-images-and-binarize-the-result">Usage to add two images and binarize the result:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_tools/math.html#usage-multiply-three-images-and-save-as-zarr">Usage multiply three images and save as Zarr:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_tools/math.html#usage-to-binarize-a-single-image-and-set-to-8-bit">Usage to binarize a single image and set to 8 bit:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_tools/math.html#unravel.image_tools.math.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_tools/math.html#unravel.image_tools.math.apply_operation"><code class="docutils literal notranslate"><span class="pre">apply_operation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_tools/math.html#unravel.image_tools.math.threshold_image"><code class="docutils literal notranslate"><span class="pre">threshold_image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="image_tools/math.html#unravel.image_tools.math.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="image_tools/avg.html">unravel.image_tools.avg module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="image_tools/avg.html#usage">Usage:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="image_tools/avg.html#unravel.image_tools.avg.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
@@ -1338,6 +1371,35 @@
 <li class="toctree-l3"><a class="reference internal" href="utilities/points_compressor.html#unravel.utilities.points_compressor.summarize_points"><code class="docutils literal notranslate"><span class="pre">summarize_points()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="utilities/points_compressor.html#unravel.utilities.points_compressor.points_compressor"><code class="docutils literal notranslate"><span class="pre">points_compressor()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="utilities/points_compressor.html#unravel.utilities.points_compressor.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="abca/toc.html">unravel.abca package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="abca/cache.html">unravel.abca.cache module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="abca/cache.html#usage">Usage:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/cache.html#usage-to-list-directories">Usage to list directories:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/cache.html#usage-to-list-subdirectories">Usage to list subdirectories:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/cache.html#usage-to-download-data">Usage to download data:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/cache.html#unravel.abca.cache.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/cache.html#unravel.abca.cache.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="abca/merfish/toc.html">unravel.abca.merfish package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="abca/merfish/merfish.html">unravel.abca.merfish module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/merfish/merfish_filter.html">unravel.abca.merfish_filter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/merfish/merfish_filter_by_mask.html">unravel.abca.merfish_filter_by_mask module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/merfish/merfish_cells_to_nii.html">unravel.abca.merfish_cells_to_nii module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/merfish/merfish_expression_to_nii.html">unravel.abca.merfish_expression_to_nii module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="abca/sunburst/toc.html">unravel.abca.sunburst package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/sunburst.html">unravel.abca.sunburst module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/sunburst_expression.html">unravel.abca.sunburst_expression module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/sunburst_filter.html">unravel.abca.sunburst_filter module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/sunburst_filter_by_proportion.html">unravel.abca.sunburst_filter_by_proportion module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/mean_expression_color_scale.html">unravel.abca.mean_expression_color_scale module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="abca/sunburst/percent_expression_color_scale.html">unravel.abca.percent_expression_color_scale module</a></li>
 </ul>
 </li>
 </ul>
