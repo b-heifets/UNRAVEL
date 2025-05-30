@@ -32,10 +32,11 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
-    reqs.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata by (e.g., ACB).', nargs='*', action=SM)
-    reqs.add_argument('-o', '--output', help='Output path for the filtered cell metadata. Default: None', default=None, action=SM)
+    reqs.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata or input.csv by (e.g., ACB).', nargs='*', action=SM)
+    reqs.add_argument('-o', '--output', help='Output path for the filtered df. Default: None', default=None, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-i', '--input', help='Input path for the cell metadata CSV file. If not provided, the script will load the default cell metadata.', default=None, action=SM)
     opts.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure \[default])', default='parcellation_substructure', nargs='*', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -85,7 +86,12 @@ def main():
     download_base = Path(args.base)
 
     # Load the cell metadata
-    cell_df = mf.load_cell_metadata(download_base)
+    if args.input:
+        cell_df = pd.read_csv(args.input)
+    else:
+        # If no input is provided, load the default cell metadata
+        print(f"Loading default cell metadata from {download_base}")
+        cell_df = mf.load_cell_metadata(download_base)
     print(f"\n    Initial cell metadata shape:\n    {cell_df.shape}")
     
     print(f'\n{cell_df=}\n')
