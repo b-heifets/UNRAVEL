@@ -36,7 +36,7 @@ def parse_args():
     reqs.add_argument('-o', '--output', help='Output path for the filtered df. Default: None', default=None, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='Input path for the cell metadata CSV file. If not provided, the script will load the default cell metadata.', default=None, action=SM)
+    opts.add_argument('-i', '--input', help='Input CSV file containing cell metadata (from MERFISH). If omitted, default metadata will be loaded.', default=None, action=SM)
     opts.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure \[default])', default='parcellation_substructure', nargs='*', action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -87,29 +87,31 @@ def main():
 
     # Load the cell metadata
     if args.input:
-        cell_df = pd.read_csv(args.input)
+        cell_df_joined = pd.read_csv(args.input)
+        print(f"\n    Cell metadata shape:\n    {cell_df_joined.shape}")
     else:
         # If no input is provided, load the default cell metadata
         print(f"Loading default cell metadata from {download_base}")
         cell_df = mf.load_cell_metadata(download_base)
-    print(f"\n    Initial cell metadata shape:\n    {cell_df.shape}")
+        print(f"\n    Initial cell metadata shape:\n    {cell_df.shape}")
     
-    print(f'\n{cell_df=}\n')
+        print(f'\n{cell_df=}\n')
 
-    # Add the reconstructed coordinates to the cell metadata
-    cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
+        # Add the reconstructed coordinates to the cell metadata
+        cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
 
-    # Add the classification levels and the corresponding color.
-    cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
+        # Add the classification levels and the corresponding color.
+        cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
 
-    # Add the cluster colors
-    cell_df_joined = mf.join_cluster_colors(cell_df_joined, download_base)
-    
-    # Add the parcellation annotation
-    cell_df_joined = mf.join_parcellation_annotation(cell_df_joined, download_base)
+        # Add the cluster colors
+        cell_df_joined = mf.join_cluster_colors(cell_df_joined, download_base)
+        
+        # Add the parcellation annotation
+        cell_df_joined = mf.join_parcellation_annotation(cell_df_joined, download_base)
 
-    # Add the parcellation color
-    cell_df_joined = mf.join_parcellation_color(cell_df_joined, download_base)
+        # Add the parcellation color
+        cell_df_joined = mf.join_parcellation_color(cell_df_joined, download_base)
+
     print("\n                                             First row:")
     print(cell_df_joined.iloc[0])
     print("\nCell metadata:")
@@ -117,6 +119,10 @@ def main():
 
     # Print column names
     print(f"\nColumn names: {cell_df_joined.columns}\n")
+
+    missing_cols = [col for col in args.columns if col not in cell_df_joined.columns]
+    if missing_cols:
+        raise ValueError(f"Missing expected column(s) in input file: {missing_cols}")
     
     # Filter the DataFrame
     filtered_df = filter_dataframe(cell_df_joined, args.columns, args.values)
