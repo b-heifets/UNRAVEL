@@ -4,11 +4,8 @@
 Use ``abca_scRNA-seq_filter`` or ``s_filter`` from UNRAVEL to filter ABCA scRNA-seq cells based on columns and values in the cell metadata.
 
 Notes:
-    - region_of_interest_acronym: ACA, AI, AUD, AUD-TEa-PERI-ECT, CB, CTXsp, 
-    ENT, HIP, HY, LSX, MB, MO-FRP, MOp, MY, OLF, P, PAL, PL-ILA-ORB, RHP, RSP, 
-    sAMY, SS-GU-VISC, SSp, STRd, STRv, TEa-PERI-ECT, TH, VIS, VIS-PTLp
-    - columns: cell_label, feature_matrix_label, region_of_interest_acronym, x, y,
-    cluster_alias, neurotransmitter, class, subclass, supertype, cluster, <genes>
+    - region_of_interest_acronym: ACA, AI, AUD, AUD-TEa-PERI-ECT, CB, CTXsp, ENT, HIP, HY, LSX, MB, MO-FRP, MOp, MY, OLF, P, PAL, PL-ILA-ORB, RHP, RSP, sAMY, SS-GU-VISC, SSp, STRd, STRv, TEa-PERI-ECT, TH, VIS, VIS-PTLp
+    - columns: cell_label, feature_matrix_label, region_of_interest_acronym, x, y, cluster_alias, neurotransmitter, class, subclass, supertype, cluster, <genes>
 
 Next steps:
     - ``abca_sunburst_expression``

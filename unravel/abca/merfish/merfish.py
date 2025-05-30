@@ -66,9 +66,8 @@ def load_cell_metadata(download_base):
     Returns:
     --------
     cell_df : pd.DataFrame
-        The cell metadata. Columns: 'brain_section_label', 'cluster_alias', 'average_correlation_score',
-       'feature_matrix_label', 'donor_label', 'donor_genotype', 'donor_sex',
-       'x_section', 'y_section', 'z_section'
+        The cell metadata. Columns: 'brain_section_label', 'cluster_alias', 'average_correlation_score', 'feature_matrix_label', 'donor_label', 'donor_genotype', 'donor_sex', 'x_section', 'y_section', 'z_section'
+
     """
     if Path(download_base).is_file():
         cell_metadata_path = download_base
@@ -97,8 +96,8 @@ def join_reconstructed_coords(cell_df, download_base):
     Returns:
     --------
     cell_joined : pd.DataFrame
-        The cell metadata joined with the reconstructed coordinates. Added columns: 'x_reconstructed', 'y_reconstructed', 'z_reconstructed',
-       'parcellation_index'
+        The cell metadata joined with the reconstructed coordinates. Added columns: 'x_reconstructed', 'y_reconstructed', 'z_reconstructed', 'parcellation_index'
+
     """
     reconstructed_coords_path = download_base / 'metadata/MERFISH-C57BL6J-638850-CCF/20231215/reconstructed_coordinates.csv'
     print(f"\n    Adding reconstructed coordinates from {reconstructed_coords_path}\n")
@@ -145,8 +144,8 @@ def join_cluster_colors(cell_df_joined, download_base):
     Returns:
     --------
     cell_df_joined : pd.DataFrame
-        The cell metadata joined with the cluster colors. Added columns: 'neurotransmitter_color', 'class_color', 'subclass_color',
-       'supertype_color', 'cluster_color'
+        The cell metadata joined with the cluster colors. Added columns: 'neurotransmitter_color', 'class_color', 'subclass_color', 'supertype_color', 'cluster_color'
+    
     """
     cluster_colors_path = download_base / 'metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_color.csv'
     print(f"\n    Adding cluster colors from {cluster_colors_path}\n")
@@ -169,8 +168,8 @@ def join_parcellation_annotation(cell_df_joined, download_base):
     Returns:
     --------
     cell_df_joined : pd.DataFrame
-        The cell metadata joined with the parcellation annotation. Added columns: 'parcellation_organ', 'parcellation_category', 'parcellation_division',
-       'parcellation_structure', 'parcellation_substructure'
+        The cell metadata joined with the parcellation annotation. Added columns: 'parcellation_organ', 'parcellation_category', 'parcellation_division', 'parcellation_structure', 'parcellation_substructure'
+    
     """
     parcellation_annotation_path = download_base / 'metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_acronym.csv'
     print(f"\n    Adding parcellation annotation from {parcellation_annotation_path}\n")
@@ -194,9 +193,8 @@ def join_parcellation_color(cell_df_joined, download_base):
     Returns:
     --------
     cell_df_joined : pd.DataFrame
-        The cell metadata joined with the parcellation color. Added columns: 'parcellation_organ_color', 'parcellation_category_color',
-       'parcellation_division_color', 'parcellation_structure_color',
-       'parcellation_substructure_color'
+        The cell metadata joined with the parcellation color. Added columns: 'parcellation_organ_color', 'parcellation_category_color', 'parcellation_division_color', 'parcellation_structure_color', 'parcellation_substructure_color'
+    
     """
     parcellation_color_path = download_base / 'metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_color.csv'
     print(f"\n    Adding parcellation color from {parcellation_color_path}\n")
