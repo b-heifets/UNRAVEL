@@ -1,9 +1,9 @@
-.. _unravel.abca.merfish:
+.. _unravel.abca.merfish.merfish:
 
-unravel.abca.merfish module
-===========================
+unravel.abca.merfish.merfish module
+===================================
 
-.. automodule:: unravel.abca.merfish
+.. automodule:: unravel.abca.merfish.merfish
    :members:
    :undoc-members:
    :show-inheritance:

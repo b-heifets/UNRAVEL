@@ -1,9 +1,9 @@
-.. _unravel.abca.sunburst_expression:
+.. _unravel.abca.sunburst.sunburst_expression:
 
-unravel.abca.sunburst_expression module
-=======================================
+unravel.abca.sunburst.sunburst_expression module
+================================================
 
-.. automodule:: unravel.abca.sunburst_expression
+.. automodule:: unravel.abca.sunburst.sunburst_expression
    :members:
    :undoc-members:
    :show-inheritance:
