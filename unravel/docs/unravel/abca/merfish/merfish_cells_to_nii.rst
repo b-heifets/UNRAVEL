@@ -1,9 +1,9 @@
-.. _unravel.abca.merfish_cells_to_nii:
+.. _unravel.abca.merfish.merfish_cells_to_nii:
 
-unravel.abca.merfish_cells_to_nii module
-========================================
+unravel.abca.merfish.merfish_cells_to_nii module
+================================================
 
-.. automodule:: unravel.abca.merfish_cells_to_nii
+.. automodule:: unravel.abca.merfish.merfish_cells_to_nii
    :members:
    :undoc-members:
    :show-inheritance:

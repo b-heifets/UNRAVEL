@@ -9,25 +9,12 @@ Inputs:
 Outputs:
     - .nii.gz, .tif series, or .zarr depending on the output path extension
 
-Supported Operations (with -n/--operation):
-    +     : Add
-    -     : Subtract
-    *     : Multiply
-    /     : Divide
-    //    : Floor divide
-    %     : Modulo
-    **    : Power
-    ==    : Equal (element-wise comparison)
-    !=    : Not equal
-    >     : Greater
-    >=    : Greater or equal
-    <     : Less
-    <=    : Less or equal
-    and   : Logical AND
-    or    : Logical OR
-    xor   : Logical XOR
-    not   : Logical NOT (applied to a single image to invert its boolean values)
-    abs_diff : Absolute difference
+Supported Operations:
+    - Use with the ``-n`` or ``--operation`` flag:
+    - Arithmetic: ``+``, ``-``, ``<asterisk>``, ``/``, ``//``, ``%``, ``<asterisk><asterisk>``  
+    - Comparison: ``==``, ``!=``, ``>``, ``>=``, ``<``, ``<=``  
+    - Logical: ``and``, ``or``, ``xor``, ``not``  
+    - Other: ``abs_diff`` (absolute difference)
 
 Thresholding:
     Optionally apply a threshold (lower and/or upper) to the result using:
@@ -42,7 +29,7 @@ Usage to add two images and binarize the result:
 
 Usage multiply three images and save as Zarr:
 --------------------------------------------
-    img_math -i A.nii.gz B.nii.gz C.nii.gz -n * -o result.zarr
+    img_math -i A.nii.gz B.nii.gz C.nii.gz -n <asterisk> -o result.zarr
 
 Usage to binarize a single image and set to 8 bit:
 --------------------------------------------------
@@ -89,19 +76,19 @@ def apply_operation(image1, image2, operation):
     Supported operations include addition, subtraction, multiplication, division, and more.
     Args:
     -----
-        image1 (np.ndarray): First image.
-        image2 (np.ndarray): Second image.
-        operation (str): The operation to perform. Supported operations are:
-        '+', '-', '*', '/', '//', '%', '**', '==', '!=', '>', '>=', '<', '<=', 'and', 'or', 'xor', 'not', 'abs_diff'.
+        - image1 (np.ndarray): First image.
+        - image2 (np.ndarray): Second image.
+        - operation (str): The operation to perform. Supported operations are:
+        - '+', '-', '<asterisk>', '/', '//', '%', '<asterisk><asterisk>', '==', '!=', '>', '>=', '<', '<=', 'and', 'or', 'xor', 'not', 'abs_diff'.
     
     Notes:
-    -----
+    ------
         - Element-wise comparison operations ('==', '!=', '>', '>=', '<', '<=') return a boolean array.
         - Logical operations ('and', 'or', 'xor', 'not') also return a boolean array.
         - The 'abs_diff' operation computes the absolute difference between the two images.
     
     Returns:
-    -------
+    --------
         np.ndarray: Resulting image after applying the operation.
     """
         
