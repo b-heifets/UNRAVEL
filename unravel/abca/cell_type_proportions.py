@@ -116,13 +116,6 @@ def main():
     if not args.counts:
         grouped_df = grouped_df.drop(columns='counts')
 
-    # # Transpose the DataFrame if requested
-    # if args.transpose:
-    #     grouped_df = grouped_df.T
-    #     grouped_df.columns = grouped_df.iloc[0]  # Set first row as new header
-    #     grouped_df = grouped_df[1:].reset_index(drop=True)
-    #     print(f'\nTransposed DataFrame:\n{grouped_df}\n')
-
     ontology_path = Path(__file__).parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'unique_cell_types.csv'
     if ontology_path.exists():
         ontology_df = pd.read_csv(ontology_path, usecols=[args.column])
@@ -131,22 +124,37 @@ def main():
 
         # Merge with the ontology DataFrame on the specified column
         grouped_df = pd.merge(ontology_df, grouped_df, left_on=args.column, right_on=args.column, how='left')
-
-        # Fill NaN values in 'proportions' with 0
         grouped_df['proportions'] = grouped_df['proportions'].fillna(0)
+        print(f'\nMerged cell proportions DataFrame with ontology DataFrame:\n{grouped_df}\n')
 
-        # Rename values in the specified column to match the ontology (spaces, dashes, and slashes to dots)
-        grouped_df[args.column] = grouped_df[args.column].str.replace(' ', '.', regex=False).str.replace('-', '.', regex=False).str.replace('/', '.', regex=False)
+        # Filter to keep only entries present in the filtered cells_df
+        if args.region_col and args.region:
+            grouped_df = grouped_df[grouped_df[args.column].isin(cells_df[args.column])]
+            print(f'\nFiltered merged DataFrame by region ({args.region}):\n{grouped_df[[args.column, "proportions"]].head()}\n')
+
+        # Rename values in the specified column (spaces, dashes,  slashes to dots, and remove numerical prefixes)
+        grouped_df[args.column] = (
+            grouped_df[args.column]
+            .str.replace(' ', '.', regex=False)
+            .str.replace('-', '.', regex=False)
+            .str.replace('/', '.', regex=False)
+            .str.replace(r'^\d+\.', '', regex=True)
+        )
 
         # Sort by the specified column
         grouped_df = grouped_df.sort_values(by=args.column).reset_index(drop=True)
 
-        print(f'\nMerged DataFrame with ontology:\n{grouped_df}\n')
+        print(f'\nRenamed cell types and sorted merged DataFrame:\n{grouped_df}\n')
 
     else:
         print(f'Ontology file not found at {ontology_path}. Proceeding without merging.')
 
-    import sys ; sys.exit()
+    # Transpose the DataFrame if requested
+    if args.transpose:
+        grouped_df = grouped_df.T
+        grouped_df.columns = grouped_df.iloc[0]  # Set first row as new header
+        grouped_df = grouped_df[1:].reset_index(drop=True)
+        print(f'\nTransposed DataFrame:\n{grouped_df}\n')
 
     # Save the output to a CSV file
     if args.output:
