@@ -584,34 +584,33 @@
 <dl class="py function">
 <dt class="sig sig-object py" id="unravel.image_tools.math.apply_operation">
 <span class="sig-prename descclassname"><span class="pre">unravel.image_tools.math.</span></span><span class="sig-name descname"><span class="pre">apply_operation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">operation</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/image_tools/math.html#apply_operation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.image_tools.math.apply_operation" title="Link to this definition">#</a></dt>
-<dd><p>Apply a mathematical operation to two ndarrays (images).
-Supported operations include addition, subtraction, multiplication, division, and more.
-Args:
-—–</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>image1 (np.ndarray): First image.</p></li>
-<li><p>image2 (np.ndarray): Second image.</p></li>
-<li><p>operation (str): The operation to perform. Supported operations are:</p></li>
-<li><p>‘+’, ‘-’, ‘&lt;asterisk&gt;’, ‘/’, ‘//’, ‘%’, ‘&lt;asterisk&gt;&lt;asterisk&gt;’, ‘==’, ‘!=’, ‘&gt;’, ‘&gt;=’, ‘&lt;’, ‘&lt;=’, ‘and’, ‘or’, ‘xor’, ‘not’, ‘abs_diff’.</p></li>
+<dd><p>Apply a mathematical operation to two ndarrays (images).</p>
+<p>Supported operations include addition, subtraction, multiplication, division, and more.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image1</strong> (<em>np.ndarray</em>) – First image.</p></li>
+<li><p><strong>image2</strong> (<em>np.ndarray</em>) – Second image.</p></li>
+<li><p><strong>operation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The operation to perform. Supported operations are:
+<code class="docutils literal notranslate"><span class="pre">+</span></code>, <code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">//</span></code>, <code class="docutils literal notranslate"><span class="pre">%</span></code>, <code class="docutils literal notranslate"><span class="pre">**</span></code>, <code class="docutils literal notranslate"><span class="pre">==</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>,
+<code class="docutils literal notranslate"><span class="pre">and</span></code>, <code class="docutils literal notranslate"><span class="pre">or</span></code>, <code class="docutils literal notranslate"><span class="pre">xor</span></code>, <code class="docutils literal notranslate"><span class="pre">not</span></code>, <code class="docutils literal notranslate"><span class="pre">abs_diff</span></code>.</p></li>
 </ul>
-</div></blockquote>
-<section id="notes">
-<h2>Notes:<a class="headerlink" href="#notes" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><ul class="simple">
-<li><p>Element-wise comparison operations (‘==’, ‘!=’, ‘&gt;’, ‘&gt;=’, ‘&lt;’, ‘&lt;=’) return a boolean array.</p></li>
-<li><p>Logical operations (‘and’, ‘or’, ‘xor’, ‘not’) also return a boolean array.</p></li>
-<li><p>The ‘abs_diff’ operation computes the absolute difference between the two images.</p></li>
+</dd>
+</dl>
+<p class="rubric">Notes</p>
+<ul class="simple">
+<li><p>Element-wise comparison operations (<code class="docutils literal notranslate"><span class="pre">==</span></code>, <code class="docutils literal notranslate"><span class="pre">!=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>) return a boolean array.</p></li>
+<li><p>Logical operations (<code class="docutils literal notranslate"><span class="pre">and</span></code>, <code class="docutils literal notranslate"><span class="pre">or</span></code>, <code class="docutils literal notranslate"><span class="pre">xor</span></code>, <code class="docutils literal notranslate"><span class="pre">not</span></code>) also return a boolean array.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">abs_diff</span></code> operation computes the absolute difference between the two images.</p></li>
 </ul>
-</div></blockquote>
-</section>
-<section id="returns">
-<h2>Returns:<a class="headerlink" href="#returns" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>np.ndarray: Resulting image after applying the operation.</p>
-</div></blockquote>
-</section>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Resulting image after applying the operation.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>np.ndarray</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

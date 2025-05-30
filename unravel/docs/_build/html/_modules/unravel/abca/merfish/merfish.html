@@ -422,9 +422,8 @@
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
 <span class="sd">    cell_df : pd.DataFrame</span>
-<span class="sd">        The cell metadata. Columns: &#39;brain_section_label&#39;, &#39;cluster_alias&#39;, &#39;average_correlation_score&#39;,</span>
-<span class="sd">       &#39;feature_matrix_label&#39;, &#39;donor_label&#39;, &#39;donor_genotype&#39;, &#39;donor_sex&#39;,</span>
-<span class="sd">       &#39;x_section&#39;, &#39;y_section&#39;, &#39;z_section&#39;</span>
+<span class="sd">        The cell metadata. Columns: &#39;brain_section_label&#39;, &#39;cluster_alias&#39;, &#39;average_correlation_score&#39;, &#39;feature_matrix_label&#39;, &#39;donor_label&#39;, &#39;donor_genotype&#39;, &#39;donor_sex&#39;, &#39;x_section&#39;, &#39;y_section&#39;, &#39;z_section&#39;</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">download_base</span><span class="p">)</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
         <span class="n">cell_metadata_path</span> <span class="o">=</span> <span class="n">download_base</span>
@@ -456,8 +455,8 @@
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
 <span class="sd">    cell_joined : pd.DataFrame</span>
-<span class="sd">        The cell metadata joined with the reconstructed coordinates. Added columns: &#39;x_reconstructed&#39;, &#39;y_reconstructed&#39;, &#39;z_reconstructed&#39;,</span>
-<span class="sd">       &#39;parcellation_index&#39;</span>
+<span class="sd">        The cell metadata joined with the reconstructed coordinates. Added columns: &#39;x_reconstructed&#39;, &#39;y_reconstructed&#39;, &#39;z_reconstructed&#39;, &#39;parcellation_index&#39;</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">reconstructed_coords_path</span> <span class="o">=</span> <span class="n">download_base</span> <span class="o">/</span> <span class="s1">&#39;metadata/MERFISH-C57BL6J-638850-CCF/20231215/reconstructed_coordinates.csv&#39;</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Adding reconstructed coordinates from </span><span class="si">{</span><span class="n">reconstructed_coords_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -510,8 +509,8 @@
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
 <span class="sd">    cell_df_joined : pd.DataFrame</span>
-<span class="sd">        The cell metadata joined with the cluster colors. Added columns: &#39;neurotransmitter_color&#39;, &#39;class_color&#39;, &#39;subclass_color&#39;,</span>
-<span class="sd">       &#39;supertype_color&#39;, &#39;cluster_color&#39;</span>
+<span class="sd">        The cell metadata joined with the cluster colors. Added columns: &#39;neurotransmitter_color&#39;, &#39;class_color&#39;, &#39;subclass_color&#39;, &#39;supertype_color&#39;, &#39;cluster_color&#39;</span>
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">cluster_colors_path</span> <span class="o">=</span> <span class="n">download_base</span> <span class="o">/</span> <span class="s1">&#39;metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_color.csv&#39;</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Adding cluster colors from </span><span class="si">{</span><span class="n">cluster_colors_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -537,8 +536,8 @@
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
 <span class="sd">    cell_df_joined : pd.DataFrame</span>
-<span class="sd">        The cell metadata joined with the parcellation annotation. Added columns: &#39;parcellation_organ&#39;, &#39;parcellation_category&#39;, &#39;parcellation_division&#39;,</span>
-<span class="sd">       &#39;parcellation_structure&#39;, &#39;parcellation_substructure&#39;</span>
+<span class="sd">        The cell metadata joined with the parcellation annotation. Added columns: &#39;parcellation_organ&#39;, &#39;parcellation_category&#39;, &#39;parcellation_division&#39;, &#39;parcellation_structure&#39;, &#39;parcellation_substructure&#39;</span>
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parcellation_annotation_path</span> <span class="o">=</span> <span class="n">download_base</span> <span class="o">/</span> <span class="s1">&#39;metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_acronym.csv&#39;</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Adding parcellation annotation from </span><span class="si">{</span><span class="n">parcellation_annotation_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -565,9 +564,8 @@
 <span class="sd">    Returns:</span>
 <span class="sd">    --------</span>
 <span class="sd">    cell_df_joined : pd.DataFrame</span>
-<span class="sd">        The cell metadata joined with the parcellation color. Added columns: &#39;parcellation_organ_color&#39;, &#39;parcellation_category_color&#39;,</span>
-<span class="sd">       &#39;parcellation_division_color&#39;, &#39;parcellation_structure_color&#39;,</span>
-<span class="sd">       &#39;parcellation_substructure_color&#39;</span>
+<span class="sd">        The cell metadata joined with the parcellation color. Added columns: &#39;parcellation_organ_color&#39;, &#39;parcellation_category_color&#39;, &#39;parcellation_division_color&#39;, &#39;parcellation_structure_color&#39;, &#39;parcellation_substructure_color&#39;</span>
+<span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parcellation_color_path</span> <span class="o">=</span> <span class="n">download_base</span> <span class="o">/</span> <span class="s1">&#39;metadata/Allen-CCF-2020/20230630/views/parcellation_to_parcellation_term_membership_color.csv&#39;</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Adding parcellation color from </span><span class="si">{</span><span class="n">parcellation_color_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
