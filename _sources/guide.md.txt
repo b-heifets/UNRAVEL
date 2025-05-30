@@ -310,6 +310,7 @@ uc -m
 :::
 
 ::: {tab-item} Image tools
+- [**img_math**](unravel.image_tools.math): Perform mathematical operations on 3D images.
 - [**img_avg**](unravel.image_tools.avg): Average NIfTI images.
 - [**img_unique**](unravel.image_tools.unique_intensities): Find unique intensities in images.
 - [**img_max**](unravel.image_tools.max): Print the max intensity value in an image.
@@ -424,6 +425,7 @@ uc -m
 :::
 
 :::{tab-item} Image tools
+- [**img_math**](unravel.image_tools.math): Perform mathematical operations on 3D images.
 - [**img_avg**](unravel.image_tools.avg): Average NIfTI images.
 - [**img_unique**](unravel.image_tools.unique_intensities): Find unique intensities in images.
 - [**img_max**](unravel.image_tools.max): Print the max intensity value in an image.

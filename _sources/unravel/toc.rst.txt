@@ -19,6 +19,7 @@ Subpackages
    image_io/toc
    image_tools/toc
    utilities/toc
+   abca/toc
 
 Module contents
 ---------------
