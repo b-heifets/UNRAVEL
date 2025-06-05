@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 
 """
-Download a specific level of STPT .zarr datasets from the Allen Genetic Tools Atlas.
+Use ``gta_download_STPT_zarr`` (``gta_dl``) from UNRAVEL to download STPT Zarr images from the Allen Genetic Tools Atlas (GTA).
+
+Prereqs:
+    - Optional: Use ``gta_find_STPT_brains`` to search for STPT brains of interest and generate a CSV file with S3 paths.
 
 Usage given a list of experiment IDs:
 -------------------------------------
-    ./download_zarr_level_N.py -e <exp_id1> <exp_id2> ... -l <level> -o <output_dir> [-w <workers>]
+    gta_dl -e <exp_id1> <exp_id2> ... -l <level> -o <output_dir> [-w <workers>]
 
 Usage given a CSV file with S3 paths:
 -------------------------------------
-    ./download_zarr_level_N.py -c <path_to_csv> -l <level> -o <output_dir> [-pc <path_column>] [-w <workers>]
+    gta_dl -c <path_to_csv> -l <level> -o <output_dir> [-pc <path_column>] [-w <workers>]
 """
 
 import re
@@ -22,29 +25,25 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import initialize_progress_bar, log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+from unravel.core.utils import initialize_progress_bar, log_command, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-e', '--exp_ids', help='Allen Genetic Tools Atlas experiment ID to download (e.g., 1342775164)', nargs='*', action=SM)
+    opts.add_argument('-e', '--exp_ids', help='GTA experiment ID to download (e.g., 1342775164)', nargs='*', action=SM)
     opts.add_argument('-l', '--level', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts.add_argument('-o', '--output', help='Output directory. Default: GTA_STPT_level_<level>', default=None, action=SM)
     opts.add_argument('-c', '--csv', help='Path to a CSV file with experiment IDs. If provided, will read IDs from this file instead of command line.', default=None, action=SM)
-    opts.add_argument('-pc', '--path_column', help='Column name in the CSV file that contains the s3 paths to the zarr files. Default: "STPT Data File Path"', default="STPT Data File Path", action=SM)
+    opts.add_argument('-col', '--column', help='CSV column name w/ either the "Image Series ID" or Zarr s3 paths. Default: "File URI"', default="File URI", action=SM)
     opts.add_argument('-w', '--workers', help='Number of parallel downloads', type=int, default=10, action=SM)
     opts.add_argument('-f', '--force', help='Force download even if the zarr file already exists. Default: False', action='store_true', default=False)
     opts.add_argument('--full', help='Download the full Zarr root instead of a specific level. ⚠️ This can be >200 GB per brain!', action='store_true', default=False)
-
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
-
-# TODO: Test downloading all STPT brains at level 9
-# TODO: Make a script for search for STPT brains of interest (download current SpecimenFileManifest.csv and SpecimenMetadata.csv)
 
 def get_s3_paths_from_csv(csv_path, path_column):
     """
@@ -67,11 +66,15 @@ def get_s3_paths_from_csv(csv_path, path_column):
     if path_column not in df.columns:
         raise ValueError(f"Column '{path_column}' not found in the CSV file.")
     path_list = df[path_column].dropna().tolist()
-    path_list = [path.rstrip('/') for path in path_list] # Remove trailing slashes
+    path_list = [str(path).rstrip('/') for path in path_list] # Remove trailing slashes
     return path_list
 
 def extract_exp_id(s3_path):
-    match = re.search(r'/(\d{9,})/', s3_path)  # Match 9 or more digits between slashes
+    # if there are slashes in the path, extract the first occurrence of 9 or more digits
+    if s3_path.startswith('s3://'):
+        match = re.search(r'/(\d{9,})/', s3_path)  # Match 9 or more digits between slashes
+    else:
+        match = re.search(r'(\d{9,})', s3_path)  # Match 9 or more digits anywhere in the string
     return match.group(1) if match else None
 
 def download_GTA_STPT_zarr(exp_id, level, output_dir, force=False, full=False, verbose=False):
@@ -196,13 +199,13 @@ def main():
 
     if args.csv:
         # If a CSV file is provided, read experiment IDs from it
-        s3_paths = get_s3_paths_from_csv(args.csv, args.path_column)
+        s3_paths = get_s3_paths_from_csv(args.csv, args.column)
         exp_ids = [extract_exp_id(path) for path in s3_paths]
         exp_ids = [eid for eid in exp_ids if eid is not None]
 
         # If there were paths with no valid experiment IDs, print a warning
         if not exp_ids:
-            print(f"No valid experiment IDs found in the CSV file '{args.csv}'. Please check the '{args.path_column}' column.")
+            print(f"No valid experiment IDs found in the CSV file '{args.csv}'. Please check the '{args.column}' column.")
             print("Experiment IDs are extracted using the regex pattern: r'/(\d{9,})/'")
 
     elif len(args.exp_ids) > 0:
@@ -218,6 +221,9 @@ def main():
         output_dir = Path(args.output)
     else:
         output_dir = Path(f"GTA_STPT_level_{args.level}")
+
+    # Get uniq experiment IDs
+    exp_ids = list(set(exp_ids))  # Remove duplicates
 
     # Print message about downloading the datasets
     print(f"\n[bold green]Downloading {len(exp_ids)} Zarr datasets at level {args.level} to {output_dir}...[/bold green]\n")
