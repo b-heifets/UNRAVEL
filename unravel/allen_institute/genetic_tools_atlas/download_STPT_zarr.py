@@ -4,17 +4,19 @@
 Use ``gta_download_STPT_zarr`` (``gta_dl``) from UNRAVEL to download STPT Zarr images from the Allen Genetic Tools Atlas (GTA).
 
 Prereqs:
-    - Optional: Use ``gta_find_STPT_brains`` to search for STPT brains of interest and generate a CSV file with S3 paths.
-
-
-
+    - Find STPT experiments at https://knowledge.brain-map.org/data/7CVKSF7QGAKIQ8LM5LC/specimens
+    - Filter by 'Data Modality' = 'STPT'
+    - Optional: Apply other filters of interest
+    - 'Download Data' --> 'Metadata Table' or 'Raw File Manifest' to get a CSV file with experiment IDs or S3 paths, respectively.
+    - Alternatively, content from the MapMySections submission sheet can be copied to a CSV file (-col 'STPT Data File Path')
+    
 Usage given a list of experiment IDs:
 -------------------------------------
-    gta_dl -e <exp_id1> <exp_id2> ... -l <level> -o <output_dir> [-w <workers>]
+    gta_dl -e <exp_id1> <exp_id2> ... -l <level> [-o <output_dir>] [-w <workers>]
 
-Usage given a CSV file with S3 paths:
--------------------------------------
-    gta_dl -c <path_to_csv> -l <level> -o <output_dir> [-pc <path_column>] [-w <workers>]
+Usage given a CSV file with exp IDs or S3 paths:
+------------------------------------------------
+    gta_dl -c <path_to_csv> -l <level> [-col <column>] [-o <output_dir>] [-w <workers>]
 """
 
 import re
