@@ -6,6 +6,8 @@ Use ``gta_download_STPT_zarr`` (``gta_dl``) from UNRAVEL to download STPT Zarr i
 Prereqs:
     - Optional: Use ``gta_find_STPT_brains`` to search for STPT brains of interest and generate a CSV file with S3 paths.
 
+
+
 Usage given a list of experiment IDs:
 -------------------------------------
     gta_dl -e <exp_id1> <exp_id2> ... -l <level> -o <output_dir> [-w <workers>]
