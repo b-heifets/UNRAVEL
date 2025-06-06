@@ -5,6 +5,10 @@ Use ``./RNAseq_expression`` from UNRAVEL to extract expression data for specific
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.html
+    - Only the first gene in the list will be used to name the output file.
+    - For humans, the cell type must be specified (Neurons or Nonneurons).
+    - For mice, the region must be specified (OLF, CTXsp, Isocortex-1, Isocortex-2, HPF, STR, PAL, TH, HY, MB, MY, P, CB).
+    - The output will be a CSV file with the expression data for the selected genes, indexed by cell_label.
 
 Usage:
 ------
@@ -205,9 +209,11 @@ def main():
 
     download_base = Path(args.base)
 
-    if args.species == 'human' and args.cell_type is None:
-        print("\n    [red1]Please provide a cell type (Neurons or Nonneurons) for humans\n")
-        return
+    valid_cell_types = {"Neurons", "Nonneurons"}
+    if args.species == 'human':
+        if args.cell_type is None or args.cell_type not in valid_cell_types:
+            print(f"\n    [red1]Error: Please provide a valid cell type: {valid_cell_types}\n")
+            return
     if args.species == 'mouse' and args.region is None:
         print("\n    [red1]Please provide a region for mice\n")
         return
@@ -231,7 +237,10 @@ def main():
     if args.species == 'mouse':
         output_file = output_folder / f"WMB-10Xv3_{args.genes[0]}_expression_data_{args.region}_{args.data_type}.csv"
     else:
-        output_file = output_folder / f"WHB-10Xv3_{args.genes[0]}_expression_data_{args.cell_type}_{args.data_type}.csv"
+        if args.region is None:
+            output_file = output_folder / f"WHB-10Xv3_{args.genes[0]}_expression_data_{args.cell_type}_{args.data_type}.csv"
+        else:
+            output_file = output_folder / f"WHB-10Xv3_{args.genes[0]}_expression_data_{args.cell_type}_{args.region}_{args.data_type}.csv"
 
     expression_data.to_csv(output_file, index=False)
     print(f"\n    Saved expression data for gene {args.genes[0]} to {output_file}\n")
