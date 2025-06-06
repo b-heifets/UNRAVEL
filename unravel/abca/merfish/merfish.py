@@ -107,23 +107,31 @@ def join_reconstructed_coords(cell_df, download_base):
     cell_df_joined = cell_df.join(reconstructed_coords_df, how='inner')
     return cell_df_joined
 
-def join_cluster_details(cell_df_joined, download_base):
+def join_cluster_details(cell_df_joined, download_base, species='mouse'):
     """
-    Join the cell metadata with the cluster details and colors (using cluster_alias).
+    Join the cell metadata with the cluster details (using cluster_alias).
 
     Parameters:
     -----------
     cell_df_joined : pd.DataFrame
         The cell metadata joined with the reconstructed coordinates.
     download_base : Path
-        The root directory of the MERFISH data.
+        The root directory of the Allen Brain Cell Atlas data.
 
     Returns:
     --------
     cell_df_joined : pd.DataFrame
-        The cell metadata joined with the cluster details and colors. Added columns: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
+        The cell metadata joined with the cluster details. 
+        Added mouse columns: 'neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'
+        Added human columns: 'neurotransmitter', 'supercluster', 'cluster', 'subcluster'
     """
-    cluster_details_path = download_base / 'metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_pivoted.csv'
+    if species == 'mouse':
+        cluster_details_path = download_base / 'metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_pivoted.csv'
+    elif species == 'human':
+        cluster_details_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_cluster_to_cluster_annotation_membership_pivoted.csv'
+    else:
+        raise ValueError(f"Species '{species}' not supported. Use 'mouse' or 'human'.")
+    
     print(f"\n    Adding cluster details from {cluster_details_path}\n")
     cluster_details = pd.read_csv(cluster_details_path)
     cluster_details.set_index('cluster_alias', inplace=True)
