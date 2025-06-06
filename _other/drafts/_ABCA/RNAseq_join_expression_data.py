@@ -56,6 +56,16 @@ def main():
 
     print(cell_df)
 
+    # Classify cells based on their metadata
+    cell_df = mf.join_cluster_details(cell_df, download_base, args.species)  # This could be moved to the RNAseq_expression.py script
+
+    print(cell_df)
+
+    # Add color info
+    cell_df = mf.join_cluster_colors(cell_df, download_base, args.species)
+
+    print(cell_df)
+
     # Load the input expression data (from RNAseq_expression.py)
     exp_df = pd.read_csv(args.input, dtype={'cell_label': str})
 
