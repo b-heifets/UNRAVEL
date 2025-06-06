@@ -56,7 +56,7 @@ def parse_args():
 
 def load_cell_metadata(download_base):
     """
-    Load the cell metadata from the MERFISH data (using cell_label as the index).
+    Load the cell metadata DataFrame from the MERFISH data (using cell_label as the index).
 
     Parameters:
     -----------
@@ -109,12 +109,12 @@ def join_reconstructed_coords(cell_df, download_base):
 
 def join_cluster_details(cell_df_joined, download_base, species='mouse'):
     """
-    Join the cell metadata with the cluster details (using cluster_alias).
+    Join the cell metadata DataFrame with the cluster details (using 'cluster_alias').
 
     Parameters:
     -----------
     cell_df_joined : pd.DataFrame
-        The cell metadata joined with the reconstructed coordinates.
+        The cell metadata DataFrame [joined with other metadata].
     download_base : Path
         The root directory of the Allen Brain Cell Atlas data.
 
@@ -138,24 +138,29 @@ def join_cluster_details(cell_df_joined, download_base, species='mouse'):
     cell_df_joined = cell_df_joined.join(cluster_details, on='cluster_alias')
     return cell_df_joined
 
-def join_cluster_colors(cell_df_joined, download_base):
+def join_cluster_colors(cell_df_joined, download_base, species='mouse'):
     """
-    Join the cell metadata with the cluster colors (using cluster_alias).
+    Join the cell metadata DataFrame with the cluster colors (using 'cluster_alias').
 
     Parameters:
     -----------
     cell_df_joined : pd.DataFrame
-        The cell metadata joined with the cluster details.
+        The cell metadata DataFrame [joined with other metadata].
     download_base : Path
-        The root directory of the MERFISH data.
+        The root directory of the Allen Brain Cell Atlas data.
 
     Returns:
     --------
     cell_df_joined : pd.DataFrame
-        The cell metadata joined with the cluster colors. Added columns: 'neurotransmitter_color', 'class_color', 'subclass_color', 'supertype_color', 'cluster_color'
+        The cell metadata joined with the cluster colors. 
+        Added mouse columns: 'neurotransmitter_color', 'class_color', 'subclass_color', 'supertype_color', 'cluster_color'
+        Added human columns: 'neurotransmitter_color', 'supercluster_color', 'cluster_color', 'subcluster_color'
     
     """
-    cluster_colors_path = download_base / 'metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_color.csv'
+    if species == 'mouse':
+        cluster_colors_path = download_base / 'metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_color.csv'
+    elif species == 'human':
+        cluster_colors_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_cluster_to_cluster_annotation_membership_color.csv'
     print(f"\n    Adding cluster colors from {cluster_colors_path}\n")
     cluster_colors = pd.read_csv(cluster_colors_path)
     cluster_colors.set_index('cluster_alias', inplace=True)
@@ -164,7 +169,7 @@ def join_cluster_colors(cell_df_joined, download_base):
 
 def join_parcellation_annotation(cell_df_joined, download_base):
     """
-    Join the cell metadata with the parcellation annotation (using parcellation_index).
+    Join the cell metadata DataFrame with the parcellation annotation (using parcellation_index).
 
     Parameters:
     -----------
@@ -189,7 +194,7 @@ def join_parcellation_annotation(cell_df_joined, download_base):
 
 def join_parcellation_color(cell_df_joined, download_base):
     """
-    Join the cell metadata with the parcellation color (using parcellation_index).
+    Join the cell metadata DataFrame with the parcellation color (using parcellation_index).
 
     Parameters:
     -----------
@@ -214,7 +219,7 @@ def join_parcellation_color(cell_df_joined, download_base):
 
 def filter_brain_section(cell_df, slice_index):
     """
-    Filter the cell metadata for a specific brain section (using brain_section_label).
+    Filter the cell metadata DataFrame for a specific brain section (using brain_section_label).
     
     Parameters:
     -----------
