@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 """
-This script processes tabular data by either removing specified columns 
-or keeping only specified columns and dropping all others.
+This removes or keeps specified columns in a CSV or XLSX file.
 
-Example use cases:
-- Drop unnecessary metadata columns to reduce file size.
-- Retain only essential columns from large datasets.
+Usage:
+------
+    filter_columns.py -i "path/to/data/*.csv" [-d col1 col2 ... or -k col3 col4 ...] [-o output_file.csv] [-v]
 
 """
 
@@ -27,18 +26,18 @@ def parse_args():
     reqs.add_argument('-i', '--input', help="Glob pattern to match CSV or XLSX files", required=True, action=SM)
 
     mode = parser.add_mutually_exclusive_group(required=True)
-    mode.add_argument('-d', '--drop_cols', nargs='+', help="Columns to drop", action=SM)
-    mode.add_argument('-k', '--keep_cols', nargs='+', help="Columns to keep (drops all others)", action=SM)
+    mode.add_argument('-d', '--drop_cols', help="Columns to drop", nargs='*', action=SM)
+    mode.add_argument('-k', '--keep_cols', help="Columns to keep (drops all others)", nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-od', '--output_dir', help="Directory to save processed files", default="processed_files", action=SM)
+    opts.add_argument('-o', '--output', help="Output file path/name. Default: <input>_cols_filtered.csv", default=None, action=SM)
     opts.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
 
-# TODO complete __doc__ string and add to the main repo
+# TODO: add to the main repo
 
-def process_columns(file_path, drop_cols, keep_cols, output_dir):
+def filter_columns(file_path, drop_cols, keep_cols, output_path=None):
     """
     Load a CSV or XLSX file, process columns (drop/keep), and save the modified file.
 
@@ -53,8 +52,8 @@ def process_columns(file_path, drop_cols, keep_cols, output_dir):
     keep_cols : list or None
         List of column names to keep (all others will be dropped).
 
-    output_dir : str
-        Path to the output directory to save the processed file.
+    output_path : str or None
+        Path to save the processed file. If None, saves in the same directory with "_cols_filtered" suffix.
     """
     # Determine file extension and read the file accordingly
     if file_path.lower().endswith('.csv'):
@@ -85,19 +84,21 @@ def process_columns(file_path, drop_cols, keep_cols, output_dir):
         else:
             print(f"[yellow]No matching columns found in {file_path}. Skipping...[/yellow]")
 
-    # Save the processed dataframe
-    output_dir = Path(output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    # Input file extension check
+    if file_extension not in [".csv", ".xlsx"]:
+        print(f"[bold red]Unsupported file format: {file_extension}[/bold red]")
+        return
 
-    suffix = "_filtered" if drop_cols else "_selected"
-    output_path = output_dir / str(Path(file_path).stem + suffix + file_extension)
-    
+    # Save the processed dataframe
+    if output_path is None:
+        output_path = Path(file_path).parent / f"{Path(file_path).stem}_cols_filtered{file_extension}"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     if file_extension == ".csv":
         df.to_csv(output_path, index=False)
     else:
         df.to_excel(output_path, index=False)
 
-    print(f"[green]Processed file saved to:[/green] {output_path}")
+    print(f"[green]Filtered data saved to: {output_path}[/green]")
 
 @log_command
 def main():
@@ -112,7 +113,7 @@ def main():
         if Path(file_path).name.startswith("~"):
             continue
         
-        process_columns(file_path, args.drop_cols, args.keep_cols, args.output_dir)
+        filter_columns(file_path, args.drop_cols, args.keep_cols, args.output)
 
     verbose_end_msg()
 
