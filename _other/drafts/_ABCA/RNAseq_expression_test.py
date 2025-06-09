@@ -25,7 +25,6 @@ Usage for mice:
 
 from typing import List
 import anndata
-import numpy as np
 import pandas as pd
 from pathlib import Path
 from rich import print
@@ -141,40 +140,43 @@ def load_scRNAseq_expression_data(
 
     # Path to expression matrix
     if species == 'mouse':
-        expression_path = download_base / f"expression_matrices/WMB-10Xv3/20230630/WMB-10Xv3-{region}-{data_type}.h5ad"
+        file_prefix = f"WMB-10Xv3-{region}"
+        expression_path = download_base / f"expression_matrices/WMB-10Xv3/20230630/{file_prefix}-{data_type}.h5ad"
     else:
-        expression_path = download_base / f"expression_matrices/WHB-10Xv3/20240330/WHB-10Xv3-{cell_type}-{data_type}.h5ad"
+        file_prefix = f"WHB-10Xv3-{cell_type}"
+        expression_path = download_base / f"expression_matrices/WHB-10Xv3/20240330/{file_prefix}-{data_type}.h5ad"
 
     if not expression_path.exists():
         raise FileNotFoundError(f"Expression data not found at {expression_path}")
 
     print(f"    Opening {expression_path} in backed mode...")
 
-    # Open AnnData in backed mode
+    # Open in backed mode
     adata = anndata.read_h5ad(expression_path, backed="r")
 
-    # Match cells and genes using index positions
-    matched_cells = all_cells.index.intersection(adata.obs_names)
-    matched_genes = gene_filtered.index.intersection(adata.var_names)
+    # Match genes first — much faster
+    matched_gene_ids = gene_filtered.index.intersection(adata.var_names)
+    if len(matched_gene_ids) == 0:
+        raise ValueError("None of the selected genes found in the expression matrix.")
 
-    if len(matched_cells) == 0 or len(matched_genes) == 0:
-        raise ValueError("No matching cells or genes found.")
+    print(f"    Found {len(matched_gene_ids)} genes in expression matrix")
 
-    print(f"    Matched {len(matched_cells)} cells and {len(matched_genes)} genes")
+    # Subset genes only, load into memory (still includes all cells)
+    adata_subset = adata[:, matched_gene_ids].to_memory()
 
-    # Convert names to positions
-    cell_idx = [adata.obs_names.get_loc(c) for c in matched_cells]
-    gene_idx = [adata.var_names.get_loc(g) for g in matched_genes]
+    # Now match cells
+    matched_cells = all_cells.index.intersection(adata_subset.obs_names)
+    if len(matched_cells) == 0:
+        raise ValueError("No matching cells found between metadata and expression matrix")
 
-    # Read only relevant slice from backed .X
-    print("    Reading subset of data from disk...")
-    X = adata.X[cell_idx, :][:, gene_idx]  # this is still an h5py array, will be read lazily
+    print(f"    Found {len(matched_cells)} cells with matching metadata")
 
-    # Convert to dense array (efficient since it's a small subset)
-    X = np.asarray(X)
+    # Subset cells (now fully in memory)
+    adata_subset = adata_subset[matched_cells, :]
 
-    # Build final DataFrame
-    df = pd.DataFrame(X, index=matched_cells, columns=gene_filtered.loc[matched_genes, "gene_symbol"].values)
+    # Convert to dataframe
+    df = adata_subset.to_df()
+    df.columns = gene_filtered.loc[matched_gene_ids, "gene_symbol"].values
     df.index.name = "cell_label"
     return df.reset_index()
 
