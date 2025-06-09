@@ -55,6 +55,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Should load_RNAseq_cell_metadata and load_RNAseq_gene_metadata be moved to a separate module?
+# TODO: loading expression data is slow (loads whoe dataset). It might be optimized by changing the orientation of the data (CSR to CSC) once, and then perhaps slices of data can be loaded instead of the whole dataset.
 
 def load_RNAseq_cell_metadata(download_base, species='mouse'):
     """
@@ -74,13 +75,17 @@ def load_RNAseq_cell_metadata(download_base, species='mouse'):
     """
     if species == 'mouse':
         cell_metadata_path = download_base / "metadata/WMB-10X/20231215/cell_metadata.csv"
+        cols = ['cell_label', 'feature_matrix_label', 'region_of_interest_acronym', 'x', 'y', 'cluster_alias']
     else:
         cell_metadata_path = download_base / "metadata/WHB-10Xv3/20240330/cell_metadata.csv"
+        cols = ['cell_label', 'feature_matrix_label', 'region_of_interest_label', 'x', 'y', 'cluster_alias']
+
     if cell_metadata_path.exists():
         print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
-        cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str}, usecols=[
-            'cell_label', 'feature_matrix_label', 'region_of_interest_acronym', 'x', 'y', 'cluster_alias'])
+        cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str}, usecols=cols)
         cell_df.set_index('cell_label', inplace=True)
+        if species == 'human':
+            cell_df.rename(columns={'region_of_interest_label': 'region_of_interest_acronym'}, inplace=True)
     else:
         print(f"\n    [red1]Cell metadata not found at {cell_metadata_path}\n")
         import sys ; sys.exit()
@@ -210,8 +215,8 @@ def main():
 
     download_base = Path(args.base)
 
-    valid_cell_types = {"Neurons", "Nonneurons"}
     if args.species == 'human':
+        valid_cell_types = {"Neurons", "Nonneurons"}
         if args.cell_type is None or args.cell_type not in valid_cell_types:
             print(f"\n    [red1]Error: Please provide a valid cell type: {valid_cell_types}\n")
             return
