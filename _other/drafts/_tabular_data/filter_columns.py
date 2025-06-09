@@ -91,6 +91,7 @@ def filter_columns(file_path, drop_cols, keep_cols, output_path=None):
     # Save the processed dataframe
     if output_path is None:
         output_path = Path(file_path).parent / f"{Path(file_path).stem}_cols_filtered{file_extension}"
+    output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     if file_extension == ".csv":
         df.to_csv(output_path, index=False)
