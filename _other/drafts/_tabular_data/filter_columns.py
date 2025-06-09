@@ -25,11 +25,10 @@ def parse_args():
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help="Glob pattern to match CSV or XLSX files", required=True, action=SM)
 
-    mode = parser.add_mutually_exclusive_group(required=True)
-    mode.add_argument('-d', '--drop_cols', help="Columns to drop", nargs='*', action=SM)
-    mode.add_argument('-k', '--keep_cols', help="Columns to keep (drops all others)", nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-d', '--drop_cols', help="Columns to drop (use -d or -k)", nargs='*', action=SM)
+    opts.add_argument('-k', '--keep_cols', help="Columns to keep (drops all others)", nargs='*', action=SM)
     opts.add_argument('-o', '--output', help="Output file path/name. Default: <input>_cols_filtered.csv", default=None, action=SM)
     opts.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
@@ -106,6 +105,14 @@ def main():
     args = parse_args()
     Configuration.verbose = args.verbose
     verbose_start_msg()
+
+    # Check that -d or -k is provided and not both
+    if not args.drop_cols and not args.keep_cols:
+        print("[bold red]You must specify either -d (drop columns) or -k (keep columns).[/bold red]")
+        return
+    if args.drop_cols and args.keep_cols:
+        print("[bold red]You cannot specify both -d (drop columns) and -k (keep columns). Please choose one.[/bold red]")
+        return
 
     for file_path in glob.glob(args.input):
 
