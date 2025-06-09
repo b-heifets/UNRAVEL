@@ -56,7 +56,7 @@ def parse_args():
 
 # TODO: Should load_RNAseq_cell_metadata and load_RNAseq_gene_metadata be moved to a separate module?
 
-def load_RNAseq_cell_metadata(download_base, species='human'):
+def load_RNAseq_cell_metadata(download_base, species='mouse'):
     """
     Load the cell metadata from the RNA-seq data.
 
@@ -70,7 +70,7 @@ def load_RNAseq_cell_metadata(download_base, species='human'):
     Returns
     -------
     cell_df : pd.DataFrame
-        The cell metadata dataframe. Index: cell_label. Columns: cell_barcode, barcoded_cell_sample_label, library_label, feature_matrix_label, entity, brain_section_label, library_method, donor_label, donor_sex, dataset_label, x, y, cluster_alias, region_of_interest_label, anatomical_division_label, abc_sample_id.
+        The cell metadata dataframe. Index: cell_label. Columns: feature_matrix_label, region_of_interest_acronym, x, y, cluster_alias.
     """
     if species == 'mouse':
         cell_metadata_path = download_base / "metadata/WMB-10X/20231215/cell_metadata.csv"
@@ -78,7 +78,8 @@ def load_RNAseq_cell_metadata(download_base, species='human'):
         cell_metadata_path = download_base / "metadata/WHB-10Xv3/20240330/cell_metadata.csv"
     if cell_metadata_path.exists():
         print(f"\n    Loading cell metadata from {cell_metadata_path}\n")
-        cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str})
+        cell_df = pd.read_csv(cell_metadata_path, dtype={'cell_label': str}, usecols=[
+            'cell_label', 'feature_matrix_label', 'region_of_interest_acronym', 'x', 'y', 'cluster_alias'])
         cell_df.set_index('cell_label', inplace=True)
     else:
         print(f"\n    [red1]Cell metadata not found at {cell_metadata_path}\n")
