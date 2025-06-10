@@ -44,7 +44,7 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Move cell metadata loading, classification, and color joining to RNAseq_expression.py
+# TODO: Move cell metadata loading, classification, and color joining to RNAseq_expression.py or consolidate in a common module.
 
 @log_command
 def main():
@@ -78,7 +78,7 @@ def main():
     if args.output is not None:
         output_path = Path(args.output)
     else:
-        output_path = Path(args.input).with_suffix('_joined_expression.csv')
+        output_path = Path(str(args.input).replace('.csv', '_w_cells.csv'))
     exp_df.to_csv(output_path, index=False)
     print(f"\n    Saved the joined data to {output_path}\n")
 
