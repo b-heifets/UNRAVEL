@@ -50,6 +50,18 @@ def parse_args():
 
     return parser.parse_args()
 
+def filter_non_neuronal_cells(cells_df, species):
+    """Filter out non-neuronal cells based on the species."""
+    species = species.lower()
+    if species == 'mouse':
+        return cells_df[cells_df['class'].str.split().str[0].astype(int) <= 29]
+    elif species == 'human':
+        nonneurons = ['Oligodendrocyte', 'Committed oligodendrocyte precursor', 'Oligodendrocyte precursor',
+                      'Astrocyte', 'Ependymal', 'Microglia', 'Vascular', 'Bergmann glia', 'Fibroblast', 'Choroid plexus']
+        return cells_df[~cells_df['supercluster'].str.split().str[0].isin(nonneurons)]
+    else:
+        raise ValueError(f"Unsupported species: {species}. Supported species are 'mouse' and 'human'.")
+
 @log_command
 def main():
     install()
@@ -71,13 +83,7 @@ def main():
     cells_df['neurotransmitter'] = cells_df['neurotransmitter'].fillna('NA')
 
     if args.neurons:
-        # Filter out non-neuronal cells
-        if species == 'mouse':
-            cells_df = cells_df[cells_df['class'].str.split().str[0].astype(int) <= 29]
-        elif species == 'human':
-            nonneurons = ['Oligodendrocyte', 'Committed oligodendrocyte precursor', 'Oligodendrocyte precursor',
-                          'Astrocyte', 'Ependymal', 'Microglia', 'Vascular', 'Bergmann glia', 'Fibroblast', 'Choroid plexus']
-            cells_df = cells_df[~cells_df['supercluster'].str.split().str[0].isin(nonneurons)]
+        cells_df = filter_non_neuronal_cells(cells_df, species)
         
     # Groupby the finest level of granularity (cluster or subcluster) to calculate the percentage of cells in each cell type
     fine_level_col = 'subcluster' if 'subcluster' in cells_df.columns else 'cluster'
