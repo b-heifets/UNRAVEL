@@ -4,18 +4,18 @@
 Use ``abca_sunburst`` or ``sb`` from UNRAVEL to generate a sunburst plot of cell type proportions across all ontological levels.
 
 Prereqs: 
-    - merfish_filter.py
+    - merfish_filter.py or RNAseq_expression.py + RNAseq_join_expression_data.py to generate the input cell metadata.
     
 Outputs:
-    - path/input_sunburst.csv and [input_path/WMB_sunburst_colors.csv]
+    - path/input_sunburst.csv and [WMB_sunburst_colors.csv or HMB_sunburst_colors.csv if --output_lut is provided]
 
 Note:
-    - LUT location: unravel/core/csvs/ABCA/WMB_sunburst_colors.csv
+    - LUT location: unravel/core/csvs/ABCA/
 
 Next steps:
     - Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (https://app.flourish.studio/)
     - It can be pasted into the Data tab (categories columns = cell type columns, Size by = percent column)
-    - Preview tab: Hierarchy -> Depth to 5, Colors -> paste hex codes from WMB_sunburst_colors.csv into Custom overrides
+    - Preview tab: Hierarchy -> Depth to 5, Colors -> paste hex codes from ..._sunburst_colors.csv into Custom overrides
 
 Usage:
 ------ 
@@ -31,7 +31,7 @@ from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.utils import log_command, print_func_name_args_times, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -39,6 +39,7 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/cell_metadata_filtered.csv', required=True, action=SM)
+    reqs.add_argument('-s', '--species', help='Species to analyze (e.g., "mouse" or "human")', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
@@ -56,28 +57,41 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
+    species = args.species.lower()
+
     # Load the CSV file
-    cells_df = pd.read_csv(args.input, usecols=['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'])
+    if species == 'mouse':
+        cells_df = pd.read_csv(args.input, usecols=['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster'])
+    elif species == 'human':
+        cells_df = pd.read_csv(args.input, usecols=['neurotransmitter', 'supercluster', 'cluster', 'subcluster'])
+    else:
+        raise ValueError(f"Unsupported species: {args.species}. Supported species are 'mouse' and 'human'.")
 
     # Replace blank values in 'neurotransmitter' column with 'NA'
     cells_df['neurotransmitter'] = cells_df['neurotransmitter'].fillna('NA')
 
     if args.neurons:
         # Filter out non-neuronal cells
-        cells_df = cells_df[cells_df['class'].str.split().str[0].astype(int) <= 29]
+        if species == 'mouse':
+            cells_df = cells_df[cells_df['class'].str.split().str[0].astype(int) <= 29]
+        elif species == 'human':
+            nonneurons = ['Oligodendrocyte', 'Committed oligodendrocyte precursor', 'Oligodendrocyte precursor',
+                          'Astrocyte', 'Ependymal', 'Microglia', 'Vascular', 'Bergmann glia', 'Fibroblast', 'Choroid plexus']
+            cells_df = cells_df[~cells_df['supercluster'].str.split().str[0].isin(nonneurons)]
 
-    # Groupby cluster
-    cluster_df = cells_df.groupby('cluster').size().reset_index(name='counts')  # Count the number of cells in each cluster
-    cluster_df = cluster_df.sort_values('counts', ascending=False)  # Sort the clusters by the number of cells
+    # Groupby the finest level of granularity (cluster or subcluster) to calculate the percentage of cells in each cell type
+    fine_level_col = 'subcluster' if 'subcluster' in cells_df.columns else 'cluster'
+    fine_df = cells_df.groupby(fine_level_col).size().reset_index(name='counts')  # Count the number of cells in each cluster
+    fine_df = fine_df.sort_values('counts', ascending=False)  # Sort the clusters by the number of cells
 
-    # Add a column for the percentage of cells in each cluster
-    cluster_df['percent'] = cluster_df['counts'] / cluster_df['counts'].sum() * 100
+    # Add a column for the percentage of cells in each fine level cell type
+    fine_df['percent'] = fine_df['counts'] / fine_df['counts'].sum() * 100
 
     # Drop the 'counts' column
-    cluster_df = cluster_df.drop(columns='counts')
+    fine_df = fine_df.drop(columns='counts')
 
-    # Join the cells_df with the cluster_df
-    cells_df = cells_df.merge(cluster_df, on='cluster')
+    # Join the cells_df with the fine_df
+    cells_df = cells_df.merge(fine_df, on=fine_level_col)
 
     # Drop duplicate rows
     cells_df = cells_df.drop_duplicates()
@@ -91,7 +105,10 @@ def main():
     cells_df.to_csv(output_path, index=False)
 
     if args.output_lut:
-        lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WMB_sunburst_colors.csv'
+        if species == 'mouse':
+            lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WMB_sunburst_colors.csv'
+        elif species == 'human':
+            lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'HMB_sunburst_colors.csv'
         shutil.copy(lut_path, Path(args.input).parent / lut_path.name)
 
     verbose_end_msg()
