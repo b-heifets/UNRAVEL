@@ -78,7 +78,7 @@ def main():
             nonneurons = ['Oligodendrocyte', 'Committed oligodendrocyte precursor', 'Oligodendrocyte precursor',
                           'Astrocyte', 'Ependymal', 'Microglia', 'Vascular', 'Bergmann glia', 'Fibroblast', 'Choroid plexus']
             cells_df = cells_df[~cells_df['supercluster'].str.split().str[0].isin(nonneurons)]
-
+        
     # Groupby the finest level of granularity (cluster or subcluster) to calculate the percentage of cells in each cell type
     fine_level_col = 'subcluster' if 'subcluster' in cells_df.columns else 'cluster'
     fine_df = cells_df.groupby(fine_level_col).size().reset_index(name='counts')  # Count the number of cells in each cluster
@@ -98,6 +98,11 @@ def main():
 
     # Sort by percentage
     cells_df = cells_df.sort_values('percent', ascending=False).reset_index(drop=True)
+
+    # If human, insert an empty column after subcluster and before percent
+    if species == 'human':
+        cells_df.insert(cells_df.columns.get_loc('subcluster') + 1, '.', '.')
+
     print(f'\n{cells_df}\n')
 
     # Save the output to a CSV file
