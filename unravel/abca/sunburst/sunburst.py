@@ -7,15 +7,15 @@ Prereqs:
     - merfish_filter.py
     
 Outputs:
-    - path/input_sunburst.csv and [input_path/ABCA_sunburst_colors.csv]
+    - path/input_sunburst.csv and [input_path/WMB_sunburst_colors.csv]
 
 Note:
-    - LUT location: unravel/core/csvs/ABCA/ABCA_sunburst_colors.csv
+    - LUT location: unravel/core/csvs/ABCA/WMB_sunburst_colors.csv
 
 Next steps:
     - Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (https://app.flourish.studio/)
     - It can be pasted into the Data tab (categories columns = cell type columns, Size by = percent column)
-    - Preview tab: Hierarchy -> Depth to 5, Colors -> paste hex codes from ABCA_sunburst_colors.csv into Custom overrides
+    - Preview tab: Hierarchy -> Depth to 5, Colors -> paste hex codes from WMB_sunburst_colors.csv into Custom overrides
 
 Usage:
 ------ 
@@ -42,7 +42,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
-    opts.add_argument('-l', '--output_lut', help='Output ABCA_sunburst_colors.csv if flag provided (for ABCA coloring)', action='store_true')
+    opts.add_argument('-l', '--output_lut', help='Output WMB_sunburst_colors.csv if flag provided (for ABCA coloring)', action='store_true')
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -91,7 +91,7 @@ def main():
     cells_df.to_csv(output_path, index=False)
 
     if args.output_lut:
-        lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'ABCA_sunburst_colors.csv'
+        lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WMB_sunburst_colors.csv'
         shutil.copy(lut_path, Path(args.input).parent / lut_path.name)
 
     verbose_end_msg()
