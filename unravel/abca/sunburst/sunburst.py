@@ -39,9 +39,9 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-i', '--input', help='path/cell_metadata_filtered.csv', required=True, action=SM)
-    reqs.add_argument('-s', '--species', help='Species to analyze (e.g., "mouse" or "human")', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-s', '--species', help='Species to analyze ("mouse" or "human"). Default: mouse', default='mouse', action=SM)
     opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
     opts.add_argument('-l', '--output_lut', help='Output WMB_sunburst_colors.csv if flag provided (for ABCA coloring)', action='store_true')
 
@@ -108,7 +108,7 @@ def main():
         if species == 'mouse':
             lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WMB_sunburst_colors.csv'
         elif species == 'human':
-            lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'HMB_sunburst_colors.csv'
+            lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_sunburst_colors.csv'
         shutil.copy(lut_path, Path(args.input).parent / lut_path.name)
 
     verbose_end_msg()
