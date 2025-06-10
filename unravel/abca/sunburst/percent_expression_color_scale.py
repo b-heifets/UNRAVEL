@@ -22,8 +22,8 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-min', '--min', help='min percent value for the colormap', default=0, type=float, action=SM)
-    opts.add_argument('-max', '--max', help='max percent value for the colormap', default=100, type=float, action=SM)
+    opts.add_argument('-min', '--min', help='min percent value for the colormap. Default: 0', default=0, type=float, action=SM)
+    opts.add_argument('-max', '--max', help='max percent value for the colormap. Default: 100', default=100, type=float, action=SM)
     opts.add_argument('-o', '--output', help='path/percent_expression_scale.pdf', default='percent_expression_scale.pdf', action=SM)
 
     return parser.parse_args()
