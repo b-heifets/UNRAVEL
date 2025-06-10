@@ -709,11 +709,11 @@ def main():
                 "common": True,
                 "alias": "sbe"
             },
-            "abca_sunburst_filter": {
+            "abca_sunburst_filter_by_expression": {
                 "module": "unravel.abca.sunburst.sunburst_filter",
                 "description": "Filter ABCA sunburst data, keeping cells with high expression at any level (class, subclass, etc.).",
                 "common": False,
-                "alias": "sbf"
+                "alias": "sfbe"
             },
             "abca_sunburst_filter_by_proportion": {
                 "module": "unravel.abca.sunburst.sunburst_filter_by_proportion",

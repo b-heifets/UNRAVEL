@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_sunburst_filter`` or ``sbf`` from UNRAVEL to filter ABCA sunburst expression data, keeping cells with high expression at any level (class, subclass, supertype, cluster).
+Use ``abca_sunburst_filter_by_expression`` or ``sfbe`` from UNRAVEL to filter ABCA sunburst expression data, keeping cells with high expression at any level (class, subclass, supertype, cluster).
 
 Prereqs:
     - ``abca_suburst_expression``
@@ -11,11 +11,11 @@ Notes:
 
 Usage for first run:
 --------------------
-abca_sunburst_filter -i path/main_ABCA_sunburst_expression.csv -g geneX -o ABCA_sunburst_filtered/ [-n] [-c 10] [-t 6] 
+abca_sunburst_filter_by_expression -i path/main_ABCA_sunburst_expression.csv -g geneX -o ABCA_sunburst_filtered/ [-n] [-c 10] [-t 6] 
 
 Usage to apply filtering from another dataset:
 ----------------------------------------------
-abca_sunburst_filter -i path/_main_ABCA_sunburst_filter.csv -a path/secondary_ABCA_sunburst_expression.csv -g geneX -o new_output [-n] [-c 10] [-t 6]
+abca_sunburst_filter_by_expression -i path/_main_ABCA_sunburst_filter.csv -a path/secondary_ABCA_sunburst_expression.csv -g geneX -o new_output [-n] [-c 10] [-t 6]
 """
 
 import matplotlib.pyplot as plt

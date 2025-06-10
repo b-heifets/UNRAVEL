@@ -6,7 +6,7 @@ unravel.abca.sunburst package
 
    sunburst
    sunburst_expression
-   sunburst_filter
+   sunburst_filter_by_expression
    sunburst_filter_by_proportion
    mean_expression_color_scale
    percent_expression_color_scale
