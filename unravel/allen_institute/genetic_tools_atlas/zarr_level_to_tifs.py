@@ -5,7 +5,7 @@ Convert a Zarr file to a series of TIFF files (e.g., for Ilastik segmentation).
 
 Outputs:
     - Saves specified channels as TIFFs in separate directories in the output directory.
-    - Saves pixel spacing in microns to a text file in the output directory.
+    - Saves pixel spacing in microns to output_dir/parameters/metadata.txt.
 
 Note:
     - Genetic Tools Atlas Zarr levels and X/Y resolutions:
@@ -34,8 +34,9 @@ from concurrent.futures import ThreadPoolExecutor
 from rich.traceback import install
 from rich import print
 
-from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+from unravel.core.img_io import save_metadata_to_file
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
@@ -49,6 +50,9 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-l', '--level', help='Resolution level to extract. Default: 3', required=True, choices=[str(i) for i in range(10)], default=3, action=SM)
     opts.add_argument('-s', '--spacing', help="Override voxel spacing in microns as a comma-separated string (z,y,x), e.g. '100.0,2.8,2.8'.", default=None, action=SM)
+
+    opts.add_argument('-x', '--xy_res', help='xy resolution in um (overrides GTA spacing)', type=float, default=None, action=SM)
+    opts.add_argument('-z', '--z_res', help='z resolution in um (overrides GTA spacing)', type=float, default=None, action=SM)
     opts.add_argument('-o', '--output', help='Output directory for TIFF files. Default: TIFFs/<Zarr name before the extension>', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -57,25 +61,23 @@ def parse_args():
     return parser.parse_args()
 
 
-def save_pixel_spacing_txt(output_dir, spacing_xyz):
-    """Save voxel spacing in microns to a text file."""
-    spacing_txt = Path(output_dir) / "pixel_spacing.txt"
-    with open(spacing_txt, "w") as f:
-        f.write("Voxel size in microns (Z [depth], Y [height], X [width]):\n")
-        f.write(f"{spacing_xyz[0]} {spacing_xyz[1]} {spacing_xyz[2]}\n")
+# def save_pixel_spacing_txt(output_dir, spacing_xyz):
+#     """Save voxel spacing in microns to a text file."""
+#     spacing_txt = Path(output_dir) / "pixel_spacing.txt"
+#     with open(spacing_txt, "w") as f:
+#         f.write("Voxel size in microns (Z [depth], Y [height], X [width]):\n")
+#         f.write(f"{spacing_xyz[0]} {spacing_xyz[1]} {spacing_xyz[2]}\n")
+
 
 def save_slice_tif(slice_, slice_idx, out_dir):
     """Save a single TIFF slice."""
     slice_path = out_dir / f"slice_{slice_idx:04d}.tif"
     tifffile.imwrite(str(slice_path), slice_)
 
-def save_as_tifs_parallel(ndarray, tif_dir_out, voxel_spacing_xyz=None):
+def save_as_tifs_parallel(ndarray, tif_dir_out):
     """Save 3D image as a TIFF series using parallel writing."""
     tif_dir_out = Path(tif_dir_out)
     tif_dir_out.mkdir(parents=True, exist_ok=True)
-
-    if voxel_spacing_xyz:
-        save_pixel_spacing_txt(tif_dir_out.parent, voxel_spacing_xyz)
 
     with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
         futures = [executor.submit(save_slice_tif, slice_, i, tif_dir_out)
@@ -85,7 +87,7 @@ def save_as_tifs_parallel(ndarray, tif_dir_out, voxel_spacing_xyz=None):
 
     print(f"✅ Saved TIFFs at {tif_dir_out}")
 
-def zarr_level_to_tifs(zarr_path, output_dir, resolution_level, channel_map, spacing_xyz):
+def zarr_level_to_tifs(zarr_path, output_dir, resolution_level, channel_map, xy_res=None, z_res=None):
     """
     Extracts a specified resolution level from a Zarr file and saves the specified channels as TIFF files.
 
@@ -99,8 +101,10 @@ def zarr_level_to_tifs(zarr_path, output_dir, resolution_level, channel_map, spa
         Resolution level to extract (e.g., "0", "1", ..., "9").
     channel_map : dict
         Mapping of output directory names to Zarr channel indices (e.g., {'red': 0, 'green': 1}).
-    spacing_xyz : tuple
-        Voxel spacing in microns as a tuple (z_spacing, y_spacing, x_spacing).
+    xy_res : float, optional
+        X/Y resolution in microns.
+    z_res : float, optional
+        Z resolution in microns. Default is 100 µm for Genetic Tools Atlas data.
     """
 
     if not zarr_path.is_dir():
@@ -129,7 +133,15 @@ def zarr_level_to_tifs(zarr_path, output_dir, resolution_level, channel_map, spa
         if idx >= num_channels:
             print(f"⚠️ Channel index {idx} not found in {zarr_path.name} (only {num_channels} channels). Skipping {name}.")
             continue
-        save_as_tifs_parallel(z_level[idx], out_dir, voxel_spacing_xyz=spacing_xyz)
+        save_as_tifs_parallel(z_level[idx], out_dir)
+        save_metadata_to_file(
+            xy_res=xy_res, 
+            z_res=z_res, 
+            x_dim=z_level[idx].shape[2], 
+            y_dim=z_level[idx].shape[1], 
+            z_dim=z_level[idx].shape[0], 
+            save_metadata=Path(out_dir).parent / "parameters" / "metadata.txt"
+        )
 
 
 @log_command
@@ -153,18 +165,12 @@ def main():
         "9": (179.2, 179.2, 100.0)
     }
 
-    # Determine voxel spacing
-    if args.spacing:
-        try:
-            spacing_xyz = tuple(float(s) for s in args.spacing.split(','))
-            if len(spacing_xyz) != 3:
-                raise ValueError
-        except ValueError:
-            raise ValueError(f"Invalid --spacing format. Expected 3 comma-separated values like '100.0,2.8,2.8'. Got: {args.spacing}")
-    else:
-        if args.level not in spacing_dict:
-            raise ValueError(f"Invalid resolution level: {args.level}. Must be between 0 and 9.")
-        spacing_xyz = spacing_dict[args.level]
+    # Determine the resolution
+    xy_res = args.xy_res if args.xy_res is not None else spacing_dict[args.level][0] if args.level in spacing_dict else None
+    z_res = args.z_res if args.z_res is not None else 100.0  # Default Z resolution is 100 µm
+    if xy_res is None:
+        raise ValueError("xy resolution must be provided either via --xy_res or the Genetic Tools Atlas spacing dictionary.")
+    print(f"Using xy resolution: {xy_res} µm, z resolution: {z_res} µm")
 
     try:
         channel_map = {}
@@ -187,7 +193,8 @@ def main():
             output_dir=output_dir,
             resolution_level=args.level,
             channel_map=channel_map,
-            spacing_xyz=spacing_xyz
+            xy_res=xy_res,
+            z_res=z_res,
         )
 
     verbose_end_msg()
