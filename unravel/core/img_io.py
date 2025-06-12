@@ -624,8 +624,8 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
 
     # If file_path points to dir containing tifs, resolve path to first .tif
     img_path = Path(img_path)
-    if img_path.is_dir():
-        tif_files = img_path.glob(f"*.tif")
+    if img_path.is_dir() and not str(img_path).endswith('.zarr'):
+        tif_files = list(img_path.glob("*.tif"))
         if tif_files: 
             return load_tifs(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
         else:
