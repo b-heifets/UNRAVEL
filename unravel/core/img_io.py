@@ -847,19 +847,61 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
     else:
         raise ValueError(f"Unsupported file type for save_3D_img(): '{suffix}'. Use: .nii.gz, .zarr, .h5, .tif, or a directory path for a TIFF series.")
 
+def zarr_level_to_tifs(zarr_path, output_dir, resolution_level, channel_map, xy_res=None, z_res=None):
+    """
+    Extracts a specified resolution level from a Zarr file and saves the specified channels as TIFF files.
 
+    Parameters:
+    -----------
+    zarr_path : str or Path
+        Path to the Zarr file.
+    output_dir : str or Path
+        Directory to save the output TIFF files. If None, defaults to "TIFFs/<sample_name>".
+    resolution_level : str
+        Resolution level to extract (e.g., "0", "1", ..., "9").
+    channel_map : dict
+        Mapping of output directory names to Zarr channel indices (e.g., {'red': 0, 'green': 1}).
+    xy_res : float, optional
+        X/Y resolution in microns.
+    z_res : float, optional
+        Z resolution in microns. Default is 100 µm for Genetic Tools Atlas data.
+    """
 
-    # if output_path.endswith('.nii.gz'):
-    #     save_as_nii(img, output_path, xy_res, z_res, data_type=data_type, reference=reference_img)
-    # elif output_path.endswith('.zarr'):
-    #     save_as_zarr(img, output_path, ndarray_axis_order=ndarray_axis_order)
-    # elif output_path.endswith('.h5'):
-    #     save_as_h5(img, output_path, ndarray_axis_order=ndarray_axis_order)
-    # elif output_path.endswith('.tif'): 
-    #     save_as_tifs(img, output_path, ndarray_axis_order=ndarray_axis_order)
-    # else:
-    #     raise ValueError(f"Unsupported file type for save_3D_img(): {output_path.suffix}. Use: .nii.gz, .zarr, .h5, .tif")
-    # print(f"\n    Image saved to: {output_path}\n")
+    if not zarr_path.is_dir():
+        raise NotADirectoryError(f"Zarr input path is not a directory: {zarr_path}")
+    if not (zarr_path / resolution_level).is_dir():
+        raise FileNotFoundError(f"Resolution level {resolution_level} not found in Zarr file: {zarr_path}")
+
+    z = zarr.open(zarr_path, mode="r")
+    z_level = z[resolution_level]
+
+    if z_level.ndim != 4:
+        raise ValueError(f"Expected shape (c, z, y, x), got {z_level.shape}")
+
+    num_channels = z_level.shape[0]
+    if num_channels == 1:
+        print(f"⚠️ Only one channel found in {zarr_path.name}")
+
+    print(f"📂 Processing {zarr_path.name} at resolution level {resolution_level}...")
+
+    for name, idx in channel_map.items():
+        out_dir = output_dir / name
+        tif_files = list(out_dir.glob("*.tif"))
+        if tif_files:
+            print(f"⚠️ Skipping {name} in {zarr_path.name}: output TIFFs already exist at {out_dir}")
+            continue
+        if idx >= num_channels:
+            print(f"⚠️ Channel index {idx} not found in {zarr_path.name} (only {num_channels} channels). Skipping {name}.")
+            continue
+        save_as_tifs(z_level[idx], out_dir, ndarray_axis_order="zyx", parallel=True)
+        save_metadata_to_file(
+            xy_res=xy_res, 
+            z_res=z_res, 
+            x_dim=z_level[idx].shape[2], 
+            y_dim=z_level[idx].shape[1], 
+            z_dim=z_level[idx].shape[0], 
+            save_metadata=Path(out_dir).parent / "parameters" / "metadata.txt"
+        )
 
 # Other functions
 def nii_voxel_size(nii, use_um=True):
