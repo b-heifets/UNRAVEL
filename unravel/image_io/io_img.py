@@ -14,6 +14,8 @@ Usage:
     io_img -i path/to/image.czi -x 3.5232 -z 6 [-c 0] [-o path/to/tif_dir] [-d np.uint8] [-r path/to/reference.nii.gz] [-ao zyx] [-v]
 """
 
+from glob import glob
+from pathlib import Path
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -26,7 +28,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='path/image .czi, path/img.nii.gz, or path/tif_dir', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="Glob pattern for input image files (e.g., '*.czi', '*.tif', '*.zarr').", required=True, action=SM)
     reqs.add_argument('-x', '--xy_res', help='xy resolution in um', required=True, type=float, action=SM)
     reqs.add_argument('-z', '--z_res', help='z resolution in um', required=True, type=float, action=SM)
 
@@ -51,23 +53,28 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    # Load image and metadata
-    if args.xy_res is None or args.z_res is None:
-        img, xy_res, z_res = load_3D_img(args.input, return_res=True, verbose=args.verbose)
-    else:
-        img = load_3D_img(args.input, verbose=args.verbose)
-        xy_res, z_res = args.xy_res, args.z_res
+    img_files = img_files = list(Path().glob(args.input))
+    if not img_files:
+        raise FileNotFoundError(f"No Zarr files found matching pattern: {args.input}")
 
-    # Print metadata
-    if args.verbose:
-        print(f"\n    Type: {type(img)}")
-        print(f"    Image shape: {img.shape}")
-        print(f"    Image dtype: {img.dtype}")
-        print(f"    xy resolution: {xy_res} um")
-        print(f"    z resolution: {z_res} um")
+    for img_file in img_files:
+        # Load image and metadata
+        if args.xy_res is None or args.z_res is None:
+            img, xy_res, z_res = load_3D_img(args.input, return_res=True, verbose=args.verbose)
+        else:
+            img = load_3D_img(args.input, verbose=args.verbose)
+            xy_res, z_res = args.xy_res, args.z_res
 
-    # Save image
-    save_3D_img(img, args.output, args.axis_order, xy_res, z_res, args.dtype, args.reference)
+        # Print metadata
+        if args.verbose:
+            print(f"\n    Type: {type(img)}")
+            print(f"    Image shape: {img.shape}")
+            print(f"    Image dtype: {img.dtype}")
+            print(f"    xy resolution: {xy_res} um")
+            print(f"    z resolution: {z_res} um")
+
+        # Save image
+        save_3D_img(img, args.output, args.axis_order, xy_res, z_res, args.dtype, args.reference)
 
     verbose_end_msg()
 
