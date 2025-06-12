@@ -342,7 +342,7 @@ def print_func_name_args_times(print_dir=True):
             elif thread_local_data.indentation_level > 1:
                 print(f"\n{indent_str}[gold3]{func.__name__!r}[/]\n{indent_str}[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
             else:
-                print(f"\nRunning: [bold gold1]{func.__name__!r}[/]{dir_string} with args: [bright_black]({combined_args})[/]")
+                print(f"\nRunning: [bold gold1]{func.__name__!r}[/]{dir_string} with parameters: [bright_black]({combined_args})[/]")
 
             # Function execution
             start_time = time.perf_counter()
