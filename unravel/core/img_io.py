@@ -17,6 +17,7 @@ Helper Functions:
 - return_3D_img
 """
 
+import os
 import re
 import cv2 
 import dask.array as da
@@ -744,6 +745,48 @@ def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
         tifffile.imwrite(str(slice_file_path), slice_)
     print(f"\n    Output: [default bold]{tif_dir_out}")
 
+###
+# @print_func_name_args_times()
+# def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz", parallel=False, max_workers=None):
+#     """
+#     Save an ndarray as a series of .tif images.
+
+#     Parameters
+#     ----------
+#     ndarray : ndarray
+#         The 3D image array to save.
+#     tif_dir_out : str or Path
+#         The directory to save the .tif files.
+#     ndarray_axis_order : str, optional
+#         The order of the ndarray axes. Default is 'xyz'.
+#     parallel : bool, optional
+#         Whether to save slices in parallel. Default is False.
+#     max_workers : int or None, optional
+#         Number of threads to use for parallel saving. Defaults to os.cpu_count().
+
+#     Returns
+#     -------
+#     None
+#     """
+#     tif_dir_out = Path(tif_dir_out)
+#     tif_dir_out.mkdir(parents=True, exist_ok=True)
+
+#     if ndarray_axis_order == "xyz":
+#         ndarray = np.transpose(ndarray, (2, 1, 0))  # to zyx
+
+#     def save_slice(i):
+#         slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
+#         tifffile.imwrite(str(slice_file_path), ndarray[i])
+
+#     if parallel:
+#         with ThreadPoolExecutor(max_workers=max_workers or os.cpu_count()) as executor:
+#             list(executor.map(save_slice, range(ndarray.shape[0])))
+#     else:
+#         for i in range(ndarray.shape[0]):
+#             save_slice(i)
+
+#     print(f"\n    Output: [default bold]{tif_dir_out}")
+
 @print_func_name_args_times()
 def save_as_zarr(ndarray, output_path, ndarray_axis_order="xyz"):
     """
@@ -802,7 +845,7 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
     img : ndarray
         The 3D image array to save.
     output_path : str
-        The path to save the image.
+        The path to save the image. The file extension determines the format: .nii.gz, .zarr, .h5, .tif, or a directory path for a TIFF series.
     ndarray_axis_order : str, optional
         The order of the ndarray axes. Default is 'xyz'.
     xy_res : float, optional
@@ -816,18 +859,38 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
     """
     output = Path(output_path)
     output.parent.mkdir(exist_ok=True, parents=True)
-    
-    if output_path.endswith('.nii.gz'):
-        save_as_nii(img, output_path, xy_res, z_res, data_type=data_type, reference=reference_img)
-    elif output_path.endswith('.zarr'):
-        save_as_zarr(img, output_path, ndarray_axis_order=ndarray_axis_order)
-    elif output_path.endswith('.h5'):
-        save_as_h5(img, output_path, ndarray_axis_order=ndarray_axis_order)
-    elif output_path.endswith('.tif'): 
-        save_as_tifs(img, output_path, ndarray_axis_order=ndarray_axis_order)
+
+    output_str = str(output).lower()
+    suffix = output.suffix.lower()
+
+    if output_str.endswith('.nii.gz'):
+        save_as_nii(img, output, xy_res, z_res, data_type=data_type, reference=reference_img)
+    elif suffix == '.zarr':
+        save_as_zarr(img, output, ndarray_axis_order=ndarray_axis_order)
+    elif suffix == '.h5':
+        save_as_h5(img, output, ndarray_axis_order=ndarray_axis_order)
+    elif suffix == '.tif':
+        # If user gave a file path like red2/slice_0000.tif, use the parent directory
+        save_as_tifs(img, output.parent, ndarray_axis_order=ndarray_axis_order)
+    elif suffix == '':
+        # If no suffix, assume directory path for TIFFs
+        save_as_tifs(img, output, ndarray_axis_order=ndarray_axis_order)
     else:
-        raise ValueError(f"Unsupported file type for save_3D_img(): {output_path.suffix}. Use: .nii.gz, .zarr, .h5, .tif")
-    print(f"\n    Image saved to: {output_path}\n")
+        raise ValueError(f"Unsupported file type for save_3D_img(): '{suffix}'. Use: .nii.gz, .zarr, .h5, .tif, or a directory path for a TIFF series.")
+
+
+
+    # if output_path.endswith('.nii.gz'):
+    #     save_as_nii(img, output_path, xy_res, z_res, data_type=data_type, reference=reference_img)
+    # elif output_path.endswith('.zarr'):
+    #     save_as_zarr(img, output_path, ndarray_axis_order=ndarray_axis_order)
+    # elif output_path.endswith('.h5'):
+    #     save_as_h5(img, output_path, ndarray_axis_order=ndarray_axis_order)
+    # elif output_path.endswith('.tif'): 
+    #     save_as_tifs(img, output_path, ndarray_axis_order=ndarray_axis_order)
+    # else:
+    #     raise ValueError(f"Unsupported file type for save_3D_img(): {output_path.suffix}. Use: .nii.gz, .zarr, .h5, .tif")
+    # print(f"\n    Image saved to: {output_path}\n")
 
 # Other functions
 def nii_voxel_size(nii, use_um=True):
