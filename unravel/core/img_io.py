@@ -847,6 +847,7 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
     else:
         raise ValueError(f"Unsupported file type for save_3D_img(): '{suffix}'. Use: .nii.gz, .zarr, .h5, .tif, or a directory path for a TIFF series.")
 
+@print_func_name_args_times()
 def zarr_level_to_tifs(zarr_path, output_dir, resolution_level, channel_map, xy_res=None, z_res=None):
     """
     Extracts a specified resolution level from a Zarr file and saves the specified channels as TIFF files.

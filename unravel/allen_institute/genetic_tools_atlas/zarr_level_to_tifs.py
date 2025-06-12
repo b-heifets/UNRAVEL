@@ -26,17 +26,13 @@ Usage:
     ./zarr_level_to_tifs.py -i '<asterisk>.zarr' --channel-map red:0 green:1 [-l 3] [-o TIFFs/sample_name] [-v]
 """
 
-import os
-import zarr
-import tifffile
 from pathlib import Path
-from concurrent.futures import ThreadPoolExecutor
 from rich.traceback import install
 from rich import print
 
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.img_io import save_metadata_to_file
+from unravel.core.img_io import zarr_level_to_tifs
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
@@ -59,89 +55,6 @@ def parse_args():
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
-
-
-# def save_pixel_spacing_txt(output_dir, spacing_xyz):
-#     """Save voxel spacing in microns to a text file."""
-#     spacing_txt = Path(output_dir) / "pixel_spacing.txt"
-#     with open(spacing_txt, "w") as f:
-#         f.write("Voxel size in microns (Z [depth], Y [height], X [width]):\n")
-#         f.write(f"{spacing_xyz[0]} {spacing_xyz[1]} {spacing_xyz[2]}\n")
-
-
-def save_slice_tif(slice_, slice_idx, out_dir):
-    """Save a single TIFF slice."""
-    slice_path = out_dir / f"slice_{slice_idx:04d}.tif"
-    tifffile.imwrite(str(slice_path), slice_)
-
-def save_as_tifs_parallel(ndarray, tif_dir_out):
-    """Save 3D image as a TIFF series using parallel writing."""
-    tif_dir_out = Path(tif_dir_out)
-    tif_dir_out.mkdir(parents=True, exist_ok=True)
-
-    with ThreadPoolExecutor(max_workers=os.cpu_count()) as executor:
-        futures = [executor.submit(save_slice_tif, slice_, i, tif_dir_out)
-                   for i, slice_ in enumerate(ndarray)]
-        for f in futures:
-            f.result()  # Wait for all to finish
-
-    print(f"✅ Saved TIFFs at {tif_dir_out}")
-
-def zarr_level_to_tifs(zarr_path, output_dir, resolution_level, channel_map, xy_res=None, z_res=None):
-    """
-    Extracts a specified resolution level from a Zarr file and saves the specified channels as TIFF files.
-
-    Parameters:
-    -----------
-    zarr_path : str or Path
-        Path to the Zarr file.
-    output_dir : str or Path
-        Directory to save the output TIFF files. If None, defaults to "TIFFs/<sample_name>".
-    resolution_level : str
-        Resolution level to extract (e.g., "0", "1", ..., "9").
-    channel_map : dict
-        Mapping of output directory names to Zarr channel indices (e.g., {'red': 0, 'green': 1}).
-    xy_res : float, optional
-        X/Y resolution in microns.
-    z_res : float, optional
-        Z resolution in microns. Default is 100 µm for Genetic Tools Atlas data.
-    """
-
-    if not zarr_path.is_dir():
-        raise NotADirectoryError(f"Zarr input path is not a directory: {zarr_path}")
-    if not (zarr_path / resolution_level).is_dir():
-        raise FileNotFoundError(f"Resolution level {resolution_level} not found in Zarr file: {zarr_path}")
-
-    z = zarr.open(zarr_path, mode="r")
-    z_level = z[resolution_level]
-
-    if z_level.ndim != 4:
-        raise ValueError(f"Expected shape (c, z, y, x), got {z_level.shape}")
-
-    num_channels = z_level.shape[0]
-    if num_channels == 1:
-        print(f"⚠️ Only one channel found in {zarr_path.name}")
-
-    print(f"📂 Processing {zarr_path.name} at resolution level {resolution_level}...")
-
-    for name, idx in channel_map.items():
-        out_dir = output_dir / name
-        tif_files = list(out_dir.glob("*.tif"))
-        if tif_files:
-            print(f"⚠️ Skipping {name} in {zarr_path.name}: output TIFFs already exist at {out_dir}")
-            continue
-        if idx >= num_channels:
-            print(f"⚠️ Channel index {idx} not found in {zarr_path.name} (only {num_channels} channels). Skipping {name}.")
-            continue
-        save_as_tifs_parallel(z_level[idx], out_dir)
-        save_metadata_to_file(
-            xy_res=xy_res, 
-            z_res=z_res, 
-            x_dim=z_level[idx].shape[2], 
-            y_dim=z_level[idx].shape[1], 
-            z_dim=z_level[idx].shape[0], 
-            save_metadata=Path(out_dir).parent / "parameters" / "metadata.txt"
-        )
 
 
 @log_command
