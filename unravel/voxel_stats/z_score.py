@@ -117,7 +117,7 @@ def z_score(input_nii_path, mask_img, suffix):
     z_scored_img = (masked_data - mean_intensity) / std_dev
 
     # Set voxels outside the mask to zero
-    z_scored_img *= mask
+    z_scored_img *= mask_img
 
     # Save the z-scored image
     output_path = Path(str(input_nii_path).replace('.nii.gz', f'_{suffix}.nii.gz'))
