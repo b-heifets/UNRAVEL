@@ -716,7 +716,7 @@ def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=None, refere
     print(f"\n    Output: [default bold]{output}")
 
 @print_func_name_args_times()
-def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
+def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz", parallel=True, max_workers=None):
     """
     Save an ndarray as a series of .tif images.
 
@@ -724,68 +724,37 @@ def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz"):
     ----------
     ndarray : ndarray
         The 3D image array to save.
-    tif_dir_out : str
+    tif_dir_out : str or Path
         The directory to save the .tif files.
     ndarray_axis_order : str, optional
         The order of the ndarray axes. Default is 'xyz'.
+    parallel : bool, optional
+        Whether to save slices in parallel. Default is False.
+    max_workers : int or None, optional
+        Number of threads to use for parallel saving. Defaults to os.cpu_count().
 
     Returns
     -------
     None
     """
-    # Ensure tif_dir_out is a Path object, not a string
     tif_dir_out = Path(tif_dir_out)
     tif_dir_out.mkdir(parents=True, exist_ok=True)
-    
+
     if ndarray_axis_order == "xyz":
-        ndarray = np.transpose(ndarray, (2, 1, 0)) # Transpose to zyx (tiff expects zyx)
-        
-    for i, slice_ in enumerate(ndarray):
+        ndarray = np.transpose(ndarray, (2, 1, 0))  # to zyx
+
+    def save_slice(i):
         slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
-        tifffile.imwrite(str(slice_file_path), slice_)
+        tifffile.imwrite(str(slice_file_path), ndarray[i])
+
+    if parallel:
+        with ThreadPoolExecutor(max_workers=max_workers or os.cpu_count()) as executor:
+            list(executor.map(save_slice, range(ndarray.shape[0])))
+    else:
+        for i in range(ndarray.shape[0]):
+            save_slice(i)
+
     print(f"\n    Output: [default bold]{tif_dir_out}")
-
-###
-# @print_func_name_args_times()
-# def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz", parallel=False, max_workers=None):
-#     """
-#     Save an ndarray as a series of .tif images.
-
-#     Parameters
-#     ----------
-#     ndarray : ndarray
-#         The 3D image array to save.
-#     tif_dir_out : str or Path
-#         The directory to save the .tif files.
-#     ndarray_axis_order : str, optional
-#         The order of the ndarray axes. Default is 'xyz'.
-#     parallel : bool, optional
-#         Whether to save slices in parallel. Default is False.
-#     max_workers : int or None, optional
-#         Number of threads to use for parallel saving. Defaults to os.cpu_count().
-
-#     Returns
-#     -------
-#     None
-#     """
-#     tif_dir_out = Path(tif_dir_out)
-#     tif_dir_out.mkdir(parents=True, exist_ok=True)
-
-#     if ndarray_axis_order == "xyz":
-#         ndarray = np.transpose(ndarray, (2, 1, 0))  # to zyx
-
-#     def save_slice(i):
-#         slice_file_path = tif_dir_out / f"slice_{i:04d}.tif"
-#         tifffile.imwrite(str(slice_file_path), ndarray[i])
-
-#     if parallel:
-#         with ThreadPoolExecutor(max_workers=max_workers or os.cpu_count()) as executor:
-#             list(executor.map(save_slice, range(ndarray.shape[0])))
-#     else:
-#         for i in range(ndarray.shape[0]):
-#             save_slice(i)
-
-#     print(f"\n    Output: [default bold]{tif_dir_out}")
 
 @print_func_name_args_times()
 def save_as_zarr(ndarray, output_path, ndarray_axis_order="xyz"):
