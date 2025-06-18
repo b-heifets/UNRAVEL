@@ -3,12 +3,12 @@
 """
 Use ``reg_check`` (``rc``) from UNRAVEL to check registration QC, copies autofl_`*`um_masked_fixed_reg_input.nii.gz and atlas_in_tissue_space.nii.gz for each sample to a target dir.
 
-Usage for copying to the current working directory:
----------------------------------------------------
-    reg_check [-ro reg_outputs] [-fri fixed_reg_in] [-wa warped_atlas] [-d list of paths] [-p sample??] [-v]
+Next steps:
+    - ``reg_check_fsleyes`` to visualize the registration outputs with an atlas overlay in FSLeyes.
 
-Usage for copying to a target directory:
-    reg_check -td <path/target_output_dir> [-ro reg_outputs] [-fri fixed_reg_in] [-wa warped_atlas] [-d list of paths] [-p sample??] [-v]
+Usage:
+------
+    reg_check [-td <path/target_output_dir>] [-ro reg_outputs] [-fri fixed_reg_in] [-wa warped_atlas] [-d list of paths] [-p sample??] [-v]
 """
 
 from pathlib import Path
@@ -26,7 +26,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-td', '--target_dir', help='path/target_output_dir name for aggregating outputs from all samples (cwd if omitted).', default=None, action=SM)
+    opts.add_argument('-td', '--target_dir', help='path/target_output_dir name  for aggregating outputs from all samples (cwd if omitted).', default=None, action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from ``reg``. Default: reg_outputs", default="reg_outputs", action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Fixed image from registration ``reg``. Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-wa', '--warped_atlas', help='Warped atlas image from ``reg``. Default: atlas_CCFv3_2020_30um_in_tissue_space.nii.gz', default="atlas_CCFv3_2020_30um_in_tissue_space.nii.gz", action=SM)
