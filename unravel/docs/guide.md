@@ -874,6 +874,7 @@ for d in $DIRS ; do cd $d ; for s in sample?? ; do reg -m $TEMPLATE -bc -sm 0.4 
 * Check registration by copying these images from each sample??/reg_ouputs folder to a target directory: 
     * autofl_??um_masked_fixed_reg_input.nii.gz
     * atlas_in_tissue_space.nii.gz
+    * The original reg_inputs/autofl_50um.nii.gz can also be copied to the target dir to check for overmasking.
 ```bash
 reg_check [-td reg_results] [-d $DIRS]  # Default for -td: copy images to the current dir.
 # The default warped atlas from reg is atlas_CCFv3_2020_30um_in_tissue_space.nii.gz (in ./sample??/.reg_outputs). Use -wa <image_name.nii.gz> to set this.
