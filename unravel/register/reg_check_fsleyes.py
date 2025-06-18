@@ -5,15 +5,15 @@ Use ``reg_check_fsleyes`` (``rcf``) from UNRAVEL to check registration in fsleye
 
 Prerequisites:
     - ``fsleyes`` must be installed.
-    - Recommended: ``reg_check`` must be run before this script to aggregate the fixed_reg_in and warped_atlas files.
-    - ``reg_check`` also prepends them with the sample?? dir name.
+    - ``reg_check`` to aggregate the fixed_reg_in and warped_atlas files
+    - Set up LUT for the atlas in FSLeyes (see "Setting up Allen brain atlas coloring in FSLeyes" at https://b-heifets.github.io/UNRAVEL/guide.html#reg-check)
 
 Notes:
     - The script will recursively search for the fixed_reg_in and warped_atlas files.
 
 Usage:
 ------
-``reg_check_fsleyes`` [-fri fixed_reg_in] [-wa warped_atlas] [-min min_val] [-max max_val] [-d dirs] 
+    reg_check_fsleyes [-fri fixed_reg_in] [-wa warped_atlas] [-min min_val] [-max max_val] [-d dirs] 
 """
 
 import subprocess
