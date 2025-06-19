@@ -54,11 +54,11 @@ def main():
 
     # If lists are empty, raise an error
     if not masked_autofl_nii_paths and not autofl_nii_paths:
-        print("Error: No autofluorescence or masked autofluorescence images found.")
+        print("[red]Error: No autofluorescence or masked autofluorescence images found.")
         return
     
     if not warped_atlas_nii_paths:
-        print("Error: No warped atlas images found.")
+        print("[red]Error: No warped atlas images found.")
         return
 
     # Sort the paths by file name
