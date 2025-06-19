@@ -240,7 +240,7 @@ def main():
                 # Check if the initial alignment of the moving image is within the padded region of the fixed image
                 above_thresh_surface_voxel_count = affine_initializer_check(init_align_out, args.threshold)
                 if above_thresh_surface_voxel_count > args.max_surface_voxels:
-                    print(f"\n[yellow]WARNING: {transformed_image} has {above_thresh_surface_voxel_count} surface voxels above the threshold {args.threshold}, suggesting that the initially aligned template is not fully within the padded region of the fixed image. Increasing padding by 0.05. New padding = {pad_percent:.2f}")
+                    print(f"\n[yellow]WARNING: {init_align_out} has {above_thresh_surface_voxel_count} surface voxels above the threshold {args.threshold}, suggesting that the initially aligned template is not fully within the padded region of the fixed image. Increasing padding by 0.05. New padding = {pad_percent:.2f}")
 
                     pad_percent += 0.05
 
