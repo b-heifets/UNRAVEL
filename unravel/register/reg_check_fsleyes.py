@@ -46,17 +46,17 @@ def main():
     cwd = Path.cwd()
 
     # Collect autofl NIfTI paths
-    masked_autofl_nii_paths, autofl_nii_paths, warped_atlas_nii_paths = [], [], []
-    masked_autofl_nii_paths.extend(cwd.rglob(f'**/*{args.fixed_reg_in}'))
+    autofl_nii_paths, masked_autofl_nii_paths, warped_atlas_nii_paths = [], [], []
     autofl_nii_paths.extend(cwd.rglob(f'**/*{args.autofl_img}'))
+    masked_autofl_nii_paths.extend(cwd.rglob(f'**/*{args.fixed_reg_in}'))
     warped_atlas_nii_paths.extend(cwd.rglob(f'**/*{args.warped_atlas}'))
 
     # Sort the paths by file name
-    masked_autofl_nii_paths = sorted(masked_autofl_nii_paths, key=lambda p: p.name)
     autofl_nii_paths = sorted(autofl_nii_paths, key=lambda p: p.name) if autofl_nii_paths else []
+    masked_autofl_nii_paths = sorted(masked_autofl_nii_paths, key=lambda p: p.name)
     warped_atlas_nii_paths = sorted(warped_atlas_nii_paths, key=lambda p: p.name) 
-    print(f'\nSorted masked_autofl_nii_paths= {masked_autofl_nii_paths}\n')
     print(f'\nSorted orig_autofl_nii_paths= {autofl_nii_paths}\n')
+    print(f'\nSorted masked_autofl_nii_paths= {masked_autofl_nii_paths}\n')
     print(f'\nSorted warped_atlas_nii_paths= {warped_atlas_nii_paths}\n')
 
     # Ensure lists have the same length
@@ -70,27 +70,27 @@ def main():
 
     # Define command for fsleyes
     fsleyes_command = ['fsleyes']
-    fsleyes_command.extend([str(masked_autofl_nii_paths[0]), '-dr', str(args.min), str(args.max)])
     if autofl_nii_paths:
         fsleyes_command.extend([str(autofl_nii_paths[0]), '-dr', str(args.min), str(args.max)])
+    fsleyes_command.extend([str(masked_autofl_nii_paths[0]), '-dr', str(args.min), str(args.max)])
     fsleyes_command.extend([str(warped_atlas_nii_paths[0]), '-ot', 'label', '-l', 'ccfv3_2020', '-o', '-a', '50'])
 
     # Drop the first element from the lists (so that visualization of remaining images is off)
-    masked_autofl_nii_paths.pop(0)
     if autofl_nii_paths:
         autofl_nii_paths.pop(0)
+    masked_autofl_nii_paths.pop(0)
     warped_atlas_nii_paths.pop(0)
 
     # Iterate over fixed_reg_input_files and warped_atlas_files
     if autofl_nii_paths:
-        for fixed_image, warped_image, autofl_image in zip(masked_autofl_nii_paths, warped_atlas_nii_paths, autofl_nii_paths):
-            fsleyes_command.extend([str(fixed_image), '-dr', str(args.min), str(args.max), '-d'])
-            fsleyes_command.extend([str(autofl_image), '-dr', str(args.min), str(args.max), '-d'])
-            fsleyes_command.extend([str(warped_image), '-ot', 'label', '-l', 'ccfv3_2020', '-o', '-a', '50', '-d'])
+        for autofl, masked_autofl, atlas,  in zip(autofl_nii_paths, masked_autofl_nii_paths, warped_atlas_nii_paths):
+            fsleyes_command.extend([str(autofl), '-dr', str(args.min), str(args.max), '-d'])
+            fsleyes_command.extend([str(masked_autofl), '-dr', str(args.min), str(args.max), '-d'])
+            fsleyes_command.extend([str(atlas), '-ot', 'label', '-l', 'ccfv3_2020', '-o', '-a', '50', '-d'])
     else: 
-        for fixed_image, warped_image in zip(masked_autofl_nii_paths, warped_atlas_nii_paths):
-            fsleyes_command.extend([str(fixed_image), '-dr', str(args.min), str(args.max), '-d']) # -d for no display
-            fsleyes_command.extend([str(warped_image), '-ot', 'label', '-l', 'ccfv3_2020', '-o', '-a', '50', '-d'])
+        for masked_autofl, atlas in zip(masked_autofl_nii_paths, warped_atlas_nii_paths):
+            fsleyes_command.extend([str(masked_autofl), '-dr', str(args.min), str(args.max), '-d']) # -d for no display
+            fsleyes_command.extend([str(atlas), '-ot', 'label', '-l', 'ccfv3_2020', '-o', '-a', '50', '-d'])
 
     # Execute fsleyes command
     subprocess.run(fsleyes_command)
