@@ -37,9 +37,9 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-t', '--threshold', help='Voxel intensity threshold for checking if the initially aligned template is within the padded region of the fixed image. Default: 0', type=float, default=0, action=SM)
-    opts.add_argument('-msv', '--max_surface_voxels', help='Max allowed surface voxels above intensity threshold', type=int, default=0)
+    opts.add_argument('-msv', '--max_surface_voxels', help='Max allowed surface voxels above intensity threshold. Default: 0', type=int, default=0)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from ``reg`` (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
-    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding to add to each dimension of the fixed image (gives space for initial alignment of the moving image). Default: 0.15 (15%%).', default=0.15, type=float, action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding to add to each dimension of the fixed image (gives space for initial alignment of the moving image). Default: 0.25 (25%%).', default=0.25, type=float, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
@@ -94,12 +94,7 @@ def main():
             above_thresh_surface_voxel_count = affine_initializer_check(img_path, args.threshold)
 
             if above_thresh_surface_voxel_count > args.max_surface_voxels:
-                print(f"\n[yellow]WARNING: {img_path} has {above_thresh_surface_voxel_count} \
-                      surface voxels above threshold{args.threshold }. This may indicate that \
-                      the initially aligned template is not fully within the padded region of \
-                      the fixed image, which can affect registration, pulling atlas regions \
-                      outwards where the initially aligned template goes out of view. Please \
-                      check the initially aligned template image (e.g., in FSLeyes).")
+                print(f"\n[yellow]WARNING: {Path(sample_path.name, args.reg_outputs, args.input)} has {above_thresh_surface_voxel_count} surface voxels above threshold{args.threshold }. This may indicate that the initially aligned template is not fully within the padded region of the fixed image, which can affect registration, pulling atlas regions outwards where the initially aligned template goes out of view. Please check the initially aligned template image (e.g., in FSLeyes).")
                 pad_percent = get_pad_percent(sample_path / args.reg_outputs, args.pad_percent)
                 print(f"[yellow]Consider increasing the padding percentage {pad_percent} when running `reg` to ensure the initially aligned template is fully within the padded region of the fixed image.\n")
 

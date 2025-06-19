@@ -68,7 +68,7 @@ def parse_args():
     tissue_mask_opts.add_argument('-tmas', '--tissue_mask', help='rel_path/brain_mask.nii.gz. For example, reg_inputs/autofl_50um_brain_mask.nii.gz', default=None, action=SM)
     tissue_mask_opts.add_argument('-fri', '--fixed_reg_in', help='Fixed image from ``reg``. Default: reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz', default="reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     tissue_mask_opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz. It is used as a reference image for warping the tissue mask to atlas space. Default: atlas/atlas_CCFv3_2020_30um.nii.gz', default=None, action=SM)
-    tissue_mask_opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
+    tissue_mask_opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
 
     atlas_mask_opts = parser.add_argument_group('Optional args for using an atlas mask')
     atlas_mask_opts.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz (can use tmas and/or amas)', default=None, action=SM)
@@ -127,7 +127,7 @@ def z_score(input_nii_path, mask_img, suffix):
 
     return z_scored_img
 
-def tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, atlas_path, pad_percent=0.15, verbose=False):
+def tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, atlas_path, pad_percent=0.25, verbose=False):
     """Warp a tissue mask to atlas space (e.g., for z-scoring).
     
     Parameters:
@@ -150,7 +150,7 @@ def tissue_mask_to_atlas_space(sample_path, tissue_mask_path, fixed_reg_input, a
     tissue_mask_img = np.where(tissue_mask_img > 0, 1, 0).astype(np.uint8)
     return tissue_mask_img
 
-def z_score_mask(sample_path, input_path, fixed_reg_input, atlas_path, tissue_mask_path=None, atlas_mask_path=None, pad_percent=0.15, verbose=False):
+def z_score_mask(sample_path, input_path, fixed_reg_input, atlas_path, tissue_mask_path=None, atlas_mask_path=None, pad_percent=0.25, verbose=False):
     """Combine tissue and atlas masks if both are provided, otherwise use whichever is available.
     
     Parameters:

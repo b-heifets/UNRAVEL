@@ -147,7 +147,7 @@ def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executabl
         print("    Ilastik completed successfully.")
 
 @print_func_name_args_times()
-def pad(ndarray, pad_percent=0.15):
+def pad(ndarray, pad_percent=0.25):
     """Pads ndarray by a specified percentage.
 
     Parameters:
@@ -156,7 +156,7 @@ def pad(ndarray, pad_percent=0.15):
         Input 3D ndarray to pad.
 
     pad_percent : float
-        Percentage of padding to add to each dimension. Default: 0.15 (15%%).
+        Percentage of padding to add to each dimension. Default: 0.25 (25%%).
 
     Returns:
     --------

@@ -9,7 +9,7 @@ Prereq:
 Python usage:
 -------------
     >>> import unravel.warp.to_native as to_native
-    >>> native_img = to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None, pad_percent=0.15)
+    >>> native_img = to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None, pad_percent=0.25)
     >>> # native_img is an np.ndarray
 
 Usage:
@@ -43,7 +43,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-o', '--output', help='Save as rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
     opts.add_argument('-inp', '--interpol', help='Interpolator for warping with ants.apply_transforms (nearestNeighbor, multiLabel \[default], linear, bSpline)', default="multiLabel", action=SM)
     opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from registration. Default: reg_outputs", default="reg_outputs", action=SM)
@@ -64,7 +64,7 @@ def parse_args():
 # TODO: Could consolidate -ro and -fri into one argument
 
 @print_func_name_args_times()
-def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, target_res=50, pad_percent=0.15, miracl=False):
+def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, target_res=50, pad_percent=0.25, miracl=False):
     # Calculate zoom factors for xy and z dimensions
     zf_xy = xy_res / target_res
     zf_z = z_res / target_res
@@ -74,7 +74,7 @@ def calculate_resampled_padded_dimensions(original_dimensions, xy_res, z_res, ta
         round(dim * zf) for dim, zf in zip(original_dimensions, (zf_xy, zf_xy, zf_z))
     ]
     
-    # Calculate padding for the resampled image (15% of the resampled dimensions)
+    # Calculate padding for the resampled image (25% of the resampled dimensions)
     padded_dimensions = []
     for dim in resampled_dimensions:
         # Calculate pad width for one side, then round to the nearest integer
@@ -100,7 +100,7 @@ def scale_to_full_res(ndarray, full_res_dims, zoom_order=0):
     return scaled_img
 
 @print_func_name_args_times()
-def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None, pad_percent=0.15):
+def to_native(sample_path, reg_outputs, fixed_reg_in, moving_img_path, metadata_rel_path, reg_res, miracl, zoom_order, interpol, output=None, pad_percent=0.25):
     """Warp image from atlas space to tissue space and scale to full resolution"""
 
     # Warp the moving image to tissue space
