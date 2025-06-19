@@ -62,7 +62,7 @@ from unravel.core.config import Configuration
 from unravel.core.img_io import resolve_path
 from unravel.core.img_tools import pad
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
-from unravel.register import affine_initializer_check
+from unravel.register.affine_initializer_check import affine_initializer_check
 from unravel.warp.warp import warp
 
 
