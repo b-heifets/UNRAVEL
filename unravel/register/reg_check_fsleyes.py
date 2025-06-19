@@ -9,14 +9,15 @@ Prerequisites:
     - Set up LUT for the atlas in FSLeyes (see "Setting up Allen brain atlas coloring in FSLeyes" at https://b-heifets.github.io/UNRAVEL/guide.html#reg-check)
 
 Notes:
-    - The script will recursively search for the fixed_reg_in, warped_atlas, and optionally the original autofluorescence images.
+    - The inputs can be glob patterns 
 
-Usage:
+    Usage:
 ------
     reg_check_fsleyes [-fri fixed_reg_in] [-wa warped_atlas] [-min min_val] [-max max_val] [-og] [-af autofl_img] [-d list of paths]
 """
 
 import subprocess
+from glob import glob
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -47,9 +48,18 @@ def main():
 
     # Collect autofl NIfTI paths
     autofl_nii_paths, masked_autofl_nii_paths, warped_atlas_nii_paths = [], [], []
-    autofl_nii_paths.extend(cwd.rglob(f'**/*{args.autofl_img}'))
-    masked_autofl_nii_paths.extend(cwd.rglob(f'**/*{args.fixed_reg_in}'))
-    warped_atlas_nii_paths.extend(cwd.rglob(f'**/*{args.warped_atlas}'))
+    autofl_nii_paths.extend(cwd.glob(args.autofl_img))
+    masked_autofl_nii_paths.extend(cwd.glob(args.fixed_reg_in))
+    warped_atlas_nii_paths.extend(cwd.glob(args.warped_atlas))
+
+    # If lists are empty, raise an error
+    if not masked_autofl_nii_paths and not autofl_nii_paths:
+        print("Error: No autofluorescence or masked autofluorescence images found.")
+        return
+    
+    if not warped_atlas_nii_paths:
+        print("Error: No warped atlas images found.")
+        return
 
     # Sort the paths by file name
     autofl_nii_paths = sorted(autofl_nii_paths, key=lambda p: p.name) if autofl_nii_paths else []
