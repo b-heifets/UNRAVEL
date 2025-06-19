@@ -252,7 +252,7 @@ def main():
                         Path(init_align_out).unlink(missing_ok=True)
 
                 else:
-                    print(f"\n    The initial alignment of the moving image is within the padded region of the fixed image. Proceeding with registration.\n")
+                    print(f"\n    [green]The initial alignment of the moving image is within the padded region of the fixed image. Proceeding with registration.\n")
                     initial_alignment_ok = True
 
             # Define final output and skip processing if it exists
