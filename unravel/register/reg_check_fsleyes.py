@@ -8,12 +8,9 @@ Prerequisites:
     - ``reg_check`` to aggregate the fixed_reg_in, warped_atlas, and optionally the original autofluorescence image.
     - Set up LUT for the atlas in FSLeyes (see "Setting up Allen brain atlas coloring in FSLeyes" at https://b-heifets.github.io/UNRAVEL/guide.html#reg-check)
 
-Notes:
-    - The inputs can be glob patterns 
-
-    Usage:
+Usage:
 ------
-    reg_check_fsleyes [-fri fixed_reg_in] [-wa warped_atlas] [-min min_val] [-max max_val] [-og] [-af autofl_img] [-d list of paths]
+    reg_check_fsleyes [-fri fixed_reg_in] [-af autofl_img] [-wa warped_atlas] [-min min_val] [-max max_val] [-og] [-af autofl_img] [-d list of paths]
 """
 
 import subprocess
@@ -30,9 +27,9 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-fri', '--fixed_reg_in', help='Fixed image from registration ``reg``. Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
-    opts.add_argument('-af', '--autofl_img', help='The original autofluorescence image (loaded if present). Default: autofl_50um.nii.gz', default="autofl_50um.nii.gz", action=SM)
-    opts.add_argument('-wa', '--warped_atlas', help='Warped atlas image from ``reg``. Default: atlas_CCFv3_2020_30um_in_tissue_space.nii.gz', default="atlas_CCFv3_2020_30um_in_tissue_space.nii.gz", action=SM)
+    opts.add_argument('-fri', '--fixed_reg_in', help='Fixed image from registration ``reg``. Default: *autofl_50um_masked_fixed_reg_input.nii.gz', default="*autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
+    opts.add_argument('-af', '--autofl_img', help='The original autofluorescence image (loaded if present). Default: *autofl_50um.nii.gz', default="*autofl_50um.nii.gz", action=SM)
+    opts.add_argument('-wa', '--warped_atlas', help='Warped atlas image from ``reg``. Default: *atlas_CCFv3_2020_30um_in_tissue_space.nii.gz', default="*atlas_CCFv3_2020_30um_in_tissue_space.nii.gz", action=SM)
     opts.add_argument('-min', '--min', help='Minimum intensity value for ``fsleyes`` display. Default: 0', type=float, default=0.0)
     opts.add_argument('-max', '--max', help='Maximum intensity value for ``fsleyes`` display. Default: 5000', type=float, default=5000.0)
 
