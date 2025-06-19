@@ -120,6 +120,12 @@ def main():
                 "common": False,
                 "alias": "rai"
             },
+            "reg_affine_initializer_check": {
+                "module": "unravel.register.affine_initializer_check",
+                "description": "Check initially aligned template.",
+                "common": False,
+                "alias": "rai"
+            },
         },
         "Warping": {
             "warp_to_atlas": {

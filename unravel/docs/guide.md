@@ -340,6 +340,7 @@ uc -m
 - [**reg_prep**](unravel.register.reg_prep): Prepare registration (resample the autofluo image to lower res).
 - [**reg**](unravel.register.reg): Perform registration (e.g., register the autofluo image to an average template).
 - [**reg_affine_initializer**](unravel.register.affine_initializer): Part of reg. Roughly aligns the template to the autofl image.
+- [**reg_affine_initializer_check**](unravel.register.affine_initializer): Check initially aligned template.
 - [**reg_check**](unravel.register.reg_check): Check registration (aggregate the autofluo and warped atlas images).
 - [**reg_check_fsleyes**](unravel.register.reg_check): Check registration using the aggregated images.
 - [**reg_check_brain_mask**](unravel.register.reg_check_brain_mask): Check brain mask for over/under segmentation.

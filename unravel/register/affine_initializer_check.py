@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``affine_initializer_check`` (``aic``) from UNRAVEL to check if the initially aligned template is fully within the padded region of the fixed image.
+Use ``reg_affine_initializer_check`` (``raic``) from UNRAVEL to check if the initially aligned template is fully within the padded region of the fixed image.
 
 Prerequisites:
     - ``affine_initializer`` or ``reg`` must have been run to generate the initially aligned template image.
@@ -14,7 +14,7 @@ Notes:
 
 Usage:
 ------
-    affine_initializer_check -i <template__initial_alignment_to_fixed_img.nii.gz> [-t <threshold>] [-d list of paths] [-p sample??] [-v]
+    reg_affine_initializer_check -i <template__initial_alignment_to_fixed_img.nii.gz> [-t <threshold>] [-d list of paths] [-p sample??] [-v]
 """
 
 from pathlib import Path
