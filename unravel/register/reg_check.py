@@ -20,10 +20,10 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from img_io import load_nii, save_as_nii
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration 
+from unravel.core.img_io import load_nii, save_as_nii
 from unravel.core.img_tools import pad
 from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, copy_files
 
