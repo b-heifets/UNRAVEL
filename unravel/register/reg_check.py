@@ -4,7 +4,7 @@
 Use ``reg_check`` (``rc``) from UNRAVEL to check registration QC, copies autofl_`*`um_masked_fixed_reg_input.nii.gz and atlas_in_tissue_space.nii.gz for each sample to a target dir.
 
 Note:
-    - This copies main outputs from ``reg`` to a target directory for further viewing.
+    - This copies main outputs from ``reg`` to a target directory (reg_check by default) for further viewing.
     - Optional: To check for overmasking, this also pads the unmasked autofluo image and saves it to reg_outputs, so it can be copied to the target directory.
 
 Next steps:
@@ -32,7 +32,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-td', '--target_dir', help='path/target_output_dir name  for aggregating outputs from all samples (cwd if omitted).', default=None, action=SM)
+    opts.add_argument('-td', '--target_dir', help='path/target_output_dir name  for aggregating outputs from all samples. Default: reg_check', default='reg_check', action=SM)
     opts.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from ``reg``. Default: reg_outputs", default="reg_outputs", action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Fixed image from registration ``reg``. Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-wa', '--warped_atlas', help='Warped atlas image from ``reg``. Default: atlas_CCFv3_2020_30um_in_tissue_space.nii.gz', default="atlas_CCFv3_2020_30um_in_tissue_space.nii.gz", action=SM)
@@ -49,7 +49,6 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Optionally pad the unmasked autofluo image and aggregate it with the masked image and/or the warped atlas image.
 
 @log_command
 def main():
@@ -59,7 +58,7 @@ def main():
     verbose_start_msg()
 
     # Create the target directory for copying the selected slices
-    target_dir = Path(args.target_dir) if args.target_dir is not None else Path.cwd()
+    target_dir = Path(args.target_dir)
     target_dir.mkdir(exist_ok=True, parents=True)
 
     sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
