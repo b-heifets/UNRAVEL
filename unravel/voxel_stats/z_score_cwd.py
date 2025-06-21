@@ -110,11 +110,11 @@ def main():
     # Z-score the image using the mask and save the output
     for nii_path in nii_paths:
         nii = nib.load(nii_path)
-        img = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
+        img = np.asanyarray(nii.dataobj, dtygstpe=nii.header.get_data_dtype()).squeeze()
         z_scored_img = z_score_img(img, mask_img)
 
         # Save the z-scored image
-        output_path = Path(str(input_nii_path).replace('.nii.gz', f'_{args.suffix}.nii.gz'))
+        output_path = Path(str(nii_path).replace('.nii.gz', f'_{args.suffix}.nii.gz'))
 
         z_scored_nii = nib.Nifti1Image(z_scored_img, nii.affine, nii.header)
         z_scored_nii.header.set_data_dtype(np.float32)
