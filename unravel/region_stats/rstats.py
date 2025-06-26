@@ -81,6 +81,7 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Using the sample_key.csv would be better for batch processing than using -c for the condition.
 
 def get_atlas_region_at_coords(atlas, x, y, z):
     """"Get the ndarray atlas region intensity at the given coordinates"""
