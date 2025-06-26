@@ -309,7 +309,7 @@ def main():
             if args.atlas_path is not None and Path(sample_path, args.atlas_path).exists():
                 atlas_path = sample_path / args.atlas_path
                 atlas_img = load_3D_img(atlas_path, verbose=args.verbose)
-            elif args.moving_img is not None and Path(sample_path, args.moving_img).exists():
+            elif args.moving_img is not None and Path(args.moving_img).exists():
                 fixed_reg_input = sample_path / args.reg_outputs / args.fixed_reg_in
                 if not fixed_reg_input.exists():
                     fixed_reg_input = sample_path / args.reg_outputs / "autofl_50um_fixed_reg_input.nii.gz"
