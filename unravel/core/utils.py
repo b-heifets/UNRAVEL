@@ -440,7 +440,7 @@ def get_pad_percent(reg_outputs_path, pad_percent):
             try:
                 return float(f.read().strip())
             except ValueError:
-                print("    Warning: Invalid value in pad_percent.txt. Using default pad_percent = 0.15")
+                print("    Warning: Invalid value in pad_percent.txt. Using default pad_percent = 0.25")
     else:
-        print("    Warning: pad_percent.txt not found. Using default pad_percent = 0.15")
-    return 0.15
+        print("    Warning: pad_percent.txt not found. Using default pad_percent = 0.25")
+    return 0.25

@@ -40,7 +40,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments for checking the unmasked autofluo image')
     opts.add_argument('-og', '--orig_autofl_img', help='Also copy the unmasked autofluo image to the target dir (to check for overmasking). Default: False', action='store_true', default=False)
     opts.add_argument('-af', '--autofl_img', help='Path to unmasked autofluorescence image from ``reg_prep`` (relative to sample dir). Default: reg_inputs/autofl_50um.nii.gz', default="reg_inputs/autofl_50um.nii.gz", action=SM)
-    opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.15.', type=float, action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
