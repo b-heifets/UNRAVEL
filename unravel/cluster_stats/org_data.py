@@ -3,6 +3,9 @@
 """
 Use ``cstats_org_data`` (``cod``) from UNRAVEL to aggregate and organize csv outputs from ``cstats_validation``.
 
+Prereqs:
+    - ``cstats_validation`` (``cstats_val``) to generate the cluster validation
+
 Inputs: 
     - clusters/cluster_validation_results_`*` (glob pattern matching ``cstats_validation`` output dirs)
     - CSVs with the density data (e.g., cell_density_data.csv or label_density_data.csv from ``cstats_validation``)
@@ -132,7 +135,7 @@ def copy_stats_files(validation_dir, dest_path, vstats_path, p_val_txt):
                     cluster_correction_path = Path(str(cluster_correction_path)[:-3])  # Remove last 3 characters (_LH or _RH)
                 else:
                     cluster_correction_path = validation_dir_name
-                cluster_correction_dir = cluster_correction_path.name
+                cluster_correction_dir = Path(cluster_correction_path).name
 
         if not cluster_correction_path.exists():
             print(f'\n    [red]Path for rev_cluster_index.nii.gz, {p_val_txt}, and _cluster_info.txt does not exist: {cluster_correction_path}\n')

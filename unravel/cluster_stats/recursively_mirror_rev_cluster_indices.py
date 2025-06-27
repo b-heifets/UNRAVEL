@@ -35,7 +35,7 @@ def parse_args():
     reqs.add_argument('-m', '--mas_side', help='Side of the brain corresponding to the mask used for ``vstats`` and ``cstats_fdr`` (RH or LH)', choices=['RH', 'LH'], required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-i', '--input', help='Glob pattern to match files (enable recursive pattern with: shopt -s globstar). Default: **/*rev_cluster_index.nii.gz', default='**/*rev_cluster_index.nii.gz', action=SM)
+    opts.add_argument('-i', '--input', help='Glob pattern to match files. Default (recursive): **/*rev_cluster_index.nii.gz', default='**/*rev_cluster_index.nii.gz', action=SM)
     opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
     opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
 

@@ -28,7 +28,7 @@ Making directional cluster indices from non-directional p value maps output from
     - ``cstats_fdr`` -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v
 
 Next commands:
-    - ``cstats_mirror_indices`` to mirror the cluster indices to the other hemisphere (if bilateral data processed with a hemispheric mask).
+    - ``cstats_mirror_indices`` to recursively mirror the cluster indices to the other hemisphere (if bilateral data was combined and processed w/ a hemispheric mask).
     - ``cstats_validation`` to validate the cluster indices (if unilateral data or bilateral data processed with a whole brain mask).
 
 Usage
