@@ -36,8 +36,9 @@ Usage to binarize a single image and set to 8 bit:
     img_math -i A.nii.gz -t 0.5 -o binarized.nii.gz -r A.nii.gz -d uint8
 """
 
-
 import numpy as np
+from glob import glob
+from pathlib import Path
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -50,7 +51,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--images', help="Paths to the input images. (path/image1 path/image2 ...)", nargs='*', required=True, action=SM)
+    reqs.add_argument('-i', '--images', help="Paths to the input images. (path/image1 path/image2 ...). Supports glob patterns like '*.nii.gz'", nargs='*', required=True, action=SM)
     reqs.add_argument('-o', '--output', help='Path to the output image', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
@@ -69,6 +70,7 @@ def parse_args():
 
 # TODO: Add support for chaining operations (e.g., img1 + img2 - img3 * img4)
 # TODO: Add the ability to apply operations to a single image (e.g., img1 * 2)
+# TODO: The logic for supporting multiple glob patterns could be centralized in a utility function
 
 @print_func_name_args_times()
 def apply_operation(image1, image2, operation):
@@ -148,8 +150,21 @@ def main():
 
     if not args.images:
         raise ValueError("At least one image must be specified with --images.")
+    
+    # Expand multiple glob patterns
+    img_paths = []
+    for pattern in args.images:
+        img_paths.extend(Path.cwd().glob(pattern))
 
-    images = [load_3D_img(img_path, verbose=args.verbose) for img_path in args.images]
+    if not img_paths:
+        raise ValueError("No images found for provided glob patterns.")
+
+    # Sort and load
+    img_paths = sorted(img_paths)
+    images = [load_3D_img(str(p), verbose=args.verbose) for p in img_paths]
+
+    if not images:
+        raise ValueError("No valid images loaded. Check the input paths and formats.") 
 
     # Ensure all images are the same shape
     shape0 = images[0].shape
