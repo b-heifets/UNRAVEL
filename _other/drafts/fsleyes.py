@@ -4,9 +4,7 @@
 Run fsleyes with given display range and files.
 """
 
-import os
 import subprocess
-from glob import glob
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from utils import match_files
