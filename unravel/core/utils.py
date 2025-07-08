@@ -402,15 +402,15 @@ def copy_files(source_dir, target_dir, filename, sample_path=None, verbose=False
         if verbose:
             print(f"File {src_file} does not exist and was not copied.")
 
-def match_files(base_path, patterns):
+def match_files(patterns, base_path=None):
     """Expand multiple glob patterns to match file paths.
     
     Parameters
     ----------
-    base_path : str or Path
-        The base directory path where the glob patterns will be applied.
     patterns : list of str
         List of glob patterns to match files. Supports patterns like '*.nii.gz', '*.tif', etc.
+    base_path : str or Path
+        Base directory where patterns are applied. Defaults to the current working directory.
 
     Returns
     -------
@@ -419,17 +419,13 @@ def match_files(base_path, patterns):
 
     Raises
     ------
-    TypeError
-        If base_path is not a str or Path, or if patterns is not a list of strings.
     ValueError
         If no files match the given patterns.
     """
-    if not isinstance(base_path, (str, Path)):
-        raise TypeError("base_path must be a string or Path object.")
     if not isinstance(patterns, list) or not all(isinstance(p, str) for p in patterns):
         raise TypeError("patterns must be a list of strings.")
-
-    base_path = Path(base_path)
+    
+    base_path = Path.cwd() if base_path is None else Path(base_path)
     paths = []
     for pattern in patterns:
         paths.extend(base_path.glob(pattern))
