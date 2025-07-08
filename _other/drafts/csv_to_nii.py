@@ -27,7 +27,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='path/*.csv. Default: *.csv', default='*.csv', action=SM)
+    opts.add_argument('-i', '--input', help="One or more csv paths or glob patterns (space-separated). Default: '*.csv'", default='*.csv', nargs='*', action=SM)
     opts.add_argument('-s', '--sort_col', help='Column to sort by. If used, also use for decoding the NIfTI file.', action=SM)
     opts.add_argument('-val', '--value_cols', help='Column(s) to include in the output NIfTI files. Default: numeric columns other than sort_col.', nargs='*', action=SM)
 
