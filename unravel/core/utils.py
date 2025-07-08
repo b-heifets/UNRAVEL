@@ -269,7 +269,7 @@ def log_command(func):
     return wrapper
 
 
-# Function decorator
+# Function decorators
 
 def get_dir_name_from_args(args, kwargs):
     """
@@ -365,6 +365,9 @@ def print_func_name_args_times(print_dir=True):
         return wrapper_timer
     return decorator
 
+
+# Other utility functions
+
 @print_func_name_args_times()
 def load_text_from_file(file_path):
     try:
@@ -399,33 +402,42 @@ def copy_files(source_dir, target_dir, filename, sample_path=None, verbose=False
         if verbose:
             print(f"File {src_file} does not exist and was not copied.")
 
-def process_files_with_glob(glob_pattern, processing_func, *args, **kwargs):
+def match_files(base_path, patterns):
+    """Expand multiple glob patterns to match file paths.
+    
+    Parameters
+    ----------
+    base_path : str or Path
+        The base directory path where the glob patterns will be applied.
+    patterns : list of str
+        List of glob patterns to match files. Supports patterns like '*.nii.gz', '*.tif', etc.
+
+    Returns
+    -------
+    list of Path
+        A sorted list of Path objects that match the provided glob patterns.
+
+    Raises
+    ------
+    TypeError
+        If base_path is not a str or Path, or if patterns is not a list of strings.
+    ValueError
+        If no files match the given patterns.
     """
-    Process all files matching a glob pattern using the provided processing function.
+    if not isinstance(base_path, (str, Path)):
+        raise TypeError("base_path must be a string or Path object.")
+    if not isinstance(patterns, list) or not all(isinstance(p, str) for p in patterns):
+        raise TypeError("patterns must be a list of strings.")
 
-    Parameters:
-    -----------
-    glob_pattern : str
-        The glob pattern to match files.
+    base_path = Path(base_path)
+    paths = []
+    for pattern in patterns:
+        paths.extend(base_path.glob(pattern))
 
-    processing_func : function
-        The function to process each file. Should accept a file path as the first argument.
+    if not paths:
+        raise ValueError(f"No files found in {base_path} for patterns: {patterns}")
 
-    ``*args``, ``**kwargs`` :
-        Additional arguments and keyword arguments to pass to the processing function.
-    """
-    files = glob(glob_pattern)
-    if not files:
-        print(f"\n    [red1]No files found matching the pattern: {glob_pattern}\n")
-        return
-
-    print(f"\nProcessing {len(files)} files matching the pattern {glob_pattern}:")
-    for file_path in files:
-        print(f"\n    {Path(file_path).name}")
-
-    for file_path in files:
-        file_path = Path(file_path).resolve()
-        processing_func(file_path, *args, **kwargs)
+    return sorted(paths)
 
 @print_func_name_args_times()
 def get_pad_percent(reg_outputs_path, pad_percent):
