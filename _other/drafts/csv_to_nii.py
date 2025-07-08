@@ -14,7 +14,6 @@ Usage:
 import nibabel as nib
 import numpy as np
 import pandas as pd
-from glob import glob
 from pathlib import Path
 from rich import print
 from rich.traceback import install
