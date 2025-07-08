@@ -302,61 +302,6 @@ def load_3D_tif(tif_path, desired_axis_order="xyz", return_res=False, return_met
 
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
-@print_func_name_args_times()
-def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
-    """
-    Load a .nii.gz image and return the ndarray.
-
-    Parameters
-    ----------
-    nii_path : str
-        The path to the .nii.gz file.
-    desired_axis_order : str, optional
-        The desired order of the image axes. Default is 'xyz'.
-    return_res : bool, optional
-        Whether to return resolutions. Default is False.
-    return_metadata : bool, optional
-        Whether to return metadata. Default is False.
-    save_metadata : str, optional
-        Path to save metadata file. Default is None.
-    xy_res : float, optional
-        The resolution in the xy-plane (use if res is not specified in the metadata).
-    z_res : float, optional
-        The resolution in the z-plane.
-
-    Returns
-    -------
-    ndarray
-        The loaded 3D image array.
-    tuple, optional
-        If return_res is True, returns (ndarray, xy_res, z_res).
-    tuple, optional
-        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
-
-    Notes
-    -----
-    - If xy_res and z_res are provided, they will be used instead of the values from the metadata.
-    """
-    if not Path(nii_path).exists():
-        raise FileNotFoundError(f"\nInput file not found: {nii_path}\n")
-
-    nii = nib.load(nii_path)
-    ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
-    ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
-
-    res_specified = True if xy_res is not None else False
-    if res_specified:
-        original_xy_res = xy_res
-        original_z_res = z_res
-
-    xy_res, z_res, x_dim, y_dim, z_dim = metadata(nii_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
-
-    if res_specified:
-        xy_res = original_xy_res
-        z_res = original_z_res
-
-    return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
-
 def nii_path_or_nii(nii):
     """Helper function to load a NIfTI image if it's a path. Returns the NIfTI image object.
     
@@ -394,6 +339,57 @@ def nii_to_ndarray(nii):
     nii = nii_path_or_nii(nii)
     ndarray = np.asanyarray(nii.dataobj, dtype=nii.header.get_data_dtype()).squeeze()
     return ndarray
+
+@print_func_name_args_times()
+def load_nii(nii_path, desired_axis_order="xyz", return_res=False, return_metadata=False, save_metadata=None, xy_res=None, z_res=None):
+    """
+    Load a .nii.gz image and return the ndarray.
+
+    Parameters
+    ----------
+    nii_path : str
+        The path to the .nii.gz file.
+    desired_axis_order : str, optional
+        The desired order of the image axes. Default is 'xyz'.
+    return_res : bool, optional
+        Whether to return resolutions. Default is False.
+    return_metadata : bool, optional
+        Whether to return metadata. Default is False.
+    save_metadata : str, optional
+        Path to save metadata file. Default is None.
+    xy_res : float, optional
+        The resolution in the xy-plane (use if res is not specified in the metadata).
+    z_res : float, optional
+        The resolution in the z-plane.
+
+    Returns
+    -------
+    ndarray
+        The loaded 3D image array.
+    tuple, optional
+        If return_res is True, returns (ndarray, xy_res, z_res).
+    tuple, optional
+        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
+
+    Notes
+    -----
+    - If xy_res and z_res are provided, they will be used instead of the values from the metadata.
+    """
+    ndarray = nii_to_ndarray(nii_path)
+    ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "zyx" else ndarray
+
+    res_specified = True if xy_res is not None else False
+    if res_specified:
+        original_xy_res = xy_res
+        original_z_res = z_res
+
+    xy_res, z_res, x_dim, y_dim, z_dim = metadata(nii_path, ndarray, return_res, return_metadata, save_metadata=save_metadata)
+
+    if res_specified:
+        xy_res = original_xy_res
+        z_res = original_z_res
+
+    return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
 @print_func_name_args_times()
 def load_nii_subset(nii_path, xmin, xmax, ymin, ymax, zmin, zmax):
