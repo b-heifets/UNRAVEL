@@ -29,14 +29,14 @@ from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, process_files_with_glob
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, print_func_name_args_times, process_files_with_glob
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help="Path to the input CSV file or a glob pattern.", required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="One or more csv paths or glob patterns (space-separated), e.g., '*.csv'", required=True, nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-p', '--pack', help="Pack the points by grouping them.", action='store_true')
@@ -160,13 +160,9 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    process_files_with_glob(
-        glob_pattern=args.input,
-        processing_func=points_compressor,
-        pack=args.pack,
-        unpack=args.unpack,
-        summary=args.summary
-    )
+    input_paths = match_files(args.input)
+    for input_path in input_paths:
+        points_compressor(input_path, pack=args.pack, unpack=args.unpack, summary=args.summary)
 
     verbose_end_msg()
 
