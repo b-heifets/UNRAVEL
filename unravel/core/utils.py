@@ -409,8 +409,9 @@ def match_files(patterns, base_path=None):
     ----------
     patterns : list of str
         List of glob patterns to match files. Supports patterns like '*.nii.gz', '*.tif', etc.
-    base_path : str or Path
-        Base directory where patterns are applied. Defaults to the current working directory.
+        Can include absolute paths with wildcards.
+    base_path : str or Path, optional
+        Base directory where relative patterns are applied. Defaults to the current working directory.
 
     Returns
     -------
@@ -419,19 +420,29 @@ def match_files(patterns, base_path=None):
 
     Raises
     ------
+    TypeError
+        If patterns is not a list of strings, or base_path is not str or Path.
     ValueError
         If no files match the given patterns.
     """
     if not isinstance(patterns, list) or not all(isinstance(p, str) for p in patterns):
         raise TypeError("patterns must be a list of strings.")
     
+    if base_path is not None and not isinstance(base_path, (str, Path)):
+        raise TypeError("base_path must be a string or Path object.")
+
     base_path = Path.cwd() if base_path is None else Path(base_path)
     paths = []
+
     for pattern in patterns:
-        paths.extend(base_path.glob(pattern))
+        pattern_path = Path(pattern)
+        if pattern_path.is_absolute():
+            paths.extend(Path(pattern_path.parent).glob(pattern_path.name))
+        else:
+            paths.extend(base_path.glob(pattern))
 
     if not paths:
-        raise ValueError(f"No files found in {base_path} for patterns: {patterns}")
+        raise ValueError(f"No files found matching patterns: {patterns}")
 
     return sorted(paths)
 
