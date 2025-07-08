@@ -20,7 +20,7 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.utils import log_command, print_func_name_args_times
+from unravel.core.utils import log_command, match_files, print_func_name_args_times
 
 
 def parse_args():
@@ -36,7 +36,7 @@ def parse_args():
 @print_func_name_args_times()
 def csv_to_nii(input_pattern='*.csv', sort_col=None, value_cols=None):
     print()
-    csv_paths = [Path(file) for file in glob(input_pattern)]
+    csv_paths = match_files(input_pattern)
     for csv_path in csv_paths:
         df = pd.read_csv(csv_path)
 
