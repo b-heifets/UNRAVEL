@@ -15,7 +15,6 @@ Version 2 allows for more flexibility (e.g., use seg from one label as a mask fo
 
 """
 
-from glob import glob
 from pathlib import Path
 import re
 import numpy as np
@@ -27,7 +26,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples
+from unravel.core.utils import match_files, print_cmd_and_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
@@ -73,8 +72,9 @@ def main():
             bbox_dir = Path(clusters_dir_path, "bounding_boxes")
 
             # Get cluster IDs
-            file_pattern = str(Path(bbox_dir, f"bounding_box_{sample}_cluster_*.txt")) # Define the pattern to match the file names
-            file_list = glob(file_pattern) # Use glob to find files matching the pattern            
+            file_pattern = f"bounding_box_{sample}_cluster_*.txt"
+            file_list = match_files([file_pattern], base_path=bbox_dir)
+                       
             clusters = [int(re.search(r"cluster_(\d+).txt", file).group(1)) for file in file_list] # Extract cluster IDs
             for cluster in clusters:
 

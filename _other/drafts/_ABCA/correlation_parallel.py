@@ -22,14 +22,13 @@ Usage:
 import numpy as np
 import pandas as pd
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from glob import glob
 from pathlib import Path
 from rich import print
 from rich.traceback import install
 from scipy.stats import pearsonr
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.utils import log_command
+from unravel.core.utils import log_command, match_files
 from unravel.core.img_io import load_nii
 from unravel.region_stats.rstats_mean_IF import calculate_mean_intensity
 from unravel.voxel_stats.apply_mask import load_mask
@@ -39,8 +38,8 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-x', '--x_img_glob', help='path/x_axis_image_*.nii.gz', required=True, action=SM)
-    reqs.add_argument('-y', '--y_image', help='path/y_axis_image.nii.gz (can pass in list of images)', nargs='*', required=True, action=SM)
+    reqs.add_argument('-x', '--x_input', help="Glob pattern(s) for X-axis images (e.g., 'path/x_axis_image_*.nii.gz').", required=True, nargs='*', action=SM)
+    reqs.add_argument('-y', '--y_input', help="Glob pattern(s) for Y-axis images (e.g., 'path/y_axis_image_*.nii.gz').", required=True, nargs='*', action=SM)
     reqs.add_argument('-a', '--atlas', help='Path to the atlas NIfTI file for a region-wise correlation. Default: None', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -102,8 +101,8 @@ def main():
     install()
     args = parse_args()
 
-    y_img_paths = [Path(y_image) for y_image in args.y_image]
-    x_img_paths = [Path(file) for file in glob(args.x_img_glob)]
+    x_img_paths = match_files(args.x_input)
+    y_img_paths = match_files(args.y_input)
     mask_imgs = [load_mask(path) for path in args.masks] if args.masks else []
     mask_img = np.ones(atlas_img.shape, dtype=bool) if not mask_imgs else np.logical_and.reduce(mask_imgs)
 

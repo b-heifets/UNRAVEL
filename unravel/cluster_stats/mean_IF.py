@@ -36,7 +36,7 @@ from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img
 from unravel.core.img_tools import label_IDs
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -46,7 +46,7 @@ def parse_args():
     reqs.add_argument('-i', '--input', help='Path/rev_cluster_index.nii.gz from ``cstats_fdr``', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-ip', '--input_pattern', help="Pattern for NIfTI images to process relative to cwd. Default: '*.nii.gz'", default='*.nii.gz', action=SM)
+    opts.add_argument('-ip', '--input_pattern', help="Glob pattern(s) for NIfTI images to process. Default: '*.nii.gz'", default='*.nii.gz', nargs='*', action=SM)
     opts.add_argument('-c', '--clusters', help='Space-separated list of cluster IDs to process. Default: all clusters', nargs='*', type=int, action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -122,7 +122,7 @@ def main():
     output_folder = Path(f'cluster_mean_IF_{str(Path(args.input).name).replace(".nii.gz", "")}')
     output_folder.mkdir(parents=True, exist_ok=True)
 
-    files = Path().cwd().glob(args.input_pattern)
+    files = match_files(args.input_pattern)
     for file in files:
         if str(file).endswith('.nii.gz'):
             

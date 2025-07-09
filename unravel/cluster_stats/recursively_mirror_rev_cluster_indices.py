@@ -25,7 +25,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 from unravel.voxel_stats.mirror import mirror
 
 def parse_args():
@@ -35,7 +35,7 @@ def parse_args():
     reqs.add_argument('-m', '--mas_side', help='Side of the brain corresponding to the mask used for ``vstats`` and ``cstats_fdr`` (RH or LH)', choices=['RH', 'LH'], required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-i', '--input', help='Glob pattern to match files. Default (recursive): **/*rev_cluster_index.nii.gz', default='**/*rev_cluster_index.nii.gz', action=SM)
+    opts.add_argument('-i', '--input', help='Glob pattern(s) to match files. Default (recursive): **/*rev_cluster_index.nii.gz', default='**/*rev_cluster_index.nii.gz', nargs='*', action=SM)
     opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
     opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 0', default=0, type=int, action=SM)
 
@@ -70,10 +70,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-
-    root_path = Path().resolve()
-    files = list(root_path.glob(args.input))
-
+    files = match_files(args.input)
     with ThreadPoolExecutor() as executor:
         executor.map(lambda file: process_file(file, args), files)
 

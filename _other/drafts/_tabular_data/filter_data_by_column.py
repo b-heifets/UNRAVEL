@@ -7,7 +7,6 @@ For example, you can keep data for valid clusters.
 
 """
 
-import glob
 import pandas as pd
 from pathlib import Path
 from rich import print
@@ -15,13 +14,13 @@ from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help="Glob pattern to match CSV or XLSX files", required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="One or more CSV/XLSX file paths or glob patterns (space-separated), e.g., 'data/*.csv'", required=True, nargs='*', action=SM)
     reqs.add_argument('-col', '--column', help="Column to filter", required=True, action=SM)
     reqs.add_argument('-vals', '--values', nargs='*', help="Values to filter by", required=True, action=SM)
 
@@ -85,7 +84,9 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    for file_path in glob.glob(args.input):
+    file_paths = match_files(args.input)
+    for file_path in file_paths:
+
 
         # Skip temporary files that start with ~
         if Path(file_path).name.startswith("~"):

@@ -10,11 +10,10 @@ Usage:
 
 import pandas as pd
 from pathlib import Path
-from glob import glob
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-
+from unravel.core.utils import match_files
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
@@ -26,11 +25,17 @@ def parse_args():
     return parser.parse_args()
 
 def cluster_summary(csv_pattern, output):
+    """
+    Recursively find and concatenate CSV files matching the given pattern, sort by the first two columns if they exist, and save the result to the specified output file.
+    Parameters:
+    -----------
+    csv_pattern : str
+        The pattern to match CSV files (e.g., 'cluster_validation_info.csv').
+    output : str
+        The output file path where the concatenated CSV will be saved (e.g., 'cluster_validation_summary.csv').
+    """
     # Use glob to find all matching CSV files recursively
-    csv_files = glob(str(f'**/{csv_pattern}'), recursive=True)
-    if not csv_files:
-        print(f"No CSV files found matching the pattern {csv_pattern}.")
-        return
+    csv_files = match_files(f'**/{csv_pattern}')
 
     # Read and concatenate all matching CSV files
     concatenated_df = pd.concat([pd.read_csv(f) for f in csv_files])

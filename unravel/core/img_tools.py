@@ -20,14 +20,13 @@ import nibabel as nib
 import numpy as np
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
-from glob import glob
 from pathlib import Path
 from rich import print
 from scipy import ndimage
 from scipy.ndimage import rotate
 
 from unravel.core.img_io import nii_to_ndarray
-from unravel.core.utils import print_func_name_args_times
+from unravel.core.utils import match_files, print_func_name_args_times
 
 
 @print_func_name_args_times()
@@ -126,8 +125,9 @@ def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executabl
         print("\n    [red1]Ilastik executable path not provided. Please provide the path to the Ilastik executable.\n")
         return
 
-    tif_list = sorted(glob(f"{tif_dir}/*.tif"))
-    if not tif_list:
+    try:
+        tif_list = match_files('*.tif', base_path=tif_dir)
+    except ValueError:
         print(f"\n    [red1]No TIF files found in {tif_dir}.\n")
         return
     

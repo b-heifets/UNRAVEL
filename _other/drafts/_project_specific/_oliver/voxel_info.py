@@ -29,14 +29,14 @@ from rich.traceback import install
 from unravel.core.img_io import load_nii
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='Path to the image or images to compute variance. Default: "*.nii.gz"', default='*.nii.gz', action=SM)
+    opts.add_argument('-i', '--input', help="Glob pattern for input .nii.gz files (e.g., '*.nii.gz'). Default: '*.nii.gz'", default='*.nii.gz', nargs='*', action=SM)
     opts.add_argument('-mi', '--more_inputs', help='Paths to additional images to append to the DataFrame. Default: None', default=None, nargs='*', action=SM)
     opts.add_argument('-mic', '--mi_cols', help='Column names for the additional images (same order as -mi; rec: use region_id for the atlas. Default: None', default=None, nargs='*', action=SM)
     opts.add_argument('-o', '--output', help='Output parquet file path. Default: voxel_info.parquet', default='voxel_info.parquet', action=SM)
@@ -112,9 +112,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    nii_paths = sorted(Path.cwd().glob(args.input))
-    if not nii_paths:
-        raise ValueError(f"No .nii.gz files found matching pattern {args.input}")
+    nii_paths = match_files(args.input)
 
     nii_names = [str(nii_path.name).removesuffix(".nii.gz") for nii_path in nii_paths]
     sample_cols = [f"{nii_name.split('_')[0]}_{nii_name.split('_')[1]}".replace("sample", "") for nii_name in nii_names] 
