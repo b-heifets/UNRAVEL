@@ -70,6 +70,7 @@ def parse_args():
 # TODO: This works for loading a .zarr from save_as_zarr(). Test it if works with .zarr files from download_GTA_STPT_zarr. 
 # TODO: Perhaps add support for zarr_level_to_tifs() can allow for saving in different formats, e.g., .nii.gz, .tif, etc.?
 # TODO: Add support for extracting metadata from .zarr and .h5 files.
+# TODO: Consider rename this script to img_convert.py to make it more intuitive and distinct from img_io.py
 
 @log_command
 def main():
