@@ -27,7 +27,6 @@ Usage
 
 import re
 import shutil
-from glob import glob
 from pathlib import Path
 from rich import print
 from rich.live import Live
@@ -36,7 +35,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration 
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, get_samples
 
 
 def parse_args():
@@ -197,12 +196,9 @@ def organize_validation_data(sample_path, clusters_path, validation_dir_pattern,
         - p_val_txt (str): the name of the file with the corrected p value threshold
         - cluster_idx (str): the name of the rev_cluster_index file"""
 
-    validation_dirs = list(clusters_path.glob(validation_dir_pattern))
-    if not validation_dirs:
-        print(f"\n    [red1]No directories found matching pattern: {validation_dir_pattern} in {clusters_path}\n")
-        import sys ; sys.exit()
+    validation_dirs = match_files(validation_dir_pattern, clusters_path)
 
-    for validation_dir in clusters_path.glob(validation_dir_pattern):
+    for validation_dir in validation_dirs:
         if validation_dir.is_dir():
             dest_path = target_dir / validation_dir.name
             dest_path.mkdir(parents=True, exist_ok=True)

@@ -33,7 +33,6 @@ Usage:
 import argparse
 import shutil
 import subprocess
-from glob import glob
 import sys
 from fsl.wrappers import fslmaths, avwutils
 from pathlib import Path
@@ -42,7 +41,7 @@ from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
@@ -75,9 +74,8 @@ def create_design_ttest2(mat_file, group1_size, group2_size):
     subprocess.run(cmd, check=True, stderr=subprocess.STDOUT)
 
 def get_groups_info():
-    files = sorted(Path('.').glob('*.nii.gz'))
     groups = {}
-
+    files = match_files('*.nii.gz')
     for file in files:
         prefix = file.stem.split('_')[0]
         if prefix in groups:
@@ -173,7 +171,7 @@ def main():
 
 
     # Merge and smooth the input images
-    images = sorted(glob('*.nii.gz'))
+    images = match_files('*.nii.gz')
     merged_file = stats_dir / 'all.nii.gz'
     if not merged_file.exists():
         print('\n    Merging *.nii.gz into ./stats/all.nii.gz with this order of files:')

@@ -11,7 +11,7 @@ Inputs:
     - ilastik_project: path/ilastik_project.ilp
     - Input: path/tif_dir or path/image (relative to current dir or sample??/)
     - Input image types: .tif, .czi, .nii.gz, .h5, .zarr
-    - If glob is used, the first match is used.
+    - If a glob pattern is used, the first match is used.
 
 Outputs:
     - seg_dir/seg_dir/`*`.tif series (segmented images; delete w/ --rm_out_tifs)
@@ -44,7 +44,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_tifs
 from unravel.core.img_tools import pixel_classification
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, get_samples, print_func_name_args_times, initialize_progress_bar
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, get_samples, print_func_name_args_times, initialize_progress_bar
 
 
 def parse_args():
@@ -123,9 +123,7 @@ def main():
                 remove_tmp_tifs = False
             else:
                 # Load and process input image
-                matches = sorted(Path(sample_path).glob(args.input))
-                if not matches:
-                    raise FileNotFoundError(f"No files matching '{args.input}' found in {sample_path}")
+                matches = match_files(args.input, sample_path)
                 image_path = matches[0]
                 if args.verbose:
                     print(f"    Using {image_path} as the input image.")

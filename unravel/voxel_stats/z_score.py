@@ -51,7 +51,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times
+from unravel.core.utils import get_pad_percent, log_command, match_files, verbose_start_msg, verbose_end_msg, get_samples, initialize_progress_bar, print_func_name_args_times
 from unravel.warp.to_atlas import to_atlas
 
 
@@ -59,7 +59,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='Path to the image(s) to be z-scored relative to the current dir or sample?? dirs (glob matches processed)', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='Path or glob pattern to the image to be z-scored relative to sample?? dirs', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-s', '--suffix', help='Output suffix. Default: z (.nii.gz replaced w/ _z.nii.gz)', default='z', action=SM)
@@ -209,7 +209,7 @@ def main():
     progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
         for sample_path in sample_paths:
-            input_paths = list(sample_path.glob(str(args.input)))
+            input_paths = match_files(args.input, sample_path)
             if not input_paths:
                 print(f"\n    [red1]No files match the pattern {args.input} in {sample_path}\n")
                 continue

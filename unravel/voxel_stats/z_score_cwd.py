@@ -35,14 +35,14 @@ from unravel.core.img_io import load_nii
 from unravel.voxel_stats.apply_mask import load_mask
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-mas', '--masks', help='Paths to mask .nii.gz files to restrict analysis. Default: None', nargs='*', required=True, action=SM)
+    reqs.add_argument('-mas', '--masks', help='Path(s) or pattern(s) to mask .nii.gz files to restrict analysis. Default: None', nargs='*', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help='Path to the image or images to z-score. Default: "*.nii.gz"', default='*.nii.gz', action=SM)
@@ -94,17 +94,15 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    if Path(args.input).is_absolute():
-        nii_paths = list(Path(args.input))
-    else:
-        nii_paths = list(Path.cwd().glob(args.input))
 
     # Load the first image to get the shape
+    nii_paths = match_files(args.input)
     input_nii_path = nii_paths[0]
     img = load_nii(input_nii_path)
 
     # Load the mask(s) and combine them
-    mask_imgs = [load_mask(path) for path in args.masks] if args.masks else []
+    mask_paths = match_files(args.masks) if args.masks else []
+    mask_imgs = [load_mask(p) for p in mask_paths]
     mask_img = np.ones(img.shape, dtype=bool) if not mask_imgs else np.logical_and.reduce(mask_imgs)
 
     # Z-score the image using the mask and save the output

@@ -20,7 +20,7 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.utils import log_command
+from unravel.core.utils import log_command, match_files
 
 
 def parse_args():
@@ -41,30 +41,10 @@ def main():
     install()
     args = parse_args()
 
-    cwd = Path.cwd()
-
     # Collect autofl NIfTI paths
-    autofl_nii_paths, masked_autofl_nii_paths, warped_atlas_nii_paths = [], [], []
-    autofl_nii_paths.extend(cwd.glob(args.autofl_img))
-    masked_autofl_nii_paths.extend(cwd.glob(args.fixed_reg_in))
-    warped_atlas_nii_paths.extend(cwd.glob(args.warped_atlas))
-
-    # If lists are empty, raise an error
-    if not masked_autofl_nii_paths and not autofl_nii_paths:
-        print("[red]Error: No autofluorescence or masked autofluorescence images found.")
-        return
-    
-    if not warped_atlas_nii_paths:
-        print("[red]Error: No warped atlas images found.")
-        return
-
-    # Sort the paths by file name
-    autofl_nii_paths = sorted(autofl_nii_paths, key=lambda p: p.name) if autofl_nii_paths else []
-    masked_autofl_nii_paths = sorted(masked_autofl_nii_paths, key=lambda p: p.name)
-    warped_atlas_nii_paths = sorted(warped_atlas_nii_paths, key=lambda p: p.name) 
-    print(f'\nSorted orig_autofl_nii_paths= {autofl_nii_paths}\n')
-    print(f'\nSorted masked_autofl_nii_paths= {masked_autofl_nii_paths}\n')
-    print(f'\nSorted warped_atlas_nii_paths= {warped_atlas_nii_paths}\n')
+    autofl_nii_paths = match_files(args.autofl_img)
+    masked_autofl_nii_paths = match_files(args.fixed_reg_in)
+    warped_atlas_nii_paths = match_files(args.warped_atlas)
 
     # Ensure lists have the same length
     if len(masked_autofl_nii_paths) != len(warped_atlas_nii_paths):
