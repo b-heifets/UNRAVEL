@@ -32,7 +32,6 @@ Usage to recursively convert all dirs with tif files to .zarr:
 io_img -i '**/*.tif' -x 3.5 -z 6 --save_as .zarr 
 """
 
-from glob import glob
 from pathlib import Path
 from rich import print
 from rich.live import Live
@@ -42,13 +41,13 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_3D_img
-from unravel.core.utils import initialize_progress_bar, log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import initialize_progress_bar, log_command, match_files, verbose_start_msg, verbose_end_msg
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help="Glob pattern for input image files (e.g., '*.czi', '*.nii.gz', etc.). For TIFFs, match individual .tif files or dirs w/ .tif series.", required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="Glob pattern(s) for input image files (e.g., '*.czi', '*.nii.gz', etc.). For TIFFs, match individual .tif files or dirs w/ .tif series.", required=True, nargs='*', action=SM)
     reqs.add_argument('-s', '--save_as', help='Output format extension (e.g., .nii.gz, .zarr, .tif).', required=True, choices=['.nii.gz', '.tif', '.zarr', '.h5'], action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -68,7 +67,6 @@ def parse_args():
 
 # TODO: Test if other scripts in the image_io parent dir of this script are redundant and can be removed. If so, consolidate them into this script.
 # TODO: Could add parallel processing multiple inputs
-# TODO: Could allow for either a glob pattern or passing in a list of image paths.
 # TODO: This works for loading a .zarr from save_as_zarr(). Test it if works with .zarr files from download_GTA_STPT_zarr. 
 # TODO: Perhaps add support for zarr_level_to_tifs() can allow for saving in different formats, e.g., .nii.gz, .tif, etc.?
 # TODO: Add support for extracting metadata from .zarr and .h5 files.
@@ -80,9 +78,7 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    img_files = list(Path().glob(args.input))
-    if not img_files:
-        raise FileNotFoundError(f"No input files found matching pattern: {args.input}")
+    img_files = match_files(args.input)
     
     # Make sure the output directory exists
     if args.output:
