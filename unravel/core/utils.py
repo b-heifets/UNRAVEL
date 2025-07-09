@@ -59,7 +59,7 @@ from rich.text import Text
 from unravel.core.config import Configuration, Config
 
 # TODO: Also output commands with default args to .verbose_command_log.txt or .command_log.txt. Rename to unravel_command_log.txt
-
+# TODO: Add a function for getting the stem from file names or paths that works with exensions with one or more dots.
 
 # Configuration loading
 def load_config(config_path):
@@ -403,12 +403,12 @@ def copy_files(source_dir, target_dir, filename, sample_path=None, verbose=False
             print(f"File {src_file} does not exist and was not copied.")
 
 def match_files(patterns, base_path=None):
-    """Expand multiple glob patterns to match file paths.
-    
+    """Expand one or more glob patterns to match file paths.
+
     Parameters
     ----------
-    patterns : list of str
-        List of glob patterns to match files. Supports patterns like '*.nii.gz', '*.tif', etc.
+    patterns : str or list of str
+        Glob pattern(s) to match files. Supports wildcards like '*.nii.gz', '*.tif', etc.
         Can include absolute paths with wildcards.
     base_path : str or Path, optional
         Base directory where relative patterns are applied. Defaults to the current working directory.
@@ -421,13 +421,15 @@ def match_files(patterns, base_path=None):
     Raises
     ------
     TypeError
-        If patterns is not a list of strings, or base_path is not str or Path.
+        If patterns is not a string or list of strings, or base_path is not str or Path.
     ValueError
         If no files match the given patterns.
     """
-    if not isinstance(patterns, list) or not all(isinstance(p, str) for p in patterns):
-        raise TypeError("patterns must be a list of strings.")
-    
+    if isinstance(patterns, str):
+        patterns = [patterns]
+    elif not isinstance(patterns, list) or not all(isinstance(p, str) for p in patterns):
+        raise TypeError("patterns must be a string or a list of strings.")
+
     if base_path is not None and not isinstance(base_path, (str, Path)):
         raise TypeError("base_path must be a string or Path object.")
 
