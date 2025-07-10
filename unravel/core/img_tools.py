@@ -56,6 +56,7 @@ def resample(ndarray, xy_res, z_res, target_res, zoom_order=1):
     - If target_res is a single float, it is assumed to be isotropic (same for x, y, and z).
     - If target_res is a tuple/list of three floats, it is assumed to be anisotropic (different for x/y vs. z).
     - This function assumes that the axes of the ndarray are ordered as (x, y, z).
+    - The units of measurement should match for xy_res, z_res, and target_res.
     """
     if isinstance(target_res, (list, tuple)) and len(target_res) == 3:
         zf_xy = xy_res / target_res[0]  # Zoom factor
@@ -63,7 +64,7 @@ def resample(ndarray, xy_res, z_res, target_res, zoom_order=1):
     else:
         if isinstance(target_res, (list, tuple)):
             target_res = target_res[0]
-        zf_xy = xy_res / target_res  # Zoom factor
+        zf_xy = xy_res / target_res
         zf_z = z_res / target_res
     img_resampled = ndimage.zoom(ndarray, (zf_xy, zf_xy, zf_z), order=zoom_order)
     return img_resampled
