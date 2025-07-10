@@ -448,6 +448,40 @@ def match_files(patterns, base_path=None):
 
     return sorted(paths)
 
+def get_stem(file_path):
+    """
+    Get the stem of a file path by removing known compound extensions
+    (e.g., '.nii.gz', '.ome.tif', '.tar.gz') and falling back to single-extension logic.
+
+    Parameters
+    ----------
+    file_path : str or Path
+        Path to a file.
+
+    Returns
+    -------
+    str
+        Stem of the file with all recognized extensions removed.
+    """
+    file_path = Path(file_path)
+    name = file_path.name
+
+    compound_extensions = [
+        '.nii.gz',
+        '.ome.tif',
+        '.ome.tiff',
+        '.zarr.gz',
+        '.tar.gz',
+        '.tar.bz2',
+        '.tar.xz',
+    ]
+
+    for ext in compound_extensions:
+        if str(name).endswith(ext):
+            return name[: -len(ext)]
+    
+    return file_path.stem
+
 @print_func_name_args_times()
 def get_pad_percent(reg_outputs_path, pad_percent):
     # TODO: Could change this from reg_outputs_path to relative path to pad_percent.txt
