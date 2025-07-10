@@ -34,13 +34,25 @@ def resample(ndarray, xy_res, z_res, target_res, zoom_order=1):
     """Resample a 3D ndarray
     
     Parameters:
+    -----------
         ndarray: 3D ndarray to resample
         xy_res: x/y voxel size in microns (for the original image)
         z_res: z voxel size in microns
-        res: resolution in microns for the resampled image
-        zoom_order: SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)"""
-    zf_xy = xy_res / target_res # Zoom factor
-    zf_z = z_res / target_res
+        target_res: resolution in microns for the resampled image (either a single value or a tuple/list of (x, y, z) resolutions)
+        zoom_order: SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)
+        
+    Returns:
+    --------
+        img_resampled: Resampled 3D ndarray
+    """
+    if isinstance(target_res, (list, tuple)) and len(target_res) == 3:
+        zf_xy = xy_res / target_res[0]  # Zoom factor
+        zf_z = z_res / target_res[2]
+    else:
+        if isinstance(target_res, (list, tuple)):
+            target_res = target_res[0]
+        zf_xy = xy_res / target_res  # Zoom factor
+        zf_z = z_res / target_res
     img_resampled = ndimage.zoom(ndarray, (zf_xy, zf_xy, zf_z), order=zoom_order)
     return img_resampled
 
