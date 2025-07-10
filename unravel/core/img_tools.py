@@ -31,19 +31,31 @@ from unravel.core.utils import match_files, print_func_name_args_times
 
 @print_func_name_args_times()
 def resample(ndarray, xy_res, z_res, target_res, zoom_order=1):
-    """Resample a 3D ndarray
-    
+    """Resample a 3D ndarray to a target resolution.
+
     Parameters:
     -----------
-        ndarray: 3D ndarray to resample
-        xy_res: x/y voxel size in microns (for the original image)
-        z_res: z voxel size in microns
-        target_res: resolution in microns for the resampled image (either a single value or a tuple/list of (x, y, z) resolutions)
-        zoom_order: SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)
-        
+    ndarray : numpy.ndarray
+        Input 3D ndarray to resample.
+    xy_res : float
+        Current resolution in the x and y dimensions
+    z_res : float
+        Current resolution in the z dimension
+    target_res : float or tuple/list of float
+        Target resolution in the x, y, and z dimensions
+    zoom_order : int
+        SciPy zoom order for resampling. Default is 1 (bilinear interpolation).
+
     Returns:
     --------
-        img_resampled: Resampled 3D ndarray
+    img_resampled : numpy.ndarray
+        Resampled 3D ndarray.
+
+    Notes:
+    -------
+    - If target_res is a single float, it is assumed to be isotropic (same for x, y, and z).
+    - If target_res is a tuple/list of three floats, it is assumed to be anisotropic (different for x/y vs. z).
+    - This function assumes that the axes of the ndarray are ordered as (x, y, z).
     """
     if isinstance(target_res, (list, tuple)) and len(target_res) == 3:
         zf_xy = xy_res / target_res[0]  # Zoom factor
