@@ -28,100 +28,109 @@ from scipy.ndimage import rotate
 from unravel.core.img_io import nii_to_ndarray
 from unravel.core.utils import match_files, print_func_name_args_times
 
-
 @print_func_name_args_times()
-def resample(ndarray, xy_res, z_res, target_res, zoom_order=1):
-    """Resample a 3D ndarray to a target resolution.
+def resample(ndarray, xy_res, z_res, target_res=None, target_dims=None, scale=None, zoom_order=1):
+    """Resample a 3D ndarray using target resolution, dimensions, or scale.
 
-    Parameters:
-    -----------
-    ndarray : numpy.ndarray
-        Input 3D ndarray to resample.
+    Parameters
+    ----------
+    ndarray : np.ndarray
+        Input 3D array to resample.
     xy_res : float
-        Current resolution in the x and y dimensions
+        Current resolution in the x and y dimensions (e.g., in microns).
     z_res : float
-        Current resolution in the z dimension
-    target_res : float or tuple/list of float
-        Target resolution in the x, y, and z dimensions
-    zoom_order : int
-        SciPy zoom order for resampling. Default is 1 (bilinear interpolation).
+        Current resolution in the z dimension (e.g., in microns).
+    target_res : float or tuple of float, optional
+        Target resolution for resampling. If a single float, it is assumed to be isotropic (same for x, y, and z). If a tuple/list of three floats, it is assumed to be anisotropic (different for x/y vs. z).
+    target_dims : tuple of int, optional
+        Target dimensions for resampling (x, y, z). If provided, it overrides target_res.
+    scale : float or list of float, optional
+        Scaling factor for resampling. If a single float, it scales all dimensions equally. If a list of three floats, it scales each dimension independently.
+    zoom_order : int, optional
+        SciPy zoom order for interpolation. Default is 1 (linear interpolation). Use 0 for nearest-neighbor interpolation.
 
-    Returns:
-    --------
-    img_resampled : numpy.ndarray
-        Resampled 3D ndarray.
-
-    Notes:
+    Returns
     -------
-    - If target_res is a single float, it is assumed to be isotropic (same for x, y, and z).
-    - If target_res is a tuple/list of three floats, it is assumed to be anisotropic (different for x/y vs. z).
+    np.ndarray
+        Resampled 3D array.
+
+    Notes
+    -----
     - This function assumes that the axes of the ndarray are ordered as (x, y, z).
     - The units of measurement should match for xy_res, z_res, and target_res.
     """
-    if isinstance(target_res, (list, tuple)) and len(target_res) == 3:
-        zf_xy = xy_res / target_res[0]  # Zoom factor
-        zf_z = z_res / target_res[2]
-    else:
-        if isinstance(target_res, (list, tuple)):
-            target_res = target_res[0]
-        zf_xy = xy_res / target_res
-        zf_z = z_res / target_res
-    img_resampled = ndimage.zoom(ndarray, (zf_xy, zf_xy, zf_z), order=zoom_order)
-    return img_resampled
-
-@print_func_name_args_times()
-def resample_nii(nii, target_res=None, target_dims=None, zoom_order=0):
-    """Resample the input NIfTI image to the target resolution or dimensions.
-    
-    Parameters:
-    -----------
-    nii : nibabel.nifti1.Nifti1Image
-        NIfTI image object to resample.
-        
-    target_res : tuple of float, optional
-        Target resolution in millimeters for resampling (x, y, z).
-
-    target_dims : tuple of int, optional
-        Target dimensions for resampling (x, y, z).
-
-    zoom_order : int
-        SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.
-        
-    Returns:
-    --------
-    resampled_nii : nibabel.nifti1.Nifti1Image
-        Resampled NIfTI image object.
-    """
-    # Load the image data and resample it
-    img = nii_to_ndarray(nii)
-
-    original_res = nii.header.get_zooms()[:3]
-
-    if target_dims is not None:
-        zoom_factors = [dim / orig_dim for dim, orig_dim in zip(target_dims, img.shape)]
-        if target_res is None:
-            # Update target_res based on target_dims
-            target_res = [orig_dim / new_dim * original_res[i] for i, (orig_dim, new_dim) in enumerate(zip(img.shape, target_dims))]
+    if scale is not None:
+        scale = np.atleast_1d(scale)
+        if len(scale) == 1:
+            zoom_factors = [scale[0]] * 3
+        elif len(scale) == 3:
+            zoom_factors = scale
+        else:
+            raise ValueError("Scale must be a float or list of 3 floats.")
+    elif target_dims is not None:
+        zoom_factors = [new / old for new, old in zip(target_dims, ndarray.shape)]
     elif target_res is not None:
-        zoom_factors = [orig / targ for orig, targ in zip(original_res, target_res)]
+        if isinstance(target_res, (float, int)):
+            target_res = [target_res] * 3
+        zoom_factors = [xy_res / target_res[0], xy_res / target_res[1], z_res / target_res[2]]
     else:
-        raise ValueError("Either target resolution or target dimensions must be specified.")
+        raise ValueError("Must provide either scale, target_res, or target_dims.")
 
-    # Resample the image
-    img_resampled = ndimage.zoom(img, zoom_factors, order=zoom_order)
+    return ndimage.zoom(ndarray, zoom_factors, order=zoom_order)
 
-    # Update the affine matrix
-    new_affine = np.array(nii.affine.copy())
-    for i in range(3):
-        new_affine[0:3, i] *= (target_res[i] / original_res[i])
+# @print_func_name_args_times()
+# def resample_nii(nii, target_res=None, target_dims=None, zoom_order=0):
+#     """Resample the input NIfTI image to the target resolution or dimensions.
     
-    # Update the header
-    new_header = nii.header.copy()
-    new_header.set_zooms(target_res)
+#     Parameters:
+#     -----------
+#     nii : nibabel.nifti1.Nifti1Image
+#         NIfTI image object to resample.
+        
+#     target_res : tuple of float, optional
+#         Target resolution in millimeters for resampling (x, y, z).
 
-    # Create the resampled NIfTI image
-    resampled_nii = nib.Nifti1Image(img_resampled, new_affine, new_header)
-    return resampled_nii
+#     target_dims : tuple of int, optional
+#         Target dimensions for resampling (x, y, z).
+
+#     zoom_order : int
+#         SciPy zoom order. Default: 0 (nearest-neighbor). Use 1 for linear interpolation.
+        
+#     Returns:
+#     --------
+#     resampled_nii : nibabel.nifti1.Nifti1Image
+#         Resampled NIfTI image object.
+#     """
+#     # Load the image data and resample it
+#     img = nii_to_ndarray(nii)
+
+#     original_res = nii.header.get_zooms()[:3]
+
+#     if target_dims is not None:
+#         zoom_factors = [dim / orig_dim for dim, orig_dim in zip(target_dims, img.shape)]
+#         if target_res is None:
+#             # Update target_res based on target_dims
+#             target_res = [orig_dim / new_dim * original_res[i] for i, (orig_dim, new_dim) in enumerate(zip(img.shape, target_dims))]
+#     elif target_res is not None:
+#         zoom_factors = [orig / targ for orig, targ in zip(original_res, target_res)]
+#     else:
+#         raise ValueError("Either target resolution or target dimensions must be specified.")
+
+#     # Resample the image
+#     img_resampled = ndimage.zoom(img, zoom_factors, order=zoom_order)
+
+#     # Update the affine matrix
+#     new_affine = np.array(nii.affine.copy())
+#     for i in range(3):
+#         new_affine[0:3, i] *= (target_res[i] / original_res[i])
+    
+#     # Update the header
+#     new_header = nii.header.copy()
+#     new_header.set_zooms(target_res)
+
+#     # Create the resampled NIfTI image
+#     resampled_nii = nib.Nifti1Image(img_resampled, new_affine, new_header)
+#     return resampled_nii
 
 @print_func_name_args_times()
 def reorient_axes(ndarray):
