@@ -101,8 +101,8 @@ def main():
             ref_img = load_3D_img(args.reference, channel=args.channel, verbose=args.verbose)
         target_dims = ref_img.shape   
 
-        if img.ndim != 3:
-            raise ValueError(f"Image must be 3D. Got shape {img.shape}")
+        if ref_img.ndim != 3:
+            raise ValueError(f"Reference image {args.reference} must be a 3D image. Got {ref_img.ndim}.")
 
     for image_path in image_paths:
         stem = get_stem(image_path)
@@ -145,8 +145,11 @@ def main():
             target_res_xy = xy_res * (img.shape[0] / target_dims[0])
             target_res_z = z_res * (img.shape[2] / target_dims[2])
         elif target_res:
-            if isinstance(target_res, (int, float)):
-                target_res = [target_res] * 3
+            target_res = np.atleast_1d(target_res)
+            if len(target_res) == 1:
+                target_res = [target_res[0]] * 3
+            elif len(target_res) != 3:
+                raise ValueError("target_res must be a float or list of 3 floats.")
             target_res_xy = target_res[0]
             target_res_z = target_res[2]
 
