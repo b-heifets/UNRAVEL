@@ -37,8 +37,7 @@ import textwrap
 from rich import print
 from rich.traceback import install
 from pathlib import Path
-# from scipy.stats import ttest_ind, dunnett  # dunnett is not available in scipy
-from scipy.stats import ttest_ind
+from scipy.stats import ttest_ind, dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -56,7 +55,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('--cluster_ids', help='List of cluster IDs to process (Default: process all clusters)', nargs='*', type=int, action=SM)
-    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett" (ignore for now), and "ttest" post-hoc tests. Default: ttest or tukey', default=None, choices=['tukey', 'dunnett', 'ttest'], action=SM)
+    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. Default: ttest or tukey', default=None, choices=['tukey', 'dunnett', 'ttest'], action=SM)
     opts.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
 
     general = parser.add_argument_group('General arguments')

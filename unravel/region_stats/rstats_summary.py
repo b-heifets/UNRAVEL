@@ -42,7 +42,7 @@ import textwrap
 from rich import print
 from rich.live import Live
 from rich.traceback import install
-from scipy.stats import ttest_ind
+from scipy.stats import ttest_ind, dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
@@ -211,25 +211,25 @@ def process_and_plot_data(df, region_id, region_name, region_abbr, side, out_dir
         test_results_df = pd.DataFrame(test_results)
         significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
 
-    # elif test_type == 'dunnett':
+    elif test_type == 'dunnett':
 
-    #     # Extract the data for the control group and the other groups
-    #     data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
-    #     control_data = df[group_columns[args.ctrl_group]].values.ravel()
+        # Extract the data for the control group and the other groups
+        data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
+        control_data = df[group_columns[args.ctrl_group]].values.ravel()
 
-    #     # The * operator unpacks the list so that each array is a separate argument, as required by dunnett
-    #     dunnett_results = dunnett(*data, control=control_data, alternative=args.alternate)
+        # The * operator unpacks the list so that each array is a separate argument, as required by dunnett
+        dunnett_results = dunnett(*data, control=control_data, alternative=args.alternate)
 
-    #     group2_data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
+        group2_data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]
 
-    #     # Convert the result to a DataFrame
-    #     test_results_df = pd.DataFrame({
-    #         'group1': [args.ctrl_group] * len(dunnett_results.pvalue),
-    #         'group2': [prefix for prefix in args.groups if prefix != args.ctrl_group],
-    #         'p-value': dunnett_results.pvalue,
-    #         'meandiff': np.mean(group2_data, axis=1) - np.mean(control_data) # Calculate the mean difference between each group and the control group
-    #     })
-    #     significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
+        # Convert the result to a DataFrame
+        test_results_df = pd.DataFrame({
+            'group1': [args.ctrl_group] * len(dunnett_results.pvalue),
+            'group2': [prefix for prefix in args.groups if prefix != args.ctrl_group],
+            'p-value': dunnett_results.pvalue,
+            'meandiff': np.mean(group2_data, axis=1) - np.mean(control_data) # Calculate the mean difference between each group and the control group
+        })
+        significant_comparisons = test_results_df[test_results_df['p-value'] < 0.05]
 
     elif test_type == 'tukey':
 
