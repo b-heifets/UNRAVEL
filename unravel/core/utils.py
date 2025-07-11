@@ -421,14 +421,17 @@ def match_files(patterns, base_path=None):
     Raises
     ------
     TypeError
-        If patterns is not a string or list of strings, or base_path is not str or Path.
+        If patterns is not a string, Path, or list of such types.
     ValueError
         If no files match the given patterns.
     """
-    if isinstance(patterns, str):
-        patterns = [patterns]
-    elif not isinstance(patterns, list) or not all(isinstance(p, str) for p in patterns):
-        raise TypeError("patterns must be a string or a list of strings.")
+    # Normalize patterns to a list of strings
+    if isinstance(patterns, (str, Path)):
+        patterns = [str(patterns)]
+    elif isinstance(patterns, list) and all(isinstance(p, (str, Path)) for p in patterns):
+        patterns = [str(p) for p in patterns]
+    else:
+        raise TypeError("patterns must be a string, Path, or a list of those types.")
 
     if base_path is not None and not isinstance(base_path, (str, Path)):
         raise TypeError("base_path must be a string or Path object.")
