@@ -161,9 +161,6 @@ def download_GTA_STPT_zarr(exp_id, level, output_dir, force=False, full=False, v
                     print("   ❌ No zarr root found at either path.")
                 return
 
-            if verbose:
-                print(f"[{exp_id}] Downloading level {level} of: {zarr_root} → {local_root}")
-
             # Download required top-level metadata files
             for meta_file in [".zattrs", ".zgroup"]:
                 s3_meta = f"{zarr_root}/{meta_file}"
@@ -183,7 +180,7 @@ def download_GTA_STPT_zarr(exp_id, level, output_dir, force=False, full=False, v
                 s3_dataset = f"{zarr_root}/{level}"
                 local_dataset = local_root / level
                 if verbose:
-                    print(f"[{exp_id}] Downloading level {level}: {s3_dataset} → {local_dataset}")
+                    print(f"[{exp_id}] Downloading level {level} of {zarr_root} → {local_root}")
 
 
             fs.get(s3_dataset, local_dataset, recursive=True)
