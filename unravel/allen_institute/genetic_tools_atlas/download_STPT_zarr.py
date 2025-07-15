@@ -9,6 +9,9 @@ Prereqs:
     - Optional: Apply other filters of interest
     - 'Download Data' --> 'Metadata Table' or 'Raw File Manifest' to get a CSV file with experiment IDs or S3 paths, respectively.
     - Alternatively, content from the MapMySections submission sheet can be copied to a CSV file (-col 'STPT Data File Path')
+
+Next steps:
+    - Convert to TIFFs for segmentation with Ilastik using `zarr_to_tifs.py`
     
 Usage given a list of experiment IDs:
 -------------------------------------
