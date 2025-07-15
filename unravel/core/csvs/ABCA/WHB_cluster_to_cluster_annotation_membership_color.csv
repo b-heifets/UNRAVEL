@@ -1,4 +1,4 @@
-cluster_alias,neurotransmitter,supercluster,cluster,subcluster
+cluster_alias,neurotransmitter_color,supercluster_color,cluster_color,subcluster_color
 0,#2BDFD1,#80BAED,#909FF6,#7E807A
 1,#2BDFD1,#80BAED,#A5B0D9,#C54945
 2,#2BDFD1,#80BAED,#A5B0D9,#5232B7
