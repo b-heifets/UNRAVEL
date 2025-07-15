@@ -34,7 +34,7 @@ from lxml import etree
 from pathlib import Path
 from rich import print
 
-from unravel.core.utils import print_func_name_args_times
+from unravel.core.utils import match_files, print_func_name_args_times
 
 
 # TODO: Create save_3D_img() function for saving 3D images in various formats. 
@@ -241,7 +241,7 @@ def load_tifs(tif_dir_path, desired_axis_order="xyz", return_res=False, return_m
         if img is None:
             raise ValueError(f"Failed to load image: {tif_file}")
         return img
-    tif_files = sorted(Path(tif_dir_path).glob("*.tif"))
+    tif_files = match_files('*.tif', base_path=tif_dir_path)
     if parallel_loading:
         with ThreadPoolExecutor() as executor:
             tifs_stacked = list(executor.map(load_single_tif, tif_files))
@@ -561,7 +561,7 @@ def load_image_metadata_from_txt(metadata="./parameters/metadata*"):
     tuple
         Returns (xy_res, z_res, x_dim, y_dim, z_dim) or (None, None, None, None, None) if file not found.
     """
-    file_paths = glob(str(metadata))
+    file_paths = match_files(metadata)
     if file_paths:
         with open(file_paths[0], 'r') as file:
             for line in file:
@@ -621,11 +621,9 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
     # If file_path points to dir containing tifs, resolve path to first .tif
     img_path = Path(img_path)
     if img_path.is_dir() and not str(img_path).endswith('.zarr'):
-        tif_files = list(img_path.glob("*.tif"))
+        tif_files = match_files('*.tif', base_path=img_path)
         if tif_files: 
             return load_tifs(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
-        else:
-            raise FileNotFoundError(f"\n    [red1]No .tif files found in directory: {img_path}\n")
 
     if not img_path.exists():
         raise FileNotFoundError(f"\n    [red1]No compatible image files found at {img_path} for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
@@ -883,7 +881,7 @@ def zarr_level_to_tifs(zarr_path, output_dir, resolution_level, channel_map, xy_
 
     for name, idx in channel_map.items():
         out_dir = output_dir / name
-        tif_files = list(out_dir.glob("*.tif"))
+        tif_files = match_files('*.tif', base_path=out_dir)
         if tif_files:
             print(f"⚠️ Skipping {name} in {zarr_path.name}: output TIFFs already exist at {out_dir}")
             continue
