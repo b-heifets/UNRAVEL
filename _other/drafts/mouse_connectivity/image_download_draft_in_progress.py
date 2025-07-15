@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``projection_densities.py`` from UNRAVEL to analyze connectivity data from the Allen Brain Atlas Mouse Connectivity API.
+Use ``projection_densities.py`` from UNRAVEL to download connectivity images from the Allen Brain Atlas Mouse Connectivity API.
 
 Notes:
     - https://allensdk.readthedocs.io/en/latest/connectivity.html
