@@ -15,6 +15,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.tabular.utils import load_tabular_file
 
 
 def parse_args():
@@ -42,20 +43,15 @@ def main():
     verbose_start_msg()
 
     # Load the CSV file
-    try:
-        data = pd.read_csv(args.input)
-    except Exception as e:
-        print(f"Error reading CSV file: {e}")
-        return
-    
+    df, _ = load_tabular_file(args.input)
 
     # Print column names
     if args.one_per_line:
-        for col in data.columns:
+        for col in df.columns:
             print(f'[default]{col}')
     else:
         print("Columns in the CSV file:")
-        print(f"[default]{args.delimiter}".join(data.columns))
+        print(f"[default]{args.delimiter}".join(df.columns))
 
     verbose_end_msg()
 
