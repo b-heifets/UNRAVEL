@@ -45,6 +45,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Move cell metadata loading, classification, and color joining to RNAseq_expression.py or consolidate in a common module.
+# TODO: Save the cell_label column too
 
 @log_command
 def main():
@@ -74,12 +75,12 @@ def main():
     # Move the exp_cols to the end of the DataFrame
     exp_df = exp_df[[col for col in exp_df.columns if col not in exp_cols] + exp_cols]
 
-    # Save the joined data
+    # Save the joined data with the cell_label column (index)
     if args.output is not None:
         output_path = Path(args.output)
     else:
         output_path = Path(str(args.input).replace('.csv', '_w_cells.csv'))
-    exp_df.to_csv(output_path, index=False)
+    exp_df.to_csv(output_path, index=True)
     print(f"\n    Saved the joined data to {output_path}\n")
 
     verbose_end_msg()
