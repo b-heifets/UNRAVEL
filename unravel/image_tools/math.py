@@ -45,13 +45,13 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii, save_as_tifs, save_as_zarr
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--images', help="Paths to the input images. (path/image1 path/image2 ...). Supports glob patterns like '*.nii.gz'", nargs='*', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="Paths or glob patterns to the input images.", required=True, nargs='*', action=SM)
     reqs.add_argument('-o', '--output', help='Path to the output image', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
@@ -147,17 +147,8 @@ def main():
     args = parse_args()
     Configuration.verbose = args.verbose
     verbose_start_msg()
-
-    if not args.images:
-        raise ValueError("At least one image must be specified with --images.")
     
-    # Expand multiple glob patterns
-    img_paths = []
-    for pattern in args.images:
-        img_paths.extend(Path.cwd().glob(pattern))
-
-    if not img_paths:
-        raise ValueError("No images found for provided glob patterns.")
+    img_paths = match_files(args.input)
 
     # Sort and load
     img_paths = sorted(img_paths)
