@@ -30,7 +30,7 @@ def parse_args():
 
     return parser.parse_args()
 
-
+# TODO: Note in Allen docs that this can be useful for checking unique values in large CSV files (e.g., 'region_of_interest_acronym' for scRNA-seq data).
 
 @log_command
 def main():
