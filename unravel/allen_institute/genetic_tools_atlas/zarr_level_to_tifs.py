@@ -33,14 +33,14 @@ from rich import print
 from unravel.core.config import Configuration
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import zarr_level_to_tifs
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help="Glob pattern to match Zarr files to process (e.g., '*.zarr')", required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="One or more Zarr file paths or glob patterns (space-separated), e.g., 'data/*.zarr'", required=True, nargs='*', action=SM)
     reqs.add_argument('-c', '--channel-map', help="Mapping of output directory names to Zarr channel indices (e.g., red:0 green:1).", nargs='*', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
@@ -93,10 +93,7 @@ def main():
     except Exception as e:
         raise ValueError(f"Invalid format in --channel-map '{item}': must be NAME:INDEX (e.g., red:0)") from e
 
-    zarr_files = zarr_files = list(Path().glob(args.input))
-    if not zarr_files:
-        raise FileNotFoundError(f"No Zarr files found matching pattern: {args.input}")
-
+    zarr_files = match_files(args.input)
     for zarr_file in zarr_files:
 
         output_dir = Path(args.output) if args.output else Path("TIFFs") / zarr_file.stem
