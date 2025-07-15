@@ -94,7 +94,7 @@ def join_cluster_details(cell_df_joined, download_base, species):
 
     elif species == 'human':
         # Map cluster_alias values to their names based on HUMAN_CLUSTER_MAP
-        cell_df_joined['class'] = cell_df_joined['cluster_alias'].astype(int).map(HUMAN_CLUSTER_MAP)
+        cell_df_joined['class'] = cell_df_joined['cluster_alias'].astype(int).map(HUMAN_CLUSTER_MAP) # This is actually the 'supercluster' in human data
 
     else:
         raise ValueError("Unsupported species. Choose either 'mouse' or 'human'.")
