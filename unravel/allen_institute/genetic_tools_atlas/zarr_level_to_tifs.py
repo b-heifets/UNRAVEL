@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Convert a Zarr file to a series of TIFF files (e.g., for Ilastik segmentation).
+Use ``gta_zarr_levels_to_tifs`` (``gta_zlt``) from UNRAVEL to convert a Zarr file to a series of TIFF files (e.g., for Ilastik segmentation).
 
 Outputs:
     - Saves specified channels as TIFFs in separate directories in the output directory.

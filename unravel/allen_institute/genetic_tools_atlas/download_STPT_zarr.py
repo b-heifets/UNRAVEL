@@ -4,6 +4,7 @@
 Use ``gta_download_STPT_zarr`` (``gta_dl``) from UNRAVEL to download STPT Zarr images from the Allen Genetic Tools Atlas (GTA).
 
 Prereqs:
+    - Genetic Tools Atlas (GTA): https://portal.brain-map.org/genetic-tools/genetic-tools-atlas
     - Find STPT experiments at https://knowledge.brain-map.org/data/7CVKSF7QGAKIQ8LM5LC/specimens
     - Filter by 'Data Modality' = 'STPT'
     - Optional: Apply other filters of interest
