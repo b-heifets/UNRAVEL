@@ -119,9 +119,10 @@ def main():
 
     # Update the legend
     handles, labels = plot.get_legend_handles_labels()
-    labels[0] = "Mean Expression"
-    # labels[7] = "Percent Expressing"
-    labels[len(labels) // 2] = "Percent Expressing"
+
+    # labels[0] = "Mean Expression"
+    ### labels[7] = "Percent Expressing"
+    # labels[len(labels) // 2] = "Percent Expressing"
 
     # Regenerate the legend with finer control over labels and layout
     legend = plot.legend(
