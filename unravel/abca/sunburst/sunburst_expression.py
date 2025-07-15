@@ -5,10 +5,10 @@ Use ``abca_sunburst_expression`` or ``sbe`` from UNRAVEL to calculate mean expre
 
 Prereqs: 
     - merfish_filter.py and merfish_join_expression_data.py
-    - Or: RNAseq_expression_in_mice.py and RNAseq_filter.py
+    - Or: RNAseq_expression.py and RNAseq_filter.py
 
 Note:
-    - LUT location: unravel/core/csvs/ABCA/ABCA_sunburst_colors.csv
+    - LUT location: unravel/core/csvs/ABCA/WMB_sunburst_colors.csv
 
 Next steps:
     - Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (https://app.flourish.studio/)
@@ -29,6 +29,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
+from unravel.abca.sunburst.sunburst import filter_non_neuronal_cells
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
@@ -42,6 +43,7 @@ def parse_args():
     reqs.add_argument('-g', '--gene', help='Gene to analyze', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-s', '--species', help='Species to analyze ("mouse" or "human"). Default: mouse', default='mouse', action=SM)
     opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
     opts.add_argument('-c', '--color_max', help='Maximum value for the color scale. Default: 10', default=10, type=float, action=SM)
     opts.add_argument('-t', '--threshold', help='Log2(CPM+1) threshold for percent gene expression. Default: 6', default=6, type=float, action=SM)
@@ -60,28 +62,41 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
+    species = args.species.lower()
+    if species not in ['mouse', 'human']:
+        raise ValueError(f"Species '{species}' not recognized. Please use 'mouse' or 'human'.")
+    print(f"\nUsing species: {species}\n")
+
     # Load the CSV file
-    cols = ['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster', args.gene]
+    if species == 'mouse':
+        cols = ['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster', args.gene]
+    elif species == 'human':
+        cols = ['neurotransmitter', 'supercluster', 'cluster', 'subcluster', args.gene]
+    expected = set(cols)
+    missing = expected - set(pd.read_csv(args.input, nrows=1).columns)
+    if missing:
+        raise ValueError(f"Missing expected columns for {species} data: {missing}")
     cells_df = pd.read_csv(args.input, usecols=cols)
 
     # Replace blank values in 'neurotransmitter' column with 'NA'
     cells_df['neurotransmitter'] = cells_df['neurotransmitter'].fillna('NA')
 
     if args.neurons:
-        cells_df = cells_df[cells_df['class'].str.split().str[0].astype(int) <= 29]
+        cells_df = filter_non_neuronal_cells(cells_df, species)
 
-    # Groupby cluster to calculate the percentage of cells in each cluster
-    cluster_df = cells_df.groupby('cluster').size().reset_index(name='counts')  # Count the number of cells in each cluster
-    cluster_df = cluster_df.sort_values('counts', ascending=False)  # Sort the clusters by the number of cells
+    # Groupby the finest cell types to calculate the percentage of cells
+    fine_level_col = 'subcluster' if 'subcluster' in cells_df.columns else 'cluster'
+    fine_df = cells_df.groupby(fine_level_col).size().reset_index(name='counts')  # Count the number of cells for each cell type
+    fine_df = fine_df.sort_values('counts', ascending=False)  # Sort the cell types by the number of cells
 
-    # Add a column for the percentage of cells in each cluster
-    cluster_df['percent'] = cluster_df['counts'] / cluster_df['counts'].sum() * 100
+    # Add a column for the percentage of cells
+    fine_df['percent'] = fine_df['counts'] / fine_df['counts'].sum() * 100
 
     # Drop the 'counts' column
-    cluster_df = cluster_df.drop(columns='counts')
+    fine_df = fine_df.drop(columns='counts')
 
-    # Join the cells_df with the cluster_df
-    cells_df = cells_df.merge(cluster_df, on='cluster')
+    # Join the cells_df with the fine_df
+    cells_df = cells_df.merge(fine_df, on=fine_level_col)
 
     # Drop duplicate rows
     cells_df = cells_df.drop_duplicates()
@@ -109,7 +124,10 @@ def main():
 
     # Calculate mean expression and percent expressing at each hierarchy level
     summary_df = cells_df.copy()
-    hierarchy_levels = ['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster']
+    if species == 'mouse':
+        hierarchy_levels = ['neurotransmitter', 'class', 'subclass', 'supertype', 'cluster']
+    elif species == 'human':
+        hierarchy_levels = ['neurotransmitter', 'supercluster', 'cluster', 'subcluster']
     for level in hierarchy_levels:
         summary_df[f'{level}_mean'] = summary_df[level].map(cells_df.groupby(level)[args.gene].mean())
         summary_df[f'{level}_percent'] = summary_df[level].map(cells_df.groupby(level)[args.gene].apply(lambda x: (x > args.threshold).mean() * 100))
@@ -163,7 +181,10 @@ def main():
         with open(percent_path, 'a') as f:
             f.write(f"{row.label}: {row.color}\n")
     
-    lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'ABCA_sunburst_colors.csv'
+    if species == 'mouse':
+        lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WMB_sunburst_colors.csv'
+    elif species == 'human':
+        lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_sunburst_colors.csv'
     shutil.copy(lut_path, output_path.parent / lut_path.name)
     
     verbose_end_msg()
