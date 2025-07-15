@@ -746,6 +746,20 @@ def main():
                 "alias": "s_filter"
             },
         },
+        "Genetic Tools Atlas (GTA)": {
+            "gta_download_STPT_zarr": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.download_STPT_zarr",
+                "description": "Download STPT Zarr files.",
+                "common": False,
+                "alias": "gta_dl"
+            },
+            "gta_zarr_levels_to_tifs": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.zarr_level_to_tifs",
+                "description": "Convert a Zarr file to a series of TIFF files (e.g., for Ilastik segmentation).",
+                "common": False,
+                "alias": "gta_zlt"
+            },
+        },
     }
 
     print("\n[magenta bold]Category[/], [cyan bold]Command[/], [green]Alias (-a), [purple3]Module (-m)[/], [grey50]Description (-d), \n")
