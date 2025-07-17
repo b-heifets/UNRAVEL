@@ -50,10 +50,14 @@ def filter_values(values, keywords, exact):
 
 
 def print_values(column, values, keywords=None):
+    count = len(values)
+    plural = "value" if count == 1 else "values"
+
     if keywords:
-        print(f"\nFiltered unique values in column '{column}' (matching {keywords}):")
+        print(f"\nFiltered {count} unique {plural} in column '{column}' (matching {keywords}):")
     else:
-        print(f"\nUnique values in column '{column}':")
+        print(f"\nUnique {count} {plural} in column '{column}':")
+
     for val in values:
         print(f"  {val}")
 
