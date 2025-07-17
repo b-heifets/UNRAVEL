@@ -52,10 +52,6 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    print(f'\n{args.interpol=}\n')
-    print(f'\n{type(args.interpol)=}\n')
-    import sys ; sys.exit()
-
     forward_warp(args.fixed_img, args.reg_outputs, args.fixed_reg_in, args.moving_img, args.interpol, output=args.output, pad_percent=args.pad_percent)
 
     # Delete the intermediate warped image
