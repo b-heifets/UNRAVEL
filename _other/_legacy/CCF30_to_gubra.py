@@ -31,7 +31,7 @@ def parse_args():
     opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz or template matching moving image. Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/gubra_ano_combined_25um_w_fixes.nii.gz', default='/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/gubra_ano_combined_25um_w_fixes.nii.gz', action=SM)
     opts.add_argument('-inp', '--interpol', help='Interpolator for ants.apply_transforms (multiLabel \[default],  nearestNeighbor, linear, bSpline)', default="multiLabel", action=SM)
     opts.add_argument('-fri', '--fixed_reg_in', help='Default: /usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/reg_outputs/CCFv3-2017_ano_30um_w_fixes__fixed_reg_input.nii.gz', default='/usr/local/unravel/atlases/gubra_to_CCF/CCF-f__Gubra-m/reg_outputs/CCFv3-2017_ano_30um_w_fixes__fixed_reg_input.nii.gz', action=SM)
-    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.25 (25%%).', default=0.25, type=float, action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding that was added to each dimension of the fixed image during ``reg``. Default: 0.15 (15%%).', default=0.15, type=float, action=SM)
     opts.add_argument('-dt', '--dtype', help='Desired dtype for output (e.g., uint8, uint16). Default: uint16', default="uint16", action=SM)
 
     general = parser.add_argument_group('General arguments')
