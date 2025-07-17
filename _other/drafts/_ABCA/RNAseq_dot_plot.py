@@ -39,7 +39,7 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Color region names based on metadata. Sort regions based on order in metadata. Define custom order for humans to match mice? 
+# TODO: Color region names based on metadata. Sort regions based on order in metadata. Define custom order for humans to match mice? Hierarchical clustering based on expression patterns?
 
 @log_command
 def main():
