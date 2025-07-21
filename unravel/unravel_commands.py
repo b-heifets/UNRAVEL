@@ -760,6 +760,38 @@ def main():
                 "alias": "gta_zlt"
             },
         },
+        "Tabular data": {
+            "tabular_edit_columns": {
+                "module": "unravel.tabular.edit_columns",
+                "description": "Edit columns in a tabular dataset.",
+                "common": False,
+                "alias": "edit_cols"
+            },
+            "tabular_filter_rows": {
+                "module": "unravel.tabular.filter_rows",
+                "description": "Filter rows in a tabular dataset.",
+                "common": False,
+                "alias": "filter_rows"
+            },
+            "tabular_key_value_to_table": {
+                "module": "unravel.tabular.key_value_to_table",
+                "description": "Convert key-value pairs to a table format.",
+                "common": False,
+                "alias": "kv_table"
+            },
+            "tabular_print_columns": {
+                "module": "unravel.tabular.print_columns",
+                "description": "Print specified columns from a tabular dataset.",
+                "common": False,
+                "alias": "print_cols"
+            },
+            "tabular_print_unique_values": {
+                "module": "unravel.tabular.print_unique_values",
+                "description": "Print unique values in specified column(s) of a tabular dataset.",
+                "common": False,
+                "alias": "print_unique"
+            },
+        },
     }
 
     print("\n[magenta bold]Category[/], [cyan bold]Command[/], [green]Alias (-a), [purple3]Module (-m)[/], [grey50]Description (-d), \n")
