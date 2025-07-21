@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``tabular_print_unique_values`` or ``print_vals`` from UNRAVEL to print unique values in specified column(s) of a CSV file.
+Use ``tabular_print_unique_values`` or ``print_unique`` from UNRAVEL to print unique values in specified column(s) of a CSV file.
 
 Usage:
 ------
@@ -26,8 +26,9 @@ def parse_args():
     reqs.add_argument('-c', '--column', help='Column name(s) to process (space-separated for multiple).', required=True, nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-n', '--count', help='Print the count for each unique value.', action='store_true', default=False)
     opts.add_argument('-k', '--keyword', help='Keyword(s) to filter unique values. For partial match use "gene", for exact match use --exact.', nargs='*', default=None, action=SM)
-    opts.add_argument('-e', '--exact', action='store_true', help='Use exact match instead of partial substring match.')
+    opts.add_argument('-e', '--exact', help='Use exact match instead of partial substring match.', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -49,7 +50,7 @@ def filter_values(values, keywords, exact):
     return filtered
 
 
-def print_values(column, values, keywords=None):
+def print_values(column, values, keywords=None, value_counts=None, show_count=False):
     count = len(values)
     plural = "value" if count == 1 else "values"
 
@@ -59,7 +60,10 @@ def print_values(column, values, keywords=None):
         print(f"\nUnique {count} {plural} in column '{column}':")
 
     for val in values:
-        print(f"  {val}")
+        if show_count and value_counts is not None:
+            print(f"  [cyan]{val}[/cyan]: {value_counts[val]}")
+        else:
+            print(f"  [cyan]{val}[/cyan]")
 
 
 @log_command
