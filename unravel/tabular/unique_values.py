@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
 
 """
-Use ``tabular_print_unique_values`` or ``print_unique`` from UNRAVEL to print unique values in specified column(s) of a CSV file.
+Use ``tabular_unique_values`` or ``uniq_vals`` from UNRAVEL to print unique values in specified column(s) of a CSV file.
 
 Usage:
 ------
-    tabular_print_unique_values -i input.csv -c column1 column2 [-k keyword1 keyword2 ...] [--exact] [-v]
+    tabular_unique_values -i input.csv -c column1 column2 [-k keyword1 keyword2 ...] [--exact] [-v]
 """
 
 import pandas as pd
 from rich import print
 from rich.traceback import install
+from rich.table import Table
+from rich import box
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
-from unravel.tabular.utils import load_tabular_file
+from unravel.tabular.utils import load_tabular_file, save_tabular_file
 
 
 def parse_args():
@@ -29,6 +31,7 @@ def parse_args():
     opts.add_argument('-n', '--count', help='Print the count for each unique value.', action='store_true', default=False)
     opts.add_argument('-k', '--keyword', help='Keyword(s) to filter unique values. For partial match use "gene", for exact match use --exact.', nargs='*', default=None, action=SM)
     opts.add_argument('-e', '--exact', help='Use exact match instead of partial substring match.', action='store_true', default=False)
+    opts.add_argument('-o', '--output', help='Output file path to save the results. Default: None (prints to console).', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -51,20 +54,48 @@ def filter_values(values, keywords, exact):
 
     return filtered
 
+# def print_values(column, values, keywords=None, value_counts=None, show_count=False):
+#     count = len(values)
+#     plural = "value" if count == 1 else "values"
+
+#     if keywords:
+#         print(f"\nFiltered {count} unique {plural} in column '{column}' (matching {keywords}):")
+#     else:
+#         print(f"\nUnique {count} {plural} in column '{column}':")
+
+#     for val in values:
+#         if show_count and value_counts is not None:
+#             print(f"  [green]{val}[/]: {value_counts[val]}")
+#         else:
+#             print(f"  [green]{val}[/]")
+
 def print_values(column, values, keywords=None, value_counts=None, show_count=False):
     count = len(values)
     plural = "value" if count == 1 else "values"
 
     if keywords:
-        print(f"\nFiltered {count} unique {plural} in column '{column}' (matching {keywords}):")
+        print(f"\n Filtered {count} unique {plural} in column '{column}' (matching {keywords}):")
     else:
-        print(f"\nUnique {count} {plural} in column '{column}':")
+        print(f"\n Unique {count} {plural} in column '{column}':")
 
-    for val in values:
-        if show_count and value_counts is not None:
-            print(f"  [cyan]{val}[/cyan]: {value_counts[val]}")
-        else:
-            print(f"  [cyan]{val}[/cyan]")
+    df_out = pd.DataFrame({
+        'Value': values,
+        'Count': [value_counts[val] for val in values],
+    })
+    total = df_out['Count'].sum()
+    df_out['Percent'] = df_out['Count'] / total * 100
+
+    # Rich table display
+    table = Table(title=None, box=box.SIMPLE)
+    table.add_column("Value", style="green", no_wrap=True)
+    table.add_column("Count", justify="right", style="cyan")
+    table.add_column("Percent", justify="right", style="magenta")
+
+    for _, row in df_out.iterrows():
+        table.add_row(str(row["Value"]), str(row["Count"]), f"{row['Percent']:.2f}%")
+
+    print(table)
+    return df_out
 
 
 @log_command
@@ -97,7 +128,13 @@ def main():
         filtered_values = filter_values(unique_values, args.keyword, args.exact)
         filtered_value_counts = value_counts[filtered_values] if args.count else None
 
-    print_values(column, filtered_values, keywords=args.keyword, value_counts=filtered_value_counts, show_count=args.count)
+    output_df = print_values(column, filtered_values, keywords=args.keyword,
+                         value_counts=filtered_value_counts, show_count=args.count)
+
+    # print_values(column, filtered_values, keywords=args.keyword, value_counts=filtered_value_counts, show_count=args.count)
+
+    if args.output and output_df is not None:
+        save_tabular_file(output_df, args.output, index=False, verbose=args.verbose)
 
     verbose_end_msg()
 

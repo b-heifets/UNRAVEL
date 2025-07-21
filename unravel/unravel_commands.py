@@ -785,11 +785,11 @@ def main():
                 "common": False,
                 "alias": "print_cols"
             },
-            "tabular_print_unique_values": {
-                "module": "unravel.tabular.print_unique_values",
+            "tabular_unique_values": {
+                "module": "unravel.tabular.unique_values",
                 "description": "Print unique values in specified column(s) of a tabular dataset.",
                 "common": False,
-                "alias": "print_unique"
+                "alias": "uniq_vals"
             },
         },
     }
