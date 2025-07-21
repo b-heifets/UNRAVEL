@@ -119,23 +119,23 @@ def main():
         filtered_values = filter_values(unique_values, args.keyword, args.exact)
         filtered_value_counts = value_counts[filtered_values] if args.count else None
 
-    output_df_or_list = print_values(
-        column,
-        filtered_values,
-        keywords=args.keyword,
-        value_counts=filtered_value_counts,
-        show_count=args.count,
-        space_mode=args.space
-    )
+        output_df_or_list = print_values(
+            column,
+            filtered_values,
+            keywords=args.keyword,
+            value_counts=filtered_value_counts,
+            show_count=args.count,
+            space_mode=args.space
+        )
 
-    if args.output and output_df_or_list is not None:
-        if args.space:
-            with open(args.output, 'w') as f:
-                f.write(output_df_or_list+ '\n')
-                if args.verbose:
-                    print(f"[green]Data saved to: {args.output}[/green]")
-        else:
-            save_tabular_file(output_df_or_list, args.output, index=False, verbose=args.verbose)
+        if args.output and output_df_or_list is not None:
+            if args.space:
+                with open(args.output, 'w') as f:
+                    f.write(output_df_or_list+ '\n')
+                    if args.verbose:
+                        print(f"\n[green]Data saved to: {args.output}[/green]")
+            else:
+                save_tabular_file(output_df_or_list, args.output, index=False, verbose=args.verbose)
 
     verbose_end_msg()
 
