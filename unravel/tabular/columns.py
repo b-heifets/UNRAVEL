@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``tabular_print_columns`` (``print_cols``) from UNRAVEL to load a CSV and print the column(s).
+Use ``tabular_columns`` (``cols``) from UNRAVEL to load a CSV and print the column(s).
 
 Usage:
 ------
-    tabular_print_columns --input path/input.csv [-one-per-line] [-v]
+    tabular_columns --input path/input.csv [-one-per-line] [-v]
 """
 
 import pandas as pd

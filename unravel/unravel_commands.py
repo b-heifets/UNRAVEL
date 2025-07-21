@@ -779,11 +779,11 @@ def main():
                 "common": False,
                 "alias": "kv_table"
             },
-            "tabular_print_columns": {
-                "module": "unravel.tabular.print_columns",
+            "tabular_columns": {
+                "module": "unravel.tabular.columns",
                 "description": "Print specified columns from a tabular dataset.",
                 "common": False,
-                "alias": "print_cols"
+                "alias": "cols"
             },
             "tabular_unique_values": {
                 "module": "unravel.tabular.unique_values",
