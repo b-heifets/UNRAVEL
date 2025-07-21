@@ -49,8 +49,6 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-d', '--delimiter', help="Delimiter for text input. Default: ','.", default=',', action=SM)
     opts.add_argument('-o', '--output', help="Path to the output file (.csv or .xlsx). Default: input with .csv extension.", default=None, action=SM)
-    opts.add_argument('-s', '--skip-header', help='Skip the first row of tabular input (useful if the file has a header).', action='store_true')
-
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)

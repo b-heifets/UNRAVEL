@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-Use ``tabular_utils`` from UNRAVEL for general utility functions related to tabular data.
-"""
-
 import pandas as pd
 
 def load_tabular_file(file_path):
