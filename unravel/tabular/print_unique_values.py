@@ -36,6 +36,8 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Note in Allen docs that this can be useful for checking unique values in large CSV files (e.g., 'region_of_interest_acronym' for scRNA-seq data).
+# TODO: Also add percentage for each value if count is enabled. A table would be cleaner. 
+# TODO: Add option to print unique values as a space-separated list for easy copy-pasting to other tools.
 
 def filter_values(values, keywords, exact):
     if not keywords:
