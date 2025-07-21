@@ -49,7 +49,6 @@ def filter_values(values, keywords, exact):
 
     return filtered
 
-
 def print_values(column, values, keywords=None, value_counts=None, show_count=False):
     count = len(values)
     plural = "value" if count == 1 else "values"
@@ -85,14 +84,18 @@ def main():
         return
 
     for column in valid_columns:
+        col_series = df[column].dropna()
+        value_counts = col_series.value_counts()
         unique_values = sorted(df[column].dropna().unique(), key=lambda x: str(x).lower())
+
         if not unique_values:
             print(f"[dim]No matching values found in column '{column}'.[/dim]")
             continue
 
         filtered_values = filter_values(unique_values, args.keyword, args.exact)
+        filtered_value_counts = value_counts[filtered_values] if args.count else None
 
-        print_values(column, filtered_values, keywords=args.keyword)
+    print_values(column, filtered_values, keywords=args.keyword, value_counts=filtered_value_counts, show_count=args.count)
 
     verbose_end_msg()
 
