@@ -5,7 +5,7 @@ Use ``CCF30_to_MERFISH.py`` from UNRAVEL to warp an image from Allen CCFv3 30 um
 
 Usage:
 ------
-``CCF30_to_MERFISH.py`` -m path/image.nii.gz -o path/image_MERFISH30.nii.gz [-f path/MERFISH-CCF_average_template_30um_avg.nii.gz] [-inp nearestNeighbor] [-ro path/reg_outputs] [-fri path/fixed_reg_input.nii.gz] [-v]
+``CCF30_to_MERFISH.py`` -m path/image.nii.gz -o path/image_MERFISH.nii.gz [-f path/MERFISH-CCF_average_template_30um_avg.nii.gz] [-inp nearestNeighbor] [-ro path/reg_outputs] [-fri path/fixed_reg_input.nii.gz] [-v]
 """
 
 from pathlib import Path
