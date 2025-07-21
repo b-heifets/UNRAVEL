@@ -32,6 +32,7 @@ def parse_args():
     opts.add_argument('-k', '--keyword', help='Keyword(s) to filter unique values. For partial match use "gene", for exact match use --exact.', nargs='*', default=None, action=SM)
     opts.add_argument('-e', '--exact', help='Use exact match instead of partial substring match.', action='store_true', default=False)
     opts.add_argument('-o', '--output', help='Output file path to save the results. Default: None (prints to console).', default=None, action=SM)
+    opts.add_argument('-s', '--space', help='Print unique values as a space-separated list for easy copy-pasting.', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -39,7 +40,6 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Note in Allen docs that this can be useful for checking unique values in large CSV files (e.g., 'region_of_interest_acronym' for scRNA-seq data).
-# TODO: Also add percentage for each value if count is enabled. A table would be cleaner. 
 # TODO: Add option to print unique values as a space-separated list for easy copy-pasting to other tools.
 
 def filter_values(values, keywords, exact):
@@ -54,22 +54,12 @@ def filter_values(values, keywords, exact):
 
     return filtered
 
-# def print_values(column, values, keywords=None, value_counts=None, show_count=False):
-#     count = len(values)
-#     plural = "value" if count == 1 else "values"
-
-#     if keywords:
-#         print(f"\nFiltered {count} unique {plural} in column '{column}' (matching {keywords}):")
-#     else:
-#         print(f"\nUnique {count} {plural} in column '{column}':")
-
-#     for val in values:
-#         if show_count and value_counts is not None:
-#             print(f"  [green]{val}[/]: {value_counts[val]}")
-#         else:
-#             print(f"  [green]{val}[/]")
-
-def print_values(column, values, keywords=None, value_counts=None, show_count=False):
+def print_values(column, values, keywords=None, value_counts=None, show_count=False, space_mode=False):
+    if space_mode:
+        list_str = " ".join(str(v) for v in values)
+        print(list_str)
+        return list_str
+    
     count = len(values)
     plural = "value" if count == 1 else "values"
 
@@ -84,6 +74,7 @@ def print_values(column, values, keywords=None, value_counts=None, show_count=Fa
     })
     total = df_out['Count'].sum()
     df_out['Percent'] = df_out['Count'] / total * 100
+
 
     # Rich table display
     table = Table(title=None, box=box.SIMPLE)
@@ -128,13 +119,23 @@ def main():
         filtered_values = filter_values(unique_values, args.keyword, args.exact)
         filtered_value_counts = value_counts[filtered_values] if args.count else None
 
-    output_df = print_values(column, filtered_values, keywords=args.keyword,
-                         value_counts=filtered_value_counts, show_count=args.count)
+    output_df_or_list = print_values(
+        column,
+        filtered_values,
+        keywords=args.keyword,
+        value_counts=filtered_value_counts,
+        show_count=args.count,
+        space_mode=args.space
+    )
 
-    # print_values(column, filtered_values, keywords=args.keyword, value_counts=filtered_value_counts, show_count=args.count)
-
-    if args.output and output_df is not None:
-        save_tabular_file(output_df, args.output, index=False, verbose=args.verbose)
+    if args.output and output_df_or_list is not None:
+        if args.space:
+            with open(args.output, 'w') as f:
+                f.write(output_df_or_list+ '\n')
+                if args.verbose:
+                    print(f"[green]Data saved to: {args.output}[/green]")
+        else:
+            save_tabular_file(output_df_or_list, args.output, index=False, verbose=args.verbose)
 
     verbose_end_msg()
 
