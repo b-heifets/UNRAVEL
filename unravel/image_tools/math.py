@@ -25,7 +25,7 @@ Thresholding:
 
 Usage to add two images and binarize the result:
 ------------------------------------------------
-    img_math -i A.nii.gz B.nii.gz -n + -t 0.5 -o result.nii.gz -r A.nii.gz -d uint8
+    img_math -i A.nii.gz B.nii.gz -n '+' -t 0.5 -o result.nii.gz -r A.nii.gz -d uint8
 
 Usage multiply three images and save as Zarr:
 ---------------------------------------------
@@ -71,6 +71,7 @@ def parse_args():
 # TODO: Add support for chaining operations (e.g., img1 + img2 - img3 * img4)
 # TODO: Add the ability to apply operations to a single image (e.g., img1 * 2)
 # TODO: The logic for supporting multiple glob patterns could be centralized in a utility function
+# TODO: extend support to subtract for -, divide for /, etc. (currently only symbolic operations are supported)
 
 @print_func_name_args_times()
 def apply_operation(image1, image2, operation):
