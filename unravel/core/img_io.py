@@ -157,7 +157,7 @@ def extract_resolution(img_path):
             dataset = f[full_res_dataset_name] 
             res = dataset.attrs['element_size_um'] # z, y, x voxel sizes in microns (ndarray)
             xy_res = res[1]
-            z_res = res[0]  
+            z_res = res[0]
     return xy_res, z_res
 
 @print_func_name_args_times()
@@ -455,7 +455,7 @@ def load_h5(hdf5_path, desired_axis_order="xyz", return_res=False, return_metada
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
 @print_func_name_args_times()
-def load_zarr(zarr_path, channel=None, desired_axis_order="xyz", return_res=False, level=None, verbose=False):
+def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False,  return_metadata=False, save_metadata=None, xy_res=None, z_res=None, level=None, verbose=False):
     """
     Load a channel and level of a Zarr image, optionally returning voxel resolution.
 
@@ -463,23 +463,31 @@ def load_zarr(zarr_path, channel=None, desired_axis_order="xyz", return_res=Fals
     ----------
     zarr_path : str or Path
         Path to .zarr directory.
-    desired_axis_order : str, optional
-        Desired output axis order (default: "xyz").
-    level : str or int, optional
-        Resolution level to load (default: highest).
     channel : int, optional
         Channel index to load (for 4D data). If None, loads all channels.
+    desired_axis_order : str, optional
+        Desired output axis order (default: "xyz").
     return_res : bool, optional
         If True, returns voxel resolution in mm (xy_res, z_res) along with the image.
+    save_metadata : str, optional
+        Path to save metadata file. Default is None.
+    xy_res : float, optional
+        Resolution in the xy-plane (in microns). If None, will be extracted from metadata.
+    z_res : float, optional
+        Resolution in the z-plane (in microns). If None, will be extracted from metadata.
+    level : str or int, optional
+        Resolution level to load (default: highest).
     verbose : bool
         Print debug output.
 
     Returns
     -------
-    ndarray : np.ndarray
-        Loaded image array (3D).
-    xy_res, z_res : float, optional
-        Returned only if return_res is True.
+    ndarray
+        3D numpy array from the zarr store, with shape (z, y, x) or (z, x, y) depending on desired_axis_order.
+    tuple, optional
+        If return_res is True, returns (ndarray, xy_res, z_res).
+    tuple, optional
+        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).
     """
     zarr_path = Path(zarr_path)
     if not zarr_path.exists():
@@ -557,6 +565,9 @@ def load_zarr(zarr_path, channel=None, desired_axis_order="xyz", return_res=Fals
     if desired_axis_order == "xyz":
         ndarray = np.transpose(ndarray, (2, 1, 0))
         log(f"    Transposed to XYZ: shape {ndarray.shape}")
+
+    xy_res, z_res, x_dim, y_dim, z_dim = metadata(zarr_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
+    return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
 
     return (ndarray, xy_res, z_res) if return_res else ndarray
 
@@ -815,7 +826,7 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
         elif str(img_path).endswith('.h5'):
             return load_h5(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
         elif str(img_path).endswith('.zarr'):
-            return load_zarr(img_path, channel, desired_axis_order, return_res, verbose=verbose)  # TODO: add save_metadata, xy_res, z_res
+            return load_zarr(img_path, channel, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res, verbose=verbose)
         else:
             raise ValueError(f"Unsupported file type: {img_path.suffix}. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5")
     except (FileNotFoundError, ValueError) as e:
