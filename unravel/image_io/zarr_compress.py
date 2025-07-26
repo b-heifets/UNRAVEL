@@ -3,6 +3,9 @@
 Use ``io_zarr_compress`` (``zc``) from UNRAVEL to compress or decompress `.zarr` directories to/from `.zarr.tar.gz` archives.
 
 Note:
+    - .zarr directories can have several subdirectories and files, which can be slow to transfer or index.
+    - Compressing to `.zarr.tar.gz` reduces the size and speeds up transfer.
+    - Decompressing restores the original `.zarr` directory structure.
     - Compression uses `tar -I pigz` if `pigz` is installed for fast, parallel gzip compression.
     - If `pigz` is not available, it falls back to standard gzip compression via `tar -czf`.
 

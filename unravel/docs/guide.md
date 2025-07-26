@@ -421,8 +421,9 @@ uc -m
 - [**io_h5_to_tifs**](unravel.image_io.h5_to_tifs): Convert H5 files to TIFFs.
 - [**io_tif_to_tifs**](unravel.image_io.tif_to_tifs): Convert TIF to TIFF series.
 - [**io_img_to_npy**](unravel.image_io.img_to_npy): Convert images to Numpy arrays.
-- [**io_points_to_img**](unravel.image_io.points_to_img): Populate an empty image with point coordinates
-- [**io_img_to_points**](unravel.image_io.img_to_points): Convert and image into points coordinates
+- [**io_points_to_img**](unravel.image_io.points_to_img): Populate an empty image with point coordinates.
+- [**io_img_to_points**](unravel.image_io.img_to_points): Convert and image into points coordinates.
+- [**io_zarr_compress**](unravel.image_io.zarr_compress): Compress .zarr or decompress .zarr.tar.gz files.
 :::
 
 :::{tab-item} Image tools

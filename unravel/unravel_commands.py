@@ -502,6 +502,12 @@ def main():
                 "description": "Populate an empty image with point coordinates.",
                 "common": False,
                 "alias": "p2i"
+            },
+            "io_zarr_compress": {
+                "module": "unravel.image_io.zarr_compress",
+                "description": "Compress .zarr or decompress .zarr.tar.gz files.",
+                "common": False,
+                "alias": "zc"
             }
         },
         "Image tools": {
