@@ -108,11 +108,8 @@ def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executabl
         print("\n    [red1]Ilastik executable path not provided. Please provide the path to the Ilastik executable.\n")
         return
 
-    try:
-        tif_list = match_files('*.tif', base_path=tif_dir)
-    except ValueError:
-        print(f"\n    [red1]No TIF files found in {tif_dir}.\n")
-        return
+    tif_list = match_files('*.tif', base_path=tif_dir)
+    tif_list = [str(tif) for tif in tif_list]
     
     cmd = [
         ilastik_executable, # Path to ilastik executable as a string
@@ -122,6 +119,7 @@ def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executabl
         '--output_format', 'tif',
         '--output_filename_format', f'{str(output_dir)}/{{nickname}}.tif'
     ] + tif_list
+    cmd = [str(x) for x in cmd]
     print("\n    Running Ilastik with command:\n", ' '.join(cmd[:10]), ' '.join(tif_list[:3]), f'[default bold]...\n')
     result = subprocess.run(cmd, capture_output=True, text=True, shell=(os.name == 'nt'))
     if result.returncode != 0:
