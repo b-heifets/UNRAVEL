@@ -51,7 +51,7 @@ def parse_args():
     reqs.add_argument('-s', '--save_as', help='Output format extension (e.g., .nii.gz, .zarr, .tif).', required=True, choices=['.nii.gz', '.tif', '.zarr', '.h5'], action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-x', '--xy_res', help='xy resolution in µm. Provide for .tifs', type=float, action=SM)
+    opts.add_argument('-x', '--xy_res', help='xy resolution in µm. Provide for .tif, .zarr, .h5', type=float, action=SM)
     opts.add_argument('-z', '--z_res', help='z resolution in µm', type=float, action=SM)
     opts.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
     opts.add_argument('-o', '--output', help='Output directory path. Default: None (saves in the same directory as input).', default=None, action=SM)
@@ -120,7 +120,7 @@ def io_img(img_file, save_as, output, force, channel, xy_res=None, z_res=None, d
 
     if not force:
         if out_path.exists():
-            print(f"[yellow]Output file {out_path} already exists for {img_path.name}. Skipping conversion.[/yellow]")
+            print(f"\n[yellow]Output file[/yellow] {out_path} [yellow]already exists[/yellow] for {img_path.name}. Skipping conversion.")
             return
 
     # Load the image
