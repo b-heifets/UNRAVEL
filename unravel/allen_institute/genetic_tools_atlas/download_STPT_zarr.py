@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 """
-Use ``gta_download_STPT_zarr`` (``gta_dl``) from UNRAVEL to download STPT Zarr images from the Allen Genetic Tools Atlas (GTA).
+Use ``gta_download_STPT_zarr`` (``gta_dl``) from UNRAVEL to download STPT Zarr images from the Allen Genetic Tools Atlas (GTA) at a specified resolution level.
 
 Prereqs:
-    - Genetic Tools Atlas (GTA): https://portal.brain-map.org/genetic-tools/genetic-tools-atlas
-    - Find STPT experiments at https://knowledge.brain-map.org/data/7CVKSF7QGAKIQ8LM5LC/specimens
+    - Visit the Genetic Tools Atlas (GTA): https://portal.brain-map.org/genetic-tools/genetic-tools-atlas
     - Filter by 'Data Modality' = 'STPT'
     - Optional: Apply other filters of interest
+    - Optional: Click link to view the brain with neuroglancer.
     - 'Download Data' --> 'Metadata Table' or 'Raw File Manifest' to get a CSV file with experiment IDs or S3 paths, respectively.
     - Alternatively, content from the MapMySections submission sheet can be copied to a CSV file (-col 'STPT Data File Path')
 
@@ -40,7 +40,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-e', '--exp_ids', help='GTA experiment ID to download (e.g., 1342775164)', nargs='*', action=SM)
-    opts.add_argument('-l', '--level', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
+    opts.add_argument('-l', '--level', help='Zarr resolution level to download (0 is highest resolution and 9 is lowest). Default: 3', choices=[str(i) for i in range(10)], default='3', action=SM)
     opts.add_argument('-o', '--output', help='Output directory. Default: GTA_STPT_level_<level>', default=None, action=SM)
     opts.add_argument('-c', '--csv', help='Path to a CSV file with experiment IDs. If provided, will read IDs from this file instead of command line.', default=None, action=SM)
     opts.add_argument('-col', '--column', help='CSV column name w/ either the "Image Series ID" or Zarr s3 paths. Default: "File URI"', default="File URI", action=SM)
