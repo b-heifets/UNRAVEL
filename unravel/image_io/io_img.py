@@ -51,9 +51,9 @@ def parse_args():
     reqs.add_argument('-s', '--save_as', help='Output format extension (e.g., .nii.gz, .zarr, .tif).', required=True, choices=['.nii.gz', '.tif', '.zarr', '.h5'], action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-x', '--xy_res', help='xy resolution in µm. Provide for .tif, .zarr, .h5', type=float, action=SM)
+    opts.add_argument('-x', '--xy_res', help='xy resolution in µm. Provide for .tif inputs', type=float, action=SM)
     opts.add_argument('-z', '--z_res', help='z resolution in µm', type=float, action=SM)
-    opts.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
+    opts.add_argument('-c', '--channel', help='Channel number. Default: 0', default=0, type=int, action=SM)
     opts.add_argument('-o', '--output', help='Output directory path. Default: None (saves in the same directory as input).', default=None, action=SM)
     opts.add_argument('-d', '--dtype', help='Data type for .nii.gz. Options: np.uint8, np.uint16, np.float32.', default=None, action=SM)
     opts.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata. Default: None', default=None, action=SM)
@@ -66,13 +66,11 @@ def parse_args():
 
 # TODO: Test if other scripts in the image_io parent dir of this script are redundant and can be removed. If so, consolidate them into this script.
 # TODO: Could add parallel processing multiple inputs
-# TODO: This works for loading a .zarr from save_as_zarr(). Test it if works with .zarr files from download_GTA_STPT_zarr. 
-# TODO: Perhaps add support for zarr_level_to_tifs() can allow for saving in different formats, e.g., .nii.gz, .tif, etc.?
-# TODO: Add support for extracting metadata from .zarr and .h5 files.
 # TODO: Consider rename this script to img_convert.py to make it more intuitive and distinct from img_io.py
 
 @print_func_name_args_times()
-def io_img(img_file, save_as, output, force, channel, xy_res=None, z_res=None, dtype=None, reference=None, verbose=False):
+def io_img(img_file, save_as=None, output=None, force=False, channel=0, xy_res=None, z_res=None, dtype=None, reference=None, verbose=False):
+
     """
     Load a 3D image and save it in a different format.
 
@@ -125,19 +123,12 @@ def io_img(img_file, save_as, output, force, channel, xy_res=None, z_res=None, d
 
     # Load the image
     if xy_res is None or z_res is None:
-        img, xy_res, z_res = load_3D_img(img_path, channel, return_res=True, verbose=verbose)
+        img, xy_res, z_res = load_3D_img(img_path, channel=channel, return_res=True, verbose=verbose)
     else:
-        img = load_3D_img(img_path, channel, verbose=verbose)
-
-    if verbose:
-        print(f"\n📄 [bold]{img_path.name}[/bold]")
-        print(f"    Type: {type(img)}")
-        print(f"    Shape: {img.shape}")
-        print(f"    Dtype: {img.dtype}")
-        print(f"    xy res: {xy_res} µm, z res: {z_res} µm")
+        img = load_3D_img(img_path, channel=channel, verbose=verbose)
 
     # Save the image in the specified format
-    save_3D_img(img, out_path, xy_res=xy_res, z_res=z_res, data_type=dtype, reference_img=reference)
+    save_3D_img(img, output_path=out_path, ndarray_axis_order="xyz", xy_res=xy_res, z_res=z_res, data_type=dtype, reference_img=reference, verbose=verbose)
 
 
 @log_command
@@ -157,7 +148,16 @@ def main():
     with Live(progress):
 
         for img_file in img_files:
-            io_img(img_file, args.save_as, args.output, args.force, args.channel, args.xy_res, args.z_res, args.dtype, args.reference, args.verbose)
+            io_img(img_file, 
+                   save_as = args.save_as, 
+                   output = args.output, 
+                   force = args.force, 
+                   channel = args.channel, 
+                   xy_res = args.xy_res, 
+                   z_res = args.z_res, 
+                   dtype = args.dtype, 
+                   reference = args.reference, 
+                   verbose = args.verbose)
 
             progress.update(task_id, advance=1)
 
