@@ -57,7 +57,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-k', '--kernel_size', help='Size of the kernel for spatial averaging. Default: 3', default=3, type=int, action=SM)
-    opts.add_argument('-c', '--channel', help='.czi channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
+    opts.add_argument('-c', '--channel', help='Channel number. Default: 0 for autofluo', default=0, type=int, action=SM)
     opts.add_argument('-x', '--xy_res', help='xy resolution in um', default=None, type=float, action=SM)
     opts.add_argument('-z', '--z_res', help='z resolution in um', default=None, type=float, action=SM)
     opts.add_argument('-dt', '--dtype', help='Output data type. Default: uint16', default='uint16', action=SM)

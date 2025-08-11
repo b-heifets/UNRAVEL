@@ -51,7 +51,7 @@ def parse_args():
     reqs.add_argument('-i', '--input', help='Image file path(s) or pattern(s), e.g., path/input_image.nii.gz or *.nii.gz', required=True, nargs='*', action=SM)
 
     input_group = parser.add_argument_group('Optional arguments for input processing')
-    input_group.add_argument('-c', '--channel', help='.czi channel number. e.g., 0 for autofluorescence and 1 for immunofluorescence', default=None, type=int, action=SM)
+    input_group.add_argument('-c', '--channel', help='Channel number. Default: 0', default=0, type=int, action=SM)
     input_group.add_argument('-x', '--xy_res', help='xy resolution (e.g., in microns) for input .tif, .zarr, or .h5 files.', type=float, action=SM)
     input_group.add_argument('-z', '--z_res', help='z resolution (e.g., in microns) for input .tif, .zarr, or .h5 files.', type=float, action=SM)
 
@@ -168,9 +168,9 @@ def main():
             print(f"    Output path: {out_path}\n")
 
         if args.reference and str(args.save_as) == '.nii.gz':
-            save_3D_img(img_resampled, out_path, xy_res=target_res_xy, z_res=target_res_z, data_type=args.dtype, reference_img=args.reference)
+            save_3D_img(img_resampled, out_path, xy_res=target_res_xy, z_res=target_res_z, data_type=args.dtype, reference_img=args.referenc, verbose=args.verbose)
         else:
-            save_3D_img(img_resampled, out_path, xy_res=target_res_xy, z_res=target_res_z)
+            save_3D_img(img_resampled, out_path, xy_res=target_res_xy, z_res=target_res_z, verbose=args.verbose)
 
     verbose_end_msg()
 
