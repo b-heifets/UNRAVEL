@@ -66,7 +66,6 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Test if other scripts in the image_io parent dir of this script are redundant and can be removed. If so, consolidate them into this script.
-# TODO: Could add parallel processing multiple inputs
 
 @print_func_name_args_times()
 def convert_img(img_file, save_as=None, output=None, force=False, channel=0, xy_res=None, z_res=None, dtype=None, reference=None, verbose=False):
