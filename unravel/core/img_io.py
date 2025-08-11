@@ -38,10 +38,10 @@ from rich import print
 from unravel.core.utils import match_files, print_func_name_args_times
 
 
-# TODO: Create save_3D_img() function for saving 3D images in various formats. 
 # TODO: save_as_nii() add logic for using the reference image for dtype (e.g., if reference is provided and dtype is None, use reference dtype)
 # TODO: Add support for extracting metadata from .zarr files.
 
+@print_func_name_args_times()
 def return_3D_img(ndarray, return_metadata=False, return_res=False, xy_res=None, z_res=None, x_dim=None, y_dim=None, z_dim=None):
     """
     Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim).
@@ -541,22 +541,21 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
     if level_str: # If a level is specified or found, load that level
         level_path = zarr_path / level_str
         if level_path.exists():
-            log(f"    GTA-style: loading level {level_str} from {level_path}")
+            log(f"        Multi-resolution structure detected: loading level {level_str}")
             ndarray = da.from_zarr(level_path).compute() # convert dask array to numpy array
         else:
             raise ValueError(f"Specified level {level_str} does not exist in {zarr_path}")
     else: # Load flat format (.zattrs is missing or it does not match expected metadata structure)
-        log("    No compatible .zattrs metadata found. Loading flat zarr format.")
+        log("        No compatible .zattrs metadata found. Loading flat zarr format.")
         zarr_dataset = zarr.open(zarr_path, mode='r')
         ndarray = np.array(zarr_dataset)
-        log(f"    Loaded zarr: shape {ndarray.shape}")
 
     # Extract channel if specified (e.g., 0 for the first channel, 1 for the second, etc.)
-    log(f"    Loaded array shape: {ndarray.shape}")
+    log(f"        Array shape ([C], Z, Y, X): {ndarray.shape}")
     if ndarray.ndim == 4:
         if channel is not None:
+            log(f"        Extracted channel: {channel}")
             ndarray = ndarray[channel]
-            log(f"    Selected channel: {channel}")
         else:
             raise ValueError(f"Multiple channels found: {ndarray.shape[0]} channels. Please specify a channel index.")
 
@@ -566,10 +565,10 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
     # Transpose to desired axis order
     if desired_axis_order == "xyz":
         ndarray = np.transpose(ndarray, (2, 1, 0))
-        log(f"    Transposed to XYZ: shape {ndarray.shape}")
+        log(f"        Array shape after transposing to (X, Y, Z): {ndarray.shape}")
 
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(zarr_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
-    return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
+    return return_3D_img(ndarray, return_metadata=return_metadata, return_res=return_res, xy_res=xy_res, z_res=z_res, x_dim=x_dim, y_dim=y_dim, z_dim=z_dim)
 
 def resolve_path(upstream_path, path_or_pattern, make_parents=True, is_file=True):
     """
@@ -723,13 +722,13 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
             return load_tifs(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
 
     if not img_path.exists():
-        raise FileNotFoundError(f"\n    [red1]No compatible image files found at {img_path} for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
+        raise FileNotFoundError(f"\n[red1]No compatible image files found at {img_path} for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
     
-    if verbose:
-        if str(img_path).endswith('.czi'):
-            print(f"\n    [default]Loading channel {channel} from {img_path} (channel 0 is the first channel)")
-        else: 
-            print(f"\n    [default]Loading {img_path}")
+    # if verbose:
+    #     if str(img_path).endswith('.czi') or str(img_path).endswith('.zarr'):
+    #         print(f"      [default]Loading channel [cyan]{channel}[/cyan] from [magenta]{img_path}[/magenta] [grey50](channel 0 is the first channel)")
+    #     else: 
+    #         print(f"      [default]Loading {img_path}")
 
     # Load image based on file type and optionally return resolutions and dimensions
     try:
@@ -742,7 +741,7 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
         elif str(img_path).endswith('.h5'):
             return load_h5(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
         elif str(img_path).endswith('.zarr'):
-            return load_zarr(img_path, channel, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res, verbose=verbose)
+            return load_zarr(img_path, channel=channel, desired_axis_order=desired_axis_order, return_res=return_res, return_metadata=return_metadata, save_metadata=save_metadata, xy_res=xy_res, z_res=z_res, verbose=verbose)
         else:
             raise ValueError(f"Unsupported file type: {img_path.suffix}. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5")
     except (FileNotFoundError, ValueError) as e:
@@ -807,7 +806,7 @@ def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=None, refere
     print(f"\n    Output: [default bold]{output}")
 
 @print_func_name_args_times()
-def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz", parallel=True, max_workers=None):
+def save_as_tifs(ndarray, tif_dir_out=None, ndarray_axis_order="xyz", parallel=True, max_workers=None, verbose=False):
     """
     Save an ndarray as a series of .tif images.
 
@@ -823,6 +822,8 @@ def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz", parallel=True, 
         Whether to save slices in parallel. Default is False.
     max_workers : int or None, optional
         Number of threads to use for parallel saving. Defaults to os.cpu_count().
+    verbose : bool, optional
+        How to print the output directory. Default is False.
 
     Returns
     -------
@@ -845,10 +846,13 @@ def save_as_tifs(ndarray, tif_dir_out, ndarray_axis_order="xyz", parallel=True, 
         for i in range(ndarray.shape[0]):
             save_slice(i)
 
-    print(f"\n    Output: [default bold]{tif_dir_out}")
+    if verbose:
+        print(f"        Output directory: [magenta]{tif_dir_out}")
+    else:
+        print(f"Output directory with tif series: [magenta]{tif_dir_out}")
 
 @print_func_name_args_times()
-def save_as_zarr(ndarray, output_path, ndarray_axis_order="xyz", xy_res=None, z_res=None, verbose=False):
+def save_as_zarr(ndarray, output_path=None, ndarray_axis_order="xyz", xy_res=None, z_res=None, verbose=False):
     """
     Save a 3D ndarray to a .zarr file as well as OME-NGFF-compatible metadata.
 
@@ -926,7 +930,7 @@ def save_as_h5(ndarray, output_path, ndarray_axis_order="xyz"):
         f.create_dataset('data', data=ndarray, compression="lzf")
 
 @print_func_name_args_times()
-def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1000, data_type=np.float32, reference_img=None):
+def save_3D_img(img, output_path=None, ndarray_axis_order="xyz", xy_res=1000, z_res=1000, data_type=np.float32, reference_img=None, verbose=False):
     """
     Save a 3D image in various formats.
 
@@ -946,6 +950,8 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
         Data type for a NIFTI image output. Default is np.float32.
     reference_img : str, Path, or a nib.Nifti1Image object, optional
         Either path to a .nii.gz file or a Nifti1Image object to set orientation and resolution. Default is None. If provided, xy_res and z_res are ignored.
+    verbose : bool, optional
+        Print addtional infomation. Default is False.
     """
     output = Path(output_path)
     output.parent.mkdir(exist_ok=True, parents=True)
@@ -956,15 +962,15 @@ def save_3D_img(img, output_path, ndarray_axis_order="xyz", xy_res=1000, z_res=1
     if output_str.endswith('.nii.gz'):
         save_as_nii(img, output, xy_res, z_res, data_type=data_type, reference=reference_img)
     elif suffix == '.zarr':
-        save_as_zarr(img, output, ndarray_axis_order=ndarray_axis_order, xy_res=xy_res, z_res=z_res, verbose=True)
+        save_as_zarr(img, output, ndarray_axis_order=ndarray_axis_order, xy_res=xy_res, z_res=z_res, verbose=verbose)
     elif suffix == '.h5':
         save_as_h5(img, output, ndarray_axis_order=ndarray_axis_order)
     elif suffix == '.tif':
         # If user gave a file path like red2/slice_0000.tif, use the parent directory
-        save_as_tifs(img, output.parent, ndarray_axis_order=ndarray_axis_order)
+        save_as_tifs(img, tif_dir_out=output.parent, ndarray_axis_order=ndarray_axis_order, parallel=True, max_workers=None, verbose=verbose)
     elif suffix == '':
         # If no suffix, assume directory path for TIFFs
-        save_as_tifs(img, output, ndarray_axis_order=ndarray_axis_order)
+        save_as_tifs(img, tif_dir_out=output, ndarray_axis_order=ndarray_axis_order, parallel=True, max_workers=None, verbose=verbose)
     else:
         raise ValueError(f"Unsupported file type for save_3D_img(): '{suffix}'. Use: .nii.gz, .zarr, .h5, .tif, or a directory path for a TIFF series.")
 

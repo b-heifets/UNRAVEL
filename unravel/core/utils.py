@@ -164,7 +164,7 @@ def get_samples(dir_list=None, dir_pattern="sample??", verbose=False):
             print(f"\n    [bold gold1]get_samples[/]() found these directories in [bright_black bold]{parent_dir}[/]:\n")
             for sample_dir in samples:
                 if sample_dir.parent == parent_dir:
-                    print(f"        [bold orange_red1]{sample_dir.name}")
+                    print(f"        [bold dark_orange]{sample_dir.name}")
             print()
 
     return samples
@@ -229,8 +229,8 @@ def verbose_start_msg():
     """Print the start command and time if verbose mode is enabled."""
     if Configuration.verbose:
         cmd = f"\n{os.path.basename(sys.argv[0])} {' '.join(sys.argv[1:])}"
-        console.print(f"\n\n[bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]{' '.join(sys.argv[1:])}[/]\n")
-        print(f"\n    [bright_blue]Start:[/] {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        console.print(f"\n\n[bold magenta]{os.path.basename(sys.argv[0])}[/] [bold purple3]{' '.join(sys.argv[1:])}[/]\n")
+        print(f"\n  [bright_blue]Start:[/] {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
         return cmd
     return None
 
@@ -238,7 +238,7 @@ def verbose_end_msg():
     """Print the end time if verbose mode is enabled."""
     if Configuration.verbose:
         end_time = datetime.now()
-        console.print(f"\n\n:mushroom: [bold bright_magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold1]![/][dark_orange]![/][red1]![/] \n")
+        console.print(f"\n\n:mushroom: [bold magenta]{os.path.basename(sys.argv[0])}[/] [purple3]finished[/] [bright_blue]at:[/] {end_time.strftime('%Y-%m-%d %H:%M:%S')}[gold1]![/][dark_orange]![/][red1]![/] \n")
         return end_time.strftime('%Y-%m-%d %H:%M:%S')
     return None
 
@@ -271,21 +271,6 @@ def log_command(func):
 
 # Function decorators
 
-def get_dir_name_from_args(args, kwargs):
-    """
-    This function checks args and kwargs for a file or directory path
-    and returns a string based on the name of the file or directory.
-    """
-    for arg in args:
-        if isinstance(arg, (str, Path)) and Path(arg).exists():
-            return Path(arg).resolve().name
-
-    for kwarg in kwargs.values():
-        if isinstance(kwarg, (str, Path)) and Path(kwarg).exists():
-            return Path(kwarg).resolve().name
-
-    return Path.cwd().name
-
 # Create a thread-local storage for indentation level
 thread_local_data = threading.local()
 thread_local_data.indentation_level = 0
@@ -304,8 +289,7 @@ def print_func_name_args_times(print_dir=True):
 
     def arg_str_representation(arg):
         """Return a string representation of the argument passed to the decorated function."""
-        # return ARG_REPRESENTATIONS.get(type(arg), str)(arg)
-        return ARG_REPRESENTATIONS.get(type(arg), repr)(arg)
+        return ARG_REPRESENTATIONS.get(type(arg), repr)(arg) # repr is used for unsupported types
     
     def decorator(func):
         @functools.wraps(func)
@@ -323,26 +307,21 @@ def print_func_name_args_times(print_dir=True):
             thread_local_data.indentation_level += 1
 
             # Compute indentation based on the current level
-            indent_str = '  ' * thread_local_data.indentation_level  # Using 4 spaces for each indentation level
+            indent_str = '  ' * thread_local_data.indentation_level  # Using 2 spaces for each indentation level
             
             # Convert args and kwargs to string for printing
             args_str = ', '.join(arg_str_representation(arg) for arg in args)
             kwargs_str = ', '.join(f"{k}={arg_str_representation(v)}" for k, v in kwargs.items())
             combined_args = args_str + (', ' if args_str and kwargs_str else '') + kwargs_str
-            
-            if print_dir:
-                dir_name = get_dir_name_from_args(args, kwargs) # Get dir name the basename of 1st arg with a valid path (e.g., sample??)
-                dir_string = f" for [bold orange_red1]{dir_name}[/]"
-            else:
-                dir_string = ""
 
             # Print out the arguments with the added indent
+            name = func.__name__
             if thread_local_data.indentation_level > 2:  # considering that main function is at level 1
-                print(f"{indent_str}[gold3]{func.__name__!r}[/]\n{indent_str}[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
+                print(f"{indent_str}[dark_orange]{name}([/][bright_black]{args_str}{', ' + kwargs_str if kwargs_str else ''}[/][dark_orange])[/]")
             elif thread_local_data.indentation_level > 1:
-                print(f"\n{indent_str}[gold3]{func.__name__!r}[/]\n{indent_str}[bright_black]({args_str}{', ' + kwargs_str if kwargs_str else ''})")
+                print(f"\n{indent_str}[dark_orange]{name}([/][bright_black]{args_str}{', ' + kwargs_str if kwargs_str else ''}[/][dark_orange])[/]")
             else:
-                print(f"\nRunning: [bold gold1]{func.__name__!r}[/]{dir_string} with parameters: [bright_black]({combined_args})[/]")
+                print(f"\n{indent_str}[bold gold3]{name}([/][bright_black]{combined_args}[/][bold gold3])[/]") # bold orange_red1
 
             # Function execution
             start_time = time.perf_counter()
@@ -356,9 +335,9 @@ def print_func_name_args_times(print_dir=True):
 
             # Print out the arguments with the added indent
             if thread_local_data.indentation_level > 1:  # considering that main function is at level 1
-                print(f"{indent_str}[gold3]{duration_str}")
+                print(f"{indent_str}[dark_orange]{duration_str}")
             else:
-                print(f"\nFinished [bold gold1]{func.__name__!r}[/] in [orange_red1]{duration_str}\n")
+                print(f"\n{indent_str}[gold3]{duration_str}\n")
 
             thread_local_data.indentation_level -= 1
             return result
