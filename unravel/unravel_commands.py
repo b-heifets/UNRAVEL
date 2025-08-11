@@ -759,12 +759,6 @@ def main():
                 "common": False,
                 "alias": "gta_dl"
             },
-            "gta_zarr_levels_to_tifs": {
-                "module": "unravel.allen_institute.genetic_tools_atlas.zarr_level_to_tifs",
-                "description": "Convert a Zarr file to a series of TIFF files (e.g., for Ilastik segmentation).",
-                "common": False,
-                "alias": "gta_zlt"
-            },
         },
         "Tabular data": {
             "tabular_edit_columns": {
