@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_img`` (``img``) from UNRAVEL to load a 3D image and save as a different format.
+Use ``io_convert_img`` (``conv``) from UNRAVEL to load a 3D image and save as a different format.
 
 Input image types:
     - .czi
@@ -17,19 +17,19 @@ Output image types:
     - .h5
 
 Note:
-    - Provide -x and -z for .tif, .zarr, .h5 files to set the xy and z resolution in micrometers.
+    - Provide -x and -z for .tif inputs to set the xy and z resolution in micrometers.
 
 Usage to convert a .czi file to .nii.gz:
 ----------------------------------------
-io_img -i 'sample.czi' -c 1 -s .nii.gz
+conv -i 'sample.czi' -c 1 -s .nii.gz
 
 Usage to convert a single .tif series to .nii.gz:
 -------------------------------------------------
-io_img -i 'sample*/tifs/' -x 3.5 -z 6 -s .nii.gz 
+conv -i 'sample*/tifs/' -x 3.5 -z 6 -s .nii.gz 
 
 Usage to recursively convert all dirs with tif files to .zarr:
 --------------------------------------------------------------
-io_img -i '**/*.tif' -x 3.5 -z 6 --save_as .zarr 
+conv -i '**/*.tif' -x 3.5 -z 6 --save_as .zarr 
 """
 
 from pathlib import Path
@@ -66,13 +66,11 @@ def parse_args():
 
 # TODO: Test if other scripts in the image_io parent dir of this script are redundant and can be removed. If so, consolidate them into this script.
 # TODO: Could add parallel processing multiple inputs
-# TODO: Consider rename this script to img_convert.py to make it more intuitive and distinct from img_io.py
 
 @print_func_name_args_times()
-def io_img(img_file, save_as=None, output=None, force=False, channel=0, xy_res=None, z_res=None, dtype=None, reference=None, verbose=False):
-
+def convert_img(img_file, save_as=None, output=None, force=False, channel=0, xy_res=None, z_res=None, dtype=None, reference=None, verbose=False):
     """
-    Load a 3D image and save it in a different format.
+    Load a 3D image and save it in a different format. Supports .czi, .nii.gz, .tif series, .zarr, and .h5 formats.
 
     Parameters:
     -----------
@@ -96,7 +94,6 @@ def io_img(img_file, save_as=None, output=None, force=False, channel=0, xy_res=N
         Path to a reference image for .nii.gz metadata. If None, the metadata will not be set.
     verbose : bool
         If True, prints detailed information about the image being processed. Default is False.
-
     """
 
     if save_as not in ['.nii.gz', '.tif', '.zarr', '.h5']:
@@ -118,7 +115,8 @@ def io_img(img_file, save_as=None, output=None, force=False, channel=0, xy_res=N
 
     if not force:
         if out_path.exists():
-            print(f"\n[yellow]Output file[/yellow] {out_path} [yellow]already exists[/yellow] for {img_path.name}. Skipping conversion.")
+            indent = '    ' if verbose else ''
+            print(f"{indent}[magenta]{out_path}[/magenta] [yellow]already exists for [/yellow][magenta]{img_path.name}[/magenta]. Skipping conversion.")
             return
 
     # Load the image
@@ -148,7 +146,7 @@ def main():
     with Live(progress):
 
         for img_file in img_files:
-            io_img(img_file, 
+            convert_img(img_file, 
                    save_as = args.save_as, 
                    output = args.output, 
                    force = args.force, 

@@ -425,11 +425,11 @@ def main():
                 "common": True,
                 "alias": "m"
             },
-            "io_img": {
-                "module": "unravel.image_io.io_img",
-                "description": "Image I/O operations.",
+            "io_convert_img": {
+                "module": "unravel.image_io.convert_img",
+                "description": "Image conversion operations.",
                 "common": False,
-                "alias": "img"
+                "alias": "conv"
             },
             "io_nii_info": {
                 "module": "unravel.image_io.nii_info",

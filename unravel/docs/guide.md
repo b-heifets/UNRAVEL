@@ -410,7 +410,7 @@ uc -m
 
 :::{tab-item} Image I/O
 - [**io_metadata**](unravel.image_io.metadata): Save raw voxel dimensions in microns and image dimensions to parameters/metadata.txt. 
-- [**io_img**](unravel.image_io.io_img): Image I/O operations.
+- [**io_convert_img**](unravel.image_io.conv): Convert a 3D image to another format. Supports .czi, .tif, .nii.gz, .zarr.
 - [**io_nii_info**](unravel.image_io.nii_info): Print info about NIfTI files.
 - [**io_nii_hd**](unravel.image_io.nii_hd): Print NIfTI headers.
 - [**io_nii**](unravel.image_io.io_nii): NIfTI I/O operations (binarize, convert data type, scale, etc).
@@ -965,7 +965,7 @@ You can test parameters for background subtraction with:
 * {py:mod}`unravel.image_tools.spatial_averaging`
 * {py:mod}`unravel.image_tools.rb`
     * Copy a tif to a test dir for this (e.g., with `seg_copy_tifs`)
-    * Use {py:mod}`unravel.image_io.io_img` to create a tif series
+    * Use {py:mod}`unravel.image_io.io_img_convert` to create a tif series
 :::
 
 ```{figure} _static/FSLeyes_Ai14_image_in_CCFv3_30um_space.jpg
