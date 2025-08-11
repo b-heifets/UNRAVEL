@@ -185,7 +185,7 @@ def main():
         output_img_path.parent.mkdir(exist_ok=True, parents=True)
     else:
         output_img_path = args.input.replace('.csv', '.nii.gz')
-    save_3D_img(img, output_img_path, reference_img=args.ref_img)
+    save_3D_img(img, output_path=output_img_path, reference_img=args.ref_img, verbose=args.verbose)
 
     verbose_end_msg()
 

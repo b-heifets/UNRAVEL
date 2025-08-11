@@ -145,7 +145,7 @@ def main():
 
     # Save the image
     if args.img_output:
-        save_3D_img(points_resampled_img, args.img_output, reference_img=args.ref_img)
+        save_3D_img(points_resampled_img, args.img_output, reference_img=args.ref_img, verbose=args.verbose)
 
     verbose_end_msg()
 
