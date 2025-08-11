@@ -32,14 +32,14 @@ Usage to recursively convert all dirs with tif files to .zarr:
 conv -i '**/*.tif' -x 3.5 -z 6 --save_as .zarr 
 """
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-
 from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img, save_3D_img
 from unravel.core.utils import initialize_progress_bar, log_command, match_files, print_func_name_args_times, verbose_start_msg, verbose_end_msg
 
@@ -58,6 +58,7 @@ def parse_args():
     opts.add_argument('-d', '--dtype', help='Data type for .nii.gz. Options: np.uint8, np.uint16, np.float32.', default=None, action=SM)
     opts.add_argument('-r', '--reference', help='Reference image for .nii.gz metadata. Default: None', default=None, action=SM)
     opts.add_argument('-f', '--force', help='Force overwrite existing output files. Default: False', action='store_true', default=False)
+    opts.add_argument('-w', '--workers', help='Number of parallel conversions. Default: 8', type=int, default=8, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -145,19 +146,32 @@ def main():
     progress, task_id = initialize_progress_bar(len(img_files), task_message="[bold green]Converting images...")
     with Live(progress):
 
-        for img_file in img_files:
-            convert_img(img_file, 
-                   save_as = args.save_as, 
-                   output = args.output, 
-                   force = args.force, 
-                   channel = args.channel, 
-                   xy_res = args.xy_res, 
-                   z_res = args.z_res, 
-                   dtype = args.dtype, 
-                   reference = args.reference, 
-                   verbose = args.verbose)
+        def wrapped_convert(img_file):
+            try:
+                convert_img(
+                    img_file,
+                    save_as=args.save_as,
+                    output=args.output,
+                    force=args.force,
+                    channel=args.channel,
+                    xy_res=args.xy_res,
+                    z_res=args.z_res,
+                    dtype=args.dtype,
+                    reference=args.reference,
+                    verbose=args.verbose,
+                )
+            except Exception as e:
+                # surface which file failed and keep going
+                return f"⚠️ Error converting {img_file}: {e}"
+            finally:
+                progress.update(task_id, advance=1)
 
-            progress.update(task_id, advance=1)
+        with ThreadPoolExecutor(max_workers=args.workers) as executor:
+            futures = [executor.submit(wrapped_convert, f) for f in img_files]
+            for fut in as_completed(futures):
+                msg = fut.result()
+                if msg:
+                    print(msg) # Print any exceptions raised in the threads
 
     verbose_end_msg()
 
