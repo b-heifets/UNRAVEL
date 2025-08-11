@@ -532,7 +532,9 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
                     res_dict = {axis["name"]: s for axis, s in zip(axes, scale)}
                     xy_res = res_dict.get("x", None)
                     z_res = res_dict.get("z", None)
-                    log(f"    Resolutions from .zattrs: xy_res={xy_res}, z_res={z_res}")
+                    # Convert to micrometers
+                    xy_res = xy_res * 1e3 if xy_res is not None else None
+                    z_res = z_res * 1e3 if z_res is not None else None
 
     # Load image data
     ndarray = None
@@ -568,92 +570,6 @@ def load_zarr(zarr_path, channel=0, desired_axis_order="xyz", return_res=False, 
 
     xy_res, z_res, x_dim, y_dim, z_dim = metadata(zarr_path, ndarray, return_res, return_metadata, xy_res, z_res, save_metadata)
     return return_3D_img(ndarray, return_metadata, return_res, xy_res, z_res, x_dim, y_dim, z_dim)
-
-    return (ndarray, xy_res, z_res) if return_res else ndarray
-
-def resolve_path(upstream_path, path_or_pattern, make_parents=True, is_file=True):
-    """
-    Returns full path or Path(upstream_path, path_or_pattern) and optionally creates parent directories.
-
-    Parameters
-    ----------
-    upstream_path : str
-        The base path.
-    path_or_pattern : str
-        The relative path or glob pattern.
-    make_parents : bool, optional
-        Whether to create parent directories if they don't exist. Default is True.
-    is_file : bool, optional
-        Whether the path is a file. Default is True.
-
-    ----------
-    zarr_path : str or Path
-        Path to the .zarr directory.
-    desired_axis_order : str, optional
-        Desired axis order of the returned array. Default is "xyz".
-    level : str or int, optional
-        Level to load (e.g., "9"). If None, the largest 3D array will be selected.
-    verbose : bool, optional
-        Whether to print verbose messages.
-
-    Returns
-    -------
-    ndarray : np.ndarray
-        3D numpy array from the zarr store.
-    """
-    zarr_path = Path(zarr_path)
-
-    # Try loading directly as array from root (Napari-style zarrs)
-    try:
-        root = zarr.open(zarr_path, mode="r")
-        if isinstance(root, zarr.Array) and root.ndim == 3:
-            if verbose:
-                print(f"    Loaded 3D array directly from root with shape {root.shape}")
-            arr = root[:]
-            return np.transpose(arr, (2, 1, 0)) if desired_axis_order == "xyz" else arr
-    except Exception as e:
-        if verbose:
-            print(f"    Root is not a 3D array: {e}")
-
-    # Try as group
-    root = zarr.open_group(zarr_path, mode="r")
-
-    # If level is specified, go to that subgroup
-    if level is not None:
-        level = str(level)
-        if level not in root:
-            raise ValueError(f"Specified level '{level}' not found in {zarr_path}")
-        group = root[level]
-    else:
-        group = root
-
-    # Recursively search for 3D arrays
-    candidates = []
-
-    def _recurse(group_or_array, path=""):
-        if isinstance(group_or_array, zarr.Array):
-            if group_or_array.ndim == 3:
-                shape = group_or_array.shape
-                size = np.prod(shape)
-                candidates.append((size, path, group_or_array))
-        elif isinstance(group_or_array, zarr.hierarchy.Group):
-            for name, item in group_or_array.items():
-                _recurse(item, f"{path}/{name}".strip("/"))
-
-    _recurse(group)
-
-    if not candidates:
-        raise ValueError(f"No 3D arrays found in {zarr_path}")
-
-    # Sort by size and pick the largest
-    candidates.sort(reverse=True)
-    _, name, arr = candidates[0]
-
-    if verbose:
-        print(f"    Loaded 3D array from '{name}' with shape {arr.shape}")
-
-    data = arr[:]
-    return np.transpose(data, (2, 1, 0)) if desired_axis_order == "xyz" else data
 
 def resolve_path(upstream_path, path_or_pattern, make_parents=True, is_file=True):
     """
