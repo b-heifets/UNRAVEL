@@ -753,11 +753,17 @@ def main():
             },
         },
         "Genetic Tools Atlas (GTA)": {
-            "gta_download_STPT_zarr": {
+            "gta_download": {
                 "module": "unravel.allen_institute.genetic_tools_atlas.download_STPT_zarr",
                 "description": "Download STPT Zarr files.",
                 "common": False,
                 "alias": "gta_dl"
+            },
+            "gta_simplify_metadata": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.simplify_metadata",
+                "description": "Simplify metadata for GTA.",
+                "common": False,
+                "alias": "gta_sm"
             },
         },
         "Tabular data": {
