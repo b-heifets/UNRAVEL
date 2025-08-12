@@ -34,113 +34,77 @@ def parse_args():
     return parser.parse_args()
 
 
-def edit_columns(data, drop_cols=None, cols=None, rename=None, output_dir=None, output_name=None, output_ext=None, verbose=False):
+def edit_columns(file_path, drop_cols, cols, rename=None, output_dir=None, verbose=False):
     """
-    Edit columns from a CSV/XLSX file or an in-memory DataFrame.
+    Load a CSV or XLSX file, process columns (drop/keep/reorder), and save the modified file.
 
-    Parameters
-    ----------
-    data : str | Path | pd.DataFrame
-        Path to the input file (CSV/XLSX) or a pandas DataFrame.
-    drop_cols : list[str] | None
-        Columns to drop.
-    cols : list[str] | None
-        Columns to keep (and reorder). All others are dropped.
-    rename : list[str] | None
-        Rename rules as 'OLD=NEW'.
-    output_dir : Path | None
-        Where to save the edited table. If `data` is a path and this is None,
-        the file is saved under `<input_parent>/edit_cols/` (legacy behavior).
-        If `data` is a DataFrame and this is None, nothing is written to disk.
-    output_name : str | None
-        Base filename (without extension) to use when saving (mainly for DataFrame input).
-        Defaults to stem of the input file, or "df_edit_cols" for DataFrame input.
-    output_ext : str | None
-        File extension (including dot) to use when saving with DataFrame input (e.g., ".csv" or ".xlsx").
-        Defaults to the source file's extension, or ".csv" for DataFrame input.
+    Parameters:
+    -----------
+    file_path : str
+        Path to the input file (CSV or XLSX).
+    
+    drop_cols : list or None
+        List of column names to drop.
+
+    cols : list or None
+        List of column names to keep and reorder (all others will be dropped).
+
+    rename : list or None
+        List of strings in the format OLD=NEW to rename columns.
+
+    output_dir : str or None
+        Path to the output directory. If None, saves in "edit_cols" directory next to the input file.
+
     verbose : bool
-        Verbose logging.
-
-    Returns
-    -------
-    pd.DataFrame | None
-        The edited DataFrame. Returns None if the function exits early due to missing columns.
+        If True, prints additional information during processing.
     """
-
-    # --- Load data and set naming/extension context ---
-    if isinstance(data, (str, Path)):
-        input_path = Path(data)
-        df, file_extension = load_tabular_file(input_path)
-        base_name = input_path.stem
-        ext = file_extension  # preserves .csv/.xlsx
-        source_label = str(input_path)
-    elif isinstance(data, pd.DataFrame):
-        df = data.copy()
-        base_name = output_name or "df_edit_cols"
-        ext = output_ext or ".csv"
-        source_label = "DataFrame"
-    else:
-        raise TypeError("`data` must be a file path or a pandas DataFrame.")
+    df, file_extension = load_tabular_file(file_path)
 
     existing_columns = df.columns.tolist()
 
-    # --- Drop specified columns ---
+    # Drop specified columns
     if drop_cols:
-        to_drop = [c for c in drop_cols if c in existing_columns]
-        if to_drop:
-            df.drop(columns=to_drop, inplace=True)
-            if verbose:
-                print(f"[dim]Dropped columns from {source_label}: {to_drop}")
+        drop_cols = [col for col in drop_cols if col in existing_columns]
+        if drop_cols:
+            df.drop(columns=drop_cols, inplace=True)
         else:
-            print(f"[yellow]No matching columns found to drop in {source_label}. Skipping...")
+            print(f"[yellow]No matching columns found to drop in {file_path}. Skipping...")
             print(f"[dim]Available columns: {existing_columns}")
-            return None
+            return
 
-    # --- Keep only specified columns (and reorder) ---
+    # Keep only specified columns
     if cols:
-        missing = [c for c in cols if c not in df.columns]
+        missing = [col for col in cols if col not in df.columns]
         if missing:
-            print(f"[yellow]Missing columns in {source_label}: {missing}. Skipping...")
+            print(f"[yellow]Missing columns: {missing}. Skipping...")
             print(f"[dim]Available columns: {df.columns.tolist()}")
-            return None
-        df = df[cols]
-        if verbose:
-            print(f"[dim]Kept/reordered columns: {cols}")
+            return
+        else:
+            df = df[cols]
 
     # Rename columns if requested
-    if rename:
+    if rename is not None:
         rename_dict = {}
-        for rule in rename:
-            if "=" in rule:
-                old, new = rule.split("=", 1)
+        for r in rename:
+            if '=' in r:
+                old, new = r.split('=', 1)
                 if old in df.columns:
                     rename_dict[old] = new
         if rename_dict:
             df.rename(columns=rename_dict, inplace=True)
             if verbose:
-                print(f"[dim]Renamed columns: {rename_dict}")
+                print(f"[dim]Renaming columns: {rename_dict}")
         else:
-            if verbose:
-                print("[yellow]No valid columns to rename. Skipping...")
+            print("[yellow]No valid columns to rename. Skipping...")
 
-    # --- Determine output path & save (if applicable) ---
-    # If input was a path, always save.
-    # If input was a DataFrame: only save if output_dir is provided.
-    should_save = isinstance(data, (str, Path)) or (isinstance(data, pd.DataFrame) and output_dir is not None)
-
-    if should_save:
-        if output_dir is None:
-            # legacy default: <input_parent>/edit_cols/
-            output_dir = Path(data).parent / "edit_cols"  # type: ignore[arg-type]
+    if output_dir is not None:
         output_dir.mkdir(parents=True, exist_ok=True)
+        output_path = output_dir / f"{Path(file_path).stem}_edit_cols{file_extension}"
+    else:
+        output_path = Path(file_path).parent / "edit_cols" / f"{Path(file_path).stem}_edit_cols{file_extension}"
+        output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Use provided output_name if given, otherwise fall back to base_name
-        final_name = (output_name or base_name) + "_edit_cols"
-        output_path = output_dir / f"{final_name}{ext}"
-
-        save_tabular_file(df, output_path, index=False, verbose=verbose)
-
-    return df
+    save_tabular_file(df, output_path, index=False, verbose=verbose)
 
 @log_command
 def main():
@@ -165,7 +129,7 @@ def main():
         if Path(file_path).name.startswith("~"):
             continue
 
-        df = edit_columns(
+        edit_columns(
             file_path=file_path,
             drop_cols=args.drop_cols,
             cols=args.cols,
