@@ -43,7 +43,7 @@ def parse_args():
     opts.add_argument('-l', '--level', help='Zarr resolution level to download (0 is highest resolution and 9 is lowest). Default: 3', choices=[str(i) for i in range(10)], default='3', action=SM)
     opts.add_argument('-o', '--output', help='Output directory. Default: GTA_level_<level>', default=None, action=SM)
     opts.add_argument('-c', '--csv', help='Path to a CSV file with experiment IDs. If provided, will read IDs from this file instead of command line.', default=None, action=SM)
-    opts.add_argument('-col', '--column', help='CSV column name w/ either the "Image Series ID" or Zarr s3 paths. Default: "File URI"', default="File URI", action=SM)
+    opts.add_argument('-col', '--column', help='CSV column name w/ either the "Image Series ID" or Zarr s3 paths. Default: "Image Series ID"', default="Image Series ID", action=SM)
     opts.add_argument('-w', '--workers', help='Number of parallel downloads', type=int, default=10, action=SM)
     opts.add_argument('-f', '--force', help='Force download even if the zarr file already exists. Default: False', action='store_true', default=False)
     opts.add_argument('--full', help='Download the full Zarr root instead of a specific level. ⚠️ This can be >200 GB per brain!', action='store_true', default=False)
@@ -169,7 +169,7 @@ def gta_download(exp_id, level, output_dir, force=False, full=False, verbose=Fal
                 s3_meta = f"{zarr_root}/{meta_file}"
                 local_meta = local_root / meta_file
                 try:
-                    fs.get(s3_meta, local_meta)
+                    fs.get(s3_meta, str(local_meta))
                 except FileNotFoundError:
                     print(f"[{exp_id}] ⚠️ Skipped missing metadata: {meta_file}")
 
@@ -185,8 +185,7 @@ def gta_download(exp_id, level, output_dir, force=False, full=False, verbose=Fal
                 if verbose:
                     print(f"[{exp_id}] Downloading level {level} of {zarr_root} → {local_root}")
 
-
-            fs.get(s3_dataset, local_dataset, recursive=True)
+            fs.get(s3_dataset, str(local_dataset), recursive=True)
 
         except Exception as e:
             print(f"⚠️ Error processing {exp_id}: {e}")
