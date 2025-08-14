@@ -4,8 +4,9 @@ unravel.allen_institute.genetic_tools_atlas package
 .. toctree::
    :maxdepth: 2
 
-   download_STPT_zarr
-   zarr_level_to_tifs
+   download
+   metadata
+   org_samples
 
 .. automodule:: unravel.allen_institute.genetic_tools_atlas
    :members:

@@ -52,12 +52,6 @@ def main():
     Configuration.verbose = args.verbose
     verbose_start_msg()
 
-    if not Path(args.input).is_file():
-        print(f"[bold red]Input file not found:[/bold red] {args.input}")
-        return
-
-
-    # load the csv file as a DataFrame
     df = pd.read_csv(args.input)
 
     missing = [c for c in args.columns if c not in df.columns]

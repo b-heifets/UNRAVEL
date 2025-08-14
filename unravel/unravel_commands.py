@@ -765,6 +765,12 @@ def main():
                 "common": False,
                 "alias": "gta_m"
             },
+            "gta_org_samples": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.org_samples",
+                "description": "Organize TIFFs dirs from the GTA after conversion.",
+                "common": False,
+                "alias": "gta_os"
+            },
         },
         "Tabular data": {
             "tabular_edit_columns": {
