@@ -66,6 +66,7 @@ def parse_args():
     return parser.parse_args()
 
 # TODO: Test if other scripts in the image_io parent dir of this script are redundant and can be removed. If so, consolidate them into this script.
+# TODO: For images with multiple channels, allow for extracting all channels of interest (prevents the need to load the image multiple times).
 
 @print_func_name_args_times()
 def convert_img(img_file, save_as=None, output=None, force=False, channel=0, xy_res=None, z_res=None, dtype=None, reference=None, verbose=False):
