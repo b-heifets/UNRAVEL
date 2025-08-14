@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``gta_simplify_metadata`` (``gta_sm``) from UNRAVEL to simplify metadata from the Genetic Tools Atlas (GTA). This allows for organizing images
+Use ``gta_metadata`` (``gta_m``) from UNRAVEL to simplify metadata from the Genetic Tools Atlas (GTA). This allows for organizing images
 
 Prereqs:
     - Visit the GTA: https://portal.brain-map.org/genetic-tools/genetic-tools-atlas
@@ -18,7 +18,7 @@ Next steps:
 
 Usage:
 ------
-    gta_sm -i "path/to/SpecimenMetadata.csv" [-col col1 col2 ...] [-o output_dir/] [-v]
+    gta_m -i "path/to/SpecimenMetadata.csv" [-col col1 col2 ...] [-o output_dir/] [-v]
 """
 
 from pathlib import Path

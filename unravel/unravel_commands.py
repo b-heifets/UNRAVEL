@@ -759,11 +759,11 @@ def main():
                 "common": False,
                 "alias": "gta_dl"
             },
-            "gta_simplify_metadata": {
-                "module": "unravel.allen_institute.genetic_tools_atlas.simplify_metadata",
-                "description": "Simplify metadata for GTA.",
+            "gta_metadata": {
+                "module": "unravel.allen_institute.genetic_tools_atlas.metadata",
+                "description": "Simplify metadata from the GTA.",
                 "common": False,
-                "alias": "gta_sm"
+                "alias": "gta_m"
             },
         },
         "Tabular data": {
