@@ -15,10 +15,11 @@ Note:
     - If the current dir is a 'ID*' dir, it will be processed.
     - If -d is provided, the specified dirs and/or dirs containing 'ID<asterisk>' dirs will be processed.
     - If -p is not provided, the default pattern for dirs to process is 'ID<asterisk>'.
+    - The scale factor can be one int (isotropic) or a list of three ints (anisotropic). Axis order is x, y, z.
 
 Usage:
 ------
-    gta_pbm -i 'tif_dir' [-c 0] [-s 40] [-o prep_brain_mask_tifs] [-zo 1] [-d list of paths] [-p ID*] [-v]
+    gta_pbm -i 'tif_dir' [-c 0] [-s 40 40 1] [-o prep_brain_mask_tifs] [-zo 1] [-d list of paths] [-p ID*] [-v]
 """
 
 from pathlib import Path
@@ -41,7 +42,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-c', '--channel', help='Channel number for image loading if applicable. Default: 0', default=0, type=int, action=SM)
-    opts.add_argument('-s', '--scale', help='Scale factor for downsampling the image. Default: 40', default=40, type=int, action=SM)
+    opts.add_argument('-s', '--scale', help='Scale factor for downsampling the image. Default: 40 40 1', default=[40, 40, 1], nargs='*', type=int, action=SM)
     opts.add_argument('-o', '--output', help='Output directory for the processed images. Default: prep_brain_mask_tifs', default='prep_brain_mask_tifs', action=SM)
     opts.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)
 
