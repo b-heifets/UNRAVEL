@@ -10,7 +10,7 @@ Note:
     - 0: 0.35, 1: 0.7, 2: 1.4, 3: 2.8, 4: 5.6, 5: 11.2, 6: 22.4, 7: 44.8, 8: 89.6, and 9: 179.2.
     - Z resolution is always 100 µm.
     - We used level 3 (2.8 µm) for the GTA data for Ilastik segmentation
-    - If we downsample 40x, the x/y spacing with be 40 * 2.8 = 112 µm (good for tissue segmentation).
+    - If we downsample 40x, the x/y scaling will be 1/40 (0.), so the x/y pixel spacing will be 40 x 2.8 = 112 µm.
     - If -d is not provided, the current directory is used to search for 'ID<asterisk>' dirs to process.
     - If the current dir is a 'ID*' dir, it will be processed.
     - If -d is provided, the specified dirs and/or dirs containing 'ID<asterisk>' dirs will be processed.
@@ -19,7 +19,7 @@ Note:
 
 Usage:
 ------
-    gta_pbm -i 'tif_dir' [-c 0] [-s 40 40 1] [-o prep_brain_mask_tifs] [-zo 1] [-d list of paths] [-p ID*] [-v]
+    gta_pbm -i 'tif_dir' [-c 0] [-s 0.025 0.025 1] [-o prep_brain_mask_tifs] [-zo 1] [-d list of paths] [-p ID*] [-v]
 """
 
 from pathlib import Path
@@ -42,7 +42,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-c', '--channel', help='Channel number for image loading if applicable. Default: 0', default=0, type=int, action=SM)
-    opts.add_argument('-s', '--scale', help='Scale factor for downsampling the image. Default: 40 40 1', default=[40, 40, 1], nargs='*', type=int, action=SM)
+    opts.add_argument('-s', '--scale', help='Scale factor for downsampling the image. Default: 0.025 0.025 1', default=[0.025, 0.025, 1], nargs='*', type=float, action=SM)
     opts.add_argument('-o', '--output', help='Output directory for the processed images. Default: prep_brain_mask_tifs', default='prep_brain_mask_tifs', action=SM)
     opts.add_argument('-zo', '--zoom_order', help='Order for resampling (scipy.ndimage.zoom). Default: 1', default=1, type=int, action=SM)
 
