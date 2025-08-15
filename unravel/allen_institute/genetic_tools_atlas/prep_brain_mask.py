@@ -68,7 +68,7 @@ def main():
 
             # Define output
             output = sample_path / args.output
-            if output.exists():
+            if output.exists() and any(output.iterdir()):
                 print(f"\n\n    {args.output} already exists. Skipping.\n")
                 continue
             output.mkdir(parents=True, exist_ok=True)
