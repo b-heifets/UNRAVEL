@@ -29,17 +29,17 @@ from unravel.core.img_io import nii_to_ndarray
 from unravel.core.utils import match_files, print_func_name_args_times
 
 @print_func_name_args_times()
-def resample(ndarray, xy_res, z_res, target_res=None, target_dims=None, scale=None, zoom_order=1):
+def resample(ndarray, xy_res=None, z_res=None, target_res=None, target_dims=None, scale=None, zoom_order=1):
     """Resample a 3D ndarray using target resolution, dimensions, or scale.
 
     Parameters
     ----------
     ndarray : np.ndarray
         Input 3D array to resample.
-    xy_res : float
-        Current resolution in the x and y dimensions (e.g., in microns).
-    z_res : float
-        Current resolution in the z dimension (e.g., in microns).
+    xy_res : float, optional
+        Current resolution in the x and y dimensions (e.g., in microns). Required if using target_res.
+    z_res : float, optional
+        Current resolution in the z dimension (e.g., in microns). Required if using target_res.
     target_res : float or tuple of float, optional
         Target resolution for resampling. If a single float, it is assumed to be isotropic (same for x, y, and z). If a tuple/list of three floats, it is assumed to be anisotropic (different for x/y vs. z).
     target_dims : tuple of int, optional
@@ -70,6 +70,8 @@ def resample(ndarray, xy_res, z_res, target_res=None, target_dims=None, scale=No
     elif target_dims is not None:
         zoom_factors = [new / old for new, old in zip(target_dims, ndarray.shape)]
     elif target_res is not None:
+        if xy_res is None or z_res is None:
+            raise ValueError("xy_res and z_res must be provided if using target_res.")
         target_res = np.atleast_1d(target_res)
         if len(target_res) == 1:
             target_res = [target_res[0]] * 3
