@@ -164,7 +164,7 @@ def get_samples(dir_list=None, dir_pattern="sample??", verbose=False):
             print(f"\n  [bold gold3]get_samples[/]() found these directories in [bright_black bold]{parent_dir}[/]:\n")
             for sample_dir in samples:
                 if sample_dir.parent == parent_dir:
-                    print(f"        [bold dark_orange]{sample_dir.name}")
+                    print(f"    [bold dark_orange]{sample_dir.name}")
             print()
 
     return samples
