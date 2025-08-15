@@ -36,8 +36,10 @@ from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='Path to the input image or tif directory.', required=True, action=SM)
+
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='Path to the SpecimenMetadata.csv. Default: SpecimenMetadata.csv in the current directory', default='SpecimenMetadata.csv', action=SM)
     opts.add_argument('-c', '--channel', help='Channel number for image loading if applicable. Default: 0', default=0, type=int, action=SM)
     opts.add_argument('-s', '--scale', help='Scale factor for downsampling the image. Default: 40', default=40, type=int, action=SM)
     opts.add_argument('-o', '--output', help='Output directory for the processed images. Default: prep_brain_mask_tifs', default='prep_brain_mask_tifs', action=SM)
