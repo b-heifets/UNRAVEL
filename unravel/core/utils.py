@@ -161,7 +161,7 @@ def get_samples(dir_list=None, dir_pattern="sample??", verbose=False):
         # Print the found directories grouped by their parent directories in order
         uniq_parent_dirs = {sample_dir.parent for sample_dir in samples}  # Avoids printing ~ duplicate message when no sample?? dirs are found
         for parent_dir in uniq_parent_dirs:
-            print(f"\n    [bold gold1]get_samples[/]() found these directories in [bright_black bold]{parent_dir}[/]:\n")
+            print(f"\n  [bold gold3]get_samples[/]() found these directories in [bright_black bold]{parent_dir}[/]:\n")
             for sample_dir in samples:
                 if sample_dir.parent == parent_dir:
                     print(f"        [bold dark_orange]{sample_dir.name}")
