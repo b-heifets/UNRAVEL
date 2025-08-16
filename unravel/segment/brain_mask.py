@@ -17,7 +17,7 @@ Outputs:
     - Same directory as input image.
     - <tif_dir>_ilastik_brain_seg/`*`.tif (TIFF series output from ilastik with labels; label 1 = tissue, all other labels = background)
     - <tif_dir>_brain_mask.nii.gz (can be used for ``reg`` or cropping)
-    - <tif_dir>_masked.nii.gz (input image with brain mask applied)
+    - <tif_dir>_masked.nii.gz (use for ``reg``; Use -bmo to skip generating the masked image [not needed for cropping]).
 
 Note:
     - Ilastik executable files for each OS (update path and version as needed):
@@ -34,10 +34,8 @@ Usage to prep for ``reg``:
 
 Usage for cropping Genetic Tools Atlas (GTA) images:
 ----------------------------------------------------
-    seg_brain_mask -ilp <path/brain_mask.ilp> -i prep_brain_mask -x 112 -z 100 -o brain_mask.nii.gz -p 'ID_*' [-v]
+    seg_brain_mask -ilp <path/brain_mask.ilp> -i prep_brain_mask -x 112 -z 100 -o brain_mask.nii.gz -bmo -p 'ID_*' [-v]
 """
-
-# seg_brain_mask -ilp brain_mask/brain_mask.ilp -i prep_brain_mask -x 112 -z 100 -p 'ID_*' -v -o brain_mask.nii.gz
 
 import numpy as np
 from pathlib import Path
@@ -63,6 +61,7 @@ def parse_args():
     key_args.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable. Default: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh', default='/usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh', action=SM)
     key_args.add_argument('-i', '--input', help='Path input image to segment (relative to -d folders). Default: reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
     key_args.add_argument('-o', '--output', help='path/brain_mask.nii.gz. Default: <input_image>_brain_mask.nii.gz', default=None, action=SM)
+    key_args.add_argument('-bmo', '--brain_mask_only', help='Only generate brain_mask.nii.gz (skip img_masked.nii.gz). Default: False', action='store_true')
 
     opts_conv = parser.add_argument_group('Optional arguments for conversion to tif series')
     opts_conv.add_argument('-c', '--channel', help='Channel number for image loading if applicable. Default: 0', default=0, type=int, action=SM)
@@ -101,11 +100,14 @@ def main():
             else:
                 brain_mask_output = sample_path / args.output
 
-            # Skip if output exists
-            img_masked_output_name = f"{img_stem}_masked.nii.gz"
-            img_masked_output = sample_path / img_masked_output_name
-            if img_masked_output.exists():
-                print(f"\n\n    {img_masked_output} already exists. Skipping.\n")
+            if not args.brain_mask_only:
+                img_masked_output_name = f"{img_stem}_masked.nii.gz"
+                img_masked_output = sample_path / img_masked_output_name
+
+            # Decide which file to check for skipping
+            skip_output = brain_mask_output if args.brain_mask_only else img_masked_output
+            if skip_output.exists():
+                print(f"\n\n    {skip_output} already exists. Skipping.\n")
                 continue
 
             # Define tif directory and, if necessary, convert the input image to a tif series
@@ -144,13 +146,11 @@ def main():
             # Save brain mask as nifti
             save_as_nii(brain_mask, brain_mask_output, xy_res, z_res, np.uint8)
 
-            # Apply brain mask to autofluo image
-            autofl_masked = np.where(seg_img == 1, img, 0)
+            if not args.brain_mask_only:
+                # Apply brain mask to autofluo image
+                autofl_masked = np.where(seg_img == 1, img, 0)
+                save_as_nii(autofl_masked, img_masked_output, xy_res, z_res, np.uint16)
 
-            # Save masked autofl image
-            save_as_nii(autofl_masked, img_masked_output, xy_res, z_res, np.uint16)
-
-            # brain_mask(sample, args)
             progress.update(task_id, advance=1)
 
     verbose_end_msg()
