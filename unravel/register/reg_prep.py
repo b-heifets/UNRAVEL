@@ -121,7 +121,12 @@ def main():
             # Prepare the autofluo image for registration
             img_resampled = reg_prep(img, xy_res, z_res, args.reg_res, args.zoom_order, args.miracl)
 
-            # Save the prepped autofluo image (for ``reg`` if skipping ``seg_brain_mask`` and for applying the brain mask)
+            # Save the prepped autofluo image as tif series (for ``seg_brain_mask``)
+            tif_dir = Path(str(output).replace('.nii.gz', '_tifs'))
+            tif_dir.mkdir(parents=True, exist_ok=True)
+            save_as_tifs(img_resampled, tif_dir, "xyz")
+
+            # Save the prepped autofl image (for ``reg`` if skipping ``seg_brain_mask`` and for applying the brain mask)
             save_as_nii(img_resampled, output, args.reg_res, args.reg_res, np.uint16)
 
             progress.update(task_id, advance=1)
