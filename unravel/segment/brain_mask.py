@@ -10,14 +10,14 @@ Prereqs:
     - Save brain_mask.ilp for use with -ilp
 
 Inputs: 
-    - reg_inputs/autofl_50um.nii.gz from ``reg_prep`` (TIFFs will be loaded from reg_inputs/autofl_50um_tifs)
-    - Or any dir with TIFFs (use ``conv`` to convert a 3D image to TIFFs)
+    - reg_inputs/autofl_50um.nii.gz from ``reg_prep`` (Non-TIFF inputs will be converted to TIFFs for ilastik).
+    - Or any dir with TIFFs
 
 Outputs:
     - Same directory as input image.
     - <tif_dir>_ilastik_brain_seg/`*`.tif (TIFF series output from ilastik with labels; label 1 = tissue, all other labels = background)
     - <tif_dir>_brain_mask.nii.gz (can be used for ``reg`` or cropping)
-    - <tif_dir>_masked.nii.gz
+    - <tif_dir>_masked.nii.gz (input image with brain mask applied)
 
 Note:
     - Ilastik executable files for each OS (update path and version as needed):
@@ -28,10 +28,16 @@ Note:
 Next command: 
     - ``reg`` or ``resample`` to scale the image back to the original resolution to guide cropping.
 
-Usage:
-------
-    seg_brain_mask -ilp <path/brain_mask.ilp> [-ie path/ilastik_executable ] [-i reg_inputs/autofl_50um.nii.gz] [-d list of paths] [-p sample??] [-v]
+Usage to prep for ``reg``:
+--------------------------
+    seg_brain_mask -ilp <path/brain_mask.ilp> [-i reg_inputs/autofl_50um.nii.gz] [-ie path/ilastik_executable ] [-d list of paths] [-p sample??] [-v]
+
+Usage for cropping Genetic Tools Atlas (GTA) images:
+----------------------------------------------------
+    seg_brain_mask -ilp <path/brain_mask.ilp> -i prep_brain_mask -x 112 -z 100 -o brain_mask.nii.gz -p 'ID_*' [-v]
 """
+
+# seg_brain_mask -ilp brain_mask/brain_mask.ilp -i prep_brain_mask -x 112 -z 100 -p 'ID_*' -v -o brain_mask.nii.gz
 
 import numpy as np
 from pathlib import Path
@@ -42,7 +48,7 @@ from rich.traceback import install
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 
 from unravel.core.config import Configuration 
-from unravel.core.img_io import load_3D_img, resolve_path, save_as_nii
+from unravel.core.img_io import load_3D_img, resolve_path, save_as_nii, save_as_tifs
 from unravel.core.img_tools import pixel_classification
 from unravel.core.utils import get_extension, get_stem, log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 
@@ -50,14 +56,20 @@ from unravel.core.utils import get_extension, get_stem, log_command, verbose_sta
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
-    opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-ilp', '--ilastik_prj', help='path/brain_mask.ilp. Default: brain_mask.ilp', default='brain_mask.ilp', action=SM)
-    opts.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable. Default: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh', default='/usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh', action=SM)
-    opts.add_argument('-i', '--input', help='Path input image to segment (relative to -d folders). Default: reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-ilp', '--ilastik_prj', help='path/brain_mask.ilp.', required=True, action=SM)
 
-    opts = parser.add_argument_group('Optional arguments if loading a tif directory')
-    opts.add_argument('-x', '--xy_res', help='X and Y resolution in um. Default: None (use image resolution)', default=None, type=float, action=SM)
-    opts.add_argument('-z', '--z_res', help='Z resolution in um. Default: None (use image resolution)', default=None, type=float, action=SM)
+    key_args = parser.add_argument_group('Optional arguments')
+    key_args.add_argument('-ie', '--ilastik_exe', help='path/ilastik_executable. Default: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh', default='/usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh', action=SM)
+    key_args.add_argument('-i', '--input', help='Path input image to segment (relative to -d folders). Default: reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
+    key_args.add_argument('-o', '--output', help='path/brain_mask.nii.gz. Default: <input_image>_brain_mask.nii.gz', default=None, action=SM)
+
+    opts_conv = parser.add_argument_group('Optional arguments for conversion to tif series')
+    opts_conv.add_argument('-c', '--channel', help='Channel number for image loading if applicable. Default: 0', default=0, type=int, action=SM)
+
+    opts_res = parser.add_argument_group('Optional arguments for output resolution (if -i is a tif series)')
+    opts_res.add_argument('-x', '--xy_res', help='X and Y resolution in um. Default: None (use -i img.nii.gz resolution)', default=None, type=float, action=SM)
+    opts_res.add_argument('-z', '--z_res', help='Z resolution in um. Default: None (use -i img.nii.gz resolution)', default=None, type=float, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
@@ -65,7 +77,6 @@ def parse_args():
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
 
     return parser.parse_args()
-
 
 @log_command
 def main():
@@ -84,33 +95,37 @@ def main():
             img_path = sample_path / args.input
             img_stem = get_stem(args.input)
             img_ext = get_extension(img_path)
-            brain_mask_output_name = f"{img_stem}_brain_mask.nii.gz"
-            brain_mask_output = sample_path / brain_mask_output_name
-            img_masked_output_name = f"{img_stem}_masked.nii.gz"
-            img_masked_output = sample_path / img_masked_output_name
-
-            # Define the input tif directory for ilastik segmentation
-            if img_path.is_dir() and any(img_path.glob('*.tif')):
-                tif_dir = str(img_path)
+            if args.output is None:
+                brain_mask_output_name = f"{img_stem}_brain_mask.nii.gz"
+                brain_mask_output = sample_path / brain_mask_output_name
             else:
-                tif_dir = str(img_path).replace(img_ext, '_tifs')
-                if not Path(tif_dir).exists():
-                    print(f"\n\n    {tif_dir} does not exist. Skipping.\n")
-                    continue
-
-            # Define the output directory for ilastik segmentation
-            seg_dir = f"{tif_dir}_ilastik_brain_seg"
+                brain_mask_output = sample_path / args.output
 
             # Skip if output exists
+            img_masked_output_name = f"{img_stem}_masked.nii.gz"
+            img_masked_output = sample_path / img_masked_output_name
             if img_masked_output.exists():
                 print(f"\n\n    {img_masked_output} already exists. Skipping.\n")
                 continue
+
+            # Define tif directory and, if necessary, convert the input image to a tif series
+            if img_path.is_dir() and any(img_path.glob('*.tif')):
+                tif_dir = str(img_path)
+            elif img_ext in ['.tif', '.ome.tif'] and len(Path(img_path.parent).glob('*.tif')) > 1:  # A file from the tif series was provided
+                tif_dir = str(img_path.parent)
+            else:
+                tif_dir = img_path.parent / f"{img_stem}_tifs"
+                if not tif_dir.exists() and img_path.is_file():
+                    # Load the input image and convert to tif series for ilastik segmentation
+                    img = load_3D_img(img_path, channel=args.channel, verbose=args.verbose)
+                    tif_dir.mkdir(parents=True, exist_ok=True)
+                    save_as_tifs(img, tif_dir, verbose=args.verbose)
+
+            # Define the output directory for ilastik segmentation
+            seg_dir = Path(str(tif_dir).rstrip('_tifs')) / 'ilastik_brain_seg'
             
             # Run ilastik segmentation
-            if args.ilastik_prj == 'brain_mask.ilp': 
-                ilastik_project = Path(sample_path.parent, args.ilastik_prj).resolve()
-            else:
-                ilastik_project = Path(args.ilastik_prj).resolve()
+            ilastik_project = Path(args.ilastik_prj).resolve()
             pixel_classification(tif_dir, ilastik_project, seg_dir, args.ilastik_exe)
 
             # Load brain mask image
@@ -120,8 +135,7 @@ def main():
             brain_mask = np.where(seg_img > 1, 0, seg_img)
 
             # Load image and resolution
-            xy_res = args.xy_res if args.xy_res is not None else None
-            z_res = args.z_res if args.z_res is not None else None
+            xy_res, z_res = args.xy_res, args.z_res
             if xy_res is None or z_res is None:
                 img, xy_res, z_res = load_3D_img(img_path, return_res=True, verbose=args.verbose)
             else:
