@@ -56,7 +56,7 @@ def parse_args():
     opts.add_argument('-i', '--input', help='Path input image to segment (relative to -d folders). Default: reg_inputs/autofl_50um.nii.gz (from ``reg_prep``)', default="reg_inputs/autofl_50um.nii.gz", action=SM)
 
     opts = parser.add_argument_group('Optional arguments if loading a tif directory')
-    opts.add_argument('-xy', '--xy_res', help='X and Y resolution in um. Default: None (use image resolution)', default=None, nargs=2, type=float, action=SM)
+    opts.add_argument('-x', '--xy_res', help='X and Y resolution in um. Default: None (use image resolution)', default=None, type=float, action=SM)
     opts.add_argument('-z', '--z_res', help='Z resolution in um. Default: None (use image resolution)', default=None, type=float, action=SM)
 
     general = parser.add_argument_group('General arguments')
