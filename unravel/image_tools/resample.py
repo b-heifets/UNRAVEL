@@ -34,10 +34,11 @@ Usage to resample using a reference image:
 
 """
 
-from pathlib import Path
 import nibabel as nib
-from rich.traceback import install
 import numpy as np
+from pathlib import Path
+from rich.traceback import install
+from rich import print
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_3D_img
