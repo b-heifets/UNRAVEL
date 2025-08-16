@@ -724,16 +724,10 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
     if not img_path.exists():
         raise FileNotFoundError(f"\n[red1]No compatible image files found at {img_path} for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
     
-    # if verbose:
-    #     if str(img_path).endswith('.czi') or str(img_path).endswith('.zarr'):
-    #         print(f"      [default]Loading channel [cyan]{channel}[/cyan] from [magenta]{img_path}[/magenta] [grey50](channel 0 is the first channel)")
-    #     else: 
-    #         print(f"      [default]Loading {img_path}")
-
     # Load image based on file type and optionally return resolutions and dimensions
     try:
         if str(img_path).endswith('.czi'):
-            return load_czi(img_path, channel, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
+            return load_czi(img_path, channel=channel, desired_axis_order=desired_axis_order, return_res=return_res, return_metadata=return_metadata, save_metadata=save_metadata, xy_res=xy_res, z_res=z_res)
         elif str(img_path).endswith('.ome.tif') or str(img_path).endswith('.tif'):
             return load_3D_tif(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
         elif str(img_path).endswith('.nii.gz'):
