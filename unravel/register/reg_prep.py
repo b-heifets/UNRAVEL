@@ -30,9 +30,8 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-
 from unravel.core.config import Configuration
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii
 from unravel.core.img_tools import resample, reorient_axes
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples, print_func_name_args_times
