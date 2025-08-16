@@ -115,9 +115,7 @@ def main():
             out_path = image_path.with_name(filename)
 
         # Load image and resolution
-        xy_res = args.xy_res if args.xy_res is not None else None
-        z_res = args.z_res if args.z_res is not None else None
-    
+        xy_res, z_res = args.xy_res, args.z_res
         if xy_res is None or z_res is None:
             img, xy_res, z_res = load_3D_img(image_path, args.channel, return_res=True, verbose=args.verbose)
         else:
