@@ -43,7 +43,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-td', '--target_dir', help='path/target_dir to copy TIF files to. Default: current dir', action=SM)
-    opts.add_argument('-c', '--channel', help='.czi channel number (if this is the input image type). Default: 1 (i.e., the 2nd channel)', default=1, type=int, metavar='')
+    opts.add_argument('-c', '--channel', help='Channel number if applicable. Default: 1 (i.e., the 2nd channel)', default=1, type=int, metavar='')
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
