@@ -443,7 +443,7 @@ def get_stem(file_path):
     Returns
     -------
     str
-        Stem of the file with all recognized extensions removed.
+        Stem of the file with all recognized extensions removed. E.g., path/to/file.nii.gz -> file
     """
     file_path = Path(file_path)
     name = file_path.name
@@ -463,6 +463,39 @@ def get_stem(file_path):
             return name[: -len(ext)]
     
     return file_path.stem
+
+def get_extension(file_path):
+    """
+    Get the extension of a file path, including compound extensions.
+
+    Parameters
+    ----------
+    file_path : str or Path
+        Path to a file.
+
+    Returns
+    -------
+    str
+        The extension of the file, including compound extensions. E.g., path/to/file.nii.gz -> .nii.gz
+    """
+    file_path = Path(file_path)
+    name = file_path.name
+
+    compound_extensions = [
+        '.nii.gz',
+        '.ome.tif',
+        '.ome.tiff',
+        '.zarr.gz',
+        '.tar.gz',
+        '.tar.bz2',
+        '.tar.xz',
+    ]
+
+    for ext in compound_extensions:
+        if str(name).endswith(ext):
+            return ext
+    
+    return file_path.suffix
 
 @print_func_name_args_times()
 def get_pad_percent(reg_outputs_path, pad_percent):
