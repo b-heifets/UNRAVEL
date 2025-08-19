@@ -4,15 +4,24 @@
 Use ``gta_org_samples`` (``gta_os``) from UNRAVEL to organize GTA data across samples for batch processing.
 
 Prereqs:
-    - ``gta_download`` (``gta_dl``) must be run first to download the data.
-    - Download STPT metadata from the GTA: https://portal.brain-map.org/genetic-tools/genetic-tools-atlas
-    - Optional: ``gta_metadata`` (``gta_m``) may be run to simplify the metadata used to sort the samples (AAVs or Tg lines).
+    - ``gta_download`` (``gta_dl``) must be run first to download .zarr data at a set resolution.
+    - ``io_convert_img`` (``conv``) must be run to convert the .zarr data to TIFF series.
+
+Inputs:
+    - `*.zarr` files from ``gta_download`` (``gta_dl``) at a set resolution (e.g., level 3).
+
+Outputs:
+    - Root dir: TIFFs/
+    - Directories created based on the fluorescent channel (e.g., red, green, dual).
+    - Relevant sample directories created in each channel directory (e.g., ID_<Image Series ID>).
+    - Sample directories contain 'green' and 'red' directories with TIFF files for each channel.
 
 Note:
-    - Key SpecimenMetadata.csv columns: 'Image Series ID' 'Vector Delivery Method'
+    - Key SpecimenMetadata.csv columns: 'Image Series ID' 'Donor Genotype' 'Cargo'
     - Run from GTA_level_3 directory
-    - Tiff series for each sample will be grouped together in a sample directory.
-    - AAV samples will be grouped together, and Tg samples will be grouped together.
+    
+Next steps:
+    - ... 
 
 Usage:
 ------
@@ -29,15 +38,46 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
-COLUMNS = ['Image Series ID', 'Vector Delivery Method']
+COLUMNS = ['Image Series ID', 'Donor Genotype', 'Cargo']
+
+# Logic determined when there was 3902 GTA STPT records (as of 2025-08-19):
+CARGO_MAP = { 
+    'NA': 'USE Tg LOGIC',
+    'iCre(R297T)': 'green if Ai193 is in "Donor Genotype" else red',
+    'SYFP2': 'green',
+    'iCre': 'green if Ai193 is in "Donor Genotype" else red',
+    'FlpO': 'red',
+    'dTomato': 'red',
+    'jGCaMP8m': 'green',
+    'SYFP2 | iCre(R297T)': 'green',
+    'iCre(R297T) | EGFP': 'dual',
+    'SYFP2 | mScarlet': 'dual',
+    'iCre(R297T) | SYFP2': 'green',
+    'ChR2(H134R) | dTomato | EYFP': 'dual',
+    'EYFP': 'green',
+    'tdTomato | SYFP2': 'dual',
+    'iCre | FlpO': 'dual',
+    'FlpO | iCre': 'dual',
+    'iCre(R297T) | tdTomato': 'red',
+    'EGFP | iCre(R297T)': 'dual',
+    'EYFP | ChR2(H134R)': 'green',
+    'CreN': 'red',
+    'tdTomato | iCre(R297T)': 'red',
+    'mScarlet | SYFP2': 'dual',
+    'ChR2(H134R) | EYFP | dTomato': 'dual',
+    'SYFP2 | tdTomato': 'dual'
+}
+
+# If 'Cargo' is 'NA', use Tg logic (Check 'Donor Genotype' for the presence of these list items to determine the channel [green, red, or dual]):
+GREEN_TG =  ['GFP', 'Ai210', 'Ai195', 'RCE-FRT']
+RED_TG = ['tdTomato', 'Ai223', 'Ai65F']
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-d', '--directories', help='Space-separated list of tif directory names to organize. Default: "red green"', default=['red', 'green'], nargs='*', action=SM)
-    opts.add_argument('-i', '--input', help='path/SpecimenMetadata.csv. Default: SpecimenMetadata_subset.csv in unravel/allen_institute/genetic_tools_atlas', default=None, action=SM)
-    opts.add_argument('-col', '--columns', help='CSV columns to keep. See notes for default columns.', nargs='*', default=COLUMNS, action=SM)
+    opts.add_argument('-i', '--input', help='path/SpecimenMetadata.csv. Default: unravel/allen_institute/genetic_tools_atlas/SpecimenMetadata_subset.csv', default=None, action=SM)
     opts.add_argument('-o', '--output_dir', help='Output directory for organized samples', default='TIFFs', action=SM)
     opts.add_argument('-p', '--prefix', help='Prefix for sample directories (useful for batch processing). Default: "ID_"', default='ID_', action=SM)
 
@@ -46,14 +86,14 @@ def parse_args():
 
     return parser.parse_args()
 
-def org_samples(aav_samples_df, target_dir, prefix, tif_dirs):
+def org_samples(df, target_dir, prefix, tif_dirs):
     """
-    Organize AAV samples into directories based on the SpecimenMetadata DataFrame.
+    Organize samples into directories based on the SpecimenMetadata DataFrame.
 
     Parameters:
     -----------
-    aav_samples_df : pd.DataFrame
-        DataFrame containing AAV samples with 'Image Series ID' and 'Vector Delivery Method'.
+    df : pd.DataFrame
+        DataFrame containing 'Image Series ID' with the sample IDs to organize.
     target_dir : Path
         Directory where the sample directories will be created.
     prefix : str
@@ -61,7 +101,7 @@ def org_samples(aav_samples_df, target_dir, prefix, tif_dirs):
     tif_dirs : list of str
         List of TIFF directory names to organize (e.g., ['red', 'green']).
     """
-    for _, row in aav_samples_df.iterrows():
+    for _, row in df.iterrows():
         series_id = row['Image Series ID']
         sample_dir = target_dir / f'{prefix}{series_id}'
 
@@ -78,7 +118,8 @@ def org_samples(aav_samples_df, target_dir, prefix, tif_dirs):
 
                 # Remove the tif_dir if empty
                 try:
-                    tif_dir.rmdir()
+                    if not any(p for p in tif_dir.iterdir() if not p.name.startswith('.')):
+                        tif_dir.rmdir()
                 except OSError:
                     print(f'Warning: {tif_dir} not empty or failed to remove.')
 
@@ -106,39 +147,63 @@ def main():
     else:
         input_path = Path(args.input)
 
-    print(f"[bold green]Using input file:[/bold green] {input_path}")
+    print(f"\n[bold green]SpecimenMetadata.csv file:\n  [/bold green]{input_path}\n")
 
     if not input_path.is_file():
-        print(f"[bold red]Input file not found:[/bold red] {input_path}")
+        print(f"[bold red]SpecimenMetadata file not found: [/bold red]{input_path}")
         return
 
-    df = pd.read_csv(input_path, usecols=args.columns)
+    df = pd.read_csv(input_path, usecols=COLUMNS)
 
     # Drop rows duplicate values in 'Image Series ID'
     df = df.drop_duplicates(subset='Image Series ID')
-    
-    # AAV samples = any Vector Delivery Method that is not blank
-    aav_samples_df = df[df['Vector Delivery Method'].notna() & (df['Vector Delivery Method'] != '')]
-    aav_samples_df = aav_samples_df.sort_values(by='Image Series ID')
 
-    # Tg samples = Vector Delivery Method is blank
-    tg_samples_df = df[df['Vector Delivery Method'].isna() | (df['Vector Delivery Method'] == '')]
-    tg_samples_df = tg_samples_df.sort_values(by='Image Series ID')
+    # Add a 'Channel' column based on 'Cargo' and 'Donor Genotype'
+    df['Channel'] = df['Cargo'].apply(lambda x: CARGO_MAP.get(x, 'NA')) # Set 'Channel' using 'Cargo' as the key
+
+    # Handle conditional logic for 'Channel'
+    for i in ['iCre(R297T)', 'iCre']:
+        df.loc[df['Cargo'] == i, 'Channel'] = df.apply(
+            lambda row: 'green' if 'Ai193' in row['Donor Genotype'] else 'red',
+            axis=1
+        )
+
+    # If 'Cargo' is 'NA', use Tg logic to determine the channel
+    df.loc[df['Channel'] == 'NA', 'Channel'] = df.apply(
+        lambda row: 'green' if any(g in row['Donor Genotype'] for g in GREEN_TG) else
+                     ('red' if any(r in row['Donor Genotype'] for r in RED_TG) else 'dual'),
+        axis=1
+    )
+
+    # Print rows with 'Channel' as 'NA' (if any)
+    na_channel_rows = df[df['Channel'] == 'NA']
+    if not na_channel_rows.empty:
+        print(f"[bold yellow]Warning: Found {len(na_channel_rows)} rows with 'Channel' as 'NA'. These will be skipped.[/bold yellow]")
+        print(na_channel_rows)
+
+    # Create a df for green, red, and dual channels with the 'Image Series ID' column
+    green_df = df[df['Channel'] == 'green'][['Image Series ID']].sort_values(by='Image Series ID')
+    red_df = df[df['Channel'] == 'red'][['Image Series ID']].sort_values(by='Image Series ID')
+    dual_df = df[df['Channel'] == 'dual'][['Image Series ID']].sort_values(by='Image Series ID')
 
     # Create output directories
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    green_dir = output_dir / 'green'
+    red_dir = output_dir / 'red'
+    dual_dir = output_dir / 'dual'
+    green_dir.mkdir(parents=True, exist_ok=True)
+    red_dir.mkdir(parents=True, exist_ok=True)
+    dual_dir.mkdir(parents=True, exist_ok=True)
 
-    aav_dir = output_dir / 'AAV'
-    tg_dir = output_dir / 'Tg'
-    aav_dir.mkdir(parents=True, exist_ok=True)
-    tg_dir.mkdir(parents=True, exist_ok=True)
+    # Organize green samples
+    org_samples(green_df, green_dir, args.prefix, args.directories)
 
-    # Organize AAV samples
-    org_samples(aav_samples_df, aav_dir, args.prefix, args.directories)
-    
-    # Organize Tg samples
-    org_samples(tg_samples_df, tg_dir, args.prefix, args.directories)
+    # Organize red samples
+    org_samples(red_df, red_dir, args.prefix, args.directories)
+
+    # Organize dual samples
+    org_samples(dual_df, dual_dir, args.prefix, args.directories)
 
     verbose_end_msg()
     
