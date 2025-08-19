@@ -5,7 +5,7 @@ unravel.allen_institute.genetic_tools_atlas package
    :maxdepth: 2
 
    download
-   metadata
+   simplify_metadata
    org_samples
 
 .. automodule:: unravel.allen_institute.genetic_tools_atlas
