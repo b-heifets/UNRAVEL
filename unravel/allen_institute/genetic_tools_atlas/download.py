@@ -7,12 +7,23 @@ Prereqs:
     - Visit the Genetic Tools Atlas (GTA): https://portal.brain-map.org/genetic-tools/genetic-tools-atlas
     - Filter by 'Data Modality' = 'STPT'
     - Optional: Apply other filters of interest
-    - Optional: Click link to view the brain with neuroglancer.
-    - 'Download Data' --> 'Metadata Table' or 'Raw File Manifest' to get a CSV file with experiment IDs or S3 paths, respectively.
-    - Alternatively, content from the MapMySections submission sheet can be copied to a CSV file (-col 'STPT Data File Path') for use with the `-c` option.
+    - Optional: Click the 'Image Series ID' link to view the brain with neuroglancer.
+
+Note: 
+    - Specifying data to download:
+    - 1) Use the -e option to specify one or more experiment IDs (e.g., 1109210299 1253762076 1253762076 1380233788).
+    - 2) GTA --> 'Download Data' --> 'Raw File Manifest' to get a CSV with S3 paths for downloading (use -c SpecimenFileManifest.csv).
+    - 3) GTA --> 'Download Data' --> 'Metadata Table' to get a CSV with experiment IDs (use -c SpecimenMetadata.csv -col 'Image Series ID').
+    - 4a) Content from the MapMySections submission sheet (link below) can be copied to a CSV (use -c <path/to/csv> -col 'STPT Data File Path').
+    - 4b) https://github.com/AllenInstitute/MapMySections/raw/refs/heads/main/MapMySections_EntrantData.xlsx
 
 Next steps:
-    - Convert to TIFFs (one channel per series) using ``io_img_convert`` (``conv``) for registration (``reg``) and segmentation (``seg``).
+    - Convert to TIFFs (one channel per series) using ``io_img_convert`` (``conv``).
+    - ``cd GTA_level_3``
+    - ``conv -i '`*`.zarr' -s .tif -c 0 -o red ; conv -i '`*`.zarr' -s .tif -c 1 -o green``
+    - ``gta_org_samples`` (``gta_os``) to organize the TIFFs into sample directories for batch processing.
+    - Optional: crop the TIFFs to the brain region to save disk space and speed up processing.
+    - ``reg_prep`` --> ``reg`` for autofluo; ``seg`` for segmentation of fluo.
     
 Usage given a list of experiment IDs:
 -------------------------------------
@@ -25,6 +36,7 @@ Usage given a CSV file with exp IDs or S3 paths:
 
 import re
 import s3fs
+import pandas as pd
 from pathlib import Path
 from rich import print
 from rich.live import Live
@@ -43,7 +55,7 @@ def parse_args():
     opts.add_argument('-l', '--level', help='Zarr resolution level to download (0 is highest resolution and 9 is lowest). Default: 3', choices=[str(i) for i in range(10)], default='3', action=SM)
     opts.add_argument('-o', '--output', help='Output directory. Default: GTA_level_<level>', default=None, action=SM)
     opts.add_argument('-c', '--csv', help='Path to a CSV file with experiment IDs. If provided, will read IDs from this file instead of command line.', default=None, action=SM)
-    opts.add_argument('-col', '--column', help='CSV column name w/ either the "Image Series ID" or Zarr s3 paths. Default: "Image Series ID"', default="Image Series ID", action=SM)
+    opts.add_argument('-col', '--column', help='CSV column name w/ either the "File URI" or Zarr s3 paths. Default: "File URI"', default="File URI", action=SM)
     opts.add_argument('-w', '--workers', help='Number of parallel downloads', type=int, default=10, action=SM)
     opts.add_argument('-f', '--force', help='Force download even if the zarr file already exists. Default: False', action='store_true', default=False)
     opts.add_argument('--full', help='Download the full Zarr root instead of a specific level. ⚠️ This can be >200 GB per brain!', action='store_true', default=False)
@@ -53,8 +65,6 @@ def parse_args():
 
     return parser.parse_args()
 
-# TODO: Test downloading data via a GTA file manifest CSV with S3 paths.
-# TODO: Add more notes on next steps.
 
 def get_s3_paths_from_csv(csv_path, path_column):
     """
@@ -121,7 +131,6 @@ def gta_download(exp_id, level, output_dir, force=False, full=False, verbose=Fal
     """
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-
 
     # Define AWS s3 paths
     primary_root = f"s3://allen-genetic-tools/tissuecyte/{exp_id}/ome_zarr_conversion/{exp_id}.zarr"
@@ -206,9 +215,16 @@ def main():
 
     if args.csv:
         # If a CSV file is provided, read experiment IDs from it
-        s3_paths = get_s3_paths_from_csv(args.csv, args.column)
-        exp_ids = [extract_exp_id(path) for path in s3_paths]
-        exp_ids = [eid for eid in exp_ids if eid is not None]
+
+        if args.column == "File URI":
+            s3_paths = get_s3_paths_from_csv(args.csv, args.column)
+            exp_ids = [extract_exp_id(path) for path in s3_paths]
+            exp_ids = [eid for eid in exp_ids if eid is not None]
+        else:
+            df = pd.read_csv(args.csv)
+            if args.column not in df.columns:
+                raise ValueError(f"Column '{args.column}' not found in the CSV file.")
+            exp_ids = list(set(df[args.column].dropna().astype(str)))
 
         # If there were paths with no valid experiment IDs, print a warning
         if not exp_ids:
