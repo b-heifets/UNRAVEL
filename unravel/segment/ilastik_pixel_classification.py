@@ -23,6 +23,7 @@ Note:
     - Linux and WSL: /usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh
     - Mac: /Applications/ilastik-1.4.0.post1-OSX.app/Contents/ilastik-release/run_ilastik.sh
     - Windows: C:\\Program Files\\ilastik-1.4.0.post1\\run_ilastik.bat
+    - The Ilastik project should be closed before running this script.
 
 Usage:
 ------
