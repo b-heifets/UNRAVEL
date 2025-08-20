@@ -78,7 +78,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-d', '--directories', help='Space-separated list of tif directory names to organize. Default: "red green"', default=['red', 'green'], nargs='*', action=SM)
     opts.add_argument('-i', '--input', help='path/SpecimenMetadata.csv. Default: unravel/allen_institute/genetic_tools_atlas/SpecimenMetadata_subset.csv', default=None, action=SM)
-    opts.add_argument('-o', '--output_dir', help='Output directory for organized samples', default='TIFFs', action=SM)
+    opts.add_argument('-o', '--output_dir', help='Output directory for organized samples. Default: TIFFs', default='TIFFs', action=SM)
     opts.add_argument('-p', '--prefix', help='Prefix for sample directories (useful for batch processing). Default: "ID_"', default='ID_', action=SM)
 
     general = parser.add_argument_group('General arguments')
