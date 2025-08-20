@@ -348,7 +348,7 @@ def main():
                 "module": "unravel.cluster_stats.crop",
                 "description": "Crop clusters to a bounding box.",
                 "common": False,
-                "alias": "crop"
+                "alias": "crop_cluster"
             },
             "cstats_mean_IF": {
                 "module": "unravel.cluster_stats.mean_IF",
