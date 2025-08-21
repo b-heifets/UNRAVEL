@@ -27,7 +27,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-fri', '--fixed_reg_in', help='Fixed image from registration ``reg``. Default: *autofl_50um_masked_fixed_reg_input.nii.gz', default="*autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
+    opts.add_argument('-fri', '--fixed_reg_in', help='Pattern for the fixed image from registration ``reg``. Default: *autofl_50um_masked_fixed_reg_input.nii.gz', default="*autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)
     opts.add_argument('-af', '--autofl_img', help='The original autofluorescence image (loaded if present). Default: *autofl_50um.nii.gz', default="*autofl_50um.nii.gz", action=SM)
     opts.add_argument('-wa', '--warped_atlas', help='Warped atlas image from ``reg``. Default: *atlas_CCFv3_2020_30um_in_tissue_space.nii.gz', default="*atlas_CCFv3_2020_30um_in_tissue_space.nii.gz", action=SM)
     opts.add_argument('-min', '--min', help='Minimum intensity value for ``fsleyes`` display. Default: 0', type=float, default=0.0)
