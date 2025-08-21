@@ -1,13 +1,14 @@
-unravel.abca package
-====================
+unravel.allen_institute.mapmysections package
+=============================================
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
 
-   cache
-   merfish/toc
-   sunburst/toc
-   scRNA_seq/toc
+   cell_type_proportions_concat
+   cell_type_proportions
+   csv_concat_with_source
+   segmentation_summary
+   soma_in_grey
 
 .. automodule:: unravel.abca
    :members:

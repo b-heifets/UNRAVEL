@@ -7,6 +7,8 @@ unravel.allen_institute.genetic_tools_atlas package
    download
    simplify_metadata
    org_samples
+   auto_crop
+   bbox_crop
 
 .. automodule:: unravel.allen_institute.genetic_tools_atlas
    :members:
