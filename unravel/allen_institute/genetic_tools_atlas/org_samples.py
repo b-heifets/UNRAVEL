@@ -205,6 +205,17 @@ def main():
     # Organize dual samples
     org_samples(dual_df, dual_dir, args.prefix, args.directories)
 
+    # Delete empty directories in the output directory
+    for dir in [green_dir, red_dir, dual_dir]:
+        try:
+            if not any(p for p in dir.iterdir() if not p.name.startswith('.')):
+                dir.rmdir()
+        except OSError:
+            print(f'Warning: {dir} not empty or failed to remove.')
+
+    # Print output directory structure
+    print(f"\n[bold green]Organized samples saved to: {output_dir}[/bold green]")
+
     verbose_end_msg()
     
 
