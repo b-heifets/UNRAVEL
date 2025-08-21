@@ -53,7 +53,7 @@ def parse_args():
     opts.add_argument('-i', '--input', help='Name of a directory with TIFFs in the "ID_*" directories. Default: green', default='green', action=SM)
     opts.add_argument('-o', '--output', help='Output directory for average intensity projections and masks. Default: bbox', default='bbox', action=SM)
     opts.add_argument('-t', '--threshold', help='Intensity value for thresholding brain tissue (default: 40)', default=40, type=int, action=SM)
-    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding to add to each dimension of the brain bbox. Default: 0.02 (2%%).', default=0.02, type=float, action=SM)
+    opts.add_argument('-pad', '--pad_percent', help='Percentage of padding to add to each dimension of the brain bbox. Default: 0.05 (5%%).', default=0.05, type=float, action=SM)
     opts.add_argument('-f', '--force', help='Force overwrite existing output files. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
