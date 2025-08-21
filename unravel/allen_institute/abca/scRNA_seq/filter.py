@@ -24,7 +24,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-import unravel.abca.merfish.merfish as mf
+import unravel.allen_institute.abca.merfish.merfish as mf
 from unravel.abca.merfish.merfish_filter import filter_dataframe
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 

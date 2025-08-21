@@ -674,79 +674,79 @@ def main():
         },
         "Allen Brain Cell Atlas (ABCA)": {
             "abca_cache": {
-                "module": "unravel.abca.cache",
+                "module": "unravel.allen_institute.abca.cache",
                 "description": "Download data from the Allen Brain Cell Atlas.",
                 "common": True,
                 "alias": "points_compressor"
             },
             "abca_merfish": {
-                "module": "unravel.abca.merfish.merfish",
+                "module": "unravel.allen_institute.abca.merfish.merfish",
                 "description": "Plot MERFISH data from the ABCA.",
                 "common": True,
                 "alias": "mf"
             },
             "abca_merfish_filter": {
-                "module": "unravel.abca.merfish.merfish_filter",
+                "module": "unravel.allen_institute.abca.merfish.merfish_filter",
                 "description": "Filter MERFISH data from the ABCA and output CSV.",
                 "common": True,
                 "alias": "mf_filter"
             },
             "abca_merfish_filter_by_mask": {
-                "module": "unravel.abca.merfish.merfish_filter_by_mask",
+                "module": "unravel.allen_institute.abca.merfish.merfish_filter_by_mask",
                 "description": "Filter MERFISH data using a mask.nii.gz and output CSV.",
                 "common": True,
                 "alias": "mf_filter_mask"
             },
             "abca_merfish_expression_to_nii": {
-                "module": "unravel.abca.merfish.abca_merfish_expression_to_nii",
+                "module": "unravel.allen_institute.abca.merfish.abca_merfish_expression_to_nii",
                 "description": "Make a 3D .nii.gz image of ABCA MERFISH expression data.",
                 "common": True,
                 "alias": "me"
             },
             "abca_merfish_cells_to_nii": {
-                "module": "unravel.abca.merfish.abca_merfish_cells_to_nii",
+                "module": "unravel.allen_institute.abca.merfish.abca_merfish_cells_to_nii",
                 "description": "Convert ABCA MERFISH cells to a .nii.gz 3D image.",
                 "common": False,
                 "alias": "mc"
             },
             "abca_sunburst": {
-                "module": "unravel.abca.sunburst.sunburst",
+                "module": "unravel.allen_institute.abca.sunburst.sunburst",
                 "description": "Make a CSV for a sunburst plot of cell type proportions across all ontological levels.",
                 "common": True,
                 "alias": "sb"
             },
             "abca_sunburst_expression": {
-                "module": "unravel.abca.sunburst.sunburst_expression",
+                "module": "unravel.allen_institute.abca.sunburst.sunburst_expression",
                 "description": "Calculate mean expression for all cell types in the ABCA and make a sunburst plot.",
                 "common": True,
                 "alias": "sbe"
             },
             "abca_sunburst_filter_by_expression": {
-                "module": "unravel.abca.sunburst.sunburst_filter",
+                "module": "unravel.allen_institute.abca.sunburst.sunburst_filter",
                 "description": "Filter ABCA sunburst data, keeping cells with high expression at any level (class, subclass, etc.).",
                 "common": False,
                 "alias": "sfbe"
             },
             "abca_sunburst_filter_by_proportion": {
-                "module": "unravel.abca.sunburst.sunburst_filter_by_proportion",
+                "module": "unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion",
                 "description": "Filter ABCA sunburst data, keeping prevalent cells at any level.",
                 "common": False,
                 "alias": "sbfp"
             },
             "abca_mean_expression_color_scale": {
-                "module": "unravel.abca.sunburst.mean_expression_color_scale",
+                "module": "unravel.allen_institute.abca.sunburst.mean_expression_color_scale",
                 "description": "Save a color scale for mean RNA expression values.",
                 "common": False,
                 "alias": "mecs"
             },
             "abca_percent_expression_color_scale": {
-                "module": "unravel.abca.sunburst.percent_expression_color_scale",
+                "module": "unravel.allen_institute.abca.sunburst.percent_expression_color_scale",
                 "description": "Save a color scale for the percent of cells expressing a gene.",
                 "common": False,
                 "alias": "pecs"
             },
             "abca_scRNA-seq_filter": {
-                "module": "unravel.abca.scRNA_seq.filter",
+                "module": "unravel.allen_institute.abca.scRNA_seq.filter",
                 "description": "Filter ABCA scRNA-seq cells based on columns and values in the cell metadata and save as CSV.",
                 "common": True,
                 "alias": "s_filter"

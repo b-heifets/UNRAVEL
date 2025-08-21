@@ -197,7 +197,7 @@ def load_czi(czi_path, channel=0, desired_axis_order="xyz", return_res=False, re
     ndarray = np.squeeze(czi.read_image(C=channel)[0])
 
     if ndarray.ndim == 4:
-        print(f"\n    [red1].czi channel {channel} has 4 axes. Please stitch tiles from {Path(czi_path).name}\n")
+        print(f"\n[red1].czi channel {channel} has 4 axes. Please stitch tiles from {Path(czi_path).name}\n")
         import sys ; sys.exit()
 
     ndarray = np.transpose(ndarray, (2, 1, 0)) if desired_axis_order == "xyz" else ndarray
@@ -322,7 +322,7 @@ def nii_path_or_nii(nii):
     elif isinstance(nii, (str, Path)) and Path(nii).exists():
         return nib.load(nii)
     else:
-        raise FileNotFoundError(f"\n    [red1]Input file not found: {nii}\n")
+        raise FileNotFoundError(f"\nInput file not found: {nii}\n")
 
 @print_func_name_args_times()
 def nii_to_ndarray(nii):
@@ -722,7 +722,7 @@ def load_3D_img(img_path, channel=0, desired_axis_order="xyz", return_res=False,
             return load_tifs(img_path, desired_axis_order, return_res, return_metadata, save_metadata, xy_res, z_res)
 
     if not img_path.exists():
-        raise FileNotFoundError(f"\n[red1]No compatible image files found at {img_path} for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
+        raise FileNotFoundError(f"\nNo compatible image files found at {img_path} for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr")
     
     # Load image based on file type and optionally return resolutions and dimensions
     try:
@@ -781,7 +781,7 @@ def save_as_nii(ndarray, output, xy_res=1000, z_res=1000, data_type=None, refere
         elif isinstance(reference, nib.Nifti1Image):
             ref_nii = reference
         else:
-            raise ValueError("\n    [red1]Reference for save_as_nii() must be a path to a .nii.gz file or a Nifti1Image object.\n")
+            raise ValueError("\nReference for save_as_nii() must be a path to a .nii.gz file or a Nifti1Image object.\n")
         
         affine = ref_nii.affine
         header = ref_nii.header.copy()
