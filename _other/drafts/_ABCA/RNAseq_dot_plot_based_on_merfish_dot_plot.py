@@ -15,7 +15,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.abca.sunburst.sunburst import filter_non_neuronal_cells
+from unravel.allen_institute.abca.sunburst.sunburst import filter_non_neuronal_cells
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
