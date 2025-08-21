@@ -1,9 +1,9 @@
-.. _unravel.abca.cache:
+.. _unravel.allen_institute.abca.cache:
 
-unravel.abca.cache module
-=========================
+unravel.allen_institute.abca.cache module
+=========================================
 
-.. automodule:: unravel.abca.cache
+.. automodule:: unravel.allen_institute.abca.cache
    :members:
    :undoc-members:
    :show-inheritance:

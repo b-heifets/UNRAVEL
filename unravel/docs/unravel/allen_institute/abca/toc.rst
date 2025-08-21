@@ -1,5 +1,5 @@
-unravel.abca package
-====================
+unravel.allen_institute.abca package
+====================================
 
 .. toctree::
    :maxdepth: 3
@@ -9,7 +9,7 @@ unravel.abca package
    sunburst/toc
    scRNA_seq/toc
 
-.. automodule:: unravel.abca
+.. automodule:: unravel.allen_institute.abca
    :members:
    :undoc-members:
    :show-inheritance:

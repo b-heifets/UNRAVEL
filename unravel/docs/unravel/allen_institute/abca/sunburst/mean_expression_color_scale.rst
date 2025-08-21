@@ -1,9 +1,9 @@
-.. _unravel.abca.sunburst.mean_expression_color_scale:
+.. _unravel.allen_institute.abca.sunburst.mean_expression_color_scale:
 
-unravel.abca.sunburst.mean_expression_color_scale module
-========================================================
+unravel.allen_institute.abca.sunburst.mean_expression_color_scale module
+========================================================================
 
-.. automodule:: unravel.abca.sunburst.mean_expression_color_scale
+.. automodule:: unravel.allen_institute.abca.sunburst.mean_expression_color_scale
    :members:
    :undoc-members:
    :show-inheritance:

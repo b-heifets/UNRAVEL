@@ -1,5 +1,5 @@
-unravel.abca.sunburst package
-=============================
+unravel.allen_institute.abca.sunburst package
+=============================================
 
 .. toctree::
    :maxdepth: 2
@@ -11,7 +11,7 @@ unravel.abca.sunburst package
    mean_expression_color_scale
    percent_expression_color_scale
 
-.. automodule:: unravel.abca.sunburst
+.. automodule:: unravel.allen_institute.abca.sunburst
    :members:
    :undoc-members:
    :show-inheritance:

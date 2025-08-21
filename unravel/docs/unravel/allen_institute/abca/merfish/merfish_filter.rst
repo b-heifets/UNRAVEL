@@ -1,9 +1,9 @@
-.. _unravel.abca.merfish.merfish_filter:
+.. _unravel.allen_institute.abca.merfish.merfish_filter:
 
-unravel.abca.merfish.merfish_filter module
-==========================================
+unravel.allen_institute.abca.merfish.merfish_filter module
+==========================================================
 
-.. automodule:: unravel.abca.merfish.merfish_filter
+.. automodule:: unravel.allen_institute.abca.merfish.merfish_filter
    :members:
    :undoc-members:
    :show-inheritance:

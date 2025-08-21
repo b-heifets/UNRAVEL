@@ -1,5 +1,5 @@
-unravel.abca.merfish package
-============================
+unravel.allen_institute.abca.merfish package
+============================================
 
 .. toctree::
    :maxdepth: 2
@@ -11,7 +11,7 @@ unravel.abca.merfish package
    merfish_expression_to_nii
    CCF30_to_MERFISH
 
-.. automodule:: unravel.abca.merfish
+.. automodule:: unravel.allen_institute.abca.merfish
    :members:
    :undoc-members:
    :show-inheritance:

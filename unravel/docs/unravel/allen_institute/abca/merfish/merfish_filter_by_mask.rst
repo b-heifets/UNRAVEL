@@ -1,9 +1,9 @@
-.. _unravel.abca.merfish.merfish_filter_by_mask:
+.. _unravel.allen_institute.abca.merfish.merfish_filter_by_mask:
 
-unravel.abca.merfish.merfish_filter_by_mask module
-==================================================
+unravel.allen_institute.abca.merfish.merfish_filter_by_mask module
+==================================================================
 
-.. automodule:: unravel.abca.merfish.merfish_filter_by_mask
+.. automodule:: unravel.allen_institute.abca.merfish.merfish_filter_by_mask
    :members:
    :undoc-members:
    :show-inheritance:

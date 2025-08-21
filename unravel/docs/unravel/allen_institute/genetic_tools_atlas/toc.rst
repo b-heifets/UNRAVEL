@@ -1,5 +1,5 @@
 unravel.allen_institute.genetic_tools_atlas package
-===========================================
+===================================================
 
 .. toctree::
    :maxdepth: 2

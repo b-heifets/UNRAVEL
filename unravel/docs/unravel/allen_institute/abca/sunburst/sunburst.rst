@@ -1,9 +1,9 @@
-.. _unravel.abca.sunburst.sunburst:
+.. _unravel.allen_institute.abca.sunburst.sunburst:
 
-unravel.abca.sunburst.sunburst module
-=====================================
+unravel.allen_institute.abca.sunburst.sunburst module
+=====================================================
 
-.. automodule:: unravel.abca.sunburst.sunburst
+.. automodule:: unravel.allen_institute.abca.sunburst.sunburst
    :members:
    :undoc-members:
    :show-inheritance:
