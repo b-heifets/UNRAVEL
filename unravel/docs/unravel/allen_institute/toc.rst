@@ -6,6 +6,7 @@ unravel.allen_institute package
 
    abca/toc
    genetic_tools_atlas/toc
+   mapmysections/toc
 
 .. automodule:: unravel.allen_institute
    :members:

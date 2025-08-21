@@ -6,7 +6,7 @@ segmentation_summary.py
 Compute voxel counts and proportions for somata (1), endothelial cells (3),
 and astrocytes (4) from Ilastik .nii.gz outputs and save to CSV summaries.
 
-By default, if you don’t pass -o/--output, each sample will get its own
+By default, if you don't pass -o/--output, each sample will get its own
 CSV in its MMS_seg folder named <sample>_segmentation_summary.csv.
 You can still override with -o to write a single combined CSV.
 """
