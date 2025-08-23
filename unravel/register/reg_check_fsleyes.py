@@ -42,7 +42,7 @@ def main():
     args = parse_args()
 
     # Collect autofl NIfTI paths
-    autofl_nii_paths = match_files(args.autofl_img)
+    autofl_nii_paths = match_files(args.autofl_img) if glob(args.autofl_img) else []
     masked_autofl_nii_paths = match_files(args.fixed_reg_in)
     warped_atlas_nii_paths = match_files(args.warped_atlas)
 
