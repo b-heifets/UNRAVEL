@@ -33,7 +33,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
     
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='path/image.nii.gz to warp from CCFv3 30 µm atlas space', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help='One or more .nii.gz files or glob patterns to warp from CCFv3 30 µm atlas space (e.g., *.nii.gz subdir/*.nii.gz)', nargs='*', required=True, action=SM)
     reqs.add_argument('-w', '--warp_root', help='Path to the root directory containing the warp files.', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
