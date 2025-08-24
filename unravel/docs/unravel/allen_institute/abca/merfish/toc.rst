@@ -9,7 +9,6 @@ unravel.allen_institute.abca.merfish package
    merfish_filter_by_mask
    merfish_cells_to_nii
    merfish_expression_to_nii
-   CCF30_to_MERFISH
 
 .. automodule:: unravel.allen_institute.abca.merfish
    :members:
