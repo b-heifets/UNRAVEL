@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_cell_type_proportions`` or ``cell_types`` from UNRAVEL to calculate cell type proportions for an ontological level.
+Use ``mms_cell_type_proportions`` or ``ctp`` from UNRAVEL to calculate cell type proportions for an ontological level.
 
 Prereqs: 
     - ``abca_merfish_filter`` or ``abca_merfish_filter_by_mask`` to generate the input cell metadata.
@@ -15,19 +15,16 @@ Note:
     - Cell type names are standardized by replacing spaces, dashes, and slashes with dots (``.``), and removing any numerical prefixes (e.g., ``1.``).
 
 Next steps:
-    - To summarize cell type proportions across multiple files (like in MapMySections), use ``abca_cell_type_proportions_concat`` to concatenate multiple CSVs into one file
+    - To summarize cell type proportions across multiple files (like in MapMySections), usemms_concat`` to concatenate multiple CSVs into one file
 
 Usage:
------- 
-    abca_cell_type_proportions -i <input_path(s)> [-col subclass] [-rc parcellation_structure -r VISp] [-n] [-c] [-t] [-o output_path]
+------mms -i <input_path(s)> [-col subclass] [-rc parcellation_structure -r VISp] [-n] [-c] [-t] [-o output_path]
 
 Usage for MapMySections (VISp example):
----------------------------------------
-    abca_cell_type_proportions -i <input_path(s)> -col subclass -rc parcellation_structure -r VISp -t -o VISp_subclass
+--------------------------------------mms -i <input_path(s)> -col subclass -rc parcellation_structure -r VISp -t -o VISp_subclass
 
 Usage for MapMySections (all regions):
---------------------------------------
-    abca_cell_type_proportions -i <input_path(s)> -col subclass -t -o all_regions_subclass
+-------------------------------------mms -i <input_path(s)> -col subclass -t -o all_regions_subclass
 """
 
 import pandas as pd

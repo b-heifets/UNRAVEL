@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_cell_type_proportions_concat`` or ``cell_types_concat`` from UNRAVEL to concatenate cell type proportions
+Use ``mms_cell_type_proportions_concat`` or ``ctpc`` from UNRAVEL to concatenate cell type proportions
 across multiple filtered cell metadata files.
 
 Prereqs:
-    - Each file should contain a row of cell type proportions (e.g., output from ``abca_cell_type_proportions`` with --transpose).
+    - Each file should contain a row of cell type proportions (e.g., output from ``mms_cell_type_proportions`` with --transpose).
     - The script aligns all cell type columns, fills in missing types with 0, and optionally recalculates proportions.
 
 Features:
@@ -28,8 +28,7 @@ Outputs:
     - By default, saved as concatenated_cell_type_proportions.csv in the current directory.
 
 Usage:
-------
-    abca_cell_type_proportions_concat -i '<asterisk>.csv' [-o output_path] [--keep_list path/to/keep_list.txt] [-v]
+-----mms -i '<asterisk>.csv' [-o output_path] [--keep_list path/to/keep_list.txt] [-v]
 """
 
 import pandas as pd
