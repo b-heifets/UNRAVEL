@@ -6,6 +6,13 @@ Use ``abca_cell_type_proportions`` or ``cell_types`` from UNRAVEL to calculate c
 Prereqs: 
     - ``abca_merfish_filter`` or ``abca_merfish_filter_by_mask``
 
+Output:
+    - CSV file with cell type proportions for the specified column (e.g., neurotransmitter, class, subclass, supertype, cluster).
+    - To organize data like in the MapMySections data challenge, use --transpose to get cell types as columns (one row of proportions per input file).
+
+Next steps:
+    - To summarize cell type proportions across multiple files (like in MapMySections), use ``abca_cell_type_proportions_concat`` to concatenate multiple CSVs into one file
+
 Usage:
 ------ 
     abca_cell_type_proportions -i path/cell_metadata_filtered.csv [-col subclass] [--neurons] [--counts] [--transpose] [-v]
@@ -116,10 +123,10 @@ def main():
     if not args.counts:
         grouped_df = grouped_df.drop(columns='counts')
 
-    ontology_path = Path(__file__).parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'unique_cell_types.csv'
+    ontology_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WMB_unique_cell_types.csv'
     if ontology_path.exists():
         ontology_df = pd.read_csv(ontology_path, usecols=[args.column])
-        ontology_df = ontology_df.dropna().reset_index(drop=True)
+        ontology_df = ontology_df.dropna().reset_index(drop=True)  # This removes any rows with NaN in the specified column
         print(f'\nLoaded ontology DataFrame:\n{ontology_df}\n')
 
         # Merge with the ontology DataFrame on the specified column
