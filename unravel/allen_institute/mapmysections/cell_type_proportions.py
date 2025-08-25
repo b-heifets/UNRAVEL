@@ -1,21 +1,33 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_cell_type_proportions`` or ``cell_types`` from UNRAVEL to calculate cell type proportions for an ontological levels.
+Use ``abca_cell_type_proportions`` or ``cell_types`` from UNRAVEL to calculate cell type proportions for an ontological level.
 
 Prereqs: 
-    - ``abca_merfish_filter`` or ``abca_merfish_filter_by_mask``
+    - ``abca_merfish_filter`` or ``abca_merfish_filter_by_mask`` to generate the input cell metadata.
 
 Output:
     - CSV file with cell type proportions for the specified column (e.g., neurotransmitter, class, subclass, supertype, cluster).
     - To organize data like in the MapMySections data challenge, use --transpose to get cell types as columns (one row of proportions per input file).
+
+Note:
+    - Only cell types present in the filtered MERFISH data are included.
+    - Cell type names are standardized by replacing spaces, dashes, and slashes with dots (``.``), and removing any numerical prefixes (e.g., ``1.``).
 
 Next steps:
     - To summarize cell type proportions across multiple files (like in MapMySections), use ``abca_cell_type_proportions_concat`` to concatenate multiple CSVs into one file
 
 Usage:
 ------ 
-    abca_cell_type_proportions -i path/cell_metadata_filtered.csv [-col subclass] [--neurons] [--counts] [--transpose] [-v]
+    abca_cell_type_proportions -i path/cell_metadata_filtered.csv [-col subclass] [-rc parcellation_structure -r VISp] [-n] [-c] [-t] [-o output_path]
+
+Usage for MapMySections (VISp example):
+---------------------------------------
+    abca_cell_type_proportions -i path/cell_metadata_filtered.csv -col subclass -rc parcellation_structure -r VISp -t
+
+Usage for MapMySections (all regions):
+--------------------------------------
+    abca_cell_type_proportions -i path/cell_metadata_filtered.csv -col subclass -t
 """
 
 import pandas as pd
@@ -40,7 +52,7 @@ def parse_args():
     opts.add_argument('-r', '--region', help='Region to filter by (e.g., "VISp" with parcellation_structure). If not provided, all regions are included.', default=None, action=SM)
     opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
     opts.add_argument('-c', '--counts', help='Include counts in the output. Default: False', action='store_true', default=False)
-    opts.add_argument('-t', '--transpose', help='Transpose the df', action='store_true')
+    opts.add_argument('-t', '--transpose', help='Transpose the output DataFrame. Default: False', action='store_true', default=False)
     opts.add_argument('-o', '--output', help='Output path for the proportions CSV file.', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
@@ -139,7 +151,7 @@ def main():
             grouped_df = grouped_df[grouped_df[args.column].isin(cells_df[args.column])]
             print(f'\nFiltered merged DataFrame by region ({args.region}):\n{grouped_df[[args.column, "proportions"]].head()}\n')
 
-        # Rename values in the specified column (spaces, dashes,  slashes to dots, and remove numerical prefixes)
+        # Rename values in the specified column (spaces, dashes, slashes to dots, and remove numerical prefixes)
         grouped_df[args.column] = (
             grouped_df[args.column]
             .str.replace(' ', '.', regex=False)
