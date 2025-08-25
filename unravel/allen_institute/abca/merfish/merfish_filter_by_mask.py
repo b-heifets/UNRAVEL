@@ -1,19 +1,27 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_merfish_filter_by_mask`` or ``mf_filter_mask``  from UNRAVEL to filter MERFISH cell metadata using a mask image in MERFISH-CCF space.
+Use ``abca_merfish_filter_by_mask`` or ``mf_filter_mask``  from UNRAVEL to spatially filter MERFISH cell metadata using a mask image in MERFISH-CCF space.
 
 Prereqs:
-    - Use CCF30_to_MERFISH.py to warp the mask image to MERFISH-CCF space
+    - Use ``warp_ccf30_to_merfish`` to warp the mask image to MERFISH-CCF space
 
-Steps:
+Processing steps:
     - 1) Binarize the mask image
     - 2) Determine the bounding box of the mask image and filter the cell metadata by the bounding box
-    - 3) Loop through each cell and filter out cells whose reconstructed coordinates fall are external to the mask
+    - 3) Loop through each cell and filter out cells whose reconstructed coordinates are external to the mask
     - 4) Save the filtered cell metadata to a new CSV file
+
+Inputs:
+    - path/to/mask.nii.gz file(s) or glob patterns (e.g., '*.nii.gz')
+    - Path to the root directory of the Allen Brain Cell Atlas data (downloaded from Allen Brain Atlas)
+
+Outputs:
+    - Each CSV will be named like <input_mask_name>_cells.csv
 
 Next steps:
     - Use the filtered cell metadata to examine cell type prevalence or gene expression
+    - For cell type prevalence, use ``abca_sunburst`` to make a CSV for sunburst plotting or organize data according the the MapMySections template
     - For looking at gene expression, load the filtered cell metadata and join it with the expression data for the gene(s) of interest
 
 Usage:
@@ -25,13 +33,14 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 from rich import print
+from rich.live import Live
 from rich.traceback import install
 
 import unravel.allen_institute.abca.merfish.merfish as mf
 from unravel.cluster_stats.validation import cluster_bbox
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+from unravel.core.utils import get_stem, initialize_progress_bar, log_command, match_files, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 from unravel.core.img_io import load_nii
 
 
@@ -39,11 +48,11 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     reqs = parser.add_argument_group('Required arguments')
-    reqs.add_argument('-i', '--input', help='path/mask.nii.gz', required=True, action=SM)
+    reqs.add_argument('-i', '--input', help="path/to/mask.nii.gz file(s) or glob patterns (e.g., '*.nii.gz')", nargs='*', required=True, action=SM)
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-o', '--output', help='path/MERFISH_cells_filtered_by_mask.csv.', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='path/output/directory/ for filtered cell metadata CSV files. Default: current working directory', default='.', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -114,52 +123,14 @@ def check_cells_in_mask(cell_df_bbox_filter, mask_img, xy_res, z_res):
 
     return cell_df_final
 
+def merfish_filter_by_mask(input_path, xy_res_mm, z_res_mm, cell_df_joined, output_dir, verbose=False):
+    mask_img = load_nii(input_path)
 
-@log_command
-def main():
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    verbose_start_msg()
-
-    # Load the mask image
-    mask_img = load_nii(args.input)
-    
-    # These are the resolutions for MERFISH-CCF space
-    xy_res = 10
-    z_res = 200
-    xy_res_mm = xy_res / 1000
-    z_res_mm = z_res / 1000
-    
     # Binarize
     mask_img[mask_img > 0] = 1
 
     # Get the bounding box of the mask
     _, xmin, xmax, ymin, ymax, zmin, zmax = cluster_bbox(1, mask_img)
-
-    # Load the cell metadata
-    download_base = Path(args.base)
-
-    # Load the cell metadata
-    cell_df = mf.load_cell_metadata(download_base)
-
-    # Add the reconstructed coordinates to the cell metadata
-    cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
-
-    # Add the classification levels and the corresponding color.
-    cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
-
-    # Add the cluster colors
-    cell_df_joined = mf.join_cluster_colors(cell_df_joined, download_base)
-    
-    # Add the parcellation annotation
-    cell_df_joined = mf.join_parcellation_annotation(cell_df_joined, download_base)
-
-    # Add the parcellation color
-    cell_df_joined = mf.join_parcellation_color(cell_df_joined, download_base)
-
-    if args.verbose:
-        print(f'\n{cell_df_joined=}\n')
 
     # Convert the bounding box to float
     xmin, xmax, ymin, ymax, zmin, zmax = map(float, [xmin, xmax, ymin, ymax, zmin, zmax])
@@ -174,7 +145,7 @@ def main():
     zmax_mm = zmax * z_res_mm
 
     # Print the bounding box in mm
-    if args.verbose:
+    if verbose:
         print(f'\nBounding box of the mask in voxel units:\n')
         print(f'{xmin=}')
         print(f'{xmax=}')
@@ -191,7 +162,7 @@ def main():
     zmin_reconstructed = cell_df_joined['z_reconstructed'].min()
     zmax_reconstructed = cell_df_joined['z_reconstructed'].max()
 
-    if args.verbose:
+    if verbose:
         print(f'\nCell coordinate ranges in mm before filtering by bounding box:\n')
         print(f'{xmax_reconstructed=}')
         print(f'{xmax_reconstructed=}')
@@ -218,7 +189,7 @@ def main():
     zmin_reconstructed = cell_df_bbox_filter['z_reconstructed'].min()
     zmax_reconstructed = cell_df_bbox_filter['z_reconstructed'].max()
 
-    if args.verbose:
+    if verbose:
         print(f'\nCell coordinate ranges in mm after filtering by bounding box:')
         print(f'{xmin_reconstructed=}')
         print(f'{xmax_reconstructed=}')
@@ -233,16 +204,62 @@ def main():
     cell_df_filtered = check_cells_in_mask(cell_df_bbox_filter, mask_img, xy_res=10, z_res=200)
 
     # Save the filtered cell metadata to a new CSV file
-    if args.output:
-        output_path = Path(args.output)
-        output_dir = output_path.parent
-        output_dir.mkdir(parents=True, exist_ok=True)  # Only create the parent directory
-    else:
-        output_path = Path("MERFISH_cells_filtered_by_mask.csv")
+    output_path = output_dir / f"{get_stem(input_path)}_cells.csv"
 
     cell_df_filtered.to_csv(output_path)
-    print(f"\nFiltered data saved to: {output_path}\n")
-           
+    print(f"Filtered data saved to: {output_path}")
+
+@log_command
+def main():
+    install()
+    args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
+    # These are the resolutions for MERFISH-CCF space
+    xy_res = 10
+    z_res = 200
+    xy_res_mm = xy_res / 1000
+    z_res_mm = z_res / 1000
+    
+    # Load the cell metadata
+    download_base = Path(args.base)
+
+    # Load the cell metadata
+    cell_df = mf.load_cell_metadata(download_base)
+
+    # Add the reconstructed coordinates to the cell metadata
+    cell_df_joined = mf.join_reconstructed_coords(cell_df, download_base)
+
+    # Add the classification levels and the corresponding color.
+    cell_df_joined = mf.join_cluster_details(cell_df_joined, download_base)
+
+    # Add the cluster colors
+    cell_df_joined = mf.join_cluster_colors(cell_df_joined, download_base)
+    
+    # Add the parcellation annotation
+    cell_df_joined = mf.join_parcellation_annotation(cell_df_joined, download_base)
+
+    # Add the parcellation color
+    cell_df_joined = mf.join_parcellation_color(cell_df_joined, download_base)
+
+    if args.verbose:
+        print(f'\n{cell_df_joined=}\n')
+
+    # Match input files
+    input_paths = match_files(args.input)
+
+    output_dir = Path(args.output)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    progress, task_id = initialize_progress_bar(len(input_paths), task_message="[bold green]Filtering cell metadata by mask...")
+    with Live(progress):
+
+        for input_path in input_paths:
+            merfish_filter_by_mask(input_path, xy_res_mm, z_res_mm, cell_df_joined, output_dir, args.verbose)
+
+            progress.update(task_id, advance=1)
+
     verbose_end_msg()
 
 if __name__ == '__main__':
