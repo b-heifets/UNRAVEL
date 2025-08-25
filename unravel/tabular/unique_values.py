@@ -68,22 +68,28 @@ def print_values(column, values, keywords=None, value_counts=None, show_count=Fa
     else:
         print(f"\n Unique {count} {plural} in column '{column}':")
 
-    df_out = pd.DataFrame({
-        'Value': values,
-        'Count': [value_counts[val] for val in values],
-    })
-    total = df_out['Count'].sum()
-    df_out['Percent'] = df_out['Count'] / total * 100
-
+    if show_count and value_counts is not None:
+        df_out = pd.DataFrame({
+            'Value': values,
+            'Count': [value_counts[val] for val in values],
+        })
+        total = df_out['Count'].sum()
+        df_out['Percent'] = df_out['Count'] / total * 100
+    else:
+        df_out = pd.DataFrame({'Value': values})
 
     # Rich table display
     table = Table(title=None, box=box.SIMPLE)
     table.add_column("Value", style="green", no_wrap=True)
-    table.add_column("Count", justify="right", style="cyan")
-    table.add_column("Percent", justify="right", style="magenta")
+    if show_count and value_counts is not None:
+        table.add_column("Count", justify="right", style="cyan")
+        table.add_column("Percent", justify="right", style="magenta")
 
-    for _, row in df_out.iterrows():
-        table.add_row(str(row["Value"]), str(row["Count"]), f"{row['Percent']:.2f}%")
+        for _, row in df_out.iterrows():
+            table.add_row(str(row["Value"]), str(row["Count"]), f"{row['Percent']:.2f}%")
+    else:
+        for val in df_out['Value']:
+            table.add_row(str(val))
 
     print(table)
     return df_out
