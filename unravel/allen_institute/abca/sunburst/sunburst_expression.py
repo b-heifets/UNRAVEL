@@ -182,9 +182,9 @@ def main():
             f.write(f"{row.label}: {row.color}\n")
     
     if species == 'mouse':
-        lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WMB_sunburst_colors.csv'
+        lut_path = Path(__file__).parent.parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WMB_sunburst_colors.csv'
     elif species == 'human':
-        lut_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_sunburst_colors.csv'
+        lut_path = Path(__file__).parent.parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_sunburst_colors.csv'
     shutil.copy(lut_path, output_path.parent / lut_path.name)
     
     verbose_end_msg()

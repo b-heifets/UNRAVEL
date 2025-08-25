@@ -129,7 +129,7 @@ def join_cluster_details(cell_df_joined, download_base, species='mouse'):
     if species == 'mouse':
         cluster_details_path = download_base / 'metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_pivoted.csv'
     elif species == 'human':
-        cluster_details_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_cluster_to_cluster_annotation_membership_pivoted.csv'
+        cluster_details_path = Path(__file__).parent.parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_cluster_to_cluster_annotation_membership_pivoted.csv'
     else:
         raise ValueError(f"Species '{species}' not supported. Use 'mouse' or 'human'.")
     
@@ -161,7 +161,7 @@ def join_cluster_colors(cell_df_joined, download_base, species='mouse'):
     if species == 'mouse':
         cluster_colors_path = download_base / 'metadata/WMB-taxonomy/20231215/views/cluster_to_cluster_annotation_membership_color.csv'
     elif species == 'human':
-        cluster_colors_path = Path(__file__).parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_cluster_to_cluster_annotation_membership_color.csv'
+        cluster_colors_path = Path(__file__).parent.parent.parent.parent.parent / 'unravel' / 'core' / 'csvs' / 'ABCA' / 'WHB_cluster_to_cluster_annotation_membership_color.csv'
     print(f"\n    Adding cluster colors from {cluster_colors_path}\n")
     cluster_colors = pd.read_csv(cluster_colors_path)
     cluster_colors.set_index('cluster_alias', inplace=True)
