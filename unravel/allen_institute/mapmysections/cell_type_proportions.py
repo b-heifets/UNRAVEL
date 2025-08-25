@@ -23,11 +23,11 @@ Usage:
 
 Usage for MapMySections (VISp example):
 ---------------------------------------
-    abca_cell_type_proportions -i <input_path(s)> -col subclass -rc parcellation_structure -r VISp -t
+    abca_cell_type_proportions -i <input_path(s)> -col subclass -rc parcellation_structure -r VISp -t -o VISp_subclass
 
 Usage for MapMySections (all regions):
 --------------------------------------
-    abca_cell_type_proportions -i <input_path(s)> -col subclass -t
+    abca_cell_type_proportions -i <input_path(s)> -col subclass -t -o all_regions_subclass
 """
 
 import pandas as pd
@@ -53,7 +53,7 @@ def parse_args():
     opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
     opts.add_argument('-c', '--counts', help='Include counts in the output. Default: False', action='store_true', default=False)
     opts.add_argument('-t', '--transpose', help='Transpose the output DataFrame. Default: False', action='store_true', default=False)
-    opts.add_argument('-o', '--output', help='Output directory path. Default: <column>_proportions[_transposed]/<input_file>.csv', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='Output directory path. Default: [region_]<column>_proportions[_transposed]/<input_file>.csv', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -97,16 +97,16 @@ def main():
 
     input_paths = match_files(args.input)
 
-    # Make the output directory
-    if args.transpose and not args.output:
-        out_dir = Path(f'{args.column}_proportions_transposed')
-        out_dir.mkdir(parents=True, exist_ok=True)
-    elif not args.transpose and not args.output:
-        out_dir = Path(f'{args.column}_proportions')
-        out_dir.mkdir(parents=True, exist_ok=True)
-    else:
+    # Construct default output directory name
+    if args.output:
         out_dir = Path(args.output)
-        out_dir.mkdir(parents=True, exist_ok=True)
+    else:
+        region_prefix = f"{args.region}_" if args.region else ""
+        suffix = "_proportions_transposed" if args.transpose else "_proportions"
+        out_dir = Path(f"{region_prefix}{args.column}{suffix}")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    if args.verbose:
+        print(f'Output directory: {out_dir}')
 
     for input_path in input_paths:
         if args.verbose:
