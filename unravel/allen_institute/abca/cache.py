@@ -3,6 +3,10 @@
 """
 Use ``abca_cache`` or ``cache`` from UNRAVEL to download data from the Allen Brain Cell Atlas.
 
+Prereqs:
+    - cd to the UNRAVEL root directory
+    - pip install -e ".[abca]"
+
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/getting_started.html
 
