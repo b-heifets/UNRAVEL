@@ -14,26 +14,23 @@ Features:
     - Optionally filters to a specific list of desired cell types (columns) using a text file.
     - If filtering is applied, proportions are recalculated per row based on the remaining columns.
 
-Optional: Keep only specific cell types
----------------------------------------
-To drop unused cell types and recalculate proportions accordingly, create a file named:
+Note:
+    - If no keep list is provided, all cell types present in the input files will be included in the output.
+    - If --keep_list is provided, only those cell types will be retained, and proportions will be re-normalized per row (proportions will sum to 1).
+    - This .txt file should contain a single column (no header) with one desired cell type (column name) per line, e.g. (don't include the indent/dash):
+    - ABC.NN
+    - Astro.TE.NN
+    - L5.IT.CTX.Glut
+    - Vip.Gaba
 
-    unravel/core/scripts/keep_cell_type_columns.txt
-
-with one desired cell type (column name) per line, e.g.:
-
-    ABC.NN
-    Astro.TE.NN
-    L5.IT.CTX.Glut
-    Vip.Gaba
-
-Columns not in this list will be dropped, and the remaining values will be re-normalized (row-wise proportions will sum to 1).
+Outputs:
+    - A single CSV file with concatenated and aligned cell type proportions (one row per input file).
+    - By default, saved as concatenated_cell_type_proportions.csv in the current directory.
 
 Usage:
 ------
-    abca_cell_type_proportions_concat -i '<asterisk>.csv' [-o output_path] [-v]
+    abca_cell_type_proportions_concat -i '<asterisk>.csv' [-o output_path] [--keep_list path/to/keep_list.txt] [-v]
 """
-
 
 import pandas as pd
 from pathlib import Path
@@ -51,6 +48,7 @@ def parse_args():
     opts = parser.add_argument_group('Optional args')
     opts.add_argument('-i', '--input', help='Glob pattern(s) for input CSV files (e.g., "*.csv").', nargs='*', action=SM)
     opts.add_argument('-o', '--output', help='Output path for the concatenated CSV file.', default=None, action=SM)
+    opts.add_argument('-k', '--keep_list', help='Optional path to a text file listing which cell types (columns) to keep. Default: keep_cell_type_columns.txt in the current directory.', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -73,7 +71,8 @@ def main():
 
     # Load keep list if available
     keep_cols = None
-    keep_cols_path = Path().cwd() / 'keep_cell_type_columns.txt'
+    keep_cols_path = Path(args.keep_list) if args.keep_list else Path().cwd() / 'keep_cell_type_columns.txt'
+
     if keep_cols_path.exists():
         print(f"\n[bold yellow]Using keep list from:[/bold yellow] {keep_cols_path}")
         keep_cols = [line.strip() for line in keep_cols_path.read_text().splitlines() if line.strip()]
