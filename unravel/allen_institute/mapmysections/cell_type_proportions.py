@@ -19,15 +19,15 @@ Next steps:
 
 Usage:
 ------ 
-    abca_cell_type_proportions -i path/cell_metadata_filtered.csv [-col subclass] [-rc parcellation_structure -r VISp] [-n] [-c] [-t] [-o output_path]
+    abca_cell_type_proportions -i <input_path(s)> [-col subclass] [-rc parcellation_structure -r VISp] [-n] [-c] [-t] [-o output_path]
 
 Usage for MapMySections (VISp example):
 ---------------------------------------
-    abca_cell_type_proportions -i path/cell_metadata_filtered.csv -col subclass -rc parcellation_structure -r VISp -t
+    abca_cell_type_proportions -i <input_path(s)> -col subclass -rc parcellation_structure -r VISp -t
 
 Usage for MapMySections (all regions):
 --------------------------------------
-    abca_cell_type_proportions -i path/cell_metadata_filtered.csv -col subclass -t
+    abca_cell_type_proportions -i <input_path(s)> -col subclass -t
 """
 
 import pandas as pd
@@ -53,7 +53,7 @@ def parse_args():
     opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
     opts.add_argument('-c', '--counts', help='Include counts in the output. Default: False', action='store_true', default=False)
     opts.add_argument('-t', '--transpose', help='Transpose the output DataFrame. Default: False', action='store_true', default=False)
-    opts.add_argument('-o', '--output', help='Output path for the proportions CSV file.', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='Output directory path. Default: <column>_proportions[_transposed]/<input_file>.csv', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -96,6 +96,17 @@ def main():
     verbose_start_msg()
 
     input_paths = match_files(args.input)
+
+    # Make the output directory
+    if args.transpose and not args.output:
+        out_dir = Path(f'{args.column}_proportions_transposed')
+        out_dir.mkdir(parents=True, exist_ok=True)
+    elif not args.transpose and not args.output:
+        out_dir = Path(f'{args.column}_proportions')
+        out_dir.mkdir(parents=True, exist_ok=True)
+    else:
+        out_dir = Path(args.output)
+        out_dir.mkdir(parents=True, exist_ok=True)
 
     for input_path in input_paths:
         if args.verbose:
@@ -182,16 +193,8 @@ def main():
             print(f'\nTransposed DataFrame:\n{grouped_df}\n')
 
         # Save the output to a CSV file
-        if args.output:
-            output_path = Path(args.output)
-        else:
-            output_file = input_path.name
-            if args.transpose:
-                output_path = Path(f'{args.column}_proportions_transposed', output_file)
-            else:
-                output_path = Path(f'{args.column}_proportions', output_file)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-
+        output_file = input_path.name
+        output_path = out_dir / output_file if out_dir else None
         print(f'Saving output to: {output_path}')
         grouped_df.to_csv(output_path, index=False)
 
