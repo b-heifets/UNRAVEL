@@ -4,15 +4,15 @@
 Use ``abca_cell_type_proportions_concat`` or ``cell_types_concat`` from UNRAVEL to concatenate cell type proportions
 across multiple filtered cell metadata files.
 
-Each file should contain a row of cell type proportions (e.g., output from ``abca_cell_type_proportions`` with --transpose).
-The script aligns all cell type columns, fills in missing types with 0, and optionally recalculates proportions.
+Prereqs:
+    - Each file should contain a row of cell type proportions (e.g., output from ``abca_cell_type_proportions`` with --transpose).
+    - The script aligns all cell type columns, fills in missing types with 0, and optionally recalculates proportions.
 
 Features:
----------
-- Aligns cell type columns across multiple input files, filling missing values with 0.
-- Keeps ``source_file`` as the first column for traceability.
-- Optionally filters to a specific list of desired cell types (columns) using a text file.
-- If filtering is applied, proportions are recalculated per row based on the remaining columns.
+    - Aligns cell type columns across multiple input files, filling missing values with 0.
+    - Keeps ``source_file`` as the first column for traceability.
+    - Optionally filters to a specific list of desired cell types (columns) using a text file.
+    - If filtering is applied, proportions are recalculated per row based on the remaining columns.
 
 Optional: Keep only specific cell types
 ---------------------------------------
