@@ -17,7 +17,6 @@ Usage:
 warp_ccf30_to_merfish -i path/image.nii.gz -w path/to/warp_root [-o MERFISH] [-inp nearestNeighbor] [-v]
 """
 
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from rich import print
 from rich.live import Live
@@ -75,29 +74,18 @@ def main():
 
     input_img_paths = match_files(args.input)
     input_img_paths = [str(p) for p in input_img_paths]
+    output_dir = Path(args.output)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    progress, task_id = initialize_progress_bar(len(input_img_paths), task_message="[bold green]Downloading Zarr datasets...")
+    progress, task_id = initialize_progress_bar(len(input_img_paths), task_message="[bold green]Warping images...")
     with Live(progress):
 
-        def wrapped_download(input_img_path, output_img_path=None):
+        for input_img_path in input_img_paths:
+            img_stem = get_stem(input_img_path)
+            output_img_path = output_dir / f"{img_stem}_MERFISH.nii.gz"
             ccf30_to_merfish(input_img_path, args.warp_root, output_img_path, args.interpol)
-            progress.update(task_id, advance=1)
-    
-        # Download each experiment ID in parallel
-        with ThreadPoolExecutor(max_workers=args.workers) as executor:
-            output_dir = Path(args.output)
-            output_dir.mkdir(parents=True, exist_ok=True)
 
-            futures = []
-            for input_img_path in input_img_paths:
-                img_stem = get_stem(input_img_path)
-                output_img_path = output_dir / f"{img_stem}_MERFISH.nii.gz"
-                futures.append(executor.submit(wrapped_download, input_img_path, output_img_path))
-            for f in as_completed(futures):
-                try:
-                    f.result()  # This will raise any exceptions from the thread
-                except Exception as e:
-                    print(f"[red]Exception occurred:[/red] {e}")
+            progress.update(task_id, advance=1)
 
     verbose_end_msg()
 
