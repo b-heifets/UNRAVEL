@@ -14,7 +14,7 @@ Prereqs:
 
 Usage:
 ------
-warp_ccf30_to_merfish -i path/image.nii.gz -o path/to/output_dir -w path/to/warp_root [-inp nearestNeighbor] [-v]
+warp_ccf30_to_merfish -i path/image.nii.gz -w path/to/warp_root [-o MERFISH] [-inp nearestNeighbor] [-v]
 """
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -74,6 +74,7 @@ def main():
     verbose_start_msg()
 
     input_img_paths = match_files(args.input)
+    input_img_paths = [str(p) for p in input_img_paths]
 
     progress, task_id = initialize_progress_bar(len(input_img_paths), task_message="[bold green]Downloading Zarr datasets...")
     with Live(progress):
