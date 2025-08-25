@@ -59,6 +59,8 @@ def parse_args():
 
     return parser.parse_args()
 
+# TODO: Add parallelization.
+
 @print_func_name_args_times()
 def check_cells_in_mask(cell_df_bbox_filter, mask_img, xy_res, z_res):
     """
