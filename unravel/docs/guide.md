@@ -1,4 +1,4 @@
-# Guide
+# LSFM/STPT Guide
 
 
 * This guide focuses on our most common workflow (IF/iDISCO --> LSFM --> atlas registration --> voxel-wise stats --> cluster validation).
@@ -410,7 +410,7 @@ uc -m
 
 :::{tab-item} Image I/O
 - [**io_metadata**](unravel.image_io.metadata): Save raw voxel dimensions in microns and image dimensions to parameters/metadata.txt. 
-- [**io_convert_img**](unravel.image_io.conv): Convert a 3D image to another format. Supports .czi, .tif, .nii.gz, .zarr.
+- [**io_convert_img**](unravel.image_io.convert_img): Convert a 3D image to another format. Supports .czi, .tif, .nii.gz, .zarr.
 - [**io_nii_info**](unravel.image_io.nii_info): Print info about NIfTI files.
 - [**io_nii_hd**](unravel.image_io.nii_hd): Print NIfTI headers.
 - [**io_nii**](unravel.image_io.io_nii): NIfTI I/O operations (binarize, convert data type, scale, etc).
