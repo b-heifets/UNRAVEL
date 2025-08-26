@@ -45,7 +45,7 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional args')
-    opts.add_argument('-i', '--input', help='Glob pattern(s) for input CSV files (e.g., "*.csv").', nargs='*', action=SM)
+    opts.add_argument('-i', '--input', help='Glob pattern(s) for input CSV files. Default: *.csv', default='*.csv', nargs='*', action=SM)
     opts.add_argument('-o', '--output', help='Output path for the concatenated CSV file. Default: concatenated_cell_type_proportions.csv in the current directory.', default=None, action=SM)
     opts.add_argument('-k', '--keep_list', help='Optional path to a text file listing which cell types (columns) to keep. Default: keep_cell_type_columns.txt in the current directory.', default=None, action=SM)
 
