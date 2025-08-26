@@ -4,9 +4,10 @@
 Use ``abca_merfish_filter`` or ``mf_filter`` from UNRAVEL to filter ABCA MERFISH cells based on columns and values in the cell metadata. 
 It integrates the filtering with the generation of `exp_df` and allows optional export of filtered data or the generation of updated 3D images.
 
-Notes:
+Note:
     - Columns to filter by: parcellation_substructure (default)
     - Values to filter by: e.g., ACB
+    - The input CSV may be previously filtered (e.g., ``abca_merfish_filter_by_mask``) or it may be the full cell metadata (cell_metadata.csv).
 
 Usage:
 ------
@@ -35,9 +36,10 @@ def parse_args():
     reqs.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata or input.csv by (e.g., ACB).', required=True,nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='Input CSV file containing cell metadata (from MERFISH). If omitted, default metadata will be loaded.', default=None, action=SM)
+    opts.add_argument('-i', '--input', help='Input CSV file containing MERFISH cell metadata. If omitted, cell_metadata.csv will be loaded.', default=None, action=SM)
     opts.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure \[default])', default=['parcellation_substructure'], nargs='*', action=SM)
-    reqs.add_argument('-o', '--output', help='Output path for the filtered df. Default: <input_stem>_filtered_<first_value>.csv', default=None, action=SM)
+    opts.add_argument('-o', '--output', help='Output path for the filtered df. Default: <input_stem>_filtered_<first_value>.csv', default=None, action=SM)
+    opts.add_argument('-n', '--neurons', help='Filter out non-neuronal cells. Default: False', action='store_true', default=False)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -117,6 +119,7 @@ def main():
     print("\nCell metadata:")
     print(f'{cell_df_joined}\n')
 
+
     # Print column names
     print(f"\nColumn names: {cell_df_joined.columns}\n")
 
@@ -129,6 +132,11 @@ def main():
     print("\nFiltered cell metadata shape:", filtered_df.shape)
     print("\n                                             First row:")
     print(filtered_df.iloc[0])
+
+    if args.neurons:
+        print("[green]Filtering out non-neuronal cells (class > 29)[/green]")
+        filtered_df = filtered_df[filtered_df['class'].str.split().str[0].astype(int) <= 29]
+
     print("Filtered cell metadata:")
     print(f'\n{filtered_df}\n')
     
