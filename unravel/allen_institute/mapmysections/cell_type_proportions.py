@@ -22,7 +22,7 @@ Usage:
     mms_ctp -i <input_path(s)> [-col subclass] [-rc parcellation_structure -r VISp] [-n] [-c] [-t] [-o output_path]
 
 Usage for MapMySections (VISp example):
---------------------------------------
+---------------------------------------
     mms_ctp -i <input_path(s)> -col subclass -rc parcellation_structure -r VISp -t -o VISp_subclass
 
 Usage for MapMySections (all regions):

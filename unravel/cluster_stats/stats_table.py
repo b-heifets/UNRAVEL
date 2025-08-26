@@ -27,6 +27,7 @@ def parse_args():
 def cluster_summary(csv_pattern, output):
     """
     Recursively find and concatenate CSV files matching the given pattern, sort by the first two columns if they exist, and save the result to the specified output file.
+
     Parameters:
     -----------
     csv_pattern : str

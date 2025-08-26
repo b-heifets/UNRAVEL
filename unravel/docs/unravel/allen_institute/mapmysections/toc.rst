@@ -10,7 +10,7 @@ unravel.allen_institute.mapmysections package
    segmentation_summary
    soma_in_grey
 
-.. automodule:: unravel.abca
+.. automodule:: unravel.allen_institute.mapmysections
    :members:
    :undoc-members:
    :show-inheritance:

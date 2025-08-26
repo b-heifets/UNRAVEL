@@ -13,7 +13,7 @@ Processing steps:
     - 4) Save the filtered cell metadata to a new CSV file
 
 Inputs:
-    - path/to/mask.nii.gz file(s) or glob patterns (e.g., '*.nii.gz')
+    - path/to/mask.nii.gz file(s) or glob patterns (e.g., `*.nii.gz`)
     - Path to the root directory of the Allen Brain Cell Atlas data (downloaded from Allen Brain Atlas)
 
 Outputs:

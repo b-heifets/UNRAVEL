@@ -4,25 +4,22 @@
 Use ``tabular_key_value_to_table`` or ``kv_table`` from UNRAVEL to convert structured key-value data into a tabular format.
 
 Input file format:
-------------------
-    Format: <key><delimiter><value>, one pair per line or row
-    Example (txt or 2-col csv/xlsx):
-        cluster,1
-        Pearson correlation,-0.1567
-        p-value,0.2359
-        cluster,2
-        Pearson correlation,0.1376
-        p-value,0.4449
-
-    Groups of key-value pairs (separated by repeated first key) form rows in the output.
+    - Format: <key><delimiter><value>, one pair per line or row
+    - Groups of key-value pairs (separated by repeated first key) form rows in the output.
+    - Example (txt or 2-col csv/xlsx):
+    - cluster,1
+    - Pearson correlation,-0.1567
+    - p-value,0.2359
+    - cluster,2
+    - Pearson correlation,0.1376
+    - p-value,0.4449
 
 Output file format:
-    A tabular file (.csv or .xlsx) where each key becomes a column header, and each group forms a row.
-    Example:
-        | cluster | Pearson_correlation | p_value |
-        |---------|---------------------|---------|
-        | 1       | -0.1567             | 0.2359  |
-        | 2       | 0.1376              | 0.4449  |
+    - A tabular file (.csv or .xlsx) where each key becomes a column header, and each group forms a row.
+    - Example:
+    - cluster, Person_correlation, p_value
+    - 1, -0.1567, 0.2359
+    - 2, 0.1376, 0.4449
 
 Usage:
 ------

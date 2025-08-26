@@ -19,6 +19,7 @@ Subpackages
    image_io/toc
    image_tools/toc
    utilities/toc
+   tabular/toc
    allen_institute/toc
 
 Module contents

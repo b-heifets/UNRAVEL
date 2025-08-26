@@ -5,7 +5,7 @@ Use ``tabular_edit_columns`` (``edit_cols``) from UNRAVEL to drop, keep, rename,
 
 Usage:
 ------
-    tabular_edit_columns -i "path/to/data/*.csv" [-d col1 col2 ... or -c col2 col1 ...] [--rename OLD=NEW ...] [-o output_dir/] [-v]
+    `tabular_edit_columns -i 'path/to/data/*.csv' [-d col1 col2 ... or -c col2 col1 ...] [--rename OLD=NEW ...] [-o output_dir/] [-v]`
 """
 
 import pandas as pd
@@ -42,19 +42,14 @@ def edit_columns(file_path, drop_cols, cols, rename=None, output_dir=None, verbo
     -----------
     file_path : str
         Path to the input file (CSV or XLSX).
-    
     drop_cols : list or None
         List of column names to drop.
-
     cols : list or None
         List of column names to keep and reorder (all others will be dropped).
-
     rename : list or None
         List of strings in the format OLD=NEW to rename columns.
-
     output_dir : str or None
-        Path to the output directory. If None, saves in "edit_cols" directory next to the input file.
-
+        Path to the output directory. If None, saves in ``edit_cols`` directory next to the input file.
     verbose : bool
         If True, prints additional information during processing.
     """

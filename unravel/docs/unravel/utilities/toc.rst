@@ -7,7 +7,7 @@ unravel.utilities package
    get_samples
    region_info
    aggregate_files_from_sample_dirs
-   aggregate_files_w_recursive_search
+   aggregate_files_recursively
    clean_tif_dirs
    prepend_conditions
    process_samples

@@ -1,9 +1,9 @@
-.. _unravel.allen_institute.mapmysections.soma_in_grey:
+.. _unravel.allen_institute.mapmysections.soma_ratio:
 
-unravel.allen_institute.mapmysections.soma_in_grey module
-=========================================================
+unravel.allen_institute.mapmysections.soma_ratio module
+=======================================================
 
-.. automodule:: unravel.allen_institute.mapmysections.soma_in_grey
+.. automodule:: unravel.allen_institute.mapmysections.soma_ratio
    :members:
    :undoc-members:
    :show-inheritance:

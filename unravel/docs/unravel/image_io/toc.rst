@@ -16,6 +16,7 @@ unravel.image_io package
    reorient_nii
    tif_to_tifs
    zarr_to_nii
+   zarr_compress
    points_to_img
    img_to_points
 

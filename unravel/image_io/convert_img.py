@@ -25,11 +25,11 @@ conv -i 'sample.czi' -c 1 -s .nii.gz
 
 Usage to convert a single .tif series to .nii.gz:
 -------------------------------------------------
-conv -i 'sample*/tifs/' -x 3.5 -z 6 -s .nii.gz 
+`conv -i 'sample*/tifs/' -x 3.5 -z 6 -s .nii.gz`
 
 Usage to recursively convert all dirs with tif files to .zarr:
 --------------------------------------------------------------
-conv -i '**/*.tif' -x 3.5 -z 6 --save_as .zarr 
+`conv -i '**/*.tif' -x 3.5 -z 6 --save_as .zarr`
 """
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
