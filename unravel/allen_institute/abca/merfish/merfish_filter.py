@@ -36,8 +36,8 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help='Input CSV file containing cell metadata (from MERFISH). If omitted, default metadata will be loaded.', default=None, action=SM)
-    opts.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure \[default])', default='parcellation_substructure', nargs='*', action=SM)
-    reqs.add_argument('-o', '--output', help='Output path for the filtered df. Default: [input_stem]_filtered_[first_value].csv', default=None, action=SM)
+    opts.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure \[default])', default=['parcellation_substructure'], nargs='*', action=SM)
+    reqs.add_argument('-o', '--output', help='Output path for the filtered df. Default: <input_stem>_filtered_<first_value>.csv', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
