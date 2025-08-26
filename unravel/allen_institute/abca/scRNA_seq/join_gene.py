@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 """
-Use ``./RNAseq_join_expression_data.py`` from UNRAVEL to join cell metadata with scRNA-seq expression data from the Allen Brain Cell Atlas.
+Use ``abca_scRNAseq_join_gene`` from UNRAVEL to join cell metadata with scRNA-seq expression data from the Allen Brain Cell Atlas.
 
 Prereqs:
-    - RNAseq_expression.py script to generate the input expression data.
+    - ``abca_scRNAseq_expression`` to generate the input expression data for the specified genes.
     - Cell metadata from the Allen Brain Cell Atlas (use ``abca_cache`` to download).
 
 Output:
@@ -12,7 +12,7 @@ Output:
 
 Usage:
 ------
-    ./RNAseq_join_expression_data.py -i path/filtered_cells.csv -b path/base_dir -s species [-v]
+    abca_scRNAseq_join_gene -i path/filtered_cells.csv -b path/base_dir -s species [-v]
 
 """
 
@@ -21,7 +21,7 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from _other.drafts._ABCA.RNAseq_expression import load_RNAseq_cell_metadata
+from unravel.allen_institute.abca.scRNA_seq.expression import load_RNAseq_cell_metadata
 import unravel.allen_institute.abca.merfish.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 

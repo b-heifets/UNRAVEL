@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``./merfish_join_expression_data.py`` from UNRAVEL to join [filtered] cell metadata with MERFISH expression data from the Allen Brain Cell Atlas.
+Use ``abca_merfish_join_gene`` ``mjg`` from UNRAVEL to join [filtered] cell metadata with MERFISH expression data for a specified gene from the ABCA.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/merfish_tutorial_part_2b.html
@@ -11,7 +11,7 @@ Output:
 
 Usage:
 ------
-    ./merfish_join_expression_data.py -i path/filtered_cells.csv -b path/base_dir -g gene -gb groupby [-v]
+    abca_merfish_join_gene -i path/filtered_cells.csv -b path/base_dir -g gene [-im] [-v]
 
 """
 

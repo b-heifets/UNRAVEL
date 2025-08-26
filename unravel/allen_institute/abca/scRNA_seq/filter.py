@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``abca_scRNA-seq_filter`` or ``s_filter`` from UNRAVEL to filter ABCA scRNA-seq cells based on columns and values in the cell metadata.
+Use ``abca_scRNAseq_filter`` or ``rna_filter`` from UNRAVEL to filter ABCA scRNA-seq cells based on columns and values in the cell metadata.
 
 Notes:
     - region_of_interest_acronym: ACA, AI, AUD, AUD-TEa-PERI-ECT, CB, CTXsp, ENT, HIP, HY, LSX, MB, MO-FRP, MOp, MY, OLF, P, PAL, PL-ILA-ORB, RHP, RSP, sAMY, SS-GU-VISC, SSp, STRd, STRv, TEa-PERI-ECT, TH, VIS, VIS-PTLp
@@ -13,7 +13,7 @@ Next steps:
 
 Usage:
 ------
-    abca_scRNA-seq_filter -b path/base_dir [--columns] [--values] [-o path/output.csv] [-v]
+    abca_scRNAseq_filter -b path/base_dir [--columns] [--values] [-o path/output.csv] [-v]
 """
 
 import anndata

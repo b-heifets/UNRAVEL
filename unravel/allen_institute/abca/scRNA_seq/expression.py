@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``./RNAseq_expression`` from UNRAVEL to extract expression data for specific genes from the Allen Brain Cell Atlas RNA-seq data.
+Use ``abca_scRNAseq_expression`` or ``rna_exp`` from UNRAVEL to extract expression data for specific genes from the Allen Brain Cell Atlas RNA-seq data.
 
 Note:
     - https://alleninstitute.github.io/abc_atlas_access/notebooks/general_accessing_10x_snRNASeq_tutorial.html
@@ -12,15 +12,15 @@ Note:
 
 Usage:
 ------
-    ./RNAseq_expression -b path/base_dir -g genes [-s mouse | human] [-c Neurons | Nonneurons] [-r region] [-d log2 | raw ] [-o output] [-v]
+    abca_scRNAseq_expression -b path/base_dir -g genes [-s mouse | human] [-c Neurons | Nonneurons] [-r region] [-d log2 | raw ] [-o output] [-v]
 
 Usage for humans:
 -----------------
-    ./RNAseq_expression -b path/base_dir -g genes -c Neurons [-o output_dir] [-v]
+    abca_scRNAseq_expression -b path/base_dir -g genes -c Neurons [-o output_dir] [-v]
 
 Usage for mice:
 ---------------
-    ./RNAseq_expression -b path/base_dir -g genes -r region [-o output_dir] [-v]
+    abca_scRNAseq_expression -b path/base_dir -g genes -r region [-o output_dir] [-v]
 """
 
 from typing import List

@@ -4,8 +4,11 @@
 Use ``abca_sunburst_expression`` or ``sbe`` from UNRAVEL to calculate mean expression for all cell types in the ABCA and make a sunburst plot.
 
 Prereqs: 
-    - merfish_filter.py and merfish_join_expression_data.py
-    - Or: RNAseq_expression.py and RNAseq_filter.py
+    - ``abca_merfish_filter`` and ``merfish_join_expression_data.py``
+    - Or: ``RNAseq_expression.py`` and ``RNAseq_filter.py``
+
+Outputs:
+    - path/input_sunburst_expression_thr<value>.csv, input_mean_expression_lut.txt, and input_percent_expression_thr<value>_lut.txt
 
 Note:
     - LUT location: unravel/core/csvs/ABCA/WMB_sunburst_colors.csv
@@ -34,6 +37,7 @@ from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
 from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
+# TODO: Update docstring with commands for other scripts in prereqs. Mean for all cells not saved yet.
 
 def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
