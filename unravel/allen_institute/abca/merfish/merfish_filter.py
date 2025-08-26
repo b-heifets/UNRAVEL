@@ -24,7 +24,7 @@ from rich.traceback import install
 import unravel.allen_institute.abca.merfish.merfish as mf
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration 
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import get_stem, log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -32,12 +32,12 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
-    reqs.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata or input.csv by (e.g., ACB).', nargs='*', action=SM)
-    reqs.add_argument('-o', '--output', help='Output path for the filtered df. Default: None', default=None, action=SM)
+    reqs.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata or input.csv by (e.g., ACB).', required=True,nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help='Input CSV file containing cell metadata (from MERFISH). If omitted, default metadata will be loaded.', default=None, action=SM)
     opts.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure \[default])', default='parcellation_substructure', nargs='*', action=SM)
+    reqs.add_argument('-o', '--output', help='Output path for the filtered df. Default: [input_stem]_filtered_[first_value].csv', default=None, action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
@@ -131,8 +131,12 @@ def main():
     print(filtered_df.iloc[0])
     print("Filtered cell metadata:")
     print(f'\n{filtered_df}\n')
-
-    filtered_df.to_csv(args.output)
+    
+    # Save the filtered DataFrame
+    stem = get_stem(args.input) if args.input else "cell_metadata"
+    first_value = args.values[0]
+    output_path = args.output if args.output else Path().cwd() / f"{stem}_filtered_{first_value}.csv"
+    filtered_df.to_csv(output_path)
 
     print("\nUnique parcellation substructures:")
     print(cell_df_joined['parcellation_substructure'].unique())
