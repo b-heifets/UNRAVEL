@@ -334,3 +334,7 @@ mms_cell_type_proportions = "unravel.allen_institute.mapmysections.cell_type_pro
 ctp = "unravel.allen_institute.mapmysections.cell_type_proportions:main"
 mms_cell_type_proportions_concat = "unravel.allen_institute.mapmysections.cell_type_proportions_concat:main"
 ctpc = "unravel.allen_institute.mapmysections.cell_type_proportions_concat:main"
+mms_soma_ratio = "unravel.allen_institute.mapmysections.soma_ratio:main"
+sr = "unravel.allen_institute.mapmysections.soma_ratio:main"
+mms_seg_summary = "unravel.allen_institute.mapmysections.segmentation_summary:main"
+seg_summary = "unravel.allen_institute.mapmysections.segmentation_summary:main"
