@@ -16,7 +16,7 @@ Note:
 
 Usage:
 ------
-    csv_concat_with_source -i '<asterisk>.csv' [-o output.csv] [-v]
+    csv_concat_with_source [-i '<asterisk>.csv'] [-o output.csv] [-v]
 """
 
 import pandas as pd
@@ -32,8 +32,8 @@ def parse_args():
     parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
     opts = parser.add_argument_group('Optional arguments')
-    opts.add_argument('-i', '--input', help='Path(s) or glob pattern(s) for input CSV files (e.g., "*.csv").', nargs='*', action=SM)
-    opts.add_argument('-o', '--output', help='Output CSV path. Default: concatenated_output.csv', default='concatenated_output.csv', action=SM)
+    opts.add_argument('-i', '--input', help="Path(s) or glob pattern(s) for input CSV files. Default: '*.csv'", default='*.csv', nargs='*', action=SM)
+    opts.add_argument('-o', '--output', help="Output CSV path. Default: concatenated_output.csv", default='concatenated_output.csv', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Verbose output.', action='store_true')
