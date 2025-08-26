@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 
 """
-Concatenate multiple CSV files, add a 'source_file' column, and sort rows by that column.
+Use ``mms_concat_with_source`` or ``cws`` from UNRAVEL to concatenate multiple CSV files, include a 'source_file' column, and sort rows by that column.
 
-Features:
----------
-- Loads all matching CSV files.
-- Adds a 'source_file' column (file stem).
-- Handles empty files by filling rows with 0s for all expected columns.
-- Sorts all rows by 'source_file'.
+Prereqs:
+    - ``mms_soma_ratio`` or ``mms_seg_summary``
+    - Aggregate their outputs
+    - For ``mms_seg_summary``, use ``agg`` to aggregate results across samples and cd to the target directory.
+
+Note:
+    - This command loads all matching CSV files.
+    - It adds a 'source_file' column (file stem).
+    - It handles empty files by filling rows with 0s for all expected columns.
+    - It sorts all rows by 'source_file'.
 
 Usage:
 ------
@@ -21,7 +25,7 @@ from rich import print
 from rich.traceback import install
 
 from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
-from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
@@ -29,7 +33,7 @@ def parse_args():
 
     opts = parser.add_argument_group('Optional arguments')
     opts.add_argument('-i', '--input', help='Path(s) or glob pattern(s) for input CSV files (e.g., "*.csv").', nargs='*', action=SM)
-    opts.add_argument('-o', '--output', help='Output CSV path.', default='concatenated_output.csv', action=SM)
+    opts.add_argument('-o', '--output', help='Output CSV path. Default: concatenated_output.csv', default='concatenated_output.csv', action=SM)
 
     general = parser.add_argument_group('General arguments')
     general.add_argument('-v', '--verbose', help='Verbose output.', action='store_true')
