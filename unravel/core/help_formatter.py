@@ -12,7 +12,7 @@ Classes:
           all nargs configurations.
     - RichArgumentParser: An enhanced ArgumentParser that integrates custom help message formatting and 
                             handling, including filtering and styling of argparse help text.
-    - CustomHelpAction: An argparse Action that displays a richly formatted help message, integrating the script’s 
+    - CustomHelpAction: An argparse Action that displays a richly formatted help message, integrating the script's 
                         docstring.
 
 Functions:
