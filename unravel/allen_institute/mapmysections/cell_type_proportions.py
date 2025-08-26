@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``mms_cell_type_proportions`` or ``ctp`` from UNRAVEL to calculate cell type proportions for an ontological level.
+Use ``mms_cell_type_proportions`` or ``mms_ctp`` from UNRAVEL to calculate cell type proportions for an ontological level.
 
 Prereqs: 
     - ``abca_merfish_filter`` or ``abca_merfish_filter_by_mask`` to generate the input cell metadata.
@@ -18,13 +18,16 @@ Next steps:
     - To summarize cell type proportions across multiple files (like in MapMySections), usemms_concat`` to concatenate multiple CSVs into one file
 
 Usage:
-------mms -i <input_path(s)> [-col subclass] [-rc parcellation_structure -r VISp] [-n] [-c] [-t] [-o output_path]
+------
+    mms_ctp -i <input_path(s)> [-col subclass] [-rc parcellation_structure -r VISp] [-n] [-c] [-t] [-o output_path]
 
 Usage for MapMySections (VISp example):
---------------------------------------mms -i <input_path(s)> -col subclass -rc parcellation_structure -r VISp -t -o VISp_subclass
+--------------------------------------
+    mms_ctp -i <input_path(s)> -col subclass -rc parcellation_structure -r VISp -t -o VISp_subclass
 
 Usage for MapMySections (all regions):
--------------------------------------mms -i <input_path(s)> -col subclass -t -o all_regions_subclass
+--------------------------------------
+    mms_ctp -i <input_path(s)> -col subclass -t -o all_regions_subclass
 """
 
 import pandas as pd

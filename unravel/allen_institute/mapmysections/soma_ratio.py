@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Use ``mms_soma_ratio`` or ``sr`` from UNRAVEL to compute the proportion of somata voxels in specified atlas regions.
+Use ``mms_soma_ratio`` or ``mms_sr`` from UNRAVEL to compute the proportion of somata voxels in specified atlas regions.
 
 Note:
     - We used this to compute the proportion of voxels in the anterior commissure containing somata. 

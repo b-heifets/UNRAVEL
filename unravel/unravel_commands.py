@@ -772,6 +772,38 @@ def main():
                 "alias": "gta_os"
             },
         },
+        "MapMySections (MMS)": {
+            "mms_soma_ratio": {
+                "module": "unravel.allen_institute.mapmysections.soma_ratio",
+                "description": "Check for oligodendrocytes: compute soma voxel ratio in the anterior commissure.",
+                "common": False,
+                "alias": "mms_sr"
+            },
+            "mms_concat_with_source": {
+                "module": "unravel.allen_institute.mapmysections.concat_with_source",
+                "description": "Concatenate multiple CSV files with a source_file column (for mms_sr and mms_ss outputs).",
+                "common": False,
+                "alias": "mms_c"
+            },
+            "mms_cell_type_proportions": {
+                "module": "unravel.allen_institute.mapmysections.cell_type_proportions",
+                "description": "Calculate cell type proportions for an ontological level, organized based on the MapMySections challenge.",
+                "common": False,
+                "alias": "mms_ctp"
+            },
+            "mms_cell_type_proportions_concat": {
+                "module": "unravel.allen_institute.mapmysections.cell_type_proportions_concat",
+                "description": "Calculate cell type proportions for an ontological level, organized based on the MapMySections challenge.",
+                "common": False,
+                "alias": "mms_ctp"
+            },
+            "mms_seg_summary": {
+                "module": "unravel.allen_institute.mapmysections.segmentation_summary",
+                "description": "Summarize the prevalence of voxels for somata, endothelial cells, and astrocytes from Ilastik segmentations.",
+                "common": False,
+                "alias": "mms_ss"
+            },
+        },
         "Tabular data": {
             "tabular_edit_columns": {
                 "module": "unravel.tabular.edit_columns",

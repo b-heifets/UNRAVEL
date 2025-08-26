@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``mms_seg_summary`` or ``seg_summary`` from UNRAVEL to summarize the prevalence of voxels for somata, endothelial cells, and astrocytes from Ilastik segmentations.
+Use ``mms_seg_summary`` or ``mms_ss`` from UNRAVEL to summarize the prevalence of voxels for somata, endothelial cells, and astrocytes from Ilastik segmentations.
 
 Note:
     - Designed for MMS segmentations of somata (label 1), endothelial cells (3), and astrocytes (4).

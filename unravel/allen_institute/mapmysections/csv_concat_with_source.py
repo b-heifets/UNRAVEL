@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``mms_concat_with_source`` or ``cws`` from UNRAVEL to concatenate multiple CSV files, include a 'source_file' column, and sort rows by that column.
+Use ``mms_concat_with_source`` or ``mms_c`` from UNRAVEL to concatenate multiple CSV files, include a 'source_file' column, and sort rows by that column.
 
 Prereqs:
     - ``mms_soma_ratio`` or ``mms_seg_summary``
