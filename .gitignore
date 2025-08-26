@@ -101,8 +101,8 @@ venv.bak/
 .Spotlight-V100
 .Trashes
 
-# Pickle file from Sphinx 
-unravel/docs/_build/doctrees/environment.pickle
-
 # Log from UNRAVEL
 .command_log.txt
+
+# Build directory for Sphinx documentation
+unravel/docs/_build/
