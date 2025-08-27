@@ -681,9 +681,15 @@ def main():
             },
             "abca_merfish": {
                 "module": "unravel.allen_institute.abca.merfish.merfish",
-                "description": "Plot MERFISH data from the ABCA.",
+                "description": "Plot MERFISH data from the ABCA and utils.",
                 "common": True,
                 "alias": "mf"
+            },
+            "abca_merfish_slice": {
+                "module": "unravel.allen_institute.abca.merfish.merfish",
+                "description": "Plot MERFISH data from the ABCA.",
+                "common": True,
+                "alias": "mf_slice"
             },
             "abca_merfish_filter": {
                 "module": "unravel.allen_institute.abca.merfish.merfish_filter",
