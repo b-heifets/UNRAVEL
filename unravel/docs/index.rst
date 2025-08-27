@@ -49,6 +49,9 @@ UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet
     * Voxel-wise analysis of fluorescent signals and cluster correction
     * Validation of hot/cold spots via cell/label density quantification at cellular resolution
 * `UNRAVEL GitHub repository <https://github.com/b-heifets/UNRAVEL/tree/main>`_
+* `UNRAVEL can be installed via the Python Package Index (PyPI) <https://pypi.org/project/heifetslab-unravel/>`_ with this command:
+  .. code-block:: bash
+      pip install heifetslab-unravel
 * `Initial UNRAVEL publication <https://www.nature.com/articles/s41386-023-01613-4>`_
 * UNRAVEL was developed by `the Heifets lab <https://heifetslab.stanford.edu/>`_ and `TensorAnalytics <https://sites.google.com/view/tensoranalytics/home?authuser=0>`_
 * Additional support/guidance was provided by:
@@ -73,6 +76,7 @@ Getting started
 * `Guide on immunofluorescence staining, iDISCO+, & lightsheet fluorescence microscopy <https://docs.google.com/document/d/16yowBhiBQWz8_VX2t9Rf6Xo3Ub4YPYD6qeJP6vJo6P4/edit?usp=sharing>`_
 * :doc:`installation`
 * :doc:`guide`
+* :doc:`guide_mms`
 * :doc:`unravel/toc`
 
 
@@ -98,7 +102,7 @@ If you have any questions, suggestions, or are interested in collaborations and 
 
 Developers
 ----------
-* **Daniel Ryskamp Rijsketic** (lead developer and maintainer) - `danrijs@stanford.edu <mailto:danrijs@stanford.edu>`_
+* **Daniel Ryskamp Rijsketic** (developer and maintainer) - `danrijs@stanford.edu <mailto:danrijs@stanford.edu>`_
 * **Austen Casey** (developer) - `abcasey@stanford.edu <mailto:abcasey@stanford.edu>`_
 * **MetaCell** (UNRAVEL visualizer developers) - `info@metacell.us <info@metacell.us>`_
 * **Boris Heifets** (PI) - `bheifets@stanford.edu <mailto:bheifets@stanford.edu>`_
@@ -125,10 +129,11 @@ Main dependencies
 * `pandas <https://pandas.pydata.org/>`_
 * `cc3d <https://pypi.org/project/connected-components-3d/>`_
 * Registration and warping workflows were inspired by `MIRACL <https://miracl.readthedocs.io/en/latest/>`_
-* We adapted `LSFM/iDISCO+ atlases <https://pubmed.ncbi.nlm.nih.gov/33063286/>`_ from `Gubra <https://www.gubra.dk/cro-services/3d-imaging/>`_
+* We warped this `LSFM/iDISCO+ average template brain <https://pubmed.ncbi.nlm.nih.gov/33063286/>`_ to Allen brain atlas space (CCFv3) and refined alignment. 
 
 Support is welcome for
 ----------------------
+
 * Analysis of new datasets
 * Development of new features
 * Maintenance of the codebase
@@ -144,6 +149,7 @@ Support is welcome for
 
    installation
    guide
+   guide_mms
    unravel/toc
 
 .. raw:: html
