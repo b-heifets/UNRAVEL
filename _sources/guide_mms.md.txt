@@ -12,7 +12,7 @@ Example MapMySections results.
 ```
 
 ```{figure} _static/MapMySections_flow_chart.png
-:width: 50%
+:width: 75%
 :align: center
 MapMySections workflow.
 ```
