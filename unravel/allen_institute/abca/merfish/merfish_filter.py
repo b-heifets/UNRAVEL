@@ -9,9 +9,13 @@ Note:
     - Values to filter by: e.g., ACB
     - The input CSV may be previously filtered (e.g., ``abca_merfish_filter_by_mask``) or it may be the full cell metadata (cell_metadata.csv).
 
+    
+Outputs:
+    - Filtered cell metadata CSV file (default: <input_stem>_filtered[_<first_value>][_neurons].csv)
+    
 Usage:
 ------
-    ./abca_merfish_filter -b path/base_dir [--columns] [--values] [-o path/output.csv] [-v]
+    abca_merfish_filter -b path/base_dir [--columns] [--values] [-o path/output.csv] [-n] [-v]
 """
 
 import anndata
@@ -33,9 +37,9 @@ def parse_args():
 
     reqs = parser.add_argument_group('Required arguments')
     reqs.add_argument('-b', '--base', help='Path to the root directory of the Allen Brain Cell Atlas data', required=True, action=SM)
-    reqs.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata or input.csv by (e.g., ACB).', required=True,nargs='*', action=SM)
 
     opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-val', '--values', help='Values to filter MERFISH cell metadata or input.csv by (e.g., ACB).', nargs='*', action=SM)
     opts.add_argument('-i', '--input', help='Input CSV file containing MERFISH cell metadata. If omitted, cell_metadata.csv will be loaded.', default=None, action=SM)
     opts.add_argument('-c', '--columns', help='Columns to filter MERFISH cell metadata by (e.g., parcellation_substructure \[default])', default=['parcellation_substructure'], nargs='*', action=SM)
     opts.add_argument('-o', '--output', help='Output path for the filtered df. Default: <input_stem>_filtered_<first_value>.csv', default=None, action=SM)
@@ -128,7 +132,12 @@ def main():
         raise ValueError(f"Missing expected column(s) in input file: {missing_cols}")
     
     # Filter the DataFrame
-    filtered_df = filter_dataframe(cell_df_joined, args.columns, args.values)
+    if args.values:
+        filtered_df = filter_dataframe(cell_df_joined, args.columns, args.values)
+    else:
+        filtered_df = cell_df_joined.copy()
+
+
     print("\nFiltered cell metadata shape:", filtered_df.shape)
     print("\n                                             First row:")
     print(filtered_df.iloc[0])
@@ -142,8 +151,15 @@ def main():
     
     # Save the filtered DataFrame
     stem = get_stem(args.input) if args.input else "cell_metadata"
-    first_value = args.values[0]
-    output_path = args.output if args.output else Path().cwd() / f"{stem}_filtered_{first_value}.csv"
+    if args.values:
+        suffix = f'_{args.values[0]}'
+        if args.neurons:
+            suffix += '_neurons'
+    elif args.neurons:
+        suffix = '_neurons'
+    else:
+        suffix = ''
+    output_path = args.output if args.output else Path().cwd() / f"{stem}_filtered{suffix}.csv"
     filtered_df.to_csv(output_path)
 
     print("\nUnique parcellation substructures:")
