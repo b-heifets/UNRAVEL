@@ -1,0 +1,914 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>MapMySections Guide &#8212; UNRAVEL docs</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css?v=872d93e8" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=8d563738"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guide_mms';</script>
+    <link rel="icon" href="_static/favicon.png"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="unravel package" href="unravel/toc.html" />
+    <link rel="prev" title="LSFM/STPT Guide" href="guide.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">UNRAVEL docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="guide.html">
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="guide.html">
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"></div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">MapMySections Guide</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="mapmysections-guide">
+<h1>MapMySections Guide<a class="headerlink" href="#mapmysections-guide" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p>This guide walks through our workflow for the <strong>Allen Institute MapMySections challenge</strong>.</p>
+<ul>
+<li><p>Background: <a class="reference external" href="https://alleninstitute.org/events/mapmysections/">MapMySections</a></p></li>
+<li><p>Webinar: <a class="reference external" href="https://alleninstitute.org/events/cell_type_az_webinars/">Cell Type AZ Webinars</a></p></li>
+</ul>
+</li>
+</ul>
+<div class="note admonition">
+<p class="admonition-title">Input Options</p>
+<ul class="simple">
+<li><p>If you have <strong>your own LSFM/STPT images</strong>, skip ahead to the <strong>Segmentation</strong> section.</p></li>
+<li><p>For more info, refer to our <a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html">LSFM/STPT Guide</a>.</p></li>
+<li><p>Otherwise, download images from the <a class="reference external" href="https://portal.brain-map.org/genetic-tools/genetic-tools-atlas">Genetic Tools Atlas (GTA)</a>.</p></li>
+<li><p>If needed, update <code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">&lt;sample</span> <span class="pre">folder</span> <span class="pre">pattern&gt;</span></code> and <code class="docutils literal notranslate"><span class="pre">-d</span> <span class="pre">&lt;path(s)</span> <span class="pre">to</span> <span class="pre">folder(s)&gt;</span></code> when running commands for batch processing of all brains.</p></li>
+</ul>
+</div>
+<hr class="docutils" />
+<br>
+<section id="set-up">
+<h2>Set Up<a class="headerlink" href="#set-up" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>To set up and activate a virtual environment, see the <a class="reference external" href="https://b-heifets.github.io/UNRAVEL/installation.html#setting-up-a-virtual-environment-for-installing-python-dependencies-with-venv">installation guide</a>.</p></li>
+<li><p>Installation with extra dependencies for using the Allen Brain Cell (ABCA) atlas cache:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path/to/where/you/want/UNRAVEL&gt;
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/b-heifets/UNRAVEL.git
+<span class="nb">cd</span><span class="w"> </span>UNRAVEL
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[abca]&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Verify UNRAVEL commands are working</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>abca_cache<span class="w"> </span>-h<span class="w">  </span><span class="c1"># use &lt;command&gt; -h to view help for each command</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Updating code</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path/to/UNRAVEL&gt;
+git<span class="w"> </span>pull
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<span class="nb">cd</span><span class="w"> </span>-<span class="w">   </span><span class="c1"># Return to prior working dir</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Download ABCA metadata</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;path/to/where/you/want/ABCA_download_root&gt;<span class="w"> </span>
+abca_cache<span class="w"> </span>-d<span class="w"> </span>MERFISH-C57BL6J-638850<span class="w"> </span>MERFISH-C57BL6J-638850-CCF<span class="w"> </span>--dl_metadata
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Save the <strong>ABCA_download_root</strong> path (e.g., required later for <code class="docutils literal notranslate"><span class="pre">abca_merfish_filter_by_mask</span></code>).</p></li>
+</ul>
+<hr class="docutils" />
+<br>
+</section>
+<section id="genetic-tools-atlas-gta-data">
+<h2>Genetic Tools Atlas (GTA) Data<a class="headerlink" href="#genetic-tools-atlas-gta-data" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;/path/to/your/data<span class="w"> </span>or<span class="w"> </span>/path/to/where/you/want/GTA/data&gt;
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Visit the <a class="reference external" href="https://portal.brain-map.org/genetic-tools/genetic-tools-atlas">Genetic Tools Atlas (GTA)</a></p></li>
+<li><p>Filter <strong>modality</strong> by <strong>STPT</strong></p></li>
+<li><p>Download <strong>metadata</strong></p></li>
+<li><p>Unzip it and move SpecimenMetadata.csv to the current working directory and optionally run:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gta_simplify_metadata<span class="w">  </span><span class="c1"># Outputs: SpecimenMetadata_subset.csv</span>
+</pre></div>
+</div>
+<section id="download-zarr-images">
+<h3>Download Zarr Images<a class="headerlink" href="#download-zarr-images" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># One experiment at resolution level 3</span>
+gta_download<span class="w"> </span>-e<span class="w"> </span><span class="m">1109210299</span><span class="w"> </span>-l<span class="w"> </span><span class="m">3</span>
+
+<span class="c1"># From metadata file</span>
+gta_download<span class="w"> </span>-c<span class="w"> </span>SpecimenFileManifest.csv<span class="w"> </span>-l<span class="w"> </span><span class="m">3</span><span class="w"> </span>-col<span class="w"> </span><span class="s1">&#39;Image Series ID&#39;</span>
+
+<span class="c1"># From simplified metadata</span>
+gta_download<span class="w"> </span>-c<span class="w"> </span>SpecimenMetadata_subset.csv<span class="w"> </span>-l<span class="w"> </span><span class="m">3</span><span class="w"> </span>-col<span class="w"> </span><span class="s1">&#39;Image Series ID&#39;</span>
+
+<span class="c1"># From MapMySections entrant dataset (first copy sheet to a csv)</span>
+gta_download<span class="w"> </span>-c<span class="w"> </span>MapMySections_EntrantData_Test_Set.csv<span class="w"> </span>-l<span class="w"> </span><span class="m">3</span><span class="w"> </span>-col<span class="w"> </span><span class="s1">&#39;STPT Data File Path&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Output: GTA_level_3/*.zarr</p></li>
+</ul>
+</section>
+<section id="convert-zarr-to-tiff">
+<h3>Convert Zarr to TIFF<a class="headerlink" href="#convert-zarr-to-tiff" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>GTA_level_3
+conv<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.zarr&#39;</span><span class="w"> </span>-s<span class="w"> </span>.tif<span class="w"> </span>-c<span class="w"> </span><span class="m">0</span><span class="w"> </span>-o<span class="w"> </span>red
+conv<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.zarr&#39;</span><span class="w"> </span>-s<span class="w"> </span>.tif<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span><span class="w"> </span>-o<span class="w"> </span>green
+rm<span class="w"> </span>-rf<span class="w"> </span>*.zarr<span class="w">  </span><span class="c1"># optional</span>
+</pre></div>
+</div>
+</section>
+<section id="organize-tiff-directories-into-sample-folders">
+<h3>Organize TIFF directories into sample folders<a class="headerlink" href="#organize-tiff-directories-into-sample-folders" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gta_org_samples
+<span class="nb">cd</span><span class="w"> </span>TIFFs
+</pre></div>
+</div>
+<div class="hint dropdown admonition">
+<p class="admonition-title">Optionally Crop Brains</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Adjust the channel (tif directory), threshold, and padding if needed</span>
+gta_auto_crop<span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span><span class="c1"># Green channel cropping for samples with red labeling</span>
+gta_auto_crop<span class="w"> </span>-d<span class="w"> </span>green<span class="w"> </span>-i<span class="w"> </span>red
+gta_auto_crop<span class="w"> </span>-d<span class="w"> </span>dual<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span><span class="c1"># or -i red </span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Inspect brain outlines with Fiji, napari, or viu (this determines cropping)</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>agg<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;bbox/*_aip_outline.tif&#39;</span><span class="w"> </span>-td<span class="w"> </span>auto_crop_check<span class="w"> </span>-a<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+<span class="nb">cd</span><span class="w"> </span>auto_crop_check
+
+<span class="c1"># If viu and imagemagick are installed, quickly view images with:</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>*.tif<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;\n</span><span class="nv">$i</span><span class="s2">&quot;</span><span class="p">;</span><span class="w"> </span>magick<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$i</span><span class="s2">&quot;</span><span class="w"> </span>-auto-level<span class="w"> </span>tmp.jpg<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>viu<span class="w"> </span>tmp.jpg<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>rm<span class="w"> </span>tmp.jpg<span class="p">;</span><span class="w"> </span>echo<span class="p">;</span><span class="w"> </span><span class="k">done</span>
+
+<span class="nb">cd</span><span class="w"> </span>..
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If cropping is satisfactory, apply cropping to the other channel (otherwise, adjust parameters for gta_auto_crop)</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>gta_bbox_crop<span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>-i<span class="w"> </span>red
+gta_bbox_crop<span class="w"> </span>-d<span class="w"> </span>green<span class="w"> </span>-i<span class="w"> </span>green
+gta_bbox_crop<span class="w"> </span>-d<span class="w"> </span>dual<span class="w"> </span>-i<span class="w"> </span>red<span class="w"> </span><span class="c1"># or -i green </span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Remove uncropped TIFFs to save disk space and speed up processing</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># If using bash, first run: shopt -s globstar</span>
+<span class="k">for</span><span class="w"> </span>d<span class="w"> </span><span class="k">in</span><span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>rm<span class="w"> </span>-rf<span class="w"> </span><span class="nv">$d</span>/**/red/<span class="w"> </span><span class="nv">$d</span>/**/green/<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<br>
+</section>
+</section>
+<section id="segmentation">
+<h2>Segmentation<a class="headerlink" href="#segmentation" title="Link to this heading">#</a></h2>
+<section id="install-ilastik-download-pretrained-project">
+<h3>Install Ilastik &amp; Download Pretrained Project<a class="headerlink" href="#install-ilastik-download-pretrained-project" title="Link to this heading">#</a></h3>
+<p>Download project: <a class="reference external" href="https://drive.google.com/drive/folders/13SJHuA85iOEmFxx44yPQ_Cgx-yntTPJi?usp=drive_link">Ilastik project folder</a></p>
+<p><strong>Training MMS sample IDs for input slices:</strong></p>
+<ul class="simple">
+<li><p>Astrocytes: 012, 021, 281</p></li>
+<li><p>Endothelial: 067, 099, 183</p></li>
+<li><p>Oligodendrocytes: 269, 359, 385</p></li>
+<li><p>Rest: Neurons</p></li>
+</ul>
+</section>
+<section id="segment-with-ilastik">
+<h3>Segment with Ilastik<a class="headerlink" href="#segment-with-ilastik" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Example (red channel)</span>
+seg_ilastik<span class="w"> </span>-ilp<span class="w"> </span>&lt;path&gt;/somata1_bkg2_endo3_astro4.ilp<span class="w"> </span>-i<span class="w"> </span>red<span class="w"> </span>-o<span class="w"> </span>MMS_seg<span class="w"> </span>-l<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="w"> </span>-rmo<span class="w"> </span>-v<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-ie<span class="w"> </span>&lt;path_to_ilastik_executable&gt;<span class="w"> </span>-d<span class="w"> </span>red
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Repeat for <strong>green</strong> or <strong>dual</strong> samples using the appropriate input channel</p></li>
+<li><p>Executable locations:</p>
+<ul>
+<li><p>Linux/WSL: <code class="docutils literal notranslate"><span class="pre">/usr/local/ilastik-1.4.0.post1-Linux/run_ilastik.sh</span></code></p></li>
+<li><p>Mac: <code class="docutils literal notranslate"><span class="pre">/Applications/ilastik-1.4.0.post1-OSX.app/Contents/ilastik-release/run_ilastik.sh</span></code></p></li>
+<li><p>Windows: <code class="docutils literal notranslate"><span class="pre">C:\Program</span> <span class="pre">Files\ilastik-1.4.0.post1\run_ilastik.bat</span></code></p></li>
+</ul>
+</li>
+<li><p>If training from scratch, see this <a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#training-ilastik">guide</a></p></li>
+</ul>
+<hr class="docutils" />
+<br>
+</section>
+</section>
+<section id="registration">
+<h2>Registration<a class="headerlink" href="#registration" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>io_metadata<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-x<span class="w"> </span><span class="m">2</span>.8<span class="w"> </span>-z<span class="w"> </span><span class="m">100</span><span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+reg_prep<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red
+reg_prep<span class="w"> </span>-i<span class="w"> </span>red<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>green<span class="w"> </span>
+
+<span class="c1"># for dual, use the channel with less fluorescence for -i. For example:</span>
+reg_prep<span class="w"> </span>-i<span class="w"> </span>green<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>dual<span class="w"> </span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Download the template and atlas</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># For STPT data use this template:</span>
+curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>average_template_CCFv3_30um.nii.gz<span class="w"> </span><span class="s2">&quot;https://drive.google.com/uc?export=download&amp;id=13cdFNa8uG4zhR7mh6QZxPzJxhzYA8-vJ&quot;</span>
+
+<span class="c1"># For iDISCO/LSFM use this template:</span>
+curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>iDISCO_template_CCFv3_30um.nii.gz<span class="w"> </span><span class="s2">&quot;https://drive.google.com/uc?export=download&amp;id=1BBg7ydj3WTfvbIqtBlrkkLiDl0ZmCeaP&quot;</span>
+
+curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>atlas_CCFv3_2020_30um.nii.gz<span class="w"> </span><span class="s2">&quot;https://drive.google.com/uc?export=download&amp;id=1IL0Qgi1ctJEM0Ask89l4CQqEj2RZWy7H&quot;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Run registration:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg<span class="w"> </span>-m<span class="w"> </span>average_template_CCFv3_30um.nii.gz<span class="w"> </span>-f<span class="w"> </span>reg_inputs/autofl_50um.nii.gz<span class="w"> </span>-m2<span class="w"> </span>atlas_CCFv3_2020_30um.nii.gz<span class="w"> </span>-mas<span class="w"> </span>None<span class="w"> </span>-sm<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span>-ort<span class="w"> </span>RIA<span class="w"> </span>-v<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Check alignment:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>reg_check<span class="w"> </span>-fri<span class="w"> </span>reg_outputs/autofl_50um_fixed_reg_input.nii.gz<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+
+<span class="c1"># Setting up fsleyes: https://b-heifets.github.io/UNRAVEL/guide.html#reg-check</span>
+<span class="nb">cd</span><span class="w"> </span>reg_check
+reg_check_fsleyes<span class="w"> </span>-fri<span class="w"> </span><span class="s1">&#39;*autofl_50um_fixed_reg_input.nii.gz&#39;</span><span class="w"> </span>-max<span class="w"> </span><span class="m">2000</span><span class="w"> </span><span class="p">&amp;</span>
+<span class="nb">cd</span><span class="w"> </span>..
+
+<span class="c1"># If fsleyes is not working (e.g., on Windows), use ITK-SNAP or another neuroimaging viewer. Contact us about wireframe atlas coloring for ITK-SNAP.</span>
+</pre></div>
+</div>
+<div class="hint dropdown admonition">
+<p class="admonition-title">Revising registration</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># If registration is not good, try the other channel for affected samples </span>
+<span class="nb">cd</span><span class="w"> </span>dual/ID_&lt;enter<span class="w"> </span>number&gt;
+rm<span class="w"> </span>-rf<span class="w"> </span>reg_prep/<span class="w"> </span>reg/
+reg_prep<span class="w"> </span>-i<span class="w"> </span>red
+<span class="nb">cd</span><span class="w"> </span>../../
+<span class="c1"># Rerun reg_prep, reg, etc.</span>
+</pre></div>
+</div>
+</div>
+<hr class="docutils" />
+<br>
+</section>
+<section id="pre-processing-ccfv3-space">
+<h2>Pre-Processing (CCFv3 Space)<a class="headerlink" href="#pre-processing-ccfv3-space" title="Link to this heading">#</a></h2>
+<section id="warp-segmentations-to-ccfv3-atlas-space">
+<h3>Warp segmentations to CCFv3 atlas space<a class="headerlink" href="#warp-segmentations-to-ccfv3-atlas-space" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>warp_to_atlas<span class="w"> </span>-a<span class="w"> </span>atlas_CCFv3_2020_30um.nii.gz<span class="w"> </span>-i<span class="w"> </span>MMS_seg/MMS_seg_<span class="si">${</span><span class="nv">i</span><span class="si">}</span>.nii.gz<span class="w"> </span>-o<span class="w"> </span>MMS_seg_<span class="si">${</span><span class="nv">i</span><span class="si">}</span>.nii.gz<span class="w"> </span>-dt<span class="w"> </span>uint8<span class="w"> </span>-fri<span class="w"> </span>reg_outputs/autofl_50um_fixed_reg_input.nii.gz<span class="w"> </span>-inp<span class="w"> </span>nearestNeighbor<span class="w"> </span>-zo<span class="w"> </span><span class="m">0</span><span class="w"> </span>-v<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+
+agg<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;atlas_space/MMS_seg_*.nii.gz&#39;</span><span class="w"> </span>-a<span class="w"> </span>-td<span class="w"> </span>CCF30_space<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+
+<span class="nb">cd</span><span class="w"> </span>CCF30_space
+</pre></div>
+</div>
+</section>
+<section id="oligodendocytes-check">
+<h3>Oligodendocytes check<a class="headerlink" href="#oligodendocytes-check" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Determine the prevalence of voxels segmented as oligodentrocyte somata in the anterior commisure</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mms_soma_ratio<span class="w"> </span>-a<span class="w"> </span>&lt;path&gt;/atlas_CCFv3_2020_30um.nii.gz
+<span class="nb">cd</span><span class="w"> </span>soma_ratio
+mms_concat_with_source<span class="w"> </span>
+<span class="c1"># The concatenated_output.csv can be used later to revise cell type proportions. </span>
+<span class="c1"># For example, if the proportion of somatic voxels in the anterior commisure is greater than 0.004, then labeling is likely occurring in oligodendrocytes. </span>
+<span class="nb">cd</span><span class="w"> </span>..
+</pre></div>
+</div>
+</section>
+<section id="prep-seg-images-for-warping-to-merfish-space">
+<h3>Prep seg images for warping to MERFISH space<a class="headerlink" href="#prep-seg-images-for-warping-to-merfish-space" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Mirror segmentation masks:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mirror<span class="w"> </span>-o<span class="w"> </span>mirrored<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*1.nii.gz&#39;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Combine with the original</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>*1.nii.gz<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>img_math<span class="w"> </span>-i<span class="w"> </span><span class="nv">$i</span><span class="w"> </span>mirrored/mirror_<span class="si">${</span><span class="nv">i</span><span class="si">}</span><span class="w"> </span>-o<span class="w"> </span>combined/<span class="nv">$i</span><span class="w"> </span>-n<span class="w"> </span>+<span class="w"> </span>-t<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span>-d<span class="w"> </span>uint8<span class="w"> </span>-r<span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="p">&amp;</span><span class="w"> </span><span class="k">done</span>
+
+<span class="nb">cd</span><span class="w"> </span>combined
+</pre></div>
+</div>
+<hr class="docutils" />
+<br>
+</section>
+</section>
+<section id="warp-to-merfish-space">
+<h2>Warp to MERFISH space<a class="headerlink" href="#warp-to-merfish-space" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Download warp files (CCF30_to_MERFISH.tar.gz) <a class="reference external" href="https://stanfordmedicine.box.com/s/u9vg2wdmrx1t4bvqu321vmggg793kvuo">here</a> (This is 1.4 GB)</p></li>
+<li><p>Extract it (double click or use tar -xvzf CCF30_to_MERFISH.tar.gz). This is the warp root.</p></li>
+<li><p>Warp combined segmentation images from CCFv3 space (30 µm res) to MERFISH space:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>warp_ccf30_to_merfish<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.nii.gz&#39;</span><span class="w"> </span>-w<span class="w"> </span>&lt;/path/to/warp_root&gt;
+
+<span class="nb">cd</span><span class="w"> </span>MERFISH
+</pre></div>
+</div>
+<hr class="docutils" />
+<br>
+</section>
+<section id="spatially-filter-merfish-cells">
+<h2>Spatially Filter MERFISH Cells:<a class="headerlink" href="#spatially-filter-merfish-cells" title="Link to this heading">#</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>abca_merfish_filter_by_mask<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.nii.gz&#39;</span><span class="w"> </span>-b<span class="w"> </span>&lt;ABCA_download_root&gt;<span class="w"> </span>-o<span class="w"> </span>cells
+
+<span class="nb">cd</span><span class="w"> </span>cells
+
+<span class="c1"># Optionally remove non-neuronal cells</span>
+<span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>*.csv<span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span>abca_merfish_filter<span class="w"> </span>-b<span class="w"> </span>&lt;ABCA_download_root&gt;<span class="w"> </span>--neurons<span class="w"> </span>-i<span class="w"> </span><span class="nv">$i</span><span class="w"> </span><span class="p">;</span><span class="w"> </span><span class="k">done</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<br>
+</section>
+<section id="visualize-cell-type-proportions">
+<h2>Visualize Cell-Type Proportions<a class="headerlink" href="#visualize-cell-type-proportions" title="Link to this heading">#</a></h2>
+<section id="for-all-cells-across-the-brain">
+<h3>For all cells across the brain:<a class="headerlink" href="#for-all-cells-across-the-brain" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>abca_sunburst<span class="w"> </span>-i<span class="w"> </span>ID_1104197092_MMS_seg_1_MERFISH_cells.csv<span class="w"> </span>-l
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Make a sunburst plot, as described <a class="reference external" href="https://b-heifets.github.io/UNRAVEL/guide.html#sunburst-plots">here</a>, except update Data and Preview settings:</p></li>
+<li><p>Under Data: set Categories/nesting to A-E and Size by B.</p></li>
+<li><p>Under Preview –&gt; Colors –&gt; Custom overrides, paste the contents of WMB_sunburst_colors.csv</p></li>
+<li><p>Copy columns from ID_1104197092_MMS_seg_1_MERFISH_cells_sunburst.csv into Data</p></li>
+<li><p>Switch to the Preview tab</p></li>
+<li><p>Wider pie angles = larger cell type proportions</p></li>
+<li><p>Inner ring = neurotransmitter level, followed by class, subclass, supertype, and cluster</p></li>
+<li><p>Use Hierarchy –&gt; Depth to adjust how many rings are shown</p></li>
+</ul>
+</section>
+<section id="for-region-specific-filtering-visualization">
+<h3>For region-specific filtering &amp; visualization:<a class="headerlink" href="#for-region-specific-filtering-visualization" title="Link to this heading">#</a></h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>abca_merfish_filter<span class="w"> </span>-b<span class="w"> </span><span class="nv">$A</span><span class="w"> </span>-i<span class="w"> </span>ID_1104197092_MMS_seg_1_MERFISH_cells.csv<span class="w"> </span>-val<span class="w"> </span>ACB
+abca_sunburst<span class="w"> </span>-i<span class="w"> </span>ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv
+</pre></div>
+</div>
+<hr class="docutils" />
+<br>
+</section>
+</section>
+<section id="quantify-cell-type-proportions">
+<h2>Quantify cell type proportions:<a class="headerlink" href="#quantify-cell-type-proportions" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>For a region (e.g., VISp):</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mms_cell_type_proportions<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.csv&#39;</span><span class="w"> </span>-col<span class="w"> </span>subclass<span class="w"> </span>-rc<span class="w"> </span>parcellation_structure<span class="w"> </span>-r<span class="w"> </span>VISp<span class="w"> </span>-t
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For the whole brain:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mms_cell_type_proportions<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;*.csv&#39;</span><span class="w"> </span>-col<span class="w"> </span>subclass<span class="w"> </span>-t
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Outputs from mms_cell_type_proportions have one row with cell type proportions per brain.</p></li>
+<li><p>To combine them into one csv, run:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mms_cell_type_proportions_concat<span class="w">   </span>
+
+<span class="c1"># Optional: --keep_list &lt;path/keep_cell_type_columns.txt&gt; may be used match columns in the challenge (see help for notes).</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<br>
+</section>
+<section id="revising-cell-type-proportions">
+<h2>Revising cell type proportions<a class="headerlink" href="#revising-cell-type-proportions" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Summarize relative proportions of voxel counts for each segmentation label (somata, endothelial, astroglial)</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>../../../..<span class="w"> </span><span class="c1"># cd to the TIFFs dir</span>
+mms_seg_summary<span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+agg<span class="w"> </span>-i<span class="w"> </span><span class="s1">&#39;MMS_seg/MMS_test_*_segmentation_summary.csv&#39;</span><span class="w"> </span>-td<span class="w"> </span>seg_summary<span class="w"> </span>-p<span class="w"> </span><span class="s1">&#39;ID_*&#39;</span><span class="w"> </span>-d<span class="w"> </span>red<span class="w"> </span>green<span class="w"> </span>dual
+<span class="nb">cd</span><span class="w"> </span>seg_summary
+mms_concat_with_source<span class="w">  </span><span class="c1"># Combine outputs into one file (one row per brain)</span>
+<span class="nb">cd</span><span class="w"> </span>..
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Revise cell type proportions</p></li>
+<li><p>If the majority of voxels are endothelial, this brain is likely enriched for endothelial cell labeling.</p></li>
+<li><p>If the majority of voxels are astroglial, this brain is likely enriched for astroglial labeling.</p></li>
+<li><p>If the proportion of somatic voxels in the anterior commisure is &gt; 0.004 in concatenated_output.csv, this brain is enriched for oligodendrocyte labeling.</p></li>
+</ul>
+<hr class="docutils" />
+<br>
+</section>
+<section id="gene-expression-across-cell-types">
+<h2>Gene Expression Across Cell Types:<a class="headerlink" href="#gene-expression-across-cell-types" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>For gene expression sunburst plots:</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>abca_merfish_join_gene<span class="w"> </span>-b<span class="w"> </span><span class="nv">$A</span><span class="w"> </span>-i<span class="w"> </span>ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv<span class="w"> </span>-g<span class="w"> </span>Drd2
+abca_sunburst_expression<span class="w"> </span>-i<span class="w"> </span>ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB_Drd2_expression.csv<span class="w"> </span>-g<span class="w"> </span>Drd2
+abca_mean_expression_color_scale
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Copy the ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv contents into the Data tab as before.</p></li>
+<li><p>Open <input>_mean_expression_lut.txt and copy it into the Preview –&gt; Colors –&gt; Custom overrides</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="guide.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">LSFM/STPT Guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="unravel/toc.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">unravel package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#set-up">Set Up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#genetic-tools-atlas-gta-data">Genetic Tools Atlas (GTA) Data</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-zarr-images">Download Zarr Images</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#convert-zarr-to-tiff">Convert Zarr to TIFF</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#organize-tiff-directories-into-sample-folders">Organize TIFF directories into sample folders</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#segmentation">Segmentation</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-ilastik-download-pretrained-project">Install Ilastik &amp; Download Pretrained Project</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#segment-with-ilastik">Segment with Ilastik</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#registration">Registration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pre-processing-ccfv3-space">Pre-Processing (CCFv3 Space)</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#warp-segmentations-to-ccfv3-atlas-space">Warp segmentations to CCFv3 atlas space</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#oligodendocytes-check">Oligodendocytes check</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prep-seg-images-for-warping-to-merfish-space">Prep seg images for warping to MERFISH space</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#warp-to-merfish-space">Warp to MERFISH space</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#spatially-filter-merfish-cells">Spatially Filter MERFISH Cells:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualize-cell-type-proportions">Visualize Cell-Type Proportions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#for-all-cells-across-the-brain">For all cells across the brain:</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#for-region-specific-filtering-visualization">For region-specific filtering &amp; visualization:</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quantify-cell-type-proportions">Quantify cell type proportions:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#revising-cell-type-proportions">Revising cell type proportions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#gene-expression-across-cell-types">Gene Expression Across Cell Types:</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/guide_mms.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, the UNRAVEL team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

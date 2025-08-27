@@ -55,7 +55,7 @@
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="unravel.register.reg_check module" href="reg_check.html" />
+    <link rel="next" title="unravel.register.affine_initializer_check module" href="affine_initializer_check.html" />
     <link rel="prev" title="unravel.register.reg module" href="reg.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -144,7 +144,14 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -245,7 +252,14 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -297,6 +311,7 @@
 <li class="toctree-l2"><a class="reference internal" href="reg_prep.html">unravel.register.reg_prep module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.register.affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="affine_initializer_check.html">unravel.register.affine_initializer_check module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg_check.html">unravel.register.reg_check module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg_check_fsleyes.html">unravel.register.reg_check_fsleyes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg_check_brain_mask.html">unravel.register.reg_check_brain_mask module</a></li>
@@ -308,6 +323,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../warp/to_native.html">unravel.warp.to_native module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../warp/warp.html">unravel.warp.warp module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../warp/points_to_atlas.html">unravel.warp.points_to_atlas module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../warp/ccf30_to_merfish.html">unravel.warp.ccf30_to_merfish module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../segment/toc.html">unravel.segment package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -384,7 +400,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../image_io/toc.html">unravel.image_io package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/io_img.html">unravel.image_io.io_img module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/convert_img.html">unravel.image_io.convert_img module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
@@ -394,6 +410,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_compress.html">unravel.image_io.zarr_compress module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/points_to_img.html">unravel.image_io.points_to_img module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_points.html">unravel.image_io.img_to_points module</a></li>
 </ul>
@@ -433,27 +450,58 @@
 <li class="toctree-l2"><a class="reference internal" href="../utilities/points_compressor.html">unravel.utilities.points_compressor module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../abca/toc.html">unravel.abca package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../abca/cache.html">unravel.abca.cache module</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../abca/merfish/toc.html">unravel.abca.merfish package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish.html">unravel.abca.merfish.merfish module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_filter.html">unravel.abca.merfish.merfish_filter module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_filter_by_mask.html">unravel.abca.merfish.merfish_filter_by_mask module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_cells_to_nii.html">unravel.abca.merfish.merfish_cells_to_nii module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_expression_to_nii.html">unravel.abca.merfish.merfish_expression_to_nii module</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tabular/toc.html">unravel.segment package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/columns.html">unravel.tabular.columns module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/edit_columns.html">unravel.tabular.edit_columns module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/filter_rows.html">unravel.tabular.filter_rows module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/key_value_to_table.html">unravel.tabular.key_value_to_table module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/unique_values.html">unravel.tabular.unique_values module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/utils.html">unravel.tabular.utils module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../abca/sunburst/toc.html">unravel.abca.sunburst package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst.html">unravel.abca.sunburst.sunburst module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_expression.html">unravel.abca.sunburst.sunburst_expression module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_filter.html">unravel.abca.sunburst.sunburst_filter module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_filter_by_proportion.html">unravel.abca.sunburst.sunburst_filter_by_proportion module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/mean_expression_color_scale.html">unravel.abca.sunburst.mean_expression_color_scale module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/percent_expression_color_scale.html">unravel.abca.sunburst.percent_expression_color_scale module</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../allen_institute/toc.html">unravel.allen_institute package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../allen_institute/abca/toc.html">unravel.allen_institute.abca package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/abca/cache.html">unravel.allen_institute.abca.cache module</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../allen_institute/abca/merfish/toc.html">unravel.allen_institute.abca.merfish package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish.html">unravel.allen_institute.abca.merfish.merfish module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_filter.html">unravel.allen_institute.abca.merfish.merfish_filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_filter_by_mask.html">unravel.allen_institute.abca.merfish.merfish_filter_by_mask module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_cells_to_nii.html">unravel.allen_institute.abca.merfish.merfish_cells_to_nii module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_expression_to_nii.html">unravel.allen_institute.abca.merfish.merfish_expression_to_nii module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_join_gene.html">unravel.allen_institute.abca.merfish.merfish_join_gene module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../abca/scRNA_seq/toc.html">unravel.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../abca/scRNA_seq/filter.html">unravel.abca..scRNA_seq.filter module</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../allen_institute/abca/sunburst/toc.html">unravel.allen_institute.abca.sunburst package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst.html">unravel.allen_institute.abca.sunburst.sunburst module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst_expression.html">unravel.allen_institute.abca.sunburst.sunburst_expression module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst_filter_by_expression.html">unravel.allen_institute.abca.sunburst.sunburst_filter_by_expression module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst_filter_by_proportion.html">unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/mean_expression_color_scale.html">unravel.allen_institute.abca.sunburst.mean_expression_color_scale module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/percent_expression_color_scale.html">unravel.allen_institute.abca.sunburst.percent_expression_color_scale module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/toc.html">unravel.allen_institute.genetic_tools_atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/download.html">unravel.allen_institute.genetic_tools_atlas.download module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/simplify_metadata.html">unravel.allen_institute.genetic_tools_atlas.simplify_metadata module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/org_samples.html">unravel.allen_institute.genetic_tools_atlas.org_samples module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/auto_crop.html">unravel.allen_institute.genetic_tools_atlas.auto_crop module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/bbox_crop.html">unravel.allen_institute.genetic_tools_atlas.bbox_crop module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../allen_institute/mapmysections/toc.html">unravel.allen_institute.mapmysections package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/cell_type_proportions_concat.html">unravel.allen_institute.mapmysections.cell_type_proportions_concat module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/cell_type_proportions.html">unravel.allen_institute.mapmysections.cell_type_proportions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/csv_concat_with_source.html">unravel.allen_institute.mapmysections.csv_concat_with_source module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/segmentation_summary.html">unravel.allen_institute.mapmysections.segmentation_summary module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/soma_in_grey.html">unravel.allen_institute.mapmysections.soma_ratio module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -521,53 +569,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-unravel.register.affine_initializer">
-<span id="unravel-register-affine-initializer-module"></span><span id="unravel-register-affine-initializer"></span><h1>unravel.register.affine_initializer module<a class="headerlink" href="#module-unravel.register.affine_initializer" title="Link to this heading">#</a></h1>
-<p>Run <code class="docutils literal notranslate"><span class="pre">reg_affine_initializer</span></code> (<code class="docutils literal notranslate"><span class="pre">rai</span></code>) from UNRAVEL to perform affine initialization using ANTsPy.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<ul class="simple">
-<li><p>This allows ants.affine_initializer() to be run as a seperate process during reg.</p></li>
-<li><p>This process is killed after a time out.</p></li>
-<li><p>This also allows for suppressing error messages.</p></li>
-</ul>
-</div>
-<section id="python-usage">
-<h2>Python usage:<a class="headerlink" href="#python-usage" title="Link to this heading">#</a></h2>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">subprocess</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_affine_initializer&#39;</span><span class="p">,</span> <span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;atlas/average_template_CCFv3_30um.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;reg_outputs/ANTsPy_init_tform.nii.gz&#39;</span><span class="p">,</span> <span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;10&#39;</span> <span class="p">]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">devnull</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">devnull</span><span class="p">:</span>
-<span class="gp">&gt;&gt;&gt; </span>   <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">command</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">devnull</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="usage">
-<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<blockquote>
-<div><p>reg_affine_initializer -f reg_outputs/autofl_50um_masked_fixed_reg_input.nii.gz -m atlas/average_template_CCFv3_30um.nii.gz -o reg_outputs/ANTsPy_init_tform.nii.gz [-t 10] [-v]</p>
-</div></blockquote>
-</section>
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.affine_initializer.parse_args">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.affine_initializer.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/affine_initializer.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.affine_initializer.parse_args" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.affine_initializer.affine_initializer_wrapper">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.affine_initializer.</span></span><span class="sig-name descname"><span class="pre">affine_initializer_wrapper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fixed_image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_image_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_outputs_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">queue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/affine_initializer.html#affine_initializer_wrapper"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.affine_initializer.affine_initializer_wrapper" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.affine_initializer.run_with_timeout">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.affine_initializer.</span></span><span class="sig-name descname"><span class="pre">run_with_timeout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fixed_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">moving_image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_outputs_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/affine_initializer.html#run_with_timeout"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.affine_initializer.run_with_timeout" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="unravel.register.affine_initializer.main">
-<span class="sig-prename descclassname"><span class="pre">unravel.register.affine_initializer.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/affine_initializer.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.affine_initializer.main" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
-
+  <section id="unravel-register-affine-initializer-module">
+<span id="unravel-register-affine-initializer"></span><h1>unravel.register.affine_initializer module<a class="headerlink" href="#unravel-register-affine-initializer-module" title="Link to this heading">#</a></h1>
 </section>
 
 
@@ -590,11 +593,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="reg_check.html"
+       href="affine_initializer_check.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">unravel.register.reg_check module</p>
+        <p class="prev-next-title">unravel.register.affine_initializer_check module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -608,23 +611,6 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
-
-  <div class="sidebar-secondary-item">
-<div
-    id="pst-page-navigation-heading-2"
-    class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> On this page
-  </div>
-  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-usage">Python usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.affine_initializer.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.affine_initializer.affine_initializer_wrapper"><code class="docutils literal notranslate"><span class="pre">affine_initializer_wrapper()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.affine_initializer.run_with_timeout"><code class="docutils literal notranslate"><span class="pre">run_with_timeout()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.affine_initializer.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
-</ul>
-  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

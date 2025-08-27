@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -410,7 +424,7 @@
 <span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">Config</span>
 
 <span class="c1"># TODO: Also output commands with default args to .verbose_command_log.txt or .command_log.txt. Rename to unravel_command_log.txt</span>
-
+<span class="c1"># TODO: Add a function for getting the stem from file names or paths that works with exensions with one or more dots.</span>
 
 <span class="c1"># Configuration loading</span>
 <div class="viewcode-block" id="load_config">
@@ -517,10 +531,10 @@
         <span class="c1"># Print the found directories grouped by their parent directories in order</span>
         <span class="n">uniq_parent_dirs</span> <span class="o">=</span> <span class="p">{</span><span class="n">sample_dir</span><span class="o">.</span><span class="n">parent</span> <span class="k">for</span> <span class="n">sample_dir</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">}</span>  <span class="c1"># Avoids printing ~ duplicate message when no sample?? dirs are found</span>
         <span class="k">for</span> <span class="n">parent_dir</span> <span class="ow">in</span> <span class="n">uniq_parent_dirs</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [bold gold1]get_samples[/]() found these directories in [bright_black bold]</span><span class="si">{</span><span class="n">parent_dir</span><span class="si">}</span><span class="s2">[/]:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  [bold gold3]get_samples[/]() found these directories in [bright_black bold]</span><span class="si">{</span><span class="n">parent_dir</span><span class="si">}</span><span class="s2">[/]:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">sample_dir</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">sample_dir</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">parent_dir</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;        [bold orange_red1]</span><span class="si">{</span><span class="n">sample_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    [bold dark_orange]</span><span class="si">{</span><span class="n">sample_dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">samples</span></div>
@@ -615,8 +629,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the start command and time if verbose mode is enabled.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">cmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">[bold bright_magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [purple3]</span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">[/]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [bright_blue]Start:[/] </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">[bold magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [bold purple3]</span><span class="si">{</span><span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span><span class="si">}</span><span class="s2">[/]</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  [bright_blue]Start:[/] </span><span class="si">{</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">cmd</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -627,7 +641,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Print the end time if verbose mode is enabled.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
         <span class="n">end_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">:mushroom: [bold bright_magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [purple3]finished[/] [bright_blue]at:[/] </span><span class="si">{</span><span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">[gold1]![/][dark_orange]![/][red1]![/] </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">:mushroom: [bold magenta]</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="si">}</span><span class="s2">[/] [purple3]finished[/] [bright_blue]at:[/] </span><span class="si">{</span><span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">[gold1]![/][dark_orange]![/][red1]![/] </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">end_time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
@@ -662,25 +676,7 @@
 
 
 
-<span class="c1"># Function decorator</span>
-
-<div class="viewcode-block" id="get_dir_name_from_args">
-<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.get_dir_name_from_args">[docs]</a>
-<span class="k">def</span> <span class="nf">get_dir_name_from_args</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function checks args and kwargs for a file or directory path</span>
-<span class="sd">    and returns a string based on the name of the file or directory.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">))</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
-
-    <span class="k">for</span> <span class="n">kwarg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">kwarg</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">))</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">kwarg</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">kwarg</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
-
-    <span class="k">return</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">name</span></div>
-
+<span class="c1"># Function decorators</span>
 
 <span class="c1"># Create a thread-local storage for indentation level</span>
 <span class="n">thread_local_data</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">local</span><span class="p">()</span>
@@ -702,8 +698,7 @@
 
     <span class="k">def</span> <span class="nf">arg_str_representation</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Return a string representation of the argument passed to the decorated function.&quot;&quot;&quot;</span>
-        <span class="c1"># return ARG_REPRESENTATIONS.get(type(arg), str)(arg)</span>
-        <span class="k">return</span> <span class="n">ARG_REPRESENTATIONS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">),</span> <span class="nb">repr</span><span class="p">)(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ARG_REPRESENTATIONS</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">arg</span><span class="p">),</span> <span class="nb">repr</span><span class="p">)(</span><span class="n">arg</span><span class="p">)</span> <span class="c1"># repr is used for unsupported types</span>
     
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
         <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
@@ -721,26 +716,21 @@
             <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span> <span class="o">+=</span> <span class="mi">1</span>
 
             <span class="c1"># Compute indentation based on the current level</span>
-            <span class="n">indent_str</span> <span class="o">=</span> <span class="s1">&#39;  &#39;</span> <span class="o">*</span> <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span>  <span class="c1"># Using 4 spaces for each indentation level</span>
+            <span class="n">indent_str</span> <span class="o">=</span> <span class="s1">&#39;  &#39;</span> <span class="o">*</span> <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span>  <span class="c1"># Using 2 spaces for each indentation level</span>
             
             <span class="c1"># Convert args and kwargs to string for printing</span>
             <span class="n">args_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">arg_str_representation</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span> <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">)</span>
             <span class="n">kwargs_str</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">arg_str_representation</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
             <span class="n">combined_args</span> <span class="o">=</span> <span class="n">args_str</span> <span class="o">+</span> <span class="p">(</span><span class="s1">&#39;, &#39;</span> <span class="k">if</span> <span class="n">args_str</span> <span class="ow">and</span> <span class="n">kwargs_str</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">kwargs_str</span>
-            
-            <span class="k">if</span> <span class="n">print_dir</span><span class="p">:</span>
-                <span class="n">dir_name</span> <span class="o">=</span> <span class="n">get_dir_name_from_args</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span> <span class="c1"># Get dir name the basename of 1st arg with a valid path (e.g., sample??)</span>
-                <span class="n">dir_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot; for [bold orange_red1]</span><span class="si">{</span><span class="n">dir_name</span><span class="si">}</span><span class="s2">[/]&quot;</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">dir_string</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 
             <span class="c1"># Print out the arguments with the added indent</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span>
             <span class="k">if</span> <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># considering that main function is at level 1</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[gold3]</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">[/]</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[bright_black](</span><span class="si">{</span><span class="n">args_str</span><span class="si">}{</span><span class="s1">&#39;, &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[dark_orange]</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">([/][bright_black]</span><span class="si">{</span><span class="n">args_str</span><span class="si">}{</span><span class="s1">&#39;, &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">[/][dark_orange])[/]&quot;</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[gold3]</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">[/]</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[bright_black](</span><span class="si">{</span><span class="n">args_str</span><span class="si">}{</span><span class="s1">&#39;, &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[dark_orange]</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">([/][bright_black]</span><span class="si">{</span><span class="n">args_str</span><span class="si">}{</span><span class="s1">&#39;, &#39;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">kwargs_str</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">[/][dark_orange])[/]&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Running: [bold gold1]</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">[/]</span><span class="si">{</span><span class="n">dir_string</span><span class="si">}</span><span class="s2"> with args: [bright_black](</span><span class="si">{</span><span class="n">combined_args</span><span class="si">}</span><span class="s2">)[/]&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[bold gold3]</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">([/][bright_black]</span><span class="si">{</span><span class="n">combined_args</span><span class="si">}</span><span class="s2">[/][bold gold3])[/]&quot;</span><span class="p">)</span> <span class="c1"># bold orange_red1</span>
 
             <span class="c1"># Function execution</span>
             <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
@@ -754,15 +744,18 @@
 
             <span class="c1"># Print out the arguments with the added indent</span>
             <span class="k">if</span> <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># considering that main function is at level 1</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[gold3]</span><span class="si">{</span><span class="n">duration_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[dark_orange]</span><span class="si">{</span><span class="n">duration_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Finished [bold gold1]</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">!r}</span><span class="s2">[/] in [orange_red1]</span><span class="si">{</span><span class="n">duration_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">indent_str</span><span class="si">}</span><span class="s2">[gold3]</span><span class="si">{</span><span class="n">duration_str</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
             <span class="n">thread_local_data</span><span class="o">.</span><span class="n">indentation_level</span> <span class="o">-=</span> <span class="mi">1</span>
             <span class="k">return</span> <span class="n">result</span>
         <span class="k">return</span> <span class="n">wrapper_timer</span>
     <span class="k">return</span> <span class="n">decorator</span></div>
 
+
+
+<span class="c1"># Other utility functions</span>
 
 <div class="viewcode-block" id="load_text_from_file">
 <a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.load_text_from_file">[docs]</a>
@@ -804,35 +797,129 @@
             <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;File </span><span class="si">{</span><span class="n">src_file</span><span class="si">}</span><span class="s2"> does not exist and was not copied.&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="process_files_with_glob">
-<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.process_files_with_glob">[docs]</a>
-<span class="k">def</span> <span class="nf">process_files_with_glob</span><span class="p">(</span><span class="n">glob_pattern</span><span class="p">,</span> <span class="n">processing_func</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Process all files matching a glob pattern using the provided processing function.</span>
+<div class="viewcode-block" id="match_files">
+<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.match_files">[docs]</a>
+<span class="k">def</span> <span class="nf">match_files</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="n">base_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Expand one or more glob patterns to match file paths.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
-<span class="sd">    glob_pattern : str</span>
-<span class="sd">        The glob pattern to match files.</span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    patterns : str or list of str</span>
+<span class="sd">        Glob pattern(s) to match files. Supports wildcards like &#39;*.nii.gz&#39;, &#39;*.tif&#39;, etc.</span>
+<span class="sd">        Can include absolute paths with wildcards.</span>
+<span class="sd">    base_path : str or Path, optional</span>
+<span class="sd">        Base directory where relative patterns are applied. Defaults to the current working directory.</span>
 
-<span class="sd">    processing_func : function</span>
-<span class="sd">        The function to process each file. Should accept a file path as the first argument.</span>
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    list of Path</span>
+<span class="sd">        A sorted list of Path objects that match the provided glob patterns.</span>
 
-<span class="sd">    ``*args``, ``**kwargs`` :</span>
-<span class="sd">        Additional arguments and keyword arguments to pass to the processing function.</span>
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    TypeError</span>
+<span class="sd">        If patterns is not a string, Path, or list of such types.</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If no files match the given patterns.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="n">glob_pattern</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">files</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No files found matching the pattern: </span><span class="si">{</span><span class="n">glob_pattern</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span>
+    <span class="c1"># Normalize patterns to a list of strings</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">patterns</span><span class="p">)]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">patterns</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">))</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">):</span>
+        <span class="n">patterns</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;patterns must be a string, Path, or a list of those types.&quot;</span><span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Processing </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">files</span><span class="p">)</span><span class="si">}</span><span class="s2"> files matching the pattern </span><span class="si">{</span><span class="n">glob_pattern</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    </span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">base_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;base_path must be a string or Path object.&quot;</span><span class="p">)</span>
 
-    <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-        <span class="n">processing_func</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+    <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span> <span class="k">if</span> <span class="n">base_path</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">Path</span><span class="p">(</span><span class="n">base_path</span><span class="p">)</span>
+    <span class="n">paths</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">patterns</span><span class="p">:</span>
+        <span class="n">pattern_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">pattern_path</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">():</span>
+            <span class="n">paths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">pattern_path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern_path</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">paths</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">pattern</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">paths</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No files found matching patterns: </span><span class="si">{</span><span class="n">patterns</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">paths</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_stem">
+<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.get_stem">[docs]</a>
+<span class="k">def</span> <span class="nf">get_stem</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the stem of a file path by removing known compound extensions</span>
+<span class="sd">    (e.g., &#39;.nii.gz&#39;, &#39;.ome.tif&#39;, &#39;.tar.gz&#39;) and falling back to single-extension logic.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_path : str or Path</span>
+<span class="sd">        Path to a file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        Stem of the file with all recognized extensions removed. E.g., path/to/file.nii.gz -&gt; file</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="n">compound_extensions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.ome.tif&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.ome.tiff&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.zarr.gz&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.tar.gz&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.tar.bz2&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.tar.xz&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">compound_extensions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">ext</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">name</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">ext</span><span class="p">)]</span>
+    
+    <span class="k">return</span> <span class="n">file_path</span><span class="o">.</span><span class="n">stem</span></div>
+
+
+<div class="viewcode-block" id="get_extension">
+<a class="viewcode-back" href="../../../unravel/core/utils.html#unravel.core.utils.get_extension">[docs]</a>
+<span class="k">def</span> <span class="nf">get_extension</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get the extension of a file path, including compound extensions.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    file_path : str or Path</span>
+<span class="sd">        Path to a file.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        The extension of the file, including compound extensions. E.g., path/to/file.nii.gz -&gt; .nii.gz</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">file_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">file_path</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="n">compound_extensions</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;.nii.gz&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.ome.tif&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.ome.tiff&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.zarr.gz&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.tar.gz&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.tar.bz2&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;.tar.xz&#39;</span><span class="p">,</span>
+    <span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">ext</span> <span class="ow">in</span> <span class="n">compound_extensions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">ext</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ext</span>
+    
+    <span class="k">return</span> <span class="n">file_path</span><span class="o">.</span><span class="n">suffix</span></div>
 
 
 <div class="viewcode-block" id="get_pad_percent">
@@ -850,10 +937,10 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
             <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Warning: Invalid value in pad_percent.txt. Using default pad_percent = 0.15&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Warning: Invalid value in pad_percent.txt. Using default pad_percent = 0.25&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Warning: pad_percent.txt not found. Using default pad_percent = 0.15&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="mf">0.15</span></div>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;    Warning: pad_percent.txt not found. Using default pad_percent = 0.25&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mf">0.25</span></div>
 
 </pre></div>
 

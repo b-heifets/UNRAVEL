@@ -144,7 +144,14 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -245,7 +252,14 @@
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -297,6 +311,7 @@
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">unravel.register.reg_prep module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg.html">unravel.register.reg module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="affine_initializer.html">unravel.register.affine_initializer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="affine_initializer_check.html">unravel.register.affine_initializer_check module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg_check.html">unravel.register.reg_check module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg_check_fsleyes.html">unravel.register.reg_check_fsleyes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="reg_check_brain_mask.html">unravel.register.reg_check_brain_mask module</a></li>
@@ -308,6 +323,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../warp/to_native.html">unravel.warp.to_native module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../warp/warp.html">unravel.warp.warp module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../warp/points_to_atlas.html">unravel.warp.points_to_atlas module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../warp/ccf30_to_merfish.html">unravel.warp.ccf30_to_merfish module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../segment/toc.html">unravel.segment package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -384,7 +400,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../image_io/toc.html">unravel.image_io package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/h5_to_tifs.html">unravel.image_io.h5_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_npy.html">unravel.image_io.img_to_npy module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../image_io/io_img.html">unravel.image_io.io_img module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/convert_img.html">unravel.image_io.convert_img module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/metadata.html">unravel.image_io.metadata module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_hd.html">unravel.image_io.nii_hd module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/nii_info.html">unravel.image_io.nii_info module</a></li>
@@ -394,6 +410,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../image_io/reorient_nii.html">unravel.image_io.reorient_nii module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/tif_to_tifs.html">unravel.image_io.tif_to_tifs module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_to_nii.html">unravel.image_io.zarr_to_nii module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../image_io/zarr_compress.html">unravel.image_io.zarr_compress module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/points_to_img.html">unravel.image_io.points_to_img module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../image_io/img_to_points.html">unravel.image_io.img_to_points module</a></li>
 </ul>
@@ -433,27 +450,58 @@
 <li class="toctree-l2"><a class="reference internal" href="../utilities/points_compressor.html">unravel.utilities.points_compressor module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../abca/toc.html">unravel.abca package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../abca/cache.html">unravel.abca.cache module</a></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../abca/merfish/toc.html">unravel.abca.merfish package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish.html">unravel.abca.merfish.merfish module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_filter.html">unravel.abca.merfish.merfish_filter module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_filter_by_mask.html">unravel.abca.merfish.merfish_filter_by_mask module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_cells_to_nii.html">unravel.abca.merfish.merfish_cells_to_nii module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/merfish/merfish_expression_to_nii.html">unravel.abca.merfish.merfish_expression_to_nii module</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../tabular/toc.html">unravel.segment package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/columns.html">unravel.tabular.columns module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/edit_columns.html">unravel.tabular.edit_columns module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/filter_rows.html">unravel.tabular.filter_rows module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/key_value_to_table.html">unravel.tabular.key_value_to_table module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/unique_values.html">unravel.tabular.unique_values module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tabular/utils.html">unravel.tabular.utils module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../abca/sunburst/toc.html">unravel.abca.sunburst package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst.html">unravel.abca.sunburst.sunburst module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_expression.html">unravel.abca.sunburst.sunburst_expression module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_filter.html">unravel.abca.sunburst.sunburst_filter module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/sunburst_filter_by_proportion.html">unravel.abca.sunburst.sunburst_filter_by_proportion module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/mean_expression_color_scale.html">unravel.abca.sunburst.mean_expression_color_scale module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../abca/sunburst/percent_expression_color_scale.html">unravel.abca.sunburst.percent_expression_color_scale module</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../allen_institute/toc.html">unravel.allen_institute package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../allen_institute/abca/toc.html">unravel.allen_institute.abca package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/abca/cache.html">unravel.allen_institute.abca.cache module</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../allen_institute/abca/merfish/toc.html">unravel.allen_institute.abca.merfish package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish.html">unravel.allen_institute.abca.merfish.merfish module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_filter.html">unravel.allen_institute.abca.merfish.merfish_filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_filter_by_mask.html">unravel.allen_institute.abca.merfish.merfish_filter_by_mask module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_cells_to_nii.html">unravel.allen_institute.abca.merfish.merfish_cells_to_nii module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_expression_to_nii.html">unravel.allen_institute.abca.merfish.merfish_expression_to_nii module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/merfish/merfish_join_gene.html">unravel.allen_institute.abca.merfish.merfish_join_gene module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../abca/scRNA_seq/toc.html">unravel.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../abca/scRNA_seq/filter.html">unravel.abca..scRNA_seq.filter module</a></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../allen_institute/abca/sunburst/toc.html">unravel.allen_institute.abca.sunburst package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst.html">unravel.allen_institute.abca.sunburst.sunburst module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst_expression.html">unravel.allen_institute.abca.sunburst.sunburst_expression module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst_filter_by_expression.html">unravel.allen_institute.abca.sunburst.sunburst_filter_by_expression module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/sunburst_filter_by_proportion.html">unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/mean_expression_color_scale.html">unravel.allen_institute.abca.sunburst.mean_expression_color_scale module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/sunburst/percent_expression_color_scale.html">unravel.allen_institute.abca.sunburst.percent_expression_color_scale module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l3 has-children"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/toc.html">unravel.allen_institute.abca.scRNA_seq package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/filter.html">unravel.allen_institute.abca.scRNA_seq.filter module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/expression.html">unravel.allen_institute.abca.scRNA_seq.expression module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../allen_institute/abca/scRNA_seq/join_gene.html">unravel.allen_institute.abca.scRNA_seq.join_gene module</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/toc.html">unravel.allen_institute.genetic_tools_atlas package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/download.html">unravel.allen_institute.genetic_tools_atlas.download module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/simplify_metadata.html">unravel.allen_institute.genetic_tools_atlas.simplify_metadata module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/org_samples.html">unravel.allen_institute.genetic_tools_atlas.org_samples module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/auto_crop.html">unravel.allen_institute.genetic_tools_atlas.auto_crop module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/genetic_tools_atlas/bbox_crop.html">unravel.allen_institute.genetic_tools_atlas.bbox_crop module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../allen_institute/mapmysections/toc.html">unravel.allen_institute.mapmysections package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/cell_type_proportions_concat.html">unravel.allen_institute.mapmysections.cell_type_proportions_concat module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/cell_type_proportions.html">unravel.allen_institute.mapmysections.cell_type_proportions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/csv_concat_with_source.html">unravel.allen_institute.mapmysections.csv_concat_with_source module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/segmentation_summary.html">unravel.allen_institute.mapmysections.segmentation_summary module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../allen_institute/mapmysections/soma_in_grey.html">unravel.allen_institute.mapmysections.soma_ratio module</a></li>
 </ul>
 </details></li>
 </ul>
@@ -521,8 +569,72 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="unravel-register-reg-prep-module">
-<span id="unravel-register-reg-prep"></span><h1>unravel.register.reg_prep module<a class="headerlink" href="#unravel-register-reg-prep-module" title="Link to this heading">#</a></h1>
+  <section id="module-unravel.register.reg_prep">
+<span id="unravel-register-reg-prep-module"></span><span id="unravel-register-reg-prep"></span><h1>unravel.register.reg_prep module<a class="headerlink" href="#module-unravel.register.reg_prep" title="Link to this heading">#</a></h1>
+<p>Use <code class="docutils literal notranslate"><span class="pre">reg_prep</span></code> (<code class="docutils literal notranslate"><span class="pre">rp</span></code>) from UNRAVEL to load a full resolution autofluo image and resamples to a lower resolution for registration.</p>
+<dl class="simple">
+<dt>Input examples (path is relative to ./sample??; 1st glob match processed):</dt><dd><p><cite>*</cite>.czi, autofluo/<cite>*</cite>.tif series, autofluo, <cite>*</cite>.tif, or <cite>*</cite>.h5</p>
+</dd>
+<dt>Outputs:</dt><dd><p>./sample??/reg_inputs/autofl_`*`um.nii.gz
+./sample??/reg_inputs/autofl_`*`um_tifs/<cite>*</cite>.tif series (used for training ilastik for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code>)</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>If -d is not provided, the current directory is used to search for sample?? dirs to process.</p></li>
+<li><p>If the current dir is a sample?? dir, it will be processed.</p></li>
+<li><p>If -d is provided, the specified dirs and/or dirs containing sample?? dirs will be processed.</p></li>
+<li><p>If -p is not provided, the default pattern for dirs to process is ‘sample??’.</p></li>
+</ul>
+</div>
+<dl class="simple">
+<dt>Next command:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">seg_copy_tifs</span></code> for <code class="docutils literal notranslate"><span class="pre">seg_brain_mask</span></code> or <code class="docutils literal notranslate"><span class="pre">reg</span></code></p>
+</dd>
+</dl>
+<section id="usage">
+<h2>Usage:<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<blockquote>
+<div><p>reg_prep -i <cite>*</cite>.czi [-md path/metadata.txt] [For .czi: –channel 0] [-o reg_inputs/autofl_50um.nii.gz] [–reg_res 50] [–zoom_order 0] [–miracl] [-d list of paths] [-p sample??] [-v]</p>
+</div></blockquote>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.reg_prep.parse_args">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.reg_prep.</span></span><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg_prep.html#parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg_prep.parse_args" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.reg_prep.reg_prep">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.reg_prep.</span></span><span class="sig-name descname"><span class="pre">reg_prep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xy_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reg_res</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">zoom_order</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">miracl</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg_prep.html#reg_prep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg_prep.reg_prep" title="Link to this definition">#</a></dt>
+<dd><p>Prepare the autofluo image for <code class="docutils literal notranslate"><span class="pre">reg</span></code> or mimic preprocessing  for <code class="docutils literal notranslate"><span class="pre">vstats_prep</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ndarray</strong> (<em>-</em>) – full res 3D autofluo image.</p></li>
+<li><p><strong>xy_res</strong> (<em>-</em>) – x/y resolution in microns of ndarray.</p></li>
+<li><p><strong>z_res</strong> (<em>-</em>) – z resolution in microns of ndarray.</p></li>
+<li><p><strong>reg_res</strong> (<em>-</em>) – Resample input to this resolution in microns for <code class="docutils literal notranslate"><span class="pre">reg</span></code>.</p></li>
+<li><p><strong>zoom_order</strong> (<em>-</em>) – Order for resampling (scipy.ndimage.zoom).</p></li>
+<li><p><strong>miracl</strong> (<em>-</em>) – Include reorientation step to mimic MIRACL’s tif to .nii.gz conversion.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Resampled image.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p>img_resampled (np.ndarray)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unravel.register.reg_prep.main">
+<span class="sig-prename descclassname"><span class="pre">unravel.register.reg_prep.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/unravel/register/reg_prep.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#unravel.register.reg_prep.main" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
 </section>
 
 
@@ -563,6 +675,21 @@
                 <dialog id="pst-secondary-sidebar-modal"></dialog>
                 <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#usage">Usage:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_prep.parse_args"><code class="docutils literal notranslate"><span class="pre">parse_args()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_prep.reg_prep"><code class="docutils literal notranslate"><span class="pre">reg_prep()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unravel.register.reg_prep.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+  </nav></div>
 
   <div class="sidebar-secondary-item">
   <div role="note" aria-label="source link">

@@ -15,33 +15,30 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
   </script>
-  <!--
-    this give us a css class that will be invisible only if js is disabled
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
 
-    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+  
+  <link href="../../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=a746c00c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=13237357" />
     <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=87e54e7c" />
     <link rel="stylesheet" type="text/css" href="../../../_static/custom.css?v=872d93e8" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
     <script src="../../../_static/documentation_options.js?v=8d563738"></script>
-    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
@@ -50,21 +47,14 @@
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
-    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
-    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
-    <script type="module">
-import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
-window.addEventListener("load", () => mermaid.run());
-</script>
+    <script src="https://unpkg.com/mermaid@10.2.0/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
     <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/region_stats/rstats_summary';</script>
     <link rel="icon" href="../../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -80,8 +70,19 @@ window.addEventListener("load", () => mermaid.run());
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../../../search.html"
       method="get">
@@ -89,6 +90,7 @@ window.addEventListener("load", () => mermaid.run());
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search the docs ..."
          aria-label="Search the docs ..."
          autocomplete="off"
@@ -96,8 +98,8 @@ window.addEventListener("load", () => mermaid.run());
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -106,7 +108,7 @@ window.addEventListener("load", () => mermaid.run());
   
     <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
 <div class="bd-header__inner bd-page-width">
-  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+  <button class="sidebar-toggle primary-toggle" aria-label="Site navigation">
     <span class="fa-solid fa-bars"></span>
   </button>
   
@@ -115,8 +117,6 @@ window.addEventListener("load", () => mermaid.run());
     
       <div class="navbar-item">
 
-  
-    
   
 
 <a class="navbar-brand logo" href="../../../index.html">
@@ -137,24 +137,31 @@ window.addEventListener("load", () => mermaid.run());
     <div class="me-auto navbar-header-items__center">
       
         <div class="navbar-item">
-<nav>
+<nav class="navbar-nav">
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item ">
+<li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../installation.html">
     Installation
   </a>
 </li>
 
 
-<li class="nav-item ">
+<li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
   </a>
 </li>
 
 
-<li class="nav-item ">
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../unravel/toc.html">
     unravel package
   </a>
@@ -171,15 +178,19 @@ window.addEventListener("load", () => mermaid.run());
         <div class="navbar-item navbar-persistent--container">
           
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button>
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
         </div>
       
       
-        <div class="navbar-item"><ul class="navbar-icon-links"
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
     aria-label="Icon Links">
         <li class="nav-item">
           
@@ -190,7 +201,7 @@ window.addEventListener("load", () => mermaid.run());
           
           
           
-          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square fa-lg" aria-hidden="true"></i></span>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -202,11 +213,15 @@ window.addEventListener("load", () => mermaid.run());
   
     <div class="navbar-persistent--mobile">
 
-<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
- <i class="fa-solid fa-magnifying-glass"></i>
- <span class="search-button__default-text">Search</span>
- <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-</button>
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script>
     </div>
   
 
@@ -223,8 +238,7 @@ window.addEventListener("load", () => mermaid.run());
       
         
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+      <div class="bd-sidebar-primary bd-sidebar hide-on-wide">
         
 
   
@@ -236,24 +250,31 @@ window.addEventListener("load", () => mermaid.run());
           
           
             <div class="navbar-item">
-<nav>
+<nav class="navbar-nav">
   <ul class="bd-navbar-elements navbar-nav">
     
-<li class="nav-item ">
+<li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../installation.html">
     Installation
   </a>
 </li>
 
 
-<li class="nav-item ">
+<li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
   </a>
 </li>
 
 
-<li class="nav-item ">
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../unravel/toc.html">
     unravel package
   </a>
@@ -269,7 +290,7 @@ window.addEventListener("load", () => mermaid.run());
     
       <div class="sidebar-header-items__end">
         
-          <div class="navbar-item"><ul class="navbar-icon-links"
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
     aria-label="Icon Links">
         <li class="nav-item">
           
@@ -280,7 +301,7 @@ window.addEventListener("load", () => mermaid.run());
           
           
           
-          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fab fa-github-square fa-lg" aria-hidden="true"></i></span>
             <span class="sr-only">GitHub</span></a>
         </li>
 </ul></div>
@@ -291,14 +312,9 @@ window.addEventListener("load", () => mermaid.run());
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item">
-<div id="ethical-ad-placement"
-      class="flat"
-      data-ea-publisher="readthedocs"
-      data-ea-type="readthedocs-sidebar"
-      data-ea-manual="true">
-</div></div>
   </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -316,6 +332,8 @@ window.addEventListener("load", () => mermaid.run());
       
         <div class="header-article-item">
 
+
+
 <nav aria-label="Breadcrumb" class="d-print-none">
   <ul class="bd-breadcrumbs">
     
@@ -327,7 +345,7 @@ window.addEventListener("load", () => mermaid.run());
     
     <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">unravel.region_stats.rstats_summary</span></li>
+    <li class="breadcrumb-item active" aria-current="page">unravel.regi...</li>
   </ul>
 </nav>
 </div>
@@ -369,43 +387,43 @@ window.addEventListener("load", () => mermaid.run());
 
 <span class="sd">Usage for Tukey tests:</span>
 <span class="sd">----------------------</span>
-<span class="sd">    rstats_summary --groups Saline MDMA Meth -hemi both [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-v]</span>
+<span class="sd">    rstats_summary --groups Saline MDMA Meth --side both [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o tukey_plots] [-e pdf] [-v]</span>
 
 <span class="sd">Usage for t-tests:</span>
 <span class="sd">------------------</span>
-<span class="sd">    rstats_summary --groups Saline MDMA -hemi both -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]</span>
+<span class="sd">    rstats_summary --groups Saline MDMA --side both -c Saline [-alt two-sided] [-div 10000] [-y cell_density] [-csv CCFv3-2020_regional_summary.csv] [-b ABA] [-s light:white] [-o t-test_plots] [-e pdf] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">seaborn</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sns</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">textwrap</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rich</span><span class="w"> </span><span class="kn">import</span> <span class="nb">print</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rich.live</span><span class="w"> </span><span class="kn">import</span> <span class="n">Live</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">rich.traceback</span><span class="w"> </span><span class="kn">import</span> <span class="n">install</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.stats</span><span class="w"> </span><span class="kn">import</span> <span class="n">ttest_ind</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">statsmodels.stats.multicomp</span><span class="w"> </span><span class="kn">import</span> <span class="n">pairwise_tukeyhsd</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+<span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
+<span class="kn">from</span> <span class="nn">rich.live</span> <span class="kn">import</span> <span class="n">Live</span>
+<span class="kn">from</span> <span class="nn">rich.traceback</span> <span class="kn">import</span> <span class="n">install</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">ttest_ind</span><span class="p">,</span> <span class="n">dunnett</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.multicomp</span> <span class="kn">import</span> <span class="n">pairwise_tukeyhsd</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.help_formatter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span> <span class="nn">unravel.core.help_formatter</span> <span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">initialize_progress_bar</span>
+<span class="kn">from</span> <span class="nn">unravel.core.config</span> <span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">initialize_progress_bar</span>
 
 
 <div class="viewcode-block" id="parse_args">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.parse_args">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">parse_args</span><span class="p">():</span>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
 
     <span class="n">reqs</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Required arguments&#39;</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Group prefixes (e.g., saline meth mdma)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-hemi&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Hemisphere(s) to process (r, l or both)&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="s1">&#39;--groups&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Group prefixes (e.g., saline meth mdma)&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">reqs</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--side&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Side of brain to process (r, l or both)&quot;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;l&#39;</span><span class="p">,</span> <span class="s1">&#39;both&#39;</span><span class="p">],</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
     <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span> <span class="s1">&#39;--ctrl_group&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Control group name for t-test or Dunnett&#39;s tests&quot;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>  <span class="c1"># Does the control need to be specified for a t-test? First group could be the control.</span>
@@ -414,7 +432,7 @@ window.addEventListener("load", () => mermaid.run());
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-y&#39;</span><span class="p">,</span> <span class="s1">&#39;--ylabel&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Y-axis label (Default: cell_density)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;cell_density&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-csv&#39;</span><span class="p">,</span> <span class="s1">&#39;--csv_path&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;CSV name or path/name.csv. Default: CCFv3-2020_regional_summary.csv&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CCFv3-2020_regional_summary.csv&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-b&#39;</span><span class="p">,</span> <span class="s1">&#39;--bar_color&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;ABA (default), #hex_code, Seaborn palette, or #hex_code list matching # of groups&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ABA&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
-    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-s&#39;</span><span class="p">,</span> <span class="s1">&#39;--symbol_color&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;light:white&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-sc&#39;</span><span class="p">,</span> <span class="s1">&#39;--symbol_color&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;ABA, #hex_code, Seaborn palette (Default: light:white), or #hex_code list matching # of groups&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;light:white&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output directory for plots (Default: &lt;t-test or tukey&gt;_plots)&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
     <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s2">&quot;--extension&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;File extension for plots. Choices: pdf (default), svg, eps, tiff, png)&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span> <span class="s1">&#39;svg&#39;</span><span class="p">,</span> <span class="s1">&#39;eps&#39;</span><span class="p">,</span> <span class="s1">&#39;tiff&#39;</span><span class="p">,</span> <span class="s1">&#39;png&#39;</span><span class="p">],</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
 
@@ -428,10 +446,11 @@ window.addEventListener("load", () => mermaid.run());
 <span class="c1"># TODO: Adapt this to work for cell counts and label densities. This could also be used for mean IF intensities.</span>
 <span class="c1"># TODO: Need a way to handle cases when some data from some samples is from one hemisphere and some from the other. (see filter_csv.py)</span>
 <span class="c1"># TODO: Fix plots for when there are &gt; 3 groups (comparison lines are not positioned correctly)</span>
+<span class="c1"># TODO: Zip the output directory to save space and make it easier to move around.</span>
 
 <div class="viewcode-block" id="get_region_details">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.get_region_details">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_region_details</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">get_region_details</span><span class="p">(</span><span class="n">region_id</span><span class="p">,</span> <span class="n">df</span><span class="p">):</span>
     <span class="c1"># Adjust to account for the unique region IDs.</span>
     <span class="n">region_row</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Region_ID&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region_id</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;Region_ID&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">region_id</span> <span class="o">+</span> <span class="mi">20000</span><span class="p">)]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">region_row</span><span class="p">[</span><span class="s2">&quot;Region&quot;</span><span class="p">],</span> <span class="n">region_row</span><span class="p">[</span><span class="s2">&quot;Abbr&quot;</span><span class="p">]</span></div>
@@ -439,7 +458,7 @@ window.addEventListener("load", () => mermaid.run());
 
 <div class="viewcode-block" id="parse_color_argument">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.parse_color_argument">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">parse_color_argument</span><span class="p">(</span><span class="n">color_arg</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">parse_color_argument</span><span class="p">(</span><span class="n">color_arg</span><span class="p">,</span> <span class="n">num_groups</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">color_arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">color_arg</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">color_arg</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">):</span>
             <span class="c1"># It&#39;s a string representation of a list, so evaluate it safely</span>
@@ -472,7 +491,7 @@ window.addEventListener("load", () => mermaid.run());
 
 <div class="viewcode-block" id="summarize_significance">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.summarize_significance">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">summarize_significance</span><span class="p">(</span><span class="n">test_df</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">summarize_significance</span><span class="p">(</span><span class="n">test_df</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Summarize the results of the statistical tests.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -510,7 +529,7 @@ window.addEventListener("load", () => mermaid.run());
 
 <div class="viewcode-block" id="process_and_plot_data">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.process_and_plot_data">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">process_and_plot_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">region_abbr</span><span class="p">,</span> <span class="n">side</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">group_columns</span><span class="p">,</span> <span class="n">test_type</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">process_and_plot_data</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">region_id</span><span class="p">,</span> <span class="n">region_name</span><span class="p">,</span> <span class="n">region_abbr</span><span class="p">,</span> <span class="n">side</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">group_columns</span><span class="p">,</span> <span class="n">test_type</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
 
     <span class="c1"># Reshaping the data for plotting</span>
     <span class="n">reshaped_data</span> <span class="o">=</span> <span class="p">[]</span>
@@ -571,25 +590,25 @@ window.addEventListener("load", () => mermaid.run());
         <span class="n">test_results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">test_results</span><span class="p">)</span>
         <span class="n">significant_comparisons</span> <span class="o">=</span> <span class="n">test_results_df</span><span class="p">[</span><span class="n">test_results_df</span><span class="p">[</span><span class="s1">&#39;p-value&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">]</span>
 
-    <span class="c1"># elif test_type == &#39;dunnett&#39;:</span>
+    <span class="k">elif</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s1">&#39;dunnett&#39;</span><span class="p">:</span>
 
-    <span class="c1">#     # Extract the data for the control group and the other groups</span>
-    <span class="c1">#     data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]</span>
-    <span class="c1">#     control_data = df[group_columns[args.ctrl_group]].values.ravel()</span>
+        <span class="c1"># Extract the data for the control group and the other groups</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">group_columns</span><span class="p">[</span><span class="n">prefix</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span> <span class="k">if</span> <span class="n">prefix</span> <span class="o">!=</span> <span class="n">args</span><span class="o">.</span><span class="n">ctrl_group</span><span class="p">]</span>
+        <span class="n">control_data</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">group_columns</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">ctrl_group</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
 
-    <span class="c1">#     # The * operator unpacks the list so that each array is a separate argument, as required by dunnett</span>
-    <span class="c1">#     dunnett_results = dunnett(*data, control=control_data, alternative=args.alternate)</span>
+        <span class="c1"># The * operator unpacks the list so that each array is a separate argument, as required by dunnett</span>
+        <span class="n">dunnett_results</span> <span class="o">=</span> <span class="n">dunnett</span><span class="p">(</span><span class="o">*</span><span class="n">data</span><span class="p">,</span> <span class="n">control</span><span class="o">=</span><span class="n">control_data</span><span class="p">,</span> <span class="n">alternative</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">alternate</span><span class="p">)</span>
 
-    <span class="c1">#     group2_data = [df[group_columns[prefix]].values.ravel() for prefix in args.groups if prefix != args.ctrl_group]</span>
+        <span class="n">group2_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">group_columns</span><span class="p">[</span><span class="n">prefix</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span> <span class="k">if</span> <span class="n">prefix</span> <span class="o">!=</span> <span class="n">args</span><span class="o">.</span><span class="n">ctrl_group</span><span class="p">]</span>
 
-    <span class="c1">#     # Convert the result to a DataFrame</span>
-    <span class="c1">#     test_results_df = pd.DataFrame({</span>
-    <span class="c1">#         &#39;group1&#39;: [args.ctrl_group] * len(dunnett_results.pvalue),</span>
-    <span class="c1">#         &#39;group2&#39;: [prefix for prefix in args.groups if prefix != args.ctrl_group],</span>
-    <span class="c1">#         &#39;p-value&#39;: dunnett_results.pvalue,</span>
-    <span class="c1">#         &#39;meandiff&#39;: np.mean(group2_data, axis=1) - np.mean(control_data) # Calculate the mean difference between each group and the control group</span>
-    <span class="c1">#     })</span>
-    <span class="c1">#     significant_comparisons = test_results_df[test_results_df[&#39;p-value&#39;] &lt; 0.05]</span>
+        <span class="c1"># Convert the result to a DataFrame</span>
+        <span class="n">test_results_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s1">&#39;group1&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">ctrl_group</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">dunnett_results</span><span class="o">.</span><span class="n">pvalue</span><span class="p">),</span>
+            <span class="s1">&#39;group2&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">prefix</span> <span class="k">for</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">groups</span> <span class="k">if</span> <span class="n">prefix</span> <span class="o">!=</span> <span class="n">args</span><span class="o">.</span><span class="n">ctrl_group</span><span class="p">],</span>
+            <span class="s1">&#39;p-value&#39;</span><span class="p">:</span> <span class="n">dunnett_results</span><span class="o">.</span><span class="n">pvalue</span><span class="p">,</span>
+            <span class="s1">&#39;meandiff&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">group2_data</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">control_data</span><span class="p">)</span> <span class="c1"># Calculate the mean difference between each group and the control group</span>
+        <span class="p">})</span>
+        <span class="n">significant_comparisons</span> <span class="o">=</span> <span class="n">test_results_df</span><span class="p">[</span><span class="n">test_results_df</span><span class="p">[</span><span class="s1">&#39;p-value&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">]</span>
 
     <span class="k">elif</span> <span class="n">test_type</span> <span class="o">==</span> <span class="s1">&#39;tukey&#39;</span><span class="p">:</span>
 
@@ -674,7 +693,7 @@ window.addEventListener("load", () => mermaid.run());
 <div class="viewcode-block" id="main">
 <a class="viewcode-back" href="../../../unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.main">[docs]</a>
 <span class="nd">@log_command</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
     <span class="n">install</span><span class="p">()</span>
     <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
     <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
@@ -745,8 +764,8 @@ window.addEventListener("load", () => mermaid.run());
         <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">hemi</span> <span class="o">==</span> <span class="s1">&#39;l&#39;</span><span class="p">:</span> 
             <span class="n">out_dirs</span> <span class="o">=</span> <span class="p">{</span><span class="n">side</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">output</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">side</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">]}</span>
         <span class="k">else</span><span class="p">:</span> 
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--hemi should be l, r, or both&quot;</span><span class="p">)</span>
-            <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--side should be l, r, or both&quot;</span><span class="p">)</span>
+            <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">hemi</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span> 
             <span class="n">out_dirs</span> <span class="o">=</span> <span class="p">{</span><span class="n">side</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_type</span><span class="si">}</span><span class="s2">_plots_</span><span class="si">{</span><span class="n">side</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">,</span> <span class="s2">&quot;R&quot;</span><span class="p">,</span> <span class="s2">&quot;pooled&quot;</span><span class="p">]}</span>
@@ -755,8 +774,8 @@ window.addEventListener("load", () => mermaid.run());
         <span class="k">elif</span> <span class="n">args</span><span class="o">.</span><span class="n">hemi</span> <span class="o">==</span> <span class="s1">&#39;l&#39;</span><span class="p">:</span> 
             <span class="n">out_dirs</span> <span class="o">=</span> <span class="p">{</span><span class="n">side</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">test_type</span><span class="si">}</span><span class="s2">_plots_</span><span class="si">{</span><span class="n">side</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;L&quot;</span><span class="p">]}</span>
         <span class="k">else</span><span class="p">:</span> 
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--hemi should be l, r, or both&quot;</span><span class="p">)</span>
-            <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--side should be l, r, or both&quot;</span><span class="p">)</span>
+            <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
     <span class="k">for</span> <span class="n">out_dir</span> <span class="ow">in</span> <span class="n">out_dirs</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
         <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -883,8 +902,8 @@ window.addEventListener("load", () => mermaid.run());
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+  <script src="../../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -904,7 +923,7 @@ window.addEventListener("load", () => mermaid.run());
         <div class="footer-item">
 
   <p class="sphinx-version">
-    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.7.
     <br/>
   </p>
 </div>
@@ -917,8 +936,7 @@ window.addEventListener("load", () => mermaid.run());
       
         <div class="footer-item">
 <p class="theme-version">
-  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.15.3.
 </p></div>
       
     </div>

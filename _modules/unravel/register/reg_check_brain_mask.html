@@ -149,7 +149,14 @@ window.addEventListener("load", () => mermaid.run());
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -248,7 +255,14 @@ window.addEventListener("load", () => mermaid.run());
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -348,15 +362,11 @@ window.addEventListener("load", () => mermaid.run());
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Use ``reg_check_brain_mask`` (``rcbm``) from UNRAVEL for masking QC, copies autofluo_50um.nii.gz and autofluo_50_masked.nii.gz for each sample to a target directory.</span>
+<span class="sd">Use ``reg_check_brain_mask`` (``rcbm``) from UNRAVEL for masking QC, copies autofluo_50um.nii.gz and autofluo_50um_masked.nii.gz for each sample to a target directory.</span>
 
-<span class="sd">Usage for copying to the current working directory:</span>
-<span class="sd">---------------------------------------------------</span>
-<span class="sd">    reg_check_brain_mask [-d list of paths] [-p sample??] [-v]</span>
-
-<span class="sd">Usage for copying to a target directory:</span>
-<span class="sd">----------------------------------------</span>
-<span class="sd">    reg_check_brain_mask -td &lt;target_output_dir&gt; [-d list of paths] [-p sample??] [-v]</span>
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    reg_check_brain_mask [-td &lt;path/target_output_dir&gt;] [-d list of paths] [-p sample??] [-v]</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>

@@ -1,0 +1,655 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unravel.allen_institute.genetic_tools_atlas.auto_crop &#8212; UNRAVEL docs</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=87e54e7c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/custom.css?v=872d93e8" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../../_static/documentation_options.js?v=8d563738"></script>
+    <script src="../../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";import elkLayouts from "https://cdn.jsdelivr.net/npm/@mermaid-js/layout-elk@0.1.4/dist/mermaid-layout-elk.esm.min.mjs";mermaid.registerLayoutLoaders(elkLayouts);mermaid.initialize({startOnLoad:false});</script>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+    <script type="module">
+import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.2.0/dist/mermaid.esm.min.mjs";
+window.addEventListener("load", () => mermaid.run());
+</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/unravel/allen_institute/genetic_tools_atlas/auto_crop';</script>
+    <link rel="icon" href="../../../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">UNRAVEL docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../guide.html">
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../guide_mms.html">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../installation.html">
+    Installation
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../guide.html">
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../guide_mms.html">
+    MapMySections Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../../unravel/toc.html">
+    unravel package
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/b-heifets/UNRAVEL" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github-square fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">unravel.allen_institute.genetic_tools_atlas.auto_crop</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for unravel.allen_institute.genetic_tools_atlas.auto_crop</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Use ``gta_auto_crop`` (``gta_ac``) from UNRAVEL to automatically crop 3D images for all `ID_*` directories based on the brain bounding box.</span>
+
+<span class="sd">Inputs:</span>
+<span class="sd">    - One or more 3D image files (e.g., directory with tifs)</span>
+
+<span class="sd">Outputs:</span>
+<span class="sd">    - ./bbox/: Saves average intensity projections (AIPs) for two axes (coronal and sagittal) w/ &amp; w/o mask outlines.</span>
+<span class="sd">    - ./bbox/: Saves thresholded AIPs as binary masks.</span>
+<span class="sd">    - ./bbox/: Saves bounding box coordinates of the largest connected component in a text file.</span>
+<span class="sd">    - ./bbox/: Saves the bounding box coordinates with padding in a text file.</span>
+<span class="sd">    - ./: Crops the original 3D image based on the bounding box w/ padding and saves it as a tif series to ./&lt;tif_dir&gt;_cropped/.</span>
+
+<span class="sd">Note:</span>
+<span class="sd">    - This currently uses a simple thresholding method to identify brain tissue, which works well for GTA data.</span>
+<span class="sd">    - Future improvements could include more advanced segmentation techniques, such as machine learning-based methods.</span>
+<span class="sd">    - For simplicity and processing with Ilastik, this outputs as a TIFF series.</span>
+<span class="sd">    - The TIFF series can be converted with ``io_convert_img`` (``conv``) to other formats if needed.</span>
+
+<span class="sd">Next steps:</span>
+<span class="sd">    - Aggregate the average intensity projections (AIPs) from the green channel with the outline to check the cropping.</span>
+<span class="sd">    - Use ``gta_bbox_crop`` (``gta_bc``) to crop the other channels (e.g., red) using the bounding box from the green channel.</span>
+<span class="sd">    - To save space, the original TIFF directories may be deleted. Run from TIFFs/ directory: `rm -rf **/green **/red`</span>
+<span class="sd">    - ``reg_prep`` to prepare the cropped images for registration.</span>
+<span class="sd">    - ``seg_copy_tifs`` to copy select TIFFs to a common directory to train an Ilastik project for cell segmentation.</span>
+
+<span class="sd">Usage:</span>
+<span class="sd">------</span>
+<span class="sd">    gta_ac [-i green] [-o bbox] [-t 40] [-pad 0.02] [--force] [-d ID_123 ID_456 ...] [-p pattern] [-v]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">cc3d</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tifffile</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich</span><span class="w"> </span><span class="kn">import</span> <span class="nb">print</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.live</span><span class="w"> </span><span class="kn">import</span> <span class="n">Live</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.traceback</span><span class="w"> </span><span class="kn">import</span> <span class="n">install</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.ndimage</span><span class="w"> </span><span class="kn">import</span> <span class="n">binary_erosion</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.help_formatter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.img_io</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_3D_img</span><span class="p">,</span> <span class="n">save_as_tifs</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_stem</span><span class="p">,</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">match_files</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">get_samples</span><span class="p">,</span> <span class="n">initialize_progress_bar</span>
+
+
+<div class="viewcode-block" id="parse_args">
+<a class="viewcode-back" href="../../../../unravel/allen_institute/genetic_tools_atlas/auto_crop.html#unravel.allen_institute.genetic_tools_atlas.auto_crop.parse_args">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_args</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">RichArgumentParser</span><span class="p">(</span><span class="n">formatter_class</span><span class="o">=</span><span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">add_help</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">docstring</span><span class="o">=</span><span class="vm">__doc__</span><span class="p">)</span>
+
+    <span class="n">opts</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;Optional arguments&#39;</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Name of a directory with TIFFs in the &quot;ID_*&quot; directories. Default: green&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output directory for average intensity projections and masks. Default: bbox&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;bbox&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span> <span class="s1">&#39;--threshold&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Intensity value for thresholding brain tissue (default: 40)&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-pad&#39;</span><span class="p">,</span> <span class="s1">&#39;--pad_percent&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Percentage of padding to add to each dimension of the brain bbox. Default: 0.05 (5</span><span class="si">%%</span><span class="s1">).&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">opts</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-f&#39;</span><span class="p">,</span> <span class="s1">&#39;--force&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Force overwrite existing output files. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">general</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;General arguments&#39;</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="s1">&#39;--dirs&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Paths to &quot;ID*&quot; dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir&#39;</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-p&#39;</span><span class="p">,</span> <span class="s1">&#39;--pattern&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Pattern for directories to process. Default: ID_*&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;ID_*&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="n">SM</span><span class="p">)</span>
+    <span class="n">general</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-v&#39;</span><span class="p">,</span> <span class="s1">&#39;--verbose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Increase verbosity. Default: False&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="create_outline">
+<a class="viewcode-back" href="../../../../unravel/allen_institute/genetic_tools_atlas/auto_crop.html#unravel.allen_institute.genetic_tools_atlas.auto_crop.create_outline">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_outline</span><span class="p">(</span><span class="n">mask</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an outline mask by eroding the original mask and subtracting it from the original mask.&quot;&quot;&quot;</span>
+    <span class="n">eroded_mask</span> <span class="o">=</span> <span class="n">binary_erosion</span><span class="p">(</span><span class="n">mask</span><span class="p">)</span>
+    <span class="n">outline_mask</span> <span class="o">=</span> <span class="n">mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> <span class="o">-</span> <span class="n">eroded_mask</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">outline_mask</span></div>
+
+
+
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../../../unravel/allen_institute/genetic_tools_atlas/auto_crop.html#unravel.allen_institute.genetic_tools_atlas.auto_crop.main">[docs]</a>
+<span class="nd">@log_command</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">install</span><span class="p">()</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parse_args</span><span class="p">()</span>
+    <span class="n">Configuration</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span>
+    <span class="n">verbose_start_msg</span><span class="p">()</span>
+
+    <span class="n">sample_paths</span> <span class="o">=</span> <span class="n">get_samples</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">dirs</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">pattern</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+
+    <span class="n">progress</span><span class="p">,</span> <span class="n">task_id</span> <span class="o">=</span> <span class="n">initialize_progress_bar</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_paths</span><span class="p">),</span> <span class="s2">&quot;[red]Processing samples...&quot;</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">Live</span><span class="p">(</span><span class="n">progress</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">sample_path</span> <span class="ow">in</span> <span class="n">sample_paths</span><span class="p">:</span>
+
+            <span class="n">img_path</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">input</span>
+
+            <span class="n">output_dir</span> <span class="o">=</span> <span class="n">sample_path</span> <span class="o">/</span> <span class="n">args</span><span class="o">.</span><span class="n">output</span>
+            <span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="c1"># Define output paths</span>
+            <span class="n">img_stem</span> <span class="o">=</span> <span class="n">get_stem</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
+            <span class="n">coronal_aip_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_stem</span><span class="si">}</span><span class="s2">_coronal_aip.tif&quot;</span><span class="p">)</span>
+            <span class="n">sagittal_aip_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_stem</span><span class="si">}</span><span class="s2">_sagittal_aip.tif&quot;</span><span class="p">)</span>
+            <span class="n">coronal_aip_thr_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_stem</span><span class="si">}</span><span class="s2">_coronal_aip_thresh</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s2">.tif&quot;</span><span class="p">)</span>
+            <span class="n">sagittal_aip_thr_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_stem</span><span class="si">}</span><span class="s2">_sagittal_aip_thresh</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">threshold</span><span class="si">}</span><span class="s2">.tif&quot;</span><span class="p">)</span>
+            <span class="n">coronal_aip_outline_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_stem</span><span class="si">}</span><span class="s2">_coronal_aip_outline.tif&quot;</span><span class="p">)</span>
+            <span class="n">sagittal_aip_outline_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_stem</span><span class="si">}</span><span class="s2">_sagittal_aip_outline.tif&quot;</span><span class="p">)</span>
+            <span class="n">bbox_file</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_stem</span><span class="si">}</span><span class="s2">_bbox_zyx.txt&quot;</span>
+            <span class="n">pad_percent_txt</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_stem</span><span class="si">}</span><span class="s2">_pad_percent.txt&quot;</span>
+            <span class="n">bbox_pad_file</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_stem</span><span class="si">}</span><span class="s2">_bbox_pad_zyx.txt&quot;</span>
+            <span class="n">output_cropped</span> <span class="o">=</span> <span class="n">img_path</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">img_stem</span><span class="si">}</span><span class="s2">_cropped&quot;</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">args</span><span class="o">.</span><span class="n">force</span> <span class="ow">and</span> <span class="n">output_cropped</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="n">output_cropped</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()):</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">    </span><span class="si">{</span><span class="n">output_cropped</span><span class="si">}</span><span class="s2"> already exists. Skipping.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">args</span><span class="o">.</span><span class="n">force</span> <span class="ow">and</span> <span class="n">output_cropped</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">output_cropped</span><span class="o">.</span><span class="n">iterdir</span><span class="p">():</span>
+                    <span class="n">file</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+            <span class="n">img</span> <span class="o">=</span> <span class="n">load_3D_img</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s1">&#39;zyx&#39;</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">verbose</span><span class="p">)</span>
+
+            <span class="c1"># Create/save average intensity projections (AIPs) for 2 axes (coronal [x, y] and sagittal [y, z])</span>
+            <span class="n">aip_coronal</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">aip_sagittal</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="c1"># Save AIPs as .tif files</span>
+            <span class="n">tifffile</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">coronal_aip_path</span><span class="p">,</span> <span class="n">aip_coronal</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">))</span>
+            <span class="n">tifffile</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">sagittal_aip_path</span><span class="p">,</span> <span class="n">aip_sagittal</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">))</span>
+
+            <span class="c1"># Threshold the AIPs</span>
+            <span class="n">aip_coronal_thresh</span> <span class="o">=</span> <span class="n">aip_coronal</span> <span class="o">&gt;</span> <span class="n">args</span><span class="o">.</span><span class="n">threshold</span> <span class="c1"># Binary thresholding</span>
+            <span class="n">aip_sagittal_thresh</span> <span class="o">=</span> <span class="n">aip_sagittal</span> <span class="o">&gt;</span> <span class="n">args</span><span class="o">.</span><span class="n">threshold</span>
+
+            <span class="c1"># Save thresholded AIPs</span>
+            <span class="n">tifffile</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">coronal_aip_thr_path</span><span class="p">,</span> <span class="n">aip_coronal_thresh</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
+            <span class="n">tifffile</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">sagittal_aip_thr_path</span><span class="p">,</span> <span class="n">aip_sagittal_thresh</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
+
+            <span class="c1"># Get mean in brain masks</span>
+            <span class="n">aip_coronal_mean</span> <span class="o">=</span> <span class="n">aip_coronal</span><span class="p">[</span><span class="n">aip_coronal_thresh</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="n">aip_sagittal_mean</span> <span class="o">=</span> <span class="n">aip_sagittal</span><span class="p">[</span><span class="n">aip_sagittal_thresh</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+            <span class="c1"># Create outlines for the AIPs</span>
+            <span class="n">aip_coronal_outline</span> <span class="o">=</span> <span class="n">create_outline</span><span class="p">(</span><span class="n">aip_coronal_thresh</span><span class="p">)</span>
+            <span class="n">aip_sagittal_outline</span> <span class="o">=</span> <span class="n">create_outline</span><span class="p">(</span><span class="n">aip_sagittal_thresh</span><span class="p">)</span>
+
+            <span class="c1"># Add the outlines to the AIPs</span>
+            <span class="n">aip_coronal_with_outline</span> <span class="o">=</span> <span class="n">aip_coronal</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">aip_sagittal_with_outline</span> <span class="o">=</span> <span class="n">aip_sagittal</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">aip_coronal_with_outline</span><span class="p">[</span><span class="n">aip_coronal_outline</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">aip_coronal_mean</span>
+            <span class="n">aip_sagittal_with_outline</span><span class="p">[</span><span class="n">aip_sagittal_outline</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">aip_sagittal_mean</span>
+
+            <span class="c1"># Save the AIPs with outlines</span>
+            <span class="n">tifffile</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">coronal_aip_outline_path</span><span class="p">,</span> <span class="n">aip_coronal_with_outline</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">))</span>
+            <span class="n">tifffile</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="n">sagittal_aip_outline_path</span><span class="p">,</span> <span class="n">aip_sagittal_with_outline</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">uint16</span><span class="p">))</span>
+
+            <span class="c1"># Use ccd3d to find connected components in the thresholded AIPs</span>
+            <span class="n">labels_coronal</span> <span class="o">=</span> <span class="n">cc3d</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">aip_coronal_thresh</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="c1"># each object will have a unique label</span>
+            <span class="n">labels_sagittal</span> <span class="o">=</span> <span class="n">cc3d</span><span class="o">.</span><span class="n">connected_components</span><span class="p">(</span><span class="n">aip_sagittal_thresh</span><span class="p">,</span> <span class="n">connectivity</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+            <span class="n">pixel_count_coronal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">labels_coronal</span><span class="o">.</span><span class="n">ravel</span><span class="p">())[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># Exclude background (label 0)</span>
+            <span class="n">pixel_count_sagittal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">labels_sagittal</span><span class="o">.</span><span class="n">ravel</span><span class="p">())[</span><span class="mi">1</span><span class="p">:]</span>  <span class="c1"># Exclude background (label 0)</span>
+            <span class="n">largest_label_coronal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pixel_count_coronal</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># +1 to adjust for background label</span>
+            <span class="n">largest_label_sagittal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pixel_count_sagittal</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>  <span class="c1"># +1 to adjust for background label</span>
+
+            <span class="c1"># Get the bounding box of the largest connected component</span>
+            <span class="n">stats_coronal</span> <span class="o">=</span> <span class="n">cc3d</span><span class="o">.</span><span class="n">statistics</span><span class="p">(</span><span class="n">labels_coronal</span><span class="p">)</span>
+            <span class="n">stats_sagittal</span> <span class="o">=</span> <span class="n">cc3d</span><span class="o">.</span><span class="n">statistics</span><span class="p">(</span><span class="n">labels_sagittal</span><span class="p">)</span>
+            <span class="n">largest_component_bbox_coronal</span> <span class="o">=</span> <span class="n">stats_coronal</span><span class="p">[</span><span class="s1">&#39;bounding_boxes&#39;</span><span class="p">][</span><span class="n">largest_label_coronal</span><span class="p">]</span>
+            <span class="n">largest_component_bbox_sagittal</span> <span class="o">=</span> <span class="n">stats_sagittal</span><span class="p">[</span><span class="s1">&#39;bounding_boxes&#39;</span><span class="p">][</span><span class="n">largest_label_sagittal</span><span class="p">]</span>
+
+            <span class="c1"># bbox is (x_slice, y_slice, z_slice)</span>
+            <span class="n">y_slice</span><span class="p">,</span> <span class="n">x_slice</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">largest_component_bbox_coronal</span>
+            <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">x_slice</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">x_slice</span><span class="o">.</span><span class="n">stop</span>
+            <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">y_slice</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">y_slice</span><span class="o">.</span><span class="n">stop</span>
+
+            <span class="c1"># Extract the sagittal bounding box coordinates</span>
+            <span class="n">y_slice</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">largest_component_bbox_sagittal</span>
+            <span class="n">zmin</span><span class="p">,</span> <span class="n">zmax</span> <span class="o">=</span> <span class="n">y_slice</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">y_slice</span><span class="o">.</span><span class="n">stop</span>
+
+            <span class="c1"># Save the bounding box to a file</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">bbox_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">zmin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">zmax</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ymin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">ymax</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">xmin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">xmax</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Write the pad percentage to a file</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pad_percent_txt</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">args</span><span class="o">.</span><span class="n">pad_percent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Calculate padding based on the specified percentage</span>
+            <span class="n">pad_factor</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">args</span><span class="o">.</span><span class="n">pad_percent</span>
+            <span class="n">x_size</span> <span class="o">=</span> <span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span>
+            <span class="n">y_size</span> <span class="o">=</span> <span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span>
+            <span class="n">z_size</span> <span class="o">=</span> <span class="n">zmax</span> <span class="o">-</span> <span class="n">zmin</span>
+            <span class="n">pad_width_x</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(((</span><span class="n">x_size</span> <span class="o">*</span> <span class="n">pad_factor</span><span class="p">)</span> <span class="o">-</span> <span class="n">x_size</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">pad_width_y</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(((</span><span class="n">y_size</span> <span class="o">*</span> <span class="n">pad_factor</span><span class="p">)</span> <span class="o">-</span> <span class="n">y_size</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="n">pad_width_z</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(((</span><span class="n">z_size</span> <span class="o">*</span> <span class="n">pad_factor</span><span class="p">)</span> <span class="o">-</span> <span class="n">z_size</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+            <span class="c1"># Adjust the bounding box with padding</span>
+            <span class="n">xmin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">xmin</span> <span class="o">-</span> <span class="n">pad_width_x</span><span class="p">)</span>
+            <span class="n">xmax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">xmax</span> <span class="o">+</span> <span class="n">pad_width_x</span><span class="p">)</span>
+            <span class="n">ymin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">-</span> <span class="n">pad_width_y</span><span class="p">)</span>
+            <span class="n">ymax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ymax</span> <span class="o">+</span> <span class="n">pad_width_y</span><span class="p">)</span>
+            <span class="n">zmin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">zmin</span> <span class="o">-</span> <span class="n">pad_width_z</span><span class="p">)</span>
+            <span class="n">zmax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zmax</span> <span class="o">+</span> <span class="n">pad_width_z</span><span class="p">)</span>
+
+            <span class="c1"># Save the adjusted bounding box to a file</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">bbox_pad_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+                <span class="n">file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">zmin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">zmax</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">ymin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">ymax</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">xmin</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">xmax</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Crop/save the original 3D image using the bounding box</span>
+            <span class="n">img_cropped</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="n">zmin</span><span class="p">:</span><span class="n">zmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">:</span><span class="n">ymax</span><span class="p">,</span> <span class="n">xmin</span><span class="p">:</span><span class="n">xmax</span><span class="p">]</span>
+            <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img_cropped</span><span class="p">,</span> <span class="n">output_cropped</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s1">&#39;zyx&#39;</span><span class="p">)</span>
+
+            <span class="n">progress</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">task_id</span><span class="p">,</span> <span class="n">advance</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+    <span class="n">verbose_end_msg</span><span class="p">()</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, the UNRAVEL team.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.2.5.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

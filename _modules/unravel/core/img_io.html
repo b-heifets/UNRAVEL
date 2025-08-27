@@ -149,7 +149,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -255,7 +262,14 @@
 
 <li class="nav-item pst-header-nav-item">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item pst-header-nav-item">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -368,6 +382,8 @@
 <span class="sd">- return_3D_img</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">cv2</span> 
 <span class="kn">import</span> <span class="nn">dask.array</span> <span class="k">as</span> <span class="nn">da</span>
@@ -384,14 +400,15 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">rich</span> <span class="kn">import</span> <span class="nb">print</span>
 
-<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">print_func_name_args_times</span>
+<span class="kn">from</span> <span class="nn">unravel.core.utils</span> <span class="kn">import</span> <span class="n">match_files</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
 
 
-<span class="c1"># TODO: Create save_3D_img() function for saving 3D images in various formats. </span>
 <span class="c1"># TODO: save_as_nii() add logic for using the reference image for dtype (e.g., if reference is provided and dtype is None, use reference dtype)</span>
+<span class="c1"># TODO: Add support for extracting metadata from .zarr files.</span>
 
 <div class="viewcode-block" id="return_3D_img">
 <a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.return_3D_img">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">y_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_dim</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Return the 3D image ndarray and optionally resolutions (xy_res, z_res) or metadata (xy_res, z_res, x_dim, y_dim, z_dim).</span>
@@ -513,7 +530,7 @@
             <span class="n">dataset</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">full_res_dataset_name</span><span class="p">]</span> 
             <span class="n">res</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">attrs</span><span class="p">[</span><span class="s1">&#39;element_size_um&#39;</span><span class="p">]</span> <span class="c1"># z, y, x voxel sizes in microns (ndarray)</span>
             <span class="n">xy_res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-            <span class="n">z_res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  
+            <span class="n">z_res</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span></div>
 
 
@@ -556,7 +573,7 @@
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">czi</span><span class="o">.</span><span class="n">read_image</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="n">channel</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="k">if</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1].czi channel </span><span class="si">{</span><span class="n">channel</span><span class="si">}</span><span class="s2"> has 4 axes. Please stitch tiles from </span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">czi_path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[red1].czi channel </span><span class="si">{</span><span class="n">channel</span><span class="si">}</span><span class="s2"> has 4 axes. Please stitch tiles from </span><span class="si">{</span><span class="n">Path</span><span class="p">(</span><span class="n">czi_path</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="kn">import</span> <span class="nn">sys</span> <span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
 
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="k">if</span> <span class="n">desired_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span> <span class="k">else</span> <span class="n">ndarray</span>
@@ -605,7 +622,7 @@
         <span class="k">if</span> <span class="n">img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to load image: </span><span class="si">{</span><span class="n">tif_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">img</span>
-    <span class="n">tif_files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">tif_dir_path</span><span class="p">)</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.tif&quot;</span><span class="p">))</span>
+    <span class="n">tif_files</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">&#39;*.tif&#39;</span><span class="p">,</span> <span class="n">base_path</span><span class="o">=</span><span class="n">tif_dir_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">parallel_loading</span><span class="p">:</span>
         <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
             <span class="n">tifs_stacked</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">load_single_tif</span><span class="p">,</span> <span class="n">tif_files</span><span class="p">))</span>
@@ -670,6 +687,50 @@
     <span class="k">return</span> <span class="n">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="nii_path_or_nii">
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.nii_path_or_nii">[docs]</a>
+<span class="k">def</span> <span class="nf">nii_path_or_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to load a NIfTI image if it&#39;s a path. Returns the NIfTI image object.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    nii : str, Path, or nib.Nifti1Image</span>
+<span class="sd">        Path to the NIfTI image file or a Nifti1Image object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    nib.Nifti1Image</span>
+<span class="sd">        The NIfTI image object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">nii</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">))</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">nii</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">nii</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Input file not found: </span><span class="si">{</span><span class="n">nii</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="nii_to_ndarray">
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.nii_to_ndarray">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">nii_to_ndarray</span><span class="p">(</span><span class="n">nii</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a NIfTI image and return as a 3D ndarray.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    nii : str, Path, or nib.Nifti1Image</span>
+<span class="sd">        Path to the NIfTI image file or a Nifti1Image object.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    ndarray : ndarray</span>
+<span class="sd">        The 3D image array.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">nii</span> <span class="o">=</span> <span class="n">nii_path_or_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">)</span>
+    <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">nii</span><span class="o">.</span><span class="n">dataobj</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_data_dtype</span><span class="p">())</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">ndarray</span></div>
+
+
 <div class="viewcode-block" id="load_nii">
 <a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_nii">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
@@ -707,11 +768,7 @@
 <span class="sd">    -----</span>
 <span class="sd">    - If xy_res and z_res are provided, they will be used instead of the values from the metadata.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">nii_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Input file not found: </span><span class="si">{</span><span class="n">nii_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="n">nii</span> <span class="o">=</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">nii_path</span><span class="p">)</span>
-    <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">nii</span><span class="o">.</span><span class="n">dataobj</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_data_dtype</span><span class="p">())</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+    <span class="n">ndarray</span> <span class="o">=</span> <span class="n">nii_to_ndarray</span><span class="p">(</span><span class="n">nii_path</span><span class="p">)</span>
     <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="k">if</span> <span class="n">desired_axis_order</span> <span class="o">==</span> <span class="s2">&quot;zyx&quot;</span> <span class="k">else</span> <span class="n">ndarray</span>
 
     <span class="n">res_specified</span> <span class="o">=</span> <span class="kc">True</span> <span class="k">if</span> <span class="n">xy_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">False</span>
@@ -726,50 +783,6 @@
         <span class="n">z_res</span> <span class="o">=</span> <span class="n">original_z_res</span>
 
     <span class="k">return</span> <span class="n">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="nii_path_or_nii">
-<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.nii_path_or_nii">[docs]</a>
-<span class="k">def</span> <span class="nf">nii_path_or_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Helper function to load a NIfTI image if it&#39;s a path. Returns the NIfTI image object.</span>
-<span class="sd">    </span>
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
-<span class="sd">    nii : str, Path, or nib.Nifti1Image</span>
-<span class="sd">        Path to the NIfTI image file or a Nifti1Image object.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    nib.Nifti1Image</span>
-<span class="sd">        The NIfTI image object.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">nii</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">))</span> <span class="ow">and</span> <span class="n">Path</span><span class="p">(</span><span class="n">nii</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">return</span> <span class="n">nib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">nii</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]Input file not found: </span><span class="si">{</span><span class="n">nii</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="nii_to_ndarray">
-<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.nii_to_ndarray">[docs]</a>
-<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">nii_to_ndarray</span><span class="p">(</span><span class="n">nii</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Load a NIfTI image and return as a 3D ndarray.</span>
-
-<span class="sd">    Parameters:</span>
-<span class="sd">    -----------</span>
-<span class="sd">    nii : str, Path, or nib.Nifti1Image</span>
-<span class="sd">        Path to the NIfTI image file or a Nifti1Image object.</span>
-
-<span class="sd">    Returns:</span>
-<span class="sd">    --------</span>
-<span class="sd">    ndarray : ndarray</span>
-<span class="sd">        The 3D image array.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">nii</span> <span class="o">=</span> <span class="n">nii_path_or_nii</span><span class="p">(</span><span class="n">nii</span><span class="p">)</span>
-    <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asanyarray</span><span class="p">(</span><span class="n">nii</span><span class="o">.</span><span class="n">dataobj</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">get_data_dtype</span><span class="p">())</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
-    <span class="k">return</span> <span class="n">ndarray</span></div>
 
 
 <div class="viewcode-block" id="load_nii_subset">
@@ -842,26 +855,120 @@
 <div class="viewcode-block" id="load_zarr">
 <a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.load_zarr">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">load_zarr</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">load_zarr</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="n">return_metadata</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Load a .zarr image and return the ndarray.</span>
+<span class="sd">    Load a channel and level of a Zarr image, optionally returning voxel resolution.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    zarr_path : str</span>
-<span class="sd">        The path to the .zarr file.</span>
+<span class="sd">    zarr_path : str or Path</span>
+<span class="sd">        Path to .zarr directory.</span>
+<span class="sd">    channel : int, optional</span>
+<span class="sd">        Channel index to load (for 4D data). If None, loads all channels.</span>
 <span class="sd">    desired_axis_order : str, optional</span>
-<span class="sd">        The desired order of the image axes. Default is &#39;xyz&#39;.</span>
+<span class="sd">        Desired output axis order (default: &quot;xyz&quot;).</span>
+<span class="sd">    return_res : bool, optional</span>
+<span class="sd">        If True, returns voxel resolution in mm (xy_res, z_res) along with the image.</span>
+<span class="sd">    save_metadata : str, optional</span>
+<span class="sd">        Path to save metadata file. Default is None.</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        Resolution in the xy-plane (in microns). If None, will be extracted from metadata.</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        Resolution in the z-plane (in microns). If None, will be extracted from metadata.</span>
+<span class="sd">    level : str or int, optional</span>
+<span class="sd">        Resolution level to load (default: highest).</span>
+<span class="sd">    verbose : bool</span>
+<span class="sd">        Print debug output.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    ndarray</span>
-<span class="sd">        The loaded 3D image array.</span>
+<span class="sd">        3D numpy array from the zarr store, with shape (z, y, x) or (z, x, y) depending on desired_axis_order.</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_res is True, returns (ndarray, xy_res, z_res).</span>
+<span class="sd">    tuple, optional</span>
+<span class="sd">        If return_metadata is True, returns (ndarray, xy_res, z_res, x_dim, y_dim, z_dim).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">zarr_dataset</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
-    <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">zarr_dataset</span><span class="p">)</span>
-    <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="k">if</span> <span class="n">desired_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span> <span class="k">else</span> <span class="n">ndarray</span>
-    <span class="k">return</span> <span class="n">ndarray</span></div>
+    <span class="n">zarr_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">zarr_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zarr path </span><span class="si">{</span><span class="n">zarr_path</span><span class="si">}</span><span class="s2"> does not exist.&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="n">msg</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="c1"># Load .zattrs</span>
+    <span class="n">zattrs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">zattrs_path</span> <span class="o">=</span> <span class="n">zarr_path</span> <span class="o">/</span> <span class="s2">&quot;.zattrs&quot;</span>
+    <span class="k">if</span> <span class="n">zattrs_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">zattrs_path</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">zattrs</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+    <span class="n">level_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">level</span><span class="p">)</span> <span class="k">if</span> <span class="n">level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="n">xy_res</span> <span class="o">=</span> <span class="n">z_res</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="s2">&quot;multiscales&quot;</span> <span class="ow">in</span> <span class="n">zattrs</span><span class="p">:</span>
+        <span class="n">multiscale</span> <span class="o">=</span> <span class="n">zattrs</span><span class="p">[</span><span class="s2">&quot;multiscales&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="n">multiscale</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;axes&quot;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="n">datasets</span> <span class="o">=</span> <span class="n">multiscale</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;datasets&quot;</span><span class="p">,</span> <span class="p">[])</span>
+
+        <span class="c1"># Infer highest-res level available on disk</span>
+        <span class="n">level_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">level</span><span class="p">)</span> <span class="k">if</span> <span class="n">level</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">level_str</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">datasets</span><span class="p">:</span>
+            <span class="n">dataset_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">ds</span> <span class="ow">in</span> <span class="n">datasets</span> <span class="k">if</span> <span class="n">ds</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;.&quot;</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()]</span>
+            <span class="n">existing_dirs</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">dataset_dirs</span> <span class="k">if</span> <span class="p">(</span><span class="n">zarr_path</span> <span class="o">/</span> <span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">()]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">level_str</span> <span class="ow">and</span> <span class="n">existing_dirs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">existing_dirs</span><span class="p">:</span>
+                    <span class="n">level_str</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
+                <span class="k">elif</span> <span class="n">existing_dirs</span><span class="p">:</span>
+                    <span class="n">level_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">existing_dirs</span><span class="p">)))</span>
+
+        <span class="c1"># Extract resolution for this level</span>
+        <span class="n">dataset</span> <span class="o">=</span> <span class="nb">next</span><span class="p">((</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">datasets</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="n">level_str</span><span class="p">),</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dataset</span><span class="p">:</span>
+            <span class="n">transforms</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;coordinateTransformations&quot;</span><span class="p">,</span> <span class="p">[])</span>
+            <span class="k">if</span> <span class="n">transforms</span><span class="p">:</span>
+                <span class="n">scale</span> <span class="o">=</span> <span class="n">transforms</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;scale&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scale</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">axes</span><span class="p">):</span>
+                    <span class="n">res_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">axis</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]:</span> <span class="n">s</span> <span class="k">for</span> <span class="n">axis</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">scale</span><span class="p">)}</span>
+                    <span class="n">xy_res</span> <span class="o">=</span> <span class="n">res_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="n">z_res</span> <span class="o">=</span> <span class="n">res_dict</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="c1"># Convert to micrometers</span>
+                    <span class="n">xy_res</span> <span class="o">=</span> <span class="n">xy_res</span> <span class="o">*</span> <span class="mf">1e3</span> <span class="k">if</span> <span class="n">xy_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="n">z_res</span> <span class="o">=</span> <span class="n">z_res</span> <span class="o">*</span> <span class="mf">1e3</span> <span class="k">if</span> <span class="n">z_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="c1"># Load image data</span>
+    <span class="n">ndarray</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">level_str</span><span class="p">:</span> <span class="c1"># If a level is specified or found, load that level</span>
+        <span class="n">level_path</span> <span class="o">=</span> <span class="n">zarr_path</span> <span class="o">/</span> <span class="n">level_str</span>
+        <span class="k">if</span> <span class="n">level_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;        Multi-resolution structure detected: loading level </span><span class="si">{</span><span class="n">level_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">ndarray</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_zarr</span><span class="p">(</span><span class="n">level_path</span><span class="p">)</span><span class="o">.</span><span class="n">compute</span><span class="p">()</span> <span class="c1"># convert dask array to numpy array</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Specified level </span><span class="si">{</span><span class="n">level_str</span><span class="si">}</span><span class="s2"> does not exist in </span><span class="si">{</span><span class="n">zarr_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span> <span class="c1"># Load flat format (.zattrs is missing or it does not match expected metadata structure)</span>
+        <span class="n">log</span><span class="p">(</span><span class="s2">&quot;        No compatible .zattrs metadata found. Loading flat zarr format.&quot;</span><span class="p">)</span>
+        <span class="n">zarr_dataset</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+        <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">zarr_dataset</span><span class="p">)</span>
+
+    <span class="c1"># Extract channel if specified (e.g., 0 for the first channel, 1 for the second, etc.)</span>
+    <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;        Array shape ([C], Z, Y, X): </span><span class="si">{</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">channel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;        Extracted channel: </span><span class="si">{</span><span class="n">channel</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">ndarray</span> <span class="o">=</span> <span class="n">ndarray</span><span class="p">[</span><span class="n">channel</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Multiple channels found: </span><span class="si">{</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> channels. Please specify a channel index.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ndarray</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected 3D array, but got shape </span><span class="si">{</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Transpose to desired axis order</span>
+    <span class="k">if</span> <span class="n">desired_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span><span class="p">:</span>
+        <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;        Array shape after transposing to (X, Y, Z): </span><span class="si">{</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span> <span class="o">=</span> <span class="n">metadata</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">,</span> <span class="n">ndarray</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">return_3D_img</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="n">return_metadata</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="n">return_res</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="n">z_res</span><span class="p">,</span> <span class="n">x_dim</span><span class="o">=</span><span class="n">x_dim</span><span class="p">,</span> <span class="n">y_dim</span><span class="o">=</span><span class="n">y_dim</span><span class="p">,</span> <span class="n">z_dim</span><span class="o">=</span><span class="n">z_dim</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="resolve_path">
@@ -959,7 +1066,7 @@
 <span class="sd">    tuple</span>
 <span class="sd">        Returns (xy_res, z_res, x_dim, y_dim, z_dim) or (None, None, None, None, None) if file not found.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">file_paths</span> <span class="o">=</span> <span class="n">glob</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">metadata</span><span class="p">))</span>
+    <span class="n">file_paths</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">file_paths</span><span class="p">:</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_paths</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file</span><span class="p">:</span>
@@ -1021,26 +1128,18 @@
 
     <span class="c1"># If file_path points to dir containing tifs, resolve path to first .tif</span>
     <span class="n">img_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">img_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
-        <span class="n">tif_files</span> <span class="o">=</span> <span class="n">img_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*.tif&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">img_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zarr&#39;</span><span class="p">):</span>
+        <span class="n">tif_files</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">&#39;*.tif&#39;</span><span class="p">,</span> <span class="n">base_path</span><span class="o">=</span><span class="n">img_path</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">tif_files</span><span class="p">:</span> 
             <span class="k">return</span> <span class="n">load_tifs</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No .tif files found in directory: </span><span class="si">{</span><span class="n">img_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="n">img_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]No compatible image files found at </span><span class="si">{</span><span class="n">img_path</span><span class="si">}</span><span class="s2"> for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">No compatible image files found at </span><span class="si">{</span><span class="n">img_path</span><span class="si">}</span><span class="s2"> for load_3D_img(). Use: .czi, .ome.tif, .tif, .nii.gz, .h5, .zarr&quot;</span><span class="p">)</span>
     
-    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.czi&#39;</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [default]Loading channel </span><span class="si">{</span><span class="n">channel</span><span class="si">}</span><span class="s2"> from </span><span class="si">{</span><span class="n">img_path</span><span class="si">}</span><span class="s2"> (channel 0 is the first channel)&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span> 
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [default]Loading </span><span class="si">{</span><span class="n">img_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
     <span class="c1"># Load image based on file type and optionally return resolutions and dimensions</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.czi&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">load_czi</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">channel</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">load_czi</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="n">desired_axis_order</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="n">save_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="n">z_res</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.ome.tif&#39;</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">load_3D_tif</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">):</span>
@@ -1048,7 +1147,7 @@
         <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">load_h5</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="p">,</span> <span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">str</span><span class="p">(</span><span class="n">img_path</span><span class="p">)</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zarr&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">load_zarr</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">load_zarr</span><span class="p">(</span><span class="n">img_path</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="n">channel</span><span class="p">,</span> <span class="n">desired_axis_order</span><span class="o">=</span><span class="n">desired_axis_order</span><span class="p">,</span> <span class="n">return_res</span><span class="o">=</span><span class="n">return_res</span><span class="p">,</span> <span class="n">return_metadata</span><span class="o">=</span><span class="n">return_metadata</span><span class="p">,</span> <span class="n">save_metadata</span><span class="o">=</span><span class="n">save_metadata</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="n">z_res</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported file type: </span><span class="si">{</span><span class="n">img_path</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">. Supported file types: .czi, .ome.tif, .tif, .nii.gz, .h5&quot;</span><span class="p">)</span>
     <span class="k">except</span> <span class="p">(</span><span class="ne">FileNotFoundError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -1097,7 +1196,7 @@
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">nib</span><span class="o">.</span><span class="n">Nifti1Image</span><span class="p">):</span>
             <span class="n">ref_nii</span> <span class="o">=</span> <span class="n">reference</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    [red1]Reference for save_as_nii() must be a path to a .nii.gz file or a Nifti1Image object.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Reference for save_as_nii() must be a path to a .nii.gz file or a Nifti1Image object.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         
         <span class="n">affine</span> <span class="o">=</span> <span class="n">ref_nii</span><span class="o">.</span><span class="n">affine</span>
         <span class="n">header</span> <span class="o">=</span> <span class="n">ref_nii</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -1119,7 +1218,7 @@
 <div class="viewcode-block" id="save_as_tifs">
 <a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.save_as_tifs">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">save_as_tifs</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">tif_dir_out</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">save_as_tifs</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">tif_dir_out</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save an ndarray as a series of .tif images.</span>
 
@@ -1127,34 +1226,50 @@
 <span class="sd">    ----------</span>
 <span class="sd">    ndarray : ndarray</span>
 <span class="sd">        The 3D image array to save.</span>
-<span class="sd">    tif_dir_out : str</span>
+<span class="sd">    tif_dir_out : str or Path</span>
 <span class="sd">        The directory to save the .tif files.</span>
 <span class="sd">    ndarray_axis_order : str, optional</span>
 <span class="sd">        The order of the ndarray axes. Default is &#39;xyz&#39;.</span>
+<span class="sd">    parallel : bool, optional</span>
+<span class="sd">        Whether to save slices in parallel. Default is False.</span>
+<span class="sd">    max_workers : int or None, optional</span>
+<span class="sd">        Number of threads to use for parallel saving. Defaults to os.cpu_count().</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        How to print the output directory. Default is False.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Ensure tif_dir_out is a Path object, not a string</span>
     <span class="n">tif_dir_out</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">tif_dir_out</span><span class="p">)</span>
     <span class="n">tif_dir_out</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    
+
     <span class="k">if</span> <span class="n">ndarray_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span><span class="p">:</span>
-        <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="c1"># Transpose to zyx (tiff expects zyx)</span>
-        
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">slice_</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>  <span class="c1"># to zyx</span>
+
+    <span class="k">def</span> <span class="nf">save_slice</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
         <span class="n">slice_file_path</span> <span class="o">=</span> <span class="n">tif_dir_out</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;slice_</span><span class="si">{</span><span class="n">i</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">.tif&quot;</span>
-        <span class="n">tifffile</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">slice_file_path</span><span class="p">),</span> <span class="n">slice_</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Output: [default bold]</span><span class="si">{</span><span class="n">tif_dir_out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="n">tifffile</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">slice_file_path</span><span class="p">),</span> <span class="n">ndarray</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">parallel</span><span class="p">:</span>
+        <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="n">max_workers</span> <span class="ow">or</span> <span class="n">os</span><span class="o">.</span><span class="n">cpu_count</span><span class="p">())</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+            <span class="nb">list</span><span class="p">(</span><span class="n">executor</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">save_slice</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">ndarray</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">save_slice</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;        Output directory: [magenta]</span><span class="si">{</span><span class="n">tif_dir_out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Output directory with tif series: [magenta]</span><span class="si">{</span><span class="n">tif_dir_out</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="save_as_zarr">
 <a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.save_as_zarr">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">save_as_zarr</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">save_as_zarr</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Save an ndarray to a .zarr file.</span>
+<span class="sd">    Save a 3D ndarray to a .zarr file as well as OME-NGFF-compatible metadata.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -1164,17 +1279,47 @@
 <span class="sd">        The path to save the .zarr file.</span>
 <span class="sd">    ndarray_axis_order : str, optional</span>
 <span class="sd">        The order of the ndarray axes. Default is &#39;xyz&#39;.</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    None</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        The voxel size in the XY plane (in mm).</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        The voxel size in the Z direction (in mm).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">ndarray_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span><span class="p">:</span>
         <span class="n">ndarray</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-    <span class="n">dask_array</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">da</span><span class="o">.</span><span class="n">Array</span><span class="p">):</span>
+        <span class="n">dask_array</span> <span class="o">=</span> <span class="n">ndarray</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dask_array</span> <span class="o">=</span> <span class="n">da</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
     <span class="n">compressor</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">Blosc</span><span class="p">(</span><span class="n">cname</span><span class="o">=</span><span class="s1">&#39;lz4&#39;</span><span class="p">,</span> <span class="n">clevel</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="n">zarr</span><span class="o">.</span><span class="n">Blosc</span><span class="o">.</span><span class="n">BITSHUFFLE</span><span class="p">)</span>
     <span class="n">dask_array</span><span class="o">.</span><span class="n">to_zarr</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">compressor</span><span class="o">=</span><span class="n">compressor</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Output: [default bold]</span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Saved zarr as: [default bold]</span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Add NGFF-style .zattrs</span>
+    <span class="n">first_axis</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span> <span class="k">if</span> <span class="n">ndarray_axis_order</span> <span class="o">==</span> <span class="s2">&quot;xyz&quot;</span> <span class="k">else</span> <span class="s2">&quot;z&quot;</span>
+    <span class="n">third_axis</span> <span class="o">=</span> <span class="s2">&quot;z&quot;</span> <span class="k">if</span> <span class="n">first_axis</span> <span class="o">==</span> <span class="s2">&quot;x&quot;</span> <span class="k">else</span> <span class="s2">&quot;x&quot;</span>
+    <span class="k">if</span> <span class="n">xy_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">z_res</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">attrs</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;multiscales&quot;</span><span class="p">:</span> <span class="p">[{</span>
+                <span class="s2">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;0.4&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;axes&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">first_axis</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;space&quot;</span><span class="p">,</span> <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;millimeter&quot;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;space&quot;</span><span class="p">,</span> <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;millimeter&quot;</span><span class="p">},</span>
+                    <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">third_axis</span><span class="p">,</span> <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;space&quot;</span><span class="p">,</span> <span class="s2">&quot;unit&quot;</span><span class="p">:</span> <span class="s2">&quot;millimeter&quot;</span><span class="p">},</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;datasets&quot;</span><span class="p">:</span> <span class="p">[{</span>
+                    <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;coordinateTransformations&quot;</span><span class="p">:</span> <span class="p">[{</span>
+                        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;scale&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;scale&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">]</span>
+                    <span class="p">}]</span>
+                <span class="p">}]</span>
+            <span class="p">}]</span>
+        <span class="p">}</span>
+        <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;    Added NGFF-style .zattrs with resolutions (in mm): xy_res=</span><span class="si">{</span><span class="n">xy_res</span><span class="si">}</span><span class="s2">, z_res=</span><span class="si">{</span><span class="n">z_res</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="save_as_h5">
@@ -1206,7 +1351,7 @@
 <div class="viewcode-block" id="save_3D_img">
 <a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.save_3D_img">[docs]</a>
 <span class="nd">@print_func_name_args_times</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">save_3D_img</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">reference_img</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">save_3D_img</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;xyz&quot;</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">reference_img</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Save a 3D image in various formats.</span>
 
@@ -1215,7 +1360,7 @@
 <span class="sd">    img : ndarray</span>
 <span class="sd">        The 3D image array to save.</span>
 <span class="sd">    output_path : str</span>
-<span class="sd">        The path to save the image.</span>
+<span class="sd">        The path to save the image. The file extension determines the format: .nii.gz, .zarr, .h5, .tif, or a directory path for a TIFF series.</span>
 <span class="sd">    ndarray_axis_order : str, optional</span>
 <span class="sd">        The order of the ndarray axes. Default is &#39;xyz&#39;.</span>
 <span class="sd">    xy_res : float, optional</span>
@@ -1226,21 +1371,103 @@
 <span class="sd">        Data type for a NIFTI image output. Default is np.float32.</span>
 <span class="sd">    reference_img : str, Path, or a nib.Nifti1Image object, optional</span>
 <span class="sd">        Either path to a .nii.gz file or a Nifti1Image object to set orientation and resolution. Default is None. If provided, xy_res and z_res are ignored.</span>
+<span class="sd">    verbose : bool, optional</span>
+<span class="sd">        Print addtional infomation. Default is False.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">output</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
     <span class="n">output</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    
-    <span class="k">if</span> <span class="n">output_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">):</span>
-        <span class="n">save_as_nii</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">data_type</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">reference_img</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">output_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.zarr&#39;</span><span class="p">):</span>
-        <span class="n">save_as_zarr</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">ndarray_axis_order</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">output_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.h5&#39;</span><span class="p">):</span>
-        <span class="n">save_as_h5</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">ndarray_axis_order</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">output_path</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.tif&#39;</span><span class="p">):</span> 
-        <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output_path</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">ndarray_axis_order</span><span class="p">)</span>
+
+    <span class="n">output_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">suffix</span> <span class="o">=</span> <span class="n">output</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">output_str</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.nii.gz&#39;</span><span class="p">):</span>
+        <span class="n">save_as_nii</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="p">,</span> <span class="n">data_type</span><span class="o">=</span><span class="n">data_type</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">reference_img</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">suffix</span> <span class="o">==</span> <span class="s1">&#39;.zarr&#39;</span><span class="p">:</span>
+        <span class="n">save_as_zarr</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">ndarray_axis_order</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="n">xy_res</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="n">z_res</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">suffix</span> <span class="o">==</span> <span class="s1">&#39;.h5&#39;</span><span class="p">:</span>
+        <span class="n">save_as_h5</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">ndarray_axis_order</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">suffix</span> <span class="o">==</span> <span class="s1">&#39;.tif&#39;</span><span class="p">:</span>
+        <span class="c1"># If user gave a file path like red2/slice_0000.tif, use the parent directory</span>
+        <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">tif_dir_out</span><span class="o">=</span><span class="n">output</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">ndarray_axis_order</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">suffix</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="c1"># If no suffix, assume directory path for TIFFs</span>
+        <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">tif_dir_out</span><span class="o">=</span><span class="n">output</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="n">ndarray_axis_order</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">max_workers</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported file type for save_3D_img(): </span><span class="si">{</span><span class="n">output_path</span><span class="o">.</span><span class="n">suffix</span><span class="si">}</span><span class="s2">. Use: .nii.gz, .zarr, .h5, .tif&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">    Image saved to: </span><span class="si">{</span><span class="n">output_path</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported file type for save_3D_img(): &#39;</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&#39;. Use: .nii.gz, .zarr, .h5, .tif, or a directory path for a TIFF series.&quot;</span><span class="p">)</span></div>
+
+
+<span class="c1"># TODO: Function to extract a resolution level from a Zarr file (return as ndarray)</span>
+
+<div class="viewcode-block" id="zarr_level_to_tifs">
+<a class="viewcode-back" href="../../../unravel/core/img_io.html#unravel.core.img_io.zarr_level_to_tifs">[docs]</a>
+<span class="nd">@print_func_name_args_times</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">zarr_level_to_tifs</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">channel_map</span><span class="p">,</span> <span class="n">resolution_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xy_res</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_res</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Extracts a specified resolution level from a Zarr file and saves the specified channels as TIFF files.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    -----------</span>
+<span class="sd">    zarr_path : str or Path</span>
+<span class="sd">        Path to the Zarr file.</span>
+<span class="sd">    output_dir : str or Path</span>
+<span class="sd">        Directory to save the output TIFF files. If None, defaults to &quot;TIFFs/&lt;sample_name&gt;&quot;.</span>
+<span class="sd">    resolution_level : str</span>
+<span class="sd">        Resolution level to extract (e.g., &quot;0&quot;, &quot;1&quot;, ..., &quot;9&quot;).</span>
+<span class="sd">    channel_map : dict</span>
+<span class="sd">        Mapping of output directory names to Zarr channel indices (e.g., {&#39;red&#39;: 0, &#39;green&#39;: 1}).</span>
+<span class="sd">    xy_res : float, optional</span>
+<span class="sd">        X/Y resolution in microns.</span>
+<span class="sd">    z_res : float, optional</span>
+<span class="sd">        Z resolution in microns. Default is 100 µm for Genetic Tools Atlas data.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Check what resolution levels are available in the Zarr file</span>
+    <span class="n">zarr_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">zarr_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zarr input path does not exist: </span><span class="si">{</span><span class="n">zarr_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zarr input path exists: </span><span class="si">{</span><span class="n">zarr_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">level</span><span class="p">)</span> <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">zarr_path</span><span class="o">.</span><span class="n">iterdir</span><span class="p">()</span> <span class="k">if</span> <span class="n">level</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()]</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">resolution_level</span> <span class="o">=</span> <span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">resolution_level</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Multiple resolution levels found in </span><span class="si">{</span><span class="n">zarr_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">. Please specify a resolution level. Available levels: </span><span class="si">{</span><span class="n">levels</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">zarr_path</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">NotADirectoryError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Zarr input path is not a directory: </span><span class="si">{</span><span class="n">zarr_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">zarr_path</span> <span class="o">/</span> <span class="n">resolution_level</span><span class="p">)</span><span class="o">.</span><span class="n">is_dir</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resolution level </span><span class="si">{</span><span class="n">resolution_level</span><span class="si">}</span><span class="s2"> not found in Zarr file: </span><span class="si">{</span><span class="n">zarr_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">zarr</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">zarr_path</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">)</span>
+    <span class="n">z_level</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">resolution_level</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">z_level</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Expected shape (c, z, y, x), got </span><span class="si">{</span><span class="n">z_level</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">num_channels</span> <span class="o">=</span> <span class="n">z_level</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">num_channels</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Only one channel found in </span><span class="si">{</span><span class="n">zarr_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;📂 Processing </span><span class="si">{</span><span class="n">zarr_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> at resolution level </span><span class="si">{</span><span class="n">resolution_level</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">channel_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">out_dir</span> <span class="o">=</span> <span class="n">output_dir</span> <span class="o">/</span> <span class="n">name</span>
+        <span class="n">tif_files</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="s1">&#39;*.tif&#39;</span><span class="p">,</span> <span class="n">base_path</span><span class="o">=</span><span class="n">out_dir</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">tif_files</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Skipping </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">zarr_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">: output TIFFs already exist at </span><span class="si">{</span><span class="n">out_dir</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">&gt;=</span> <span class="n">num_channels</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;⚠️ Channel index </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2"> not found in </span><span class="si">{</span><span class="n">zarr_path</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> (only </span><span class="si">{</span><span class="n">num_channels</span><span class="si">}</span><span class="s2"> channels). Skipping </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="n">save_as_tifs</span><span class="p">(</span><span class="n">z_level</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">out_dir</span><span class="p">,</span> <span class="n">ndarray_axis_order</span><span class="o">=</span><span class="s2">&quot;zyx&quot;</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">save_metadata_to_file</span><span class="p">(</span>
+            <span class="n">xy_res</span><span class="o">=</span><span class="n">xy_res</span><span class="p">,</span> 
+            <span class="n">z_res</span><span class="o">=</span><span class="n">z_res</span><span class="p">,</span> 
+            <span class="n">x_dim</span><span class="o">=</span><span class="n">z_level</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> 
+            <span class="n">y_dim</span><span class="o">=</span><span class="n">z_level</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> 
+            <span class="n">z_dim</span><span class="o">=</span><span class="n">z_level</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> 
+            <span class="n">save_metadata</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="n">out_dir</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;parameters&quot;</span> <span class="o">/</span> <span class="s2">&quot;metadata.txt&quot;</span>
+        <span class="p">)</span></div>
 
 
 <span class="c1"># Other functions</span>

@@ -149,7 +149,14 @@ window.addEventListener("load", () => mermaid.run());
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -248,7 +255,14 @@ window.addEventListener("load", () => mermaid.run());
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -346,12 +360,18 @@ window.addEventListener("load", () => mermaid.run());
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/register/affine_initializer.html#unravel.register.affine_initializer.affine_initializer_wrapper">affine_initializer_wrapper() (in module unravel.register.affine_initializer)</a>
+      <li><a href="unravel/register/affine_initializer_check.html#unravel.register.affine_initializer_check.affine_initializer_check">affine_initializer_check() (in module unravel.register.affine_initializer_check)</a>
 </li>
       <li><a href="unravel/utilities/aggregate_files_from_sample_dirs.html#unravel.utilities.aggregate_files_from_sample_dirs.aggregate_files_from_sample_dirs">aggregate_files_from_sample_dirs() (in module unravel.utilities.aggregate_files_from_sample_dirs)</a>
 </li>
+      <li><a href="unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.apply_2D_mean_filter">apply_2D_mean_filter() (in module unravel.image_tools.spatial_averaging)</a>
+</li>
+      <li><a href="unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.apply_mask_to_ndarray">apply_mask_to_ndarray() (in module unravel.voxel_stats.apply_mask)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/image_tools/math.html#unravel.image_tools.math.apply_operation">apply_operation() (in module unravel.image_tools.math)</a>
+</li>
       <li><a href="unravel/cluster_stats/legend.html#unravel.cluster_stats.legend.apply_rgb_to_cell">apply_rgb_to_cell() (in module unravel.cluster_stats.legend)</a>
 </li>
       <li><a href="unravel/core/config.html#unravel.core.config.AttrDict">AttrDict (class in unravel.core.config)</a>
@@ -366,11 +386,17 @@ window.addEventListener("load", () => mermaid.run());
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.calculate_fragments">calculate_fragments() (in module unravel.voxel_stats.vstats)</a>
 </li>
+      <li><a href="unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.calculate_mean_intensity">calculate_mean_intensity() (in module unravel.region_stats.rstats_mean_IF)</a>
+</li>
+      <li><a href="unravel/cluster_stats/index.html#unravel.cluster_stats.mean_IF.calculate_mean_intensity_in_clusters">calculate_mean_intensity_in_clusters() (in module unravel.cluster_stats.mean_IF)</a>
+</li>
       <li><a href="unravel/cluster_stats/sunburst.html#unravel.cluster_stats.sunburst.calculate_regional_volumes">calculate_regional_volumes() (in module unravel.cluster_stats.sunburst)</a>
 </li>
       <li><a href="unravel/cluster_stats/table.html#unravel.cluster_stats.table.calculate_top_regions">calculate_top_regions() (in module unravel.cluster_stats.table)</a>
 </li>
       <li><a href="unravel/cluster_stats/table.html#unravel.cluster_stats.table.can_collapse">can_collapse() (in module unravel.cluster_stats.table)</a>
+</li>
+      <li><a href="unravel/allen_institute/mapmysections/cell_type_proportions.html#unravel.allen_institute.mapmysections.cell_type_proportions.cell_type_proportions">cell_type_proportions() (in module unravel.allen_institute.mapmysections.cell_type_proportions)</a>
 </li>
       <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.check_fdr_command">check_fdr_command() (in module unravel.voxel_stats.vstats)</a>
 </li>
@@ -383,6 +409,10 @@ window.addEventListener("load", () => mermaid.run());
       <li><a href="unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.cluster_validation_data_df">cluster_validation_data_df() (in module unravel.cluster_stats.cstats)</a>
 </li>
       <li><a href="unravel/cluster_stats/table.html#unravel.cluster_stats.table.collapse_hierarchy">collapse_hierarchy() (in module unravel.cluster_stats.table)</a>
+</li>
+      <li><a href="unravel/image_io/zarr_compress.html#unravel.image_io.zarr_compress.compress_or_decompress_zarr">compress_or_decompress_zarr() (in module unravel.image_io.zarr_compress)</a>
+</li>
+      <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#unravel.allen_institute.mapmysections.segmentation_summary.compute_proportions">compute_proportions() (in module unravel.allen_institute.mapmysections.segmentation_summary)</a>
 </li>
       <li><a href="unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.condition_selector">condition_selector() (in module unravel.cluster_stats.cstats)</a>
 
@@ -402,13 +432,23 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       <li><a href="unravel/image_io/io_nii.html#unravel.image_io.io_nii.convert_dtype">convert_dtype() (in module unravel.image_io.io_nii)</a>
 </li>
+      <li><a href="unravel/image_io/convert_img.html#unravel.image_io.convert_img.convert_img">convert_img() (in module unravel.image_io.convert_img)</a>
+</li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.copy_files">copy_files() (in module unravel.core.utils)</a>
 </li>
+      <li><a href="unravel/segment/copy_tifs.html#unravel.segment.copy_tifs.copy_specific_tifs">copy_specific_tifs() (in module unravel.segment.copy_tifs)</a>
+</li>
       <li><a href="unravel/cluster_stats/org_data.html#unravel.cluster_stats.org_data.copy_stats_files">copy_stats_files() (in module unravel.cluster_stats.org_data)</a>
+</li>
+      <li><a href="unravel/segment/ilastik_pixel_classification.html#unravel.segment.ilastik_pixel_classification.count_files">count_files() (in module unravel.segment.ilastik_pixel_classification)</a>
 </li>
       <li><a href="unravel/cluster_stats/org_data.html#unravel.cluster_stats.org_data.cp">cp() (in module unravel.cluster_stats.org_data)</a>
 </li>
       <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.create_design_ttest2">create_design_ttest2() (in module unravel.voxel_stats.vstats)</a>
+</li>
+      <li><a href="unravel/allen_institute/genetic_tools_atlas/auto_crop.html#unravel.allen_institute.genetic_tools_atlas.auto_crop.create_outline">create_outline() (in module unravel.allen_institute.genetic_tools_atlas.auto_crop)</a>
+</li>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.crop">crop() (in module unravel.core.img_tools)</a>
 </li>
       <li><a href="unravel/core/help_formatter.html#unravel.core.help_formatter.CustomHelpAction">CustomHelpAction (class in unravel.core.help_formatter)</a>
 </li>
@@ -427,11 +467,25 @@ window.addEventListener("load", () => mermaid.run());
       <li><a href="unravel/image_io/zarr_to_nii.html#unravel.image_io.zarr_to_nii.define_zarr_to_nii_output">define_zarr_to_nii_output() (in module unravel.image_io.zarr_to_nii)</a>
 </li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/image_tools/DoG.html#unravel.image_tools.DoG.difference_of_gaussians">difference_of_gaussians() (in module unravel.image_tools.DoG)</a>
+</li>
+      <li><a href="unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.dilate_mask">dilate_mask() (in module unravel.voxel_stats.apply_mask)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/tabular/edit_columns.html#unravel.tabular.edit_columns.edit_columns">edit_columns() (in module unravel.tabular.edit_columns)</a>
+</li>
+      <li><a href="unravel/image_tools/extend.html#unravel.image_tools.extend.extend_one_side_3d_array">extend_one_side_3d_array() (in module unravel.image_tools.extend)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.extract_resolution">extract_resolution() (in module unravel.core.img_io)</a>
+</li>
       <li><a href="unravel/cluster_stats/legend.html#unravel.cluster_stats.legend.extract_unique_regions_from_file">extract_unique_regions_from_file() (in module unravel.cluster_stats.legend)</a>
 </li>
   </ul></td>
@@ -456,17 +510,21 @@ window.addEventListener("load", () => mermaid.run());
       </ul></li>
       <li><a href="unravel/core/help_formatter.html#unravel.core.help_formatter.RichArgumentParser.filter_help_output">filter_help_output() (unravel.core.help_formatter.RichArgumentParser method)</a>
 </li>
-      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.filter_region_ids">filter_region_ids() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
+      <li><a href="unravel/allen_institute/abca/sunburst/sunburst.html#unravel.allen_institute.abca.sunburst.sunburst.filter_non_neuronal_cells">filter_non_neuronal_cells() (in module unravel.allen_institute.abca.sunburst.sunburst)</a>
+</li>
+      <li><a href="unravel/utilities/region_info.html#unravel.utilities.region_info.filter_region_summary">filter_region_summary() (in module unravel.utilities.region_info)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/utilities/region_info.html#unravel.utilities.region_info.filter_region_summary">filter_region_summary() (in module unravel.utilities.region_info)</a>
+      <li><a href="unravel/tabular/filter_rows.html#unravel.tabular.filter_rows.filter_table">filter_table() (in module unravel.tabular.filter_rows)</a>
+</li>
+      <li><a href="unravel/tabular/unique_values.html#unravel.tabular.unique_values.filter_values">filter_values() (in module unravel.tabular.unique_values)</a>
 </li>
       <li><a href="unravel/utilities/aggregate_files_recursively.html#unravel.utilities.aggregate_files_recursively.find_and_copy_files">find_and_copy_files() (in module unravel.utilities.aggregate_files_recursively)</a>
 </li>
-      <li><a href="unravel/cluster_stats/find_incongruent_clusters.html#unravel.cluster_stats.find_incongruent_clusters.find_incongruent_clusters">find_incongruent_clusters() (in module unravel.cluster_stats.find_incongruent_clusters)</a>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.find_bounding_box">find_bounding_box() (in module unravel.core.img_tools)</a>
 </li>
-      <li><a href="unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.find_largest_h5_file">find_largest_h5_file() (in module unravel.image_io.h5_to_tifs)</a>
+      <li><a href="unravel/cluster_stats/find_incongruent_clusters.html#unravel.cluster_stats.find_incongruent_clusters.find_incongruent_clusters">find_incongruent_clusters() (in module unravel.cluster_stats.find_incongruent_clusters)</a>
 </li>
       <li><a href="unravel/cluster_stats/org_data.html#unravel.cluster_stats.org_data.find_matching_directory">find_matching_directory() (in module unravel.cluster_stats.org_data)</a>
 </li>
@@ -490,27 +548,23 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       <li><a href="unravel/image_tools/atlas/wireframe.html#unravel.image_tools.atlas.wireframe.generate_wireframe">generate_wireframe() (in module unravel.image_tools.atlas.wireframe)</a>
 </li>
-      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_all_region_ids">get_all_region_ids() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
+      <li><a href="unravel/image_io/metadata.html#unravel.image_io.metadata.get_dims_from_tifs">get_dims_from_tifs() (in module unravel.image_io.metadata)</a>
 </li>
-      <li><a href="unravel/core/utils.html#unravel.core.utils.get_dir_name_from_args">get_dir_name_from_args() (in module unravel.core.utils)</a>
+      <li><a href="unravel/core/utils.html#unravel.core.utils.get_extension">get_extension() (in module unravel.core.utils)</a>
 </li>
       <li><a href="unravel/cluster_stats/table.html#unravel.cluster_stats.table.get_fill_color">get_fill_color() (in module unravel.cluster_stats.table)</a>
 </li>
-      <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.get_groups_info">get_groups_info() (in module unravel.voxel_stats.vstats)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_max_region_id_from_csvs">get_max_region_id_from_csvs() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
+      <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.get_groups_info">get_groups_info() (in module unravel.voxel_stats.vstats)</a>
 </li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.get_pad_percent">get_pad_percent() (in module unravel.core.utils)</a>
 </li>
-      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.get_region_details">get_region_details() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
-
-      <ul>
-        <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.get_region_details">(in module unravel.region_stats.rstats_summary)</a>
-</li>
-      </ul></li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.get_samples">get_samples() (in module unravel.core.utils)</a>
+</li>
+      <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#unravel.allen_institute.mapmysections.segmentation_summary.get_seg_voxel_counts">get_seg_voxel_counts() (in module unravel.allen_institute.mapmysections.segmentation_summary)</a>
+</li>
+      <li><a href="unravel/core/utils.html#unravel.core.utils.get_stem">get_stem() (in module unravel.core.utils)</a>
 </li>
       <li><a href="unravel/cluster_stats/table.html#unravel.cluster_stats.table.get_top_regions_and_percent_vols">get_top_regions_and_percent_vols() (in module unravel.cluster_stats.table)</a>
 </li>
@@ -529,10 +583,18 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/voxel_stats/hemi_to_LR_avg.html#unravel.voxel_stats.hemi_to_LR_avg.hemi_to_LR_avg">hemi_to_LR_avg() (in module unravel.voxel_stats.hemi_to_LR_avg)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/image_io/img_to_points.html#unravel.image_io.img_to_points.img_to_points">img_to_points() (in module unravel.image_io.img_to_points)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/core/utils.html#unravel.core.utils.initialize_progress_bar">initialize_progress_bar() (in module unravel.core.utils)</a>
 </li>
@@ -542,19 +604,47 @@ window.addEventListener("load", () => mermaid.run());
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.label_IDs">label_IDs() (in module unravel.core.img_tools)</a>
+</li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_3D_img">load_3D_img() (in module unravel.core.img_io)</a>
+</li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_3D_tif">load_3D_tif() (in module unravel.core.img_io)</a>
+</li>
+      <li><a href="unravel/image_io/points_to_img.html#unravel.image_io.points_to_img.load_and_prepare_points">load_and_prepare_points() (in module unravel.image_io.points_to_img)</a>
+</li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.load_config">load_config() (in module unravel.core.utils)</a>
 </li>
-      <li><a href="unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.load_data">load_data() (in module unravel.cluster_stats.mean_IF_summary)</a>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_czi">load_czi() (in module unravel.core.img_io)</a>
+</li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_h5">load_h5() (in module unravel.core.img_io)</a>
 
       <ul>
-        <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.load_data">(in module unravel.region_stats.rstats_mean_IF_summary)</a>
+        <li><a href="unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.load_h5">(in module unravel.image_io.h5_to_tifs)</a>
 </li>
       </ul></li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_image_metadata_from_txt">load_image_metadata_from_txt() (in module unravel.core.img_io)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.load_h5">load_h5() (in module unravel.image_io.h5_to_tifs)</a>
+      <li><a href="unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.load_mask">load_mask() (in module unravel.voxel_stats.apply_mask)</a>
+</li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_nii">load_nii() (in module unravel.core.img_io)</a>
+</li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_nii_subset">load_nii_subset() (in module unravel.core.img_io)</a>
+</li>
+      <li><a href="unravel/tabular/utils.html#unravel.tabular.utils.load_tabular_file">load_tabular_file() (in module unravel.tabular.utils)</a>
 </li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.load_text_from_file">load_text_from_file() (in module unravel.core.utils)</a>
+</li>
+      <li><a href="unravel/image_tools/DoG.html#unravel.image_tools.DoG.load_tif">load_tif() (in module unravel.image_tools.DoG)</a>
+
+      <ul>
+        <li><a href="unravel/image_tools/rb.html#unravel.image_tools.rb.load_tif">(in module unravel.image_tools.rb)</a>
+</li>
+      </ul></li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_tifs">load_tifs() (in module unravel.core.img_io)</a>
+</li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.load_zarr">load_zarr() (in module unravel.core.img_io)</a>
 </li>
       <li><a href="unravel/core/utils.html#unravel.core.utils.log_command">log_command() (in module unravel.core.utils)</a>
 </li>
@@ -564,24 +654,34 @@ window.addEventListener("load", () => mermaid.run());
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/abca/merfish/merfish_cells_to_nii.html#unravel.abca.merfish.merfish_cells_to_nii.main">main() (in module unravel.abca.merfish.merfish_cells_to_nii)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#unravel.allen_institute.abca.merfish.merfish_cells_to_nii.main">main() (in module unravel.allen_institute.abca.merfish.merfish_cells_to_nii)</a>
 
       <ul>
-        <li><a href="unravel/abca/sunburst/mean_expression_color_scale.html#unravel.abca.sunburst.mean_expression_color_scale.main">(in module unravel.abca.sunburst.mean_expression_color_scale)</a>
+        <li><a href="unravel/allen_institute/abca/sunburst/sunburst.html#unravel.allen_institute.abca.sunburst.sunburst.main">(in module unravel.allen_institute.abca.sunburst.sunburst)</a>
 </li>
-        <li><a href="unravel/abca/sunburst/percent_expression_color_scale.html#unravel.abca.sunburst.percent_expression_color_scale.main">(in module unravel.abca.sunburst.percent_expression_color_scale)</a>
+        <li><a href="unravel/allen_institute/abca/sunburst/sunburst_filter_by_proportion.html#unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion.main">(in module unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion)</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst.html#unravel.abca.sunburst.sunburst.main">(in module unravel.abca.sunburst.sunburst)</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/auto_crop.html#unravel.allen_institute.genetic_tools_atlas.auto_crop.main">(in module unravel.allen_institute.genetic_tools_atlas.auto_crop)</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst_expression.html#unravel.abca.sunburst.sunburst_expression.main">(in module unravel.abca.sunburst.sunburst_expression)</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/bbox_crop.html#unravel.allen_institute.genetic_tools_atlas.bbox_crop.main">(in module unravel.allen_institute.genetic_tools_atlas.bbox_crop)</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst_filter.html#unravel.abca.sunburst.sunburst_filter.main">(in module unravel.abca.sunburst.sunburst_filter)</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/org_samples.html#unravel.allen_institute.genetic_tools_atlas.org_samples.main">(in module unravel.allen_institute.genetic_tools_atlas.org_samples)</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst_filter_by_proportion.html#unravel.abca.sunburst.sunburst_filter_by_proportion.main">(in module unravel.abca.sunburst.sunburst_filter_by_proportion)</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/simplify_metadata.html#unravel.allen_institute.genetic_tools_atlas.simplify_metadata.main">(in module unravel.allen_institute.genetic_tools_atlas.simplify_metadata)</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/cell_type_proportions.html#unravel.allen_institute.mapmysections.cell_type_proportions.main">(in module unravel.allen_institute.mapmysections.cell_type_proportions)</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/cell_type_proportions_concat.html#unravel.allen_institute.mapmysections.cell_type_proportions_concat.main">(in module unravel.allen_institute.mapmysections.cell_type_proportions_concat)</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/csv_concat_with_source.html#unravel.allen_institute.mapmysections.csv_concat_with_source.main">(in module unravel.allen_institute.mapmysections.csv_concat_with_source)</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#unravel.allen_institute.mapmysections.segmentation_summary.main">(in module unravel.allen_institute.mapmysections.segmentation_summary)</a>
 </li>
         <li><a href="unravel/cluster_stats/brain_model.html#unravel.cluster_stats.brain_model.main">(in module unravel.cluster_stats.brain_model)</a>
 </li>
         <li><a href="unravel/cluster_stats/clusters.html#unravel.cluster_stats.clusters.main">(in module unravel.cluster_stats.clusters)</a>
+</li>
+        <li><a href="unravel/cluster_stats/crop.html#unravel.cluster_stats.crop.main">(in module unravel.cluster_stats.crop)</a>
 </li>
         <li><a href="unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.main">(in module unravel.cluster_stats.cstats)</a>
 </li>
@@ -597,13 +697,15 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/cluster_stats/find_incongruent_clusters.html#unravel.cluster_stats.find_incongruent_clusters.main">(in module unravel.cluster_stats.find_incongruent_clusters)</a>
 </li>
+        <li><a href="unravel/cluster_stats/fstat_sig_vx_mask.html#unravel.cluster_stats.fstat_sig_vx_mask.main">(in module unravel.cluster_stats.fstat_sig_vx_mask)</a>
+</li>
         <li><a href="unravel/cluster_stats/group_bilateral_data.html#unravel.cluster_stats.group_bilateral_data.main">(in module unravel.cluster_stats.group_bilateral_data)</a>
 </li>
         <li><a href="unravel/cluster_stats/mean_IF.html#unravel.cluster_stats.index.main">(in module unravel.cluster_stats.index)</a>
 </li>
         <li><a href="unravel/cluster_stats/legend.html#unravel.cluster_stats.legend.main">(in module unravel.cluster_stats.legend)</a>
 </li>
-        <li><a href="unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.main">(in module unravel.cluster_stats.mean_IF_summary)</a>
+        <li><a href="unravel/cluster_stats/index.html#unravel.cluster_stats.mean_IF.main">(in module unravel.cluster_stats.mean_IF)</a>
 </li>
         <li><a href="unravel/cluster_stats/org_data.html#unravel.cluster_stats.org_data.main">(in module unravel.cluster_stats.org_data)</a>
 </li>
@@ -621,17 +723,33 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/cluster_stats/table.html#unravel.cluster_stats.table.main">(in module unravel.cluster_stats.table)</a>
 </li>
+        <li><a href="unravel/image_io/convert_img.html#unravel.image_io.convert_img.main">(in module unravel.image_io.convert_img)</a>
+</li>
         <li><a href="unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.main">(in module unravel.image_io.h5_to_tifs)</a>
+</li>
+        <li><a href="unravel/image_io/img_to_npy.html#unravel.image_io.img_to_npy.main">(in module unravel.image_io.img_to_npy)</a>
+</li>
+        <li><a href="unravel/image_io/img_to_points.html#unravel.image_io.img_to_points.main">(in module unravel.image_io.img_to_points)</a>
 </li>
         <li><a href="unravel/image_io/io_nii.html#unravel.image_io.io_nii.main">(in module unravel.image_io.io_nii)</a>
 </li>
+        <li><a href="unravel/image_io/metadata.html#unravel.image_io.metadata.main">(in module unravel.image_io.metadata)</a>
+</li>
         <li><a href="unravel/image_io/nii_hd.html#unravel.image_io.nii_hd.main">(in module unravel.image_io.nii_hd)</a>
+</li>
+        <li><a href="unravel/image_io/nii_info.html#unravel.image_io.nii_info.main">(in module unravel.image_io.nii_info)</a>
 </li>
         <li><a href="unravel/image_io/nii_to_tifs.html#unravel.image_io.nii_to_tifs.main">(in module unravel.image_io.nii_to_tifs)</a>
 </li>
         <li><a href="unravel/image_io/nii_to_zarr.html#unravel.image_io.nii_to_zarr.main">(in module unravel.image_io.nii_to_zarr)</a>
 </li>
+        <li><a href="unravel/image_io/points_to_img.html#unravel.image_io.points_to_img.main">(in module unravel.image_io.points_to_img)</a>
+</li>
         <li><a href="unravel/image_io/reorient_nii.html#unravel.image_io.reorient_nii.main">(in module unravel.image_io.reorient_nii)</a>
+</li>
+        <li><a href="unravel/image_io/tif_to_tifs.html#unravel.image_io.tif_to_tifs.main">(in module unravel.image_io.tif_to_tifs)</a>
+</li>
+        <li><a href="unravel/image_io/zarr_compress.html#unravel.image_io.zarr_compress.main">(in module unravel.image_io.zarr_compress)</a>
 </li>
         <li><a href="unravel/image_io/zarr_to_nii.html#unravel.image_io.zarr_to_nii.main">(in module unravel.image_io.zarr_to_nii)</a>
 </li>
@@ -641,21 +759,61 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/image_tools/avg.html#unravel.image_tools.avg.main">(in module unravel.image_tools.avg)</a>
 </li>
+        <li><a href="unravel/image_tools/bbox.html#unravel.image_tools.bbox.main">(in module unravel.image_tools.bbox)</a>
+</li>
+        <li><a href="unravel/image_tools/DoG.html#unravel.image_tools.DoG.main">(in module unravel.image_tools.DoG)</a>
+</li>
+        <li><a href="unravel/image_tools/extend.html#unravel.image_tools.extend.main">(in module unravel.image_tools.extend)</a>
+</li>
+        <li><a href="unravel/image_tools/math.html#unravel.image_tools.math.main">(in module unravel.image_tools.math)</a>
+</li>
         <li><a href="unravel/image_tools/max.html#unravel.image_tools.max.main">(in module unravel.image_tools.max)</a>
 </li>
         <li><a href="unravel/image_tools/modify_labels.html#unravel.image_tools.modify_labels.main">(in module unravel.image_tools.modify_labels)</a>
 </li>
-        <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.main">(in module unravel.region_stats.rstats_mean_IF_summary)</a>
+        <li><a href="unravel/image_tools/pad.html#unravel.image_tools.pad.main">(in module unravel.image_tools.pad)</a>
 </li>
-        <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.main">(in module unravel.region_stats.rstats_summary)</a>
+        <li><a href="unravel/image_tools/rb.html#unravel.image_tools.rb.main">(in module unravel.image_tools.rb)</a>
 </li>
-        <li><a href="unravel/register/affine_initializer.html#unravel.register.affine_initializer.main">(in module unravel.register.affine_initializer)</a>
+        <li><a href="unravel/image_tools/resample.html#unravel.image_tools.resample.main">(in module unravel.image_tools.resample)</a>
+</li>
+        <li><a href="unravel/image_tools/resample_points.html#unravel.image_tools.resample_points.main">(in module unravel.image_tools.resample_points)</a>
+</li>
+        <li><a href="unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.main">(in module unravel.image_tools.spatial_averaging)</a>
+</li>
+        <li><a href="unravel/image_tools/transpose_axes.html#unravel.image_tools.transpose_axes.main">(in module unravel.image_tools.transpose_axes)</a>
+</li>
+        <li><a href="unravel/image_tools/unique_intensities.html#unravel.image_tools.unique_intensities.main">(in module unravel.image_tools.unique_intensities)</a>
+</li>
+        <li><a href="unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.main">(in module unravel.region_stats.rstats_mean_IF)</a>
+</li>
+        <li><a href="unravel/register/affine_initializer_check.html#unravel.register.affine_initializer_check.main">(in module unravel.register.affine_initializer_check)</a>
 </li>
         <li><a href="unravel/register/reg_check.html#unravel.register.reg_check.main">(in module unravel.register.reg_check)</a>
 </li>
         <li><a href="unravel/register/reg_check_brain_mask.html#unravel.register.reg_check_brain_mask.main">(in module unravel.register.reg_check_brain_mask)</a>
 </li>
         <li><a href="unravel/register/reg_check_fsleyes.html#unravel.register.reg_check_fsleyes.main">(in module unravel.register.reg_check_fsleyes)</a>
+</li>
+        <li><a href="unravel/register/reg_prep.html#unravel.register.reg_prep.main">(in module unravel.register.reg_prep)</a>
+</li>
+        <li><a href="unravel/segment/brain_mask.html#unravel.segment.brain_mask.main">(in module unravel.segment.brain_mask)</a>
+</li>
+        <li><a href="unravel/segment/copy_tifs.html#unravel.segment.copy_tifs.main">(in module unravel.segment.copy_tifs)</a>
+</li>
+        <li><a href="unravel/segment/ilastik_pixel_classification.html#unravel.segment.ilastik_pixel_classification.main">(in module unravel.segment.ilastik_pixel_classification)</a>
+</li>
+        <li><a href="unravel/segment/labels_to_masks.html#unravel.segment.labels_to_masks.main">(in module unravel.segment.labels_to_masks)</a>
+</li>
+        <li><a href="unravel/tabular/columns.html#unravel.tabular.columns.main">(in module unravel.tabular.columns)</a>
+</li>
+        <li><a href="unravel/tabular/edit_columns.html#unravel.tabular.edit_columns.main">(in module unravel.tabular.edit_columns)</a>
+</li>
+        <li><a href="unravel/tabular/filter_rows.html#unravel.tabular.filter_rows.main">(in module unravel.tabular.filter_rows)</a>
+</li>
+        <li><a href="unravel/tabular/key_value_to_table.html#unravel.tabular.key_value_to_table.main">(in module unravel.tabular.key_value_to_table)</a>
+</li>
+        <li><a href="unravel/tabular/unique_values.html#unravel.tabular.unique_values.main">(in module unravel.tabular.unique_values)</a>
 </li>
         <li><a href="unravel/unravel_commands.html#unravel.unravel_commands.main">(in module unravel.unravel_commands)</a>
 </li>
@@ -679,18 +837,32 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/utilities/toggle_samples.html#unravel.utilities.toggle_samples.main">(in module unravel.utilities.toggle_samples)</a>
 </li>
+        <li><a href="unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.main">(in module unravel.voxel_stats.apply_mask)</a>
+</li>
+        <li><a href="unravel/voxel_stats/hemi_to_LR_avg.html#unravel.voxel_stats.hemi_to_LR_avg.main">(in module unravel.voxel_stats.hemi_to_LR_avg)</a>
+</li>
         <li><a href="unravel/voxel_stats/mirror.html#unravel.voxel_stats.mirror.main">(in module unravel.voxel_stats.mirror)</a>
+</li>
+        <li><a href="unravel/voxel_stats/other/r_to_p.html#unravel.voxel_stats.other.r_to_p.main">(in module unravel.voxel_stats.other.r_to_p)</a>
 </li>
         <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.main">(in module unravel.voxel_stats.vstats)</a>
 </li>
         <li><a href="unravel/voxel_stats/vstats_check_fsleyes.html#unravel.voxel_stats.vstats_check_fsleyes.main">(in module unravel.voxel_stats.vstats_check_fsleyes)</a>
 </li>
-        <li><a href="unravel/warp/warp.html#unravel.warp.warp.main">(in module unravel.warp.warp)</a>
+        <li><a href="unravel/voxel_stats/whole_to_LR_avg.html#unravel.voxel_stats.whole_to_LR_avg.main">(in module unravel.voxel_stats.whole_to_LR_avg)</a>
+</li>
+        <li><a href="unravel/voxel_stats/z_score_cwd.html#unravel.voxel_stats.z_score_cwd.main">(in module unravel.voxel_stats.z_score_cwd)</a>
 </li>
       </ul></li>
+      <li><a href="unravel/core/utils.html#unravel.core.utils.match_files">match_files() (in module unravel.core.utils)</a>
+</li>
+      <li><a href="unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.mean_intensity_in_brain">mean_intensity_in_brain() (in module unravel.voxel_stats.apply_mask)</a>
+</li>
       <li><a href="unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.mean_std_count">mean_std_count() (in module unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative)</a>
 </li>
-      <li><a href="unravel/abca/merfish/merfish_cells_to_nii.html#unravel.abca.merfish.merfish_cells_to_nii.merfish_cells_to_img">merfish_cells_to_img() (in module unravel.abca.merfish.merfish_cells_to_nii)</a>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#unravel.allen_institute.abca.merfish.merfish_cells_to_nii.merfish_cells_to_img">merfish_cells_to_img() (in module unravel.allen_institute.abca.merfish.merfish_cells_to_nii)</a>
+</li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.metadata">metadata() (in module unravel.core.img_io)</a>
 </li>
       <li><a href="unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.metadata_from_h5">metadata_from_h5() (in module unravel.image_io.h5_to_tifs)</a>
 </li>
@@ -702,23 +874,33 @@ window.addEventListener("load", () => mermaid.run());
     module
 
       <ul>
-        <li><a href="unravel/abca/merfish/merfish_cells_to_nii.html#module-unravel.abca.merfish.merfish_cells_to_nii">unravel.abca.merfish.merfish_cells_to_nii</a>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#module-unravel.allen_institute.abca.merfish.merfish_cells_to_nii">unravel.allen_institute.abca.merfish.merfish_cells_to_nii</a>
 </li>
-        <li><a href="unravel/abca/sunburst/mean_expression_color_scale.html#module-unravel.abca.sunburst.mean_expression_color_scale">unravel.abca.sunburst.mean_expression_color_scale</a>
+        <li><a href="unravel/allen_institute/abca/sunburst/sunburst.html#module-unravel.allen_institute.abca.sunburst.sunburst">unravel.allen_institute.abca.sunburst.sunburst</a>
 </li>
-        <li><a href="unravel/abca/sunburst/percent_expression_color_scale.html#module-unravel.abca.sunburst.percent_expression_color_scale">unravel.abca.sunburst.percent_expression_color_scale</a>
+        <li><a href="unravel/allen_institute/abca/sunburst/sunburst_filter_by_proportion.html#module-unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion">unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst.html#module-unravel.abca.sunburst.sunburst">unravel.abca.sunburst.sunburst</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/auto_crop.html#module-unravel.allen_institute.genetic_tools_atlas.auto_crop">unravel.allen_institute.genetic_tools_atlas.auto_crop</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst_expression.html#module-unravel.abca.sunburst.sunburst_expression">unravel.abca.sunburst.sunburst_expression</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/bbox_crop.html#module-unravel.allen_institute.genetic_tools_atlas.bbox_crop">unravel.allen_institute.genetic_tools_atlas.bbox_crop</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst_filter.html#module-unravel.abca.sunburst.sunburst_filter">unravel.abca.sunburst.sunburst_filter</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/org_samples.html#module-unravel.allen_institute.genetic_tools_atlas.org_samples">unravel.allen_institute.genetic_tools_atlas.org_samples</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst_filter_by_proportion.html#module-unravel.abca.sunburst.sunburst_filter_by_proportion">unravel.abca.sunburst.sunburst_filter_by_proportion</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/simplify_metadata.html#module-unravel.allen_institute.genetic_tools_atlas.simplify_metadata">unravel.allen_institute.genetic_tools_atlas.simplify_metadata</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/cell_type_proportions.html#module-unravel.allen_institute.mapmysections.cell_type_proportions">unravel.allen_institute.mapmysections.cell_type_proportions</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/cell_type_proportions_concat.html#module-unravel.allen_institute.mapmysections.cell_type_proportions_concat">unravel.allen_institute.mapmysections.cell_type_proportions_concat</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/csv_concat_with_source.html#module-unravel.allen_institute.mapmysections.csv_concat_with_source">unravel.allen_institute.mapmysections.csv_concat_with_source</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#module-unravel.allen_institute.mapmysections.segmentation_summary">unravel.allen_institute.mapmysections.segmentation_summary</a>
 </li>
         <li><a href="unravel/cluster_stats/brain_model.html#module-unravel.cluster_stats.brain_model">unravel.cluster_stats.brain_model</a>
 </li>
         <li><a href="unravel/cluster_stats/clusters.html#module-unravel.cluster_stats.clusters">unravel.cluster_stats.clusters</a>
+</li>
+        <li><a href="unravel/cluster_stats/crop.html#module-unravel.cluster_stats.crop">unravel.cluster_stats.crop</a>
 </li>
         <li><a href="unravel/cluster_stats/cstats.html#module-unravel.cluster_stats.cstats">unravel.cluster_stats.cstats</a>
 </li>
@@ -734,13 +916,15 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/cluster_stats/find_incongruent_clusters.html#module-unravel.cluster_stats.find_incongruent_clusters">unravel.cluster_stats.find_incongruent_clusters</a>
 </li>
+        <li><a href="unravel/cluster_stats/fstat_sig_vx_mask.html#module-unravel.cluster_stats.fstat_sig_vx_mask">unravel.cluster_stats.fstat_sig_vx_mask</a>
+</li>
         <li><a href="unravel/cluster_stats/group_bilateral_data.html#module-unravel.cluster_stats.group_bilateral_data">unravel.cluster_stats.group_bilateral_data</a>
 </li>
         <li><a href="unravel/cluster_stats/mean_IF.html#module-unravel.cluster_stats.index">unravel.cluster_stats.index</a>
 </li>
         <li><a href="unravel/cluster_stats/legend.html#module-unravel.cluster_stats.legend">unravel.cluster_stats.legend</a>
 </li>
-        <li><a href="unravel/cluster_stats/mean_IF_summary.html#module-unravel.cluster_stats.mean_IF_summary">unravel.cluster_stats.mean_IF_summary</a>
+        <li><a href="unravel/cluster_stats/index.html#module-unravel.cluster_stats.mean_IF">unravel.cluster_stats.mean_IF</a>
 </li>
         <li><a href="unravel/cluster_stats/org_data.html#module-unravel.cluster_stats.org_data">unravel.cluster_stats.org_data</a>
 </li>
@@ -762,19 +946,39 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/core/help_formatter.html#module-unravel.core.help_formatter">unravel.core.help_formatter</a>
 </li>
+        <li><a href="unravel/core/img_io.html#module-unravel.core.img_io">unravel.core.img_io</a>
+</li>
+        <li><a href="unravel/core/img_tools.html#module-unravel.core.img_tools">unravel.core.img_tools</a>
+</li>
         <li><a href="unravel/core/utils.html#module-unravel.core.utils">unravel.core.utils</a>
+</li>
+        <li><a href="unravel/image_io/convert_img.html#module-unravel.image_io.convert_img">unravel.image_io.convert_img</a>
 </li>
         <li><a href="unravel/image_io/h5_to_tifs.html#module-unravel.image_io.h5_to_tifs">unravel.image_io.h5_to_tifs</a>
 </li>
+        <li><a href="unravel/image_io/img_to_npy.html#module-unravel.image_io.img_to_npy">unravel.image_io.img_to_npy</a>
+</li>
+        <li><a href="unravel/image_io/img_to_points.html#module-unravel.image_io.img_to_points">unravel.image_io.img_to_points</a>
+</li>
         <li><a href="unravel/image_io/io_nii.html#module-unravel.image_io.io_nii">unravel.image_io.io_nii</a>
 </li>
+        <li><a href="unravel/image_io/metadata.html#module-unravel.image_io.metadata">unravel.image_io.metadata</a>
+</li>
         <li><a href="unravel/image_io/nii_hd.html#module-unravel.image_io.nii_hd">unravel.image_io.nii_hd</a>
+</li>
+        <li><a href="unravel/image_io/nii_info.html#module-unravel.image_io.nii_info">unravel.image_io.nii_info</a>
 </li>
         <li><a href="unravel/image_io/nii_to_tifs.html#module-unravel.image_io.nii_to_tifs">unravel.image_io.nii_to_tifs</a>
 </li>
         <li><a href="unravel/image_io/nii_to_zarr.html#module-unravel.image_io.nii_to_zarr">unravel.image_io.nii_to_zarr</a>
 </li>
+        <li><a href="unravel/image_io/points_to_img.html#module-unravel.image_io.points_to_img">unravel.image_io.points_to_img</a>
+</li>
         <li><a href="unravel/image_io/reorient_nii.html#module-unravel.image_io.reorient_nii">unravel.image_io.reorient_nii</a>
+</li>
+        <li><a href="unravel/image_io/tif_to_tifs.html#module-unravel.image_io.tif_to_tifs">unravel.image_io.tif_to_tifs</a>
+</li>
+        <li><a href="unravel/image_io/zarr_compress.html#module-unravel.image_io.zarr_compress">unravel.image_io.zarr_compress</a>
 </li>
         <li><a href="unravel/image_io/zarr_to_nii.html#module-unravel.image_io.zarr_to_nii">unravel.image_io.zarr_to_nii</a>
 </li>
@@ -784,21 +988,63 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/image_tools/avg.html#module-unravel.image_tools.avg">unravel.image_tools.avg</a>
 </li>
+        <li><a href="unravel/image_tools/bbox.html#module-unravel.image_tools.bbox">unravel.image_tools.bbox</a>
+</li>
+        <li><a href="unravel/image_tools/DoG.html#module-unravel.image_tools.DoG">unravel.image_tools.DoG</a>
+</li>
+        <li><a href="unravel/image_tools/extend.html#module-unravel.image_tools.extend">unravel.image_tools.extend</a>
+</li>
+        <li><a href="unravel/image_tools/math.html#module-unravel.image_tools.math">unravel.image_tools.math</a>
+</li>
         <li><a href="unravel/image_tools/max.html#module-unravel.image_tools.max">unravel.image_tools.max</a>
 </li>
         <li><a href="unravel/image_tools/modify_labels.html#module-unravel.image_tools.modify_labels">unravel.image_tools.modify_labels</a>
 </li>
-        <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#module-unravel.region_stats.rstats_mean_IF_summary">unravel.region_stats.rstats_mean_IF_summary</a>
+        <li><a href="unravel/image_tools/pad.html#module-unravel.image_tools.pad">unravel.image_tools.pad</a>
 </li>
-        <li><a href="unravel/region_stats/rstats_summary.html#module-unravel.region_stats.rstats_summary">unravel.region_stats.rstats_summary</a>
+        <li><a href="unravel/image_tools/rb.html#module-unravel.image_tools.rb">unravel.image_tools.rb</a>
 </li>
-        <li><a href="unravel/register/affine_initializer.html#module-unravel.register.affine_initializer">unravel.register.affine_initializer</a>
+        <li><a href="unravel/image_tools/resample.html#module-unravel.image_tools.resample">unravel.image_tools.resample</a>
+</li>
+        <li><a href="unravel/image_tools/resample_points.html#module-unravel.image_tools.resample_points">unravel.image_tools.resample_points</a>
+</li>
+        <li><a href="unravel/image_tools/spatial_averaging.html#module-unravel.image_tools.spatial_averaging">unravel.image_tools.spatial_averaging</a>
+</li>
+        <li><a href="unravel/image_tools/transpose_axes.html#module-unravel.image_tools.transpose_axes">unravel.image_tools.transpose_axes</a>
+</li>
+        <li><a href="unravel/image_tools/unique_intensities.html#module-unravel.image_tools.unique_intensities">unravel.image_tools.unique_intensities</a>
+</li>
+        <li><a href="unravel/region_stats/rstats_mean_IF.html#module-unravel.region_stats.rstats_mean_IF">unravel.region_stats.rstats_mean_IF</a>
+</li>
+        <li><a href="unravel/register/affine_initializer_check.html#module-unravel.register.affine_initializer_check">unravel.register.affine_initializer_check</a>
 </li>
         <li><a href="unravel/register/reg_check.html#module-unravel.register.reg_check">unravel.register.reg_check</a>
 </li>
         <li><a href="unravel/register/reg_check_brain_mask.html#module-unravel.register.reg_check_brain_mask">unravel.register.reg_check_brain_mask</a>
 </li>
         <li><a href="unravel/register/reg_check_fsleyes.html#module-unravel.register.reg_check_fsleyes">unravel.register.reg_check_fsleyes</a>
+</li>
+        <li><a href="unravel/register/reg_prep.html#module-unravel.register.reg_prep">unravel.register.reg_prep</a>
+</li>
+        <li><a href="unravel/segment/brain_mask.html#module-unravel.segment.brain_mask">unravel.segment.brain_mask</a>
+</li>
+        <li><a href="unravel/segment/copy_tifs.html#module-unravel.segment.copy_tifs">unravel.segment.copy_tifs</a>
+</li>
+        <li><a href="unravel/segment/ilastik_pixel_classification.html#module-unravel.segment.ilastik_pixel_classification">unravel.segment.ilastik_pixel_classification</a>
+</li>
+        <li><a href="unravel/segment/labels_to_masks.html#module-unravel.segment.labels_to_masks">unravel.segment.labels_to_masks</a>
+</li>
+        <li><a href="unravel/tabular/columns.html#module-unravel.tabular.columns">unravel.tabular.columns</a>
+</li>
+        <li><a href="unravel/tabular/edit_columns.html#module-unravel.tabular.edit_columns">unravel.tabular.edit_columns</a>
+</li>
+        <li><a href="unravel/tabular/filter_rows.html#module-unravel.tabular.filter_rows">unravel.tabular.filter_rows</a>
+</li>
+        <li><a href="unravel/tabular/key_value_to_table.html#module-unravel.tabular.key_value_to_table">unravel.tabular.key_value_to_table</a>
+</li>
+        <li><a href="unravel/tabular/unique_values.html#module-unravel.tabular.unique_values">unravel.tabular.unique_values</a>
+</li>
+        <li><a href="unravel/tabular/utils.html#module-unravel.tabular.utils">unravel.tabular.utils</a>
 </li>
         <li><a href="unravel/unravel_commands.html#module-unravel.unravel_commands">unravel.unravel_commands</a>
 </li>
@@ -822,13 +1068,21 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/utilities/toggle_samples.html#module-unravel.utilities.toggle_samples">unravel.utilities.toggle_samples</a>
 </li>
+        <li><a href="unravel/voxel_stats/apply_mask.html#module-unravel.voxel_stats.apply_mask">unravel.voxel_stats.apply_mask</a>
+</li>
+        <li><a href="unravel/voxel_stats/hemi_to_LR_avg.html#module-unravel.voxel_stats.hemi_to_LR_avg">unravel.voxel_stats.hemi_to_LR_avg</a>
+</li>
         <li><a href="unravel/voxel_stats/mirror.html#module-unravel.voxel_stats.mirror">unravel.voxel_stats.mirror</a>
+</li>
+        <li><a href="unravel/voxel_stats/other/r_to_p.html#module-unravel.voxel_stats.other.r_to_p">unravel.voxel_stats.other.r_to_p</a>
 </li>
         <li><a href="unravel/voxel_stats/vstats.html#module-unravel.voxel_stats.vstats">unravel.voxel_stats.vstats</a>
 </li>
         <li><a href="unravel/voxel_stats/vstats_check_fsleyes.html#module-unravel.voxel_stats.vstats_check_fsleyes">unravel.voxel_stats.vstats_check_fsleyes</a>
 </li>
-        <li><a href="unravel/warp/warp.html#module-unravel.warp.warp">unravel.warp.warp</a>
+        <li><a href="unravel/voxel_stats/whole_to_LR_avg.html#module-unravel.voxel_stats.whole_to_LR_avg">unravel.voxel_stats.whole_to_LR_avg</a>
+</li>
+        <li><a href="unravel/voxel_stats/z_score_cwd.html#module-unravel.voxel_stats.z_score_cwd">unravel.voxel_stats.z_score_cwd</a>
 </li>
       </ul></li>
   </ul></td>
@@ -837,17 +1091,31 @@ window.addEventListener("load", () => mermaid.run());
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/image_io/nii_to_zarr.html#unravel.image_io.nii_to_zarr.nii_to_ndarray">nii_to_ndarray() (in module unravel.image_io.nii_to_zarr)</a>
+      <li><a href="unravel/image_io/nii_info.html#unravel.image_io.nii_info.nii_axis_codes">nii_axis_codes() (in module unravel.image_io.nii_info)</a>
 </li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.nii_path_or_nii">nii_path_or_nii() (in module unravel.core.img_io)</a>
+</li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.nii_to_ndarray">nii_to_ndarray() (in module unravel.core.img_io)</a>
+
+      <ul>
+        <li><a href="unravel/image_io/nii_to_zarr.html#unravel.image_io.nii_to_zarr.nii_to_ndarray">(in module unravel.image_io.nii_to_zarr)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/image_io/nii_to_tifs.html#unravel.image_io.nii_to_tifs.nii_to_tifs">nii_to_tifs() (in module unravel.image_io.nii_to_tifs)</a>
+</li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.nii_voxel_size">nii_voxel_size() (in module unravel.core.img_io)</a>
 </li>
   </ul></td>
 </tr></table>
 
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/allen_institute/genetic_tools_atlas/org_samples.html#unravel.allen_institute.genetic_tools_atlas.org_samples.org_samples">org_samples() (in module unravel.allen_institute.genetic_tools_atlas.org_samples)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/cluster_stats/org_data.html#unravel.cluster_stats.org_data.organize_validation_data">organize_validation_data() (in module unravel.cluster_stats.org_data)</a>
 </li>
@@ -859,24 +1127,36 @@ window.addEventListener("load", () => mermaid.run());
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/utilities/points_compressor.html#unravel.utilities.points_compressor.pack_points">pack_points() (in module unravel.utilities.points_compressor)</a>
 </li>
-      <li><a href="unravel/abca/merfish/merfish_cells_to_nii.html#unravel.abca.merfish.merfish_cells_to_nii.parse_args">parse_args() (in module unravel.abca.merfish.merfish_cells_to_nii)</a>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.pad">pad() (in module unravel.core.img_tools)</a>
+</li>
+      <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#unravel.allen_institute.abca.merfish.merfish_cells_to_nii.parse_args">parse_args() (in module unravel.allen_institute.abca.merfish.merfish_cells_to_nii)</a>
 
       <ul>
-        <li><a href="unravel/abca/sunburst/mean_expression_color_scale.html#unravel.abca.sunburst.mean_expression_color_scale.parse_args">(in module unravel.abca.sunburst.mean_expression_color_scale)</a>
+        <li><a href="unravel/allen_institute/abca/sunburst/sunburst.html#unravel.allen_institute.abca.sunburst.sunburst.parse_args">(in module unravel.allen_institute.abca.sunburst.sunburst)</a>
 </li>
-        <li><a href="unravel/abca/sunburst/percent_expression_color_scale.html#unravel.abca.sunburst.percent_expression_color_scale.parse_args">(in module unravel.abca.sunburst.percent_expression_color_scale)</a>
+        <li><a href="unravel/allen_institute/abca/sunburst/sunburst_filter_by_proportion.html#unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion.parse_args">(in module unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion)</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst.html#unravel.abca.sunburst.sunburst.parse_args">(in module unravel.abca.sunburst.sunburst)</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/auto_crop.html#unravel.allen_institute.genetic_tools_atlas.auto_crop.parse_args">(in module unravel.allen_institute.genetic_tools_atlas.auto_crop)</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst_expression.html#unravel.abca.sunburst.sunburst_expression.parse_args">(in module unravel.abca.sunburst.sunburst_expression)</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/bbox_crop.html#unravel.allen_institute.genetic_tools_atlas.bbox_crop.parse_args">(in module unravel.allen_institute.genetic_tools_atlas.bbox_crop)</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst_filter.html#unravel.abca.sunburst.sunburst_filter.parse_args">(in module unravel.abca.sunburst.sunburst_filter)</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/org_samples.html#unravel.allen_institute.genetic_tools_atlas.org_samples.parse_args">(in module unravel.allen_institute.genetic_tools_atlas.org_samples)</a>
 </li>
-        <li><a href="unravel/abca/sunburst/sunburst_filter_by_proportion.html#unravel.abca.sunburst.sunburst_filter_by_proportion.parse_args">(in module unravel.abca.sunburst.sunburst_filter_by_proportion)</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/simplify_metadata.html#unravel.allen_institute.genetic_tools_atlas.simplify_metadata.parse_args">(in module unravel.allen_institute.genetic_tools_atlas.simplify_metadata)</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/cell_type_proportions.html#unravel.allen_institute.mapmysections.cell_type_proportions.parse_args">(in module unravel.allen_institute.mapmysections.cell_type_proportions)</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/cell_type_proportions_concat.html#unravel.allen_institute.mapmysections.cell_type_proportions_concat.parse_args">(in module unravel.allen_institute.mapmysections.cell_type_proportions_concat)</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/csv_concat_with_source.html#unravel.allen_institute.mapmysections.csv_concat_with_source.parse_args">(in module unravel.allen_institute.mapmysections.csv_concat_with_source)</a>
+</li>
+        <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#unravel.allen_institute.mapmysections.segmentation_summary.parse_args">(in module unravel.allen_institute.mapmysections.segmentation_summary)</a>
 </li>
         <li><a href="unravel/cluster_stats/brain_model.html#unravel.cluster_stats.brain_model.parse_args">(in module unravel.cluster_stats.brain_model)</a>
 </li>
         <li><a href="unravel/cluster_stats/clusters.html#unravel.cluster_stats.clusters.parse_args">(in module unravel.cluster_stats.clusters)</a>
+</li>
+        <li><a href="unravel/cluster_stats/crop.html#unravel.cluster_stats.crop.parse_args">(in module unravel.cluster_stats.crop)</a>
 </li>
         <li><a href="unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.parse_args">(in module unravel.cluster_stats.cstats)</a>
 </li>
@@ -892,13 +1172,15 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/cluster_stats/find_incongruent_clusters.html#unravel.cluster_stats.find_incongruent_clusters.parse_args">(in module unravel.cluster_stats.find_incongruent_clusters)</a>
 </li>
+        <li><a href="unravel/cluster_stats/fstat_sig_vx_mask.html#unravel.cluster_stats.fstat_sig_vx_mask.parse_args">(in module unravel.cluster_stats.fstat_sig_vx_mask)</a>
+</li>
         <li><a href="unravel/cluster_stats/group_bilateral_data.html#unravel.cluster_stats.group_bilateral_data.parse_args">(in module unravel.cluster_stats.group_bilateral_data)</a>
 </li>
         <li><a href="unravel/cluster_stats/mean_IF.html#unravel.cluster_stats.index.parse_args">(in module unravel.cluster_stats.index)</a>
 </li>
         <li><a href="unravel/cluster_stats/legend.html#unravel.cluster_stats.legend.parse_args">(in module unravel.cluster_stats.legend)</a>
 </li>
-        <li><a href="unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.parse_args">(in module unravel.cluster_stats.mean_IF_summary)</a>
+        <li><a href="unravel/cluster_stats/index.html#unravel.cluster_stats.mean_IF.parse_args">(in module unravel.cluster_stats.mean_IF)</a>
 </li>
         <li><a href="unravel/cluster_stats/org_data.html#unravel.cluster_stats.org_data.parse_args">(in module unravel.cluster_stats.org_data)</a>
 </li>
@@ -916,17 +1198,33 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/cluster_stats/table.html#unravel.cluster_stats.table.parse_args">(in module unravel.cluster_stats.table)</a>
 </li>
+        <li><a href="unravel/image_io/convert_img.html#unravel.image_io.convert_img.parse_args">(in module unravel.image_io.convert_img)</a>
+</li>
         <li><a href="unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.parse_args">(in module unravel.image_io.h5_to_tifs)</a>
+</li>
+        <li><a href="unravel/image_io/img_to_npy.html#unravel.image_io.img_to_npy.parse_args">(in module unravel.image_io.img_to_npy)</a>
+</li>
+        <li><a href="unravel/image_io/img_to_points.html#unravel.image_io.img_to_points.parse_args">(in module unravel.image_io.img_to_points)</a>
 </li>
         <li><a href="unravel/image_io/io_nii.html#unravel.image_io.io_nii.parse_args">(in module unravel.image_io.io_nii)</a>
 </li>
+        <li><a href="unravel/image_io/metadata.html#unravel.image_io.metadata.parse_args">(in module unravel.image_io.metadata)</a>
+</li>
         <li><a href="unravel/image_io/nii_hd.html#unravel.image_io.nii_hd.parse_args">(in module unravel.image_io.nii_hd)</a>
+</li>
+        <li><a href="unravel/image_io/nii_info.html#unravel.image_io.nii_info.parse_args">(in module unravel.image_io.nii_info)</a>
 </li>
         <li><a href="unravel/image_io/nii_to_tifs.html#unravel.image_io.nii_to_tifs.parse_args">(in module unravel.image_io.nii_to_tifs)</a>
 </li>
         <li><a href="unravel/image_io/nii_to_zarr.html#unravel.image_io.nii_to_zarr.parse_args">(in module unravel.image_io.nii_to_zarr)</a>
 </li>
+        <li><a href="unravel/image_io/points_to_img.html#unravel.image_io.points_to_img.parse_args">(in module unravel.image_io.points_to_img)</a>
+</li>
         <li><a href="unravel/image_io/reorient_nii.html#unravel.image_io.reorient_nii.parse_args">(in module unravel.image_io.reorient_nii)</a>
+</li>
+        <li><a href="unravel/image_io/tif_to_tifs.html#unravel.image_io.tif_to_tifs.parse_args">(in module unravel.image_io.tif_to_tifs)</a>
+</li>
+        <li><a href="unravel/image_io/zarr_compress.html#unravel.image_io.zarr_compress.parse_args">(in module unravel.image_io.zarr_compress)</a>
 </li>
         <li><a href="unravel/image_io/zarr_to_nii.html#unravel.image_io.zarr_to_nii.parse_args">(in module unravel.image_io.zarr_to_nii)</a>
 </li>
@@ -936,21 +1234,61 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/image_tools/avg.html#unravel.image_tools.avg.parse_args">(in module unravel.image_tools.avg)</a>
 </li>
+        <li><a href="unravel/image_tools/bbox.html#unravel.image_tools.bbox.parse_args">(in module unravel.image_tools.bbox)</a>
+</li>
+        <li><a href="unravel/image_tools/DoG.html#unravel.image_tools.DoG.parse_args">(in module unravel.image_tools.DoG)</a>
+</li>
+        <li><a href="unravel/image_tools/extend.html#unravel.image_tools.extend.parse_args">(in module unravel.image_tools.extend)</a>
+</li>
+        <li><a href="unravel/image_tools/math.html#unravel.image_tools.math.parse_args">(in module unravel.image_tools.math)</a>
+</li>
         <li><a href="unravel/image_tools/max.html#unravel.image_tools.max.parse_args">(in module unravel.image_tools.max)</a>
 </li>
         <li><a href="unravel/image_tools/modify_labels.html#unravel.image_tools.modify_labels.parse_args">(in module unravel.image_tools.modify_labels)</a>
 </li>
-        <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.parse_args">(in module unravel.region_stats.rstats_mean_IF_summary)</a>
+        <li><a href="unravel/image_tools/pad.html#unravel.image_tools.pad.parse_args">(in module unravel.image_tools.pad)</a>
 </li>
-        <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.parse_args">(in module unravel.region_stats.rstats_summary)</a>
+        <li><a href="unravel/image_tools/rb.html#unravel.image_tools.rb.parse_args">(in module unravel.image_tools.rb)</a>
 </li>
-        <li><a href="unravel/register/affine_initializer.html#unravel.register.affine_initializer.parse_args">(in module unravel.register.affine_initializer)</a>
+        <li><a href="unravel/image_tools/resample.html#unravel.image_tools.resample.parse_args">(in module unravel.image_tools.resample)</a>
+</li>
+        <li><a href="unravel/image_tools/resample_points.html#unravel.image_tools.resample_points.parse_args">(in module unravel.image_tools.resample_points)</a>
+</li>
+        <li><a href="unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.parse_args">(in module unravel.image_tools.spatial_averaging)</a>
+</li>
+        <li><a href="unravel/image_tools/transpose_axes.html#unravel.image_tools.transpose_axes.parse_args">(in module unravel.image_tools.transpose_axes)</a>
+</li>
+        <li><a href="unravel/image_tools/unique_intensities.html#unravel.image_tools.unique_intensities.parse_args">(in module unravel.image_tools.unique_intensities)</a>
+</li>
+        <li><a href="unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.parse_args">(in module unravel.region_stats.rstats_mean_IF)</a>
+</li>
+        <li><a href="unravel/register/affine_initializer_check.html#unravel.register.affine_initializer_check.parse_args">(in module unravel.register.affine_initializer_check)</a>
 </li>
         <li><a href="unravel/register/reg_check.html#unravel.register.reg_check.parse_args">(in module unravel.register.reg_check)</a>
 </li>
         <li><a href="unravel/register/reg_check_brain_mask.html#unravel.register.reg_check_brain_mask.parse_args">(in module unravel.register.reg_check_brain_mask)</a>
 </li>
         <li><a href="unravel/register/reg_check_fsleyes.html#unravel.register.reg_check_fsleyes.parse_args">(in module unravel.register.reg_check_fsleyes)</a>
+</li>
+        <li><a href="unravel/register/reg_prep.html#unravel.register.reg_prep.parse_args">(in module unravel.register.reg_prep)</a>
+</li>
+        <li><a href="unravel/segment/brain_mask.html#unravel.segment.brain_mask.parse_args">(in module unravel.segment.brain_mask)</a>
+</li>
+        <li><a href="unravel/segment/copy_tifs.html#unravel.segment.copy_tifs.parse_args">(in module unravel.segment.copy_tifs)</a>
+</li>
+        <li><a href="unravel/segment/ilastik_pixel_classification.html#unravel.segment.ilastik_pixel_classification.parse_args">(in module unravel.segment.ilastik_pixel_classification)</a>
+</li>
+        <li><a href="unravel/segment/labels_to_masks.html#unravel.segment.labels_to_masks.parse_args">(in module unravel.segment.labels_to_masks)</a>
+</li>
+        <li><a href="unravel/tabular/columns.html#unravel.tabular.columns.parse_args">(in module unravel.tabular.columns)</a>
+</li>
+        <li><a href="unravel/tabular/edit_columns.html#unravel.tabular.edit_columns.parse_args">(in module unravel.tabular.edit_columns)</a>
+</li>
+        <li><a href="unravel/tabular/filter_rows.html#unravel.tabular.filter_rows.parse_args">(in module unravel.tabular.filter_rows)</a>
+</li>
+        <li><a href="unravel/tabular/key_value_to_table.html#unravel.tabular.key_value_to_table.parse_args">(in module unravel.tabular.key_value_to_table)</a>
+</li>
+        <li><a href="unravel/tabular/unique_values.html#unravel.tabular.unique_values.parse_args">(in module unravel.tabular.unique_values)</a>
 </li>
         <li><a href="unravel/unravel_commands.html#unravel.unravel_commands.parse_args">(in module unravel.unravel_commands)</a>
 </li>
@@ -974,34 +1312,32 @@ window.addEventListener("load", () => mermaid.run());
 </li>
         <li><a href="unravel/utilities/toggle_samples.html#unravel.utilities.toggle_samples.parse_args">(in module unravel.utilities.toggle_samples)</a>
 </li>
+        <li><a href="unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.parse_args">(in module unravel.voxel_stats.apply_mask)</a>
+</li>
+        <li><a href="unravel/voxel_stats/hemi_to_LR_avg.html#unravel.voxel_stats.hemi_to_LR_avg.parse_args">(in module unravel.voxel_stats.hemi_to_LR_avg)</a>
+</li>
         <li><a href="unravel/voxel_stats/mirror.html#unravel.voxel_stats.mirror.parse_args">(in module unravel.voxel_stats.mirror)</a>
+</li>
+        <li><a href="unravel/voxel_stats/other/r_to_p.html#unravel.voxel_stats.other.r_to_p.parse_args">(in module unravel.voxel_stats.other.r_to_p)</a>
 </li>
         <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.parse_args">(in module unravel.voxel_stats.vstats)</a>
 </li>
         <li><a href="unravel/voxel_stats/vstats_check_fsleyes.html#unravel.voxel_stats.vstats_check_fsleyes.parse_args">(in module unravel.voxel_stats.vstats_check_fsleyes)</a>
 </li>
-        <li><a href="unravel/warp/warp.html#unravel.warp.warp.parse_args">(in module unravel.warp.warp)</a>
+        <li><a href="unravel/voxel_stats/whole_to_LR_avg.html#unravel.voxel_stats.whole_to_LR_avg.parse_args">(in module unravel.voxel_stats.whole_to_LR_avg)</a>
+</li>
+        <li><a href="unravel/voxel_stats/z_score_cwd.html#unravel.voxel_stats.z_score_cwd.parse_args">(in module unravel.voxel_stats.z_score_cwd)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.parse_color_argument">parse_color_argument() (in module unravel.region_stats.rstats_summary)</a>
-</li>
-      <li><a href="unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.perform_t_tests">perform_t_tests() (in module unravel.cluster_stats.mean_IF_summary)</a>
-
-      <ul>
-        <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.perform_t_tests">(in module unravel.region_stats.rstats_mean_IF_summary)</a>
-</li>
-      </ul></li>
       <li><a href="unravel/cluster_stats/cstats.html#unravel.cluster_stats.cstats.perform_tukey_test">perform_tukey_test() (in module unravel.cluster_stats.cstats)</a>
 </li>
-      <li><a href="unravel/cluster_stats/mean_IF_summary.html#unravel.cluster_stats.mean_IF_summary.plot_data">plot_data() (in module unravel.cluster_stats.mean_IF_summary)</a>
-
-      <ul>
-        <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.plot_data">(in module unravel.region_stats.rstats_mean_IF_summary)</a>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.pixel_classification">pixel_classification() (in module unravel.core.img_tools)</a>
 </li>
-      </ul></li>
       <li><a href="unravel/utilities/points_compressor.html#unravel.utilities.points_compressor.points_compressor">points_compressor() (in module unravel.utilities.points_compressor)</a>
+</li>
+      <li><a href="unravel/image_io/points_to_img.html#unravel.image_io.points_to_img.points_to_img">points_to_img() (in module unravel.image_io.points_to_img)</a>
 </li>
       <li><a href="unravel/utilities/prepend_conditions.html#unravel.utilities.prepend_conditions.prepend_conditions">prepend_conditions() (in module unravel.utilities.prepend_conditions)</a>
 </li>
@@ -1009,17 +1345,21 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       <li><a href="unravel/core/help_formatter.html#unravel.core.help_formatter.RichArgumentParser.print_help">print_help() (unravel.core.help_formatter.RichArgumentParser method)</a>
 </li>
-      <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.process_and_plot_data">process_and_plot_data() (in module unravel.region_stats.rstats_summary)</a>
+      <li><a href="unravel/image_io/metadata.html#unravel.image_io.metadata.print_metadata">print_metadata() (in module unravel.image_io.metadata)</a>
+</li>
+      <li><a href="unravel/tabular/unique_values.html#unravel.tabular.unique_values.print_values">print_values() (in module unravel.tabular.unique_values)</a>
+</li>
+      <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#unravel.allen_institute.mapmysections.segmentation_summary.process_and_write_line">process_and_write_line() (in module unravel.allen_institute.mapmysections.segmentation_summary)</a>
 </li>
       <li><a href="unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.process_fdr_and_clusters">process_fdr_and_clusters() (in module unravel.cluster_stats.fdr)</a>
 </li>
       <li><a href="unravel/cluster_stats/recursively_mirror_rev_cluster_indices.html#unravel.cluster_stats.recursively_mirror_rev_cluster_indices.process_file">process_file() (in module unravel.cluster_stats.recursively_mirror_rev_cluster_indices)</a>
 </li>
-      <li><a href="unravel/core/utils.html#unravel.core.utils.process_files_with_glob">process_files_with_glob() (in module unravel.core.utils)</a>
-</li>
       <li><a href="unravel/image_tools/atlas/wireframe.html#unravel.image_tools.atlas.wireframe.process_intensity">process_intensity() (in module unravel.image_tools.atlas.wireframe)</a>
 </li>
       <li><a href="unravel/utilities/process_samples.html#unravel.utilities.process_samples.process_samples">process_samples() (in module unravel.utilities.process_samples)</a>
+</li>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.process_slice">process_slice() (in module unravel.core.img_tools)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1027,9 +1367,11 @@ window.addEventListener("load", () => mermaid.run());
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g">relative_hedges_g() (in module unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative)</a>
+      <li><a href="unravel/voxel_stats/other/r_to_p.html#unravel.voxel_stats.other.r_to_p.r_to_z">r_to_z() (in module unravel.voxel_stats.other.r_to_p)</a>
 </li>
-      <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#unravel.region_stats.rstats_mean_IF_summary.remove_zero_intensity_regions">remove_zero_intensity_regions() (in module unravel.region_stats.rstats_mean_IF_summary)</a>
+      <li><a href="unravel/register/reg_prep.html#unravel.register.reg_prep.reg_prep">reg_prep() (in module unravel.register.reg_prep)</a>
+</li>
+      <li><a href="unravel/cluster_stats/effect_sizes/effect_sizes_by_sex__relative.html#unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative.relative_hedges_g">relative_hedges_g() (in module unravel.cluster_stats.effect_sizes.effect_sizes_by_sex__relative)</a>
 </li>
       <li><a href="unravel/utilities/rename.html#unravel.utilities.rename.rename_files">rename_files() (in module unravel.utilities.rename)</a>
 </li>
@@ -1045,21 +1387,43 @@ window.addEventListener("load", () => mermaid.run());
         <li><a href="unravel/core/utils.html#unravel.core.utils.CustomTimeRemainingColumn.render">(unravel.core.utils.CustomTimeRemainingColumn method)</a>
 </li>
       </ul></li>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.reorient_axes">reorient_axes() (in module unravel.core.img_tools)</a>
+</li>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.reorient_ndarray">reorient_ndarray() (in module unravel.core.img_tools)</a>
+</li>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.reorient_ndarray2">reorient_ndarray2() (in module unravel.core.img_tools)</a>
+</li>
+      <li><a href="unravel/image_io/reorient_nii.html#unravel.image_io.reorient_nii.reorient_nii">reorient_nii() (in module unravel.image_io.reorient_nii)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/image_io/reorient_nii.html#unravel.image_io.reorient_nii.reorient_nii">reorient_nii() (in module unravel.image_io.reorient_nii)</a>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.resample">resample() (in module unravel.core.img_tools)</a>
+</li>
+      <li><a href="unravel/image_tools/resample_points.html#unravel.image_tools.resample_points.resample_and_convert_points">resample_and_convert_points() (in module unravel.image_tools.resample_points)</a>
+</li>
+      <li><a href="unravel/tabular/key_value_to_table.html#unravel.tabular.key_value_to_table.reshape_key_value_blocks">reshape_key_value_blocks() (in module unravel.tabular.key_value_to_table)</a>
+</li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.resolve_path">resolve_path() (in module unravel.core.img_io)</a>
 </li>
       <li><a href="unravel/image_tools/modify_labels.html#unravel.image_tools.modify_labels.retain_labels">retain_labels() (in module unravel.image_tools.modify_labels)</a>
 </li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.return_3D_img">return_3D_img() (in module unravel.core.img_io)</a>
+</li>
       <li><a href="unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.reverse_clusters">reverse_clusters() (in module unravel.cluster_stats.fdr)</a>
 </li>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.reverse_reorient_axes">reverse_reorient_axes() (in module unravel.core.img_tools)</a>
+</li>
       <li><a href="unravel/core/help_formatter.html#unravel.core.help_formatter.RichArgumentParser">RichArgumentParser (class in unravel.core.help_formatter)</a>
+</li>
+      <li><a href="unravel/image_tools/rb.html#unravel.image_tools.rb.rolling_ball_subtraction">rolling_ball_subtraction() (in module unravel.image_tools.rb)</a>
+</li>
+      <li><a href="unravel/core/img_tools.html#unravel.core.img_tools.rolling_ball_subtraction_opencv_parallel">rolling_ball_subtraction_opencv_parallel() (in module unravel.core.img_tools)</a>
+</li>
+      <li><a href="unravel/image_io/zarr_compress.html#unravel.image_io.zarr_compress.run_in_parallel">run_in_parallel() (in module unravel.image_io.zarr_compress)</a>
 </li>
       <li><a href="unravel/voxel_stats/vstats.html#unravel.voxel_stats.vstats.run_randomise_parallel">run_randomise_parallel() (in module unravel.voxel_stats.vstats)</a>
 </li>
       <li><a href="unravel/cluster_stats/summary.html#unravel.cluster_stats.summary.run_script">run_script() (in module unravel.cluster_stats.summary)</a>
-</li>
-      <li><a href="unravel/register/affine_initializer.html#unravel.register.affine_initializer.run_with_timeout">run_with_timeout() (in module unravel.register.affine_initializer)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1067,11 +1431,49 @@ window.addEventListener("load", () => mermaid.run());
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/image_io/zarr_to_nii.html#unravel.image_io.zarr_to_nii.save_as_nii">save_as_nii() (in module unravel.image_io.zarr_to_nii)</a>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.save_3D_img">save_3D_img() (in module unravel.core.img_io)</a>
 </li>
-      <li><a href="unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.save_as_tifs">save_as_tifs() (in module unravel.image_io.h5_to_tifs)</a>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.save_as_h5">save_as_h5() (in module unravel.core.img_io)</a>
 </li>
-      <li><a href="unravel/image_io/nii_to_zarr.html#unravel.image_io.nii_to_zarr.save_as_zarr">save_as_zarr() (in module unravel.image_io.nii_to_zarr)</a>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.save_as_nii">save_as_nii() (in module unravel.core.img_io)</a>
+
+      <ul>
+        <li><a href="unravel/image_io/zarr_to_nii.html#unravel.image_io.zarr_to_nii.save_as_nii">(in module unravel.image_io.zarr_to_nii)</a>
+</li>
+      </ul></li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.save_as_tifs">save_as_tifs() (in module unravel.core.img_io)</a>
+
+      <ul>
+        <li><a href="unravel/image_io/h5_to_tifs.html#unravel.image_io.h5_to_tifs.save_as_tifs">(in module unravel.image_io.h5_to_tifs)</a>
+</li>
+      </ul></li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.save_as_zarr">save_as_zarr() (in module unravel.core.img_io)</a>
+
+      <ul>
+        <li><a href="unravel/image_io/nii_to_zarr.html#unravel.image_io.nii_to_zarr.save_as_zarr">(in module unravel.image_io.nii_to_zarr)</a>
+</li>
+      </ul></li>
+      <li><a href="unravel/cluster_stats/crop.html#unravel.cluster_stats.crop.save_cropped_img">save_cropped_img() (in module unravel.cluster_stats.crop)</a>
+</li>
+      <li><a href="unravel/segment/ilastik_pixel_classification.html#unravel.segment.ilastik_pixel_classification.save_labels_as_masks">save_labels_as_masks() (in module unravel.segment.ilastik_pixel_classification)</a>
+
+      <ul>
+        <li><a href="unravel/segment/labels_to_masks.html#unravel.segment.labels_to_masks.save_labels_as_masks">(in module unravel.segment.labels_to_masks)</a>
+</li>
+      </ul></li>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.save_metadata_to_file">save_metadata_to_file() (in module unravel.core.img_io)</a>
+</li>
+      <li><a href="unravel/tabular/utils.html#unravel.tabular.utils.save_tabular_file">save_tabular_file() (in module unravel.tabular.utils)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/image_tools/DoG.html#unravel.image_tools.DoG.save_tif">save_tif() (in module unravel.image_tools.DoG)</a>
+
+      <ul>
+        <li><a href="unravel/image_tools/rb.html#unravel.image_tools.rb.save_tif">(in module unravel.image_tools.rb)</a>
+</li>
+      </ul></li>
+      <li><a href="unravel/voxel_stats/apply_mask.html#unravel.voxel_stats.apply_mask.scale_bool_to_full_res">scale_bool_to_full_res() (in module unravel.voxel_stats.apply_mask)</a>
 </li>
       <li><a href="unravel/image_tools/modify_labels.html#unravel.image_tools.modify_labels.set_labels">set_labels() (in module unravel.image_tools.modify_labels)</a>
 </li>
@@ -1079,17 +1481,17 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       <li><a href="unravel/cluster_stats/fdr_range.html#unravel.cluster_stats.fdr_range.smart_float_format">smart_float_format() (in module unravel.cluster_stats.fdr_range)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/cluster_stats/prism.html#unravel.cluster_stats.prism.sort_samples">sort_samples() (in module unravel.cluster_stats.prism)</a>
 </li>
       <li><a href="unravel/cluster_stats/table.html#unravel.cluster_stats.table.sort_sunburst_hierarchy">sort_sunburst_hierarchy() (in module unravel.cluster_stats.table)</a>
 </li>
+      <li><a href="unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.spatial_average_2D">spatial_average_2D() (in module unravel.image_tools.spatial_averaging)</a>
+</li>
+      <li><a href="unravel/image_tools/spatial_averaging.html#unravel.image_tools.spatial_averaging.spatial_average_3D">spatial_average_3D() (in module unravel.image_tools.spatial_averaging)</a>
+</li>
       <li><a href="unravel/cluster_stats/fdr.html#unravel.cluster_stats.fdr.split_clusters_based_on_effect">split_clusters_based_on_effect() (in module unravel.cluster_stats.fdr)</a>
 </li>
       <li><a href="unravel/utilities/points_compressor.html#unravel.utilities.points_compressor.summarize_points">summarize_points() (in module unravel.utilities.points_compressor)</a>
-</li>
-      <li><a href="unravel/region_stats/rstats_summary.html#unravel.region_stats.rstats_summary.summarize_significance">summarize_significance() (in module unravel.region_stats.rstats_summary)</a>
 </li>
       <li><a href="unravel/cluster_stats/sunburst.html#unravel.cluster_stats.sunburst.sunburst">sunburst() (in module unravel.cluster_stats.sunburst)</a>
 </li>
@@ -1101,7 +1503,15 @@ window.addEventListener("load", () => mermaid.run());
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/image_tools/math.html#unravel.image_tools.math.threshold_image">threshold_image() (in module unravel.image_tools.math)</a>
+</li>
+      <li><a href="unravel/image_io/points_to_img.html#unravel.image_io.points_to_img.threshold_points_by_region_id">threshold_points_by_region_id() (in module unravel.image_io.points_to_img)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unravel/image_io/reorient_nii.html#unravel.image_io.reorient_nii.transform_nii_affine">transform_nii_affine() (in module unravel.image_io.reorient_nii)</a>
+</li>
+      <li><a href="unravel/image_tools/transpose_axes.html#unravel.image_tools.transpose_axes.transpose_img">transpose_img() (in module unravel.image_tools.transpose_axes)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1114,52 +1524,80 @@ window.addEventListener("load", () => mermaid.run());
       <li><a href="unravel/utilities/points_compressor.html#unravel.utilities.points_compressor.unpack_points">unpack_points() (in module unravel.utilities.points_compressor)</a>
 </li>
       <li>
-    unravel.abca.merfish.merfish_cells_to_nii
+    unravel.allen_institute.abca.merfish.merfish_cells_to_nii
 
       <ul>
-        <li><a href="unravel/abca/merfish/merfish_cells_to_nii.html#module-unravel.abca.merfish.merfish_cells_to_nii">module</a>
+        <li><a href="unravel/allen_institute/abca/merfish/merfish_cells_to_nii.html#module-unravel.allen_institute.abca.merfish.merfish_cells_to_nii">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.abca.sunburst.mean_expression_color_scale
+    unravel.allen_institute.abca.sunburst.sunburst
 
       <ul>
-        <li><a href="unravel/abca/sunburst/mean_expression_color_scale.html#module-unravel.abca.sunburst.mean_expression_color_scale">module</a>
+        <li><a href="unravel/allen_institute/abca/sunburst/sunburst.html#module-unravel.allen_institute.abca.sunburst.sunburst">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.abca.sunburst.percent_expression_color_scale
+    unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion
 
       <ul>
-        <li><a href="unravel/abca/sunburst/percent_expression_color_scale.html#module-unravel.abca.sunburst.percent_expression_color_scale">module</a>
+        <li><a href="unravel/allen_institute/abca/sunburst/sunburst_filter_by_proportion.html#module-unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.abca.sunburst.sunburst
+    unravel.allen_institute.genetic_tools_atlas.auto_crop
 
       <ul>
-        <li><a href="unravel/abca/sunburst/sunburst.html#module-unravel.abca.sunburst.sunburst">module</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/auto_crop.html#module-unravel.allen_institute.genetic_tools_atlas.auto_crop">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.abca.sunburst.sunburst_expression
+    unravel.allen_institute.genetic_tools_atlas.bbox_crop
 
       <ul>
-        <li><a href="unravel/abca/sunburst/sunburst_expression.html#module-unravel.abca.sunburst.sunburst_expression">module</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/bbox_crop.html#module-unravel.allen_institute.genetic_tools_atlas.bbox_crop">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.abca.sunburst.sunburst_filter
+    unravel.allen_institute.genetic_tools_atlas.org_samples
 
       <ul>
-        <li><a href="unravel/abca/sunburst/sunburst_filter.html#module-unravel.abca.sunburst.sunburst_filter">module</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/org_samples.html#module-unravel.allen_institute.genetic_tools_atlas.org_samples">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.abca.sunburst.sunburst_filter_by_proportion
+    unravel.allen_institute.genetic_tools_atlas.simplify_metadata
 
       <ul>
-        <li><a href="unravel/abca/sunburst/sunburst_filter_by_proportion.html#module-unravel.abca.sunburst.sunburst_filter_by_proportion">module</a>
+        <li><a href="unravel/allen_institute/genetic_tools_atlas/simplify_metadata.html#module-unravel.allen_institute.genetic_tools_atlas.simplify_metadata">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.mapmysections.cell_type_proportions
+
+      <ul>
+        <li><a href="unravel/allen_institute/mapmysections/cell_type_proportions.html#module-unravel.allen_institute.mapmysections.cell_type_proportions">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.mapmysections.cell_type_proportions_concat
+
+      <ul>
+        <li><a href="unravel/allen_institute/mapmysections/cell_type_proportions_concat.html#module-unravel.allen_institute.mapmysections.cell_type_proportions_concat">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.mapmysections.csv_concat_with_source
+
+      <ul>
+        <li><a href="unravel/allen_institute/mapmysections/csv_concat_with_source.html#module-unravel.allen_institute.mapmysections.csv_concat_with_source">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.allen_institute.mapmysections.segmentation_summary
+
+      <ul>
+        <li><a href="unravel/allen_institute/mapmysections/segmentation_summary.html#module-unravel.allen_institute.mapmysections.segmentation_summary">module</a>
 </li>
       </ul></li>
       <li>
@@ -1174,6 +1612,13 @@ window.addEventListener("load", () => mermaid.run());
 
       <ul>
         <li><a href="unravel/cluster_stats/clusters.html#module-unravel.cluster_stats.clusters">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.cluster_stats.crop
+
+      <ul>
+        <li><a href="unravel/cluster_stats/crop.html#module-unravel.cluster_stats.crop">module</a>
 </li>
       </ul></li>
       <li>
@@ -1226,6 +1671,13 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       </ul></li>
       <li>
+    unravel.cluster_stats.fstat_sig_vx_mask
+
+      <ul>
+        <li><a href="unravel/cluster_stats/fstat_sig_vx_mask.html#module-unravel.cluster_stats.fstat_sig_vx_mask">module</a>
+</li>
+      </ul></li>
+      <li>
     unravel.cluster_stats.group_bilateral_data
 
       <ul>
@@ -1247,10 +1699,10 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       </ul></li>
       <li>
-    unravel.cluster_stats.mean_IF_summary
+    unravel.cluster_stats.mean_IF
 
       <ul>
-        <li><a href="unravel/cluster_stats/mean_IF_summary.html#module-unravel.cluster_stats.mean_IF_summary">module</a>
+        <li><a href="unravel/cluster_stats/index.html#module-unravel.cluster_stats.mean_IF">module</a>
 </li>
       </ul></li>
       <li>
@@ -1324,10 +1776,31 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       </ul></li>
       <li>
+    unravel.core.img_io
+
+      <ul>
+        <li><a href="unravel/core/img_io.html#module-unravel.core.img_io">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.core.img_tools
+
+      <ul>
+        <li><a href="unravel/core/img_tools.html#module-unravel.core.img_tools">module</a>
+</li>
+      </ul></li>
+      <li>
     unravel.core.utils
 
       <ul>
         <li><a href="unravel/core/utils.html#module-unravel.core.utils">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.image_io.convert_img
+
+      <ul>
+        <li><a href="unravel/image_io/convert_img.html#module-unravel.image_io.convert_img">module</a>
 </li>
       </ul></li>
       <li>
@@ -1337,8 +1810,20 @@ window.addEventListener("load", () => mermaid.run());
         <li><a href="unravel/image_io/h5_to_tifs.html#module-unravel.image_io.h5_to_tifs">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    unravel.image_io.img_to_npy
+
+      <ul>
+        <li><a href="unravel/image_io/img_to_npy.html#module-unravel.image_io.img_to_npy">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.image_io.img_to_points
+
+      <ul>
+        <li><a href="unravel/image_io/img_to_points.html#module-unravel.image_io.img_to_points">module</a>
+</li>
+      </ul></li>
       <li>
     unravel.image_io.io_nii
 
@@ -1347,10 +1832,24 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       </ul></li>
       <li>
+    unravel.image_io.metadata
+
+      <ul>
+        <li><a href="unravel/image_io/metadata.html#module-unravel.image_io.metadata">module</a>
+</li>
+      </ul></li>
+      <li>
     unravel.image_io.nii_hd
 
       <ul>
         <li><a href="unravel/image_io/nii_hd.html#module-unravel.image_io.nii_hd">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.image_io.nii_info
+
+      <ul>
+        <li><a href="unravel/image_io/nii_info.html#module-unravel.image_io.nii_info">module</a>
 </li>
       </ul></li>
       <li>
@@ -1368,10 +1867,33 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       </ul></li>
       <li>
+    unravel.image_io.points_to_img
+
+      <ul>
+        <li><a href="unravel/image_io/points_to_img.html#module-unravel.image_io.points_to_img">module</a>
+</li>
+      </ul></li>
+      <li>
     unravel.image_io.reorient_nii
 
       <ul>
         <li><a href="unravel/image_io/reorient_nii.html#module-unravel.image_io.reorient_nii">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.image_io.tif_to_tifs
+
+      <ul>
+        <li><a href="unravel/image_io/tif_to_tifs.html#module-unravel.image_io.tif_to_tifs">module</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    unravel.image_io.zarr_compress
+
+      <ul>
+        <li><a href="unravel/image_io/zarr_compress.html#module-unravel.image_io.zarr_compress">module</a>
 </li>
       </ul></li>
       <li>
@@ -1403,6 +1925,34 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       </ul></li>
       <li>
+    unravel.image_tools.bbox
+
+      <ul>
+        <li><a href="unravel/image_tools/bbox.html#module-unravel.image_tools.bbox">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.image_tools.DoG
+
+      <ul>
+        <li><a href="unravel/image_tools/DoG.html#module-unravel.image_tools.DoG">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.image_tools.extend
+
+      <ul>
+        <li><a href="unravel/image_tools/extend.html#module-unravel.image_tools.extend">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.image_tools.math
+
+      <ul>
+        <li><a href="unravel/image_tools/math.html#module-unravel.image_tools.math">module</a>
+</li>
+      </ul></li>
+      <li>
     unravel.image_tools.max
 
       <ul>
@@ -1417,24 +1967,66 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       </ul></li>
       <li>
-    unravel.region_stats.rstats_mean_IF_summary
+    unravel.image_tools.pad
 
       <ul>
-        <li><a href="unravel/region_stats/rstats_mean_IF_summary.html#module-unravel.region_stats.rstats_mean_IF_summary">module</a>
+        <li><a href="unravel/image_tools/pad.html#module-unravel.image_tools.pad">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.region_stats.rstats_summary
+    unravel.image_tools.rb
 
       <ul>
-        <li><a href="unravel/region_stats/rstats_summary.html#module-unravel.region_stats.rstats_summary">module</a>
+        <li><a href="unravel/image_tools/rb.html#module-unravel.image_tools.rb">module</a>
 </li>
       </ul></li>
       <li>
-    unravel.register.affine_initializer
+    unravel.image_tools.resample
 
       <ul>
-        <li><a href="unravel/register/affine_initializer.html#module-unravel.register.affine_initializer">module</a>
+        <li><a href="unravel/image_tools/resample.html#module-unravel.image_tools.resample">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.image_tools.resample_points
+
+      <ul>
+        <li><a href="unravel/image_tools/resample_points.html#module-unravel.image_tools.resample_points">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.image_tools.spatial_averaging
+
+      <ul>
+        <li><a href="unravel/image_tools/spatial_averaging.html#module-unravel.image_tools.spatial_averaging">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.image_tools.transpose_axes
+
+      <ul>
+        <li><a href="unravel/image_tools/transpose_axes.html#module-unravel.image_tools.transpose_axes">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.image_tools.unique_intensities
+
+      <ul>
+        <li><a href="unravel/image_tools/unique_intensities.html#module-unravel.image_tools.unique_intensities">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.region_stats.rstats_mean_IF
+
+      <ul>
+        <li><a href="unravel/region_stats/rstats_mean_IF.html#module-unravel.region_stats.rstats_mean_IF">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.register.affine_initializer_check
+
+      <ul>
+        <li><a href="unravel/register/affine_initializer_check.html#module-unravel.register.affine_initializer_check">module</a>
 </li>
       </ul></li>
       <li>
@@ -1456,6 +2048,83 @@ window.addEventListener("load", () => mermaid.run());
 
       <ul>
         <li><a href="unravel/register/reg_check_fsleyes.html#module-unravel.register.reg_check_fsleyes">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.register.reg_prep
+
+      <ul>
+        <li><a href="unravel/register/reg_prep.html#module-unravel.register.reg_prep">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.segment.brain_mask
+
+      <ul>
+        <li><a href="unravel/segment/brain_mask.html#module-unravel.segment.brain_mask">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.segment.copy_tifs
+
+      <ul>
+        <li><a href="unravel/segment/copy_tifs.html#module-unravel.segment.copy_tifs">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.segment.ilastik_pixel_classification
+
+      <ul>
+        <li><a href="unravel/segment/ilastik_pixel_classification.html#module-unravel.segment.ilastik_pixel_classification">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.segment.labels_to_masks
+
+      <ul>
+        <li><a href="unravel/segment/labels_to_masks.html#module-unravel.segment.labels_to_masks">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.tabular.columns
+
+      <ul>
+        <li><a href="unravel/tabular/columns.html#module-unravel.tabular.columns">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.tabular.edit_columns
+
+      <ul>
+        <li><a href="unravel/tabular/edit_columns.html#module-unravel.tabular.edit_columns">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.tabular.filter_rows
+
+      <ul>
+        <li><a href="unravel/tabular/filter_rows.html#module-unravel.tabular.filter_rows">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.tabular.key_value_to_table
+
+      <ul>
+        <li><a href="unravel/tabular/key_value_to_table.html#module-unravel.tabular.key_value_to_table">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.tabular.unique_values
+
+      <ul>
+        <li><a href="unravel/tabular/unique_values.html#module-unravel.tabular.unique_values">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.tabular.utils
+
+      <ul>
+        <li><a href="unravel/tabular/utils.html#module-unravel.tabular.utils">module</a>
 </li>
       </ul></li>
       <li>
@@ -1536,10 +2205,31 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       </ul></li>
       <li>
+    unravel.voxel_stats.apply_mask
+
+      <ul>
+        <li><a href="unravel/voxel_stats/apply_mask.html#module-unravel.voxel_stats.apply_mask">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.voxel_stats.hemi_to_LR_avg
+
+      <ul>
+        <li><a href="unravel/voxel_stats/hemi_to_LR_avg.html#module-unravel.voxel_stats.hemi_to_LR_avg">module</a>
+</li>
+      </ul></li>
+      <li>
     unravel.voxel_stats.mirror
 
       <ul>
         <li><a href="unravel/voxel_stats/mirror.html#module-unravel.voxel_stats.mirror">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.voxel_stats.other.r_to_p
+
+      <ul>
+        <li><a href="unravel/voxel_stats/other/r_to_p.html#module-unravel.voxel_stats.other.r_to_p">module</a>
 </li>
       </ul></li>
       <li>
@@ -1557,10 +2247,17 @@ window.addEventListener("load", () => mermaid.run());
 </li>
       </ul></li>
       <li>
-    unravel.warp.warp
+    unravel.voxel_stats.whole_to_LR_avg
 
       <ul>
-        <li><a href="unravel/warp/warp.html#module-unravel.warp.warp">module</a>
+        <li><a href="unravel/voxel_stats/whole_to_LR_avg.html#module-unravel.voxel_stats.whole_to_LR_avg">module</a>
+</li>
+      </ul></li>
+      <li>
+    unravel.voxel_stats.z_score_cwd
+
+      <ul>
+        <li><a href="unravel/voxel_stats/z_score_cwd.html#module-unravel.voxel_stats.z_score_cwd">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -1585,14 +2282,30 @@ window.addEventListener("load", () => mermaid.run());
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="unravel/warp/warp.html#unravel.warp.warp.warp">warp() (in module unravel.warp.warp)</a>
+      <li><a href="unravel/voxel_stats/whole_to_LR_avg.html#unravel.voxel_stats.whole_to_LR_avg.whole_to_LR_avg">whole_to_LR_avg() (in module unravel.voxel_stats.whole_to_LR_avg)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/cluster_stats/index.html#unravel.cluster_stats.mean_IF.write_to_csv">write_to_csv() (in module unravel.cluster_stats.mean_IF)</a>
+
+      <ul>
+        <li><a href="unravel/region_stats/rstats_mean_IF.html#unravel.region_stats.rstats_mean_IF.write_to_csv">(in module unravel.region_stats.rstats_mean_IF)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="Z">Z</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/voxel_stats/z_score_cwd.html#unravel.voxel_stats.z_score_cwd.z_score_img">z_score_img() (in module unravel.voxel_stats.z_score_cwd)</a>
+</li>
+      <li><a href="unravel/voxel_stats/other/r_to_p.html#unravel.voxel_stats.other.r_to_p.z_to_p">z_to_p() (in module unravel.voxel_stats.other.r_to_p)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="unravel/core/img_io.html#unravel.core.img_io.zarr_level_to_tifs">zarr_level_to_tifs() (in module unravel.core.img_io)</a>
+</li>
       <li><a href="unravel/image_io/zarr_to_nii.html#unravel.image_io.zarr_to_nii.zarr_to_ndarray">zarr_to_ndarray() (in module unravel.image_io.zarr_to_nii)</a>
 </li>
   </ul></td>

@@ -149,7 +149,14 @@ window.addEventListener("load", () => mermaid.run());
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -248,7 +255,14 @@ window.addEventListener("load", () => mermaid.run());
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -385,7 +399,7 @@ window.addEventListener("load", () => mermaid.run());
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.help_formatter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RichArgumentParser</span><span class="p">,</span> <span class="n">SuppressMetavar</span><span class="p">,</span> <span class="n">SM</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">unravel.core.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_command</span><span class="p">,</span> <span class="n">match_files</span><span class="p">,</span> <span class="n">verbose_start_msg</span><span class="p">,</span> <span class="n">verbose_end_msg</span><span class="p">,</span> <span class="n">print_func_name_args_times</span>
 
 
 <div class="viewcode-block" id="parse_args">
@@ -407,12 +421,15 @@ window.addEventListener("load", () => mermaid.run());
     <span class="k">return</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span></div>
 
 
+<span class="c1"># TODO: Add --input to specify glob pattern(s) for files to rename. Change default behavior to rename all matching files/dirs. Change -f and -d to enable selective renaming of files or directories.</span>
+
 
 <div class="viewcode-block" id="rename_items">
 <a class="viewcode-back" href="../../../unravel/utilities/prepend_conditions.html#unravel.utilities.prepend_conditions.rename_items">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">rename_items</span><span class="p">(</span><span class="n">base_path</span><span class="p">,</span> <span class="n">dir_name</span><span class="p">,</span> <span class="n">condition</span><span class="p">,</span> <span class="n">rename_files</span><span class="p">,</span> <span class="n">rename_dirs</span><span class="p">,</span> <span class="n">recursive</span><span class="p">):</span>
-    <span class="n">search_pattern</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;**/</span><span class="si">{</span><span class="n">dir_name</span><span class="si">}</span><span class="s1">*&#39;</span> <span class="k">if</span> <span class="n">recursive</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dir_name</span><span class="si">}</span><span class="s1">*&#39;</span>    
-    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">search_pattern</span><span class="p">):</span>
+    <span class="n">search_pattern</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;**/</span><span class="si">{</span><span class="n">dir_name</span><span class="si">}</span><span class="s1">*&#39;</span> <span class="k">if</span> <span class="n">recursive</span> <span class="k">else</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">dir_name</span><span class="si">}</span><span class="s1">*&#39;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">match_files</span><span class="p">(</span><span class="n">search_pattern</span><span class="p">,</span> <span class="n">base_path</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">rename_files</span><span class="p">:</span>
             <span class="n">new_name</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">condition</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span>
             <span class="n">item</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">new_name</span><span class="p">)</span>

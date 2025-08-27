@@ -149,7 +149,14 @@ window.addEventListener("load", () => mermaid.run());
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -248,7 +255,14 @@ window.addEventListener("load", () => mermaid.run());
 
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="../../guide.html">
-    Guide
+    LSFM/STPT Guide
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../guide_mms.html">
+    MapMySections Guide
   </a>
 </li>
 
@@ -469,6 +483,12 @@ window.addEventListener("load", () => mermaid.run());
             <span class="s2">&quot;reg_affine_initializer&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.register.affine_initializer&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Perform affine initialization using ANTsPy.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rai&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;reg_affine_initializer_check&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.register.affine_initializer_check&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Check initially aligned template.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;rai&quot;</span>
             <span class="p">},</span>
@@ -694,7 +714,7 @@ window.addEventListener("load", () => mermaid.run());
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.crop&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Crop clusters to a bounding box.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;crop&quot;</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;crop_cluster&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;cstats_mean_IF&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.cluster_stats.mean_IF&quot;</span><span class="p">,</span>
@@ -771,11 +791,11 @@ window.addEventListener("load", () => mermaid.run());
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;m&quot;</span>
             <span class="p">},</span>
-            <span class="s2">&quot;io_img&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.io_img&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Image I/O operations.&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;io_convert_img&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.convert_img&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Image conversion operations.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;img&quot;</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;conv&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;io_nii_info&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.nii_info&quot;</span><span class="p">,</span>
@@ -848,6 +868,12 @@ window.addEventListener("load", () => mermaid.run());
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Populate an empty image with point coordinates.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;p2i&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;io_zarr_compress&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.image_io.zarr_compress&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Compress .zarr or decompress .zarr.tar.gz files.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;zc&quot;</span>
             <span class="p">}</span>
         <span class="p">},</span>
         <span class="s2">&quot;Image tools&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -1014,82 +1040,166 @@ window.addEventListener("load", () => mermaid.run());
         <span class="p">},</span>
         <span class="s2">&quot;Allen Brain Cell Atlas (ABCA)&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;abca_cache&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.cache&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.cache&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Download data from the Allen Brain Cell Atlas.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;points_compressor&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;abca_merfish&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.merfish.merfish&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.merfish.merfish&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Plot MERFISH data from the ABCA.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mf&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;abca_merfish_filter&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.merfish.merfish_filter&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.merfish.merfish_filter&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Filter MERFISH data from the ABCA and output CSV.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mf_filter&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;abca_merfish_filter_by_mask&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.merfish.merfish_filter_by_mask&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.merfish.merfish_filter_by_mask&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Filter MERFISH data using a mask.nii.gz and output CSV.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mf_filter_mask&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;abca_merfish_expression_to_nii&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.merfish.abca_merfish_expression_to_nii&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.merfish.abca_merfish_expression_to_nii&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Make a 3D .nii.gz image of ABCA MERFISH expression data.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;me&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;abca_merfish_cells_to_nii&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.merfish.abca_merfish_cells_to_nii&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.merfish.abca_merfish_cells_to_nii&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert ABCA MERFISH cells to a .nii.gz 3D image.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mc&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;abca_sunburst&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.sunburst.sunburst&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.sunburst.sunburst&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Make a CSV for a sunburst plot of cell type proportions across all ontological levels.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sb&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;abca_sunburst_expression&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.sunburst.sunburst_expression&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.sunburst.sunburst_expression&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Calculate mean expression for all cell types in the ABCA and make a sunburst plot.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sbe&quot;</span>
             <span class="p">},</span>
-            <span class="s2">&quot;abca_sunburst_filter&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.sunburst.sunburst_filter&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;abca_sunburst_filter_by_expression&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.sunburst.sunburst_filter&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Filter ABCA sunburst data, keeping cells with high expression at any level (class, subclass, etc.).&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sbf&quot;</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sfbe&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;abca_sunburst_filter_by_proportion&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.sunburst.sunburst_filter_by_proportion&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.sunburst.sunburst_filter_by_proportion&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Filter ABCA sunburst data, keeping prevalent cells at any level.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;sbfp&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;abca_mean_expression_color_scale&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.sunburst.mean_expression_color_scale&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.sunburst.mean_expression_color_scale&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Save a color scale for mean RNA expression values.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mecs&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;abca_percent_expression_color_scale&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.sunburst.percent_expression_color_scale&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.sunburst.percent_expression_color_scale&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Save a color scale for the percent of cells expressing a gene.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;pecs&quot;</span>
             <span class="p">},</span>
             <span class="s2">&quot;abca_scRNA-seq_filter&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.abca.scRNA_seq.filter&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.abca.scRNA_seq.filter&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Filter ABCA scRNA-seq cells based on columns and values in the cell metadata and save as CSV.&quot;</span><span class="p">,</span>
                 <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
                 <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;s_filter&quot;</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Genetic Tools Atlas (GTA)&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;gta_download&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.genetic_tools_atlas.download_STPT_zarr&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Download STPT Zarr files.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;gta_dl&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;gta_metadata&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.genetic_tools_atlas.metadata&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Simplify metadata from the GTA.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;gta_m&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;gta_org_samples&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.genetic_tools_atlas.org_samples&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Organize TIFFs dirs from the GTA after conversion.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;gta_os&quot;</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;MapMySections (MMS)&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;mms_soma_ratio&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.mapmysections.soma_ratio&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Check for oligodendrocytes: compute soma voxel ratio in the anterior commissure.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mms_sr&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;mms_concat_with_source&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.mapmysections.concat_with_source&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Concatenate multiple CSV files with a source_file column (for mms_sr and mms_ss outputs).&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mms_c&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;mms_cell_type_proportions&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.mapmysections.cell_type_proportions&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Calculate cell type proportions for an ontological level, organized based on the MapMySections challenge.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mms_ctp&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;mms_cell_type_proportions_concat&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.mapmysections.cell_type_proportions_concat&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Calculate cell type proportions for an ontological level, organized based on the MapMySections challenge.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mms_ctp&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;mms_seg_summary&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.allen_institute.mapmysections.segmentation_summary&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Summarize the prevalence of voxels for somata, endothelial cells, and astrocytes from Ilastik segmentations.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;mms_ss&quot;</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;Tabular data&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;tabular_edit_columns&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.tabular.edit_columns&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Edit columns in a tabular dataset.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;edit_cols&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;tabular_filter_rows&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.tabular.filter_rows&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Filter rows in a tabular dataset.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;filter_rows&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;tabular_key_value_to_table&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.tabular.key_value_to_table&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Convert key-value pairs to a table format.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;kv_table&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;tabular_columns&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.tabular.columns&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Print specified columns from a tabular dataset.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;cols&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;tabular_unique_values&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;unravel.tabular.unique_values&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;Print unique values in specified column(s) of a tabular dataset.&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;common&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;alias&quot;</span><span class="p">:</span> <span class="s2">&quot;uniq_vals&quot;</span>
             <span class="p">},</span>
         <span class="p">},</span>
     <span class="p">}</span>
