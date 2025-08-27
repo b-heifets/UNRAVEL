@@ -101,8 +101,10 @@ venv.bak/
 .Spotlight-V100
 .Trashes
 
+# --- Sphinx documentation ---
+docs/_build/
+unravel/docs/_build/
+*.doctree
+
 # Log from UNRAVEL
 .command_log.txt
-
-# Build directory for Sphinx documentation
-unravel/docs/_build/
