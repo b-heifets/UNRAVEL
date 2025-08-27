@@ -269,6 +269,9 @@ cd MERFISH
 abca_merfish_filter_by_mask -i '*.nii.gz' -b <ABCA_download_root> -o cells
 
 cd cells
+
+# Optionally remove non-neuronal cells
+for i in *.csv ; do abca_merfish_filter -b <ABCA_download_root> --neurons -i $i ; done
 ```
 
 ---
@@ -293,32 +296,44 @@ abca_sunburst -i ID_1104197092_MMS_seg_1_MERFISH_cells.csv -l
 abca_merfish_filter -b $A -i ID_1104197092_MMS_seg_1_MERFISH_cells.csv -val ACB
 abca_sunburst -i ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv
 ```
-* Quantify cell type proportions:
+
+---
+<br>
+
+
+## Quantify cell type proportions:
+* For a region (e.g., VISp):
 ```bash
 mms_cell_type_proportions -i '*.csv' -col subclass -rc parcellation_structure -r VISp -t
 ```
+* For the whole brain:
+```bash
+mms_cell_type_proportions -i '*.csv' -col subclass -t
+```
+* Outputs from mms_cell_type_proportions have one row with cell type proportions per brain.
+* To combine them into one csv, run: 
+```bash
+mms_cell_type_proportions_concat   
 
-
-### Add sunburst plotting notes
-
-
-
-
-
+# Optional: --keep_list <path/keep_cell_type_columns.txt> may be used match columns in the challenge (see help for notes).
+```
 
 ---
 <br>
 
 ## Segmentation Summary
 
-* Summarize voxel counts:
+* Summarize relative proportions of voxel counts for each segmentation label (somata, endothelial, astroglial)
 ```bash
+cd ../../../.. # cd to the TIFFs dir
 mms_seg_summary -d red green dual
 agg -i 'MMS_seg/MMS_test_*_segmentation_summary.csv' -td seg_summary -p 'ID_*' -d red green dual
 cd seg_summary
-mms_concat_with_source
+mms_concat_with_source  # Combine outputs into one file (one row per brain)
+cd ..
 ```
-* Revise cell type proportions with outputs from mms_soma_ratio.
+* Revise cell type proportions in brains with abundant endothelial or astroglial labeling (e.g., if the majority of voxels are astroglial, this brain is likely enriched for astroglial labeling)
+* Use the concatenated_output.csv from mms_soma_ratio to revise cell type proportions. If the proportion of somatic voxels in the anterior commisure is > 0.004, the labeling is enriched in oligodendrocytes. 
 
 ---
 <br>
@@ -329,7 +344,15 @@ mms_concat_with_source
   - Brains enriched for endothelial or astroglial voxels may need adjustment.  
   - High anterior commissure somata proportion (>0.004) indicates oligodendrocyte labeling.
 
-* Proceed with cluster validation and visualization as in LSFM/STPT workflows.
-
 ---
 <br>
+
+## Gene Expression Across Cell Types: 
+* For gene expression sunburst plots:
+```bash
+abca_merfish_join_gene -b $A -i ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv -g Drd2
+abca_sunburst_expression -i ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB_Drd2_expression.csv -g Drd2
+abca_mean_expression_color_scale
+```
+* Copy the ID_1104197092_MMS_seg_1_MERFISH_cells_filtered_ACB.csv into the Data tab as before.
+* Open <input>_mean_expression_lut.txt and copy it into the Preview --> Colors --> Custom overrides
