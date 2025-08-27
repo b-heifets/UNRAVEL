@@ -43,26 +43,39 @@
 
 UN-biased high-Resolution Analysis and Validation of Ensembles using Light sheet images
 =======================================================================================
+
 * UNRAVEL is a `Python <https://www.python.org/>`_ package & command line tool for the analysis of brain-wide imaging data, automating: 
-    * Registration of brain-wide images to a common atlas space
-    * Quantification of cell/label densities across the brain
-    * Voxel-wise analysis of fluorescent signals and cluster correction
-    * Validation of hot/cold spots via cell/label density quantification at cellular resolution
+  * Registration of brain-wide images to a common atlas space
+  * Quantification of cell/label densities across the brain
+  * Voxel-wise analysis of fluorescent signals and cluster correction
+  * Validation of hot/cold spots via cell/label density quantification at cellular resolution
+
 * `UNRAVEL GitHub repository <https://github.com/b-heifets/UNRAVEL/tree/main>`_
+<<<<<<< HEAD
 <<<<<<< HEAD
 * `UNRAVEL can be installed via PyPI <https://pypi.org/project/heifetslab-unravel/>`_: ``pip install heifetslab-unravel``
 =======
+=======
+
+>>>>>>> dev
 * `UNRAVEL can be installed via the Python Package Index (PyPI) <https://pypi.org/project/heifetslab-unravel/>`_ with this command:
+
   .. code-block:: bash
 
       pip install heifetslab-unravel
+<<<<<<< HEAD
+>>>>>>> dev
+=======
+
 >>>>>>> dev
 * `Initial UNRAVEL publication <https://www.nature.com/articles/s41386-023-01613-4>`_
+
 * UNRAVEL was developed by `the Heifets lab <https://heifetslab.stanford.edu/>`_ and `TensorAnalytics <https://sites.google.com/view/tensoranalytics/home?authuser=0>`_
+
 * Additional support/guidance was provided by:
-    * `The Shamloo lab <https://med.stanford.edu/neurosurgery/research/shamloo.html>`_
-    * `The Malenka lab <https://profiles.stanford.edu/robert-malenka>`_
-    * `The Stanford-based P50 center funded by NIDA <https://med.stanford.edu/nidap50.html>`_
+  * `The Shamloo lab <https://med.stanford.edu/neurosurgery/research/shamloo.html>`_
+  * `The Malenka lab <https://profiles.stanford.edu/robert-malenka>`_
+  * `The Stanford-based P50 center funded by NIDA <https://med.stanford.edu/nidap50.html>`_
 
 .. raw:: html
 
@@ -138,6 +151,7 @@ Main dependencies
 
 Support is welcome for
 ----------------------
+
 * Analysis of new datasets
 * Development of new features
 * Maintenance of the codebase
