@@ -1,21 +1,24 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_legend`` from UNRAVEL to summarize regional abbreviations from <asterisk>_valid_clusters_table.xlsx files.
+Use ``cstats_legend`` (``legend``) from UNRAVEL to summarize regional abbreviations from _valid_clusters_table.xlsx files.
+
+Inputs:
+    - <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cstats_table``
+
+Outputs:
+    - legend.xlsx
+
+Note: 
+    - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/
+    - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst
+    - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.
 
 Usage:
 ------
-    cluster_legend
-
-Inputs:
-    <asterisk>_valid_clusters_table.xlsx files in the working directory output from ``cluster_table``
-
-Outputs:
-    legend.xlsx
+    cstats_legend [-p path/dir/with/xlsx_files] [-csv CCFv3-2020_info.csv] [-v]
 """
 
-import argparse
-from glob import glob
 from pathlib import Path
 import openpyxl
 import pandas as pd
@@ -26,16 +29,22 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.styles import Border, Side, Font
 from openpyxl.styles import Alignment
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--path', help='Path to the directory containing the *_valid_clusters_table.xlsx files. Default: current working directory', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-p', '--path', help='Path to the directory containing the *_valid_clusters_table.xlsx files. Default: current working directory', action=SM)
+    opts.add_argument('-csv', '--csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
@@ -67,20 +76,29 @@ def apply_rgb_to_cell(ws, df_w_rgb, col_w_labels, col_num):
         fill = PatternFill(start_color=hex_color, end_color=hex_color, fill_type='solid')
         region_cell.fill = fill
 
-
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
-    path = Path(args.path) if args.path else Path.cwd()
-
-    # Find cluster_* dirs in the current dir
-    xlsx_files = path.glob('*_valid_clusters_table.xlsx')
+    path = args.path or Path.cwd()
+    xlsx_files = match_files(['*_valid_clusters_table.xlsx'], base_path=path)
 
     # Filter out files starting with '~$'
     xlsx_files = [f for f in xlsx_files if not str(f).split('/')[-1].startswith('~$')]
 
     # Filter out files that start with legend
     xlsx_files = [f for f in xlsx_files if not str(f).split('/')[-1].startswith('legend')]
+
+    if xlsx_files == []:
+        print("\n    [red1]No *_valid_clusters_table.xlsx files found in the specified directory. Exiting...\n")
+        import sys ; sys.exit()
+    else:
+        print(f'\nProcessing:')
+        for file in xlsx_files:
+            print(f'    {file}')
 
     # Initialize a set to store unique regions from all files, accounting for headers in the second row
     all_unique_regions = set() # Using a set to avoid duplicates
@@ -92,13 +110,21 @@ def main():
 
     # Convert the set to a sorted list for easier reading
     all_unique_regions = sorted(list(all_unique_regions))
-    print(f'\n{all_unique_regions=}\n')
+
+    if len(all_unique_regions) == 0:
+        print("\n    [red1]No regions found in the xlsx files. Headers expected in the second row. Exiting...\n")
+        import sys ; sys.exit()
+
+    print(f'\nRegions: {all_unique_regions}\n')
 
     # Specify the column names you want to load
     columns_to_load = ['structure_id_path', 'very_general_region',  'collapsed_region_name', 'abbreviation', 'collapsed_region', 'other_abbreviation', 'other_abbreviation_defined', 'layer', 'sunburst']
 
     # Load the specified columns from the CSV with CCFv3 info
-    ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'CCFv3_info.csv', usecols=columns_to_load)
+    if args.csv_path == 'CCFv3-2017_info.csv' or args.csv_path == 'CCFv3-2020_info.csv': 
+        ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.csv_path, usecols=columns_to_load)
+    else:
+        ccfv3_info_df = pd.read_csv(args.csv_path, usecols=columns_to_load)
 
     # Creat a dictionary to hold the mappings for the region abbreviation to collapsed region abbreviation
     abbreviation_to_collapsed_dict = dict(zip(ccfv3_info_df['abbreviation'], ccfv3_info_df['collapsed_region']))
@@ -159,11 +185,9 @@ def main():
 
     # Sort the dictionary by key
     other_abbreviation_to_definitions = dict(sorted(other_abbreviation_to_definitions.items()))
-
     print(f'Additional abbreviations not shown in the region abbreviation legend (SI table): {other_abbreviation_to_definitions}')
 
-
-    # Get the 'very_general_region' column from the CCFv3_info.csv file and use it to get the 'very_general_region' for each region in unique_regions_collapsed
+    # Get the 'very_general_region' column from the CCFv3-2020_info.csv file and use it to get the 'very_general_region' for each region in unique_regions_collapsed
     very_general_region_dict = dict(zip(ccfv3_info_df['collapsed_region'], ccfv3_info_df['very_general_region']))
     very_general_regions = [very_general_region_dict.get(region, '') for region in unique_regions_collapsed]
 
@@ -318,9 +342,8 @@ def main():
             file.write(f"\nNumbers ({layers_set}) = cortical layers\n")
         file.write(f'\nAdditional abbreviations not shown in the region abbreviation legend (SI table): {other_abbreviation_to_definitions}\n')
 
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    main()

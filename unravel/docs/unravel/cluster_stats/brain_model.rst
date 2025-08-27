@@ -1,4 +1,4 @@
-.. _unravel.cluster_stats.brain_model:
+.. _unravel.cscluster_statstats.brain_model:
 
 unravel.cluster_stats.brain_model module
 ========================================

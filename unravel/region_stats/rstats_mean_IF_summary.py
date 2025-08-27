@@ -1,36 +1,39 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_mean_IF_summary`` from UNRAVEL to output plots of mean IF intensities for each region intensity ID.
-
-Usage for t-tests:
-------------------
-    rstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest
-
-Usage for Tukey's tests w/ reordering and renaming of conditions:
------------------------------------------------------------------
-    rstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1
-
-Usage with a custom atlas:
---------------------------
-    atlas=path/custom_atlas.nii.gz ; rstats_mean_IF_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest
-
-Note:
-    - The first word of the csv inputs is used for the the group names (e.g. Control from Control_sample01_cFos_rb4_atlas_space_z.csv)
-
-Inputs: 
-    - <asterisk>.csv in the working dir with these columns: 'Region_Intensity', 'Mean_IF_Intensity'
+Use ``rstats_mean_IF_summary`` (``rmis``) from UNRAVEL to output plots of mean IF intensities for each region intensity ID.
 
 Prereqs:
     - Generate CSV inputs withs ``rstats_IF_mean`` or ``rstats_IF_mean_in_seg``
     - After ``rstats_IF_mean_in_seg``, aggregate CSV inputs with ``utils_agg_files``
-    - If needed, add conditions to input CSV file names: utils_prepend -sk $SAMPLE_KEY -f
+    - If needed, add conditions to input CSV file names: ``utils_prepend`` -sk $SAMPLE_KEY -f
 
-The look up table (LUT) csv has these columns: 
-    'Region_ID', 'Side', 'Name', 'Abbr'
+Inputs: 
+    - `*`.csv in the working dir with these columns: 'Region_Intensity', 'Mean_IF_Intensity'
+
+Outputs:
+    - rstats_mean_IF_summary/region_<region_id>_<region_abbr>.pdf for each region
+    - If significant differences are found, a prefix '_' is added to the filename to sort the files
+
+Note:
+    - The first word of the csv inputs is used for the the group names (e.g. Control from Control_sample01_cFos_rb4_atlas_space_z.csv)
+    - Default csv: UNRAVEL/unravel/core/csvs/CCFv3-2020__regionID_side_IDpath_region_abbr.csv
+    - Alternatively, use CCFv3-2017__regionID_side_IDpath_region_abbr.csv or provide a custom CSV with the same columns.
+    - The look up table (LUT) csv has these columns: 'Region_ID', 'Side', 'Name', 'Abbr'
+
+Usage for t-tests:
+------------------
+    rstats_mean_IF_summary --order Control Treatment --labels Control Treatment -t ttest [-alt two-sided] [--lut CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-v]
+
+Usage for Tukey's tests w/ reordering and renaming of conditions:
+-----------------------------------------------------------------
+    rstats_mean_IF_summary --order group3 group2 group1 --labels Group_3 Group_2 Group_1 [--lut CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-v]
+
+Usage with a custom atlas:
+--------------------------
+    atlas=path/custom_atlas.nii.gz ; rstats_mean_IF_summary --region_ids $(img_unique -i $atlas) --order group2 group1 --labels Group_2 Group_1 -t ttest [-alt two-sided] [--lut CCFv3-2020__regionID_side_IDpath_region_abbr.csv] [-v]
 """
 
-import argparse
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
@@ -44,23 +47,36 @@ from pathlib import Path
 from scipy.stats import ttest_ind, dunnett
 from statsmodels.stats.multicomp import pairwise_tukeyhsd
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
+from unravel.core.config import Configuration
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', action=SM)
-    parser.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: gubra__region_ID_side_name_abbr.csv', default="gubra__region_ID_side_name_abbr.csv", action=SM)
-    parser.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', action=SM)
-    parser.add_argument('--labels', nargs='*', help='Group Labels in same order', action=SM)
-    parser.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. (Default: tukey)', default='tukey', choices=['tukey', 'dunnett', 'ttest'], action=SM)
-    parser.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
-    parser.add_argument('-s', '--show_plot', help='Show plot if flag is provided', action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('--order', nargs='*', help='Group Order for plotting (must match 1st word of CSVs)', action=SM)
+    reqs.add_argument('--labels', nargs='*', help='Group Labels in same order', action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-t', '--test', help='Choose between "tukey", "dunnett", and "ttest" post-hoc tests. Default: ttest or tukey', default=None, choices=['tukey', 'dunnett', 'ttest'], action=SM)
+    opts.add_argument('-alt', "--alternate", help="Number of tails and direction for Dunnett's test {'two-sided', 'less' (means < ctrl), 'greater'}. Default: two-sided", default='two-sided', action=SM)
+    opts.add_argument('--region_ids', nargs='*', type=int, help='List of region intensity IDs (Default: process all regions from the lut CSV)', action=SM)
+    opts.add_argument('-l', '--lut', help='LUT csv name (in unravel/core/csvs/). Default: CCFv3-2020__regionID_side_IDpath_region_abbr.csv', default="CCFv3-2020__regionID_side_IDpath_region_abbr.csv", action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
-# TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cluster_stats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
+# TODO: Dunnett's test is not available in scipy.stats. Find an alternative or implement it.
+# TODO: Also output csv to summarise t-test/Tukey/Dunnett results like in ``cstats``. Make symbols transparent. Add option to pass in symbol colors for each group. Add ABA coloring to plots. 
 # TODO: CSVs are loaded for each region. It would be more efficient to load them once for processing all regions. 
+# TODO: Update coloring of plots to match ABA colors (i.e., use code from rstats_summary.py)
+# TODO: Save a CSV with the results of the statistical tests for each region.
+
 
 # Set Arial as the font
 mpl.rcParams['font.family'] = 'Arial'
@@ -102,7 +118,7 @@ def get_max_region_id_from_csvs():
 def get_region_details(region_id, csv_path):
     region_df = pd.read_csv(csv_path)
     region_row = region_df[region_df["Region_ID"] == region_id].iloc[0]
-    return region_row["Name"], region_row["Abbr"]
+    return region_row["Region"], region_row["Abbr"]
 
 def get_all_region_ids(csv_path):
     """Retrieve all region IDs from the provided CSV."""
@@ -145,7 +161,7 @@ def perform_t_tests(df, order):
             })
     return pd.DataFrame(comparisons)
 
-def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tukey', show_plot=False, alt='two-sided'):
+def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tukey', alt='two-sided'):
     df = load_data(region_id)
 
     if 'group' not in df.columns:
@@ -224,6 +240,8 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
         test_df['reject'] = test_df['p-adj'] < 0.05
 
     significant_comparisons = test_df[test_df['reject'] == True]
+
+    # Calculate y-axis limits
     y_max = df['mean_intensity'].max()
     y_min = df['mean_intensity'].min()
     height_diff = (y_max - y_min) * 0.1
@@ -250,16 +268,9 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
         plt.text((x1+x2)*.5, y_pos + 0.8*height_diff, sig, horizontalalignment='center', size='xx-large', color='black', weight='bold')
         y_pos += 3 * height_diff
 
-    # Calculate y-axis limits
-    y_max = df['mean_intensity'].max()
-    y_min = df['mean_intensity'].min()
-    height_diff = (y_max - y_min) * 0.1
-    y_pos = y_max + 0.5 * height_diff
-
     # Ensure the y-axis starts from the minimum value, allowing for negative values
     plt.ylim(y_min - 2 * height_diff, y_pos + 2 * height_diff)
 
-    # plt.ylim(0, y_pos + 2*height_diff)
     ax.set_xlabel(None)
 
     # Save the plot
@@ -279,18 +290,29 @@ def plot_data(region_id, order=None, labels=None, csv_path=None, test_type='tuke
 
     plt.close()
 
-    if show_plot:
-        plt.show()
 
-
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     if (args.order and not args.labels) or (not args.order and args.labels):
         raise ValueError("Both --order and --labels must be provided together.")
 
     if args.order and args.labels and len(args.order) != len(args.labels):
         raise ValueError("The number of entries in --order and --labels must match.")
+
+    if len(args.order) < 2:
+        raise ValueError("At least two groups are required for comparison)")
+    
+    if len(args.order) == 2:
+        test_type = 'ttest'
+    elif len(args.order) > 2 and args.test is None:
+        test_type = 'tukey'
+    else:
+        test_type = args.test
     
     # Print CSVs in the working dir
     print(f'\n[bold]CSVs in the working dir to process (the first word defines the groups): \n')
@@ -312,9 +334,10 @@ def main():
 
     # Process each region ID
     for region_id in region_ids_to_process:
-        plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=args.test, show_plot=args.show_plot, alt=args.alternate)
+        plot_data(region_id, args.order, args.labels, csv_path=lut, test_type=test_type, alt=args.alternate)
 
+    verbose_end_msg()
+    
 
-if __name__ == "__main__":
-    install()
+if __name__ == '__main__':
     main()

@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
+        python-version: '3.11'
 
     - name: Cache pip dependencies
       uses: actions/cache@v3
@@ -29,7 +29,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install sphinx myst-parser pydata-sphinx-theme
+        pip install sphinx==7.2.5 myst-parser pydata-sphinx-theme
         pip install -e .[dev]
 
     - name: Debug information
@@ -38,6 +38,9 @@ jobs:
         ls -la
         echo "Listing unravel/docs directory:"
         ls -la unravel/docs
+        echo "Current repository and branch:"
+        git remote -v
+        git branch
 
     - name: Build documentation
       run: |

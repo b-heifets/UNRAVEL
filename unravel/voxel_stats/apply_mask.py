@@ -1,24 +1,25 @@
 #!/usr/bin/env python3
 
 """ 
-Use ``vstats_apply_mask`` from UNRAVEL to zeros out voxels in image based on a mask and direction args.
+Use ``vstats_apply_mask`` (``apply_mask``) from UNRAVEL to zeros out voxels in image based on a mask and direction args.
+
+Usage:
+------
+    vstats_apply_mask -i input_image.nii.gz -mas mask.nii.gz [-dil 0] [--mean] [-tmas brain_mask.nii.gz] [-omas other_mask.nii.gz] [-di less | greater] [-o output_image.nii.gz] [-md parameters/metadata.txt] [--reg_res 50] [-mi] [-d list of paths] [-p sample??] [-v]
 
 Usage to zero out voxels in image where mask > 0 (e.g., to exclude voxels representing artifacts):
 --------------------------------------------------------------------------------------------------
-    vstats_apply_mask -mas 6e10_seg_ilastik_2/sample??_6e10_seg_ilastik_2.nii.gz -i 6e10_rb20 -o 6e10_rb20_wo_artifacts -di greater -v
+    vstats_apply_mask -mas 6e10_seg_ilastik_2/sample??_6e10_seg_ilastik_2.nii.gz -i 6e10_rb20 -o 6e10_rb20_wo_artifacts -di greater 
 
 Usage to zero out voxels in image where mask < 1 (e.g., to preserve signal from segmented microglia clusters):
 --------------------------------------------------------------------------------------------------------------
-    vstats_apply_mask -mas iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters -v 
+    vstats_apply_mask -mas iba1_seg_ilastik_2/sample??_iba1_seg_ilastik_2.nii.gz -i iba1_rb20 -o iba1_rb20_clusters
 
 Usage to replace voxels in image with the mean intensity in the brain where mask > 0:
 -------------------------------------------------------------------------------------
-    vstats_apply_mask -mas FOS_seg_ilastik/FOS_seg_ilastik_2.nii.gz -i FOS -o FOS_wo_halo.zarr -di greater -m -v 
-
-This version allows for dilatation of the full res seg_mask (slow, but precise)
+    vstats_apply_mask -mas FOS_seg_ilastik/FOS_seg_ilastik_2.nii.gz -i FOS -o FOS_wo_halo.zarr -di greater -m
 """
 
-import argparse
 import nibabel as nib
 import numpy as np
 from pathlib import Path
@@ -28,37 +29,50 @@ from rich.traceback import install
 from scipy.ndimage import binary_dilation, zoom
 
 from unravel.register.reg_prep import reg_prep
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration 
 from unravel.core.img_io import load_3D_img, load_image_metadata_from_txt, resolve_path, save_as_tifs, save_as_nii, save_as_zarr
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? folders', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern (sample??) for dirs to process. Else: use cwd', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', required=True, action=SM)
-    parser.add_argument('-mas', '--seg_mask', help='rel_path/mask_to_apply.nii.gz (in full res tissue space)', required=True, action=SM)
-    parser.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on seg_mask. Default: 0", default=0, type=int, action=SM)
-    parser.add_argument('-m', '--mean', help='If provided, conditionally replace values w/ the mean intensity in the brain', action='store_true', default=False)
-    parser.add_argument('-tmas', '--tissue_mask', help='For the mean itensity. rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
-    parser.add_argument('-omas', '--other_mask', help='For restricting application of -mas. E.g., reg_inputs/autofl_50um_brain_mask_outline.nii.gz (from ./UNRAVEL/_other/uncommon_scripts/brain_mask_outline.py)', default=None, action=SM)
-    parser.add_argument('-di', '--direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 1', default='less', choices=['greater', 'less'], action=SM)
-    parser.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', action=SM)
-    parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: ./parameters/metadata.txt', default="./parameters/metadata.txt", action=SM)
-    parser.add_argument('-r', '--reg_res', help='Resample input to this res in microns for ``reg``. Default: 50', default=50, type=int, action=SM)
-    parser.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='Image input path relative to ./ or ./sample??/', required=True, action=SM)
+    reqs.add_argument('-mas', '--seg_mask', help='rel_path/mask_to_apply.nii.gz (in full res tissue space)', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument("-dil", "--dilation", help="Number of dilation iterations to perform on full res seg_mask (slow but precise). Default: 0", default=0, type=int, action=SM)
+    opts.add_argument('-m', '--mean', help='If provided, conditionally replace values w/ the mean intensity in the brain', action='store_true', default=False)
+    opts.add_argument('-tmas', '--tissue_mask', help='For the mean itensity. rel_path/brain_mask.nii.gz. Default: reg_inputs/autofl_50um_brain_mask.nii.gz', default="reg_inputs/autofl_50um_brain_mask.nii.gz", action=SM)
+    opts.add_argument('-omas', '--other_mask', help='For restricting application of -mas. E.g., reg_inputs/autofl_50um_brain_mask_outline.nii.gz (from ./UNRAVEL/_other/uncommon_scripts/brain_mask_outline.py)', default=None, action=SM)
+    opts.add_argument('-di', '--direction', help='"greater" to zero out where mask > 0, "less" (default) to zero out where mask < 1', default='less', choices=['greater', 'less'], action=SM)
+    opts.add_argument('-o', '--output', help='Image output path relative to ./ or ./sample??/', action=SM)
+    opts.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
+    opts.add_argument('-r', '--reg_res', help='Resample input to this res in microns for ``reg``. Default: 50', default=50, type=int, action=SM)
+
+    compatability = parser.add_argument_group('Compatability options')
+    compatability.add_argument('-mi', '--miracl', help="Include reorientation step to mimic MIRACL's tif to .nii.gz conversion", action='store_true', default=False)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
+
+# TODO: apply_mask_to_ndarray() could accept a list of masks to apply in sequence. Perhaps mask args can be a list of paths.
 
 @print_func_name_args_times()
 def load_mask(mask_path):
     """Load .nii.gz and return to an ndarray with a binary dtype"""
-    mask_nii = nib.load(mask_path)
-    return np.asanyarray(mask_nii.dataobj, dtype=np.bool_).squeeze()
+    if Path(mask_path).exists():
+        mask_nii = nib.load(mask_path)
+        return np.asanyarray(mask_nii.dataobj, dtype=np.bool_).squeeze()
+    else:
+        raise FileNotFoundError(f"    Mask not found at {mask_path}")
 
 @print_func_name_args_times()
 def mean_intensity_in_brain(img, tissue_mask):
@@ -110,17 +124,19 @@ def apply_mask_to_ndarray(ndarray, mask_ndarray, other_mask=None, mask_condition
 
     return ndarray
 
+
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
-    
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
+
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
-        for sample in samples:
-
-            # Resolve path to sample folder
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+        for sample_path in sample_paths:
 
             # Define output
             output = resolve_path(sample_path, args.output, make_parents=True)
@@ -129,7 +145,7 @@ def main():
                 continue
             
             # Load image
-            img = load_3D_img(sample_path / args.input, return_res=False)
+            img = load_3D_img(sample_path / args.input, return_res=False, verbose=args.verbose)
 
             # Load metadata
             metadata_path = sample_path / args.metadata
@@ -142,7 +158,7 @@ def main():
             img_resampled = reg_prep(img, xy_res, z_res, args.reg_res, int(1), args.miracl)
 
             # Load 50 um tissue mask 
-            tissue_mask_img = load_3D_img(sample_path / args.tissue_mask)
+            tissue_mask_img = load_3D_img(sample_path / args.tissue_mask, verbose=args.verbose)
 
             # Calculate mean intensity in brain
             if args.mean:
@@ -188,9 +204,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    main()

@@ -6,6 +6,7 @@
     * Quantification of cell/label densities across the brain
     * Voxel-wise analysis of fluorescent signals and cluster correction
     * Validation of hot/cold spots via cell/label density quantification at cellular resolution
+* UNRAVEL can be installed via [PyPI](https://pypi.org/project/heifetslab-unravel/): ``pip install heifetslab-unravel``
 * [Initial UNRAVEL publication](https://www.nature.com/articles/s41386-023-01613-4)
 * UNRAVEL was developed by [the Heifets lab](https://heifetslab.stanford.edu/) and [TensorAnalytics](https://sites.google.com/view/tensoranalytics/home?authuser=0)
 * Additional support/guidance was provided by: 
@@ -35,7 +36,7 @@
 If you have any questions, suggestions, or are interested in collaborations and contributions, please reach out to us. 
 
 ### Developers
-* **Daniel Ryskamp Rijsketic** (lead developer and maintainer) - [danrijs@stanford.edu](mailto:danrijs@stanford.edu)
+* **Daniel Ryskamp Rijsketic** (developer and maintainer) - [danrijs@stanford.edu](mailto:danrijs@stanford.edu)
 * **Austen Casey** (developer) - [abcasey@stanford.edu](mailto:abcasey@stanford.edu)
 * **MetaCell** (UNRAVEL visualizer developers) - [info@metacell.us](mailto:info@metacell.us)
 * **Boris Heifets** (PI) - [bheifets@stanford.edu](mailto:bheifets@stanford.edu)
@@ -58,7 +59,7 @@ If you have any questions, suggestions, or are interested in collaborations and 
 * [pandas](https://pandas.pydata.org/)
 * [cc3d](https://pypi.org/project/connected-components-3d/)
 * Registration and warping workflows were inspired by [MIRACL](https://miracl.readthedocs.io/en/latest/)
-* We adapted [LSFM/iDISCO+ atlases](https://pubmed.ncbi.nlm.nih.gov/33063286/) from [Gubra](https://www.gubra.dk/cro-services/3d-imaging/)
+* We warped this [LSFM/iDISCO+ average template brain](https://pubmed.ncbi.nlm.nih.gov/33063286/) to Allen brain atlas space (CCFv3) and refined alignment. 
 
 ### Support is welcome for
 * Analysis of new datasets

@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_hemi_to_avg`` from UNRAVEL to automatically average hemisphere images with their mirrored counterparts. This can also smooth the images with a kernel and apply a mask.
-
-Usage:
-------
-    vstats_hemi_to_avg -k 0.1 -tp -v
+Use ``vstats_hemi_to_avg`` (``h2a``) from UNRAVEL to automatically average hemisphere images with their mirrored counterparts. This can also smooth the images with a kernel and apply a mask.
 
 Inputs: 
     - input_img_LH.nii.gz
@@ -15,13 +11,14 @@ Outputs:
     - input_img_LRavg.nii.gz
     - input_img_s100_LRavg.nii.gz
 
+Usage:
+------
+    vstats_hemi_to_avg [--kernel 0.1] [--axis 0] [--shift 2] [--parallel] [--atlas_mask path/atlas_mask.nii.gz] [-v]
 """
 
 
-import argparse
 import numpy as np
 import nibabel as nib
-from glob import glob
 from pathlib import Path
 from rich import print
 from rich.traceback import install
@@ -29,22 +26,26 @@ from concurrent.futures import ThreadPoolExecutor
 
 from fsl.wrappers import fslmaths
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 from unravel.voxel_stats.apply_mask import load_mask
 from unravel.voxel_stats.mirror import mirror
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
-    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
-    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
-    parser.add_argument('-tp', '--parallel', help='Enable parallel processing with thread pools', default=False, action='store_true')
-    parser.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz', default=None, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
+    opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
+    opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
+    opts.add_argument('-tp', '--parallel', help='Enable parallel processing with thread pools', default=False, action='store_true')
+    opts.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz', default=None, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
+
     return parser.parse_args()
 
 
@@ -87,11 +88,16 @@ def hemi_to_LR_avg(lh_file, rh_file, kernel=0, axis=0, shift=2, atlas_mask=None)
     print(f"    Saved averaged image to {output_filename}")
 
 
-def main(): 
+@log_command
+def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     path = Path.cwd()
-    rh_files = list(path.glob('*_RH.nii.gz'))
+
+    rh_files = match_files('*_RH.nii.gz', path)
 
     if args.parallel:
         with ThreadPoolExecutor() as executor:
@@ -101,9 +107,8 @@ def main():
             lh_file = path / str(rh_file).replace('_RH.nii.gz', '_LH.nii.gz')
             hemi_to_LR_avg(lh_file, rh_file, args.kernel, args.axis, args.shift, args.atlas_mask)
 
+    verbose_end_msg()
 
-if __name__ == '__main__': 
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

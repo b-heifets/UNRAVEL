@@ -1,36 +1,47 @@
 #!/usr/bin/env python3
 
 """
-Use ``atlas_wireframe`` from UNRAVEL to generate a thin wireframe image from an atlas NIfTI file.
+Use ``atlas_wireframe`` (``wf``) from UNRAVEL to generate a thin wireframe image from an atlas NIfTI file.
+
+Outputs: 
+    - path/atlas_img_W.nii.gz (Wireframe image)
+    - path/atlas_img_W_IDs.nii.gz (Wireframe image with region IDs)
+
+Note:
+    - Outlines are generated outside the regions and not inside smaller regions. 
+    - For regions at the surface of the brain, the outlines are internalized.
 
 Usage: 
 ------
-    atlas_wireframe -i path.atlas.nii.gz 
-
-Outlines are generated outside the regions and not inside smaller regions. 
-For regions at the surface of the brain, the outlines are internalized.
-
-Outputs: 
-    - path/atlas_img_W.nii.gz # Wireframe image
-    - path/atlas_img_W_IDs.nii.gz # Wireframe image with region IDs
+    atlas_wireframe -i path.atlas.nii.gz [-wo path/atlas_img_W.nii.gz] [-id path/atlas_img_W_IDs.nii.gz] [-v]
 """
 
-import argparse
 import nibabel as nib
 import numpy as np
-from concurrent.futures import ThreadPoolExecutor
 import pandas as pd
+from concurrent.futures import ThreadPoolExecutor
+from rich.traceback import install
 from scipy.ndimage import binary_dilation, binary_erosion
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
+from unravel.core.config import Configuration
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Generate a thin wireframe image from an atlas NIfTI file.', formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/atlas_img.nii.gz', required=True, action=SM)
-    parser.add_argument('-wo', '--wire_output', help='Wireframe image output path. Default: path/atlas_img_W.nii.gz', action=SM)
-    parser.add_argument('-id', '--id_output', help='Wireframe image with atlas IDs output path. Default: path/atlas_img_W_IDs.nii.gz', action=SM)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/atlas_img.nii.gz', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-wo', '--wire_output', help='Wireframe image output path. Default: path/atlas_img_W.nii.gz', action=SM)
+    opts.add_argument('-id', '--id_output', help='Wireframe image with atlas IDs output path. Default: path/atlas_img_W_IDs.nii.gz', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
@@ -96,9 +107,12 @@ def generate_wireframe(atlas_ndarray, unique_intensities):
     wireframe_img_IDs = wireframe_img * atlas_ndarray 
     return wireframe_img.astype(np.uint8), wireframe_img_IDs.astype(np.uint16)
 
-
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Load the NIfTI file
     atlas_nii = nib.load(args.input)
@@ -134,6 +148,8 @@ def main():
         id_output = str(args.input).replace('.nii.gz', '_W_IDs.nii.gz')
     nib.save(nib.Nifti1Image(wireframe_img_IDs, atlas_nii.affine, atlas_nii.header), id_output)
 
-    
+    verbose_end_msg()
+
+
 if __name__ == '__main__':
     main()

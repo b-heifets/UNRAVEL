@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 
-import argparse
+"""
+Crop native image based on cluster bounding boxes.
+"""
+
 from pathlib import Path
 import numpy as np
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii
 from unravel.core.img_tools import crop
@@ -14,17 +18,23 @@ from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, 
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Crop native image based on cluster bounding boxes', formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help="Path to the image or it's dir", action=SM)
-    parser.add_argument('-ob', '--outer_bbox', help='Path to the text file containing the outer bounding box (outer_bounds.txt)', action=SM)
-    parser.add_argument('-ib', '--inner_bbox', help='Path to the text file containing the inner bounding box (bounding_box_sample??_cluster_*.txt)', action=SM)
-    parser.add_argument('-c', '--channel', help='.czi channel number. Default: 1', default=1, type=int, action=SM)
-    parser.add_argument('-cn', '--chann_name', help='Channel name. Default: ochann', default='ochann', action=SM)
-    parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, action=SM)
-    parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)
-    parser.add_argument('-o', '--output', help='path/img.nii.gz.', default=None, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = "Bounding box text files are from native_clusters.py."
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help="Path to the image or it's dir", required=True, action=SM)
+    reqs.add_argument('-ob', '--outer_bbox', help='Path to the text file containing the outer bounding box (outer_bounds.txt)', required=True, action=SM)
+    reqs.add_argument('-ib', '--inner_bbox', help='Path to the text file containing the inner bounding box (bounding_box_sample??_cluster_*.txt)', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-c', '--channel', help='Channel number. Default: 1', default=1, type=int, action=SM)
+    opts.add_argument('-cn', '--chann_name', help='Channel name. Default: ochann', default='ochann', action=SM)
+    opts.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, action=SM)
+    opts.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)
+    opts.add_argument('-o', '--output', help='path/img.nii.gz.', default=None, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
@@ -62,9 +72,9 @@ def main():
 
     # Load image
     if args.xy_res is None or args.z_res is None:
-        img, xy_res, z_res = load_3D_img(args.input, return_res=True)
+        img, xy_res, z_res = load_3D_img(args.input, return_res=True, verbose=args.verbose)
     else:
-        img = load_3D_img(args.input, return_res=True)
+        img = load_3D_img(args.input, return_res=True, verbose=args.verbose)
         xy_res, z_res = args.xy_res, args.z_res
     
     # Crop image

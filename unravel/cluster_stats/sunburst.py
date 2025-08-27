@@ -1,29 +1,32 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_sunburst`` from UNRAVEL to generate a sunburst plot of regional volumes across all levels of the ABA hierarchy.
+Use ``cstats_sunburst`` (``sunburst``) from UNRAVEL to generate a sunburst plot of regional volumes across all levels of the ABA hierarchy.
+
+Prereqs: 
+    - ``cstats_summary`` generates a valid rev_cluster_index.nii.gz (clusters of significant voxels) via ``cstats_index``.
+
+Inputs:
+    - path/rev_cluster_index.nii.gz (e.g., with valid clusters), path/labeled_image.nii.gz, or path/binary_image.nii.gz
+    - path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz) for applying region IDs to the input image
+    
+Outputs:
+    - path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]
+
+Note:
+    - Default sunburst csv location: UNRAVEL/unravel/core/csvs/sunburst_IDPath_Abbrv.csv
+    - Region info csv: CCFv3-2020_info.csv (or use CCFv3-2017_info.csv or provide a custom CSV with the same columns)
+
+Next steps:
+    - Use input_sunburst.csv to make a sunburst plot or regional volumes in Flourish Studio (https://app.flourish.studio/)
+    - It can be pasted into the Data tab (categories columns = Depth_`*` columns, Size by = Volumes column)
+    - Preview tab: Hierarchy -> Depth to 10, Colors -> paste RGB codes from sunburst_RGBs.csv into Custom overrides
 
 Usage:
 ------ 
-    cluster_sunburst -i path/rev_cluster_index.nii.gz -a path/atlas.nii.gz -v
-
-Prereqs: 
-    - ``cluster_validation`` generates a rev_cluster_index.nii.gz (clusters of significant voxels) and validates them. 
-    - Optional: ``cluster_index`` generates a rev_cluster_index.nii.gz w/ valid clusters.
-    
-Outputs:
-    path/input_sunburst.csv and [input_path/sunburst_RGBs.csv]
-
-Plot region volumes (https://app.flourish.studio/)
-
-Data tab: 
-    Paste in data from csv, categories columns = Depth_<asterisk> columns, Size by = Volumes column
-    
-Preview tab:
-    Hierarchy -> Depth to 10, Colors -> paste RGB codes into Custom overrides
+    cstats_sunburst -i path/rev_cluster_index.nii.gz [-a atlas/atlas_CCFv3_2020_30um.nii.gz] [-rgb] [-scsv sunburst_IDPath_Abbrv.csv] [-icsv CCFv3-2020_info.csv] [-v]
 """
 
-import argparse
 import nibabel as nib
 import numpy as np
 import pandas as pd
@@ -31,19 +34,30 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration 
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy', formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/rev_cluster_index.nii.gz (e.g., with valid clusters)', required=True, action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: path/gubra_ano_combined_25um.nii.gz)', default='/usr/local/unravel/atlases/gubra/gubra_ano_combined_25um.nii.gz', action=SM)
-    parser.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/rev_cluster_index.nii.gz (e.g., with valid clusters)', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-a', '--atlas', help='path/atlas.nii.gz (Default: atlas/atlas_CCFv3_2020_30um.nii.gz)', default='atlas/atlas_CCFv3_2020_30um.nii.gz', action=SM)
+    opts.add_argument('-rgb', '--output_rgb_lut', help='Output sunburst_RGBs.csv if flag provided (for Allen brain atlas coloring)', action='store_true')
+    opts.add_argument('-scsv', '--sunburst_csv_path', help='CSV name or path/name.csv. Default: sunburst_IDPath_Abbrv.csv', default='sunburst_IDPath_Abbrv.csv', action=SM)
+    opts.add_argument('-icsv', '--info_csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
+
+# TODO: Look into consolidating csvs
 
 
 def calculate_regional_volumes(img, atlas, atlas_res_in_um):
@@ -68,7 +82,7 @@ def calculate_regional_volumes(img, atlas, atlas_res_in_um):
 
     return dict(zip(uniq_values, volumes))
 
-def sunburst(img, atlas, atlas_res_in_um, output_path, output_rgb_lut=False):
+def sunburst(img, atlas, atlas_res_in_um, output_path, sunburst_csv_path='sunburst_IDPath_Abbrv.csv', info_csv_path='CCFv3-2020_info.csv', output_rgb_lut=False):
     """Generate a sunburst plot of regional volumes that cluster comprise across the ABA hierarchy.
     
     Args:
@@ -83,8 +97,16 @@ def sunburst(img, atlas, atlas_res_in_um, output_path, output_rgb_lut=False):
 
     volumes_dict = calculate_regional_volumes(img, atlas, atlas_res_in_um)
 
-    sunburst_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'sunburst_IDPath_Abbrv.csv')
-    ccf_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'CCFv3_info.csv', usecols=['lowered_ID', 'abbreviation'])
+    if sunburst_csv_path == 'sunburst_IDPath_Abbrv.csv': 
+        sunburst_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / sunburst_csv_path)
+    else:
+        sunburst_df = pd.read_csv(sunburst_csv_path)
+
+    # Load the specified columns from the CSV with CCFv3 info
+    if info_csv_path == 'CCFv3-2017_info.csv' or info_csv_path == 'CCFv3-2020_info.csv': 
+        ccf_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / info_csv_path, usecols=['lowered_ID', 'abbreviation'])
+    else:
+        ccf_df = pd.read_csv(info_csv_path, usecols=['lowered_ID', 'abbreviation'])
 
     # Create a mapping from region ID to volume
     histo_df = pd.DataFrame(list(volumes_dict.items()), columns=['Region', 'Volume_(mm^3)'])
@@ -115,8 +137,13 @@ def sunburst(img, atlas, atlas_res_in_um, output_path, output_rgb_lut=False):
 
     return final_df
 
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
+
 
     # Load the input image and convert to numpy array
     nii = nib.load(args.input)
@@ -134,14 +161,13 @@ def main():
     output_name = str(Path(args.input).name).replace('.nii.gz', '_sunburst.csv')
     output_path = Path(args.input).parent / output_name
     
-    sunburst_df = sunburst(img, atlas, xyz_res_in_um, output_path, args.output_rgb_lut)
+    sunburst_df = sunburst(img, atlas, xyz_res_in_um, output_path, args.sunburst_csv_path, args.info_csv_path, args.output_rgb_lut)
 
     print(f'\n\n[magenta bold]{output_name}[/]:')    
     print(f'\n{sunburst_df}\n')
 
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    main()

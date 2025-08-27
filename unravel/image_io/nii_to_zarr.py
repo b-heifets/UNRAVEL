@@ -1,31 +1,37 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_nii_to_zarr`` from UNRAVEL to convert an image.nii.gz to an image.zarr
+Use ``io_nii_to_zarr`` (``n2z``) from UNRAVEL to convert an image.nii.gz to an image.zarr
 
 Usage:
 ------
-    io_nii_to_zarr -i path/img.nii.gz -o path/img.zarr
+    io_nii_to_zarr -i path/img.nii.gz -o path/img.zarr [-v]
 """
 
-import argparse
 import dask.array as da
 import nibabel as nib
 import numpy as np
 import zarr
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/image.nii.gz', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='path/image.zarr', default=None, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/image.nii.gz', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-o', '--output', help='path/image.zarr', default=None, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
@@ -50,8 +56,12 @@ def save_as_zarr(ndarray, output_path, d_type):
     dask_array.to_zarr(output_path, compressor=compressor, overwrite=True)
 
 
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     img, d_type = nii_to_ndarray(args.input)
 
@@ -62,9 +72,8 @@ def main():
 
     save_as_zarr(img, output_path, d_type)
 
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    main()

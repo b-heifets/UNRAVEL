@@ -1,26 +1,32 @@
 #!/usr/bin/env python3
 
 """
-Use ``rstats_mean_IF_in_seg`` from UNRAVEL to measure mean intensity of immunofluorescence (IF) staining in brain regions in segmented voxels.
+Use ``rstats_mean_IF_in_seg`` (``rmiis``) from UNRAVEL to measure mean intensity of immunofluorescence (IF) staining in brain regions in segmented voxels (in tissue space).
 
-Run from experiment folder containing sample?? folders.
+Prereqs:
+    - ``seg_ilastik`` for segmentation
+    - ``reg`` for registration
 
-Usage
------
-    rstats_mean_IF_in_seg -i <asterisk>.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz
+Inputs:
+    - rel_path/fluo_image or rel_path/fluo_img_dir
+    - rel_path/seg_img.nii.gz in tissue space (1st glob match processed)
+    - path/atlas.nii.gz to warp to tissue space
+
+Output:
+    - ./sample??/seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv
 
 Note:
     This uses full resolution images (i.e., the raw IF image and a segmentation from ``seg_ilastik``)
 
-Default output:
-    - ./sample??/seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv
-
 Next steps:
     ``utils_agg_files`` -i seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv
     ``rstats_mean_IF_summary``
+
+Usage
+-----
+    rstats_mean_IF_in_seg -i `*`.czi -s seg_dir/sample??_seg_dir.nii.gz -a path/atlas.nii.gz [-o seg_dir/sample??_seg_dir_regional_mean_IF_in_seg.csv] [--region_ids 1 2 3] [-c 1] [Optional output: -n rel_path/native_image.zarr] [-fri autofl_50um_masked_fixed_reg_input.nii.gz] [-inp nearestNeighbor] [-ro reg_outputs] [-r 50] [-md parameters/metadata.txt] [-zo 0] [-mi] [-v]
 """
 
-import argparse
 import csv
 import nibabel as nib
 import numpy as np
@@ -29,40 +35,50 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples
+from unravel.core.utils import get_pad_percent, log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times, initialize_progress_bar, get_samples
 from unravel.warp.to_native import to_native
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='', formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='path/fluo_image or path/fluo_img_dir relative to sample?? folder', required=True, action=SM)
-    parser.add_argument('-c', '--chann_idx', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
-    parser.add_argument('-s', '--seg', help='rel_path/seg_img.nii.gz. 1st glob match processed', required=True, action=SM)
-    parser.add_argument('-a', '--atlas', help='path/atlas.nii.gz to warp to native space', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='path/name.csv relative to ./sample??/', default=None, action=SM)
-    parser.add_argument('--region_ids', help='Optional: Space-separated list of region intensities to process. Default: Process all regions', default=None, nargs='*', type=int)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
 
-   # Optional to_native() args
-    parser.add_argument('-n', '--native_atlas', help='Load/save native atlasfrom/to rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
-    parser.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)    
-    parser.add_argument('-inp', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor [default], multiLabel [slow])', default="nearestNeighbor", action=SM)
-    parser.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from ``reg`` (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
-    parser.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
-    parser.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
-    parser.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
-    parser.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/fluo_image or path/fluo_img_dir relative to sample?? folder', required=True, action=SM)
+    reqs.add_argument('-s', '--seg', help='rel_path/seg_img.nii.gz. 1st glob match processed', required=True, action=SM)
+    reqs.add_argument('-a', '--atlas', help='path/atlas.nii.gz to warp to native space', required=True, action=SM)
 
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-o', '--output', help='path/name.csv relative to ./sample??/', default=None, action=SM)
+    opts.add_argument('--region_ids', help='Optional: Space-separated list of region intensities to process. Default: Process all regions', default=None, nargs='*', type=int)
+    opts.add_argument('-c', '--channel', help='.czi channel index. Default: 1', default=1, type=int, action=SM)
 
-    parser.epilog = __doc__
+    # Optional to_native() args
+    opts_to_native = parser.add_argument_group('Optional to_native() arguments')
+    opts_to_native.add_argument('-n', '--native_atlas', help='Load/save native atlasfrom/to rel_path/native_image.zarr (fast) or rel_path/native_image.nii.gz if provided', default=None, action=SM)
+    opts_to_native.add_argument('-fri', '--fixed_reg_in', help='Fixed input for registration (``reg``). Default: autofl_50um_masked_fixed_reg_input.nii.gz', default="autofl_50um_masked_fixed_reg_input.nii.gz", action=SM)    
+    opts_to_native.add_argument('-inp', '--interpol', help='Interpolator for ants.apply_transforms (nearestNeighbor \[default], multiLabel [slow])', default="nearestNeighbor", action=SM)
+    opts_to_native.add_argument('-ro', '--reg_outputs', help="Name of folder w/ outputs from ``reg`` (e.g., transforms). Default: reg_outputs", default="reg_outputs", action=SM)
+    opts_to_native.add_argument('-r', '--reg_res', help='Resolution of registration inputs in microns. Default: 50', default='50',type=int, action=SM)
+    opts_to_native.add_argument('-md', '--metadata', help='path/metadata.txt. Default: parameters/metadata.txt', default="parameters/metadata.txt", action=SM)
+    opts_to_native.add_argument('-zo', '--zoom_order', help='SciPy zoom order for scaling to full res. Default: 0 (nearest-neighbor)', default='0',type=int, action=SM)
+    opts_to_native.add_argument('-pad', '--pad_percent', help='Padding percentage from ``reg``. Default: from parameters/pad_percent.txt or 0.25.', type=float, action=SM)
+
+    compatability = parser.add_argument_group('Compatability options for to_native()')
+    compatability.add_argument('-mi', '--miracl', help='Mode for compatibility (accounts for tif to nii reorienting)', action='store_true', default=False)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
+
+# TODO: Consolidate calculate_mean_intensity() here and in rstats_mean_IF.py
 
 @print_func_name_args_times()
 def calculate_mean_intensity(IF_img, ABA_seg, args):
@@ -121,26 +137,29 @@ def write_to_csv(data, output_path):
             writer.writerow([key, value])
 
 
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
 
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
-        for sample in samples:
-
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+        for sample_path in sample_paths:
 
             # Load or make the native atlas image
             native_atlas_path = next(sample_path.glob(str(args.native_atlas)), None)
             if args.native_atlas and native_atlas_path.exists():
-                native_atlas = load_3D_img(native_atlas_path)
+                native_atlas = load_3D_img(native_atlas_path, verbose=args.verbose)
             else:
                 fixed_reg_input = Path(sample_path, args.reg_outputs, args.fixed_reg_in) 
                 if not fixed_reg_input.exists():
                     fixed_reg_input = sample_path / args.reg_outputs / "autofl_50um_fixed_reg_input.nii.gz"
-                native_atlas = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.atlas, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_atlas_path)
+                pad_percent = get_pad_percent(sample_path / args.reg_outputs, args.pad_percent)
+                native_atlas = to_native(sample_path, args.reg_outputs, fixed_reg_input, args.atlas, args.metadata, args.reg_res, args.miracl, args.zoom_order, args.interpol, output=native_atlas_path, pad_percent=pad_percent)
 
             # Load the segmentation image
             seg_path = next(sample_path.glob(str(args.seg)), None)
@@ -158,7 +177,7 @@ def main():
             if IF_img_path is None:
                 print(f"No files match the pattern {args.input} in {sample_path}")
                 continue
-            IF_img = load_3D_img(IF_img_path, args.chann_idx, "xyz")
+            IF_img = load_3D_img(IF_img_path, args.channel, "xyz", verbose=args.verbose)
 
             # Calculate mean intensity
             mean_intensities = calculate_mean_intensity(IF_img, ABA_seg, args)
@@ -174,9 +193,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
+    verbose_end_msg()
 
-if __name__ == '__main__': 
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+
+if __name__ == '__main__':
+    main()

@@ -1,48 +1,58 @@
 #!/usr/bin/env python3
 
 """
-Use ``io_nii`` from UNRAVEL to convert the data type of a .nii.gz image and optionally scale the data.
+Use ``io_nii`` (``nii``) from UNRAVEL to convert the data type of a .nii.gz image and optionally scale the data.
 
-Usage:
-------
-    io_nii -i path/img.nii.gz -d float32
+Inputs:
+    - .nii.gz image
 
-Usage for z-score scaling (if 8 bit is needed):
------------------------------------------------
-    io_nii -i path/img.nii.gz -d uint8 -z
+Outputs:
+    - .nii.gz image with the specified data type and scaling.
 
 Possible numpy data types: 
     - Unsigned Integer: uint8, uint16, uint32, uint64
     - Signed Integer: int8, int16, int32, int64
     - Floating Point: float32, float64
 
-With --scale, the min intensity becomes dtype min and max intensity becomes dtype max. Every other intensity is scaled accordingly.
-With --binary, the image is binarized (0 or 1).
-With --zscore, the range of z-scored data from -3 to 3 is converted to 0 to 255.
-With --fixed_scale, the data is scaled using the provided min and max values.
+Note:
+    - With --scale, the min intensity becomes dtype min and max intensity becomes dtype max. Every other intensity is scaled accordingly.
+    - With --binary, the image is binarized (0 or 1).
+    - With --zscore, the range of z-scored data from -3 to 3 is converted to 0 to 255.
+    - With --fixed_scale, the data is scaled using the provided min and max values.
+
+Usage:
+------
+    io_nii -i path/img.nii.gz -d float32 [-o path/new_img.nii.gz] [-f min,max | -s | -b | -z] [-v]
 """
 
-import argparse
 import nibabel as nib
 import numpy as np
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration 
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Convert the data type of a .nii.gz image', formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
-    parser.add_argument('-d', '--data_type', help='Data type of output. For example: uint16 (numpy conventions)', required=True, action=SM)
-    parser.add_argument('-o', '--output', help='path/new_img.nii.gz. Default: path/img_dtype.nii.gz', action=SM)
-    parser.add_argument('-f', '--fixed_scale', help='Scale data using fixed min and max values. Supply as "min,max"', default=None)
-    parser.add_argument('-s', '--scale', help='Scale the data to the range of the new data type', action='store_true', default=False)
-    parser.add_argument('-b', '--binary', help='Convert to binary image.', action='store_true', default=False)
-    parser.add_argument('-z', '--zscore', help='Convert the range of z-scored data (use uint8 data type).', action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/img.nii.gz', required=True, action=SM)
+    reqs.add_argument('-d', '--data_type', help='Data type of output. For example: uint16 (numpy conventions)', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-o', '--output', help='path/new_img.nii.gz. Default: path/img_dtype.nii.gz', action=SM)
+    opts.add_argument('-f', '--fixed_scale', help='Scale data using fixed min and max values. Supply as "min,max"', default=None)
+    opts.add_argument('-s', '--scale', help='Scale the data to the range of the new data type', action='store_true', default=False)
+    opts.add_argument('-b', '--binary', help='Convert to binary image.', action='store_true', default=False)
+    opts.add_argument('-z', '--zscore', help='Convert the range of z-scored data (use uint8 data type).', action='store_true', default=False)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
@@ -87,8 +97,12 @@ def convert_dtype(ndarray, data_type, scale_mode='none', fixed_scale_range=None,
     return ndarray.astype(np.dtype(data_type))
 
 
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Load the .nii.gz file
     nii_path = args.input if args.input.endswith('.nii.gz') else f'{args.input}.nii.gz'
@@ -145,9 +159,8 @@ def main():
         output_path = args.output if args.output else nii_path.replace('.nii.gz', f'_{args.data_type}.nii.gz')
     nib.save(new_nii, output_path)
 
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    main()

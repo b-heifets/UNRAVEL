@@ -1,0 +1,840 @@
+﻿order,structure_ID,lowered_ID,structure_id_path,very_general_region,general_region,full_structure_name,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst,R,G,B
+0,997,997,/997/,root,root,root,root,root,root,,,,"root: rgb(0,0,0)",0,0,0
+1,8,8,/997/8/,grey matter,grey matter,Basic cell groups and regions,Basic cell groups and regions,grey,grey,,,,"grey: rgb(191,218,227)",191,218,227
+2,567,567,/997/8/567/,Cerebrum,Cerebrum,Cerebrum,Cerebrum,CH,CH,,,,"CH: rgb(176,240,255)",176,240,255
+3,688,688,/997/8/567/688/,Cerebral cortex,Cerebral cortex,Cerebral cortex,Cerebral cortex,CTX,CTX,,,,"CTX: rgb(176,255,184)",176,255,184
+4,695,695,/997/8/567/688/695/,Cortical plate,Cortical plate,Cortical plate,Cortical plate,CTXpl,CTXpl,,,,"CTXpl: rgb(112,255,112)",112,255,112
+5,315,315,/997/8/567/688/695/315/,Isocortex,Isocortex,Isocortex,Isocortex,Isocortex,Isocortex,,,,"Isocortex: rgb(112,255,113)",112,255,113
+6,184,184,/997/8/567/688/695/315/184/,Isocortex,Frontal pole,"Frontal pole, cerebral cortex",Frontal pole,FRP,FRP,,,,"FRP: rgb(38,143,68)",38,143,68
+7,68,68,/997/8/567/688/695/315/184/68/,Isocortex,Frontal pole,"Frontal pole, layer 1",Frontal pole,FRP1,FRP,,,1,"FRP1: rgb(38,143,69)",38,143,69
+8,667,667,/997/8/567/688/695/315/184/667/,Isocortex,Frontal pole,"Frontal pole, layer 2/3",Frontal pole,FRP2/3,FRP,,,3-Feb,"FRP2/3: rgb(38,142,69)",38,142,69
+9,526157192,NaN,/997/8/567/688/695/315/184/526157192/,Isocortex,Frontal pole,"Frontal pole, layer 5",Frontal pole,FRP5,FRP,,,5,"FRP5: rgb(37,143,69)",37,143,69
+10,526157196,NaN,/997/8/567/688/695/315/184/526157196/,Isocortex,Frontal pole,"Frontal pole, layer 6a",Frontal pole,FRP6a,FRP,,,6a,"FRP6a: rgb(38,142,68)",38,142,68
+11,526322264,NaN,/997/8/567/688/695/315/184/526322264/,Isocortex,Frontal pole,"Frontal pole, layer 6b",Frontal pole,FRP6b,FRP,,,6b,"FRP6b: rgb(37,143,68)",37,143,68
+12,500,500,/997/8/567/688/695/315/500/,Isocortex,Somatomotor,Somatomotor areas,Motor,MO,MO,,,,"MO: rgb(31,156,89)",31,156,89
+13,985,985,/997/8/567/688/695/315/500/985/,Isocortex,Motor,Primary motor area,Motor,MOp,MO,p,primary,,"MOp: rgb(30,155,90)",30,155,90
+14,320,320,/997/8/567/688/695/315/500/985/320/,Isocortex,Motor,"Primary motor area, Layer 1",Motor,MOp1,MO,p,primary,1,"MOp1: rgb(30,157,90)",30,157,90
+15,943,943,/997/8/567/688/695/315/500/985/943/,Isocortex,Motor,"Primary motor area, Layer 2/3",Motor,MOp2/3,MO,p,primary,3-Feb,"MOp2/3: rgb(31,156,88)",31,156,88
+16,648,648,/997/8/567/688/695/315/500/985/648/,Isocortex,Motor,"Primary motor area, Layer 5",Motor,MOp5,MO,p,primary,5,"MOp5: rgb(30,156,90)",30,156,90
+17,844,844,/997/8/567/688/695/315/500/985/844/,Isocortex,Motor,"Primary motor area, Layer 6a",Motor,MOp6a,MO,p,primary,6a,"MOp6a: rgb(31,155,90)",31,155,90
+18,882,882,/997/8/567/688/695/315/500/985/882/,Isocortex,Motor,"Primary motor area, Layer 6b",Motor,MOp6b,MO,p,primary,6b,"MOp6b: rgb(29,157,90)",29,157,90
+19,993,993,/997/8/567/688/695/315/500/993/,Isocortex,Motor,Secondary motor area,Motor,MOs,MO,s,secondary,,"MOs: rgb(29,157,89)",29,157,89
+20,656,656,/997/8/567/688/695/315/500/993/656/,Isocortex,Motor,"Secondary motor area, layer 1",Motor,MOs1,MO,s,secondary,1,"MOs1: rgb(30,156,89)",30,156,89
+21,962,962,/997/8/567/688/695/315/500/993/962/,Isocortex,Motor,"Secondary motor area, layer 2/3",Motor,MOs2/3,MO,s,secondary,3-Feb,"MOs2/3: rgb(30,157,88)",30,157,88
+22,767,767,/997/8/567/688/695/315/500/993/767/,Isocortex,Motor,"Secondary motor area, layer 5",Motor,MOs5,MO,s,secondary,5,"MOs5: rgb(31,157,88)",31,157,88
+23,1021,1021,/997/8/567/688/695/315/500/993/1021/,Isocortex,Motor,"Secondary motor area, layer 6a",Motor,MOs6a,MO,s,secondary,6a,"MOs6a: rgb(29,156,90)",29,156,90
+24,1085,1085,/997/8/567/688/695/315/500/993/1085/,Isocortex,Motor,"Secondary motor area, layer 6b",Motor,MOs6b,MO,s,secondary,6b,"MOs6b: rgb(30,156,88)",30,156,88
+25,453,453,/997/8/567/688/695/315/453/,Isocortex,Somatosensory,Somatosensory areas,Somatosensory,SS,SS,,,,"SS: rgb(27,128,97)",27,128,97
+26,322,322,/997/8/567/688/695/315/453/322/,Isocortex,Somatosensory,Primary somatosensory area,Somatosensory,SSp,SS,p,primary,,"SSp: rgb(25,128,99)",25,128,99
+27,353,353,/997/8/567/688/695/315/453/322/353/,Isocortex,Somatosensory,"Primary somatosensory area, nose",Somatosensory,SSp-n,SS,p-n,primary (nose),,"SSp-n: rgb(26,128,100)",26,128,100
+28,558,558,/997/8/567/688/695/315/453/322/353/558/,Isocortex,Somatosensory,"Primary somatosensory area, nose, layer 1",Somatosensory,SSp-n1,SS,p-n,primary (nose),1,"SSp-n1: rgb(25,126,99)",25,126,99
+29,838,838,/997/8/567/688/695/315/453/322/353/838/,Isocortex,Somatosensory,"Primary somatosensory area, nose, layer 2/3",Somatosensory,SSp-n2/3,SS,p-n,primary (nose),3-Feb,"SSp-n2/3: rgb(27,127,100)",27,127,100
+30,654,654,/997/8/567/688/695/315/453/322/353/654/,Isocortex,Somatosensory,"Primary somatosensory area, nose, layer 4",Somatosensory,SSp-n4,SS,p-n,primary (nose),4,"SSp-n4: rgb(26,128,98)",26,128,98
+31,702,702,/997/8/567/688/695/315/453/322/353/702/,Isocortex,Somatosensory,"Primary somatosensory area, nose, layer 5",Somatosensory,SSp-n5,SS,p-n,primary (nose),5,"SSp-n5: rgb(25,126,98)",25,126,98
+32,889,889,/997/8/567/688/695/315/453/322/353/889/,Isocortex,Somatosensory,"Primary somatosensory area, nose, layer 6a",Somatosensory,SSp-n6a,SS,p-n,primary (nose),6a,"SSp-n6a: rgb(24,125,98)",24,125,98
+33,929,929,/997/8/567/688/695/315/453/322/353/929/,Isocortex,Somatosensory,"Primary somatosensory area, nose, layer 6b",Somatosensory,SSp-n6b,SS,p-n,primary (nose),6b,"SSp-n6b: rgb(27,126,100)",27,126,100
+34,329,329,/997/8/567/688/695/315/453/322/329/,Isocortex,Somatosensory,"Primary somatosensory area, barrel field",Somatosensory,SSp-bfd,SS,p-bfd,primary (barrel field),,"SSp-bfd: rgb(25,127,100)",25,127,100
+35,981,981,/997/8/567/688/695/315/453/322/329/981/,Isocortex,Somatosensory,"Primary somatosensory area, barrel field, layer 1",Somatosensory,SSp-bfd1,SS,p-bfd,primary (barrel field),1,"SSp-bfd1: rgb(24,128,96)",24,128,96
+36,201,201,/997/8/567/688/695/315/453/322/329/201/,Isocortex,Somatosensory,"Primary somatosensory area, barrel field, layer 2/3",Somatosensory,SSp-bfd2/3,SS,p-bfd,primary (barrel field),3-Feb,"SSp-bfd2/3: rgb(24,127,99)",24,127,99
+37,1047,1047,/997/8/567/688/695/315/453/322/329/1047/,Isocortex,Somatosensory,"Primary somatosensory area, barrel field, layer 4",Somatosensory,SSp-bfd4,SS,p-bfd,primary (barrel field),4,"SSp-bfd4: rgb(25,124,100)",25,124,100
+38,1070,1070,/997/8/567/688/695/315/453/322/329/1070/,Isocortex,Somatosensory,"Primary somatosensory area, barrel field, layer 5",Somatosensory,SSp-bfd5,SS,p-bfd,primary (barrel field),5,"SSp-bfd5: rgb(26,125,98)",26,125,98
+39,1038,1038,/997/8/567/688/695/315/453/322/329/1038/,Isocortex,Somatosensory,"Primary somatosensory area, barrel field, layer 6a",Somatosensory,SSp-bfd6a,SS,p-bfd,primary (barrel field),6a,"SSp-bfd6a: rgb(25,128,96)",25,128,96
+40,1062,1062,/997/8/567/688/695/315/453/322/329/1062/,Isocortex,Somatosensory,"Primary somatosensory area, barrel field, layer 6b",Somatosensory,SSp-bfd6b,SS,p-bfd,primary (barrel field),6b,"SSp-bfd6b: rgb(26,126,97)",26,126,97
+41,337,337,/997/8/567/688/695/315/453/322/337/,Isocortex,Somatosensory,"Primary somatosensory area, lower limb",Somatosensory,SSp-ll,SS,p-ll,primary (lower limb),,"SSp-ll: rgb(25,127,99)",25,127,99
+42,1030,1030,/997/8/567/688/695/315/453/322/337/1030/,Isocortex,Somatosensory,"Primary somatosensory area, lower limb, layer 1",Somatosensory,SSp-ll1,SS,p-ll,primary (lower limb),1,"SSp-ll1: rgb(24,127,96)",24,127,96
+43,113,113,/997/8/567/688/695/315/453/322/337/113/,Isocortex,Somatosensory,"Primary somatosensory area, lower limb, layer 2/3",Somatosensory,SSp-ll2/3,SS,p-ll,primary (lower limb),3-Feb,"SSp-ll2/3: rgb(24,127,100)",24,127,100
+44,1094,1094,/997/8/567/688/695/315/453/322/337/1094/,Isocortex,Somatosensory,"Primary somatosensory area, lower limb, layer 4",Somatosensory,SSp-ll4,SS,p-ll,primary (lower limb),4,"SSp-ll4: rgb(28,127,100)",28,127,100
+45,1128,1128,/997/8/567/688/695/315/453/322/337/1128/,Isocortex,Somatosensory,"Primary somatosensory area, lower limb, layer 5",Somatosensory,SSp-ll5,SS,p-ll,primary (lower limb),5,"SSp-ll5: rgb(25,124,99)",25,124,99
+46,478,478,/997/8/567/688/695/315/453/322/337/478/,Isocortex,Somatosensory,"Primary somatosensory area, lower limb, layer 6a",Somatosensory,SSp-ll6a,SS,p-ll,primary (lower limb),6a,"SSp-ll6a: rgb(26,127,100)",26,127,100
+47,510,510,/997/8/567/688/695/315/453/322/337/510/,Isocortex,Somatosensory,"Primary somatosensory area, lower limb, layer 6b",Somatosensory,SSp-ll6b,SS,p-ll,primary (lower limb),6b,"SSp-ll6b: rgb(25,127,98)",25,127,98
+48,345,345,/997/8/567/688/695/315/453/322/345/,Isocortex,Somatosensory,"Primary somatosensory area, mouth",Somatosensory,SSp-m,SS,p-m,primary (mouth),,"SSp-m: rgb(24,128,98)",24,128,98
+49,878,878,/997/8/567/688/695/315/453/322/345/878/,Isocortex,Somatosensory,"Primary somatosensory area, mouth, layer 1",Somatosensory,SSp-m1,SS,p-m,primary (mouth),1,"SSp-m1: rgb(24,126,97)",24,126,97
+50,657,657,/997/8/567/688/695/315/453/322/345/657/,Isocortex,Somatosensory,"Primary somatosensory area, mouth, layer 2/3",Somatosensory,SSp-m2/3,SS,p-m,primary (mouth),3-Feb,"SSp-m2/3: rgb(26,126,100)",26,126,100
+51,950,950,/997/8/567/688/695/315/453/322/345/950/,Isocortex,Somatosensory,"Primary somatosensory area, mouth, layer 4",Somatosensory,SSp-m4,SS,p-m,primary (mouth),4,"SSp-m4: rgb(27,127,98)",27,127,98
+52,974,974,/997/8/567/688/695/315/453/322/345/974/,Isocortex,Somatosensory,"Primary somatosensory area, mouth, layer 5",Somatosensory,SSp-m5,SS,p-m,primary (mouth),5,"SSp-m5: rgb(27,126,99)",27,126,99
+53,1102,1102,/997/8/567/688/695/315/453/322/345/1102/,Isocortex,Somatosensory,"Primary somatosensory area, mouth, layer 6a",Somatosensory,SSp-m6a,SS,p-m,primary (mouth),6a,"SSp-m6a: rgb(24,125,97)",24,125,97
+54,2,2,/997/8/567/688/695/315/453/322/345/2/,Isocortex,Somatosensory,"Primary somatosensory area, mouth, layer 6b",Somatosensory,SSp-m6b,SS,p-m,primary (mouth),6b,"SSp-m6b: rgb(24,128,100)",24,128,100
+55,369,369,/997/8/567/688/695/315/453/322/369/,Isocortex,Somatosensory,"Primary somatosensory area, upper limb",Somatosensory,SSp-ul,SS,p-ul,primary (upper limb),,"SSp-ul: rgb(24,126,99)",24,126,99
+56,450,450,/997/8/567/688/695/315/453/322/369/450/,Isocortex,Somatosensory,"Primary somatosensory area, upper limb, layer 1",Somatosensory,SSp-ul1,SS,p-ul,primary (upper limb),1,"SSp-ul1: rgb(25,126,100)",25,126,100
+57,854,854,/997/8/567/688/695/315/453/322/369/854/,Isocortex,Somatosensory,"Primary somatosensory area, upper limb, layer 2/3",Somatosensory,SSp-ul2/3,SS,p-ul,primary (upper limb),3-Feb,"SSp-ul2/3: rgb(25,127,97)",25,127,97
+58,577,577,/997/8/567/688/695/315/453/322/369/577/,Isocortex,Somatosensory,"Primary somatosensory area, upper limb, layer 4",Somatosensory,SSp-ul4,SS,p-ul,primary (upper limb),4,"SSp-ul4: rgb(26,127,99)",26,127,99
+59,625,625,/997/8/567/688/695/315/453/322/369/625/,Isocortex,Somatosensory,"Primary somatosensory area, upper limb, layer 5",Somatosensory,SSp-ul5,SS,p-ul,primary (upper limb),5,"SSp-ul5: rgb(24,126,98)",24,126,98
+60,945,945,/997/8/567/688/695/315/453/322/369/945/,Isocortex,Somatosensory,"Primary somatosensory area, upper limb, layer 6a",Somatosensory,SSp-ul6a,SS,p-ul,primary (upper limb),6a,"SSp-ul6a: rgb(25,125,97)",25,125,97
+61,1026,1026,/997/8/567/688/695/315/453/322/369/1026/,Isocortex,Somatosensory,"Primary somatosensory area, upper limb, layer 6b",Somatosensory,SSp-ul6b,SS,p-ul,primary (upper limb),6b,"SSp-ul6b: rgb(28,128,100)",28,128,100
+62,361,361,/997/8/567/688/695/315/453/322/361/,Isocortex,Somatosensory,"Primary somatosensory area, trunk",Somatosensory,SSp-tr,SS,p-tr,primary (trunk),,"SSp-tr: rgb(24,127,98)",24,127,98
+63,1006,1006,/997/8/567/688/695/315/453/322/361/1006/,Isocortex,Somatosensory,"Primary somatosensory area, trunk, layer 1",Somatosensory,SSp-tr1,SS,p-tr,primary (trunk),1,"SSp-tr1: rgb(24,124,100)",24,124,100
+64,670,670,/997/8/567/688/695/315/453/322/361/670/,Isocortex,Somatosensory,"Primary somatosensory area, trunk, layer 2/3",Somatosensory,SSp-tr2/3,SS,p-tr,primary (trunk),3-Feb,"SSp-tr2/3: rgb(24,128,97)",24,128,97
+65,1086,1086,/997/8/567/688/695/315/453/322/361/1086/,Isocortex,Somatosensory,"Primary somatosensory area, trunk, layer 4",Somatosensory,SSp-tr4,SS,p-tr,primary (trunk),4,"SSp-tr4: rgb(27,126,98)",27,126,98
+66,1111,1111,/997/8/567/688/695/315/453/322/361/1111/,Isocortex,Somatosensory,"Primary somatosensory area, trunk, layer 5",Somatosensory,SSp-tr5,SS,p-tr,primary (trunk),5,"SSp-tr5: rgb(25,127,96)",25,127,96
+67,9,9,/997/8/567/688/695/315/453/322/361/9/,Isocortex,Somatosensory,"Primary somatosensory area, trunk, layer 6a",Somatosensory,SSp-tr6a,SS,p-tr,primary (trunk),6a,"SSp-tr6a: rgb(24,128,99)",24,128,99
+68,461,461,/997/8/567/688/695/315/453/322/361/461/,Isocortex,Somatosensory,"Primary somatosensory area, trunk, layer 6b",Somatosensory,SSp-tr6b,SS,p-tr,primary (trunk),6b,"SSp-tr6b: rgb(26,128,99)",26,128,99
+69,182305689,NaN,/997/8/567/688/695/315/453/322/182305689/,Isocortex,Somatosensory,"Primary somatosensory area, unassigned",Somatosensory,SSp-un,SS,p-un,primary (unassigned),,"SSp-un: rgb(26,125,100)",26,125,100
+70,182305693,NaN,/997/8/567/688/695/315/453/322/182305689/182305693/,Isocortex,Somatosensory,"Primary somatosensory area, unassigned, layer 1",Somatosensory,SSp-un1,SS,p-un,primary (unassigned),1,"SSp-un1: rgb(27,128,98)",27,128,98
+71,182305697,NaN,/997/8/567/688/695/315/453/322/182305689/182305697/,Isocortex,Somatosensory,"Primary somatosensory area, unassigned, layer 2/3",Somatosensory,SSp-un2/3,SS,p-un,primary (unassigned),3-Feb,"SSp-un2/3: rgb(28,127,99)",28,127,99
+72,182305701,NaN,/997/8/567/688/695/315/453/322/182305689/182305701/,Isocortex,Somatosensory,"Primary somatosensory area, unassigned, layer 4",Somatosensory,SSp-un4,SS,p-un,primary (unassigned),4,"SSp-un4: rgb(25,126,97)",25,126,97
+73,182305705,NaN,/997/8/567/688/695/315/453/322/182305689/182305705/,Isocortex,Somatosensory,"Primary somatosensory area, unassigned, layer 5",Somatosensory,SSp-un5,SS,p-un,primary (unassigned),5,"SSp-un5: rgb(25,125,98)",25,125,98
+74,182305709,NaN,/997/8/567/688/695/315/453/322/182305689/182305709/,Isocortex,Somatosensory,"Primary somatosensory area, unassigned, layer 6a",Somatosensory,SSp-un6a,SS,p-un,primary (unassigned),6a,"SSp-un6a: rgb(26,127,97)",26,127,97
+75,182305713,NaN,/997/8/567/688/695/315/453/322/182305689/182305713/,Isocortex,Somatosensory,"Primary somatosensory area, unassigned, layer 6b",Somatosensory,SSp-un6b,SS,p-un,primary (unassigned),6b,"SSp-un6b: rgb(26,125,99)",26,125,99
+76,378,378,/997/8/567/688/695/315/453/378/,Isocortex,Somatosensory,Supplemental somatosensory area,Somatosensory,SSs,SS,s,supplemental,,"SSs: rgb(25,128,98)",25,128,98
+77,873,873,/997/8/567/688/695/315/453/378/873/,Isocortex,Somatosensory,"Supplemental somatosensory area, layer 1",Somatosensory,SSs1,SS,s,supplemental,1,"SSs1: rgb(26,126,98)",26,126,98
+78,806,806,/997/8/567/688/695/315/453/378/806/,Isocortex,Somatosensory,"Supplemental somatosensory area, layer 2/3",Somatosensory,SSs2/3,SS,s,supplemental,3-Feb,"SSs2/3: rgb(27,128,99)",27,128,99
+79,1035,1035,/997/8/567/688/695/315/453/378/1035/,Isocortex,Somatosensory,"Supplemental somatosensory area, layer 4",Somatosensory,SSs4,SS,s,supplemental,4,"SSs4: rgb(24,124,99)",24,124,99
+80,1090,1090,/997/8/567/688/695/315/453/378/1090/,Isocortex,Somatosensory,"Supplemental somatosensory area, layer 5",Somatosensory,SSs5,SS,s,supplemental,5,"SSs5: rgb(28,128,99)",28,128,99
+81,862,862,/997/8/567/688/695/315/453/378/862/,Isocortex,Somatosensory,"Supplemental somatosensory area, layer 6a",Somatosensory,SSs6a,SS,s,supplemental,6a,"SSs6a: rgb(25,125,99)",25,125,99
+82,893,893,/997/8/567/688/695/315/453/378/893/,Isocortex,Somatosensory,"Supplemental somatosensory area, layer 6b",Somatosensory,SSs6b,SS,s,supplemental,6b,"SSs6b: rgb(26,128,97)",26,128,97
+83,1057,1057,/997/8/567/688/695/315/1057/,Isocortex,Gustatory,Gustatory areas,Gustatory,GU,GU,,,,"GU: rgb(1,155,117)",1,155,117
+84,36,36,/997/8/567/688/695/315/1057/36/,Isocortex,Gustatory,"Gustatory areas, layer 1",Gustatory,GU1,GU,,,1,"GU1: rgb(0,156,117)",0,156,117
+85,180,180,/997/8/567/688/695/315/1057/180/,Isocortex,Gustatory,"Gustatory areas, layer 2/3",Gustatory,GU2/3,GU,,,3-Feb,"GU2/3: rgb(0,155,117)",0,155,117
+86,148,148,/997/8/567/688/695/315/1057/148/,Isocortex,Gustatory,"Gustatory areas, layer 4",Gustatory,GU4,GU,,,4,"GU4: rgb(0,156,116)",0,156,116
+87,187,187,/997/8/567/688/695/315/1057/187/,Isocortex,Gustatory,"Gustatory areas, layer 5",Gustatory,GU5,GU,,,5,"GU5: rgb(1,156,117)",1,156,117
+88,638,638,/997/8/567/688/695/315/1057/638/,Isocortex,Gustatory,"Gustatory areas, layer 6a",Gustatory,GU6a,GU,,,6a,"GU6a: rgb(0,155,116)",0,155,116
+89,662,662,/997/8/567/688/695/315/1057/662/,Isocortex,Gustatory,"Gustatory areas, layer 6b",Gustatory,GU6b,GU,,,6b,"GU6b: rgb(1,156,116)",1,156,116
+90,677,677,/997/8/567/688/695/315/677/,Isocortex,Visceral,Visceral area,Visceral,VISC,VISC,,,,"VISC: rgb(17,173,131)",17,173,131
+91,897,897,/997/8/567/688/695/315/677/897/,Isocortex,Visceral,"Visceral area, layer 1",Visceral,VISC1,VISC,,,1,"VISC1: rgb(18,173,131)",18,173,131
+92,1106,1106,/997/8/567/688/695/315/677/1106/,Isocortex,Visceral,"Visceral area, layer 2/3",Visceral,VISC2/3,VISC,,,3-Feb,"VISC2/3: rgb(18,172,131)",18,172,131
+93,1010,1010,/997/8/567/688/695/315/677/1010/,Isocortex,Visceral,"Visceral area, layer 4",Visceral,VISC4,VISC,,,4,"VISC4: rgb(17,172,130)",17,172,130
+94,1058,1058,/997/8/567/688/695/315/677/1058/,Isocortex,Visceral,"Visceral area, layer 5",Visceral,VISC5,VISC,,,5,"VISC5: rgb(18,173,130)",18,173,130
+95,857,857,/997/8/567/688/695/315/677/857/,Isocortex,Visceral,"Visceral area, layer 6a",Visceral,VISC6a,VISC,,,6a,"VISC6a: rgb(17,172,131)",17,172,131
+96,849,849,/997/8/567/688/695/315/677/849/,Isocortex,Visceral,"Visceral area, layer 6b",Visceral,VISC6b,VISC,,,6b,"VISC6b: rgb(17,173,130)",17,173,130
+97,247,247,/997/8/567/688/695/315/247/,Isocortex,Auditory,Auditory areas,Auditory,AUD,AUD,,,,"AUD: rgb(1,146,153)",1,146,153
+98,1011,1011,/997/8/567/688/695/315/247/1011/,Isocortex,Auditory,Dorsal auditory area,Auditory,AUDd,AUD,d,dorsal,,"AUDd: rgb(4,147,153)",4,147,153
+99,527,527,/997/8/567/688/695/315/247/1011/527/,Isocortex,Auditory,"Dorsal auditory area, layer 1",Auditory,AUDd1,AUD,d,dorsal,1,"AUDd1: rgb(3,147,153)",3,147,153
+100,600,600,/997/8/567/688/695/315/247/1011/600/,Isocortex,Auditory,"Dorsal auditory area, layer 2/3",Auditory,AUDd2/3,AUD,d,dorsal,3-Feb,"AUDd2/3: rgb(2,147,151)",2,147,151
+101,678,678,/997/8/567/688/695/315/247/1011/678/,Isocortex,Auditory,"Dorsal auditory area, layer 4",Auditory,AUDd4,AUD,d,dorsal,4,"AUDd4: rgb(3,147,152)",3,147,152
+102,252,252,/997/8/567/688/695/315/247/1011/252/,Isocortex,Auditory,"Dorsal auditory area, layer 5",Auditory,AUDd5,AUD,d,dorsal,5,"AUDd5: rgb(2,147,152)",2,147,152
+103,156,156,/997/8/567/688/695/315/247/1011/156/,Isocortex,Auditory,"Dorsal auditory area, layer 6a",Auditory,AUDd6a,AUD,d,dorsal,6a,"AUDd6a: rgb(1,147,153)",1,147,153
+104,243,243,/997/8/567/688/695/315/247/1011/243/,Isocortex,Auditory,"Dorsal auditory area, layer 6b",Auditory,AUDd6b,AUD,d,dorsal,6b,"AUDd6b: rgb(1,147,152)",1,147,152
+105,1002,1002,/997/8/567/688/695/315/247/1002/,Isocortex,Auditory,Primary auditory area,Auditory,AUDp,AUD,p,primary,,"AUDp: rgb(3,146,151)",3,146,151
+106,735,735,/997/8/567/688/695/315/247/1002/735/,Isocortex,Auditory,"Primary auditory area, layer 1",Auditory,AUDp1,AUD,p,primary,1,"AUDp1: rgb(2,146,151)",2,146,151
+107,251,251,/997/8/567/688/695/315/247/1002/251/,Isocortex,Auditory,"Primary auditory area, layer 2/3",Auditory,AUDp2/3,AUD,p,primary,3-Feb,"AUDp2/3: rgb(1,146,152)",1,146,152
+108,816,816,/997/8/567/688/695/315/247/1002/816/,Isocortex,Auditory,"Primary auditory area, layer 4",Auditory,AUDp4,AUD,p,primary,4,"AUDp4: rgb(3,147,151)",3,147,151
+109,847,847,/997/8/567/688/695/315/247/1002/847/,Isocortex,Auditory,"Primary auditory area, layer 5",Auditory,AUDp5,AUD,p,primary,5,"AUDp5: rgb(3,145,153)",3,145,153
+110,954,954,/997/8/567/688/695/315/247/1002/954/,Isocortex,Auditory,"Primary auditory area, layer 6a",Auditory,AUDp6a,AUD,p,primary,6a,"AUDp6a: rgb(1,147,150)",1,147,150
+111,1005,1005,/997/8/567/688/695/315/247/1002/1005/,Isocortex,Auditory,"Primary auditory area, layer 6b",Auditory,AUDp6b,AUD,p,primary,6b,"AUDp6b: rgb(3,145,152)",3,145,152
+112,1027,1027,/997/8/567/688/695/315/247/1027/,Isocortex,Auditory,Posterior auditory area,Auditory,AUDpo,AUD,po,posterior,,"AUDpo: rgb(2,147,150)",2,147,150
+113,696,696,/997/8/567/688/695/315/247/1027/696/,Isocortex,Auditory,"Posterior auditory area, layer 1",Auditory,AUDpo1,AUD,po,posterior,1,"AUDpo1: rgb(3,146,153)",3,146,153
+114,643,643,/997/8/567/688/695/315/247/1027/643/,Isocortex,Auditory,"Posterior auditory area, layer 2/3",Auditory,AUDpo2/3,AUD,po,posterior,3-Feb,"AUDpo2/3: rgb(2,145,153)",2,145,153
+115,759,759,/997/8/567/688/695/315/247/1027/759/,Isocortex,Auditory,"Posterior auditory area, layer 4",Auditory,AUDpo4,AUD,po,posterior,4,"AUDpo4: rgb(3,146,152)",3,146,152
+116,791,791,/997/8/567/688/695/315/247/1027/791/,Isocortex,Auditory,"Posterior auditory area, layer 5",Auditory,AUDpo5,AUD,po,posterior,5,"AUDpo5: rgb(1,145,151)",1,145,151
+117,249,249,/997/8/567/688/695/315/247/1027/249/,Isocortex,Auditory,"Posterior auditory area, layer 6a",Auditory,AUDpo6a,AUD,po,posterior,6a,"AUDpo6a: rgb(2,147,153)",2,147,153
+118,456,456,/997/8/567/688/695/315/247/1027/456/,Isocortex,Auditory,"Posterior auditory area, layer 6b",Auditory,AUDpo6b,AUD,po,posterior,6b,"AUDpo6b: rgb(2,146,152)",2,146,152
+119,1018,1018,/997/8/567/688/695/315/247/1018/,Isocortex,Auditory,Ventral auditory area,Auditory,AUDv,AUD,v,ventral,,"AUDv: rgb(1,146,150)",1,146,150
+120,959,959,/997/8/567/688/695/315/247/1018/959/,Isocortex,Auditory,"Ventral auditory area, layer 1",Auditory,AUDv1,AUD,v,ventral,1,"AUDv1: rgb(1,144,153)",1,144,153
+121,755,755,/997/8/567/688/695/315/247/1018/755/,Isocortex,Auditory,"Ventral auditory area, layer 2/3",Auditory,AUDv2/3,AUD,v,ventral,3-Feb,"AUDv2/3: rgb(2,145,152)",2,145,152
+122,990,990,/997/8/567/688/695/315/247/1018/990/,Isocortex,Auditory,"Ventral auditory area, layer 4",Auditory,AUDv4,AUD,v,ventral,4,"AUDv4: rgb(2,145,151)",2,145,151
+123,1023,1023,/997/8/567/688/695/315/247/1018/1023/,Isocortex,Auditory,"Ventral auditory area, layer 5",Auditory,AUDv5,AUD,v,ventral,5,"AUDv5: rgb(1,144,152)",1,144,152
+124,520,520,/997/8/567/688/695/315/247/1018/520/,Isocortex,Auditory,"Ventral auditory area, layer 6a",Auditory,AUDv6a,AUD,v,ventral,6a,"AUDv6a: rgb(1,147,151)",1,147,151
+125,598,598,/997/8/567/688/695/315/247/1018/598/,Isocortex,Auditory,"Ventral auditory area, layer 6b",Auditory,AUDv6b,AUD,v,ventral,6b,"AUDv6b: rgb(1,145,152)",1,145,152
+126,669,669,/997/8/567/688/695/315/669/,Isocortex,Visual,Visual areas,Visual,VIS,VIS,,,,"VIS: rgb(9,132,137)",9,132,137
+127,402,402,/997/8/567/688/695/315/669/402/,Isocortex,Visual,Anterolateral visual area,Visual,VISal,VIS,al,anterolateral,,"VISal: rgb(9,131,140)",9,131,140
+128,1074,1074,/997/8/567/688/695/315/669/402/1074/,Isocortex,Visual,"Anterolateral visual area, layer 1",Visual,VISal1,VIS,al,anterolateral,1,"VISal1: rgb(11,131,139)",11,131,139
+129,905,905,/997/8/567/688/695/315/669/402/905/,Isocortex,Visual,"Anterolateral visual area, layer 2/3",Visual,VISal2/3,VIS,al,anterolateral,3-Feb,"VISal2/3: rgb(9,131,137)",9,131,137
+130,1114,1114,/997/8/567/688/695/315/669/402/1114/,Isocortex,Visual,"Anterolateral visual area, layer 4",Visual,VISal4,VIS,al,anterolateral,4,"VISal4: rgb(8,133,136)",8,133,136
+131,233,233,/997/8/567/688/695/315/669/402/233/,Isocortex,Visual,"Anterolateral visual area, layer 5",Visual,VISal5,VIS,al,anterolateral,5,"VISal5: rgb(8,132,139)",8,132,139
+132,601,601,/997/8/567/688/695/315/669/402/601/,Isocortex,Visual,"Anterolateral visual area, layer 6a",Visual,VISal6a,VIS,al,anterolateral,6a,"VISal6a: rgb(9,130,140)",9,130,140
+133,649,649,/997/8/567/688/695/315/669/402/649/,Isocortex,Visual,"Anterolateral visual area, layer 6b",Visual,VISal6b,VIS,al,anterolateral,6b,"VISal6b: rgb(11,132,140)",11,132,140
+134,394,394,/997/8/567/688/695/315/669/394/,Isocortex,Visual,Anteromedial visual area,Visual,VISam,VIS,am,anteromedial,,"VISam: rgb(8,131,139)",8,131,139
+135,281,281,/997/8/567/688/695/315/669/394/281/,Isocortex,Visual,"Anteromedial visual area, layer 1",Visual,VISam1,VIS,am,anteromedial,1,"VISam1: rgb(9,132,139)",9,132,139
+136,1066,1066,/997/8/567/688/695/315/669/394/1066/,Isocortex,Visual,"Anteromedial visual area, layer 2/3",Visual,VISam2/3,VIS,am,anteromedial,3-Feb,"VISam2/3: rgb(11,132,138)",11,132,138
+137,401,401,/997/8/567/688/695/315/669/394/401/,Isocortex,Visual,"Anteromedial visual area, layer 4",Visual,VISam4,VIS,am,anteromedial,4,"VISam4: rgb(9,133,138)",9,133,138
+138,433,433,/997/8/567/688/695/315/669/394/433/,Isocortex,Visual,"Anteromedial visual area, layer 5",Visual,VISam5,VIS,am,anteromedial,5,"VISam5: rgb(10,132,139)",10,132,139
+139,1046,1046,/997/8/567/688/695/315/669/394/1046/,Isocortex,Visual,"Anteromedial visual area, layer 6a",Visual,VISam6a,VIS,am,anteromedial,6a,"VISam6a: rgb(10,130,139)",10,130,139
+140,441,441,/997/8/567/688/695/315/669/394/441/,Isocortex,Visual,"Anteromedial visual area, layer 6b",Visual,VISam6b,VIS,am,anteromedial,6b,"VISam6b: rgb(8,131,138)",8,131,138
+141,409,409,/997/8/567/688/695/315/669/409/,Isocortex,Visual,Lateral visual area,Visual,VISl,VIS,l,lateral,,"VISl: rgb(10,132,140)",10,132,140
+142,421,421,/997/8/567/688/695/315/669/409/421/,Isocortex,Visual,"Lateral visual area, layer 1",Visual,VISl1,VIS,l,lateral,1,"VISl1: rgb(9,132,138)",9,132,138
+143,973,973,/997/8/567/688/695/315/669/409/973/,Isocortex,Visual,"Lateral visual area, layer 2/3",Visual,VISl2/3,VIS,l,lateral,3-Feb,"VISl2/3: rgb(10,132,137)",10,132,137
+144,573,573,/997/8/567/688/695/315/669/409/573/,Isocortex,Visual,"Lateral visual area, layer 4",Visual,VISl4,VIS,l,lateral,4,"VISl4: rgb(8,130,139)",8,130,139
+145,613,613,/997/8/567/688/695/315/669/409/613/,Isocortex,Visual,"Lateral visual area, layer 5",Visual,VISl5,VIS,l,lateral,5,"VISl5: rgb(11,133,139)",11,133,139
+146,74,74,/997/8/567/688/695/315/669/409/74/,Isocortex,Visual,"Lateral visual area, layer 6a",Visual,VISl6a,VIS,l,lateral,6a,"VISl6a: rgb(8,132,140)",8,132,140
+147,121,121,/997/8/567/688/695/315/669/409/121/,Isocortex,Visual,"Lateral visual area, layer 6b",Visual,VISl6b,VIS,l,lateral,6b,"VISl6b: rgb(9,133,140)",9,133,140
+148,385,385,/997/8/567/688/695/315/669/385/,Isocortex,Visual,Primary visual area,Visual,VISp,VIS,p,primary,,"VISp: rgb(10,133,140)",10,133,140
+149,593,593,/997/8/567/688/695/315/669/385/593/,Isocortex,Visual,"Primary visual area, layer 1",Visual,VISp1,VIS,p,primary,1,"VISp1: rgb(9,133,137)",9,133,137
+150,821,821,/997/8/567/688/695/315/669/385/821/,Isocortex,Visual,"Primary visual area, layer 2/3",Visual,VISp2/3,VIS,p,primary,3-Feb,"VISp2/3: rgb(10,130,140)",10,130,140
+151,721,721,/997/8/567/688/695/315/669/385/721/,Isocortex,Visual,"Primary visual area, layer 4",Visual,VISp4,VIS,p,primary,4,"VISp4: rgb(11,132,139)",11,132,139
+152,778,778,/997/8/567/688/695/315/669/385/778/,Isocortex,Visual,"Primary visual area, layer 5",Visual,VISp5,VIS,p,primary,5,"VISp5: rgb(8,131,137)",8,131,137
+153,33,33,/997/8/567/688/695/315/669/385/33/,Isocortex,Visual,"Primary visual area, layer 6a",Visual,VISp6a,VIS,p,primary,6a,"VISp6a: rgb(8,133,140)",8,133,140
+154,305,305,/997/8/567/688/695/315/669/385/305/,Isocortex,Visual,"Primary visual area, layer 6b",Visual,VISp6b,VIS,p,primary,6b,"VISp6b: rgb(8,133,138)",8,133,138
+155,425,425,/997/8/567/688/695/315/669/425/,Isocortex,Visual,Posterolateral visual area,Visual,VISpl,VIS,pl,posterolateral,,"VISpl: rgb(9,131,139)",9,131,139
+156,750,750,/997/8/567/688/695/315/669/425/750/,Isocortex,Visual,"Posterolateral visual area, layer 1",Visual,VISpl1,VIS,pl,posterolateral,1,"VISpl1: rgb(10,131,138)",10,131,138
+157,269,269,/997/8/567/688/695/315/669/425/269/,Isocortex,Visual,"Posterolateral visual area, layer 2/3",Visual,VISpl2/3,VIS,pl,posterolateral,3-Feb,"VISpl2/3: rgb(9,132,140)",9,132,140
+158,869,869,/997/8/567/688/695/315/669/425/869/,Isocortex,Visual,"Posterolateral visual area, layer 4",Visual,VISpl4,VIS,pl,posterolateral,4,"VISpl4: rgb(11,133,138)",11,133,138
+159,902,902,/997/8/567/688/695/315/669/425/902/,Isocortex,Visual,"Posterolateral visual area, layer 5",Visual,VISpl5,VIS,pl,posterolateral,5,"VISpl5: rgb(11,131,140)",11,131,140
+160,377,377,/997/8/567/688/695/315/669/425/377/,Isocortex,Visual,"Posterolateral visual area, layer 6a",Visual,VISpl6a,VIS,pl,posterolateral,6a,"VISpl6a: rgb(8,131,140)",8,131,140
+161,393,393,/997/8/567/688/695/315/669/425/393/,Isocortex,Visual,"Posterolateral visual area, layer 6b",Visual,VISpl6b,VIS,pl,posterolateral,6b,"VISpl6b: rgb(8,132,138)",8,132,138
+162,533,533,/997/8/567/688/695/315/669/533/,Isocortex,Visual,Posteromedial visual area,Visual,VISpm,VIS,pm,posteromedial,,"VISpm: rgb(10,131,139)",10,131,139
+163,805,805,/997/8/567/688/695/315/669/533/805/,Isocortex,Visual,"Posteromedial visual area, layer 1",Visual,VISpm1,VIS,pm,posteromedial,1,"VISpm1: rgb(10,133,137)",10,133,137
+164,41,41,/997/8/567/688/695/315/669/533/41/,Isocortex,Visual,"Posteromedial visual area, layer 2/3",Visual,VISpm2/3,VIS,pm,posteromedial,3-Feb,"VISpm2/3: rgb(8,133,139)",8,133,139
+165,501,501,/997/8/567/688/695/315/669/533/501/,Isocortex,Visual,"Posteromedial visual area, layer 4",Visual,VISpm4,VIS,pm,posteromedial,4,"VISpm4: rgb(9,130,139)",9,130,139
+166,565,565,/997/8/567/688/695/315/669/533/565/,Isocortex,Visual,"Posteromedial visual area, layer 5",Visual,VISpm5,VIS,pm,posteromedial,5,"VISpm5: rgb(8,132,137)",8,132,137
+167,257,257,/997/8/567/688/695/315/669/533/257/,Isocortex,Visual,"Posteromedial visual area, layer 6a",Visual,VISpm6a,VIS,pm,posteromedial,6a,"VISpm6a: rgb(9,133,139)",9,133,139
+168,469,469,/997/8/567/688/695/315/669/533/469/,Isocortex,Visual,"Posteromedial visual area, layer 6b",Visual,VISpm6b,VIS,pm,posteromedial,6b,"VISpm6b: rgb(8,133,137)",8,133,137
+169,312782574,NaN,/997/8/567/688/695/315/669/312782574/,Isocortex,Visual,Laterointermediate area,Visual,VISli,VIS,li,laterointermediate,,"VISli: rgb(10,133,139)",10,133,139
+170,312782578,NaN,/997/8/567/688/695/315/669/312782574/312782578/,Isocortex,Visual,"Laterointermediate area, layer 1",Visual,VISli1,VIS,li,laterointermediate,1,"VISli1: rgb(12,133,140)",12,133,140
+171,312782582,NaN,/997/8/567/688/695/315/669/312782574/312782582/,Isocortex,Visual,"Laterointermediate area, layer 2/3",Visual,VISli2/3,VIS,li,laterointermediate,3-Feb,"VISli2/3: rgb(10,133,138)",10,133,138
+172,312782586,NaN,/997/8/567/688/695/315/669/312782574/312782586/,Isocortex,Visual,"Laterointermediate area, layer 4",Visual,VISli4,VIS,li,laterointermediate,4,"VISli4: rgb(8,130,140)",8,130,140
+173,312782590,NaN,/997/8/567/688/695/315/669/312782574/312782590/,Isocortex,Visual,"Laterointermediate area, layer 5",Visual,VISli5,VIS,li,laterointermediate,5,"VISli5: rgb(10,132,138)",10,132,138
+174,312782594,NaN,/997/8/567/688/695/315/669/312782574/312782594/,Isocortex,Visual,"Laterointermediate area, layer 6a",Visual,VISli6a,VIS,li,laterointermediate,6a,"VISli6a: rgb(8,132,136)",8,132,136
+175,312782598,NaN,/997/8/567/688/695/315/669/312782574/312782598/,Isocortex,Visual,"Laterointermediate area, layer 6b",Visual,VISli6b,VIS,li,laterointermediate,6b,"VISli6b: rgb(8,129,139)",8,129,139
+176,312782628,NaN,/997/8/567/688/695/315/669/312782628/,Isocortex,Visual,Postrhinal area,Visual,VISpor,VIS,por,postrhinal,,"VISpor: rgb(9,133,136)",9,133,136
+177,312782632,NaN,/997/8/567/688/695/315/669/312782628/312782632/,Isocortex,Visual,"Postrhinal area, layer 1",Visual,VISpor1,VIS,por,postrhinal,1,"VISpor1: rgb(9,129,140)",9,129,140
+178,312782636,NaN,/997/8/567/688/695/315/669/312782628/312782636/,Isocortex,Visual,"Postrhinal area, layer 2/3",Visual,VISpor2/3,VIS,por,postrhinal,3-Feb,"VISpor2/3: rgb(10,131,137)",10,131,137
+179,312782640,NaN,/997/8/567/688/695/315/669/312782628/312782640/,Isocortex,Visual,"Postrhinal area, layer 4",Visual,VISpor4,VIS,por,postrhinal,4,"VISpor4: rgb(10,130,138)",10,130,138
+180,312782644,NaN,/997/8/567/688/695/315/669/312782628/312782644/,Isocortex,Visual,"Postrhinal area, layer 5",Visual,VISpor5,VIS,por,postrhinal,5,"VISpor5: rgb(11,131,138)",11,131,138
+181,312782648,NaN,/997/8/567/688/695/315/669/312782628/312782648/,Isocortex,Visual,"Postrhinal area, layer 6a",Visual,VISpor6a,VIS,por,postrhinal,6a,"VISpor6a: rgb(12,133,139)",12,133,139
+182,312782652,NaN,/997/8/567/688/695/315/669/312782628/312782652/,Isocortex,Visual,"Postrhinal area, layer 6b",Visual,VISpor6b,VIS,por,postrhinal,6b,"VISpor6b: rgb(12,132,140)",12,132,140
+183,31,31,/997/8/567/688/695/315/31/,Isocortex,Anterior cingulate,Anterior cingulate area,Anterior cingulate,ACA,ACA,,,,"ACA: rgb(64,166,102)",64,166,102
+184,39,39,/997/8/567/688/695/315/31/39/,Isocortex,Anterior cingulate,"Anterior cingulate area, dorsal part",Anterior cingulate,ACAd,ACA,d,dorsal,,"ACAd: rgb(64,166,101)",64,166,101
+185,935,935,/997/8/567/688/695/315/31/39/935/,Isocortex,Anterior cingulate,"Anterior cingulate area, dorsal part, layer 1",Anterior cingulate,ACAd1,ACA,d,dorsal,1,"ACAd1: rgb(62,166,101)",62,166,101
+186,211,211,/997/8/567/688/695/315/31/39/211/,Isocortex,Anterior cingulate,"Anterior cingulate area, dorsal part, layer 2/3",Anterior cingulate,ACAd2/3,ACA,d,dorsal,3-Feb,"ACAd2/3: rgb(64,165,101)",64,165,101
+187,1015,1015,/997/8/567/688/695/315/31/39/1015/,Isocortex,Anterior cingulate,"Anterior cingulate area, dorsal part, layer 5",Anterior cingulate,ACAd5,ACA,d,dorsal,5,"ACAd5: rgb(62,165,102)",62,165,102
+188,919,919,/997/8/567/688/695/315/31/39/919/,Isocortex,Anterior cingulate,"Anterior cingulate area, dorsal part, layer 6a",Anterior cingulate,ACAd6a,ACA,d,dorsal,6a,"ACAd6a: rgb(63,166,100)",63,166,100
+189,927,927,/997/8/567/688/695/315/31/39/927/,Isocortex,Anterior cingulate,"Anterior cingulate area, dorsal part, layer 6b",Anterior cingulate,ACAd6b,ACA,d,dorsal,6b,"ACAd6b: rgb(63,164,102)",63,164,102
+190,48,48,/997/8/567/688/695/315/31/48/,Isocortex,Anterior cingulate,"Anterior cingulate area, ventral part",Anterior cingulate,ACAv,ACA,v,ventral,,"ACAv: rgb(64,165,102)",64,165,102
+191,588,588,/997/8/567/688/695/315/31/48/588/,Isocortex,Anterior cingulate,"Anterior cingulate area, ventral part, layer 1",Anterior cingulate,ACAv1,ACA,v,ventral,1,"ACAv1: rgb(64,166,100)",64,166,100
+192,296,296,/997/8/567/688/695/315/31/48/296/,Isocortex,Anterior cingulate,"Anterior cingulate area, ventral part, layer 2/3",Anterior cingulate,ACAv2/3,ACA,v,ventral,3-Feb,"ACAv2/3: rgb(63,165,102)",63,165,102
+193,772,772,/997/8/567/688/695/315/31/48/772/,Isocortex,Anterior cingulate,"Anterior cingulate area, ventral part, layer 5",Anterior cingulate,ACAv5,ACA,v,ventral,5,"ACAv5: rgb(62,166,102)",62,166,102
+194,810,810,/997/8/567/688/695/315/31/48/810/,Isocortex,Anterior cingulate,"Anterior cingulate area, ventral part, 6a",Anterior cingulate,ACAv6a,ACA,v,ventral,6a,"ACAv6a: rgb(64,165,100)",64,165,100
+195,819,819,/997/8/567/688/695/315/31/48/819/,Isocortex,Anterior cingulate,"Anterior cingulate area, ventral part, 6b",Anterior cingulate,ACAv6b,ACA,v,ventral,6b,"ACAv6b: rgb(64,164,101)",64,164,101
+196,972,972,/997/8/567/688/695/315/972/,Isocortex,Prelimbic,Prelimbic area,Prelimbic,PL,PL,,,,"PL: rgb(46,167,80)",46,167,80
+197,171,171,/997/8/567/688/695/315/972/171/,Isocortex,Prelimbic,"Prelimbic area, layer 1",Prelimbic,PL1,PL,,,1,"PL1: rgb(47,167,80)",47,167,80
+198,304,304,/997/8/567/688/695/315/972/304/,Isocortex,Prelimbic,"Prelimbic area, layer 2/3",Prelimbic,PL2/3,PL,,,3-Feb,"PL2/3: rgb(47,167,79)",47,167,79
+199,363,363,/997/8/567/688/695/315/972/363/,Isocortex,Prelimbic,"Prelimbic area, layer 5",Prelimbic,PL5,PL,,,5,"PL5: rgb(46,168,79)",46,168,79
+200,84,84,/997/8/567/688/695/315/972/84/,Isocortex,Prelimbic,"Prelimbic area, layer 6a",Prelimbic,PL6a,PL,,,6a,"PL6a: rgb(47,168,80)",47,168,80
+201,132,132,/997/8/567/688/695/315/972/132/,Isocortex,Prelimbic,"Prelimbic area, layer 6b",Prelimbic,PL6b,PL,,,6b,"PL6b: rgb(47,168,79)",47,168,79
+202,44,44,/997/8/567/688/695/315/44/,Isocortex,Infralimbic,Infralimbic area,Infralimbic,ILA,ILA,,,,"ILA: rgb(89,179,99)",89,179,99
+203,707,707,/997/8/567/688/695/315/44/707/,Isocortex,Infralimbic,"Infralimbic area, layer 1",Infralimbic,ILA1,ILA,,,1,"ILA1: rgb(89,178,99)",89,178,99
+204,556,556,/997/8/567/688/695/315/44/556/,Isocortex,Infralimbic,"Infralimbic area, layer 2/3",Infralimbic,ILA2/3,ILA,,,3-Feb,"ILA2/3: rgb(89,179,98)",89,179,98
+205,827,827,/997/8/567/688/695/315/44/827/,Isocortex,Infralimbic,"Infralimbic area, layer 5",Infralimbic,ILA5,ILA,,,5,"ILA5: rgb(89,178,98)",89,178,98
+206,1054,1054,/997/8/567/688/695/315/44/1054/,Isocortex,Infralimbic,"Infralimbic area, layer 6a",Infralimbic,ILA6a,ILA,,,6a,"ILA6a: rgb(88,179,98)",88,179,98
+207,1081,1081,/997/8/567/688/695/315/44/1081/,Isocortex,Infralimbic,"Infralimbic area, layer 6b",Infralimbic,ILA6b,ILA,,,6b,"ILA6b: rgb(88,178,99)",88,178,99
+208,714,714,/997/8/567/688/695/315/714/,Isocortex,Orbital,Orbital area,Orbital,ORB,ORB,,,,"ORB: rgb(35,137,92)",35,137,92
+209,723,723,/997/8/567/688/695/315/714/723/,Isocortex,Orbital,"Orbital area, lateral part",Orbital,ORBl,ORB,l,lateral,,"ORBl: rgb(35,136,93)",35,136,93
+210,448,448,/997/8/567/688/695/315/714/723/448/,Isocortex,Orbital,"Orbital area, lateral part, layer 1",Orbital,ORBl1,ORB,l,lateral,1,"ORBl1: rgb(35,138,93)",35,138,93
+211,412,412,/997/8/567/688/695/315/714/723/412/,Isocortex,Orbital,"Orbital area, lateral part, layer 2/3",Orbital,ORBl2/3,ORB,l,lateral,3-Feb,"ORBl2/3: rgb(35,138,94)",35,138,94
+212,630,630,/997/8/567/688/695/315/714/723/630/,Isocortex,Orbital,"Orbital area, lateral part, layer 5",Orbital,ORBl5,ORB,l,lateral,5,"ORBl5: rgb(34,138,93)",34,138,93
+213,440,440,/997/8/567/688/695/315/714/723/440/,Isocortex,Orbital,"Orbital area, lateral part, layer 6a",Orbital,ORBl6a,ORB,l,lateral,6a,"ORBl6a: rgb(36,137,93)",36,137,93
+214,488,488,/997/8/567/688/695/315/714/723/488/,Isocortex,Orbital,"Orbital area, lateral part, layer 6b",Orbital,ORBl6b,ORB,l,lateral,6b,"ORBl6b: rgb(36,138,92)",36,138,92
+215,731,731,/997/8/567/688/695/315/714/731/,Isocortex,Orbital,"Orbital area, medial part",Orbital,ORBm,ORB,m,medial,,"ORBm: rgb(34,137,93)",34,137,93
+216,484,484,/997/8/567/688/695/315/714/731/484/,Isocortex,Orbital,"Orbital area, medial part, layer 1",Orbital,ORBm1,ORB,m,medial,1,"ORBm1: rgb(35,137,93)",35,137,93
+217,582,582,/997/8/567/688/695/315/714/731/582/,Isocortex,Orbital,"Orbital area, medial part, layer 2/3",Orbital,ORBm2/3,ORB,m,medial,3-Feb,"ORBm2/3: rgb(36,136,93)",36,136,93
+218,620,620,/997/8/567/688/695/315/714/731/620/,Isocortex,Orbital,"Orbital area, medial part, layer 5",Orbital,ORBm5,ORB,m,medial,5,"ORBm5: rgb(35,136,94)",35,136,94
+219,910,910,/997/8/567/688/695/315/714/731/910/,Isocortex,Orbital,"Orbital area, medial part, layer 6a",Orbital,ORBm6a,ORB,m,medial,6a,"ORBm6a: rgb(34,136,94)",34,136,94
+220,527696977,NaN,/997/8/567/688/695/315/714/731/527696977/,Isocortex,Orbital,"Orbital area, medial part, layer 6b",Orbital,ORBm6b,ORB,m,medial,6b,"ORBm6b: rgb(36,135,94)",36,135,94
+221,746,746,/997/8/567/688/695/315/714/746/,Isocortex,Orbital,"Orbital area, ventrolateral part",Orbital,ORBvl,ORB,vl,ventrolateral,,"ORBvl: rgb(34,138,92)",34,138,92
+222,969,969,/997/8/567/688/695/315/714/746/969/,Isocortex,Orbital,"Orbital area, ventrolateral part, layer 1",Orbital,ORBvl1,ORB,vl,ventrolateral,1,"ORBvl1: rgb(36,138,91)",36,138,91
+223,288,288,/997/8/567/688/695/315/714/746/288/,Isocortex,Orbital,"Orbital area, ventrolateral part, layer 2/3",Orbital,ORBvl2/3,ORB,vl,ventrolateral,3-Feb,"ORBvl2/3: rgb(36,138,93)",36,138,93
+224,1125,1125,/997/8/567/688/695/315/714/746/1125/,Isocortex,Orbital,"Orbital area, ventrolateral part, layer 5",Orbital,ORBvl5,ORB,vl,ventrolateral,5,"ORBvl5: rgb(35,136,92)",35,136,92
+225,608,608,/997/8/567/688/695/315/714/746/608/,Isocortex,Orbital,"Orbital area, ventrolateral part, layer 6a",Orbital,ORBvl6a,ORB,vl,ventrolateral,6a,"ORBvl6a: rgb(35,138,92)",35,138,92
+226,680,680,/997/8/567/688/695/315/714/746/680/,Isocortex,Orbital,"Orbital area, ventrolateral part, layer 6b",Orbital,ORBvl6b,ORB,vl,ventrolateral,6b,"ORBvl6b: rgb(34,137,94)",34,137,94
+227,95,95,/997/8/567/688/695/315/95/,Isocortex,Agranular insula,Agranular insular area,Agranular insula,AI,AI,,,,"AI: rgb(33,152,102)",33,152,102
+228,104,104,/997/8/567/688/695/315/95/104/,Isocortex,Agranular insula,"Agranular insular area, dorsal part",Agranular insula,AId,AI,d,dorsal,,"AId: rgb(33,152,101)",33,152,101
+229,996,996,/997/8/567/688/695/315/95/104/996/,Isocortex,Agranular insula,"Agranular insular area, dorsal part, layer 1",Agranular insula,AId1,AI,d,dorsal,1,"AId1: rgb(32,151,100)",32,151,100
+230,328,328,/997/8/567/688/695/315/95/104/328/,Isocortex,Agranular insula,"Agranular insular area, dorsal part, layer 2/3",Agranular insula,AId2/3,AI,d,dorsal,3-Feb,"AId2/3: rgb(32,151,101)",32,151,101
+231,1101,1101,/997/8/567/688/695/315/95/104/1101/,Isocortex,Agranular insula,"Agranular insular area, dorsal part, layer 5",Agranular insula,AId5,AI,d,dorsal,5,"AId5: rgb(32,150,101)",32,150,101
+232,783,783,/997/8/567/688/695/315/95/104/783/,Isocortex,Agranular insula,"Agranular insular area, dorsal part, layer 6a",Agranular insula,AId6a,AI,d,dorsal,6a,"AId6a: rgb(32,150,102)",32,150,102
+233,831,831,/997/8/567/688/695/315/95/104/831/,Isocortex,Agranular insula,"Agranular insular area, dorsal part, layer 6b",Agranular insula,AId6b,AI,d,dorsal,6b,"AId6b: rgb(31,151,102)",31,151,102
+234,111,111,/997/8/567/688/695/315/95/111/,Isocortex,Agranular insula,"Agranular insular area, posterior part",Agranular insula,AIp,AI,p,posterior,,"AIp: rgb(33,151,102)",33,151,102
+235,120,120,/997/8/567/688/695/315/95/111/120/,Isocortex,Agranular insula,"Agranular insular area, posterior part, layer 1",Agranular insula,AIp1,AI,p,posterior,1,"AIp1: rgb(33,151,101)",33,151,101
+236,163,163,/997/8/567/688/695/315/95/111/163/,Isocortex,Agranular insula,"Agranular insular area, posterior part, layer 2/3",Agranular insula,AIp2/3,AI,p,posterior,3-Feb,"AIp2/3: rgb(32,152,101)",32,152,101
+237,344,344,/997/8/567/688/695/315/95/111/344/,Isocortex,Agranular insula,"Agranular insular area, posterior part, layer 5",Agranular insula,AIp5,AI,p,posterior,5,"AIp5: rgb(33,152,100)",33,152,100
+238,314,314,/997/8/567/688/695/315/95/111/314/,Isocortex,Agranular insula,"Agranular insular area, posterior part, layer 6a",Agranular insula,AIp6a,AI,p,posterior,6a,"AIp6a: rgb(32,151,102)",32,151,102
+239,355,355,/997/8/567/688/695/315/95/111/355/,Isocortex,Agranular insula,"Agranular insular area, posterior part, layer 6b",Agranular insula,AIp6b,AI,p,posterior,6b,"AIp6b: rgb(33,150,102)",33,150,102
+240,119,119,/997/8/567/688/695/315/95/119/,Isocortex,Agranular insula,"Agranular insular area, ventral part",Agranular insula,AIv,AI,v,ventral,,"AIv: rgb(32,152,102)",32,152,102
+241,704,704,/997/8/567/688/695/315/95/119/704/,Isocortex,Agranular insula,"Agranular insular area, ventral part, layer 1",Agranular insula,AIv1,AI,v,ventral,1,"AIv1: rgb(32,152,100)",32,152,100
+242,694,694,/997/8/567/688/695/315/95/119/694/,Isocortex,Agranular insula,"Agranular insular area, ventral part, layer 2/3",Agranular insula,AIv2/3,AI,v,ventral,3-Feb,"AIv2/3: rgb(33,151,100)",33,151,100
+243,800,800,/997/8/567/688/695/315/95/119/800/,Isocortex,Agranular insula,"Agranular insular area, ventral part, layer 5",Agranular insula,AIv5,AI,v,ventral,5,"AIv5: rgb(31,152,101)",31,152,101
+244,675,675,/997/8/567/688/695/315/95/119/675/,Isocortex,Agranular insula,"Agranular insular area, ventral part, layer 6a",Agranular insula,AIv6a,AI,v,ventral,6a,"AIv6a: rgb(31,152,102)",31,152,102
+245,699,699,/997/8/567/688/695/315/95/119/699/,Isocortex,Agranular insula,"Agranular insular area, ventral part, layer 6b",Agranular insula,AIv6b,AI,v,ventral,6b,"AIv6b: rgb(33,150,101)",33,150,101
+246,254,254,/997/8/567/688/695/315/254/,Isocortex,Retrosplenial,Retrosplenial area,Retrosplenial,RSP,RSP,,,,"RSP: rgb(26,166,152)",26,166,152
+247,894,894,/997/8/567/688/695/315/254/894/,Isocortex,Retrosplenial,"Retrosplenial area, lateral agranular part",Retrosplenial,RSPagl,RSP,agl,agranular,,"RSPagl: rgb(27,164,151)",27,164,151
+248,671,671,/997/8/567/688/695/315/254/894/671/,Isocortex,Retrosplenial,"Retrosplenial area, lateral agranular part, layer 1",Retrosplenial,RSPagl1,RSP,agl,agranular,1,"RSPagl1: rgb(27,166,150)",27,166,150
+249,965,965,/997/8/567/688/695/315/254/894/965/,Isocortex,Retrosplenial,"Retrosplenial area, lateral agranular part, layer 2/3",Retrosplenial,RSPagl2/3,RSP,agl,agranular,3-Feb,"RSPagl2/3: rgb(26,164,150)",26,164,150
+250,774,774,/997/8/567/688/695/315/254/894/774/,Isocortex,Retrosplenial,"Retrosplenial area, lateral agranular part, layer 5",Retrosplenial,RSPagl5,RSP,agl,agranular,5,"RSPagl5: rgb(28,166,151)",28,166,151
+251,906,906,/997/8/567/688/695/315/254/894/906/,Isocortex,Retrosplenial,"Retrosplenial area, lateral agranular part, layer 6a",Retrosplenial,RSPagl6a,RSP,agl,agranular,6a,"RSPagl6a: rgb(28,165,151)",28,165,151
+252,279,279,/997/8/567/688/695/315/254/894/279/,Isocortex,Retrosplenial,"Retrosplenial area, lateral agranular part, layer 6b",Retrosplenial,RSPagl6b,RSP,agl,agranular,6b,"RSPagl6b: rgb(26,165,152)",26,165,152
+253,879,879,/997/8/567/688/695/315/254/879/,Isocortex,Retrosplenial,"Retrosplenial area, dorsal part",Retrosplenial,RSPd,RSP,d,dorsal,,"RSPd: rgb(28,165,152)",28,165,152
+254,442,442,/997/8/567/688/695/315/254/879/442/,Isocortex,Retrosplenial,"Retrosplenial area, dorsal part, layer 1",Retrosplenial,RSPd1,RSP,d,dorsal,1,"RSPd1: rgb(27,165,152)",27,165,152
+255,434,434,/997/8/567/688/695/315/254/879/434/,Isocortex,Retrosplenial,"Retrosplenial area, dorsal part, layer 2/3",Retrosplenial,RSPd2/3,RSP,d,dorsal,3-Feb,"RSPd2/3: rgb(27,166,151)",27,166,151
+256,610,610,/997/8/567/688/695/315/254/879/610/,Isocortex,Retrosplenial,"Retrosplenial area, dorsal part, layer 5",Retrosplenial,RSPd5,RSP,d,dorsal,5,"RSPd5: rgb(26,165,150)",26,165,150
+257,274,274,/997/8/567/688/695/315/254/879/274/,Isocortex,Retrosplenial,"Retrosplenial area, dorsal part, layer 6a",Retrosplenial,RSPd6a,RSP,d,dorsal,6a,"RSPd6a: rgb(26,166,151)",26,166,151
+258,330,330,/997/8/567/688/695/315/254/879/330/,Isocortex,Retrosplenial,"Retrosplenial area, dorsal part, layer 6b",Retrosplenial,RSPd6b,RSP,d,dorsal,6b,"RSPd6b: rgb(27,166,152)",27,166,152
+259,886,886,/997/8/567/688/695/315/254/886/,Isocortex,Retrosplenial,"Retrosplenial area, ventral part",Retrosplenial,RSPv,RSP,v,ventral,,"RSPv: rgb(27,165,150)",27,165,150
+260,542,542,/997/8/567/688/695/315/254/886/542/,Isocortex,Retrosplenial,"Retrosplenial area, ventral part, layer 1",Retrosplenial,RSPv1,RSP,v,ventral,1,"RSPv1: rgb(27,165,151)",27,165,151
+261,430,430,/997/8/567/688/695/315/254/886/430/,Isocortex,Retrosplenial,"Retrosplenial area, ventral part, layer 2/3",Retrosplenial,RSPv2/3,RSP,v,ventral,3-Feb,"RSPv2/3: rgb(26,165,151)",26,165,151
+262,687,687,/997/8/567/688/695/315/254/886/687/,Isocortex,Retrosplenial,"Retrosplenial area, ventral part, layer 5",Retrosplenial,RSPv5,RSP,v,ventral,5,"RSPv5: rgb(27,164,152)",27,164,152
+263,590,590,/997/8/567/688/695/315/254/886/590/,Isocortex,Retrosplenial,"Retrosplenial area, ventral part, layer 6a",Retrosplenial,RSPv6a,RSP,v,ventral,6a,"RSPv6a: rgb(26,164,152)",26,164,152
+264,622,622,/997/8/567/688/695/315/254/886/622/,Isocortex,Retrosplenial,"Retrosplenial area, ventral part, layer 6b",Retrosplenial,RSPv6b,RSP,v,ventral,6b,"RSPv6b: rgb(26,164,151)",26,164,151
+265,22,22,/997/8/567/688/695/315/22/,Isocortex,Posterior parietal association,Posterior parietal association areas,Posterior parietal association,PTLp,PTLp,,,,"PTLp: rgb(0,159,172)",0,159,172
+266,312782546,NaN,/997/8/567/688/695/315/22/312782546/,Isocortex,Posterior parietal association,Anterior area,Posterior parietal association,VISa,PTL,a,anterior,,"VISa: rgb(0,159,171)",0,159,171
+267,312782550,NaN,/997/8/567/688/695/315/22/312782546/312782550/,Isocortex,Posterior parietal association,"Anterior area, layer 1",Posterior parietal association,VISa1,PTL,a,anterior,1,"VISa1: rgb(1,159,172)",1,159,172
+268,312782554,NaN,/997/8/567/688/695/315/22/312782546/312782554/,Isocortex,Posterior parietal association,"Anterior area, layer 2/3",Posterior parietal association,VISa2/3,PTL,a,anterior,3-Feb,"VISa2/3: rgb(0,158,171)",0,158,171
+269,312782558,NaN,/997/8/567/688/695/315/22/312782546/312782558/,Isocortex,Posterior parietal association,"Anterior area, layer 4",Posterior parietal association,VISa4,PTL,a,anterior,4,"VISa4: rgb(1,158,172)",1,158,172
+270,312782562,NaN,/997/8/567/688/695/315/22/312782546/312782562/,Isocortex,Posterior parietal association,"Anterior area, layer 5",Posterior parietal association,VISa5,PTL,a,anterior,5,"VISa5: rgb(1,158,171)",1,158,171
+271,312782566,NaN,/997/8/567/688/695/315/22/312782546/312782566/,Isocortex,Posterior parietal association,"Anterior area, layer 6a",Posterior parietal association,VISa6a,PTL,a,anterior,6a,"VISa6a: rgb(0,157,172)",0,157,172
+272,312782570,NaN,/997/8/567/688/695/315/22/312782546/312782570/,Isocortex,Posterior parietal association,"Anterior area, layer 6b",Posterior parietal association,VISa6b,PTL,a,anterior,6b,"VISa6b: rgb(2,159,172)",2,159,172
+273,417,417,/997/8/567/688/695/315/22/417/,Isocortex,Posterior parietal association,Rostrolateral visual area,Posterior parietal association,VISrl,PTL,rl,rostrolateral,,"VISrl: rgb(0,158,170)",0,158,170
+274,312782604,NaN,/997/8/567/688/695/315/22/417/312782604/,Isocortex,Posterior parietal association,"Rostrolateral area, layer 1",Posterior parietal association,VISrl1,PTL,rl,rostrolateral,1,"VISrl1: rgb(2,159,171)",2,159,171
+275,312782608,NaN,/997/8/567/688/695/315/22/417/312782608/,Isocortex,Posterior parietal association,"Rostrolateral area, layer 2/3",Posterior parietal association,VISrl2/3,PTL,rl,rostrolateral,3-Feb,"VISrl2/3: rgb(2,158,172)",2,158,172
+276,312782612,NaN,/997/8/567/688/695/315/22/417/312782612/,Isocortex,Posterior parietal association,"Rostrolateral area, layer 4",Posterior parietal association,VISrl4,PTL,rl,rostrolateral,4,"VISrl4: rgb(1,158,170)",1,158,170
+277,312782616,NaN,/997/8/567/688/695/315/22/417/312782616/,Isocortex,Posterior parietal association,"Rostrolateral area, layer 5",Posterior parietal association,VISrl5,PTL,rl,rostrolateral,5,"VISrl5: rgb(1,157,171)",1,157,171
+278,312782620,NaN,/997/8/567/688/695/315/22/417/312782620/,Isocortex,Posterior parietal association,"Rostrolateral area, layer 6a",Posterior parietal association,VISrl6a,PTL,rl,rostrolateral,6a,"VISrl6a: rgb(2,158,171)",2,158,171
+279,312782624,NaN,/997/8/567/688/695/315/22/417/312782624/,Isocortex,Posterior parietal association,"Rostrolateral area, layer 6b",Posterior parietal association,VISrl6b,PTL,rl,rostrolateral,6b,"VISrl6b: rgb(0,157,170)",0,157,170
+280,541,541,/997/8/567/688/695/315/541/,Isocortex,Temporal,Temporal association areas,Temporal,TEa,TEa,,,,"TEa: rgb(22,176,179)",22,176,179
+281,97,97,/997/8/567/688/695/315/541/97/,Isocortex,Temporal,"Temporal association areas, layer 1",Temporal,TEa1,TEa,,,1,"TEa1: rgb(21,176,179)",21,176,179
+282,1127,1127,/997/8/567/688/695/315/541/1127/,Isocortex,Temporal,"Temporal association areas, layer 2/3",Temporal,TEa2/3,TEa,,,3-Feb,"TEa2/3: rgb(22,175,179)",22,175,179
+283,234,234,/997/8/567/688/695/315/541/234/,Isocortex,Temporal,"Temporal association areas, layer 4",Temporal,TEa4,TEa,,,4,"TEa4: rgb(21,176,178)",21,176,178
+284,289,289,/997/8/567/688/695/315/541/289/,Isocortex,Temporal,"Temporal association areas, layer 5",Temporal,TEa5,TEa,,,5,"TEa5: rgb(21,175,179)",21,175,179
+285,729,729,/997/8/567/688/695/315/541/729/,Isocortex,Temporal,"Temporal association areas, layer 6a",Temporal,TEa6a,TEa,,,6a,"TEa6a: rgb(21,175,178)",21,175,178
+286,786,786,/997/8/567/688/695/315/541/786/,Isocortex,Temporal,"Temporal association areas, layer 6b",Temporal,TEa6b,TEa,,,6b,"TEa6b: rgb(22,176,178)",22,176,178
+287,922,922,/997/8/567/688/695/315/922/,Isocortex,Perirhinal,Perirhinal area,Perirhinal,PERI,PERI,,,,"PERI: rgb(15,150,131)",15,150,131
+288,335,335,/997/8/567/688/695/315/922/335/,Isocortex,Perirhinal,"Perirhinal area, layer 6a",Perirhinal,PERI6a,PERI,,,6a,"PERI1: rgb(14,149,132)",14,149,132
+289,368,368,/997/8/567/688/695/315/922/368/,Isocortex,Perirhinal,"Perirhinal area, layer 6b",Perirhinal,PERI6b,PERI,,,6b,"PERI2/3: rgb(14,149,131)",14,149,131
+290,540,540,/997/8/567/688/695/315/922/540/,Isocortex,Perirhinal,"Perirhinal area, layer 1",Perirhinal,PERI1,PERI,,,1,"PERI5: rgb(15,150,132)",15,150,132
+291,692,692,/997/8/567/688/695/315/922/692/,Isocortex,Perirhinal,"Perirhinal area, layer 5",Perirhinal,PERI5,PERI,,,5,"PERI6a: rgb(14,150,132)",14,150,132
+292,888,888,/997/8/567/688/695/315/922/888/,Isocortex,Perirhinal,"Perirhinal area, layer 2/3",Perirhinal,PERI2/3,PERI,,,3-Feb,"PERI6b: rgb(14,150,131)",14,150,131
+293,895,895,/997/8/567/688/695/315/895/,Isocortex,Ectorhinal,Ectorhinal area,Ectorhinal,ECT,ECT,,,,"ECT: rgb(13,158,145)",13,158,145
+294,836,836,/997/8/567/688/695/315/895/836/,Isocortex,Ectorhinal,Ectorhinal area/Layer 1,Ectorhinal,ECT1,ECT,,,1,"ECT1: rgb(13,159,144)",13,159,144
+295,427,427,/997/8/567/688/695/315/895/427/,Isocortex,Ectorhinal,Ectorhinal area/Layer 2/3,Ectorhinal,ECT2/3,ECT,,,3-Feb,"ECT2/3: rgb(13,159,145)",13,159,145
+296,988,988,/997/8/567/688/695/315/895/988/,Isocortex,Ectorhinal,Ectorhinal area/Layer 5,Ectorhinal,ECT5,ECT,,,5,"ECT5: rgb(13,158,144)",13,158,144
+297,977,977,/997/8/567/688/695/315/895/977/,Isocortex,Ectorhinal,Ectorhinal area/Layer 6a,Ectorhinal,ECT6a,ECT,,,6a,"ECT6a: rgb(14,159,145)",14,159,145
+298,1045,1045,/997/8/567/688/695/315/895/1045/,Isocortex,Ectorhinal,Ectorhinal area/Layer 6b,Ectorhinal,ECT6b,ECT,,,6b,"ECT6b: rgb(14,159,144)",14,159,144
+299,698,698,/997/8/567/688/695/698/,Olfactory,Olfactory,Olfactory areas,Olfactory,OLF,OLF,,,,"OLF: rgb(153,210,189)",153,210,189
+300,507,507,/997/8/567/688/695/698/507/,Olfactory,Olfactory,Main olfactory bulb,Main olfactory bulb,MOB,MOB,,,,"MOB: rgb(154,209,189)",154,209,189
+301,151,151,/997/8/567/688/695/698/151/,Olfactory,Olfactory,Accessory olfactory bulb,Accessory olfactory bulb,AOB,AOB,,,,"AOB: rgb(157,240,210)",157,240,210
+302,188,188,/997/8/567/688/695/698/151/188/,Olfactory,Olfactory,"Accessory olfactory bulb, glomerular layer",Accessory olfactory bulb,AOBgl,AOB,gl,glomerular layer,,"AOBgl: rgb(157,240,209)",157,240,209
+303,196,196,/997/8/567/688/695/698/151/196/,Olfactory,Olfactory,"Accessory olfactory bulb, granular layer",Accessory olfactory bulb,AOBgr,AOB,gr,granular layer,,"AOBgr: rgb(149,228,200)",149,228,200
+304,204,204,/997/8/567/688/695/698/151/204/,Olfactory,Olfactory,"Accessory olfactory bulb, mitral layer",Accessory olfactory bulb,AOBmi,AOB,mi,mitral layer,,"AOBmi: rgb(157,239,210)",157,239,210
+305,159,159,/997/8/567/688/695/698/159/,Olfactory,Olfactory,Anterior olfactory nucleus,Anterior olfactory nucleus,AON,AON,,,,"AON: rgb(84,191,148)",84,191,148
+306,589,589,/997/8/567/688/695/698/589/,Olfactory,Olfactory,Taenia tecta,Taenia tecta,TT,TT,,,,"TT: rgb(98,207,159)",98,207,159
+307,597,597,/997/8/567/688/695/698/589/597/,Olfactory,Olfactory,"Taenia tecta, dorsal part",Taenia tecta,TTd,TT,d,dorsal,,"TTd: rgb(97,208,159)",97,208,159
+308,605,605,/997/8/567/688/695/698/589/605/,Olfactory,Olfactory,"Taenia tecta, ventral part",Taenia tecta,TTv,TT,v,ventral,,"TTv: rgb(98,207,158)",98,207,158
+309,814,814,/997/8/567/688/695/698/814/,Olfactory,Olfactory,Dorsal peduncular area,Dorsal peduncular area,DP,DP,,,,"DP: rgb(163,218,163)",163,218,163
+310,961,961,/997/8/567/688/695/698/961/,Olfactory,Olfactory,Piriform area,Piriform area,PIR,PIR,,,,"PIR: rgb(106,202,185)",106,202,185
+311,619,619,/997/8/567/688/695/698/619/,Olfactory,Olfactory,Nucleus of the lateral olfactory tract,Nucleus of the lateral olfactory tract,NLOT,NLOT,,,,"NLOT: rgb(149,227,199)",149,227,199
+312,260,260,/997/8/567/688/695/698/619/260/,Olfactory,Olfactory,"Nucleus of the lateral olfactory tract, molecular layer",Nucleus of the lateral olfactory tract,NLOT1,NLOT,1,molecular layer,,"NLOT1: rgb(149,228,199)",149,228,199
+313,268,268,/997/8/567/688/695/698/619/268/,Olfactory,Olfactory,"Nucleus of the lateral olfactory tract, pyramidal layer",Nucleus of the lateral olfactory tract,NLOT2,NLOT,2,pyramidal layer,,"NLOT2: rgb(149,227,200)",149,227,200
+314,1139,1139,/997/8/567/688/695/698/619/1139/,Olfactory,Olfactory,"Nucleus of the lateral olfactory tract, layer 3",Nucleus of the lateral olfactory tract,NLOT3,NLOT,3,layer 3,,"NLOT3: rgb(148,228,199)",148,228,199
+315,631,631,/997/8/567/688/695/698/631/,Olfactory,Olfactory,Cortical amygdalar area,Cortical amygdalar area,COA,COA,,,,"COA: rgb(96,231,181)",96,231,181
+316,639,639,/997/8/567/688/695/698/631/639/,Olfactory,Olfactory,"Cortical amygdalar area, anterior part",Cortical amygdalar area,COAa,COA,a,anterior,,"COAa: rgb(96,229,183)",96,229,183
+317,647,647,/997/8/567/688/695/698/631/647/,Olfactory,Olfactory,"Cortical amygdalar area, posterior part",Cortical amygdalar area,COAp,COA,p,posterior,,"COAp: rgb(95,231,182)",95,231,182
+318,655,655,/997/8/567/688/695/698/631/647/655/,Olfactory,Olfactory,"Cortical amygdalar area, posterior part, lateral zone",Cortical amygdalar area,COApl,COA,pl,posterolateral,,"COApl: rgb(95,230,183)",95,230,183
+319,663,663,/997/8/567/688/695/698/631/647/663/,Olfactory,Olfactory,"Cortical amygdalar area, posterior part, medial zone",Cortical amygdalar area,COApm,COA,pm,posteromedial,,"COApm: rgb(96,230,181)",96,230,181
+320,788,788,/997/8/567/688/695/698/788/,Olfactory,Olfactory,Piriform-amygdalar area,Piriform-amygdalar area,PAA,PAA,,,,"PAA: rgb(89,217,170)",89,217,170
+321,566,566,/997/8/567/688/695/698/566/,Olfactory,Olfactory,Postpiriform transition area,Postpiriform transition area,TR,TR,,,,"TR: rgb(168,236,210)",168,236,210
+322,1089,1089,/997/8/567/688/695/1089/,Hippocampal,Hippocampal,Hippocampal formation,Hippocampal formation,HPF,HPF,,,,"HPF: rgb(125,205,75)",125,205,75
+323,1080,1080,/997/8/567/688/695/1089/1080/,Hippocampal,Hippocampal,Hippocampal region,Hippocampal region,HIP,HIP,,,,"HIP: rgb(125,208,72)",125,208,72
+324,375,375,/997/8/567/688/695/1089/1080/375/,Hippocampal,Hippocampal,Ammon's horn,Ammon's horn,CA,CA,,,,"CA: rgb(126,208,74)",126,208,74
+325,382,382,/997/8/567/688/695/1089/1080/375/382/,Hippocampal,Hippocampal,Field CA1,Field CA1,CA1,CA1,,,,"CA1: rgb(126,207,75)",126,207,75
+326,423,423,/997/8/567/688/695/1089/1080/375/423/,Hippocampal,Hippocampal,Field CA2,Field CA2,CA2,CA2,,,,"CA2: rgb(125,207,75)",125,207,75
+327,463,463,/997/8/567/688/695/1089/1080/375/463/,Hippocampal,Hippocampal,Field CA3,Field CA3,CA3,CA3,,,,"CA3: rgb(126,207,73)",126,207,73
+328,726,726,/997/8/567/688/695/1089/1080/726/,Hippocampal,Hippocampal,Dentate gyrus,Dentate gyrus,DG,DG,,,,"DG: rgb(125,207,73)",125,207,73
+329,10703,1141,/997/8/567/688/695/1089/1080/726/10703/,Hippocampal,Hippocampal,"Dentate gyrus, molecular layer",Dentate gyrus,DG-mo,DG,mo,molecular layer,,"DG-mo: rgb(123,208,74)",123,208,74
+330,10704,1142,/997/8/567/688/695/1089/1080/726/10704/,Hippocampal,Hippocampal,"Dentate gyrus, polymorph layer",Dentate gyrus,DG-po,DG,po,polymorph layer,,"DG-po: rgb(126,206,74)",126,206,74
+331,632,632,/997/8/567/688/695/1089/1080/726/632/,Hippocampal,Hippocampal,"Dentate gyrus, granule cell layer",Dentate gyrus,DG-sg,DG,sg,granule cell layer,,"DG-sg: rgb(101,168,61)",101,168,61
+332,982,982,/997/8/567/688/695/1089/1080/982/,Hippocampal,Hippocampal,Fasciola cinerea,Fasciola cinerea,FC,FC,,,,"FC: rgb(126,205,74)",126,205,74
+333,19,19,/997/8/567/688/695/1089/1080/19/,Hippocampal,Hippocampal,Induseum griseum,Induseum griseum,IG,IG,,,,"IG: rgb(126,208,75)",126,208,75
+334,822,822,/997/8/567/688/695/1089/822/,Retrohippocampal,Hippocampal,Retrohippocampal region,Retrohippocampal region,RHP,RHP,,,,"RHP: rgb(48,182,37)",48,182,37
+335,909,909,/997/8/567/688/695/1089/822/909/,Retrohippocampal,Hippocampal,Entorhinal area,Entorhinal,ENT,ENT,,,,"ENT: rgb(50,184,34)",50,184,34
+336,918,918,/997/8/567/688/695/1089/822/909/918/,Retrohippocampal,Hippocampal,"Entorhinal area, lateral part",Entorhinal,ENTl,ENT,l,lateral,,"ENTl: rgb(50,181,37)",50,181,37
+337,1121,1121,/997/8/567/688/695/1089/822/909/918/1121/,Retrohippocampal,Hippocampal,"Entorhinal area, lateral part, layer 1",Entorhinal,ENTl1,ENT,l,lateral,1,"ENTl1: rgb(50,183,34)",50,183,34
+338,20,20,/997/8/567/688/695/1089/822/909/918/20/,Retrohippocampal,Hippocampal,"Entorhinal area, lateral part, layer 2",Entorhinal,ENTl2,ENT,l,lateral,2,"ENTl2: rgb(50,184,37)",50,184,37
+339,52,52,/997/8/567/688/695/1089/822/909/918/52/,Retrohippocampal,Hippocampal,"Entorhinal area, lateral part, layer 3",Entorhinal,ENTl3,ENT,l,lateral,3,"ENTl3: rgb(50,183,37)",50,183,37
+340,139,139,/997/8/567/688/695/1089/822/909/918/139/,Retrohippocampal,Hippocampal,"Entorhinal area, lateral part, layer 5",Entorhinal,ENTl5,ENT,l,lateral,5,"ENTl5: rgb(49,184,36)",49,184,36
+341,28,28,/997/8/567/688/695/1089/822/909/918/28/,Retrohippocampal,Hippocampal,"Entorhinal area, lateral part, layer 6a",Entorhinal,ENTl6a,ENT,l,lateral,6a,"ENTl6a: rgb(50,184,36)",50,184,36
+342,926,926,/997/8/567/688/695/1089/822/909/926/,Retrohippocampal,Hippocampal,"Entorhinal area, medial part, dorsal zone",Entorhinal,ENTm,ENT,m,medial,,"ENTm: rgb(49,182,35)",49,182,35
+343,526,526,/997/8/567/688/695/1089/822/909/926/526/,Retrohippocampal,Hippocampal,"Entorhinal area, medial part, dorsal zone, layer 1",Entorhinal,ENTm1,ENT,m,medial,1,"ENTm1: rgb(49,182,37)",49,182,37
+344,543,543,/997/8/567/688/695/1089/822/909/926/543/,Retrohippocampal,Hippocampal,"Entorhinal area, medial part, dorsal zone, layer 2",Entorhinal,ENTm2,ENT,m,medial,2,"ENTm2: rgb(48,184,36)",48,184,36
+345,664,664,/997/8/567/688/695/1089/822/909/926/664/,Retrohippocampal,Hippocampal,"Entorhinal area, medial part, dorsal zone, layer 3",Entorhinal,ENTm3,ENT,m,medial,3,"ENTm3: rgb(49,183,35)",49,183,35
+346,727,727,/997/8/567/688/695/1089/822/909/926/727/,Retrohippocampal,Hippocampal,"Entorhinal area, medial part, dorsal zone, layer 5",Entorhinal,ENTm5,ENT,m,medial,5,"ENTm5: rgb(48,183,36)",48,183,36
+347,743,743,/997/8/567/688/695/1089/822/909/926/743/,Retrohippocampal,Hippocampal,"Entorhinal area, medial part, dorsal zone, layer 6",Entorhinal,ENTm6,ENT,m,medial,6,"ENTm6: rgb(50,182,35)",50,182,35
+348,843,843,/997/8/567/688/695/1089/822/843/,Retrohippocampal,Hippocampal,Parasubiculum,Parasubiculum,PAR,PAR,,,,"PAR: rgb(114,213,104)",114,213,104
+349,1037,1037,/997/8/567/688/695/1089/822/1037/,Retrohippocampal,Hippocampal,Postsubiculum,Postsubiculum,POST,POST,,,,"POST: rgb(71,200,60)",71,200,60
+350,1084,1084,/997/8/567/688/695/1089/822/1084/,Retrohippocampal,Hippocampal,Presubiculum,Presubiculum,PRE,PRE,,,,"PRE: rgb(89,184,71)",89,184,71
+351,502,502,/997/8/567/688/695/1089/822/502/,Retrohippocampal,Hippocampal,Subiculum,Subiculum,SUB,SUB,,,,"SUB: rgb(79,194,68)",79,194,68
+352,484682470,NaN,/997/8/567/688/695/1089/822/484682470/,Retrohippocampal,Hippocampal,Prosubiculum,Prosubiculum,ProS,ProS,,,,"ProS: rgb(87,185,71)",87,185,71
+353,589508447,NaN,/997/8/567/688/695/1089/822/589508447/,Retrohippocampal,Hippocampal,Hippocampo-amygdalar transition area,Hippocampo-amygdalar transition area,HATA,HATA,,,,"HATA: rgb(51,185,49)",51,185,49
+354,484682508,NaN,/997/8/567/688/695/1089/822/484682508/,Retrohippocampal,Hippocampal,Area prostriata,Area prostriata,APr,APr,,,,"APr: rgb(51,185,50)",51,185,50
+355,703,703,/997/8/567/688/703/,Cortical subplate,Cortical subplate,Cortical subplate,Cortical subplate,CTXsp,CTXsp,,,,"CTXsp: rgb(138,217,135)",138,217,135
+356,583,583,/997/8/567/688/703/583/,Cortical subplate,Cortical subplate,Claustrum,Claustrum,CLA,CLA,,,,"CLA: rgb(138,218,134)",138,218,134
+357,942,942,/997/8/567/688/703/942/,Cortical subplate,Cortical subplate,Endopiriform nucleus,Endopiriform nucleus,EP,EP,,,,"EP: rgb(160,238,157)",160,238,157
+358,952,952,/997/8/567/688/703/942/952/,Cortical subplate,Cortical subplate,"Endopiriform nucleus, dorsal part",Endopiriform nucleus,EPd,EP,d,dorsal,,"EPd: rgb(160,238,156)",160,238,156
+359,966,966,/997/8/567/688/703/942/966/,Cortical subplate,Cortical subplate,"Endopiriform nucleus, ventral part",Endopiriform nucleus,EPv,EP,v,ventral,,"EPv: rgb(160,237,157)",160,237,157
+360,131,131,/997/8/567/688/703/131/,Cortical subplate,Cortical subplate,Lateral amygdalar nucleus,Lateral amygdalar nucleus,LA,LA,,,,"LA: rgb(144,235,141)",144,235,141
+361,295,295,/997/8/567/688/703/295/,Cortical subplate,Cortical subplate,Basolateral amygdalar nucleus,Basolateral amygdalar nucleus,BLA,BLA,,,,"BLA: rgb(157,231,156)",157,231,156
+362,303,303,/997/8/567/688/703/295/303/,Cortical subplate,Cortical subplate,"Basolateral amygdalar nucleus, anterior part",Basolateral amygdalar nucleus,BLAa,BLA,a,anterior,,"BLAa: rgb(157,231,155)",157,231,155
+363,311,311,/997/8/567/688/703/295/311/,Cortical subplate,Cortical subplate,"Basolateral amygdalar nucleus, posterior part",Basolateral amygdalar nucleus,BLAp,BLA,p,posterior,,"BLAp: rgb(157,230,156)",157,230,156
+364,451,451,/997/8/567/688/703/295/451/,Cortical subplate,Cortical subplate,"Basolateral amygdalar nucleus, ventral part",Basolateral amygdalar nucleus,BLAv,BLA,v,ventral,,"BLAv: rgb(156,231,156)",156,231,156
+365,319,319,/997/8/567/688/703/319/,Cortical subplate,Cortical subplate,Basomedial amygdalar nucleus,Basomedial amygdalar nucleus,BMA,BMA,,,,"BMA: rgb(132,234,129)",132,234,129
+366,327,327,/997/8/567/688/703/319/327/,Cortical subplate,Cortical subplate,"Basomedial amygdalar nucleus, anterior part",Basomedial amygdalar nucleus,BMAa,BMA,a,anterior,,"BMAa: rgb(132,234,128)",132,234,128
+367,334,334,/997/8/567/688/703/319/334/,Cortical subplate,Cortical subplate,"Basomedial amygdalar nucleus, posterior part",Basomedial amygdalar nucleus,BMAp,BMA,p,posterior,,"BMAp: rgb(132,233,129)",132,233,129
+368,780,780,/997/8/567/688/703/780/,Cortical subplate,Cortical subplate,Posterior amygdalar nucleus,Posterior amygdalar nucleus,PA,PA,,,,"PA: rgb(151,236,147)",151,236,147
+369,623,623,/997/8/567/623/,Cerebral nuclei,Cerebral nuclei,Cerebral nuclei,Cerebral nuclei,CNU,CNU,,,,"CNU: rgb(152,214,248)",152,214,248
+370,477,477,/997/8/567/623/477/,Striatum,Striatum,Striatum,Striatum,STR,STR,,,,"STR: rgb(151,214,249)",151,214,249
+371,485,485,/997/8/567/623/477/485/,Striatum,Striatum,Striatum dorsal region,Striatum,STRd,STR,d,dorsal,,"STRd: rgb(152,214,249)",152,214,249
+372,672,672,/997/8/567/623/477/485/672/,Striatum,Striatum,Caudoputamen,Caudoputamen,CP,CP,,,,"CP: rgb(152,213,249)",152,213,249
+373,493,493,/997/8/567/623/477/493/,Striatum,Striatum,Striatum ventral region,Striatum,STRv,STR,v,ventral,,"STRv: rgb(127,205,247)",127,205,247
+374,56,56,/997/8/567/623/477/493/56/,Striatum,Striatum,Nucleus accumbens,Nucleus accumbens,ACB,ACB,,,,"ACB: rgb(128,205,248)",128,205,248
+375,998,998,/997/8/567/623/477/493/998/,Striatum,Striatum,Fundus of striatum,Fundus of striatum,FS,FS,,,,"FS: rgb(126,205,248)",126,205,248
+376,754,754,/997/8/567/623/477/493/754/,Striatum,Striatum,Olfactory tubercle,Olfactory tubercle,OT,OT,,,,"OT: rgb(127,204,247)",127,204,247
+377,275,275,/997/8/567/623/477/275/,Striatum,Striatum,Lateral septal complex,Lateral septal complex,LSX,LSX,,,,"LSX: rgb(144,202,236)",144,202,236
+378,242,242,/997/8/567/623/477/275/242/,Striatum,Striatum,Lateral septal nucleus,Lateral septal nucleus,LS,LS,,,,"LS: rgb(144,203,237)",144,203,237
+379,250,250,/997/8/567/623/477/275/242/250/,Striatum,Striatum,"Lateral septal nucleus, caudal (caudodorsal) part",Lateral septal nucleus,LSc,LS,c,caudal,,"LSc: rgb(144,203,236)",144,203,236
+380,258,258,/997/8/567/623/477/275/242/258/,Striatum,Striatum,"Lateral septal nucleus, rostral (rostroventral) part",Lateral septal nucleus,LSr,LS,r,rostral,,"LSr: rgb(144,202,237)",144,202,237
+381,266,266,/997/8/567/623/477/275/242/266/,Striatum,Striatum,"Lateral septal nucleus, ventral part",Lateral septal nucleus,LSv,LS,v,ventral,,"LSv: rgb(143,203,237)",143,203,237
+382,310,310,/997/8/567/623/477/275/310/,Striatum,Striatum,Septofimbrial nucleus,Septofimbrial nucleus,SF,SF,,,,"SF: rgb(143,203,236)",143,203,236
+383,333,333,/997/8/567/623/477/275/333/,Striatum,Striatum,Septohippocampal nucleus,Septohippocampal nucleus,SH,SH,,,,"SH: rgb(143,202,237)",143,202,237
+384,278,278,/997/8/567/623/477/278/,Striatum,Striatum,Striatum-like amygdalar nuclei,Striatum-like amygdalar nuclei,sAMY,sAMY,,,,"sAMY: rgb(128,192,225)",128,192,225
+385,23,23,/997/8/567/623/477/278/23/,Striatum,Striatum,Anterior amygdalar area,Anterior amygdalar area,AAA,AAA,,,,"AAA: rgb(128,192,226)",128,192,226
+386,292,292,/997/8/567/623/477/278/292/,Striatum,Striatum,Bed nucleus of the accessory olfactory tract,Bed nucleus of the accessory olfactory tract,BA,BA,,,,"BA: rgb(128,191,226)",128,191,226
+387,536,536,/997/8/567/623/477/278/536/,Striatum,Striatum,Central amygdalar nucleus,Central amygdalar nucleus,CEA,CEA,,,,"CEA: rgb(126,192,226)",126,192,226
+388,544,544,/997/8/567/623/477/278/536/544/,Striatum,Striatum,"Central amygdalar nucleus, capsular part",Central amygdalar nucleus,CEAc,CEA,c,capsular,,"CEAc: rgb(128,191,224)",128,191,224
+389,551,551,/997/8/567/623/477/278/536/551/,Striatum,Striatum,"Central amygdalar nucleus, lateral part",Central amygdalar nucleus,CEAl,CEA,l,lateral,,"CEAl: rgb(128,190,225)",128,190,225
+390,559,559,/997/8/567/623/477/278/536/559/,Striatum,Striatum,"Central amygdalar nucleus, medial part",Central amygdalar nucleus,CEAm,CEA,m,medial,,"CEAm: rgb(127,192,224)",127,192,224
+391,1105,1105,/997/8/567/623/477/278/1105/,Striatum,Striatum,Intercalated amygdalar nucleus,Intercalated amygdalar nucleus,IA,IA,,,,"IA: rgb(128,190,226)",128,190,226
+392,403,403,/997/8/567/623/477/278/403/,Striatum,Striatum,Medial amygdalar nucleus,Medial amygdalar nucleus,MEA,MEA,,,,"MEA: rgb(128,191,225)",128,191,225
+393,803,803,/997/8/567/623/803/,Pallidum,Pallidum,Pallidum,Pallidum,PAL,PAL,,,,"PAL: rgb(133,153,204)",133,153,204
+394,818,818,/997/8/567/623/803/818/,Pallidum,Pallidum,"Pallidum, dorsal region",Pallidum,PALd,PAL,d,dorsal,,"PALd: rgb(133,153,203)",133,153,203
+395,1022,1022,/997/8/567/623/803/818/1022/,Pallidum,Pallidum,"Globus pallidus, external segment",Globus pallidus,GPe,GP,e,external,,"GPe: rgb(133,152,204)",133,152,204
+396,1031,1031,/997/8/567/623/803/818/1031/,Pallidum,Pallidum,"Globus pallidus, internal segment",Globus pallidus,GPi,GP,i,internal,,"GPi: rgb(132,153,204)",132,153,204
+397,835,835,/997/8/567/623/803/835/,Pallidum,Pallidum,"Pallidum, ventral region","Pallidum, ventral region",PALv,PAL,v,ventral,,"PALv: rgb(162,176,216)",162,176,216
+398,342,342,/997/8/567/623/803/835/342/,Pallidum,Pallidum,Substantia innominata,Substantia innominata,SI,SI,,,,"SI: rgb(162,177,215)",162,177,215
+399,298,298,/997/8/567/623/803/835/298/,Pallidum,Pallidum,Magnocellular nucleus,Magnocellular nucleus,MA,MA,,,,"MA: rgb(162,177,216)",162,177,216
+400,826,826,/997/8/567/623/803/826/,Pallidum,Pallidum,"Pallidum, medial region",Pallidum,PALm,PAL,m,medial,,"PALm: rgb(149,167,211)",149,167,211
+401,904,904,/997/8/567/623/803/826/904/,Pallidum,Pallidum,Medial septal complex,Medial septal complex,MSC,MSC,,,,"MSC: rgb(150,166,210)",150,166,210
+402,564,564,/997/8/567/623/803/826/904/564/,Pallidum,Pallidum,Medial septal nucleus,Medial septal nucleus,MS,MS,,,,"MS: rgb(150,167,211)",150,167,211
+403,596,596,/997/8/567/623/803/826/904/596/,Pallidum,Pallidum,Diagonal band nucleus,Diagonal band nucleus,NDB,NDB,,,,"NDB: rgb(150,166,211)",150,166,211
+404,581,581,/997/8/567/623/803/826/581/,Pallidum,Pallidum,Triangular nucleus of septum,Triangular nucleus of septum,TRS,TRS,,,,"TRS: rgb(150,167,210)",150,167,210
+405,809,809,/997/8/567/623/803/809/,Pallidum,Pallidum,"Pallidum, caudal region",Pallidum,PALc,PAL,c,caudal,,"PALc: rgb(177,191,223)",177,191,223
+406,351,351,/997/8/567/623/803/809/351/,Pallidum,Pallidum,Bed nuclei of the stria terminalis,Bed nuclei of the stria terminalis,BST,BST,,,,"BST: rgb(179,192,222)",179,192,222
+407,287,287,/997/8/567/623/803/809/287/,Pallidum,Pallidum,Bed nucleus of the anterior commissure,Bed nucleus of the anterior commissure,BAC,BAC,,,,"BAC: rgb(179,192,223)",179,192,223
+408,343,343,/997/8/343/,Brain stem,Brain stem,Brain stem,Brain stem,BS,BS,,,,"BS: rgb(255,112,128)",255,112,128
+409,1129,1129,/997/8/343/1129/,Interbrain,Interbrain,Interbrain,Interbrain,IB,IB,,,,"IB: rgb(255,112,127)",255,112,127
+410,549,549,/997/8/343/1129/549/,Thalamus,Thalamus,Thalamus,Thalamus,TH,TH,,,,"TH: rgb(255,111,128)",255,111,128
+411,864,864,/997/8/343/1129/549/864/,Thalamus,"Thalamus, sensory-motor cortex related","Thalamus, sensory-motor cortex related",Thalamus,DORsm,DOR,sm,sensory-motor cortex related,,"DORsm: rgb(254,126,132)",254,126,132
+412,637,637,/997/8/343/1129/549/864/637/,Thalamus,"Thalamus, sensory-motor cortex related",Ventral group of the dorsal thalamus,Ventral group of the dorsal thalamus,VENT,VENT,,,,"VENT: rgb(255,128,130)",255,128,130
+413,629,629,/997/8/343/1129/549/864/637/629/,Thalamus,"Thalamus, sensory-motor cortex related",Ventral anterior-lateral complex of the thalamus,Ventral anterior-lateral complex of the thalamus,VAL,VAL,,,,"VAL: rgb(253,126,132)",253,126,132
+414,685,685,/997/8/343/1129/549/864/637/685/,Thalamus,"Thalamus, sensory-motor cortex related",Ventral medial nucleus of the thalamus,Ventral medial nucleus of the thalamus,VM,VM,,,,"VM: rgb(255,126,132)",255,126,132
+415,709,709,/997/8/343/1129/549/864/637/709/,Thalamus,"Thalamus, sensory-motor cortex related",Ventral posterior complex of the thalamus,Ventral posterior complex of the thalamus,VP,VP,,,,"VP: rgb(255,128,129)",255,128,129
+416,718,718,/997/8/343/1129/549/864/637/709/718/,Thalamus,"Thalamus, sensory-motor cortex related",Ventral posterolateral nucleus of the thalamus,Ventral posterolateral nucleus of the thalamus,VPL,VPL,,,,"VPL: rgb(253,128,132)",253,128,132
+417,725,725,/997/8/343/1129/549/864/637/709/725/,Thalamus,"Thalamus, sensory-motor cortex related","Ventral posterolateral nucleus of the thalamus, parvicellular part",Ventral posterolateral nucleus of the thalamus,VPLpc,VPL,pc,parvicellular,,"VPLpc: rgb(255,127,130)",255,127,130
+418,733,733,/997/8/343/1129/549/864/637/709/733/,Thalamus,"Thalamus, sensory-motor cortex related",Ventral posteromedial nucleus of the thalamus,Ventral posteromedial nucleus of the thalamus,VPM,VPM,,,,"VPM: rgb(255,126,131)",255,126,131
+419,741,741,/997/8/343/1129/549/864/637/709/741/,Thalamus,"Thalamus, sensory-motor cortex related","Ventral posteromedial nucleus of the thalamus, parvicellular part",Ventral posteromedial nucleus of the thalamus,VPMpc,VPM,pc,parvicellular,,"VPMpc: rgb(254,128,130)",254,128,130
+420,563807435,NaN,/997/8/343/1129/549/864/637/563807435/,Thalamus,"Thalamus, sensory-motor cortex related",Posterior triangular thalamic nucleus,Posterior triangular thalamic nucleus,PoT,PoT,,,,"PoT: rgb(255,126,130)",255,126,130
+421,406,406,/997/8/343/1129/549/864/406/,Thalamus,"Thalamus, sensory-motor cortex related",Subparafascicular nucleus,Subparafascicular nucleus,SPF,SPF,,,,"SPF: rgb(255,128,131)",255,128,131
+422,414,414,/997/8/343/1129/549/864/406/414/,Thalamus,"Thalamus, sensory-motor cortex related","Subparafascicular nucleus, magnocellular part",Subparafascicular nucleus,SPFm,SPF,m,magnocellular,,"SPFm: rgb(255,127,132)",255,127,132
+423,422,422,/997/8/343/1129/549/864/406/422/,Thalamus,"Thalamus, sensory-motor cortex related","Subparafascicular nucleus, parvicellular part",Subparafascicular nucleus,SPFp,SPF,p,parvicellular,,"SPFp: rgb(254,128,132)",254,128,132
+424,609,609,/997/8/343/1129/549/864/609/,Thalamus,"Thalamus, sensory-motor cortex related",Subparafascicular area,Subparafascicular area,SPA,SPA,,,,"SPA: rgb(254,127,131)",254,127,131
+425,1044,1044,/997/8/343/1129/549/864/1044/,Thalamus,"Thalamus, sensory-motor cortex related",Peripeduncular nucleus,Peripeduncular nucleus,PP,PP,,,,"PP: rgb(253,127,132)",253,127,132
+426,1008,1008,/997/8/343/1129/549/864/1008/,Thalamus,"Thalamus, sensory-motor cortex related","Geniculate group, dorsal thalamus","Geniculate group, dorsal thalamus",GENd,GENd,,,,"GENd: rgb(253,128,131)",253,128,131
+427,475,475,/997/8/343/1129/549/864/1008/475/,Thalamus,"Thalamus, sensory-motor cortex related",Medial geniculate complex,Medial geniculate complex,MG,MG,,,,"MG: rgb(255,127,131)",255,127,131
+428,1072,1072,/997/8/343/1129/549/864/1008/475/1072/,Thalamus,"Thalamus, sensory-motor cortex related","Medial geniculate complex, dorsal part",Medial geniculate complex,MGd,MG,d,dorsal,,"MGd: rgb(254,127,130)",254,127,130
+429,1079,1079,/997/8/343/1129/549/864/1008/475/1079/,Thalamus,"Thalamus, sensory-motor cortex related","Medial geniculate complex, ventral part",Medial geniculate complex,MGv,MG,v,ventral,,"MGv: rgb(254,126,131)",254,126,131
+430,1088,1088,/997/8/343/1129/549/864/1008/475/1088/,Thalamus,"Thalamus, sensory-motor cortex related","Medial geniculate complex, medial part",Medial geniculate complex,MGm,MG,m,medial,,"MGm: rgb(253,127,131)",253,127,131
+431,170,170,/997/8/343/1129/549/864/1008/170/,Thalamus,"Thalamus, sensory-motor cortex related",Dorsal part of the lateral geniculate complex,Dorsal part of the lateral geniculate complex,LGd,LGd,,,,"LGd: rgb(255,128,132)",255,128,132
+432,496345664,NaN,/997/8/343/1129/549/864/1008/170/496345664/,Thalamus,"Thalamus, sensory-motor cortex related","Dorsal part of the lateral geniculate complex, shell",Dorsal part of the lateral geniculate complex,LGd-sh,LGd,sh,shell,,"LGd-sh: rgb(254,128,131)",254,128,131
+433,496345668,NaN,/997/8/343/1129/549/864/1008/170/496345668/,Thalamus,"Thalamus, sensory-motor cortex related","Dorsal part of the lateral geniculate complex, core",Dorsal part of the lateral geniculate complex,LGd-co,LGd,co,core,,"LGd-co: rgb(254,127,132)",254,127,132
+434,496345672,NaN,/997/8/343/1129/549/864/1008/170/496345672/,Thalamus,"Thalamus, sensory-motor cortex related","Dorsal part of the lateral geniculate complex, ipsilateral zone",Dorsal part of the lateral geniculate complex,LGd-ip,LGd,ip,ipsilateral zone,,"LGd-ip: rgb(253,128,130)",253,128,130
+435,856,856,/997/8/343/1129/549/856/,Thalamus,"Thalamus, polymodal association cortex related","Thalamus, polymodal association cortex related",Thalamus,DORpm,DOR,pm,polymodal association cortex related,,"DORpm: rgb(254,144,156)",254,144,156
+436,138,138,/997/8/343/1129/549/856/138/,Thalamus,"Thalamus, polymodal association cortex related",Lateral group of the dorsal thalamus,Lateral group of the dorsal thalamus,LAT,LAT,,,,"LAT: rgb(254,143,159)",254,143,159
+437,218,218,/997/8/343/1129/549/856/138/218/,Thalamus,"Thalamus, polymodal association cortex related",Lateral posterior nucleus of the thalamus,Lateral posterior nucleus of the thalamus,LP,LP,,,,"LP: rgb(254,144,157)",254,144,157
+438,1020,1020,/997/8/343/1129/549/856/138/1020/,Thalamus,"Thalamus, polymodal association cortex related",Posterior complex of the thalamus,Posterior complex of the thalamus,PO,PO,,,,"PO: rgb(255,142,156)",255,142,156
+439,1029,1029,/997/8/343/1129/549/856/138/1029/,Thalamus,"Thalamus, polymodal association cortex related",Posterior limiting nucleus of the thalamus,Posterior limiting nucleus of the thalamus,POL,POL,,,,"POL: rgb(255,141,157)",255,141,157
+440,325,325,/997/8/343/1129/549/856/138/325/,Thalamus,"Thalamus, polymodal association cortex related",Suprageniculate nucleus,Suprageniculate nucleus,SGN,SGN,,,,"SGN: rgb(255,142,157)",255,142,157
+441,560581551,NaN,/997/8/343/1129/549/856/138/560581551/,Thalamus,"Thalamus, polymodal association cortex related",Ethmoid nucleus of the thalamus,Ethmoid nucleus of the thalamus,Eth,Eth,,,,"Eth: rgb(253,143,156)",253,143,156
+442,239,239,/997/8/343/1129/549/856/239/,Thalamus,"Thalamus, polymodal association cortex related",Anterior group of the dorsal thalamus,Anterior group of the dorsal thalamus,ATN,ATN,,,,"ATN: rgb(254,142,159)",254,142,159
+443,255,255,/997/8/343/1129/549/856/239/255/,Thalamus,"Thalamus, polymodal association cortex related",Anteroventral nucleus of thalamus,Anteroventral nucleus of thalamus,AV,AV,,,,"AV: rgb(253,144,158)",253,144,158
+444,127,127,/997/8/343/1129/549/856/239/127/,Thalamus,"Thalamus, polymodal association cortex related",Anteromedial nucleus,Anteromedial nucleus,AM,AM,,,,"AM: rgb(254,144,158)",254,144,158
+445,1096,1096,/997/8/343/1129/549/856/239/127/1096/,Thalamus,"Thalamus, polymodal association cortex related","Anteromedial nucleus, dorsal part",Anteromedial nucleus,AMd,AM,d,dorsal,,"AMd: rgb(253,141,159)",253,141,159
+446,1104,1104,/997/8/343/1129/549/856/239/127/1104/,Thalamus,"Thalamus, polymodal association cortex related","Anteromedial nucleus, ventral part",Anteromedial nucleus,AMv,AM,v,ventral,,"AMv: rgb(252,144,157)",252,144,157
+447,64,64,/997/8/343/1129/549/856/239/64/,Thalamus,"Thalamus, polymodal association cortex related",Anterodorsal nucleus,Anterodorsal nucleus,AD,AD,,,,"AD: rgb(255,143,158)",255,143,158
+448,1120,1120,/997/8/343/1129/549/856/239/1120/,Thalamus,"Thalamus, polymodal association cortex related",Interanteromedial nucleus of the thalamus,Interanteromedial nucleus of the thalamus,IAM,IAM,,,,"IAM: rgb(254,142,156)",254,142,156
+449,1113,1113,/997/8/343/1129/549/856/239/1113/,Thalamus,"Thalamus, polymodal association cortex related",Interanterodorsal nucleus of the thalamus,Interanterodorsal nucleus of the thalamus,IAD,IAD,,,,"IAD: rgb(252,142,159)",252,142,159
+450,155,155,/997/8/343/1129/549/856/239/155/,Thalamus,"Thalamus, polymodal association cortex related",Lateral dorsal nucleus of thalamus,Lateral dorsal nucleus of thalamus,LD,LD,,,,"LD: rgb(255,144,157)",255,144,157
+451,444,444,/997/8/343/1129/549/856/444/,Thalamus,"Thalamus, polymodal association cortex related",Medial group of the dorsal thalamus,Medial group of the dorsal thalamus,MED,MED,,,,"MED: rgb(255,144,156)",255,144,156
+452,59,59,/997/8/343/1129/549/856/444/59/,Thalamus,"Thalamus, polymodal association cortex related",Intermediodorsal nucleus of the thalamus,Intermediodorsal nucleus of the thalamus,IMD,IMD,,,,"IMD: rgb(254,144,159)",254,144,159
+453,362,362,/997/8/343/1129/549/856/444/362/,Thalamus,"Thalamus, polymodal association cortex related",Mediodorsal nucleus of thalamus,Mediodorsal nucleus of thalamus,MD,MD,,,,"MD: rgb(253,144,157)",253,144,157
+454,366,366,/997/8/343/1129/549/856/444/366/,Thalamus,"Thalamus, polymodal association cortex related",Submedial nucleus of the thalamus,Submedial nucleus of the thalamus,SMT,SMT,,,,"SMT: rgb(253,142,159)",253,142,159
+455,1077,1077,/997/8/343/1129/549/856/444/1077/,Thalamus,"Thalamus, polymodal association cortex related",Perireunensis nucleus,Perireunensis nucleus,PR,PR,,,,"PR: rgb(253,144,156)",253,144,156
+456,571,571,/997/8/343/1129/549/856/571/,Thalamus,"Thalamus, polymodal association cortex related",Midline group of the dorsal thalamus,Midline group of the dorsal thalamus,MTN,MTN,,,,"MTN: rgb(254,142,157)",254,142,157
+457,149,149,/997/8/343/1129/549/856/571/149/,Thalamus,"Thalamus, polymodal association cortex related",Paraventricular nucleus of the thalamus,Paraventricular nucleus of the thalamus,PVT,PVT,,,,"PVT: rgb(254,143,158)",254,143,158
+458,15,15,/997/8/343/1129/549/856/571/15/,Thalamus,"Thalamus, polymodal association cortex related",Parataenial nucleus,Parataenial nucleus,PT,PT,,,,"PT: rgb(255,144,159)",255,144,159
+459,181,181,/997/8/343/1129/549/856/571/181/,Thalamus,"Thalamus, polymodal association cortex related",Nucleus of reuniens,Nucleus of reuniens,RE,RE,,,,"RE: rgb(253,144,159)",253,144,159
+460,560581559,NaN,/997/8/343/1129/549/856/571/560581559/,Thalamus,"Thalamus, polymodal association cortex related",Xiphoid thalamic nucleus,Xiphoid thalamic nucleus,Xi,Xi,,,,"Xi: rgb(252,143,159)",252,143,159
+461,51,51,/997/8/343/1129/549/856/51/,Thalamus,"Thalamus, polymodal association cortex related",Intralaminar nuclei of the dorsal thalamus,Intralaminar nuclei of the dorsal thalamus,ILM,ILM,,,,"ILM: rgb(255,143,159)",255,143,159
+462,189,189,/997/8/343/1129/549/856/51/189/,Thalamus,"Thalamus, polymodal association cortex related",Rhomboid nucleus,Rhomboid nucleus,RH,RH,,,,"RH: rgb(255,142,158)",255,142,158
+463,599,599,/997/8/343/1129/549/856/51/599/,Thalamus,"Thalamus, polymodal association cortex related",Central medial nucleus of the thalamus,Central medial nucleus of the thalamus,CM,CM,,,,"CM: rgb(253,142,158)",253,142,158
+464,907,907,/997/8/343/1129/549/856/51/907/,Thalamus,"Thalamus, polymodal association cortex related",Paracentral nucleus,Paracentral nucleus,PCN,PCN,,,,"PCN: rgb(254,141,159)",254,141,159
+465,575,575,/997/8/343/1129/549/856/51/575/,Thalamus,"Thalamus, polymodal association cortex related",Central lateral nucleus of the thalamus,Central lateral nucleus of the thalamus,CL,CL,,,,"CL: rgb(253,143,157)",253,143,157
+466,930,930,/997/8/343/1129/549/856/51/930/,Thalamus,"Thalamus, polymodal association cortex related",Parafascicular nucleus,Parafascicular nucleus,PF,PF,,,,"PF: rgb(252,144,158)",252,144,158
+467,560581563,NaN,/997/8/343/1129/549/856/51/560581563/,Thalamus,"Thalamus, polymodal association cortex related",Posterior intralaminar thalamic nucleus,Posterior intralaminar thalamic nucleus,PIL,PIL,,,,"PIL: rgb(254,141,158)",254,141,158
+468,262,262,/997/8/343/1129/549/856/262/,Thalamus,"Thalamus, polymodal association cortex related",Reticular nucleus of the thalamus,Reticular nucleus of the thalamus,RT,RT,,,,"RT: rgb(253,143,159)",253,143,159
+469,1014,1014,/997/8/343/1129/549/856/1014/,Thalamus,"Thalamus, polymodal association cortex related","Geniculate group, ventral thalamus","Geniculate group, ventral thalamus",GENv,GENv,,,,"GENv: rgb(253,142,157)",253,142,157
+470,27,27,/997/8/343/1129/549/856/1014/27/,Thalamus,"Thalamus, polymodal association cortex related",Intergeniculate leaflet of the lateral geniculate complex,Intergeniculate leaflet of the lateral geniculate complex,IGL,IGL,,,,"IGL: rgb(255,144,158)",255,144,158
+471,563807439,NaN,/997/8/343/1129/549/856/1014/563807439/,Thalamus,"Thalamus, polymodal association cortex related",Intermediate geniculate nucleus,Intermediate geniculate nucleus,IntG,IntG,,,,"IntG: rgb(254,141,157)",254,141,157
+472,178,178,/997/8/343/1129/549/856/1014/178/,Thalamus,"Thalamus, polymodal association cortex related",Ventral part of the lateral geniculate complex,Ventral part of the lateral geniculate complex,LGv,LGv,,,,"LGv: rgb(255,142,159)",255,142,159
+473,321,321,/997/8/343/1129/549/856/1014/321/,Thalamus,"Thalamus, polymodal association cortex related",Subgeniculate nucleus,Subgeniculate nucleus,SubG,SubG,,,,"SubG: rgb(253,143,158)",253,143,158
+474,958,958,/997/8/343/1129/549/856/958/,Thalamus,"Thalamus, polymodal association cortex related",Epithalamus,Epithalamus,EPI,EPI,,,,"EPI: rgb(252,143,158)",252,143,158
+475,483,483,/997/8/343/1129/549/856/958/483/,Thalamus,"Thalamus, polymodal association cortex related",Medial habenula,Medial habenula,MH,MH,,,,"MH: rgb(255,141,159)",255,141,159
+476,186,186,/997/8/343/1129/549/856/958/186/,Thalamus,"Thalamus, polymodal association cortex related",Lateral habenula,Lateral habenula,LH,LH,,,,"LH: rgb(255,143,157)",255,143,157
+477,1097,1097,/997/8/343/1129/1097/,Hypothalamus,Hypothalamus,Hypothalamus,Hypothalamus,HY,HY,,,,"HY: rgb(230,68,56)",230,68,56
+478,157,157,/997/8/343/1129/1097/157/,Hypothalamus,Hypothalamus,Periventricular zone,Periventricular zone,PVZ,PVZ,,,,"PVZ: rgb(255,92,78)",255,92,78
+479,390,390,/997/8/343/1129/1097/157/390/,Hypothalamus,Hypothalamus,Supraoptic nucleus,Supraoptic nucleus,SO,SO,,,,"SO: rgb(254,91,80)",254,91,80
+480,332,332,/997/8/343/1129/1097/157/332/,Hypothalamus,Hypothalamus,Accessory supraoptic group,Accessory supraoptic group,ASO,ASO,,,,"ASO: rgb(254,93,78)",254,93,78
+481,38,38,/997/8/343/1129/1097/157/38/,Hypothalamus,Hypothalamus,Paraventricular hypothalamic nucleus,Paraventricular hypothalamic nucleus,PVH,PVH,,,,"PVH: rgb(255,93,79)",255,93,79
+482,30,30,/997/8/343/1129/1097/157/30/,Hypothalamus,Hypothalamus,"Periventricular hypothalamic nucleus, anterior part","Periventricular hypothalamic nucleus, anterior part",PVa,PVa,,,,"PVa: rgb(255,93,80)",255,93,80
+483,118,118,/997/8/343/1129/1097/157/118/,Hypothalamus,Hypothalamus,"Periventricular hypothalamic nucleus, intermediate part","Periventricular hypothalamic nucleus, intermediate part",PVi,PVi,,,,"PVi: rgb(253,93,80)",253,93,80
+484,223,223,/997/8/343/1129/1097/157/223/,Hypothalamus,Hypothalamus,Arcuate hypothalamic nucleus,Arcuate hypothalamic nucleus,ARH,ARH,,,,"ARH: rgb(255,91,79)",255,91,79
+485,141,141,/997/8/343/1129/1097/141/,Hypothalamus,Hypothalamus,Periventricular region,Periventricular region,PVR,PVR,,,,"PVR: rgb(255,84,70)",255,84,70
+486,72,72,/997/8/343/1129/1097/141/72/,Hypothalamus,Hypothalamus,Anterodorsal preoptic nucleus,Anterodorsal preoptic nucleus,ADP,ADP,,,,"ADP: rgb(255,85,71)",255,85,71
+487,263,263,/997/8/343/1129/1097/141/263/,Hypothalamus,Hypothalamus,Anteroventral preoptic nucleus,Anteroventral preoptic nucleus,AVP,AVP,,,,"AVP: rgb(254,84,71)",254,84,71
+488,272,272,/997/8/343/1129/1097/141/272/,Hypothalamus,Hypothalamus,Anteroventral periventricular nucleus,Anteroventral periventricular nucleus,AVPV,AVPV,,,,"AVPV: rgb(254,84,70)",254,84,70
+489,830,830,/997/8/343/1129/1097/141/830/,Hypothalamus,Hypothalamus,Dorsomedial nucleus of the hypothalamus,Dorsomedial nucleus of the hypothalamus,DMH,DMH,,,,"DMH: rgb(254,84,69)",254,84,69
+490,452,452,/997/8/343/1129/1097/141/452/,Hypothalamus,Hypothalamus,Median preoptic nucleus,Median preoptic nucleus,MEPO,MEPO,,,,"MEPO: rgb(255,84,69)",255,84,69
+491,523,523,/997/8/343/1129/1097/141/523/,Hypothalamus,Hypothalamus,Medial preoptic area,Medial preoptic area,MPO,MPO,,,,"MPO: rgb(255,83,70)",255,83,70
+492,763,763,/997/8/343/1129/1097/141/763/,Hypothalamus,Hypothalamus,Vascular organ of the lamina terminalis,Vascular organ of the lamina terminalis,OV,OV,,,,"OV: rgb(253,84,71)",253,84,71
+493,914,914,/997/8/343/1129/1097/141/914/,Hypothalamus,Hypothalamus,Posterodorsal preoptic nucleus,Posterodorsal preoptic nucleus,PD,PD,,,,"PD: rgb(254,83,70)",254,83,70
+494,1109,1109,/997/8/343/1129/1097/141/1109/,Hypothalamus,Hypothalamus,Parastrial nucleus,Parastrial nucleus,PS,PS,,,,"PS: rgb(253,84,70)",253,84,70
+495,126,126,/997/8/343/1129/1097/141/126/,Hypothalamus,Hypothalamus,"Periventricular hypothalamic nucleus, posterior part",Periventricular hypothalamic nucleus,PVp,PV,p,posterior,,"PVp: rgb(255,84,71)",255,84,71
+496,133,133,/997/8/343/1129/1097/141/133/,Hypothalamus,Hypothalamus,"Periventricular hypothalamic nucleus, preoptic part",Periventricular hypothalamic nucleus,PVpo,PV,po,preoptic,,"PVpo: rgb(254,85,71)",254,85,71
+497,347,347,/997/8/343/1129/1097/141/347/,Hypothalamus,Hypothalamus,Subparaventricular zone,Subparaventricular zone,SBPV,SBPV,,,,"SBPV: rgb(253,85,71)",253,85,71
+498,286,286,/997/8/343/1129/1097/141/286/,Hypothalamus,Hypothalamus,Suprachiasmatic nucleus,Suprachiasmatic nucleus,SCH,SCH,,,,"SCH: rgb(255,85,69)",255,85,69
+499,338,338,/997/8/343/1129/1097/141/338/,Hypothalamus,Hypothalamus,Subfornical organ,Subfornical organ,SFO,SFO,,,,"SFO: rgb(255,83,71)",255,83,71
+500,576073699,NaN,/997/8/343/1129/1097/141/576073699/,Hypothalamus,Hypothalamus,Ventromedial preoptic nucleus,Ventromedial preoptic nucleus,VMPO,VMPO,,,,"VMPO: rgb(253,85,69)",253,85,69
+501,689,689,/997/8/343/1129/1097/141/689/,Hypothalamus,Hypothalamus,Ventrolateral preoptic nucleus,Ventrolateral preoptic nucleus,VLPO,VLPO,,,,"VLPO: rgb(254,85,70)",254,85,70
+502,467,467,/997/8/343/1129/1097/467/,Hypothalamus,Hypothalamus,Hypothalamic medial zone,Hypothalamic medial zone,MEZ,MEZ,,,,"MEZ: rgb(255,76,60)",255,76,60
+503,88,88,/997/8/343/1129/1097/467/88/,Hypothalamus,Hypothalamus,Anterior hypothalamic nucleus,Anterior hypothalamic nucleus,AHN,AHN,,,,"AHN: rgb(255,75,62)",255,75,62
+504,331,331,/997/8/343/1129/1097/467/331/,Hypothalamus,Hypothalamus,Mammillary body,Mammillary body,MBO,MBO,,,,"MBO: rgb(254,76,61)",254,76,61
+505,210,210,/997/8/343/1129/1097/467/331/210/,Hypothalamus,Hypothalamus,Lateral mammillary nucleus,Lateral mammillary nucleus,LM,LM,,,,"LM: rgb(255,75,61)",255,75,61
+506,491,491,/997/8/343/1129/1097/467/331/491/,Hypothalamus,Hypothalamus,Medial mammillary nucleus,Medial mammillary nucleus,MM,MM,,,,"MM: rgb(255,74,62)",255,74,62
+507,732,732,/997/8/343/1129/1097/467/331/491/732/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, median part",Medial mammillary nucleus,MMme,MM,me,median,,"MMme: rgb(253,75,62)",253,75,62
+508,606826647,NaN,/997/8/343/1129/1097/467/331/491/606826647/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, lateral part",Medial mammillary nucleus,MMl,MM,l,lateral,,"MMl: rgb(252,75,62)",252,75,62
+509,606826651,NaN,/997/8/343/1129/1097/467/331/491/606826651/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, medial part",Medial mammillary nucleus,MMm,MM,m,medial,,"MMm: rgb(254,74,60)",254,74,60
+510,606826655,NaN,/997/8/343/1129/1097/467/331/491/606826655/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, posterior part",Medial mammillary nucleus,MMp,MM,p,posterior,,"MMp: rgb(254,73,61)",254,73,61
+511,606826659,NaN,/997/8/343/1129/1097/467/331/491/606826659/,Hypothalamus,Hypothalamus,"Medial mammillary nucleus, dorsal part",Medial mammillary nucleus,MMd,MM,d,dorsal,,"MMd: rgb(253,74,61)",253,74,61
+512,525,525,/997/8/343/1129/1097/467/331/525/,Hypothalamus,Hypothalamus,Supramammillary nucleus,Supramammillary nucleus,SUM,SUM,,,,"SUM: rgb(255,73,61)",255,73,61
+513,557,557,/997/8/343/1129/1097/467/331/557/,Hypothalamus,Hypothalamus,Tuberomammillary nucleus,Tuberomammillary nucleus,TM,TM,,,,"TM: rgb(255,75,60)",255,75,60
+514,1126,1126,/997/8/343/1129/1097/467/331/557/1126/,Hypothalamus,Hypothalamus,"Tuberomammillary nucleus, dorsal part",Tuberomammillary nucleus,TMd,TM,d,dorsal,,"TMd: rgb(252,76,61)",252,76,61
+515,1,1,/997/8/343/1129/1097/467/331/557/1/,Hypothalamus,Hypothalamus,"Tuberomammillary nucleus, ventral part",Tuberomammillary nucleus,TMv,TM,v,ventral,,"TMv: rgb(255,76,62)",255,76,62
+516,515,515,/997/8/343/1129/1097/467/515/,Hypothalamus,Hypothalamus,Medial preoptic nucleus,Medial preoptic nucleus,MPN,MPN,,,,"MPN: rgb(253,76,62)",253,76,62
+517,980,980,/997/8/343/1129/1097/467/980/,Hypothalamus,Hypothalamus,Dorsal premammillary nucleus,Premammillary nucleus,PMd,PM,d,dorsal,,"PMd: rgb(252,76,62)",252,76,62
+518,1004,1004,/997/8/343/1129/1097/467/1004/,Hypothalamus,Hypothalamus,Ventral premammillary nucleus,Premammillary nucleus,PMv,PM,v,ventral,,"PMv: rgb(255,75,59)",255,75,59
+519,63,63,/997/8/343/1129/1097/467/63/,Hypothalamus,Hypothalamus,"Paraventricular hypothalamic nucleus, descending division","Paraventricular hypothalamic nucleus, descending division",PVHd,PVHd,,,,"PVHd: rgb(255,76,61)",255,76,61
+520,693,693,/997/8/343/1129/1097/467/693/,Hypothalamus,Hypothalamus,Ventromedial hypothalamic nucleus,Ventromedial hypothalamic nucleus,VMH,VMH,,,,"VMH: rgb(255,74,61)",255,74,61
+521,946,946,/997/8/343/1129/1097/467/946/,Hypothalamus,Hypothalamus,Posterior hypothalamic nucleus,Posterior hypothalamic nucleus,PH,PH,,,,"PH: rgb(253,75,60)",253,75,60
+522,290,290,/997/8/343/1129/1097/290/,Hypothalamus,Hypothalamus,Hypothalamic lateral zone,Hypothalamic lateral zone,LZ,LZ,,,,"LZ: rgb(241,72,59)",241,72,59
+523,194,194,/997/8/343/1129/1097/290/194/,Hypothalamus,Hypothalamus,Lateral hypothalamic area,Lateral hypothalamic area,LHA,LHA,,,,"LHA: rgb(242,72,58)",242,72,58
+524,226,226,/997/8/343/1129/1097/290/226/,Hypothalamus,Hypothalamus,Lateral preoptic area,Lateral preoptic area,LPO,LPO,,,,"LPO: rgb(242,71,59)",242,71,59
+525,356,356,/997/8/343/1129/1097/290/356/,Hypothalamus,Hypothalamus,Preparasubthalamic nucleus,Preparasubthalamic nucleus,PST,PST,,,,"PST: rgb(242,71,58)",242,71,58
+526,364,364,/997/8/343/1129/1097/290/364/,Hypothalamus,Hypothalamus,Parasubthalamic nucleus,Parasubthalamic nucleus,PSTN,PSTN,,,,"PSTN: rgb(241,72,58)",241,72,58
+527,576073704,NaN,/997/8/343/1129/1097/290/576073704/,Hypothalamus,Hypothalamus,Perifornical nucleus,Perifornical nucleus,PeF,PeF,,,,"PeF: rgb(242,70,58)",242,70,58
+528,173,173,/997/8/343/1129/1097/290/173/,Hypothalamus,Hypothalamus,Retrochiasmatic area,Retrochiasmatic area,RCH,RCH,,,,"RCH: rgb(242,72,59)",242,72,59
+529,470,470,/997/8/343/1129/1097/290/470/,Hypothalamus,Hypothalamus,Subthalamic nucleus,Subthalamic nucleus,STN,STN,,,,"STN: rgb(241,71,59)",241,71,59
+530,614,614,/997/8/343/1129/1097/290/614/,Hypothalamus,Hypothalamus,Tuberal nucleus,Tuberal nucleus,TU,TU,,,,"TU: rgb(242,72,57)",242,72,57
+531,797,797,/997/8/343/1129/1097/290/797/,Hypothalamus,Hypothalamus,Zona incerta,Zona incerta,ZI,ZI,,,,"ZI: rgb(240,72,59)",240,72,59
+532,804,804,/997/8/343/1129/1097/290/797/804/,Hypothalamus,Hypothalamus,Fields of Forel,Fields of Forel,FF,FF,,,,"FF: rgb(242,71,57)",242,71,57
+533,10671,1140,/997/8/343/1129/1097/10671/,Hypothalamus,Hypothalamus,Median eminence,Median eminence,ME,ME,,,,"ME: rgb(241,71,58)",241,71,58
+534,313,313,/997/8/343/313/,Midbrain,Midbrain,Midbrain,Midbrain,MB,MB,,,,"MB: rgb(255,100,255)",255,100,255
+535,339,339,/997/8/343/313/339/,Midbrain,"Midbrain, sensory related","Midbrain, sensory related",Midbrain,MBsen,MB,sen,sensory related,,"MBsen: rgb(254,122,255)",254,122,255
+536,302,302,/997/8/343/313/339/302/,Midbrain,"Midbrain, sensory related","Superior colliculus, sensory related",Superior colliculus,SCs,SC,s,sensory related,,"SCs: rgb(255,121,255)",255,121,255
+537,851,851,/997/8/343/313/339/302/851/,Midbrain,"Midbrain, sensory related","Superior colliculus, optic layer",Superior colliculus,SCop,SC,op,optic layer,,"SCop: rgb(253,122,255)",253,122,255
+538,842,842,/997/8/343/313/339/302/842/,Midbrain,"Midbrain, sensory related","Superior colliculus, superficial gray layer",Superior colliculus,SCsg,SC,sg,superficial gray layer,,"SCsg: rgb(255,120,255)",255,120,255
+539,834,834,/997/8/343/313/339/302/834/,Midbrain,"Midbrain, sensory related","Superior colliculus, zonal layer",Superior colliculus,SCzo,SC,zo,zonal layer,,"SCzo: rgb(255,122,253)",255,122,253
+540,4,4,/997/8/343/313/339/4/,Midbrain,"Midbrain, sensory related",Inferior colliculus,Inferior colliculus,IC,IC,,,,"IC: rgb(255,122,255)",255,122,255
+541,811,811,/997/8/343/313/339/4/811/,Midbrain,"Midbrain, sensory related","Inferior colliculus, central nucleus",Inferior colliculus,ICc,IC,c,central nucleus,,"ICc: rgb(254,122,254)",254,122,254
+542,820,820,/997/8/343/313/339/4/820/,Midbrain,"Midbrain, sensory related","Inferior colliculus, dorsal nucleus",Inferior colliculus,ICd,IC,d,dorsal nucleus,,"ICd: rgb(254,121,255)",254,121,255
+543,828,828,/997/8/343/313/339/4/828/,Midbrain,"Midbrain, sensory related","Inferior colliculus, external nucleus",Inferior colliculus,ICe,IC,e,external nucleus,,"ICe: rgb(254,121,254)",254,121,254
+544,580,580,/997/8/343/313/339/580/,Midbrain,"Midbrain, sensory related",Nucleus of the brachium of the inferior colliculus,Nucleus of the brachium of the inferior colliculus,NB,NB,,,,"NB: rgb(254,122,253)",254,122,253
+545,271,271,/997/8/343/313/339/271/,Midbrain,"Midbrain, sensory related",Nucleus sagulum,Nucleus sagulum,SAG,SAG,,,,"SAG: rgb(255,122,254)",255,122,254
+546,874,874,/997/8/343/313/339/874/,Midbrain,"Midbrain, sensory related",Parabigeminal nucleus,Parabigeminal nucleus,PBG,PBG,,,,"PBG: rgb(255,121,253)",255,121,253
+547,460,460,/997/8/343/313/339/460/,Midbrain,"Midbrain, sensory related",Midbrain trigeminal nucleus,Midbrain trigeminal nucleus,MEV,MEV,,,,"MEV: rgb(255,121,254)",255,121,254
+548,599626923,NaN,/997/8/343/313/339/599626923/,Midbrain,"Midbrain, sensory related",Subcommissural organ,Subcommissural organ,SCO,SCO,,,,"SCO: rgb(255,120,254)",255,120,254
+549,323,323,/997/8/343/313/323/,Midbrain,"Midbrain, motor related","Midbrain, motor related",Midbrain,MBmot,MB,mot,motor related,,"MBmot: rgb(254,142,254)",254,142,254
+550,381,381,/997/8/343/313/323/381/,Midbrain,"Midbrain, motor related","Substantia nigra, reticular part","Substantia nigra, reticular part",SNr,SNr,,,,"SNr: rgb(255,141,253)",255,141,253
+551,749,749,/997/8/343/313/323/749/,Midbrain,"Midbrain, motor related",Ventral tegmental area,Ventral tegmental area,VTA,VTA,,,,"VTA: rgb(254,141,255)",254,141,255
+552,607344830,NaN,/997/8/343/313/323/607344830/,Midbrain,"Midbrain, motor related",Paranigral nucleus,Paranigral nucleus,PN,PN,,,,"PN: rgb(255,142,254)",255,142,254
+553,246,246,/997/8/343/313/323/246/,Midbrain,"Midbrain, motor related","Midbrain reticular nucleus, retrorubral area","Midbrain reticular nucleus, retrorubral area",RR,RR,,,,"RR: rgb(253,143,255)",253,143,255
+554,128,128,/997/8/343/313/323/128/,Midbrain,"Midbrain, motor related",Midbrain reticular nucleus,Midbrain reticular nucleus,MRN,MRN,,,,"MRN: rgb(255,143,253)",255,143,253
+555,294,294,/997/8/343/313/323/294/,Midbrain,"Midbrain, motor related","Superior colliculus, motor related",Superior colliculus,SCm,SC,m,motor related,,"SCm: rgb(254,143,253)",254,143,253
+556,26,26,/997/8/343/313/323/294/26/,Midbrain,"Midbrain, motor related","Superior colliculus, motor related, deep gray layer",Superior colliculus,SCdg,SC,dg,motor related (deep gray layer),,"SCdg: rgb(255,143,255)",255,143,255
+557,42,42,/997/8/343/313/323/294/42/,Midbrain,"Midbrain, motor related","Superior colliculus, motor related, deep white layer",Superior colliculus,SCdw,SC,dw,motor related (deep white layer),,"SCdw: rgb(255,143,254)",255,143,254
+558,17,17,/997/8/343/313/323/294/17/,Midbrain,"Midbrain, motor related","Superior colliculus, motor related, intermediate white layer",Superior colliculus,SCiw,SC,iw,motor related (intermediate white layer),,"SCiw: rgb(255,144,254)",255,144,254
+559,10,10,/997/8/343/313/323/294/10/,Midbrain,"Midbrain, motor related","Superior colliculus, motor related, intermediate gray layer",Superior colliculus,SCig,SC,ig,motor related (intermediate gray layer),,"SCig: rgb(255,144,255)",255,144,255
+560,795,795,/997/8/343/313/323/795/,Midbrain,"Midbrain, motor related",Periaqueductal gray,Periaqueductal gray,PAG,PAG,,,,"PAG: rgb(252,143,255)",252,143,255
+561,50,50,/997/8/343/313/323/795/50/,Midbrain,"Midbrain, motor related",Precommissural nucleus,Precommissural nucleus,PRC,PRC,,,,"PRC: rgb(254,144,254)",254,144,254
+562,67,67,/997/8/343/313/323/795/67/,Midbrain,"Midbrain, motor related",Interstitial nucleus of Cajal,Interstitial nucleus of Cajal,INC,INC,,,,"INC: rgb(255,144,253)",255,144,253
+563,587,587,/997/8/343/313/323/795/587/,Midbrain,"Midbrain, motor related",Nucleus of Darkschewitsch,Nucleus of Darkschewitsch,ND,ND,,,,"ND: rgb(253,143,253)",253,143,253
+564,614454277,NaN,/997/8/343/313/323/795/614454277/,Midbrain,"Midbrain, motor related",Supraoculomotor periaqueductal gray,Supraoculomotor periaqueductal gray,Su3,Su3,,,,"Su3: rgb(253,144,252)",253,144,252
+565,1100,1100,/997/8/343/313/323/1100/,Midbrain,"Midbrain, motor related",Pretectal region,Pretectal region,PRT,PRT,,,,"PRT: rgb(253,142,253)",253,142,253
+566,215,215,/997/8/343/313/323/1100/215/,Midbrain,"Midbrain, motor related",Anterior pretectal nucleus,Anterior pretectal nucleus,APN,APN,,,,"APN: rgb(254,142,255)",254,142,255
+567,531,531,/997/8/343/313/323/1100/531/,Midbrain,"Midbrain, motor related",Medial pretectal area,Medial pretectal area,MPT,MPT,,,,"MPT: rgb(255,144,252)",255,144,252
+568,628,628,/997/8/343/313/323/1100/628/,Midbrain,"Midbrain, motor related",Nucleus of the optic tract,Nucleus of the optic tract,NOT,NOT,,,,"NOT: rgb(255,143,252)",255,143,252
+569,634,634,/997/8/343/313/323/1100/634/,Midbrain,"Midbrain, motor related",Nucleus of the posterior commissure,Nucleus of the posterior commissure,NPC,NPC,,,,"NPC: rgb(255,141,254)",255,141,254
+570,706,706,/997/8/343/313/323/1100/706/,Midbrain,"Midbrain, motor related",Olivary pretectal nucleus,Olivary pretectal nucleus,OP,OP,,,,"OP: rgb(254,144,252)",254,144,252
+571,1061,1061,/997/8/343/313/323/1100/1061/,Midbrain,"Midbrain, motor related",Posterior pretectal nucleus,Posterior pretectal nucleus,PPT,PPT,,,,"PPT: rgb(252,143,254)",252,143,254
+572,549009203,NaN,/997/8/343/313/323/1100/549009203/,Midbrain,"Midbrain, motor related",Retroparafascicular nucleus,Retroparafascicular nucleus,RPF,RPF,,,,"RPF: rgb(253,141,255)",253,141,255
+573,616,616,/997/8/343/313/323/616/,Midbrain,"Midbrain, motor related",Cuneiform nucleus,Cuneiform nucleus,CUN,CUN,,,,"CUN: rgb(252,144,255)",252,144,255
+574,214,214,/997/8/343/313/323/214/,Midbrain,"Midbrain, motor related",Red nucleus,Red nucleus,RN,RN,,,,"RN: rgb(254,144,253)",254,144,253
+575,35,35,/997/8/343/313/323/35/,Midbrain,"Midbrain, motor related",Oculomotor nucleus,Oculomotor nucleus,III,III,,,,"III: rgb(254,144,255)",254,144,255
+576,549009211,NaN,/997/8/343/313/323/549009211/,Midbrain,"Midbrain, motor related",Medial accesory oculomotor nucleus,Medial accesory oculomotor nucleus,MA3,MA3,,,,"MA3: rgb(252,142,255)",252,142,255
+577,975,975,/997/8/343/313/323/975/,Midbrain,"Midbrain, motor related",Edinger-Westphal nucleus,Edinger-Westphal nucleus,EW,EW,,,,"EW: rgb(254,143,252)",254,143,252
+578,115,115,/997/8/343/313/323/115/,Midbrain,"Midbrain, motor related",Trochlear nucleus,Trochlear nucleus,IV,IV,,,,"IV: rgb(253,144,255)",253,144,255
+579,606826663,NaN,/997/8/343/313/323/606826663/,Midbrain,"Midbrain, motor related",Paratrochlear nucleus,Paratrochlear nucleus,Pa4,Pa4,,,,"Pa4: rgb(254,141,254)",254,141,254
+580,757,757,/997/8/343/313/323/757/,Midbrain,"Midbrain, motor related",Ventral tegmental nucleus,Ventral tegmental nucleus,VTN,VTN,,,,"VTN: rgb(252,144,254)",252,144,254
+581,231,231,/997/8/343/313/323/231/,Midbrain,"Midbrain, motor related",Anterior tegmental nucleus,Anterior tegmental nucleus,AT,AT,,,,"AT: rgb(253,144,254)",253,144,254
+582,66,66,/997/8/343/313/323/66/,Midbrain,"Midbrain, motor related",Lateral terminal nucleus of the accessory optic tract,Lateral terminal nucleus of the accessory optic tract,LT,LT,,,,"LT: rgb(254,143,254)",254,143,254
+583,75,75,/997/8/343/313/323/75/,Midbrain,"Midbrain, motor related",Dorsal terminal nucleus of the accessory optic tract,Dorsal terminal nucleus of the accessory optic tract,DT,DT,,,,"DT: rgb(255,142,255)",255,142,255
+584,58,58,/997/8/343/313/323/58/,Midbrain,"Midbrain, motor related",Medial terminal nucleus of the accessory optic tract,Medial terminal nucleus of the accessory optic tract,MT,MT,,,,"MT: rgb(254,143,255)",254,143,255
+585,348,348,/997/8/343/313/348/,Midbrain,"Midbrain, behavioral state related","Midbrain, behavioral state related",Midbrain,MBsta,MB,sta,behavioral state related,,"MBsta: rgb(253,143,254)",253,143,254
+586,374,374,/997/8/343/313/348/374/,Midbrain,"Midbrain, behavioral state related","Substantia nigra, compact part","Substantia nigra, compact part",SNc,SNc,,,,"SNc: rgb(255,166,253)",255,166,253
+587,1052,1052,/997/8/343/313/348/1052/,Midbrain,"Midbrain, behavioral state related",Pedunculopontine nucleus,Pedunculopontine nucleus,PPN,PPN,,,,"PPN: rgb(255,165,253)",255,165,253
+588,165,165,/997/8/343/313/348/165/,Midbrain,"Midbrain, behavioral state related",Midbrain raphe nuclei,Midbrain raphe nuclei,RAmb,RAmb,,,,"RAmb: rgb(255,165,255)",255,165,255
+589,12,12,/997/8/343/313/348/165/12/,Midbrain,"Midbrain, behavioral state related",Interfascicular nucleus raphe,Interfascicular nucleus raphe,IF,IF,,,,"IF: rgb(255,166,255)",255,166,255
+590,100,100,/997/8/343/313/348/165/100/,Midbrain,"Midbrain, behavioral state related",Interpeduncular nucleus,Interpeduncular nucleus,IPN,IPN,,,,"IPN: rgb(255,166,254)",255,166,254
+591,607344834,NaN,/997/8/343/313/348/165/100/607344834/,Midbrain,"Midbrain, behavioral state related","Interpeduncular nucleus, rostral","Interpeduncular nucleus, rostral",IPR,IPR,,,,"IPR: rgb(255,164,254)",255,164,254
+592,607344838,NaN,/997/8/343/313/348/165/100/607344838/,Midbrain,"Midbrain, behavioral state related","Interpeduncular nucleus, caudal","Interpeduncular nucleus, caudal",IPC,IPC,,,,"IPC: rgb(255,165,254)",255,165,254
+593,607344842,NaN,/997/8/343/313/348/165/100/607344842/,Midbrain,"Midbrain, behavioral state related","Interpeduncular nucleus, apical","Interpeduncular nucleus, apical",IPA,IPA,,,,"IPA: rgb(254,166,254)",254,166,254
+594,607344846,NaN,/997/8/343/313/348/165/100/607344846/,Midbrain,"Midbrain, behavioral state related","Interpeduncular nucleus, lateral","Interpeduncular nucleus, lateral",IPL,IPL,,,,"IPL: rgb(254,165,255)",254,165,255
+595,607344850,NaN,/997/8/343/313/348/165/100/607344850/,Midbrain,"Midbrain, behavioral state related","Interpeduncular nucleus, intermediate","Interpeduncular nucleus, intermediate",IPI,IPI,,,,"IPI: rgb(254,166,253)",254,166,253
+596,607344854,NaN,/997/8/343/313/348/165/100/607344854/,Midbrain,"Midbrain, behavioral state related","Interpeduncular nucleus, dorsomedial","Interpeduncular nucleus, dorsomedial",IPDM,IPDM,,,,"IPDM: rgb(254,164,255)",254,164,255
+597,607344858,NaN,/997/8/343/313/348/165/100/607344858/,Midbrain,"Midbrain, behavioral state related","Interpeduncular nucleus, dorsolateral","Interpeduncular nucleus, dorsolateral",IPDL,IPDL,,,,"IPDL: rgb(253,166,254)",253,166,254
+598,607344862,NaN,/997/8/343/313/348/165/100/607344862/,Midbrain,"Midbrain, behavioral state related","Interpeduncular nucleus, rostrolateral","Interpeduncular nucleus, rostrolateral",IPRL,IPRL,,,,"IPRL: rgb(254,165,254)",254,165,254
+599,197,197,/997/8/343/313/348/165/197/,Midbrain,"Midbrain, behavioral state related",Rostral linear nucleus raphe,Rostral linear nucleus raphe,RL,RL,,,,"RL: rgb(254,166,255)",254,166,255
+600,591,591,/997/8/343/313/348/165/591/,Midbrain,"Midbrain, behavioral state related",Central linear nucleus raphe,Central linear nucleus raphe,CLI,CLI,,,,"CLI: rgb(255,164,255)",255,164,255
+601,872,872,/997/8/343/313/348/165/872/,Midbrain,"Midbrain, behavioral state related",Dorsal nucleus raphe,Dorsal nucleus raphe,DR,DR,,,,"DR: rgb(253,166,255)",253,166,255
+602,1065,1065,/997/8/343/1065/,Hindbrain,Hindbrain,Hindbrain,Hindbrain,HB,HB,,,,"HB: rgb(255,155,135)",255,155,135
+603,771,771,/997/8/343/1065/771/,Pons,Pons,Pons,Pons,P,P,,,,"P: rgb(255,155,136)",255,155,136
+604,1132,1132,/997/8/343/1065/771/1132/,Pons,"Pons, sensory related","Pons, sensory related",Pons,P-sen,P,sen,sensory related,,"P-sen: rgb(255,172,109)",255,172,109
+605,612,612,/997/8/343/1065/771/1132/612/,Pons,"Pons, sensory related",Nucleus of the lateral lemniscus,Nucleus of the lateral lemniscus,NLL,NLL,,,,"NLL: rgb(255,172,111)",255,172,111
+606,7,7,/997/8/343/1065/771/1132/7/,Pons,"Pons, sensory related",Principal sensory nucleus of the trigeminal,Principal sensory nucleus of the trigeminal,PSV,PSV,,,,"PSV: rgb(255,174,111)",255,174,111
+607,867,867,/997/8/343/1065/771/1132/867/,Pons,"Pons, sensory related",Parabrachial nucleus,Parabrachial nucleus,PB,PB,,,,"PB: rgb(255,173,109)",255,173,109
+608,123,123,/997/8/343/1065/771/1132/867/123/,Pons,"Pons, sensory related",Koelliker-Fuse subnucleus,Koelliker-Fuse subnucleus,KF,KF,,,,"KF: rgb(254,173,110)",254,173,110
+609,398,398,/997/8/343/1065/771/1132/398/,Pons,"Pons, sensory related",Superior olivary complex,Superior olivary complex,SOC,SOC,,,,"SOC: rgb(255,174,109)",255,174,109
+610,122,122,/997/8/343/1065/771/1132/398/122/,Pons,"Pons, sensory related","Superior olivary complex, periolivary region","Superior olivary complex, periolivary region",POR,POR,,,,"POR: rgb(254,173,111)",254,173,111
+611,105,105,/997/8/343/1065/771/1132/398/105/,Pons,"Pons, sensory related","Superior olivary complex, medial part",Superior olivary complex,SOCm,SOC,m,medial,,"SOCm: rgb(255,173,110)",255,173,110
+612,114,114,/997/8/343/1065/771/1132/398/114/,Pons,"Pons, sensory related","Superior olivary complex, lateral part",Superior olivary complex,SOCl,SOC,l,lateral,,"SOCl: rgb(254,174,110)",254,174,110
+613,987,987,/997/8/343/1065/771/987/,Pons,"Pons, motor related","Pons, motor related",Pons,P-mot,P,mot,motor related,,"P-mot: rgb(255,184,134)",255,184,134
+614,280,280,/997/8/343/1065/771/987/280/,Pons,"Pons, motor related",Barrington's nucleus,Barrington's nucleus,B,B,,,,"B: rgb(255,186,134)",255,186,134
+615,880,880,/997/8/343/1065/771/987/880/,Pons,"Pons, motor related",Dorsal tegmental nucleus,Dorsal tegmental nucleus,DTN,DTN,,,,"DTN: rgb(254,185,133)",254,185,133
+616,599626927,NaN,/997/8/343/1065/771/987/599626927/,Pons,"Pons, motor related",Posterodorsal tegmental nucleus,Posterodorsal tegmental nucleus,PDTg,PDTg,,,,"PDTg: rgb(255,185,132)",255,185,132
+617,898,898,/997/8/343/1065/771/987/898/,Pons,"Pons, motor related",Pontine central gray,Pontine central gray,PCG,PCG,,,,"PCG: rgb(255,186,132)",255,186,132
+618,931,931,/997/8/343/1065/771/987/931/,Pons,"Pons, motor related",Pontine gray,Pontine gray,PG,PG,,,,"PG: rgb(255,184,133)",255,184,133
+619,1093,1093,/997/8/343/1065/771/987/1093/,Pons,"Pons, motor related","Pontine reticular nucleus, caudal part","Pontine reticular nucleus, caudal part",PRNc,PRNc,,,,"PRNc: rgb(253,186,134)",253,186,134
+620,318,318,/997/8/343/1065/771/987/318/,Pons,"Pons, motor related",Supragenual nucleus,Supragenual nucleus,SG,SG,,,,"SG: rgb(255,185,134)",255,185,134
+621,534,534,/997/8/343/1065/771/987/534/,Pons,"Pons, motor related",Supratrigeminal nucleus,Supratrigeminal nucleus,SUT,SUT,,,,"SUT: rgb(254,186,134)",254,186,134
+622,574,574,/997/8/343/1065/771/987/574/,Pons,"Pons, motor related",Tegmental reticular nucleus,Tegmental reticular nucleus,TRN,TRN,,,,"TRN: rgb(254,186,133)",254,186,133
+623,621,621,/997/8/343/1065/771/987/621/,Pons,"Pons, motor related",Motor nucleus of trigeminal,Motor nucleus of trigeminal,V,V,,,,"V: rgb(254,185,134)",254,185,134
+624,549009215,NaN,/997/8/343/1065/771/987/549009215/,Pons,"Pons, motor related",Peritrigeminal zone,Peritrigeminal zone,P5,P5,,,,"P5: rgb(254,184,134)",254,184,134
+625,549009219,NaN,/997/8/343/1065/771/987/549009219/,Pons,"Pons, motor related",Accessory trigeminal nucleus,Accessory trigeminal nucleus,Acs5,Acs5,,,,"Acs5: rgb(253,186,133)",253,186,133
+626,549009223,NaN,/997/8/343/1065/771/987/549009223/,Pons,"Pons, motor related",Parvicellular motor 5 nucleus,Parvicellular motor 5 nucleus,PC5,PC5,,,,"PC5: rgb(253,185,134)",253,185,134
+627,549009227,NaN,/997/8/343/1065/771/987/549009227/,Pons,"Pons, motor related",Intertrigeminal nucleus,Intertrigeminal nucleus,I5,I5,,,,"I5: rgb(254,185,132)",254,185,132
+628,1117,1117,/997/8/343/1065/771/1117/,Pons,"Pons, behavioral state related","Pons, behavioral state related",Pons,P-sat,P,sat,behavioral state related,,"P-sat: rgb(255,193,149)",255,193,149
+629,679,679,/997/8/343/1065/771/1117/679/,Pons,"Pons, behavioral state related",Superior central nucleus raphe,Superior central nucleus raphe,CS,CS,,,,"CS: rgb(255,195,147)",255,195,147
+630,147,147,/997/8/343/1065/771/1117/147/,Pons,"Pons, behavioral state related",Locus ceruleus,Locus ceruleus,LC,LC,,,,"LC: rgb(253,195,149)",253,195,149
+631,162,162,/997/8/343/1065/771/1117/162/,Pons,"Pons, behavioral state related",Laterodorsal tegmental nucleus,Laterodorsal tegmental nucleus,LDT,LDT,,,,"LDT: rgb(254,195,149)",254,195,149
+632,604,604,/997/8/343/1065/771/1117/604/,Pons,"Pons, behavioral state related",Nucleus incertus,Nucleus incertus,NI,NI,,,,"NI: rgb(254,194,148)",254,194,148
+633,146,146,/997/8/343/1065/771/1117/146/,Pons,"Pons, behavioral state related",Pontine reticular nucleus,Pontine reticular nucleus,PRNr,PRNr,,,,"PRNr: rgb(255,194,149)",255,194,149
+634,238,238,/997/8/343/1065/771/1117/238/,Pons,"Pons, behavioral state related",Nucleus raphe pontis,Nucleus raphe pontis,RPO,RPO,,,,"RPO: rgb(255,194,148)",255,194,148
+635,350,350,/997/8/343/1065/771/1117/350/,Pons,"Pons, behavioral state related",Subceruleus nucleus,Subceruleus nucleus,SLC,SLC,,,,"SLC: rgb(254,195,148)",254,195,148
+636,358,358,/997/8/343/1065/771/1117/358/,Pons,"Pons, behavioral state related",Sublaterodorsal nucleus,Sublaterodorsal nucleus,SLD,SLD,,,,"SLD: rgb(254,194,149)",254,194,149
+637,354,354,/997/8/343/1065/354/,Medulla,Medulla,Medulla,Medulla,MY,MY,,,,"MY: rgb(255,155,205)",255,155,205
+638,386,386,/997/8/343/1065/354/386/,Medulla,"Medulla, sensory related","Medulla, sensory related",Medulla,MY-sen,MY,sen,sensory related,,"MY-sen: rgb(255,163,210)",255,163,210
+639,207,207,/997/8/343/1065/354/386/207/,Medulla,"Medulla, sensory related",Area postrema,Area postrema,AP,AP,,,,"AP: rgb(255,165,208)",255,165,208
+640,607,607,/997/8/343/1065/354/386/607/,Medulla,"Medulla, sensory related",Cochlear nuclei,Cochlear nuclei,CN,CN,,,,"CN: rgb(254,165,208)",254,165,208
+641,96,96,/997/8/343/1065/354/386/607/96/,Medulla,"Medulla, sensory related",Dorsal cochlear nucleus,Dorsal cochlear nucleus,DCO,DCO,,,,"DCO: rgb(254,165,209)",254,165,209
+642,101,101,/997/8/343/1065/354/386/607/101/,Medulla,"Medulla, sensory related",Ventral cochlear nucleus,Ventral cochlear nucleus,VCO,VCO,,,,"VCO: rgb(254,164,210)",254,164,210
+643,720,720,/997/8/343/1065/354/386/720/,Medulla,"Medulla, sensory related",Dorsal column nuclei,Dorsal column nuclei,DCN,DCN,,,,"DCN: rgb(253,163,210)",253,163,210
+644,711,711,/997/8/343/1065/354/386/720/711/,Medulla,"Medulla, sensory related",Cuneate nucleus,Cuneate nucleus,CU,CU,,,,"CU: rgb(253,165,208)",253,165,208
+645,1039,1039,/997/8/343/1065/354/386/720/1039/,Medulla,"Medulla, sensory related",Gracile nucleus,Gracile nucleus,GR,GR,,,,"GR: rgb(254,163,208)",254,163,208
+646,903,903,/997/8/343/1065/354/386/903/,Medulla,"Medulla, sensory related",External cuneate nucleus,External cuneate nucleus,ECU,ECU,,,,"ECU: rgb(255,162,210)",255,162,210
+647,642,642,/997/8/343/1065/354/386/642/,Medulla,"Medulla, sensory related",Nucleus of the trapezoid body,Nucleus of the trapezoid body,NTB,NTB,,,,"NTB: rgb(254,163,210)",254,163,210
+648,651,651,/997/8/343/1065/354/386/651/,Medulla,"Medulla, sensory related",Nucleus of the solitary tract,Nucleus of the solitary tract,NTS,NTS,,,,"NTS: rgb(253,165,209)",253,165,209
+649,429,429,/997/8/343/1065/354/386/429/,Medulla,"Medulla, sensory related","Spinal nucleus of the trigeminal, caudal part","Spinal nucleus of the trigeminal, caudal part",SPVC,SPVC,,,,"SPVC: rgb(253,164,208)",253,164,208
+650,437,437,/997/8/343/1065/354/386/437/,Medulla,"Medulla, sensory related","Spinal nucleus of the trigeminal, interpolar part","Spinal nucleus of the trigeminal, interpolar part",SPVI,SPVI,,,,"SPVI: rgb(253,165,210)",253,165,210
+651,445,445,/997/8/343/1065/354/386/445/,Medulla,"Medulla, sensory related","Spinal nucleus of the trigeminal, oral part","Spinal nucleus of the trigeminal, oral part",SPVO,SPVO,,,,"SPVO: rgb(255,164,208)",255,164,208
+652,589508451,NaN,/997/8/343/1065/354/386/589508451/,Medulla,"Medulla, sensory related",Paratrigeminal nucleus,Paratrigeminal nucleus,Pa5,Pa5,,,,"Pa5: rgb(253,163,209)",253,163,209
+653,370,370,/997/8/343/1065/354/370/,Medulla,"Medulla, motor related","Medulla, motor related",Medulla,MY-mot,MY,mot,motor related,,"MY-mot: rgb(254,178,215)",254,178,215
+654,653,653,/997/8/343/1065/354/370/653/,Medulla,"Medulla, motor related",Abducens nucleus,Abducens nucleus,VI,VI,,,,"VI: rgb(253,177,217)",253,177,217
+655,661,661,/997/8/343/1065/354/370/661/,Medulla,"Medulla, motor related",Facial motor nucleus,Facial motor nucleus,VII,VII,,,,"VII: rgb(255,179,214)",255,179,214
+656,576,576,/997/8/343/1065/354/370/576/,Medulla,"Medulla, motor related",Accessory facial motor nucleus,Accessory facial motor nucleus,ACVII,ACVII,,,,"ACVII: rgb(253,176,217)",253,176,217
+657,135,135,/997/8/343/1065/354/370/135/,Medulla,"Medulla, motor related",Nucleus ambiguus,Nucleus ambiguus,AMB,AMB,,,,"AMB: rgb(254,179,217)",254,179,217
+658,939,939,/997/8/343/1065/354/370/135/939/,Medulla,"Medulla, motor related","Nucleus ambiguus, dorsal division",Nucleus ambiguus,AMBd,AMB,d,dorsal,,"AMBd: rgb(254,179,214)",254,179,214
+659,143,143,/997/8/343/1065/354/370/135/143/,Medulla,"Medulla, motor related","Nucleus ambiguus, ventral division",Nucleus ambiguus,AMBv,AMB,v,ventral,,"AMBv: rgb(254,179,216)",254,179,216
+660,839,839,/997/8/343/1065/354/370/839/,Medulla,"Medulla, motor related",Dorsal motor nucleus of the vagus nerve,Dorsal motor nucleus of the vagus nerve,DMX,DMX,,,,"DMX: rgb(253,177,216)",253,177,216
+661,1048,1048,/997/8/343/1065/354/370/1048/,Medulla,"Medulla, motor related",Gigantocellular reticular nucleus,Gigantocellular reticular nucleus,GRN,GRN,,,,"GRN: rgb(254,176,216)",254,176,216
+662,372,372,/997/8/343/1065/354/370/372/,Medulla,"Medulla, motor related",Infracerebellar nucleus,Infracerebellar nucleus,ICB,ICB,,,,"ICB: rgb(254,177,216)",254,177,216
+663,83,83,/997/8/343/1065/354/370/83/,Medulla,"Medulla, motor related",Inferior olivary complex,Inferior olivary complex,IO,IO,,,,"IO: rgb(255,179,216)",255,179,216
+664,136,136,/997/8/343/1065/354/370/136/,Medulla,"Medulla, motor related",Intermediate reticular nucleus,Intermediate reticular nucleus,IRN,IRN,,,,"IRN: rgb(255,178,216)",255,178,216
+665,106,106,/997/8/343/1065/354/370/106/,Medulla,"Medulla, motor related",Inferior salivatory nucleus,Inferior salivatory nucleus,ISN,ISN,,,,"ISN: rgb(255,178,217)",255,178,217
+666,203,203,/997/8/343/1065/354/370/203/,Medulla,"Medulla, motor related",Linear nucleus of the medulla,Linear nucleus of the medulla,LIN,LIN,,,,"LIN: rgb(255,177,216)",255,177,216
+667,235,235,/997/8/343/1065/354/370/235/,Medulla,"Medulla, motor related",Lateral reticular nucleus,Lateral reticular nucleus,LRN,LRN,,,,"LRN: rgb(253,179,216)",253,179,216
+668,955,955,/997/8/343/1065/354/370/235/955/,Medulla,"Medulla, motor related","Lateral reticular nucleus, magnocellular part",Lateral reticular nucleus,LRNm,LRN,m,magnocellular,,"LRNm: rgb(252,179,215)",252,179,215
+669,963,963,/997/8/343/1065/354/370/235/963/,Medulla,"Medulla, motor related","Lateral reticular nucleus, parvicellular part",Lateral reticular nucleus,LRNp,LRN,p,parvicellular,,"LRNp: rgb(254,176,217)",254,176,217
+670,307,307,/997/8/343/1065/354/370/307/,Medulla,"Medulla, motor related",Magnocellular reticular nucleus,Magnocellular reticular nucleus,MARN,MARN,,,,"MARN: rgb(253,178,217)",253,178,217
+671,395,395,/997/8/343/1065/354/370/395/,Medulla,"Medulla, motor related",Medullary reticular nucleus,Medullary reticular nucleus,MDRN,MDRN,,,,"MDRN: rgb(253,178,216)",253,178,216
+672,1098,1098,/997/8/343/1065/354/370/395/1098/,Medulla,"Medulla, motor related","Medullary reticular nucleus, dorsal part",Medullary reticular nucleus,MDRNd,MDRN,d,dorsal,,"MDRNd: rgb(253,177,215)",253,177,215
+673,1107,1107,/997/8/343/1065/354/370/395/1107/,Medulla,"Medulla, motor related","Medullary reticular nucleus, ventral part",Medullary reticular nucleus,MDRNv,MDRN,v,ventral,,"MDRNv: rgb(255,177,214)",255,177,214
+674,852,852,/997/8/343/1065/354/370/852/,Medulla,"Medulla, motor related",Parvicellular reticular nucleus,Parvicellular reticular nucleus,PARN,PARN,,,,"PARN: rgb(252,179,217)",252,179,217
+675,859,859,/997/8/343/1065/354/370/859/,Medulla,"Medulla, motor related",Parasolitary nucleus,Parasolitary nucleus,PAS,PAS,,,,"PAS: rgb(255,178,214)",255,178,214
+676,938,938,/997/8/343/1065/354/370/938/,Medulla,"Medulla, motor related",Paragigantocellular reticular nucleus,Paragigantocellular reticular nucleus,PGRN,PGRN,,,,"PGRN: rgb(255,176,216)",255,176,216
+677,970,970,/997/8/343/1065/354/370/938/970/,Medulla,"Medulla, motor related","Paragigantocellular reticular nucleus, dorsal part",Paragigantocellular reticular nucleus,PGRNd,PGRN,d,dorsal,,"PGRNd: rgb(252,179,216)",252,179,216
+678,978,978,/997/8/343/1065/354/370/938/978/,Medulla,"Medulla, motor related","Paragigantocellular reticular nucleus, lateral part",Paragigantocellular reticular nucleus,PGRNl,PGRN,l,lateral,,"PGRNl: rgb(252,178,217)",252,178,217
+679,154,154,/997/8/343/1065/354/370/154/,Medulla,"Medulla, motor related",Perihypoglossal nuclei,Perihypoglossal nuclei,PHY,PHY,,,,"PHY: rgb(254,178,217)",254,178,217
+680,177,177,/997/8/343/1065/354/370/154/177/,Medulla,"Medulla, motor related",Nucleus of Roller,Nucleus of Roller,NR,NR,,,,"NR: rgb(255,177,217)",255,177,217
+681,169,169,/997/8/343/1065/354/370/154/169/,Medulla,"Medulla, motor related",Nucleus prepositus,Nucleus prepositus,PRP,PRP,,,,"PRP: rgb(255,179,215)",255,179,215
+682,1069,1069,/997/8/343/1065/354/370/1069/,Medulla,"Medulla, motor related",Parapyramidal nucleus,Parapyramidal nucleus,PPY,PPY,,,,"PPY: rgb(252,178,216)",252,178,216
+683,701,701,/997/8/343/1065/354/370/701/,Medulla,"Medulla, motor related",Vestibular nuclei,Vestibular nuclei,VNC,VNC,,,,"VNC: rgb(252,177,217)",252,177,217
+684,209,209,/997/8/343/1065/354/370/701/209/,Medulla,"Medulla, motor related",Lateral vestibular nucleus,Lateral vestibular nucleus,LAV,LAV,,,,"LAV: rgb(254,179,215)",254,179,215
+685,202,202,/997/8/343/1065/354/370/701/202/,Medulla,"Medulla, motor related",Medial vestibular nucleus,Medial vestibular nucleus,MV,MV,,,,"MV: rgb(255,176,215)",255,176,215
+686,225,225,/997/8/343/1065/354/370/701/225/,Medulla,"Medulla, motor related",Spinal vestibular nucleus,Spinal vestibular nucleus,SPIV,SPIV,,,,"SPIV: rgb(254,177,217)",254,177,217
+687,217,217,/997/8/343/1065/354/370/701/217/,Medulla,"Medulla, motor related",Superior vestibular nucleus,Superior vestibular nucleus,SUV,SUV,,,,"SUV: rgb(253,179,214)",253,179,214
+688,765,765,/997/8/343/1065/354/370/765/,Medulla,"Medulla, motor related",Nucleus x,Nucleus x,x,x,,,,"x: rgb(255,176,217)",255,176,217
+689,773,773,/997/8/343/1065/354/370/773/,Medulla,"Medulla, motor related",Hypoglossal nucleus,Hypoglossal nucleus,XII,XII,,,,"XII: rgb(254,177,215)",254,177,215
+690,781,781,/997/8/343/1065/354/370/781/,Medulla,"Medulla, motor related",Nucleus y,Nucleus y,y,y,,,,"y: rgb(253,178,215)",253,178,215
+691,379,379,/997/8/343/1065/354/379/,Medulla,"Medulla, behavioral state related","Medulla, behavioral state related",Medulla,MY-sat,MY,sat,behavioral state related,,"MY-sat: rgb(255,198,225)",255,198,225
+692,206,206,/997/8/343/1065/354/379/206/,Medulla,"Medulla, behavioral state related",Nucleus raphe magnus,Nucleus raphe magnus,RM,RM,,,,"RM: rgb(255,197,226)",255,197,226
+693,230,230,/997/8/343/1065/354/379/230/,Medulla,"Medulla, behavioral state related",Nucleus raphe pallidus,Nucleus raphe pallidus,RPA,RPA,,,,"RPA: rgb(255,198,226)",255,198,226
+694,222,222,/997/8/343/1065/354/379/222/,Medulla,"Medulla, behavioral state related",Nucleus raphe obscurus,Nucleus raphe obscurus,RO,RO,,,,"RO: rgb(254,198,226)",254,198,226
+695,512,512,/997/8/512/,Cerebellum,Cerebellum,Cerebellum,Cerebellum,CB,CB,,,,"CB: rgb(240,240,128)",240,240,128
+696,528,528,/997/8/512/528/,Cerebellum,Cerebellar cortex,Cerebellar cortex,Cerebellar cortex,CBX,CBX,,,,"CBX: rgb(240,239,128)",240,239,128
+697,645,645,/997/8/512/528/645/,Cerebellum,Cerebellar cortex,Vermal regions,Vermal regions,VERM,VERM,,,,"VERM: rgb(255,250,145)",255,250,145
+698,912,912,/997/8/512/528/645/912/,Cerebellum,Cerebellar cortex,Lingula (I),Lingula (I),LING,LING,,,,"LING: rgb(254,250,145)",254,250,145
+699,920,920,/997/8/512/528/645/920/,Cerebellum,Cerebellar cortex,Central lobule,Central lobule,CENT,CENT,,,,"CENT: rgb(253,251,145)",253,251,145
+700,976,976,/997/8/512/528/645/920/976/,Cerebellum,Cerebellar cortex,Lobule II,Central lobule,CENT2,CENT,2,II,,"CENT2: rgb(253,250,145)",253,250,145
+701,984,984,/997/8/512/528/645/920/984/,Cerebellum,Cerebellar cortex,Lobule III,Central lobule,CENT3,CENT,3,III,,"CENT3: rgb(255,252,142)",255,252,142
+702,928,928,/997/8/512/528/645/928/,Cerebellum,Cerebellar cortex,Culmen,Culmen,CUL,CUL,,,,"CUL: rgb(254,251,143)",254,251,143
+703,1091,1091,/997/8/512/528/645/928/1091/,Cerebellum,Cerebellar cortex,Lobules IV-V,Culmen,"CUL4, 5",CUL,"4, 5",lobules IV-V,,"CUL4, 5: rgb(252,251,144)",#VALUE!, 5: rgb(252,"251,144"
+704,936,936,/997/8/512/528/645/936/,Cerebellum,Cerebellar cortex,Declive (VI),Declive (VI),DEC,DEC,,,,"DEC: rgb(254,250,144)",254,250,144
+705,944,944,/997/8/512/528/645/944/,Cerebellum,Cerebellar cortex,Folium-tuber vermis (VII),Folium-tuber vermis (VII),FOTU,FOTU,,,,"FOTU: rgb(253,251,144)",253,251,144
+706,951,951,/997/8/512/528/645/951/,Cerebellum,Cerebellar cortex,Pyramus (VIII),Pyramus (VIII),PYR,PYR,,,,"PYR: rgb(251,252,145)",251,252,145
+707,957,957,/997/8/512/528/645/957/,Cerebellum,Cerebellar cortex,Uvula (IX),Uvula (IX),UVU,UVU,,,,"UVU: rgb(255,250,143)",255,250,143
+708,968,968,/997/8/512/528/645/968/,Cerebellum,Cerebellar cortex,Nodulus (X),Nodulus (X),NOD,NOD,,,,"NOD: rgb(253,252,143)",253,252,143
+709,1073,1073,/997/8/512/528/1073/,Cerebellum,Cerebellar cortex,Hemispheric regions,Hemispheric regions,HEM,HEM,,,,"HEM: rgb(254,249,144)",254,249,144
+710,1007,1007,/997/8/512/528/1073/1007/,Cerebellum,Cerebellar cortex,Simple lobule,Simple lobule,SIM,SIM,,,,"SIM: rgb(253,251,143)",253,251,143
+711,1017,1017,/997/8/512/528/1073/1017/,Cerebellum,Cerebellar cortex,Ansiform lobule,Ansiform lobule,AN,AN,,,,"AN: rgb(252,252,145)",252,252,145
+712,1056,1056,/997/8/512/528/1073/1017/1056/,Cerebellum,Cerebellar cortex,Crus 1,Crus,ANcr1,AN,cr1,crus 1,,"ANcr1: rgb(252,252,144)",252,252,144
+713,1064,1064,/997/8/512/528/1073/1017/1064/,Cerebellum,Cerebellar cortex,Crus 2,Crus,ANcr2,AN,cr2,crus 2,,"ANcr2: rgb(252,250,145)",252,250,145
+714,1025,1025,/997/8/512/528/1073/1025/,Cerebellum,Cerebellar cortex,Paramedian lobule,Paramedian lobule,PRM,PRM,,,,"PRM: rgb(255,251,142)",255,251,142
+715,1033,1033,/997/8/512/528/1073/1033/,Cerebellum,Cerebellar cortex,Copula pyramidis,Copula pyramidis,COPY,COPY,,,,"COPY: rgb(255,249,144)",255,249,144
+716,1041,1041,/997/8/512/528/1073/1041/,Cerebellum,Cerebellar cortex,Paraflocculus,Paraflocculus,PFL,PFL,,,,"PFL: rgb(255,252,141)",255,252,141
+717,1049,1049,/997/8/512/528/1073/1049/,Cerebellum,Cerebellar cortex,Flocculus,Flocculus,FL,FL,,,,"FL: rgb(254,249,145)",254,249,145
+718,519,519,/997/8/512/519/,Cerebellum,Cerebellar nuclei,Cerebellar nuclei,Cerebellar nuclei,CBN,CBN,,,,"CBN: rgb(240,240,127)",240,240,127
+719,989,989,/997/8/512/519/989/,Cerebellum,Cerebellar nuclei,Fastigial nucleus,Fastigial nucleus,FN,FN,,,,"FN: rgb(255,252,188)",255,252,188
+720,91,91,/997/8/512/519/91/,Cerebellum,Cerebellar nuclei,Interposed nucleus,Interposed nucleus,IP,IP,,,,"IP: rgb(255,253,188)",255,253,188
+721,846,846,/997/8/512/519/846/,Cerebellum,Cerebellar nuclei,Dentate nucleus,Dentate nucleus,DN,DN,,,,"DN: rgb(255,253,187)",255,253,187
+722,589508455,NaN,/997/8/512/519/589508455/,Cerebellum,Cerebellar nuclei,Vestibulocerebellar nucleus,Vestibulocerebellar nucleus,VeCB,VeCB,,,,"VeCB: rgb(254,253,188)",254,253,188
+723,1009,1009,/997/1009/,fiber tracts,fiber tracts,fiber tracts,fiber tracts,fiber tracts,fiber tracts,,,,"fiber tracts: rgb(202,199,203)",202,199,203
+724,967,967,/997/1009/967/,fiber tracts,fiber tracts,cranial nerves,cranial nerves,cm,cm,,,,"cm: rgb(200,202,201)",200,202,201
+725,949,949,/997/1009/967/949/,fiber tracts,fiber tracts,vomeronasal nerve,vomeronasal nerve,von,von,,,,"von: rgb(202,200,201)",202,200,201
+726,840,840,/997/1009/967/840/,fiber tracts,fiber tracts,olfactory nerve,olfactory nerve,In,In,,,,"In: rgb(204,203,199)",204,203,199
+727,1016,1016,/997/1009/967/840/1016/,fiber tracts,fiber tracts,olfactory nerve layer of main olfactory bulb,olfactory nerve layer of main olfactory bulb,onl,onl,,,,"onl: rgb(199,203,202)",199,203,202
+728,21,21,/997/1009/967/840/21/,fiber tracts,fiber tracts,"lateral olfactory tract, general","lateral olfactory tract, general",lotg,lotg,,,,"lotg: rgb(204,204,203)",204,204,203
+729,665,665,/997/1009/967/840/21/665/,fiber tracts,fiber tracts,"lateral olfactory tract, body","lateral olfactory tract, body",lot,lot,,,,"lot: rgb(202,200,199)",202,200,199
+730,538,538,/997/1009/967/840/21/538/,fiber tracts,fiber tracts,dorsal limb,dorsal limb,lotd,lotd,,,,"lotd: rgb(202,202,201)",202,202,201
+731,900,900,/997/1009/967/840/900/,fiber tracts,fiber tracts,"anterior commissure, olfactory limb","anterior commissure, olfactory limb",aco,aco,,,,"aco: rgb(203,203,199)",203,203,199
+732,848,848,/997/1009/967/848/,fiber tracts,fiber tracts,optic nerve,optic nerve,IIn,IIn,,,,"IIn: rgb(203,204,199)",203,204,199
+733,916,916,/997/1009/967/848/916/,fiber tracts,fiber tracts,brachium of the superior colliculus,brachium of the superior colliculus,bsc,bsc,,,,"bsc: rgb(199,203,203)",199,203,203
+734,336,336,/997/1009/967/848/336/,fiber tracts,fiber tracts,superior colliculus commissure,superior colliculus commissure,csc,csc,,,,"csc: rgb(201,203,203)",201,203,203
+735,117,117,/997/1009/967/848/117/,fiber tracts,fiber tracts,optic chiasm,optic chiasm,och,och,,,,"och: rgb(203,202,204)",203,202,204
+736,125,125,/997/1009/967/848/125/,fiber tracts,fiber tracts,optic tract,optic tract,opt,opt,,,,"opt: rgb(202,204,203)",202,204,203
+737,832,832,/997/1009/967/832/,fiber tracts,fiber tracts,oculomotor nerve,oculomotor nerve,IIIn,IIIn,,,,"IIIn: rgb(199,204,204)",199,204,204
+738,62,62,/997/1009/967/832/62/,fiber tracts,fiber tracts,medial longitudinal fascicle,medial longitudinal fascicle,mlf,mlf,,,,"mlf: rgb(203,203,204)",203,203,204
+739,158,158,/997/1009/967/832/158/,fiber tracts,fiber tracts,posterior commissure,posterior commissure,pc,pc,,,,"pc: rgb(204,202,202)",204,202,202
+740,911,911,/997/1009/967/911/,fiber tracts,fiber tracts,trochlear nerve,trochlear nerve,IVn,IVn,,,,"IVn: rgb(200,201,200)",200,201,200
+741,901,901,/997/1009/967/901/,fiber tracts,fiber tracts,trigeminal nerve,trigeminal nerve,Vn,Vn,,,,"Vn: rgb(203,199,203)",203,199,203
+742,93,93,/997/1009/967/901/93/,fiber tracts,fiber tracts,motor root of the trigeminal nerve,motor root of the trigeminal nerve,moV,moV,,,,"moV: rgb(204,203,202)",204,203,202
+743,229,229,/997/1009/967/901/229/,fiber tracts,fiber tracts,sensory root of the trigeminal nerve,sensory root of the trigeminal nerve,sV,sV,,,,"sV: rgb(202,202,203)",202,202,203
+744,794,794,/997/1009/967/901/229/794/,fiber tracts,fiber tracts,spinal tract of the trigeminal nerve,spinal tract of the trigeminal nerve,sptV,sptV,,,,"sptV: rgb(200,202,202)",200,202,202
+745,798,798,/997/1009/967/798/,fiber tracts,fiber tracts,facial nerve,facial nerve,VIIn,VIIn,,,,"VIIn: rgb(204,204,199)",204,204,199
+746,1116,1116,/997/1009/967/798/1116/,fiber tracts,fiber tracts,genu of the facial nerve,genu of the facial nerve,gVIIn,gVIIn,,,,"gVIIn: rgb(201,204,199)",201,204,199
+747,933,933,/997/1009/967/933/,fiber tracts,fiber tracts,vestibulocochlear nerve,vestibulocochlear nerve,VIIIn,VIIIn,,,,"VIIIn: rgb(201,199,202)",201,199,202
+748,413,413,/997/1009/967/933/413/,fiber tracts,fiber tracts,vestibular nerve,vestibular nerve,vVIIIn,vVIIIn,,,,"vVIIIn: rgb(201,202,203)",201,202,203
+749,948,948,/997/1009/967/933/948/,fiber tracts,fiber tracts,cochlear nerve,cochlear nerve,cVIIIn,cVIIIn,,,,"cVIIIn: rgb(202,201,200)",202,201,200
+750,841,841,/997/1009/967/933/948/841/,fiber tracts,fiber tracts,trapezoid body,trapezoid body,tb,tb,,,,"tb: rgb(204,199,203)",204,199,203
+751,506,506,/997/1009/967/933/948/506/,fiber tracts,fiber tracts,dorsal acoustic stria,dorsal acoustic stria,das,das,,,,"das: rgb(204,203,200)",204,203,200
+752,658,658,/997/1009/967/933/948/658/,fiber tracts,fiber tracts,lateral lemniscus,lateral lemniscus,ll,ll,,,,"ll: rgb(201,201,203)",201,201,203
+753,633,633,/997/1009/967/933/948/633/,fiber tracts,fiber tracts,inferior colliculus commissure,inferior colliculus commissure,cic,cic,,,,"cic: rgb(203,201,201)",203,201,201
+754,482,482,/997/1009/967/933/948/482/,fiber tracts,fiber tracts,brachium of the inferior colliculus,brachium of the inferior colliculus,bic,bic,,,,"bic: rgb(201,200,200)",201,200,200
+755,917,917,/997/1009/967/917/,fiber tracts,fiber tracts,vagus nerve,vagus nerve,Xn,Xn,,,,"Xn: rgb(199,201,203)",199,201,203
+756,237,237,/997/1009/967/917/237/,fiber tracts,fiber tracts,solitary tract,solitary tract,ts,ts,,,,"ts: rgb(200,202,199)",200,202,199
+757,792,792,/997/1009/967/792/,fiber tracts,fiber tracts,dorsal roots,dorsal roots,drt,drt,,,,"drt: rgb(202,200,202)",202,200,202
+758,932,932,/997/1009/967/792/932/,fiber tracts,fiber tracts,cervicothalamic tract,cervicothalamic tract,cett,cett,,,,"cett: rgb(204,199,202)",204,199,202
+759,514,514,/997/1009/967/792/932/514/,fiber tracts,fiber tracts,dorsal column,dorsal column,dc,dc,,,,"dc: rgb(204,200,203)",204,200,203
+760,380,380,/997/1009/967/792/932/514/380/,fiber tracts,fiber tracts,cuneate fascicle,cuneate fascicle,cuf,cuf,,,,"cuf: rgb(202,201,204)",202,201,204
+761,697,697,/997/1009/967/792/932/697/,fiber tracts,fiber tracts,medial lemniscus,medial lemniscus,ml,ml,,,,"ml: rgb(202,204,200)",202,204,200
+762,960,960,/997/1009/960/,fiber tracts,fiber tracts,cerebellum related fiber tracts,cerebellum related fiber tracts,cbf,cbf,,,,"cbf: rgb(201,202,200)",201,202,200
+763,744,744,/997/1009/960/744/,fiber tracts,fiber tracts,cerebellar commissure,cerebellar commissure,cbc,cbc,,,,"cbc: rgb(203,200,202)",203,200,202
+764,752,752,/997/1009/960/752/,fiber tracts,fiber tracts,cerebellar peduncles,cerebellar peduncles,cbp,cbp,,,,"cbp: rgb(202,200,203)",202,200,203
+765,326,326,/997/1009/960/752/326/,fiber tracts,fiber tracts,superior cerebelar peduncles,superior cerebelar peduncles,scp,scp,,,,"scp: rgb(203,201,203)",203,201,203
+766,812,812,/997/1009/960/752/326/812/,fiber tracts,fiber tracts,superior cerebellar peduncle decussation,superior cerebellar peduncle decussation,dscp,dscp,,,,"dscp: rgb(204,199,204)",204,199,204
+767,850,850,/997/1009/960/752/326/850/,fiber tracts,fiber tracts,uncinate fascicle,uncinate fascicle,uf,uf,,,,"uf: rgb(203,201,200)",203,201,200
+768,866,866,/997/1009/960/752/326/866/,fiber tracts,fiber tracts,ventral spinocerebellar tract,ventral spinocerebellar tract,sctv,sctv,,,,"sctv: rgb(203,199,204)",203,199,204
+769,78,78,/997/1009/960/752/78/,fiber tracts,fiber tracts,middle cerebellar peduncle,middle cerebellar peduncle,mcp,mcp,,,,"mcp: rgb(204,204,202)",204,204,202
+770,1123,1123,/997/1009/960/752/1123/,fiber tracts,fiber tracts,inferior cerebellar peduncle,inferior cerebellar peduncle,icp,icp,,,,"icp: rgb(201,201,200)",201,201,200
+771,553,553,/997/1009/960/752/1123/553/,fiber tracts,fiber tracts,dorsal spinocerebellar tract,dorsal spinocerebellar tract,sctd,sctd,,,,"sctd: rgb(201,202,202)",201,202,202
+772,728,728,/997/1009/960/728/,fiber tracts,fiber tracts,arbor vitae,arbor vitae,arb,arb,,,,"arb: rgb(203,201,204)",203,201,204
+773,484682512,NaN,/997/1009/484682512/,fiber tracts,fiber tracts,supra-callosal cerebral white matter,supra-callosal cerebral white matter,scwm,scwm,,,,"scwm: rgb(201,201,202)",201,201,202
+774,983,983,/997/1009/983/,fiber tracts,fiber tracts,lateral forebrain bundle system,lateral forebrain bundle system,lfbs,lfbs,,,,"lfbs: rgb(199,204,202)",199,204,202
+775,776,776,/997/1009/983/776/,fiber tracts,fiber tracts,corpus callosum,corpus callosum,cc,cc,,,,"cc: rgb(199,201,202)",199,201,202
+776,956,956,/997/1009/983/776/956/,fiber tracts,fiber tracts,"corpus callosum, anterior forceps","corpus callosum, anterior forceps",fa,fa,,,,"fa: rgb(202,199,204)",202,199,204
+777,579,579,/997/1009/983/776/956/579/,fiber tracts,fiber tracts,external capsule,external capsule,ec,ec,,,,"ec: rgb(200,203,204)",200,203,204
+778,964,964,/997/1009/983/776/964/,fiber tracts,fiber tracts,"corpus callosum, extreme capsule","corpus callosum, extreme capsule",ee,ee,,,,"ee: rgb(201,200,202)",201,200,202
+779,1108,1108,/997/1009/983/776/1108/,fiber tracts,fiber tracts,genu of corpus callosum,genu of corpus callosum,ccg,ccg,,,,"ccg: rgb(204,199,201)",204,199,201
+780,971,971,/997/1009/983/776/971/,fiber tracts,fiber tracts,"corpus callosum, posterior forceps","corpus callosum, posterior forceps",fp,fp,,,,"fp: rgb(200,201,202)",200,201,202
+781,484682516,NaN,/997/1009/983/776/484682516/,fiber tracts,fiber tracts,"corpus callosum, body","corpus callosum, body",ccb,ccb,,,,"ccb: rgb(201,199,201)",201,199,201
+782,986,986,/997/1009/983/776/986/,fiber tracts,fiber tracts,"corpus callosum, splenium","corpus callosum, splenium",ccs,ccs,,,,"ccs: rgb(199,202,204)",199,202,204
+783,784,784,/997/1009/983/784/,fiber tracts,fiber tracts,corticospinal tract,corticospinal tract,cst,cst,,,,"cst: rgb(200,199,204)",200,199,204
+784,6,6,/997/1009/983/784/6/,fiber tracts,fiber tracts,internal capsule,internal capsule,int,int,,,,"int: rgb(204,204,204)",204,204,204
+785,924,924,/997/1009/983/784/924/,fiber tracts,fiber tracts,cerebal peduncle,cerebal peduncle,cpd,cpd,,,,"cpd: rgb(204,202,199)",204,202,199
+786,190,190,/997/1009/983/784/190/,fiber tracts,fiber tracts,pyramid,pyramid,py,py,,,,"py: rgb(199,201,201)",199,201,201
+787,198,198,/997/1009/983/784/198/,fiber tracts,fiber tracts,pyramidal decussation,pyramidal decussation,pyd,pyd,,,,"pyd: rgb(201,199,204)",201,199,204
+788,896,896,/997/1009/983/896/,fiber tracts,fiber tracts,thalamus related,thalamus related,lfbst,lfbst,,,,"lfbst: rgb(199,203,204)",199,203,204
+789,1092,1092,/997/1009/983/896/1092/,fiber tracts,fiber tracts,external medullary lamina of the thalamus,external medullary lamina of the thalamus,em,em,,,,"em: rgb(199,202,202)",199,202,202
+790,484682520,NaN,/997/1009/983/896/484682520/,fiber tracts,fiber tracts,optic radiation,optic radiation,or,or,,,,"or: rgb(203,201,199)",203,201,199
+791,484682524,NaN,/997/1009/983/896/484682524/,fiber tracts,fiber tracts,auditory radiation,auditory radiation,ar,ar,,,,"ar: rgb(204,200,202)",204,200,202
+792,1000,1000,/997/1009/1000/,fiber tracts,fiber tracts,extrapyramidal fiber systems,extrapyramidal fiber systems,eps,eps,,,,"eps: rgb(202,203,199)",202,203,199
+793,760,760,/997/1009/1000/760/,fiber tracts,fiber tracts,cerebral nuclei related,cerebral nuclei related,epsc,epsc,,,,"epsc: rgb(200,202,203)",200,202,203
+794,102,102,/997/1009/1000/760/102/,fiber tracts,fiber tracts,nigrostriatal tract,nigrostriatal tract,nst,nst,,,,"nst: rgb(204,202,203)",204,202,203
+795,877,877,/997/1009/1000/877/,fiber tracts,fiber tracts,tectospinal pathway,tectospinal pathway,tsp,tsp,,,,"tsp: rgb(200,203,201)",200,203,201
+796,1051,1051,/997/1009/1000/877/1051/,fiber tracts,fiber tracts,direct tectospinal pathway,direct tectospinal pathway,tspd,tspd,,,,"tspd: rgb(203,200,200)",203,200,200
+797,1060,1060,/997/1009/1000/877/1060/,fiber tracts,fiber tracts,doral tegmental decussation,doral tegmental decussation,dtd,dtd,,,,"dtd: rgb(202,202,199)",202,202,199
+798,1043,1043,/997/1009/1000/877/1043/,fiber tracts,fiber tracts,crossed tectospinal pathway,crossed tectospinal pathway,tspc,tspc,,,,"tspc: rgb(200,200,204)",200,200,204
+799,863,863,/997/1009/1000/863/,fiber tracts,fiber tracts,rubrospinal tract,rubrospinal tract,rust,rust,,,,"rust: rgb(200,200,203)",200,200,203
+800,397,397,/997/1009/1000/863/397/,fiber tracts,fiber tracts,ventral tegmental decussation,ventral tegmental decussation,vtd,vtd,,,,"vtd: rgb(202,203,201)",202,203,201
+801,991,991,/997/1009/991/,fiber tracts,fiber tracts,medial forebrain bundle system,medial forebrain bundle system,mfbs,mfbs,,,,"mfbs: rgb(203,202,199)",203,202,199
+802,768,768,/997/1009/991/768/,fiber tracts,fiber tracts,cerebrum related,cerebrum related,mfbc,mfbc,,,,"mfbc: rgb(201,203,199)",201,203,199
+803,884,884,/997/1009/991/768/884/,fiber tracts,fiber tracts,amygdalar capsule,amygdalar capsule,amc,amc,,,,"amc: rgb(200,201,203)",200,201,203
+804,908,908,/997/1009/991/768/908/,fiber tracts,fiber tracts,"anterior commissure, temporal limb","anterior commissure, temporal limb",act,act,,,,"act: rgb(201,201,201)",201,201,201
+805,940,940,/997/1009/991/768/940/,fiber tracts,fiber tracts,cingulum bundle,cingulum bundle,cing,cing,,,,"cing: rgb(202,204,199)",202,204,199
+806,1099,1099,/997/1009/991/768/1099/,fiber tracts,fiber tracts,fornix system,fornix system,fxs,fxs,,,,"fxs: rgb(204,201,199)",204,201,199
+807,466,466,/997/1009/991/768/1099/466/,fiber tracts,fiber tracts,alveus,alveus,alv,alv,,,,"alv: rgb(199,200,204)",199,200,204
+808,530,530,/997/1009/991/768/1099/530/,fiber tracts,fiber tracts,dorsal fornix,dorsal fornix,df,df,,,,"df: rgb(203,200,204)",203,200,204
+809,603,603,/997/1009/991/768/1099/603/,fiber tracts,fiber tracts,fimbria,fimbria,fi,fi,,,,"fi: rgb(203,200,203)",203,200,203
+810,737,737,/997/1009/991/768/1099/737/,fiber tracts,fiber tracts,postcommissural fornix,postcommissural fornix,fxpo,fxpo,,,,"fxpo: rgb(200,200,201)",200,200,201
+811,428,428,/997/1009/991/768/1099/737/428/,fiber tracts,fiber tracts,medial corticohypothalamic tract,medial corticohypothalamic tract,mct,mct,,,,"mct: rgb(204,200,204)",204,200,204
+812,436,436,/997/1009/991/768/1099/737/436/,fiber tracts,fiber tracts,columns of the fornix,columns of the fornix,fx,fx,,,,"fx: rgb(199,200,202)",199,200,202
+813,618,618,/997/1009/991/768/1099/618/,fiber tracts,fiber tracts,hippocampal commissures,hippocampal commissures,hc,hc,,,,"hc: rgb(201,201,204)",201,201,204
+814,443,443,/997/1009/991/768/1099/618/443/,fiber tracts,fiber tracts,dorsal hippocampal commissure,dorsal hippocampal commissure,dhc,dhc,,,,"dhc: rgb(201,204,201)",201,204,201
+815,449,449,/997/1009/991/768/1099/618/449/,fiber tracts,fiber tracts,ventral hippocampal commissure,ventral hippocampal commissure,vhc,vhc,,,,"vhc: rgb(200,201,201)",200,201,201
+816,301,301,/997/1009/991/768/301/,fiber tracts,fiber tracts,stria terminalis,stria terminalis,st,st,,,,"st: rgb(200,203,199)",200,203,199
+817,484682528,NaN,/997/1009/991/768/301/484682528/,fiber tracts,fiber tracts,commissural branch of stria terminalis,commissural branch of stria terminalis,stc,stc,,,,"stc: rgb(199,202,200)",199,202,200
+818,824,824,/997/1009/991/824/,fiber tracts,fiber tracts,hypothalamus related,hypothalamus related,mfsbshy,mfsbshy,,,,"mfsbshy: rgb(200,204,201)",200,204,201
+819,54,54,/997/1009/991/824/54/,fiber tracts,fiber tracts,medial forebrain bundle,medial forebrain bundle,mfb,mfb,,,,"mfb: rgb(203,204,203)",203,204,203
+820,349,349,/997/1009/991/824/349/,fiber tracts,fiber tracts,supraoptic commissures,supraoptic commissures,sup,sup,,,,"sup: rgb(204,202,201)",204,202,201
+821,46,46,/997/1009/991/824/46/,fiber tracts,fiber tracts,mammillary related,mammillary related,mfbsma,mfbsma,,,,"mfbsma: rgb(204,203,203)",204,203,203
+822,753,753,/997/1009/991/824/46/753/,fiber tracts,fiber tracts,principal mammillary tract,principal mammillary tract,pm,pm,,,,"pm: rgb(200,203,202)",200,203,202
+823,690,690,/997/1009/991/824/46/690/,fiber tracts,fiber tracts,mammillothalamic tract,mammillothalamic tract,mtt,mtt,,,,"mtt: rgb(199,201,204)",199,201,204
+824,681,681,/997/1009/991/824/46/681/,fiber tracts,fiber tracts,mammillotegmental tract,mammillotegmental tract,mtg,mtg,,,,"mtg: rgb(200,200,200)",200,200,200
+825,673,673,/997/1009/991/824/46/673/,fiber tracts,fiber tracts,mammillary peduncle,mammillary peduncle,mp,mp,,,,"mp: rgb(204,202,200)",204,202,200
+826,1083,1083,/997/1009/991/824/1083/,fiber tracts,fiber tracts,epithalamus related,epithalamus related,mfbse,mfbse,,,,"mfbse: rgb(200,199,203)",200,199,203
+827,802,802,/997/1009/991/824/1083/802/,fiber tracts,fiber tracts,stria medullaris,stria medullaris,sm,sm,,,,"sm: rgb(204,201,200)",204,201,200
+828,595,595,/997/1009/991/824/1083/595/,fiber tracts,fiber tracts,fasciculus retroflexus,fasciculus retroflexus,fr,fr,,,,"fr: rgb(199,202,201)",199,202,201
+829,611,611,/997/1009/991/824/1083/611/,fiber tracts,fiber tracts,habenular commissure,habenular commissure,hbc,hbc,,,,"hbc: rgb(200,204,199)",200,204,199
+830,73,73,/997/73/,ventricular systems,ventricular systems,ventricular systems,ventricular systems,VS,VS,,,,"VS: rgb(170,168,170)",170,168,170
+831,81,81,/997/73/81/,ventricular systems,ventricular systems,lateral ventricle,lateral ventricle,VL,VL,,,,"VL: rgb(168,170,170)",168,170,170
+832,98,98,/997/73/81/98/,ventricular systems,ventricular systems,subependymal zone,subependymal zone,SEZ,SEZ,,,,"SEZ: rgb(170,168,169)",170,168,169
+833,108,108,/997/73/81/108/,ventricular systems,ventricular systems,choroid plexus,choroid plexus,chpl,chpl,,,,"chpl: rgb(169,170,168)",169,170,168
+834,129,129,/997/73/129/,ventricular systems,ventricular systems,third ventricle,third ventricle,V3,V3,,,,"V3: rgb(168,169,170)",168,169,170
+835,140,140,/997/73/140/,ventricular systems,ventricular systems,cerebral aqueduct,cerebral aqueduct,AQ,AQ,,,,"AQ: rgb(169,169,168)",169,169,168
+836,145,145,/997/73/145/,ventricular systems,ventricular systems,fourth ventricle,fourth ventricle,V4,V4,,,,"V4: rgb(170,169,167)",170,169,167
+837,153,153,/997/73/145/153/,ventricular systems,ventricular systems,lateral recess,lateral recess,V4r,V4r,,,,"V4r: rgb(169,170,167)",169,170,167
+838,164,164,/997/73/164/,ventricular systems,ventricular systems,"central canal, spinal cord/medulla","central canal, spinal cord/medulla",c,c,,,,"c: rgb(167,170,169)",167,170,169

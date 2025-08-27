@@ -7,6 +7,7 @@ unravel.segment package
    brain_mask
    copy_tifs
    ilastik_pixel_classification
+   labels_to_masks
 
 .. automodule:: unravel.segment
    :members:

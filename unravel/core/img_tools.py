@@ -3,108 +3,150 @@
 """ 
 This module contains functions processing 3D images: 
     - resample: Resample a 3D ndarray.
-    - reorient_for_raw_to_nii_conv: Reorient an ndarray for registration or warping to atlas space
+    - reorient_axes: Reorient an ndarray for registration or warping to atlas space
     - pixel_classification: Segment tif series with Ilastik.
     - pad: Pad an ndarray by a specified percentage.
     - reorient_ndarray: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).
     - reorient_ndarray2: Reorient a 3D ndarray based on the 3 letter orientation code (using the letters RLAPSI).
     - rolling_ball_subtraction_opencv_parallel: Subtract background from a 3D ndarray using OpenCV.
-    - cluster_IDs: Prints cluster IDs for clusters > minextent voxels.
+    - label_IDs: Prints label IDs > min_voxel_count (and optionally their sizes) in a 3D ndarray.
     - find_bounding_box: Finds the bounding box of all clusters or a specific cluster in a cluster index ndarray and optionally writes to file.
 """
 
 
+import os
 import cv2 
+import nibabel as nib
 import numpy as np
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
-from glob import glob
 from pathlib import Path
 from rich import print
 from scipy import ndimage
 from scipy.ndimage import rotate
 
-from unravel.core.utils import print_func_name_args_times
-
-
-@print_func_name_args_times()
-def resample(ndarray, xy_res, z_res, res, zoom_order=1):
-    """Resample a 3D ndarray
-    
-    Parameters:
-        ndarray: 3D ndarray to resample
-        xy_res: x/y voxel size in microns (for the original image)
-        z_res: z voxel size in microns
-        res: resolution in microns for the resampled image
-        zoom_order: SciPy zoom order for resampling the native image. Default: 1 (bilinear interpolation)"""
-    zf_xy = xy_res / res # Zoom factor
-    zf_z = z_res / res
-    img_resampled = ndimage.zoom(ndarray, (zf_xy, zf_xy, zf_z), order=zoom_order)
-    return img_resampled
+from unravel.core.img_io import nii_to_ndarray
+from unravel.core.utils import match_files, print_func_name_args_times
 
 @print_func_name_args_times()
-def reorient_for_raw_to_nii_conv(ndarray):
+def resample(ndarray, xy_res=None, z_res=None, target_res=None, target_dims=None, scale=None, zoom_order=1):
+    """Resample a 3D ndarray using target resolution, dimensions, or scale.
+
+    Parameters
+    ----------
+    ndarray : np.ndarray
+        Input 3D array to resample.
+    xy_res : float, optional
+        Current resolution in the x and y dimensions (e.g., in microns). Required if using target_res.
+    z_res : float, optional
+        Current resolution in the z dimension (e.g., in microns). Required if using target_res.
+    target_res : float or tuple of float, optional
+        Target resolution for resampling. If a single float, it is assumed to be isotropic (same for x, y, and z). If a tuple/list of three floats, it is assumed to be anisotropic (different for x/y vs. z).
+    target_dims : tuple of int, optional
+        Target dimensions for resampling (x, y, z). If provided, it overrides target_res.
+    scale : float or list of float, optional
+        Scaling factor for resampling. If a single float, it scales all dimensions equally. If a list of three floats, it scales each dimension independently.
+    zoom_order : int, optional
+        SciPy zoom order for interpolation. Default is 1 (linear interpolation). Use 0 for nearest-neighbor interpolation.
+
+    Returns
+    -------
+    np.ndarray
+        Resampled 3D array.
+
+    Notes
+    -----
+    - This function assumes that the axes of the ndarray are ordered as (x, y, z).
+    - The units of measurement should match for xy_res, z_res, and target_res.
+    """
+    if scale is not None:
+        scale = np.atleast_1d(scale)
+        if len(scale) == 1:
+            zoom_factors = [scale[0]] * 3
+        elif len(scale) == 3:
+            zoom_factors = scale
+        else:
+            raise ValueError("Scale must be a float or list of 3 floats.")
+    elif target_dims is not None:
+        zoom_factors = [new / old for new, old in zip(target_dims, ndarray.shape)]
+    elif target_res is not None:
+        if xy_res is None or z_res is None:
+            raise ValueError("xy_res and z_res must be provided if using target_res.")
+        target_res = np.atleast_1d(target_res)
+        if len(target_res) == 1:
+            target_res = [target_res[0]] * 3
+        elif len(target_res) != 3:
+            raise ValueError("target_res must be a float or a list of 3 floats.")
+        zoom_factors = [xy_res / target_res[0], xy_res / target_res[1], z_res / target_res[2]]
+    else:
+        raise ValueError("Must provide either scale, target_res, or target_dims.")
+
+    return ndimage.zoom(ndarray, zoom_factors, order=zoom_order)
+
+@print_func_name_args_times()
+def reorient_axes(ndarray):
     """Reorient resampled ndarray for registration or warping to atlas space 
-    (legacy mode mimics MIRACL's tif to .nii.gz conversion)"""
+    (mimics orientation change from MIRACL's tif to .nii.gz conversion)"""
     img_reoriented = np.einsum('zyx->xzy', ndarray)
     return np.transpose(img_reoriented, (2, 1, 0))
 
 @print_func_name_args_times()
-def reverse_reorient_for_raw_to_nii_conv(ndarray):
-    """After warping to native space, reorients image to match tissue"""
+def reverse_reorient_axes(ndarray):
+    """Reorient an ndarray by rotating and flipping to correct axis order for image conversion.
+
+    Rotates 90 degrees to the right and flips horizontally.
+    
+    This can reverse the reorientation done by reorient_axes().
+    """
     rotated_img = rotate(ndarray, -90, reshape=True, axes=(0, 1)) # Rotate 90 degrees to the right
     flipped_img = np.fliplr(rotated_img) # Flip horizontally
     return flipped_img
 
-# @print_func_name_args_times()
-# def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_log=None):
-#     """Segment tif series with Ilastik."""
-#     tif_dir = str(tif_dir)
-#     tif_list = sorted(glob(f"{tif_dir}/*.tif"))
-#     ilastik_project = str(ilastik_project)
-#     output_dir_ = str(output_dir)
-#     cmd = [
-#         'run_ilastik.sh',
-#         '--headless',
-#         '--project', ilastik_project,
-#         '--export_source', 'Simple Segmentation',
-#         '--output_format', 'tif',
-#         '--output_filename_format', f'{output_dir}/{{nickname}}.tif',
-#     ] + tif_list
-#     if not Path(output_dir_).exists():
-#         if ilastik_log == None:
-#             subprocess.run(cmd)
-#         else:
-#             subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
 @print_func_name_args_times()
-def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_log=None):
+def pixel_classification(tif_dir, ilastik_project, output_dir, ilastik_executable=None):
     """Segment tif series with Ilastik using pixel classification."""
-    tif_list = sorted(glob(f"{tif_dir}/*.tif"))
-    if not tif_list:
-        print(f"No TIF files found in {tif_dir}.")
+
+    if ilastik_executable is None:
+        print("\n    [red1]Ilastik executable path not provided. Please provide the path to the Ilastik executable.\n")
         return
 
+    tif_list = match_files('*.tif', base_path=tif_dir)
+    tif_list = [str(tif) for tif in tif_list]
+    
     cmd = [
-        'run_ilastik.sh',  # Make sure this path is correct
+        ilastik_executable, # Path to ilastik executable as a string
         '--headless',
         '--project', str(ilastik_project),
         '--export_source', 'Simple Segmentation',
         '--output_format', 'tif',
         '--output_filename_format', f'{str(output_dir)}/{{nickname}}.tif'
     ] + tif_list
-
-    print("\n    Running Ilastik with command:\n", ' '.join(cmd))
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    cmd = [str(x) for x in cmd]
+    print("\n    Running Ilastik with command:\n", ' '.join(cmd[:10]), ' '.join(tif_list[:3]), f'[default bold]...\n')
+    result = subprocess.run(cmd, capture_output=True, text=True, shell=(os.name == 'nt'))
     if result.returncode != 0:
         print("\n    Ilastik failed with error:\n", result.stderr)
     else:
-        print("\n    Ilastik completed successfully.\n")
+        print("    Ilastik completed successfully.")
 
 @print_func_name_args_times()
-def pad(ndarray, pad_width=0.15):
-    """Pads ndarray by 15% of voxels on all sides"""
-    pad_factor = 1 + 2 * pad_width
+def pad(ndarray, pad_percent=0.25):
+    """Pads ndarray by a specified percentage.
+
+    Parameters:
+    -----------
+    ndarray : numpy.ndarray
+        Input 3D ndarray to pad.
+
+    pad_percent : float
+        Percentage of padding to add to each dimension. Default: 0.25 (25%%).
+
+    Returns:
+    --------
+    padded_ndarray : numpy.ndarray
+        Padded 3D ndarray.
+    """
+    pad_factor = 1 + 2 * pad_percent
     pad_width_x = round(((ndarray.shape[0] * pad_factor) - ndarray.shape[0]) / 2)
     pad_width_y = round(((ndarray.shape[1] * pad_factor) - ndarray.shape[1]) / 2)
     pad_width_z = round(((ndarray.shape[2] * pad_factor) - ndarray.shape[2]) / 2)
@@ -201,29 +243,58 @@ def rolling_ball_subtraction_opencv_parallel(ndarray, radius, threads=8):
     return bkg_subtracted_img
 
 print_func_name_args_times()
-def cluster_IDs(ndarray, min_extent=1, print_IDs=False, print_sizes=False):
-    """Gets unique intensities [and sizes] for regions/clusters > minextent voxels and prints them in a string-separated list. 
+def label_IDs(ndarray, min_voxel_count=1, print_IDs=False, print_sizes=False):
+    """
+    This finds and prints unique intensities in the ndarry with more than min_voxel_count voxels (does not check for connectedness).
 
-    Args:
-        ndarray
-        min_extent (int, optional): _description_. Defaults to 1.
-        print_IDs (bool, optional): _description_. Defaults to False.
-        print_sizes (bool, optional): _description_. Defaults to False.
+    Optionally, it also prints the number of voxels for each label ID (intensity).
 
-    Returns:
-        list of ints: list of unique intensities
+    Parameters
+    ----------
+    ndarray : numpy.ndarray
+        Input array with integer intensities.
+    min_voxel_count : int, optional
+        Minimum size threshold for each intensity in voxels. Labels smaller than this
+        threshold are ignored. Default is 1.
+    print_IDs : bool, optional
+        If True, print the IDs of labels above the minimum size threshold. Default is False.
+    print_sizes : bool, optional
+        If True, print both the IDs and sizes of label IDs above the minimum size threshold.
+        Default is False.
+
+    Returns
+    -------
+    list of int
+        List of unique label IDs (intensities) that meet the minimum size threshold.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> array = np.array([[0, 1, 1], [0, 2, 2], [3, 3, 3]])
+    >>> cluster_IDs(array, min_voxel_count=2)
+    [1, 2, 3]
+
+    >>> cluster_IDs(array, min_voxel_count=2, print_IDs=True)
+    1 2 3
+
+    >>> cluster_IDs(array, min_voxel_count=2, print_sizes=True)
+    ID: 1, Size: 2
+    ID: 2, Size: 2
+    ID: 3, Size: 3
     """
 
     # Get unique intensities and their counts
     unique_intensities, counts = np.unique(ndarray[ndarray > 0], return_counts=True)
 
     # Filter clusters based on size
-    clusters_above_minextent = [intensity for intensity, count in zip(unique_intensities, counts) if count >= min_extent]
+    clusters_above_minextent = [intensity for intensity, count in zip(unique_intensities, counts) if count >= min_voxel_count]
     
     # Print cluster IDs
+    if print_sizes:
+        print(f"\nID,Size")
     for idx, cluster_id in enumerate(clusters_above_minextent):
         if print_sizes:
-            print(f"ID: {int(cluster_id)}, Size: {counts[idx]}")
+            print(f"{int(cluster_id)},{counts[idx]}")
         elif print_IDs:
             print(int(cluster_id), end=' ')
     if print_IDs: # Removes trailing %

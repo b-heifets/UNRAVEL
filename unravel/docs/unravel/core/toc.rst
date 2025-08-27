@@ -4,8 +4,7 @@ unravel.core package
 .. toctree::
    :maxdepth: 2
 
-   argparse_utils
-   argparse_utils_rich
+   help_formatter
    config
    img_io
    img_tools

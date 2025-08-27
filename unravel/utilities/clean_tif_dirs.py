@@ -1,23 +1,25 @@
 #!/usr/bin/env python3
 
 """
-Use ``utils_clean_tifs`` from UNRAVEL to clean directories w/ tif series.
-
-Run command from the experiment directory w/ sample?? folder(s), a sample?? folder, or provide -e or -d arguments.
-
-Usage:
-------
-    utils_clean_tifs -t <tif_folder_name> -m -v
+Use ``utils_clean_tifs`` (``clean_tiffs``) from UNRAVEL to clean directories w/ tif series.
 
 Tif directory clean up involves:
+    - Finding .tif or .ome.tif files in the tif directory
     - Moving subdirectories to parent dir
     - Moving non-TIF files to parent dir
     - Replacing spaces in TIF file names
 
-Assumes that the extension of the TIF files is .tif or .ome.tif.
+Note:
+    - If -d is not provided, the current directory is used to search for sample?? dirs to process. 
+    - If the current dir is a sample?? dir, it will be processed.
+    - If -d is provided, the specified dirs and/or dirs containing sample?? dirs will be processed.
+    - If -p is not provided, the default pattern for dirs to process is 'sample??'.
+
+Usage:
+------
+    utils_clean_tifs -t <list of tif dir> --move [-d list of paths] [-p sample??] [-v]
 """
 
-import argparse
 import shutil
 from glob import glob
 from pathlib import Path
@@ -25,20 +27,26 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration 
-from unravel.core.utils import print_cmd_and_times, initialize_progress_bar, get_samples
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, initialize_progress_bar, get_samples
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-e', '--exp_paths', help='List of experiment dir paths w/ sample?? dirs to process.', nargs='*', default=None, action=SM)
-    parser.add_argument('-p', '--pattern', help='Pattern for sample?? dirs. Use cwd if no matches.', default='sample??', action=SM)
-    parser.add_argument('-d', '--dirs', help='List of sample?? dir names or paths to dirs to process', nargs='*', default=None, action=SM)
-    parser.add_argument('-t', '--tif_dirs', help='List of tif series dirs to check.', nargs='*', required=True, action=SM)
-    parser.add_argument('-m', '--move', help='Enable moving of subdirs and non-TIF files to parent dir.', action='store_true', default=False)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-t', '--tif_dirs', help='List names of folders with tif series to check (or paths relative to sample??/)', nargs='*', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-m', '--move', help='Enable moving of subdirs and non-TIF files to parent dir.', action='store_true', default=False)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-d', '--dirs', help='Paths to sample?? dirs and/or dirs containing them (space-separated) for batch processing. Default: current dir', nargs='*', default=None, action=SM)
+    general.add_argument('-p', '--pattern', help='Pattern for directories to process. Default: sample??', default='sample??', action=SM)
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
@@ -88,17 +96,19 @@ def clean_tifs_dir(path_to_tif_dir, move, verbose):
                 new_file_path = file.with_name(new_file_name)
                 file.rename(new_file_path)
 
+
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
-    samples = get_samples(args.dirs, args.pattern, args.exp_paths)
-    
-    progress, task_id = initialize_progress_bar(len(samples), "[red]Processing samples...")
+    sample_paths = get_samples(args.dirs, args.pattern, args.verbose)
+
+    progress, task_id = initialize_progress_bar(len(sample_paths), "[red]Processing samples...")
     with Live(progress):
-        for sample in samples:
-
-            # Resolve path to sample folder
-            sample_path = Path(sample).resolve() if sample != Path.cwd().name else Path.cwd()
+        for sample_path in sample_paths:
 
             # Clean TIF directories
             tif_dirs = [sample_path / tif_dir for tif_dir in args.tif_dirs]            
@@ -107,9 +117,8 @@ def main():
 
             progress.update(task_id, advance=1)
 
+    verbose_end_msg()
+
 
 if __name__ == '__main__':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    main()

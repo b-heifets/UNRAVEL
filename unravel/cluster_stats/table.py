@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_table`` from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
-
-Usage:
-------
-    cluster_table
+Use ``cstats_table`` (``ct``) from UNRAVEL to summarize volumes of the top x regions and collapsing them into parent regions until a criterion is met.
 
 Prereqs:
-    ``cluster_index`` has been run. Run this command from the valid_clusters dir. <asterisk>cluster_info.txt in working dir.
+    - This command is usually run via ``cstats_summary``.
+
+Inputs:
+    - CSVs with sunburst data for each cluster (e.g., cluster_`*`_sunburst.csv).
+    - `*`cluster_info.txt in the parent dir (made by ``cstats_fdr`` and copied by ``cstats_org_data``).
+
+Outputs:
+    - A color-coded xlsx table summarizing the top regions and their volumes for each cluster.
+    - A hierarchically sorted CSV with regional volumes for each cluster.
 
 Sorting by hierarchy and volume:
 --------------------------------
@@ -21,10 +25,18 @@ Sort Within Groups: Within each group created in step 1:
 
 Maintain Grouping Order:
    - As we move to deeper depth levels, maintain the grouping and ordering established in previous steps (only adjusting the order within groups based on the new depth's aggregate volumes).
+
+Note: 
+    - CCFv3-2020_info.csv is in UNRAVEL/unravel/core/csvs/
+    - It has columns: structure_id_path,very_general_region,collapsed_region_name,abbreviation,collapsed_region,other_abbreviation,other_abbreviation_defined,layer,sunburst
+    - Alternatively, use CCFv3-2017_info.csv or provide a custom CSV with the same columns.
+
+Usage:
+------
+    cstats_table [-vcd <val_clusters_dir>] [-t <number of top regions>] [-pv <perecent volume criterion>] [-csv CCFv3-2020_info.csv] [-rgb sunburst_RGBs.csv] [-v]
 """
 
 
-import argparse
 import openpyxl
 import math
 import numpy as np
@@ -38,21 +50,33 @@ from openpyxl.styles import Border, Side, Font, Alignment
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg
+
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from unravel.cluster_stats.index (else cwd)', action=SM)
-    parser.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
-    parser.add_argument('-pv', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-vcd', '--val_clusters_dir', help='Path to the valid_clusters dir output from unravel.cluster_stats.index (else cwd)', action=SM)
+    opts.add_argument('-t', '--top_regions', help='Number of top regions to output. Default: 4', default=4, type=int, action=SM)
+    opts.add_argument('-pv', '--percent_vol', help='Percentage of the total volume the top regions must comprise [after collapsing]. Default: 0.8', default=0.8, type=float, action=SM)
+    opts.add_argument('-csv', '--info_csv_path', help='CSV name or path/name.csv. Default: CCFv3-2020_info.csv', default='CCFv3-2020_info.csv', action=SM)
+    opts.add_argument('-rgb', '--sunburst_rgbs', help='CSV name or path/name.csv. Default: sunburst_RGBs.csv', default='sunburst_RGBs.csv', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 # TODO: Correct font color for the volumes column. 'fiber tracts' is filled with white rather than the color of the fiber tracts
-
+# TODO: 'CUL4, 5' is not filled with the color of the region. 
+# TODO: The first 3 columns need to be converted to a number in the excel file. Can this be done in the code?
+# TODO: Sometimes when copying tables to PPT, the close to black color in the Volumes column is not visible.
+# TODO: Fix the font in the volumes column to be white if the fill color is dark and black if the fill color is light
+# TODO: CA3slm is not filled with the color of the region.
 
 def fill_na_with_last_known(df):
     depth_columns = [col for col in df.columns if 'Depth' in col]
@@ -271,9 +295,12 @@ def get_fill_color(value, max_value):
     
     return fill_color, font_color
 
-
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Find cluster_* dirs in the current dir
     valid_clusters_dir = Path(args.val_clusters_dir) if args.val_clusters_dir else Path.cwd()
@@ -289,12 +316,16 @@ def main():
     cluster_info_txt_parent = Path(args.val_clusters_dir).parent if args.val_clusters_dir else Path.cwd()
     cluster_info_files = list(cluster_info_txt_parent.glob('*cluster_info.txt'))
     
-    # If no cluster_info.txt file is found, exit
+    # If no cluster_info.txt file is found, search in the grandparent dir, and exit if not found
     if not cluster_info_files:
-        print(f'\n    [red]No *cluster_info.txt file found in {cluster_info_txt_parent}. Exiting...')
-        return
-    else:
-        cluster_info_file = cluster_info_files[0] # first match
+        # Check for it in the grandparent dir
+        cluster_info_txt_grandparent = cluster_info_txt_parent.parent
+        cluster_info_files = list(cluster_info_txt_grandparent.glob('*cluster_info.txt'))
+        if not cluster_info_files:
+            print(f'\n    [red]No *cluster_info.txt file found in {cluster_info_txt_parent}. Exiting...')
+            return
+    
+    cluster_info_file = cluster_info_files[0] # first match
  
     # Load the cluster info file
     cluster_info_df = pd.read_csv(cluster_info_file, sep='\t', header=None)  # Assuming tab-separated values; adjust if different
@@ -321,7 +352,10 @@ def main():
     columns_to_load = ['abbreviation', 'general_region',  'structure_id_path']
 
     # Load the specified columns from the CSV with CCFv3 info
-    ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'CCFv3_info.csv', usecols=columns_to_load)
+    if args.info_csv_path == 'CCFv3-2017_info.csv' or args.info_csv_path == 'CCFv3-2020_info.csv': 
+        ccfv3_info_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / args.info_csv_path, usecols=columns_to_load)
+    else:
+        ccfv3_info_df = pd.read_csv(args.info_csv_path, usecols=columns_to_load)
 
     # For each cluster directory
     for cluster_sunburst_csv in cluster_sunburst_csvs:
@@ -373,7 +407,10 @@ def main():
     print(f'\n{top_regions_and_percent_vols_df.to_string(index=False)}\n')
 
     # Load csv with RGB values 
-    sunburst_RGBs_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'sunburst_RGBs.csv', header=None)
+    if args.sunburst_rgbs == 'sunburst_RGBs.csv': 
+        sunburst_RGBs_df = pd.read_csv(Path(__file__).parent.parent / 'core' / 'csvs' / 'sunburst_RGBs.csv', header=None)
+    else:
+        sunburst_RGBs_df = pd.read_csv(args.sunburst_rgbs, header=None)
 
     # Parse the dataframe to get a dictionary of region names and their corresponding RGB values
     rgb_values = {}
@@ -535,9 +572,8 @@ def main():
     with open(valid_clusters_dir / 'valid_cluster_IDs_sorted_by_anatomy.txt', 'w') as f:
         f.write(valid_cluster_ids_str)
 
+    verbose_end_msg()
+    
 
 if __name__ == '__main__':
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    main()

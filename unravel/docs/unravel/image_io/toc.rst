@@ -6,7 +6,7 @@ unravel.image_io package
 
    h5_to_tifs
    img_to_npy
-   io_img
+   convert_img
    metadata
    nii_hd
    nii_info
@@ -16,6 +16,9 @@ unravel.image_io package
    reorient_nii
    tif_to_tifs
    zarr_to_nii
+   zarr_compress
+   points_to_img
+   img_to_points
 
 .. automodule:: unravel.image_io
    :members:

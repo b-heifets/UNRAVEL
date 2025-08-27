@@ -1,50 +1,62 @@
 #!/usr/bin/env python3
 
 """
-Use ``vstats_whole_to_avg`` from UNRAVEL to average an image with its mirrored version for voxel-wise stats. This can also smooth the image with a kernel and apply a mask.
-
-Usage:
-------
-    vstats_whole_to_avg -k 0.1 -v -tp
-    
-Output:
-    input_img_LRavg.nii.gz
+Use ``vstats_whole_to_avg`` (``lr_avg``) from UNRAVEL to average an image with its mirrored version for voxel-wise stats. This can also smooth the image with a kernel and apply a mask.
 
 Prereqs:
     - Input images from ``vstats_prep``.
         - These may be z-scored with ``vstats_z_score``.
 
+Inputs:
+    - `*`.nii.gz images in the current directory.
+    
+Output:
+    - input_img_LRavg.nii.gz for each input image.
+
 Next steps:
     - Run ``vstats`` to perform voxel-wise stats.
+
+Next commands for voxel-wise stats: 
+    - Prepend condition names with ``utils_prepend``.
+    - Check images in FSLeyes and run ``vstats`` to perform voxel-wise stats.
+
+Next commands for voxel-wise stats:
+        Preprocess atlas space IF images ``vstats_z_score``, prepend condition names with ``utils_prepend``, and perform voxel-wise stats with ``vstats``.
+
+Usage:
+------
+    vstats_whole_to_avg [-i '<asterisk>.nii.gz'] [--kernel 0] [--axis 2] [--shift 0] [--parallel] [--atlas_mask path/atlas_mask.nii.gz] [-v]
 """
 
-import argparse
 import numpy as np
 import nibabel as nib
-from glob import glob
 from fsl.wrappers import fslmaths
 from pathlib import Path
 from rich import print
 from rich.traceback import install
 from concurrent.futures import ThreadPoolExecutor
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, match_files, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 from unravel.voxel_stats.apply_mask import load_mask
 from unravel.voxel_stats.mirror import mirror
         
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--pattern', help='Pattern to match atlas space input images in the working dir. Default: *.nii.gz', default='*.nii.gz', action=SM)
-    parser.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0 ', default=0, type=float, action=SM)
-    parser.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 0', default=0, type=int, action=SM)
-    parser.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping. Default: 2', default=2, type=int, action=SM)
-    parser.add_argument('-tp', '--parallel', help='Enable parallel processing with thread pools', default=False, action='store_true')
-    parser.add_argument('-amas', '--atlas_mask', help='path/atlas_mask.nii.gz', default=None, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-i', '--input', help='File path(s) or pattern(s) for atlas space images. Default: *.nii.gz', default='*.nii.gz', nargs='*', action=SM)
+    opts.add_argument('-k', '--kernel', help='Smoothing kernel radius in mm if > 0. Default: 0', default=0, type=float, action=SM)
+    opts.add_argument('-ax', '--axis', help='Axis to flip the image along. Default: 2', default=2, type=int, action=SM)
+    opts.add_argument('-s', '--shift', help='Number of voxels to shift content after flipping (if atlas is asym.). Default: 0', default=0, type=int, action=SM)
+    opts.add_argument('-tp', '--parallel', help='Enable parallel processing with thread pools', default=False, action='store_true')
+    opts.add_argument('-amas', '--atlas_mask', help='path/atlas_space_mask.nii.gz', default=None, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
+
     return parser.parse_args()
 
 
@@ -90,24 +102,27 @@ def whole_to_LR_avg(file, kernel=0, axis=0, shift=2, atlas_mask=None):
     nib.save(averaged_nii, averaged_filename)
 
 
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
-    files = Path().cwd().glob(args.pattern)
-    print(f'\nImages to process: {list(files)}\n')
+    files = match_files(args.input)
 
-    files = Path().cwd().glob(args.pattern)
+    if args.verbose:
+        print(f'\nInput files: {files}\n')
+
     if args.parallel:
         with ThreadPoolExecutor() as executor:
             executor.map(lambda file: whole_to_LR_avg(file, args.kernel, args.axis, args.shift, args.atlas_mask), files)
     else:
         for file in files:
-            whole_to_LR_avg(file, args)
             whole_to_LR_avg(file, args.kernel, args.axis, args.shift, args.atlas_mask)
-        
 
-if __name__ == '__main__': 
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    verbose_end_msg()
+
+
+if __name__ == '__main__':
+    main()

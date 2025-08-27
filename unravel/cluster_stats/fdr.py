@@ -1,38 +1,41 @@
 #!/usr/bin/env python3
 
 """
-Use ``cluster_fdr`` from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.
-
-Usage
------
-    cluster_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05
+Use ``cstats_fdr`` (``f``) from UNRAVEL to perform FDR correction on a 1 - p value map to define clusters.
 
 Inputs: 
-    - p value map (e.g., <asterisk>vox_p_<asterisk>stat<asterisk>.nii.gz from vstats)    
+    - p value map (e.g., `*`vox_p_`*`stat`*`.nii.gz from vstats)    
 
 Outputs saved in the output directory:
-    - FDR-adjusted p value map
+    - FDR-adjusted 1-p value map (1 - q value defines the threshold for cluster maps)
     - Cluster information CSV
     - Reversed cluster index image (output_dir/input_name_rev_cluster_index.nii.gz)
     - min_cluster_size_in_voxels.txt
     - p_value_threshold.txt
     - 1-p_value_threshold.txt
 
-Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.
+Note:
+    - The q value does not influence the FDR-adjusted 1-p value map, but it does determine the threshold for cluster maps.
+    - Cluster IDs are reversed in the cluster index image so that the largest cluster is 1, the second largest is 2, etc.
+    - For bilateral data processed with a hemispheric mask, next run ``cstats_mirror_indices`` to mirror the cluster indices to the other hemisphere.
+    - For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cstats_validation``.
 
 Making directional cluster indices from non-directional p value maps output from ANOVAs: 
     - Provide the average immunostaining intensity images for each group being contrasted (``img_avg``)
     - The --output needs to have <group1>_v_<group2> in the name
     - _v_ will be replaced with _gt_ or _lt_ based on the effect direction 
     - The cluster index will be split accoding to the effect directions
-    - ``cluster_fdr`` -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v
+    - ``cstats_fdr`` -i vox_p_fstat1.nii.gz -mas mask.nii.gz -q 0.05 -a1 group1_avg.nii.gz -a2 group2_avg.nii.gz -o stats_info_g1_v_g2 -v
 
-For bilateral data processed with a hemispheric mask, next run ``cluster_mirror_indices`` to mirror the cluster indices to the other hemisphere.
+Next commands:
+    - ``cstats_mirror_indices`` to recursively mirror the cluster indices to the other hemisphere (if bilateral data was combined and processed w/ a hemispheric mask).
+    - ``cstats_validation`` to validate the cluster indices (if unilateral data or bilateral data processed with a whole brain mask).
 
-For unilateral data or bilateral data processed with a whole brain mask, the cluster indices are ready for validation with ``cluster_validation``.
+Usage
+-----
+    cstats_fdr -i path/vox_p_tstat1.nii.gz -mas path/mask.nii.gz -q 0.05 0.01 0.001 [-ms 100] [-o output_dir] [-a1 path/avg_img1.nii.gz] [-a2 path/avg_img2.nii.gz] [-th 10] [-v]
 """
 
-import argparse
 import concurrent.futures
 import subprocess
 import numpy as np
@@ -42,26 +45,32 @@ from pathlib import Path
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SM, SuppressMetavar
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
 from unravel.core.config import Configuration
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
-    parser.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
-    parser.add_argument('-q', '--q_value', help='Space-separated list of FDR q values', required=True, nargs='*', type=float, action=SM)
-    parser.add_argument('-ms', '--min_size', help='Min cluster size in voxels. Default: 100', default=100, type=int, action=SM)
-    parser.add_argument('-o', '--output', help='Output directory. Default: input_name_q{args.q_value}"', default=None, action=SM)
-    parser.add_argument('-a1', '--avg_img1', help='path/averaged_immunofluo_group1.nii.gz for spliting the cluster index based on effect direction', action=SM)
-    parser.add_argument('-a2', '--avg_img2', help='path/averaged_immunofluo_group2.nii.gz for spliting the cluster index based on effect direction', action=SM)
-    parser.add_argument('-th', '--threads', help='Number of threads. Default: 10', default=10, type=int, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity', default=False, action='store_true')
-    parser.epilog = __doc__
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='path/p_value_map.nii.gz', required=True, action=SM)
+    reqs.add_argument('-mas', '--mask', help='path/mask.nii.gz', required=True, action=SM)
+    reqs.add_argument('-q', '--q_value', help='Space-separated list of FDR q values', required=True, nargs='*', type=float, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-ms', '--min_size', help='Min cluster size in voxels. Default: 100', default=100, type=int, action=SM)
+    opts.add_argument('-o', '--output', help='Output directory. Default: input_name_q{args.q_value}"', default=None, action=SM)
+    opts.add_argument('-a1', '--avg_img1', help='path/averaged_immunofluo_group1.nii.gz for spliting the cluster index based on effect direction', action=SM)
+    opts.add_argument('-a2', '--avg_img2', help='path/averaged_immunofluo_group2.nii.gz for spliting the cluster index based on effect direction', action=SM)
+    opts.add_argument('-th', '--threads', help='Number of threads. Default: 10', default=10, type=int, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', default=False, action='store_true')
+
     return parser.parse_args()
 
-# TODO: could add optional args like in ``vstats`` for running the ``cluster_fdr`` command. 
+# TODO: could add optional args like in ``vstats`` for running the ``cstats_fdr`` command. 
 
 @print_func_name_args_times()
 def fdr(input_path, fdr_path, mask_path, q_value):
@@ -74,7 +83,7 @@ def fdr(input_path, fdr_path, mask_path, q_value):
         - q_value (float): the q value for FDR correction
 
     Saves in the fdr_path:
-        - FDR-adjusted p value map
+        - FDR-adjusted 1-p value map (1 - q value defines the threshold)
 
     Returns:
         - adjusted_pval_output_path (str): the path to the FDR-adjusted p value map 
@@ -82,7 +91,7 @@ def fdr(input_path, fdr_path, mask_path, q_value):
         """
 
     prefix = str(Path(input_path).name).replace('.nii.gz', '')
-    adjusted_pval_output_path = fdr_path / f"{prefix}_q{q_value}_adjusted_p_values.nii.gz"
+    adjusted_pval_output_path = fdr_path / f"{prefix}_q{q_value}_adjusted_1-p_values.nii.gz"
 
     fdr_command = [
         'fdr', 
@@ -103,15 +112,12 @@ def fdr(input_path, fdr_path, mask_path, q_value):
     return adjusted_pval_output_path, float(probability_threshold)
 
 @print_func_name_args_times()
-def cluster_index(adj_p_val_img_path, min_size, q_value, output_index):
-
+def cluster_index(adj_p_val_img_path, min_size, threshold, output_index):
     print('')
-    thres = 1 - float(q_value)
-
     command = [
         'cluster',
         '-i', adj_p_val_img_path,
-        '-t', str(thres),
+        '-t', str(threshold),
         '--oindex=' + str(output_index),
         '--minextent=' + str(min_size)
     ]
@@ -121,7 +127,6 @@ def cluster_index(adj_p_val_img_path, min_size, q_value, output_index):
     else:
         print("Output:", result.stdout)
     return result.stdout
-
 
 @print_func_name_args_times()
 def reverse_clusters(cluster_index_img, output, data_type, cluster_index_nii):
@@ -208,7 +213,8 @@ def process_fdr_and_clusters(input, mask, q, min_size, avg_img1, avg_img2, outpu
 
     # Generate cluster index
     cluster_index_path = f"{fdr_path}/{fdr_dir_name}_cluster_index.nii.gz"
-    cluster_info = cluster_index(adjusted_pval_output_path, min_size, q, cluster_index_path)
+    thres = 1 - float(q)
+    cluster_info = cluster_index(adjusted_pval_output_path, min_size, thres, cluster_index_path)
 
     # Save the cluster info
     with open(fdr_path / f"{fdr_dir_name}_cluster_info.txt", "w") as f:
@@ -232,9 +238,12 @@ def process_fdr_and_clusters(input, mask, q, min_size, avg_img1, avg_img2, outpu
     # Remove the original cluster index file
     Path(cluster_index_path).unlink()
 
-
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Prepare directory paths and outputs
     results = []
@@ -252,8 +261,8 @@ def main():
             except Exception as exc:
                 print(f'{q_value} generated an exception: {exc}')
 
-if __name__ == '__main__': 
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    verbose_end_msg()
+    
+
+if __name__ == '__main__':
+    main()

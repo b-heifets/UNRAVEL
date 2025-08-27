@@ -1,20 +1,31 @@
 #!/usr/bin/env python3
 
-import argparse
+"""
+Convert images to HDF5 format for ilastik processing.
+"""
+
 import h5py
 from rich import print
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img
 from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Convert images to HDF5 format for ilastik processing.', formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', required=True, help='Input image file path (.czi, .nii.gz, .tif)', action=SM)
-    parser.add_argument('-o', '--output', required=True, help='Output HDF5 file path', action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity.', action='store_true', default=False)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', required=True, help='Input image file path (.czi, .nii.gz, .tif)', action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-o', '--output', required=True, help='Output HDF5 file path', action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 @print_func_name_args_times()
@@ -28,7 +39,7 @@ def save_image_as_hdf5(ndarray, output):
 def main():
     args = parse_args()
 
-    img = load_3D_img(args.input, desired_axis_order="zyx") # Ensure the image is in the correct axis order for ilastik
+    img = load_3D_img(args.input, desired_axis_order="zyx", verbose=args.verbose) # Ensure the image is in the correct axis order for ilastik
 
     if args.output: 
         output = args.output

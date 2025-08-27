@@ -1,7 +1,0 @@
-
-Replace the original random look up table (LUT) text file with one containing region IDs (intensities), regions-specific RGB values from the Allen Brain Atlas (ABA), and region abbreviations and names.
-
-Location of LUTs for fsleyes: 
-/home/user/.config/fsleyes/luts/random.lut
-
-Launch fsleyes, load atlas gubra_ano_combined_25um.nii.gz, and change 3D/4D volume to Label image to apply LUT (random.lut is applied by default).

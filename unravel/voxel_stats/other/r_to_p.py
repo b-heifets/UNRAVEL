@@ -3,17 +3,19 @@
 """
 Converts correlation map to z-score, p value, and FDR p value maps.
 
-Usage:
-------
-    path/r_to_p.py -i sample01_cfos_correlation_map.nii.gz -x 25 -z 25 -v
+Input:
+    - <image>_correlation_map.nii.gz
 
 Outputs: 
     - <image>_z_score_map.nii.gz
     - <image>_p_value_map.nii.gz
     - <image>_p_value_map_fdr_corrected.nii.gz
+
+Usage:
+------
+    path/r_to_p.py -i sample01_cfos_correlation_map.nii.gz -x 25 -z 25 -v
 """
 
-import argparse
 from pathlib import Path
 import numpy as np
 from rich import print
@@ -21,18 +23,27 @@ from rich.traceback import install
 from scipy.stats import norm
 from statsmodels.stats.multitest import multipletests
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times
+from unravel.core.utils import log_command, verbose_start_msg, verbose_end_msg, print_func_name_args_times
+
 
 def parse_args():
-    parser = argparse.ArgumentParser(formatter_class=SuppressMetavar)
-    parser.add_argument('-i', '--input', help='[path/]image.nii.gz', required=True, action=SM)
-    parser.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
-    parser.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
-    parser.add_argument('-a', '--alpha', help='FDR alpha. Default: 0.05', default=0.05, type=float, action=SM)
-    parser.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='[path/]image.nii.gz', required=True, action=SM)
+
+    opts = parser.add_argument_group('Optional arguments')
+    opts.add_argument('-x', '--xy_res', help='x/y voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
+    opts.add_argument('-z', '--z_res', help='z voxel size in microns. Default: get via metadata', default=None, type=float, action=SM)
+    opts.add_argument('-a', '--alpha', help='FDR alpha. Default: 0.05', default=0.05, type=float, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-v', '--verbose', help='Increase verbosity. Default: False', action='store_true', default=False)
+
     return parser.parse_args()
 
 
@@ -50,17 +61,21 @@ def z_to_p(z_map):
     return norm.sf(abs(z_map)) * 2 #https://www.geeksforgeeks.org/how-to-find-a-p-value-from-a-z-score-in-python/
 
 
+@log_command
 def main():
+    install()
     args = parse_args()
+    Configuration.verbose = args.verbose
+    verbose_start_msg()
 
     # Load Pearson correlation map
     if args.xy_res is None or args.z_res is None:
-        img, xy_res, z_res = load_3D_img(args.input, return_res=True)
+        img, xy_res, z_res = load_3D_img(args.input, return_res=True, verbose=args.verbose)
     else:
-        img = load_3D_img(args.input)
+        img = load_3D_img(args.input, verbose=args.verbose)
         xy_res, z_res = args.xy_res, args.z_res
 
-    correlation_map = load_3D_img(args.input)
+    correlation_map = load_3D_img(args.input, verbose=args.verbose)
 
     # Apply Fisher Z-transformation to convert to z-score map
     z_map = r_to_z(correlation_map)
@@ -87,9 +102,8 @@ def main():
     save_as_nii(inv_p_map_fdr_corrected, f"{output_prefix}_1-p_value_map_fdr_corrected.nii.gz", xy_res, z_res, data_type='float32')
     print("\n    Z-score map, P-value map, and FDR-corrected P-value map saved.\n")
     
-    
-if __name__ == '__main__': 
-    install()
-    args = parse_args()
-    Configuration.verbose = args.verbose
-    print_cmd_and_times(main)()
+    verbose_end_msg()
+
+
+if __name__ == '__main__':
+    main()

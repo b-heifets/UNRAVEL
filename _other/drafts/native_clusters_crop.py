@@ -1,7 +1,15 @@
 #!/usr/bin/env python3
 
-import argparse
-from glob import glob
+"""
+Crop native image based on cluster bounding boxes.
+
+Currently, inputs are from native_clusters.sh
+Run native_cluster_crop.py from the experiment directory containing sample?? folders or a sample?? folder.
+Example usage: native_cluster_crop.py -o clusters_output_folder_name -cn ochann -x 3.5232 -z 5 -v
+inputs: ./sample??/clusters/output_folder/bounding_boxes/outer_bounds.txt and ./sample??/clusters/output_folder/bounding_boxes/bounding_box_sample??_cluster_*.txt
+outputs: ./sample??/clusters/output_folder/<chann_name>_cropped/<sample>_cluster_*.nii.gz
+"""
+
 from pathlib import Path
 import re
 import numpy as np
@@ -9,29 +17,31 @@ from rich import print
 from rich.live import Live
 from rich.traceback import install
 
-from unravel.core.argparse_utils import SuppressMetavar, SM
+from unravel.core.help_formatter import RichArgumentParser, SuppressMetavar, SM
+
 from unravel.core.config import Configuration
 from unravel.core.img_io import load_3D_img, save_as_nii
 from unravel.core.img_tools import crop
-from unravel.core.utils import print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples, load_text_from_file
+from unravel.core.utils import match_files, print_cmd_and_times, print_func_name_args_times, initialize_progress_bar, get_samples, load_text_from_file
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Crop native image based on cluster bounding boxes', formatter_class=SuppressMetavar)
-    parser.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
-    parser.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
-    parser.add_argument('-i', '--input', help='If if inputs is .czi or .nii.gz: path/raw_image (otherwise the tif dir mattching -cn is used)', default=None, action=SM)
-    parser.add_argument('-o', '--out_dir_name', help="Output folder name. If supplied as path (./sample??/clusters/output_folder), the basename will be used", action=SM)
-    parser.add_argument('-cn', '--chann_name', help='Channel name (e.g., cfos or cfos_rb4). Default: ochann', default='ochann', action=SM)
-    parser.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, action=SM)
-    parser.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)
-    parser.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
-    parser.epilog = """
-Currently, inputs are from native_clusters.sh
-Run native_cluster_crop.py from the experiment directory containing sample?? folders or a sample?? folder.
-Example usage: native_cluster_crop.py -o clusters_output_folder_name -cn ochann -x 3.5232 -z 5 -v
-inputs: ./sample??/clusters/output_folder/bounding_boxes/outer_bounds.txt and ./sample??/clusters/output_folder/bounding_boxes/bounding_box_sample??_cluster_*.txt
-outputs: ./sample??/clusters/output_folder/<chann_name>_cropped/<sample>_cluster_*.nii.gz"""
+    parser = RichArgumentParser(formatter_class=SuppressMetavar, add_help=False, docstring=__doc__)
+
+    reqs = parser.add_argument_group('Required arguments')
+    reqs.add_argument('-i', '--input', help='If if inputs is .czi or .nii.gz: path/raw_image (otherwise the tif dir mattching -cn is used)', default=None, action=SM)
+
+    opts = parser.add_argument_group('Optional args')
+    opts.add_argument('-o', '--out_dir_name', help="Output folder name. If supplied as path (./sample??/clusters/output_folder), the basename will be used", action=SM)
+    opts.add_argument('-cn', '--chann_name', help='Channel name (e.g., cfos or cfos_rb4). Default: ochann', default='ochann', action=SM)
+    opts.add_argument('-x', '--xy_res', help='xy resolution in um', type=float, action=SM)
+    opts.add_argument('-z', '--z_res', help='z resolution in um', type=float, action=SM)
+
+    general = parser.add_argument_group('General arguments')
+    general.add_argument('-p', '--pattern', help='Pattern for folders to process. If no matches, use current dir. Default: sample??', default='sample??', action=SM)
+    general.add_argument('--dirs', help='List of folders to process. Overrides --pattern', nargs='*', default=None, action=SM)
+    general.add_argument('-v', '--verbose', help='Enable verbose mode', action='store_true')
+
     return parser.parse_args()
 
 
@@ -77,9 +87,9 @@ def main():
 
             # Load image
             if args.xy_res is None or args.z_res is None:
-                img, xy_res, z_res = load_3D_img(input_path, return_res=True)
+                img, xy_res, z_res = load_3D_img(input_path, return_res=True, verbose=args.verbose)
             else:
-                img = load_3D_img(input_path, return_res=False)
+                img = load_3D_img(input_path, return_res=False, verbose=args.verbose)
                 xy_res, z_res = args.xy_res, args.z_res
 
             # Define output path
@@ -93,8 +103,9 @@ def main():
             print(f'\n    {outer_bbox=}\n')
 
             # Load inner bounding boxes and crop image for each cluster
-            file_pattern = str(Path(bbox_dir, f"bounding_box_{sample}_cluster_*.txt")) # Define the pattern to match the file names
-            file_list = glob(file_pattern) # Use glob to find files matching the pattern            
+            file_pattern = f"bounding_box_{sample}_cluster_*.txt"
+            file_list = match_files([file_pattern], base_path=bbox_dir)
+
             clusters = [int(re.search(r"cluster_(\d+).txt", file).group(1)) for file in file_list] # Extract cluster IDs
             for cluster in clusters:
                 # Load bounding box
